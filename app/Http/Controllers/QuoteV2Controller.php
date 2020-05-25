@@ -2448,7 +2448,7 @@ class QuoteV2Controller extends Controller
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
-        $chargesFreight = $request->input('chargeFreight');
+        $chargesFreight ='true';
 
 
         $form = $request->all();
@@ -2598,7 +2598,7 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -2606,7 +2606,7 @@ class QuoteV2Controller extends Controller
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             }
 
@@ -2828,7 +2828,7 @@ class QuoteV2Controller extends Controller
                             //Origin
                             if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
-
+                                    $band = false;
                                     foreach ($containers as $cont) {
                                         $name_arreglo = 'array' . $cont->code;
                                         if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
@@ -2843,22 +2843,24 @@ class QuoteV2Controller extends Controller
                                             $arregloOrigin = array_merge($arregloOrigin, $markupGe);
                                             $collectionOrigin->push($arregloOrigin);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
-
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionOrigin->push($arregloOrigin);
                                     }
-                                    $collectionOrigin->push($arregloOrigin);
                                 }
                             }
                             //Destiny
                             if ($chargesDestination != null) {
                                 if ($local->typedestiny_id == '2') {
-
+                                    $band = false;
                                     foreach ($containers as $cont) {
 
                                         $name_arreglo = 'array' . $cont->code;
@@ -2874,21 +2876,25 @@ class QuoteV2Controller extends Controller
                                             $arregloDestiny = array_merge($arregloDestiny, $markupGe);
                                             $collectionDestiny->push($arregloDestiny);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionDestiny->push($arregloDestiny);
                                     }
-                                    $collectionDestiny->push($arregloDestiny);
                                 }
                             }
                             //Freight
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
-
+                                    $band = false;
                                     //Se ajusta el calculo para freight tomando en cuenta el rate currency
                                     $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
                                     $localParams['typeCurrency'] = $data->currency->alphacode;
@@ -2910,16 +2916,21 @@ class QuoteV2Controller extends Controller
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
 
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionFreight->push($arregloFreight);
+
                                     }
-                                    $collectionFreight->push($arregloFreight);
+                                 
                                 }
                             }
                         }
@@ -3108,18 +3119,26 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('remarksG', $remarksGeneral);
 
                 // EXCEL REQUEST
-                $excelRequestFCL = ContractFclFile::where('contract_id', $data->contract->id)->first();
-                if (!empty($excelRequestFCL)) {
-                    $excelRequestIdFCL = $excelRequestFCL->id;
-                } else {
-                    $excelRequestIdFCL = '0';
-                }
+                $excelRequestFCL = 0;
+                $excelRequest = 0;   
+                $excelRequestIdFCL = 0;
+                $excelRequestId = 0;
+                
+                if ($data->contract->status != 'api') {
 
-                $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
-                if (!empty($excelRequest)) {
-                    $excelRequestId = $excelRequest->id;
-                } else {
-                    $excelRequestId = "0";
+                    $excelRequestFCL = ContractFclFile::where('contract_id', $data->contract->id)->first();
+                    if (!empty($excelRequestFCL)) {
+                        $excelRequestIdFCL = $excelRequestFCL->id;
+                    } else {
+                        $excelRequestIdFCL = '0';
+                    }
+
+                    $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
+                    if (!empty($excelRequest)) {
+                        $excelRequestId = $excelRequest->id;
+                    } else {
+                        $excelRequestId = "0";
+                    }
                 }
 
                 $idContract = 0;
@@ -3164,7 +3183,10 @@ class QuoteV2Controller extends Controller
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
+                //Contrato Futuro
+                $contratoFuturo = $this->contratoFuturo($dateUntil,$data->contract->expire);
 
+                $data->setAttribute('contratoFuturo', $contratoFuturo);
                 // INLANDS
                 $data->setAttribute('inlandDestiny', $inlandDestiny);
                 //   dd($inlandDestiny);
