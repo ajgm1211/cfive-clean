@@ -2387,11 +2387,11 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
-        $incoterm->prepend('Select at option', '');
+        $incoterm->prepend('Select an option', '');
         $group_contain = GroupContainer::pluck('name', 'id');
-        $group_contain->prepend('Select at option', '');
+        //$group_contain->prepend('Select an option', '');
         $contain = Container::pluck('code', 'id');
-        $contain->prepend('Select at option', '');
+        $contain->prepend('Select an option', '');
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2400,7 +2400,7 @@ class QuoteV2Controller extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
-        $companies->prepend('Select at option', '0');
+        $companies->prepend('Select an option', '0');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
 
@@ -2426,7 +2426,7 @@ class QuoteV2Controller extends Controller
         $form['equipment'] = array('1', '2', '3');
         $form['company_id_quote'] = '';
         $form['mode'] = '1';
-
+        
         return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain'));
     }
 
@@ -2443,7 +2443,7 @@ class QuoteV2Controller extends Controller
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
         $group_contain = GroupContainer::pluck('name', 'id');
-        $group_contain->prepend('Select at option', '');
+        //$group_contain->prepend('Select an option', '');
 
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
@@ -2468,7 +2468,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id', \Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name', 'id');
         $contain = Container::pluck('code', 'id');
-        $contain->prepend('Select at option', '');
+        $contain->prepend('Select an option', '');
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
         $typeCurrency = 'USD';
         $idCurrency = 149;
@@ -3654,7 +3654,7 @@ class QuoteV2Controller extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
-        $companies->prepend('Select at option', '0');
+        $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
@@ -3662,7 +3662,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id', \Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name', 'id');
         $contain = Container::pluck('code', 'id');
-        $contain->prepend('Select at option', '');
+        $contain->prepend('Select an option', '');
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
         $typeCurrency = 'USD';
         $idCurrency = 149;
