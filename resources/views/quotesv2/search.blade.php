@@ -1211,7 +1211,13 @@
                         </div>
                         @else
                         <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
+
+                         @if($arr->contratoFuturo)
+                           <img src="{{ url('images/error.svg')}}" width='20' height='20' >  
+                          @endif
+                            
+
 
                         </div>
                         @endif
@@ -1953,7 +1959,7 @@
 
                 $('.list-group1 .c5-case:nth-child(1) input').attr('checked', true);
             }
-
+//conment
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
@@ -1974,6 +1980,7 @@
    function getContainerByGroup(id_group){
         $.ajax({
         type: 'GET',
+        dataType: 'json',
         url: '/Container/getContainer/',
         data: {
             'id_group' : id_group            
