@@ -2431,11 +2431,11 @@ class QuoteV2Controller extends Controller
         $form['containerType'] = '1';
         $validateEquipment = $this->validateEquipment($form['equipment'], $containers);
         $containerType = $validateEquipment['gpId'];
-        $dataEquip = json_encode($form['equipment']);
- 
+        $carriersSelected = $carrierMan;
+        
+        //dd($carriersSelected);
 
-
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','dataEquip'));
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','carriersSelected'));
     }
 
     /**
@@ -2458,8 +2458,7 @@ class QuoteV2Controller extends Controller
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight ='true';
         $containerType = $request->input('container_type');
-        $carriersSelected = $request->input('container_type');
-
+        $carriersSelected = $request->input('carriers');
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
@@ -2519,7 +2518,8 @@ class QuoteV2Controller extends Controller
         $equipment = $request->input('equipment');
         $carriers =$this->divideCarriers($request->input('carriers'));
 
-
+        //alla
+        //dd($equipment);
         $chargesAPI = isset($carriers['api']['CMA']) ? true : null;
         $chargesAPI_M = isset($carriers['api']['MAERSK']) ? true : null;
         $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
@@ -3229,9 +3229,9 @@ class QuoteV2Controller extends Controller
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
-        $dataEquip = json_encode($form['equipment']);
         $containerType = $validateEquipment['gpId'];
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF', 'containerType', 'carriersSelected','dataEquip')); //aqui
+
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF', 'containerType', 'carriersSelected','equipment')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)

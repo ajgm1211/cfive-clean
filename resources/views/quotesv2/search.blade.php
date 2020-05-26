@@ -489,6 +489,7 @@
         justify-content: flex-start;
         overflow: hidden;
         white-space: nowrap;
+        height: 35px;
         background-color: #f6f6f6;   
     }
     .m-input.date{
@@ -677,6 +678,8 @@
                 {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
                 <!-- {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }} -->
               </div>
+
+            
               <div class="col-lg-2">
                 <label>Company</label>
                 <div class="m-input-icon m-input-icon--right">
@@ -769,7 +772,7 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carriers</label>
-                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
               </div>
             
               <div class="col-lg-4 for-check">   
@@ -1705,8 +1708,9 @@
 
     $('#carrier_select').selectC5();
     $('#equipment').selectC5();
-    $('.c5-switch').prop('checked', true);
-    $(".c5-switch").trigger("change");
+    /*$('.c5-switch').prop('checked', true);
+    $('.c5-switch').trigger('change');*/
+   
     
 
   });
@@ -1811,20 +1815,20 @@
             var selectContainer = $('select#'+clickOnID+' option').val();
 
             var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
-                                '<ul class="c5-select-dropdown-list .select-list">'+
+                                '<ul class="c5-select-dropdown-list select-list">'+
                                 '</ul>'+
                                 '</span>'+
                                 '<span class="c5-select-multiple-container '+clickOnID+'">'+
                                     '<span class="c5-select-header">Types</span>'+
                                     '<ul class="c5-select-list list-types-carriers">'+
                                         '<li class="c5-case"><label class="c5-label">CMA CGM Spot'+
-                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA">'+
+                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">'+
                                             '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">MAERSK Spot'+
-                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK">'+
+                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK" title="MAERSK">'+
                                             '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">SAFMARINE Spot'+
-                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE">'+
+                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">'+
                                             '<span class="checkmark"></span></label></li>'+
                                     '</ul>'+
                                     '<span class="c5-select-header">Carriers</span>'+
@@ -1858,7 +1862,6 @@
             
             // Select Multiple con swicth
             if(selectType == 'multiple'){
-                //var data1 = ['1', '2', '5'];
                 var data = '{{$carrierMan}}';
                 var carriersList = JSON.parse(data.replace(/&quot;/g,'"')); 
                 var defaultValuesCarriers = $('#'+clickOnID+'').val();
@@ -1872,16 +1875,23 @@
                                 '"><span class="checkmark"></span></label></li>';
                     $('.c5-select-list.select-normal').append(list);    
                 });
+
                 
-                for (var i in defaultValuesCarriers) {
+
+                for ( var i in defaultValuesCarriers ) {
                     var ident = defaultValuesCarriers[i];
-                    var data = carriersList[ident];
-
-                    //console.log('<li title="'+data+'">'+data+', </li>');
-
-                    $('.'+clickOnID+' .select-list').append('<li title="'+data+'">'+data+', </li>');
-                    $('.list-group2 .c5-case:nth-child('+ident+') input').attr('checked', true);
+                    var name = $('.select-normal .c5-case input[value="'+ident+'"]').attr('title');
+                    
+                    //console.log(name);
+                    
+                    $('.'+clickOnID+' .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    //$('.'+clickOnID+' .select-list').append('<li title="'+nameAPI+'">'+nameAPI+', </li>');
+                    $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true); 
                 }
+
+                $('.'+clickOnID+' .select-list li[title="1"]').remove();
+
 
                 $('#'+clickOnID+'').val(defaultValuesCarriers);
 
@@ -1955,7 +1965,7 @@
                 $('.select-normal .c5-case:nth-child(2)').remove();
                 $('.select-normal .c5-case:nth-child(1)').remove();
             }
-
+            
             // Select Multiple con Lables
             if(selectType == 'groupLabel') {
                 $(this).after(multiSelectGroup);
@@ -1964,7 +1974,7 @@
                 var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
                 var defaultValues = $('#'+clickOnID+'').val();
                 var containerType= '{{$containerType}}';
-                
+
                 getContainerByGroup(''+containerType+'');
                 
                 for (var i in newData) {
@@ -2011,6 +2021,7 @@
 
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
+
             for ( const equip in data ) {
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
@@ -2020,19 +2031,21 @@
                 $('.list-group2').append(list2);
             }
 
-            if( id_group == containerType ) {
+            $('.equipment .select-list').html('');
 
+            if( id_group == containerType ) {
+                
                 for (var i in selectValues) {
                     var ident = selectValues[i];
-                    var a = ident - 1;
-                    var code = `${data[a].code}`;
-                    var idEquip = `${data[a].id}`;
-
-                    $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
-                    $('.list-group2 .c5-case:nth-child('+ident+') input').attr('checked', true);
+                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title'); 
+                    console.log(ident, selectValues, containerType);
+                    $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true); 
                 }
+                $('.equipment .select-list li[title="undefined"]').remove();
 
             }
+
 
             $('.equipment .list-group2 .c5-check').on("click", function() {
                 var valueEquipment = [];                    
@@ -2041,7 +2054,7 @@
                 $('.equipment .list-group2 .c5-check').each(function() {
                     if (this.checked) {
                         valueEquipment.push($(this).val());
-                        console.log(valueEquipment);
+                        //console.log(valueEquipment);
                     }
                 });
 
