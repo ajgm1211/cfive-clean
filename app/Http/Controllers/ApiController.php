@@ -708,13 +708,15 @@ class ApiController extends Controller
         if ($request->paginate) {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
-            })->paginate($request->paginate);
+            })->select('id','name','code','display_name','coordinates','country_id','varation as variation')
+            ->with('country')->paginate($request->paginate);
         } else {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
-            })->take($request->size)->get();
+            })->with('country')
+            ->select('id','name','code','display_name','coordinates','country_id','varation as variation')->take($request->size)->get();
         }
-
+        
         return $ports;
     }
 
