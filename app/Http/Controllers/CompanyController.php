@@ -130,7 +130,7 @@ class CompanyController extends Controller
                 $query->with(['currency' => function ($q) {
                     $q->select('id', 'name', 'alphacode', 'api_code_eur', 'api_code', 'rates', 'rates_eur');
                 }]);
-            }))->where('id', $id)->first();
+            }))->where('id', $id)->firstOrFail();
 
             $collection = Collection::make($company);
             return $collection;
