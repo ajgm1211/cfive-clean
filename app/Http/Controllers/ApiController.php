@@ -24,6 +24,7 @@ use App\CompanyUser;
 use App\QuoteV2;
 use App\Carrier;
 use App\Airline;
+use App\Airport;
 use App\Http\Resources\SurchargeResource;
 use App\Surcharge;
 use App\IntegrationQuoteStatus;
@@ -684,13 +685,59 @@ class ApiController extends Controller
         if ($request->paginate) {
             $surcharges = Surcharge::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%');
-            })->where('company_user_id',\Auth::user()->company_user_id)->paginate($request->paginate);
+            })->where('company_user_id', \Auth::user()->company_user_id)->paginate($request->paginate);
         } else {
             $surcharges = Surcharge::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%');
-            })->where('company_user_id',\Auth::user()->company_user_id)->take($request->size)->get();
+            })->where('company_user_id', \Auth::user()->company_user_id)->take($request->size)->get();
         }
 
         return $surcharges;
+    }
+
+    /**
+     * Show ports list
+     * @param Request $request 
+     * @return JSON
+     */
+
+    public function ports(Request $request)
+    {
+        $name = $request->name;
+
+        if ($request->paginate) {
+            $ports = Harbor::when($name, function ($query, $name) {
+                return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
+            })->paginate($request->paginate);
+        } else {
+            $ports = Harbor::when($name, function ($query, $name) {
+                return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
+            })->take($request->size)->get();
+        }
+
+        return $ports;
+    }
+
+    /**
+     * Show airports list
+     * @param Request $request 
+     * @return JSON
+     */
+
+    public function airports(Request $request)
+    {
+        $name = $request->name;
+
+        if ($request->paginate) {
+            $airports = Airport::when($name, function ($query, $name) {
+                return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
+            })->paginate($request->paginate);
+        } else {
+            $airports = Airport::when($name, function ($query, $name) {
+                return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
+            })->take($request->size)->get();
+        }
+
+        return $airports;
     }
 }
