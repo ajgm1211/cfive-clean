@@ -19,6 +19,7 @@
                 :vdatalists="datalists"
                 :actions="actions"
                 @onEdit="onEdit"
+                :firstEmpty="false"
                 ></DataTable>
 
 
@@ -105,6 +106,7 @@
             }
         },
         created() {
+            
         },
         methods: {
             /* Single Actions */
