@@ -10,8 +10,12 @@ class ApiIntegration extends Model
         'name',
         'api_key',
         'api_integration_setting_id',
+        'module',
+        'partner_id',
         'url'
     ];
+
+    protected $modules = ['Contacts', 'Companies'];
 
     public function api_integration_setting(){
         return $this->belongsTo('App\ApiIntegrationSetting');
