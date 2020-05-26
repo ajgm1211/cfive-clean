@@ -43,6 +43,9 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
 Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
     Route::post('store', 'ApiIntegrationController@store')->name('api.store');
+    Route::get('edit/{id}', 'ApiIntegrationController@edit')->name('api.edit');
+    Route::put('update', 'ApiIntegrationController@update')->name('api.update');
+    Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
