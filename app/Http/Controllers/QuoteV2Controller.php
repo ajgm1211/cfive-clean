@@ -514,8 +514,8 @@ class QuoteV2Controller extends Controller
         }
         $charge->update();
         $quote_id = $charge->automatic_rate->quote_id;
-        //$this->updatePdfApi($quote_id);
-        //$this->updateIntegrationQuoteStatus($quote_id);
+        $this->updatePdfApi($quote_id);
+        $this->updateIntegrationQuoteStatus($quote_id);
         return response()->json(['success' => 'Ok']);
     }
 
