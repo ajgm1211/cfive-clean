@@ -274,7 +274,7 @@ class ContractController extends Controller
      */
     public function retrieve(Contract $contract)
     {
-        return new ContractResource($contract, true);
+        return new ContractResource($contract);
     }
 
     /**
