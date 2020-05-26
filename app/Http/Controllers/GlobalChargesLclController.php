@@ -189,7 +189,7 @@ class GlobalChargesLclController extends Controller
 
 		$request->session()->flash('message.nivel', 'success');
 		$request->session()->flash('message.title', 'Well done!');
-		$request->session()->flash('message.content', 'You successfully add this contract.');
+		$request->session()->flash('message.content', 'Record saved successfully!');
 		return redirect()->action('GlobalChargesLclController@index');
 	}
 

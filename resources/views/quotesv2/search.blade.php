@@ -828,7 +828,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_quantity" value="1" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <select class="form-control" id="type_cargo" name="cargo_type" style="height:2.5em">
                                 <option value="1">Pallets</option>
@@ -844,7 +844,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_weight" value="1" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">KG <span class="caret" ></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
@@ -859,7 +859,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_volume" value="1" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">M<sup>3</sup> <span class="caret"></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
