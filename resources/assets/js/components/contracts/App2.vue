@@ -1,6 +1,6 @@
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mt-5">
             <div class="col-12">
                 <b-card>

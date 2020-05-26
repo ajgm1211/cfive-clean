@@ -1208,7 +1208,7 @@ var hasIntersectionObserverSupport = isBrowser && 'IntersectionObserver' in wind
 
 var getEnv = function getEnv(key) {
   var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var env = typeof process !== 'undefined' && process ? Object({"MIX_PUSHER_APP_KEY":"b74324bf3d783ed40021","MIX_PUSHER_APP_CLUSTER":"us2","NODE_ENV":"development"}) || {} : {};
+  var env = typeof process !== 'undefined' && process ? Object({"MIX_PUSHER_APP_KEY":"","MIX_PUSHER_APP_CLUSTER":"mt1","NODE_ENV":"development"}) || {} : {};
 
   if (!key) {
     /* istanbul ignore next */
@@ -95384,7 +95384,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container" },
+    { staticClass: "container-fluid" },
     [
       _c("div", { staticClass: "row mt-5" }, [
         _c(
