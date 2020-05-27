@@ -173,9 +173,9 @@
 
     <!-- Charges -->
     @if($quote->type=='FCL')
-    @include('quotesv2.partials.ratesByContainer')
+        @include('quotesv2.partials.ratesByContainer')
     @else
-    @include('quotesv2.partials.ratesByPackage')
+        @include('quotesv2.partials.ratesByPackage')
     @endif
     <div class="row">
         <div class="col-md-12">

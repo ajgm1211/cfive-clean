@@ -65,12 +65,10 @@
     font-style:'semi_bold';
     }*/
 
-
-    @font-face{
-        font-family: "sailec";
-        src: url("/fonts/sailec.otf") format("opentype");
-    }
-
+@font-face {
+    font-family: "sailec";
+    src: url("/fonts/sailec.otf") format("opentype");
+}
 
 .clearfix:after {
     content: "";
@@ -81,14 +79,14 @@
 .img-footer {
     position: relative !important;
     float: left !important;
-    width:  100%  !important;
-    height: auto  !important;
-    background-position: 50% 50%  !important;
-    background-repeat:   no-repeat  !important;
-    background-size:     cover  !important;
+    width: 100% !important;
+    height: auto !important;
+    background-position: 50% 50% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
 }
 
-.page-break{
+.page-break {
     page-break-after: always;
 }
 
@@ -101,19 +99,19 @@ a {
     page-break-inside: avoid !important;
 }
 
-.color-table{
+.color-table {
     color: #525F7F !important;
 }
 
-.color-title{
+.color-title {
     color: #031B4E !important;
 }
 
 body {
     position: relative;
     width: 100%;
-    height: 29.7cm; 
-    margin: 0 auto; 
+    height: 29.7cm;
+    margin: 0 auto;
     color: #787878;
     background: #FFFFFF;
     font-size: 12px !important;
@@ -125,25 +123,30 @@ header {
     margin-bottom: 20px;
 }
 
-.title{
+.title {
     color: #031B4E !important;
     font-weight: bolder !important;
-    font-size: 12px !important; 
+    font-size: 12px !important;
 }
-.subtotal{
+
+.subtotal {
     font-size: 12px;
-    color: #031B4E;;
+    color: #031B4E;
+    ;
 }
-.total{
+
+.total {
     color: #fff !important;
     background-color: #031B4E;
-    width:220px !important;
-    padding:10px !important;
-    border-radius:2px !important;
+    width: 220px !important;
+    padding: 10px !important;
+    border-radius: 2px !important;
 }
-.white{
+
+.white {
     background-color: #fff;
 }
+
 #logo {
     float: left;
 }
@@ -159,11 +162,13 @@ header {
 .details {
     margin-bottom: 10px;
 }
-h1{
+
+h1 {
     font-size: 18px !important;
     font-weight: bold !important;
     color: #031B4E !important;
 }
+
 .client {
     float: left;
     width: 100%;
@@ -188,11 +193,11 @@ table {
     color: #525F7F;
 }
 
-.table-border{
+.table-border {
     border: 1px solid #E2E2E2 !important;
 }
 
-table tr:nth-child(odd) td{
+table tr:nth-child(odd) td {
     background-color: #faf9fc !important;
 }
 
@@ -203,7 +208,7 @@ table td {
 }
 
 table th {
-    white-space: nowrap;        
+    white-space: nowrap;
     font-weight: normal;
     color: #031B4E !important;
     background-color: #F4F3F8 !important;
@@ -215,7 +220,7 @@ table td {
     color: #031B4E;
 }
 
-table td h3{
+table td h3 {
     color: #57B223;
     font-size: 1.2em;
     font-weight: normal;
@@ -240,8 +245,7 @@ table .unit {
     background: #f1f1f1;
 }
 
-table .qty {
-}
+table .qty {}
 
 table .total {
     background: #031B4E;
@@ -257,11 +261,13 @@ table td.total {
 table tbody tr:last-child td {
     border: none;
 }
+
 .td-a {
     border: 1px solid #eee !important;
     border-radius: 5px;
     padding: 6px;
 }
+
 .tds {
     line-height: 40px;
     text-align: left;
@@ -272,18 +278,17 @@ table tfoot td {
     background: #FFFFFF;
     border-bottom: none;
     font-size: 1.2em;
-    white-space: nowrap; 
-    border-top: 1px solid #AAAAAA; 
+    white-space: nowrap;
+    border-top: 1px solid #AAAAAA;
 }
 
 table tfoot tr:first-child td {
-    border-top: none; 
+    border-top: none;
 }
 
 table tfoot tr:last-child td {
     color: #031B4E;
     font-size: 1.4em;
-
 }
 
 table tfoot tr td:first-child {
@@ -301,3 +306,13 @@ footer {
     text-align: center;
 }
 
+border-top: 1px solid #AAAAAA;
+padding: 8px 0;
+text-align: center;
+
+}
+border-top: 1px solid #AAAAAA;
+padding: 8px 0;
+text-align: center;
+
+}

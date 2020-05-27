@@ -59,9 +59,23 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="form-group m-form__group row align-items-center">
+                  <div class="col-md-4">
+                    <div class="m-input-icon m-input-icon--left">
+                        <h5 >
+															Harbor 
+														</h5>
+                      <h5 class="m--font-primary">
+															 {{ $harbor->name }}
+														</h5>
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',{{  $harbor->id }})">
                   <span>
                     <i class="la la-plus"></i>
                     <span>
@@ -76,15 +90,23 @@
           <table class="m-datatable" id="html_table" width="100%">
             <thead>
               <tr>
-
                 <th title="Field #1">
+                  ID
+                </th>
+                <th title="Field #1">
+                  Zip Code
+                </th>
+                <th title="Field #2">
+                  Address
+                </th>
+                <th title="Field #2">
+                  Province/State
+                </th>
+                <th title="Field #2">
+                  Display Name
+                </th>
+                <th title="Field #6">
                   Distance
-                </th>
-                <th title="Field #2">
-                  Harbor
-                </th>
-                <th title="Field #2">
-                  Location
                 </th>
                 <th title="Field #6">
                   Options
@@ -95,9 +117,12 @@
             <tbody>
               @foreach ($data as $arr)
               <tr>
+                <td>{{ $arr->id }}</td>
+                <td>{{ $arr->zip }}</td>
+                <td>{{ $arr->address }}</td>
+                <td>{{ $arr->province }}</td>
+                <td>{{ $arr->zip }}, {{ $arr->address }}, {{ $arr->province }} </td>
                 <td>{{ $arr->distance }}</td>
-                <td>{{ $arr->harbor->name }}</td>
-                <td>{{ $arr->inlandLocation->name }}</td>
                 <td>
                   <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                     <i class="la la-edit"></i>
@@ -165,7 +190,8 @@
       });
     }
     if(action == "add"){
-      var url = 'inlandD/add';
+      var url = '{{ route("inlandD.add", ":id") }}';
+      url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#m_modal_6').modal({show:true});
       });

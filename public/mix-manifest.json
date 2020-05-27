@@ -1,4 +1,8 @@
 {
+    "/js/contracts/edit.js": "/js/contracts/edit.js",
+    "/js/inlands/index.js": "/js/inlands/index.js",
+    "/js/inlands/edit.js": "/js/inlands/edit.js",
+    "/js/contracts/index.js": "/js/contracts/index.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css"
 }
