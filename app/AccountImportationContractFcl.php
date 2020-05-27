@@ -4,11 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class AccountImportationContractFcl extends Model implements Auditable
+
+class AccountImportationContractFcl extends Model implements HasMedia,Auditable
 {
+    use HasMediaTrait;
     use \OwenIt\Auditing\Auditable;
-    
     protected $table    = "accounts_import_cfcl";
     protected $fillable = ['id',
                            'name',
@@ -24,7 +27,7 @@ class AccountImportationContractFcl extends Model implements Auditable
 
 
     public function FilesTmps(){
-        return $thid->hasMany('App\FileTmp');  
+        return $this->hasMany('App\FileTmp');  
     }
 
     public function contract(){

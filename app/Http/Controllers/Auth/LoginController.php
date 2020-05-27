@@ -103,7 +103,6 @@ class LoginController extends Controller
       return back()->with('warning', 'This user does not have administrator permission.');
     }else  if($user->company_user_id==''){
       return redirect('/settings');
-
     }
 
     return redirect()->intended($this->redirectPath());

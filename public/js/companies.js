@@ -22,7 +22,7 @@ function save_business_name(id) {
         data: {
             'business_name': $("#business_name_input").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Business name has been updated.',
@@ -35,7 +35,7 @@ function save_business_name(id) {
             $("#edit_business_name").removeAttr('hidden');
             $("#business_name_span").html(data.business_name);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
     });
@@ -65,7 +65,7 @@ function save_phone(id) {
         data: {
             'phone': $("#phone_input").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Phone has been updated.',
@@ -78,7 +78,7 @@ function save_phone(id) {
             $("#edit_phone").removeAttr('hidden');
             $("#phone_span").html(data.phone);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
     });
@@ -108,7 +108,7 @@ function save_address(id) {
         data: {
             'address': $("#address_input").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Address has been updated.',
@@ -121,7 +121,7 @@ function save_address(id) {
             $("#edit_address").removeAttr('hidden');
             $("#address_span").html(data.address);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
     });
@@ -151,7 +151,7 @@ function save_email(id) {
         data: {
             'email': $("#email_input").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Email has been updated.',
@@ -164,7 +164,7 @@ function save_email(id) {
             $("#edit_email").removeAttr('hidden');
             $("#email_span").html(data.email);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
 
@@ -195,7 +195,7 @@ function save_tax_number(id) {
         data: {
             'tax_number': $("#tax_number_input").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Tax number has been updated.',
@@ -208,7 +208,7 @@ function save_tax_number(id) {
             $("#edit_tax_number").removeAttr('hidden');
             $("#tax_number_span").html(data.tax_number);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
 
@@ -240,7 +240,7 @@ function save_pdf_language(id) {
         data: {
             'pdf_language': $("#pdf_language_select").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'PDF language has been updated.',
@@ -260,7 +260,7 @@ function save_pdf_language(id) {
             }
             $("#pdf_language_span").html(language);
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
 
@@ -294,7 +294,7 @@ function save_price_level(id) {
         data: {
             'price_id': $("#price_level_select").val(),
         },
-        success: function (data) {
+        success: function(data) {
             swal(
                 'Updated!',
                 'Price levels has been updated.',
@@ -308,12 +308,12 @@ function save_price_level(id) {
             $("#edit_prices").removeAttr('hidden');
 
             $("#price_level_ul").html('');
-            $.each(data, function (key, value) {
+            $.each(data, function(key, value) {
                 $("#price_level_ul").append('<li style="margin-left: -25px;" class="color-black">' + value + '</li>');
             });
 
         },
-        error: function (request, status, error) {
+        error: function(request, status, error) {
             alert(request.responseText);
         }
 
@@ -321,7 +321,7 @@ function save_price_level(id) {
 }
 
 //binds to onchange event of your input field
-$(document).on('change', '#logo', function (e) {
+$(document).on('change', '#logo', function(e) {
     if (this.files[0].size > 1000000) {
         $("#logo-error").removeClass('hide');
     } else {
@@ -329,29 +329,48 @@ $(document).on('change', '#logo', function (e) {
     }
 });
 
-$(document).on('click', '#syncCompanies', function (e) {
-    $("#syncCompanies").addClass("hide");
-    $("#syncCompaniesLoading").removeClass("hide");
-    msg('This process may take a few minutes');
-    $.ajax({
-        type: 'GET',
-        url: '/api/get/companies',
-        success: function (data) {
-            swal(
-                'Done!',
-                'Synchronization completed successfully.',
-                'success'
-            )
-            $("#syncCompaniesLoading").addClass("hide");
-            $("#syncCompanies").removeClass("hide");
+$(document).on('click', '#syncCompanies', function(e) {
+    swal({
+        title: 'Are you sure?',
+        text: "Do you want to synchronize your information with the external API?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes'
+    }).then(function(result) {
+        if (result.value) {
+            $("#syncCompanies").addClass("hide");
+            $("#syncCompaniesLoading").removeClass("hide");
+            msg('Synchronizing. This process may take a few minutes &nbsp;<i class="fa fa-spin fa-spinner"></i>');
+            $.ajax({
+                type: 'GET',
+                url: '/api/get/companies',
+                success: function(data) {
+                    if (data.message == 'Ok') {
+                        swal(
+                            'Done!',
+                            'Synchronization completed successfully.',
+                            'success'
+                        )
 
-            setTimeout(function () { location.replace("/companies/api"); }, 2000);
-        },
-        error: function (request, status, error) {
-            msg('An error has occurred!', 'error');
-            console.log(request.responseText);
-            $("#syncCompaniesLoading").addClass("hide");
-            $("#syncCompanies").removeClass("hide");
+                        setTimeout(function() { location.reload(); }, 3000);
+
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
+                    } else {
+                        toastr.clear();
+                        msg('An error occurred while trying to connect to the external server. Code: ' + data.error, 'error');
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
+                    }
+                },
+                error: function(request, status, error) {
+                    toastr.clear();
+                    msg('An error has occurred', 'error');
+                    console.log(request.responseText);
+                    $("#syncCompaniesLoading").addClass("hide");
+                    $("#syncCompanies").removeClass("hide");
+                }
+            });
         }
     });
 });
