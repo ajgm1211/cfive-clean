@@ -184,13 +184,9 @@ class CompanyController extends Controller
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
-
-            foreach ($options_key as $key) {
-                foreach ($options_value as $value) {
-                    $options_array[$key] = $value;
-                }
-            }
-            $options_array = json_encode($options_array);
+            
+            $options_array = json_encode(array_combine($options_key, $options_value));
+            
         }
 
         if ($request->ajax()) {
@@ -326,12 +322,7 @@ class CompanyController extends Controller
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
 
-            foreach ($options_key as $key) {
-                foreach ($options_value as $value) {
-                    $options_array[$key] = $value;
-                }
-            }
-            $options_array = json_encode($options_array);
+            $options_array = json_encode(array_combine($options_key, $options_value));
         }
 
         if ($request->ajax()) {
