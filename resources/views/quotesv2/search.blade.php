@@ -1121,14 +1121,14 @@
                 <div class="col-lg-2" >  <span class="portcss"> Carrier</span></div>
                 <div class="col-lg-10">
                   <div class="row">
-                    <div class="col-lg-4">
+                    <div class="{{ $equipmentHides['head_1'] }}">
                       <div class="row">
                         <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-3" ><span class="portcss">Destination</span></div>
+                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destination</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-6 padding-right-table" style="padding-left: 0;">
-                      <div style="display:flex; justify-content:flex-start">
+                    <div class="{{ $equipmentHides['head_2'] }} padding-right-table" style="padding-left: 0;">
+                      <div style="display:flex; justify-content:flex-end">
                         @foreach($containers as $container)
                         <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides[$container->code] }} ><span class="portcss">{{ $container->code }}</span></div>
                         @endforeach
@@ -1160,7 +1160,7 @@
                 </div>
                 <div class="col-lg-10 b-left info-bottom-border">
                   <div class="row">
-                    <div class="col-lg-4 no-padding padding-min-col d-flex justify-content-center">
+                    <div class="{{ $equipmentHides['head_1'] }} no-padding padding-min-col ">
                       <div class="row">
                         <div class="col-lg-4">
                           <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
@@ -1193,8 +1193,8 @@
                       <br>
                     </div>
 
-                    <div class="col-lg-6" style="padding-right: 35px;">
-                      <div class="table-r__quotes" style="display: flex; justify-content: flex-start">
+                    <div class="{{ $equipmentHides['head_2'] }}" style="padding-right: 35px;">
+                      <div class="table-r__quotes" style="display: flex; justify-content: flex-end">
                         @foreach($containers as $container)
                         <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate tot{{$container->code}}-{{$arr->id}}">{{$arr->{'totalT'.$container->code}  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
                         <input type='hidden' id='tot{{$container->code}}-{{$arr->id}}' value="{{$arr->{'totalT'.$container->code}  }}">
