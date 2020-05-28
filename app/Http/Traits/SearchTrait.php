@@ -5,6 +5,7 @@ use App\CalculationType;
 use App\Currency;
 use App\Inland;
 use App\Price;
+use App\TransitTime;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
 trait SearchTrait
@@ -549,21 +550,34 @@ trait SearchTrait
     }
 
 
-    public function transitTime($date1,$date2){
+    public function transitTime($port_orig,$port_dest,$carrier,$status){
 
+     $transitArray = array();
+     if($status != 'api'){
 
-
-        $date1 = new \DateTime($date1);
-        $date2 = new \DateTime($date2);
-        $diff = $date1->diff($date2);
+        $transit  = TransitTime::where('origin_id',$port_orig)->where('destination_id',$port_dest)->where('carrier_id',$carrier)->first();
         
-        if($diff->invert  == "0")
-            $contratoFuturo = true;
-        else
-            $contratoFuturo = false;
+  
+        if(!empty($transit)){
+            $transitArray['via'] = $transit->via;
+            $transitArray['transit_time'] = $transit->transit_time;
+            $transitArray['service'] = $transit->service->name;
+        }else{
+            $transitArray['via'] = "";
+            $transitArray['transit_time'] =  "";
+            $transitArray['service'] =  "";
+        }
+        
+        
 
+     } else{
 
-    return $contratoFuturo;
+        $transitArray['via'] = "";
+        $transitArray['transit_time'] =  "";
+        $transitArray['service'] =  "";
+
+     }
+     return $transitArray;
 
     }
 
