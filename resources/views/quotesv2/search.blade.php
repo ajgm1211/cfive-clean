@@ -67,6 +67,7 @@
   .filter-table__quotes, .card-p__quotes, .card__quote-manual {
     padding: 25px;
     box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+    background: #FFFFFF;
   }
   .card__quote-manual {
     margin: 0 15px;
@@ -124,7 +125,7 @@
   .btn-input__select, .btn-input__select-add {
     position: relative;
     left: 25px;
-    width: 120px;
+    width: 95px;
     display: flex;
     align-items:center;
     justify-content:center;
@@ -1120,14 +1121,14 @@
                 <div class="col-lg-2" >  <span class="portcss"> Carrier</span></div>
                 <div class="col-lg-10">
                   <div class="row">
-                    <div class="col-lg-5">
+                    <div class="col-lg-4">
                       <div class="row">
                         <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
                         <div class="col-lg-3" ><span class="portcss">Destination</span></div>
                       </div>
                     </div>
                     <div class="col-lg-6 padding-right-table" style="padding-left: 0;">
-                      <div style="display:flex; justify-content:space-between">
+                      <div style="display:flex; justify-content:flex-start">
                         @foreach($containers as $container)
                         <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides[$container->code] }} ><span class="portcss">{{ $container->code }}</span></div>
                         @endforeach
@@ -1159,7 +1160,7 @@
                 </div>
                 <div class="col-lg-10 b-left info-bottom-border">
                   <div class="row">
-                    <div class="col-lg-5 no-padding padding-min-col d-flex justify-content-center">
+                    <div class="col-lg-4 no-padding padding-min-col d-flex justify-content-center">
                       <div class="row">
                         <div class="col-lg-4">
                           <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
@@ -1193,7 +1194,7 @@
                     </div>
 
                     <div class="col-lg-6" style="padding-right: 35px;">
-                      <div class="table-r__quotes">
+                      <div class="table-r__quotes" style="display: flex; justify-content: flex-start">
                         @foreach($containers as $container)
                         <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate tot{{$container->code}}-{{$arr->id}}">{{$arr->{'totalT'.$container->code}  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
                         <input type='hidden' id='tot{{$container->code}}-{{$arr->id}}' value="{{$arr->{'totalT'.$container->code}  }}">
@@ -1203,7 +1204,7 @@
 
                       </div>
                     </div>
-                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
+                    <div class="col-lg-2 no-padding d-flex align-items-center justify-content-end pos-btn">
                       <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate checkboxx" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
