@@ -11,6 +11,7 @@ use GuzzleHttp\Message\Response;
 use App\Company;
 use App\Contact;
 use App\Jobs\SyncCompaniesJob;
+use App\Partner;
 
 class ApiIntegrationController extends Controller
 {
@@ -21,9 +22,9 @@ class ApiIntegrationController extends Controller
      */
     public function index()
     {
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
-
-        return view('api.index', compact('api'));
+        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->with('api_integration')->first();
+        $partners = Partner::pluck('name', 'id');
+        return view('api.index', compact('api', 'partners'));
     }
 
     /**
@@ -39,13 +40,13 @@ class ApiIntegrationController extends Controller
             $api->enable = $request->enable;
             $api->update();
         } else {
-            $api_int = new ApiIntegrationSetting();
-            $api_int->company_user_id = $request->company_user_id;
-            $api_int->enable = $request->enable;
-            $api_int->save();
+            $api = new ApiIntegrationSetting();
+            $api->company_user_id = $request->company_user_id;
+            $api->enable = $request->enable;
+            $api->save();
         }
 
-        return response()->json(['message' => 'Ok']);
+        return response()->json(['data' => $api]);
     }
 
     /**
@@ -66,13 +67,13 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        $api_int = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
-        $api_int->api_key = $request->api_key;
-        $api_int->key_name = $request->key_name;
-        $api_int->url = $request->url;
-        $api_int->update();
+        ApiIntegration::create($request->all());
 
-        return response()->json(['message' => 'Ok']);
+        $request->session()->flash('message.content', 'Record saved successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
     }
 
     /**
@@ -94,7 +95,9 @@ class ApiIntegrationController extends Controller
      */
     public function edit($id)
     {
-        //
+        return response()->json([
+            'data' => ApiIntegration::find($id)
+        ]);
     }
 
     /**
@@ -104,9 +107,17 @@ class ApiIntegrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $api = ApiIntegration::find($request->api_integration_id);
+
+        $api->update($request->all());
+
+        $request->session()->flash('message.content', 'Record updated successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
     }
 
     /**
@@ -117,89 +128,54 @@ class ApiIntegrationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $api = ApiIntegration::find($id)->delete();
+
+        return response()->json([
+            'message' => 'Ok'
+        ]);
     }
 
     public function getCompanies()
     {
-        $user = \Auth::user();
+        $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
+            $query->where('company_user_id', \Auth::user()->company_user_id);
+        })->with('partner')->first();
 
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
-        ]);
-
-        $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
         $setting->status = 1;
         $setting->save();
 
-        $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
+        $endpoint = $setting->url . "=" . $setting->api_key;
 
         try {
 
-            $response = $client->get($endpoint, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'X-Requested-With' => 'XMLHttpRequest',
-                ]
+            $client = new Client([
+                'verify' => false,
+                'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
             ]);
 
-            $api_response = json_decode($response->getBody());
+            $response = $client->get($endpoint);
 
-            SyncCompaniesJob::dispatch($api_response, $user);
+            $type = $response->getHeader('content-type');
+
+            $type = explode(';', $type[0]);
+
+            $api_response = $response->getBody()->getContents();
+
+            if ($type[1] == 'charset=iso-8859-1') {
+                $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
+            }
+
+            $result = json_decode($api_response, true);
+
+            SyncCompaniesJob::dispatch($result, \Auth::user(), $setting->partner);
 
             return response()->json(['message' => 'Ok']);
-            
+
         } catch (\Exception $e) {
             $setting->status = 0;
             $setting->save();
-            return "Error: " . $e;
+            return response()->json(['error' => $e->getCode()]);
         }
-    }
-
-    public function syncCompanies($response)
-    {
-        $i = 0;
-        foreach ($response->ent_m as $item) {
-            if ($item->es_emp) {
-
-                $exist_com = Company::where('business_name', $item->nom_com)->get();
-
-                if ($exist_com->count() == 0) {
-                    $company = new Company();
-                    $company->business_name = $item->nom_com;
-                    $company->phone = $item->tlf;
-                    $company->address = $item->address;
-                    $company->email = $item->eml;
-                    $company->company_user_id = \Auth::user()->company_user_id;
-                    $company->owner = \Auth::user()->id;
-                    $company->api_id = $item->id;
-                    $company->api_status = 'created';
-                    $company->save();
-
-                    /*$contacts = $this->getContacts($item->id);
-                
-                foreach($contacts->ent_rel_m as $v){
-                    $exist_cont = Contact::where('api_id',$item->ent_rel)->count();
-
-                    if($exist_cont==0){
-                        $contact = new Contact();
-                        $contact->first_name = $v->name;
-                        $contact->phone = $item->tlf;
-                        $contact->email = $item->eml;
-                        $contact->position = $v->dsc;
-                        $contact->company_id = $v->ent_rel;
-                        $contact->api_id = $v->ent_rel;
-                        $contact->save();
-                    }
-                }*/
-                }
-            }
-
-            $i++;
-        }
-
-        return 'Done';
     }
 
     public function getContacts($company_id)
