@@ -22,7 +22,7 @@ const router = new VueRouter({
     mode: 'history',
     routes: [
     	{
-    		path: '/api/v2/inlands/:id/edit',
+    		path: '/api/inlands/:id/edit',
     		name: 'Inlands'
     	}
     ],

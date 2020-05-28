@@ -37,7 +37,8 @@
                     <b-th>
                         <b-button v-bind:id="'popover_all'" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover_all'" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                            <button class="btn-action" v-on:click="onDeleteAll()">Delete</button>
+                            <button v-if="massiveactions.includes('delete')" class="btn-action" v-on:click="onDeleteAll()">Delete</button>
+                            <button v-if="massiveactions.includes('changecontainersview')" class="btn-action" v-on:click="onChangeContainersView()">Change View Container</button>
                         </b-popover>
                     </b-th>
                 </b-tr>
@@ -220,6 +221,11 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
+            },
+            massiveactions: {
+                type: Array,
+                required: false,
+                default: () => { return ['delete'] }
             },
             actions: Object,
             firstEmpty: {
@@ -450,6 +456,9 @@
                         return false;
                 }
                 return true;
+            },
+            onChangeContainersView(){
+                this.$emit('onChangeContainersView', true);
             }
         },
         watch: {

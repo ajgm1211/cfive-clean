@@ -19,6 +19,7 @@
                 :vdatalists="datalists"
                 :actions="actions"
                 @onEdit="onEdit"
+                :firstEmpty="false"
                 ></DataTable>
 
 
@@ -83,7 +84,7 @@
                     { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
                     { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
                     { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
-                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badges(value) } }, 
+                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgescarriers(value) } }, 
                     { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
                     { key: 'amount', label: 'Amount' }, 
                     { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } },
@@ -93,8 +94,8 @@
                 input_fields: {
                     typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
                     surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
-                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'dynamical_ports' },
-                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'dynamical_ports' },
+                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports' },
+                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports' },
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
@@ -105,6 +106,7 @@
             }
         },
         created() {
+            
         },
         methods: {
             /* Single Actions */
@@ -119,6 +121,20 @@
             },
 
             badges(value, color='primary'){
+                let carriers = "";
+
+                if(value){
+                    value.forEach(function(val){
+                        carriers += `<span class='badge badge-${color}'>${val.display_name}</span>`;
+                    });
+
+                    return carriers;
+                } else {
+                    return '-';
+                }
+
+            },
+            badgescarriers(value, color='primary'){
                 let carriers = "";
 
                 if(value){
