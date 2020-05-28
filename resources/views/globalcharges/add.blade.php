@@ -1,6 +1,6 @@
 <div class="m-portlet" style="box-shadow:none">
 
-  {!! Form::open(['route' => $route,'class' => 'form-group m-form__group','novalidate' => 'novalidate']) !!}
+  {!! Form::open(['route' => $route,'class' => 'form-group m-form__group']) !!}
 
 
   
