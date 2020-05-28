@@ -70,6 +70,8 @@ Route::group(['prefix' => 'v1'], function () {
         //Ports
         Route::get('ports', 'ApiController@ports');
         //Airports
-        Route::get('airports', 'ApiController@airports');    
+        Route::get('airports', 'ApiController@airports');
+        //Rates
+        Route::get('rates/nogroup/{code_origin}/{code_destination}/{inicio}/{fin}',['as' => 'search.index.v2', 'uses' => 'ApiController@searchV2']);
     });
 });
