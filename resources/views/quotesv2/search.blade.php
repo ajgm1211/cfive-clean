@@ -1708,8 +1708,12 @@
 
     $('#carrier_select').selectC5();
     $('#equipment').selectC5();
-    /*$('.c5-switch').prop('checked', true);
-    $('.c5-switch').trigger('change');*/
+    var data = '{{$allCarrier}}';
+    if(data==true){
+      $('.c5-switch').prop('checked', true);
+      $('.c5-switch').trigger('change');
+    }
+    
    
     
 

@@ -2432,10 +2432,11 @@ class QuoteV2Controller extends Controller
         $validateEquipment = $this->validateEquipment($form['equipment'], $containers);
         $containerType = $validateEquipment['gpId'];
         $carriersSelected = $carrierMan;
+        $allCarrier =true;
         
         //dd($carriersSelected);
 
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','carriersSelected'));
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','carriersSelected','allCarrier'));
     }
 
     /**
@@ -2446,6 +2447,7 @@ class QuoteV2Controller extends Controller
 
     public function processSearch(Request $request)
     {
+        $allCarrier =false;
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
@@ -3109,12 +3111,18 @@ class QuoteV2Controller extends Controller
                 $collectionRate->push($array);
 
                 // SCHEDULE TYPE
-                if ($data->schedule_type_id != null) {
+
+                //$trann = $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
+
+
+
+
+               /* if ($data->schedule_type_id != null) {
                     $sheduleType = ScheduleType::find($data->schedule_type_id);
                     $data->setAttribute('sheduleType', $sheduleType->name);
                 } else {
                     $data->setAttribute('sheduleType', null);
-                }
+                }*/
                 //remarks
                 $typeMode = $request->input('mode');
                 $remarks = "";
@@ -3231,7 +3239,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
         $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF', 'containerType', 'carriersSelected','equipment')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF', 'containerType', 'carriersSelected','equipment','allCarrier')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
