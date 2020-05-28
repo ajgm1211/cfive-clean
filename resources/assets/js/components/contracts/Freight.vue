@@ -27,7 +27,7 @@
         </b-card>
 
         <!-- Edit Form -->
-        <b-modal id="editOFreight" size="lg" cancel-title="Cancel" ok-title="Add Contract" hide-header-close title="Update Ocean Freight" hide-footer>
+        <b-modal id="editOFreight" size="lg" cancel-title="Cancel" hide-header-close title="Add Ocean Freight" hide-footer>
             <FormView 
                 :data="currentData" 
                 :fields="form_fields"
@@ -43,7 +43,7 @@
         <!-- End Edit Form -->
 
         <!-- Create Form -->
-        <b-modal id="addOFreight" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
+        <b-modal id="addOFreight" size="lg" hide-header-close title="Update Ocean Freight" hide-footer>
             <FormView 
                 :data="{}" 
                 :fields="form_fields"
@@ -81,8 +81,8 @@
 
                 /* Table headers */
                 fields: [ 
-                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return value.name } }, 
-                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return value.name } }, 
+                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return value.display_name } }, 
+                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return value.display_name } }, 
                     { key: 'carrier', label: 'Carrier', formatter: (value)=> { return value.name } }, 
                     { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } }
                 ],
@@ -94,7 +94,7 @@
                         searchable: true, 
                         type: 'select', 
                         rules: 'required', 
-                        trackby: 'name', 
+                        trackby: 'display_name', 
                         placeholder: 'Select Origin Port', 
                         options: 'harbors' 
                     },
@@ -103,7 +103,7 @@
                         searchable: true, 
                         type: 'select', 
                         rules: 'required', 
-                        trackby: 'name', 
+                        trackby: 'display_name', 
                         placeholder: 'Select Destination Port', 
                         options: 'harbors' 
                     },
