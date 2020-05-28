@@ -3110,19 +3110,15 @@ class QuoteV2Controller extends Controller
                 $array = array_merge($array, $arregloRateSave);
                 $collectionRate->push($array);
 
-                // SCHEDULE TYPE
+                // SCHEDULE 
 
-                //$trann = $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
+                $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id,$data->contract->status);
 
+                
+                $data->setAttribute('via', $transit_time['via']);
+                $data->setAttribute('transit_time', $transit_time['transit_time']);
+                $data->setAttribute('service', $transit_time['service']);
 
-
-
-               /* if ($data->schedule_type_id != null) {
-                    $sheduleType = ScheduleType::find($data->schedule_type_id);
-                    $data->setAttribute('sheduleType', $sheduleType->name);
-                } else {
-                    $data->setAttribute('sheduleType', null);
-                }*/
                 //remarks
                 $typeMode = $request->input('mode');
                 $remarks = "";
