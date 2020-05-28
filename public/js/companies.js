@@ -375,6 +375,23 @@ $(document).on('click', '#syncCompanies', function(e) {
     });
 });
 
+$(document).on('click', '#add_extra_field', function(e) {
+    e.preventDefault();
+    $("#hide_extra_field").append('a');
+
+});
+
+//Functions
+
+function addOriginCharge() {
+    var $template = $('#hide_extra_field'),
+        $clone = $template
+        .clone()
+        .removeClass('hide')
+        .removeAttr('id')
+        .insertAfter($template);
+}
+
 function msg(message, type) {
     switch (type) {
         case "error":
