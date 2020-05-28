@@ -1166,10 +1166,23 @@
                           <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                         </div>
                         <div class="col-lg-4 d-flex flex-column justify-content-center">
+                        @if($arr->service != '')
+                              {{$arr->service}} 
+
+                          @endif
+                          @if($arr->via != '')
+                              Via : <br> {{$arr->via}} 
+
+                          @endif
                           <div class="progress m-progress--sm">
                             <div class="progress-bar {{ $arr->color }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
-                          Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                          @if($arr->transit_time != '')
+                              Transit : <br> {{$arr->transit_time}} Days
+
+                          @endif
+                          
+                          
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column">
                           <span class="portcss"> {{$arr->port_destiny->name  }}</span>
@@ -1225,16 +1238,20 @@
                         @endif
 
                         @if(isset($arr->sheduleType))
-                        <div class="col-lg-2 d-flex align-items-center">
+                        <!--<div class="col-lg-2 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:5px;">Schedule Type: </span> {{ $arr->sheduleType  }}
                         </div>
                         <div class="col-lg-1 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap">  TT:  </span>  {{ $arr->transit_time   }}
                         </div>
                         <div class="col-lg-2 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
-                        </div>
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> > Via: </span> {{  $arr->via }}
+                        </div>-->
                         @endif
+                        <div class="col-lg-2 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;">Contract: </span>  {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                        </div>
+                       
                         <div class="col-lg-2 no-padding d-flex justify-content-end align-items-center">
                           @if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") || ($arr->totalItems !="0") )
                           <div class="downexcel" style="margin-right: 10px;">
