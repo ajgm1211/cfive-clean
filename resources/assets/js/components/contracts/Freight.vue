@@ -27,7 +27,7 @@
         </b-card>
 
         <!-- Edit Form -->
-        <b-modal id="editOFreight" size="lg" cancel-title="Cancel" ok-title="Add Contract" hide-header-close title="Update Ocean Freight" hide-footer>
+        <b-modal id="editOFreight" size="lg" cancel-title="Cancel" hide-header-close title="Add Ocean Freight" hide-footer>
             <FormView 
                 :data="currentData" 
                 :fields="form_fields"
@@ -43,7 +43,7 @@
         <!-- End Edit Form -->
 
         <!-- Create Form -->
-        <b-modal id="addOFreight" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
+        <b-modal id="addOFreight" size="lg" hide-header-close title="Update Ocean Freight" hide-footer>
             <FormView 
                 :data="{}" 
                 :fields="form_fields"
