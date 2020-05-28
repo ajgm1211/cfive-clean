@@ -43,6 +43,9 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
 Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
     Route::post('store', 'ApiIntegrationController@store')->name('api.store');
+    Route::get('edit/{id}', 'ApiIntegrationController@edit')->name('api.edit');
+    Route::put('update', 'ApiIntegrationController@update')->name('api.update');
+    Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
@@ -1009,9 +1012,18 @@ Route::prefix('Container')->group(function () {
 
 /** Contracts V2 view routes **/
 Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
-Route::get('api/contracts/create', 'ContractController@create')->name('new.contracts.create');
 Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit');
 /** End Contracts routes view **/
+
+/** Inlands V2 view routes **/
+Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+Route::get('api/inlands/{inland}/edit', 'InlandController@edit')->name('inlands.edit');
+/** End Inlands routes view **/
+
+/** Inlands V2 view routes **/
+Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index');
+/** End Inlands routes view **/
+
 
 /*****************************************************************************************
 **                                      API ENDPOINTS                                   **
@@ -1067,21 +1079,69 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
 
 });
 
+
+
+/** Inland V2 routes **/
+Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function () {
+     
+    /** API Inlands endpoint (Pending to check) **/
+    Route::get('', 'InlandController@list');
+    Route::get('data', 'InlandController@data');
+    Route::post('store', 'InlandController@store');
+    Route::get('{inland}', 'InlandController@retrieve');
+    Route::post('{inland}/update', 'InlandController@update');
+    Route::post('{inland}/duplicate', 'InlandController@duplicate');
+    Route::delete('{inland}/destroy', 'InlandController@destroy');
+    Route::post('destroyAll', 'InlandController@destroyAll');
+
+    /** API Inland Range EndPoints **/
+    Route::get('{inland}/range', 'InlandRangeController@list');
+    Route::post('{inland}/range/store', 'InlandRangeController@store');
+    Route::post('{inland}/range/{range}/update', 'InlandRangeController@update');
+    Route::get('{inland}/range/{range}', 'InlandRangeController@retrieve');
+    Route::post('range/{range}/duplicate', 'InlandRangeController@duplicate');
+    Route::delete('range/{range}/destroy', 'InlandRangeController@destroy');
+    Route::post('range/destroyAll', 'InlandRangeController@destroyAll');
+    /** End API Inland Range EndPoints **/
+
+    /** API Inland Km EndPoints **/
+    Route::get('{inland}/km', 'InlandKmController@list');
+    Route::post('{inland}/km/store', 'InlandKmController@store');
+    Route::post('{inland}/km/{km}/update', 'InlandKmController@update');
+    Route::get('{inland}/km/{km}', 'InlandKmController@retrieve');
+    Route::post('km/{km}/duplicate', 'InlandKmController@duplicate');
+    Route::delete('km/{km}/destroy', 'InlandKmController@destroy');
+    Route::post('km/destroyAll', 'InlandKmController@destroyAll');
+    /** End API Inland Km EndPoints **/
+
+    /**
+    Route::get('groupc/{inland}', 'InlandController@groupInlandContainer');
+      // INLAND RANGE 
+    Route::get('range/{inland}', 'InlandKmController@list');
+    Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');**/
+    /** End inlands endpoint (Pending to check) **/
+});
+
+/** Transit Time V2 routes **/
+Route::group(['prefix' => 'api/v2/transit_time'], function () {
+     
+    /** API Transit Time EndPoints **/
+    Route::get('', 'TransitTimeController@list');
+    Route::get('data', 'TransitTimeController@data');
+    Route::post('/store', 'TransitTimeController@store');
+    Route::post('/{transit_time}/update', 'TransitTimeController@update');
+    Route::get('/{transit_time}', 'TransitTimeController@retrieve');
+    Route::delete('/{transit_time}/destroy', 'TransitTimeController@destroy');
+    Route::post('/destroyAll', 'TransitTimeController@destroyAll');
+    /** End API Transit Time EndPoints **/
+
+});
+
 /*****************************************************************************************
 **                                   END API ENDPOINTS                                   **
 *****************************************************************************************/
 
-/** Inland V2 routes **/
-Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function () {
-    Route::get('list', 'InlandController@list');
-    Route::get('data', 'InlandController@data');
-    Route::get('retrieve/{inland}', 'InlandController@retrieve');
-    Route::get('groupc/{inland}', 'InlandController@groupInlandContainer');
-      // INLAND RANGE 
-    Route::get('range/{inland}', 'InlandRangeController@list');
-    Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');
-});
-Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
+//Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 
 /*
 Route::get('api/inlands', 'InlandController@index');
