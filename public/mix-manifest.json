@@ -4,5 +4,6 @@
     "/js/inlands/edit.js": "/js/inlands/edit.js",
     "/js/contracts/index.js": "/js/contracts/index.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/js/transit_time/index.js": "/js/transit_time/index.js"
 }
