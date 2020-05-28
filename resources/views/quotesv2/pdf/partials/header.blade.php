@@ -19,16 +19,16 @@
             </div>
             <div id="company">
                 <div>
-                    <span class="color-title"><b>@if($quote->pdf_option->language=='English')Quotation Id:@elseif($quote->pdf_option->language=='Spanish') Cotización: @else Numero de cotação: @endif</b></span> 
+                <span class="color-title"><b>{{__('pdf.quote_id')}}:</b></span> 
                     <span style="color: #20A7EE"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
                 </div>
                 <div>
-                    <span class="color-title"><b>@if($quote->pdf_option->language=='English')Date of issue:@elseif($quote->pdf_option->language=='Spanish') Fecha creación: @else Data de emissão: @endif</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}
+                    <span class="color-title"><b>{{__('pdf.date_issue')}}:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}
                 </div>
-                @if($quote->validity_start!=''&&$quote->validity_end!='')
-                <div>
-                    <span class="color-title"><b>@if($quote->pdf_option->language=='English')Validity:@elseif($quote->pdf_option->language=='Spanish') Validez: @else Validade: @endif </b></span>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}
-                </div>
+                @if($quote->validity_start!='' && $quote->validity_end!='')
+                    <div>
+                        <span class="color-title"><b>{{__('pdf.validity')}}:</b></span> {{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}
+                    </div>
                 @endif
             </div>
             <hr>

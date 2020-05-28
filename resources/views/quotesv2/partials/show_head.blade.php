@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left" role="tablist" style="border-bottom: none;">
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             <li class="nav-item m-tabs__item size-14px" >
-                <a  href="javascript:history.back()" class="btn-backto"><span class="fa fa-arrow-left"></span> Back to search</a>
+                <a  href="javascript:history.back()" class="btn-backto"><span class="fa fa-arrow-left"></span> Back</a>
             </li>                    
         </ul>                
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
@@ -15,24 +15,24 @@
             </li>
             <li class="nav-item m-tabs__item" >
                 @if($quote->type=='FCL')
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @elseif($quote->type=='LCL')
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @else
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.air',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.air',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @endif
             </li>
-            <li class="nav-item m-tabs__item" >
+            <!--<li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.cost.page',setearRouteKey($quote->id))}}">
                     Excel &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
                 </a>
-            </li>
+            </li>-->
             <li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}">
                     Duplicate &nbsp;&nbsp;<i class="fa fa-plus"></i>
@@ -68,7 +68,7 @@
                     <div class="row quote-info-mb">
                         <div class="col-md-4">
                             <input type="text" value="{{$quote->id}}" class="form-control id" hidden >
-                            <input type="text" id="currency_id" value="{{$currency_cfg->alphacode}}" class="form-control id" hidden >
+                            <input type="text" id="currency_id" value="{{$company_user->currency->alphacode}}" class="form-control id" hidden >
                             <label class="title-quote"><b>Quotation ID:&nbsp;&nbsp;</b></label>
                             <input type="text" value="{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}" class="form-control quote_id" hidden >
                             <span class="quote_id_span">{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</span>
@@ -90,8 +90,8 @@
                         <div class="col-md-4">
                             <br>
                             <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
-                            {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
-                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
+                            {{ Form::select('status',['Draft'=>'Draft','Winner'=>'Winner','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
+                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status!='' ? $quote->status:'Winner' }} <i class="fa fa-check"></i></span>
                         </div>
                         @if($quote->type!='AIR')
                         <div class="col-md-4">
@@ -167,16 +167,22 @@
                             <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                             <span class="equipment_span">
                                 @if($quote->type=='FCL')
-                                @if($quote->equipment!='')
-                                <?php
-                                $equipment=json_decode($quote->equipment);
-                                ?>
-                                @foreach($equipment as $item)
-                                {{$item}}@unless($loop->last),@endunless
-                                @endforeach
-                                @endif
+                                    @if($quote->equipment!='')
+                                        <?php
+                                            $equipment=json_decode($quote->equipment);
+                                        ?>
+                                        @foreach ($equipmentHides as $key=>$hide)
+                                            @if($hide != 'hidden')
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+                                                        {{$key}}
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @else
-                                N/A
+                                    N/A
                                 @endif
                             </span>
                             {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
@@ -316,11 +322,11 @@
                 <br>
                 <div class="row ">
                     @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
-                    <div class="col-md-6 ">
-                        <b>Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
-                    </div>
+                        <div class="col-md-6 ">
+                            <b>Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
+                        </div>
                     @else
-                    <div class="col-md-6 "></div>
+                        <div class="col-md-6 "></div>
                     @endif
                     <div class="col-md-6 ">
                         <span class="pull-right">
@@ -329,29 +335,36 @@
                     </div>
                 </div>
                 @else
-                @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                <div class="row">
-                    <div class="col-md-2">
-                        <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                    @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_quantity" data-value="{{$quote->total_quantity}}" data-pk="{{@$quote->id}}" data-title="Total Quantity"></a></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="cargo_details_total_weight_p"><b>Total weight: </b> <a href="#" class="editable-quote-weight" data-type="text" data-name="total_weight" data-value="{{$quote->total_weight}}" data-pk="{{@$quote->id}}" data-title="Total Weight" id="total-weight"></a> kg</div>
+                        </div>
+                        <div class="col-md-2">
+                            <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-volume" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume" id="total-volume"></a> m<sup>3</sup></p>
+                        </div>
+                        <div class="col-md-2">
+                            <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> m<sup>3</sup></p>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_quantity" data-value="{{$quote->total_quantity}}" data-pk="{{@$quote->id}}" data-title="Total Quantity"></a></div>
-                    </div>
-                    <div class="col-md-2">
-                        <div id="cargo_details_total_weight_p"><b>Total weight: </b> <a href="#" class="editable-quote-weight" data-type="text" data-name="total_weight" data-value="{{$quote->total_weight}}" data-pk="{{@$quote->id}}" data-title="Total Weight" id="total-weight"></a> kg</div>
-                    </div>
-                    <div class="col-md-2">
-                        <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-volume" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume" id="total-volume"></a> m<sup>3</sup></p>
-                    </div>
-                    <div class="col-md-2">
-                        <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> m<sup>3</sup></p>
-                    </div>
-                </div>
-                @endif
+                    @endif
                 @endif
             </div>
         </div>
     </div>
 </div>
 @endif
-
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary-v2 btn-edit pull-right" data-toggle="modal" data-target="#createRateModal">
+            Add rate &nbsp;&nbsp;<i class="fa fa-plus"></i>
+        </button>
+    </div>
+</div>
+<br>

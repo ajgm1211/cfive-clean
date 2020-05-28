@@ -1,8 +1,6 @@
         <div id="details" class="clearfix details">
             <div class="client" style="line-height: 10px; width:300px;">
-                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>From:</p>
-                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
-                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
+                <p class="title">{{__('pdf.from')}}:</p>
                 <span id="destination_input" style="line-height: 0.5">
                     <p style="line-height:10px;">{{$quote->user->name}} {{$quote->user->lastname}}</p>
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
@@ -13,9 +11,7 @@
             </div>
             <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
                 @if($quote->company_id!='')
-                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>To:</p>
-                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Para:</b></p>
-                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
+                <p class="title">{{__('pdf.to')}}:</p>
                 @endif
                 <span id="destination_input" style="line-height: 0.5">
                     @if($quote->pdf_option->show_logo==1)
@@ -42,34 +38,32 @@
         @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
             <div style="margin-top: 25px;">
                 @if($quote->incoterm_id!='')<p><span class="title" >Incoterm: </span>{{$quote->incoterm->name}}</p>@endif
-                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Risk level:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
-                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nivel de riesgo:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
-                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nível de risco:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
+                <p>@if($quote->kind_of_cargo!='')<span class="title" >{{__('pdf.kind_cargo')}}:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >{{__('pdf.commodity')}}:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >{{__('pdf.risk_level')}}:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
             </div>
         @endif      
         <br>
         @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
             <div>
-                @if($quote->origin_address!='')<p><span class="title" >Origin Address: </span>{{@$quote->origin_address}}</p>@endif
-                @if($quote->destination_address!='')<p><span class="title" >Destination Address: </span>{{@$quote->destination_address}}</p>@endif
+                @if($quote->origin_address!='')<p><span class="title" >{{__('pdf.origin_address')}}: </span>{{@$quote->origin_address}}</p>@endif
+                @if($quote->destination_address!='')<p><span class="title" >{{__('pdf.destination_address')}}: </span>{{@$quote->destination_address}}</p>@endif
             </div>
         @endif
         <br>
         <div class="company" style="color: #1D3A6E;">
-            <p class="title"><b>Cargo details</b></p>
+            <p class="title"><b>{{__('pdf.cargo_details')}}</b></p>
             <br>
             @if(!empty($package_loads) && count($package_loads)>0)
                 <table border="0" cellspacing="1" cellpadding="1">
                   <thead class="title-quote text-center header-table">
                     <tr>
-                        <th class="unit"><b>Cargo type</b></th>
-                        <th class="unit"><b>Quantity</b></th>
-                        <th class="unit"><b>Height</b></th>
-                        <th class="unit"><b>Width</b></th>
-                        <th class="unit"><b>Large</b></th>
-                        <th class="unit"><b>Weight</b></th>
-                        <th class="unit"><b>Total weight</b></th>
-                        <th class="unit"><b>Volume</b></th>
+                        <th class="unit"><b>{{__('pdf.cargo_type')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.quantity')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.height')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.width')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.large')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.weight')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.total_weight')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.volume')}}</b></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -90,13 +84,13 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12 pull-right">
-                        <b class="title">Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                        <b class="title">{{__('pdf.total')}}:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
                     </div>
                 </div>
                 @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
                   <div class="row">
                       <div class="col-md-12 ">
-                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
+                          <b class="title">{{__('pdf.chargeable_weight')}}:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
                       </div>
                   </div>
                 @endif
@@ -104,19 +98,11 @@
                 <table border="0" cellspacing="1" cellpadding="1">
                   <thead class="title-quote text-center header-table">
                     <tr>
-                        <th class="unit"><b>Cargo type</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total quantity</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Cantidad total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Quantidade total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total weight</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Peso total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Peso total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total volume</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Volumen total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Volume total</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Chargeable weight</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Peso tasable</b></th>
-                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Peso carregável</b></th>
+                        <th class="unit"><b>{{__('pdf.cargo_type')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.total_quantity')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.total_weight')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.total_volume')}}</b></th>
+                        <th class="unit"><b>{{__('pdf.chargeable_weight')}}</b></th>
                     </tr>
                   </thead>
                   <tbody>
