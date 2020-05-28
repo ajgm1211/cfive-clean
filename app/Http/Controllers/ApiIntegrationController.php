@@ -12,6 +12,7 @@ use App\Company;
 use App\Contact;
 use App\Jobs\SyncCompaniesJob;
 use App\Partner;
+use App\Http\Requests\StoreApiIntegration;
 
 class ApiIntegrationController extends Controller
 {
@@ -65,7 +66,7 @@ class ApiIntegrationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreApiIntegration $request)
     {
         ApiIntegration::create($request->all());
 
