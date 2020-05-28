@@ -1020,6 +1020,10 @@ Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
 Route::get('api/inlands/{inland}/edit', 'InlandController@edit')->name('inlands.edit');
 /** End Inlands routes view **/
 
+/** Inlands V2 view routes **/
+Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index');
+/** End Inlands routes view **/
+
 
 /*****************************************************************************************
 **                                      API ENDPOINTS                                   **
@@ -1116,6 +1120,21 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::get('range/{inland}', 'InlandKmController@list');
     Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');**/
     /** End inlands endpoint (Pending to check) **/
+});
+
+/** Transit Time V2 routes **/
+Route::group(['prefix' => 'api/v2/transit_time'], function () {
+     
+    /** API Transit Time EndPoints **/
+    Route::get('', 'TransitTimeController@list');
+    Route::get('data', 'TransitTimeController@data');
+    Route::post('/store', 'TransitTimeController@store');
+    Route::post('/{transit_time}/update', 'TransitTimeController@update');
+    Route::get('/{transit_time}', 'TransitTimeController@retrieve');
+    Route::delete('/{transit_time}/destroy', 'TransitTimeController@destroy');
+    Route::post('/destroyAll', 'TransitTimeController@destroyAll');
+    /** End API Transit Time EndPoints **/
+
 });
 
 /*****************************************************************************************
