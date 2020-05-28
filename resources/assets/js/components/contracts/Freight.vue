@@ -81,8 +81,8 @@
 
                 /* Table headers */
                 fields: [ 
-                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return value.name } }, 
-                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return value.name } }, 
+                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return value.display_name } }, 
+                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return value.display_name } }, 
                     { key: 'carrier', label: 'Carrier', formatter: (value)=> { return value.name } }, 
                     { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } }
                 ],
@@ -94,7 +94,7 @@
                         searchable: true, 
                         type: 'select', 
                         rules: 'required', 
-                        trackby: 'name', 
+                        trackby: 'display_name', 
                         placeholder: 'Select Origin Port', 
                         options: 'harbors' 
                     },
@@ -103,7 +103,7 @@
                         searchable: true, 
                         type: 'select', 
                         rules: 'required', 
-                        trackby: 'name', 
+                        trackby: 'display_name', 
                         placeholder: 'Select Destination Port', 
                         options: 'harbors' 
                     },
