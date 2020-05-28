@@ -10,6 +10,9 @@ use App\QuoteV2;
 use App\AutomaticRate;
 use App\CompanyUser;
 use App\Currency;
+use App\Container;
+use App\SaleTermV2;
+use App\Harbor;
 use App\Http\Traits\QuoteV2Trait;
 
 class ExcelController extends Controller
@@ -23,10 +26,37 @@ class ExcelController extends Controller
      */
     public function costPageQuote($id)
     {
-        $id = obtenerRouteKey($id);
+        $quote = QuoteV2::whereHas('rates_v2', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->with(['rates_v2' => function ($q) use ($id) {
+            $q->where('id', $id);
+        }])->first();
 
-        $quote = QuoteV2::findOrFail($id);
-        $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
+        $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
+
+        $sale_terms_destination = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
+
+        $containers = Container::all();
+
+        $company_user = CompanyUser::find(\Auth::user()->company_user_id);
+
+        $sale_terms_origin = $this->processSaleTerms($sale_terms_origin, $quote, $company_user, 'origin');
+
+        $sale_terms_destination = $this->processSaleTerms($sale_terms_destination, $quote, $company_user, 'destination');
+
+        $origin_sales = $sale_terms_origin->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $destination_sales = $sale_terms_destination->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
         $spreadsheet = new Spreadsheet();
 
@@ -36,7 +66,9 @@ class ExcelController extends Controller
 
         $spreadsheet->removeSheetByIndex($sheetIndex);
 
-        foreach($rates as $key=>$item){
+        $rates = $quote->rates_v2;
+
+        foreach ($rates as $key => $item) {
             // Create a new worksheet called "My Data"
             $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, @$item->carrier->name);
 
@@ -55,7 +87,7 @@ class ExcelController extends Controller
             ];
 
             $spreadsheet->getSheet($key)->getColumnDimension('A')->setWidth(3);
-            $spreadsheet->getSheet($key)->getColumnDimension('B')->setWidth(17);
+            $spreadsheet->getSheet($key)->getColumnDimension('B')->setWidth(20);
             $spreadsheet->getSheet($key)->getColumnDimension('C')->setWidth(20);
             $spreadsheet->getSheet($key)->getColumnDimension('F')->setWidth(15);
             $spreadsheet->getSheet($key)->getColumnDimension('G')->setWidth(14);
@@ -75,7 +107,7 @@ class ExcelController extends Controller
             $sheet->setCellValue('G9', 'Fecha:');
             $sheet->setCellValue('H9', date('d-m-Y', strtotime($quote->date_issued)));
             $sheet->setCellValue('G10', 'Referencia:');
-            $sheet->setCellValue('H10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
+            $sheet->setCellValue('H10', $quote->custom_quote_id != '' ? $quote->custom_quote_id : $quote->quote_id);
 
             $sheet->setCellValue('A13', '2)');
             $sheet->setCellValue('B13', 'Crédito:');
@@ -91,49 +123,50 @@ class ExcelController extends Controller
             $sheet->setCellValue('H15', $quote->type);
 
             //Set equipments
-            $equipments = array();
             $json_equipment = json_decode($quote->equipment);
             $str = null;
-            foreach($json_equipment as $value){
-                if ($value !== end($json_equipment)) {
-                    $str .= $value.', ';
-                }else{
-                    $str .= $value;
+            foreach ($equipmentHides as $k => $hide) {
+                if ($hide != 'hidden') {
+                    foreach ($containers as $c) {
+                        if ($c->code == $k) {
+                            $str .= $k . ' ';
+                        }
+                    }
                 }
             }
 
             $sheet->setCellValue('G16', 'Mercancía:');
             $sheet->setCellValue('H16', '');
             $sheet->setCellValue('G17', 'Tipo de CNTR:');
-            $sheet->setCellValue('H17', $str);
+            $sheet->setCellValue('H17', $quote->type == 'FCL' ? $str : 'N/A');
             $sheet->setCellValue('G18', 'Otro:');
 
             $sheet->setCellValue('A19', '4)');
             $sheet->setCellValue('B19', 'Cantidad:');
-            $sheet->setCellValue('C19', $quote->type=='FCL' ? 'N/A':$quote->total_quantity);
+            $sheet->setCellValue('C19', $quote->type == 'FCL' ? 'N/A' : $quote->total_quantity);
 
             $sheet->setCellValue('B20', 'Dimensiones:');
-            $sheet->setCellValue('C20', $quote->type=='FCL' ? 'N/A':@$quote->packing_load->height.' x '.@$quote->packing_load->width.' x '.@$quote->packing_load->large);
+            $sheet->setCellValue('C20', $quote->type == 'FCL' ? 'N/A' : @$quote->packing_load->height . ' x ' . @$quote->packing_load->width . ' x ' . @$quote->packing_load->large);
 
             $sheet->setCellValue('B21', 'Peso Bruto:');
-            $sheet->setCellValue('C21', $quote->type=='FCL' ? 'N/A':$quote->total_weight.' Kg');
+            $sheet->setCellValue('C21', $quote->type == 'FCL' ? 'N/A' : $quote->total_weight . ' Kg');
 
             $sheet->setCellValue('B22', 'Volumen:');
-            $sheet->setCellValue('C22', $quote->type=='FCL' ? 'N/A':$quote->total_volume.' m3');
+            $sheet->setCellValue('C22', $quote->type == 'FCL' ? 'N/A' : $quote->total_volume . ' m3');
 
             $sheet->setCellValue('A24', '7)');
             $sheet->setCellValue('B24', 'POL:');
-            $sheet->setCellValue('C24', $item->origin_port->name.', '.$item->origin_port->code);
+            $sheet->setCellValue('C24', $item->origin_port->name . ', ' . $item->origin_port->code);
 
             $sheet->setCellValue('B25', 'POD:');
-            $sheet->setCellValue('C25', $item->destination_port->name.', '.$item->destination_port->code);
+            $sheet->setCellValue('C25', $item->destination_port->name . ', ' . $item->destination_port->code);
 
             $sheet->setCellValue('A27', '8)');
             $sheet->setCellValue('B27', 'Dirección de recolección:');
-            $sheet->setCellValue('C27', $item->origin_address);
+            $sheet->setCellValue('C27', $quote->origin_address);
 
             $sheet->setCellValue('B28', 'Dirección de entrega:');
-            $sheet->setCellValue('C28', $item->destination_address);
+            $sheet->setCellValue('C28', $quote->destination_address);
 
             $sheet->setCellValue('B29', 'Proveedor terrestre:');
             $sheet->setCellValue('C29', '');
@@ -177,95 +210,186 @@ class ExcelController extends Controller
             $sheet->setCellValue('C38', '');
 
             //Table
-            $sheet->setCellValue('E40', 'DESGLOSE DE CARGOS');
+            $sheet->setCellValue('B40', 'DESGLOSE DE CARGOS');
 
-            $sheet->setCellValue('B41', 'ID');
-            $sheet->setCellValue('C41', 'Concepto');
-            $sheet->setCellValue('D41', 'Costo');
-            $sheet->setCellValue('F41', 'Moneda');
-            $sheet->setCellValue('E41', 'Unidad');
-            $sheet->setCellValue('G41', 'Venta');
-            $sheet->setCellValue('H41', 'Moneda');
-            $sheet->setCellValue('I41', 'Unidad');
-            $sheet->setCellValue('J41', 'CC/PP');
-
-            $i=42;
-            if($quote->type=='LCL' || $quote->type=='AIR'){
-                foreach($item->charge_lcl_air as $charge){
-                    $sheet->setCellValue('B'.$i, $charge->id);
-                    if($charge->surcharge_id==''){
-                        $sheet->setCellValue('C'.$i, 'Ocean freight');  
-                    }else{
-                        $sheet->setCellValue('C'.$i, @$charge->surcharge->name);   
+            $sheet->setCellValue('B41', 'Cargo');
+            $sheet->setCellValue('C41', 'Detalle');
+            if ($quote->type == 'FCL') {
+                $col = 'D';
+                $spreadsheet->getSheet($key)->getStyle($col . '41')->applyFromArray($styleArray);
+                foreach ($equipmentHides as $k => $hide) {
+                    foreach ($containers as $c) {
+                        if ($c->code == $k && $hide == "") {
+                            $sheet->setCellValue($col++ . '41', $k);
+                            $spreadsheet->getSheet($key)->getStyle($col . '41')->applyFromArray($styleArray);
+                        }
                     }
-                    $sheet->setCellValue('D'.$i, $charge->price_per_unit);
-                    $sheet->setCellValue('F'.$i, $charge->currency->alphacode);
-                    $sheet->setCellValue('J'.$i, 'PP');
+                }
+                $sheet->setCellValue($col . '41', 'Moneda');
+            } else {
+                $sheet->setCellValue('D41', 'Unidades');
+                $sheet->setCellValue('E41', 'Precio');
+                $sheet->setCellValue('F41', 'Total');
+                $sheet->setCellValue('G41', 'Moneda');
+                $spreadsheet->getSheet($key)->getStyle('D41')->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('E41')->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('F41')->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('G41')->applyFromArray($styleArray);
+            }
+
+            $i = 42;
+            
+            if ($quote->type == 'LCL' || $quote->type == 'AIR') {
+                foreach ($item->charge_lcl_air as $charge) {
+                    $type = $this->getAmountType($charge->type_id);
+                    $sheet->setCellValue('B' . $i, $type);
+                    if ($charge->surcharge_id == '') {
+                        $sheet->setCellValue('C' . $i, 'Ocean freight');
+                    } else {
+                        $sheet->setCellValue('C' . $i, @$charge->surcharge->name);
+                    }
+                    $sheet->setCellValue('D' . $i, $charge->units);
+                    $sheet->setCellValue('E' . $i, (($charge->units * $charge->price_per_unit) + $charge->markup) / $charge->units);
+                    $sheet->setCellValue('F' . $i, ($charge->units * $charge->price_per_unit) + $charge->markup);
+                    $sheet->setCellValue('G' . $i, $charge->currency->alphacode);
+                    $spreadsheet->getSheet($key)->getStyle('D' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('E' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('F' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('G' . $i)->applyFromArray($styleArray);
                     $i++;
                 }
-            }else{
-                $this->calculateFcl($item);
+            } else {
 
-                foreach($item->charge as $charge){
+                $this->calculateFcl($item, $containers);
+                
+                foreach ($item->charge as $charge) {
 
-                    $sum20 = 0;
-                    $sum40 = 0;
-                    $sum40hc = 0;
-                    $sum40nor = 0;
-                    $sum45 = 0;
-                    $sum_m20 = 0;
-                    $sum_m40 = 0;
-                    $sum_m40hc = 0;
-                    $sum_m40nor = 0;
-                    $sum_m45 = 0;
+                    $col_amount = 'D';
+                    $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
 
-                    $amounts = json_decode($charge->amount,true);
-                    $markups = json_decode($charge->markups,true);
-                    //dd($amounts);
-                    if(isset($amounts['c20'])){
-                        $sum20+=$charge->total_20;
-                    }
-                    if(isset($amounts['c40'])){
-                        $sum40+=@$charge->total_40;
-                    }
-                    if(isset($amounts['c40hc'])){
-                        $sum40hc+=@$charge->total_40hc;
-                    }
-                    if(isset($amounts['c40nor'])){
-                        $sum40nor+=@$charge->total_40nor;
-                    }
-                    if(isset($amounts['c45'])){
-                        $sum45+=@$charge->total_45;
+                    foreach ($containers as $c) {
+                        ${'sum_' . $c->code} = 0;
+                        ${'sum_m' . $c->code} = 0;
+                        $total = 0;
+                        $total_m = 0;
                     }
 
-                    if(isset($markups['m20'])){
-                        $sum_m20+=$charge->total_markup20;
-                    }
-                    if(isset($markups['m40'])){
-                        $sum_m40+=@$charge->total_markup40;
-                    }
-                    if(isset($markups['m40hc'])){
-                        $sum_m40hc+=@$charge->total_markup40hc;
-                    }
-                    if(isset($markups['m40nor'])){
-                        $sum_m40nor+=@$charge->total_markup40nor;
-                    }
-                    if(isset($markups['m45'])){
-                        $sum_m45+=@$charge->total_markup45;
+                    $amounts = json_decode($charge->amount, true);
+                    $markups = json_decode($charge->markups, true);
+
+                    $amounts = $this->processOldContainers($amounts, 'amounts');
+                    $markups = $this->processOldContainers($markups, 'markups');
+
+                    foreach ($containers as $c) {
+                        if (isset($amounts['c' . $c->code])) {
+                            ${'sum_' . $c->code} += @$charge->${'total_' . $c->code};
+                            $total += ${'sum_' . $c->code};
+                        }
+
+                        if (isset($markups['m' . $c->code])) {
+                            ${'sum_m' . $c->code} += @$charge->${'total_' . $c->code};
+                            $total_m += ${'sum_m' . $c->code};
+                        }
                     }
 
-                    $sheet->setCellValue('B'.$i, $charge->id);
-                    if($charge->surcharge_id==''){
-                        $sheet->setCellValue('C'.$i, 'Ocean freight');  
-                    }else{
-                        $sheet->setCellValue('C'.$i, @$charge->surcharge->name);   
+                    $type = $this->getAmountType($charge->type_id);
+                    if ($charge->surcharge_id == '') {
+                        $sheet->setCellValue('B' . $i, 'Ocean freight');
+                    } else {
+                        $sheet->setCellValue('B' . $i, @$charge->surcharge->name);
                     }
+                    $sheet->setCellValue('C' . $i, @$charge->calculation_type->name);
+                    foreach ($equipmentHides as $k => $hide) {
+                        foreach ($containers as $c) {
+                            if ($c->code == $k && $hide == "") {
+                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code] + @$markups['m' . $c->code]);
+                                $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
+                            }
+                        }
+                    }
+                    $sheet->setCellValue($col_amount . $i, $charge->currency->alphacode);
+                    $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
 
-                    $sheet->setCellValue('D'.$i, $sum20+$sum_m20+$sum40+$sum_m40+$sum40hc+$sum_m40hc+$sum40nor+$sum_m40nor+$sum45+$sum_m45);
-                    $sheet->setCellValue('E'.$i, '');
-                    $sheet->setCellValue('F'.$i, $charge->currency->alphacode);
-                    $sheet->setCellValue('J'.$i, 'PP');
                     $i++;
+                }
+
+                foreach ($item->inland as $inland) {
+                    $col_inland = 'D';
+                    $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
+
+                    $inland_rates = json_decode($inland->rate, true);
+                    $inland_markups = json_decode($inland->markup, true);
+
+                    $inland_rates = $this->processOldContainers($inland_rates, 'amounts');
+                    $inland_markups = $this->processOldContainers($inland_markups, 'markups');
+
+                    $sheet->setCellValue('B' . $i, $inland->provider);
+                    $sheet->setCellValue('C' . $i, $inland->distance.' Km');
+                    foreach ($equipmentHides as $k => $hide) {
+                        foreach ($containers as $c) {
+                            if ($c->code == $k && $hide == "") {
+                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code] + @$inland_markups['m' . $c->code]);
+                                $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
+                            }
+                        }
+                    }
+                    $sheet->setCellValue($col_inland . $i, $inland->currency->alphacode);
+
+                    $i++;
+                }
+
+                $check_port_origin = $this->find_key_value($origin_sales->toArray(), 'port_id', $item->origin_port_id);
+
+                if ($check_port_origin) {
+                    foreach ($sale_terms_origin as $sale_term_origin) {
+                        foreach ($sale_term_origin->charge as $sale_origin) {
+                            $col_sale = 'D';
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+
+                            $sale_rates = json_decode($sale_origin->rate, true);
+
+                            $sheet->setCellValue('B' . $i, $sale_origin->charge);
+                            $sheet->setCellValue('C' . $i, $sale_origin->detail);
+                            foreach ($equipmentHides as $k => $hide) {
+                                foreach ($containers as $c) {
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                                    }
+                                }
+                            }
+                            $sheet->setCellValue($col_sale . $i, @$sale_origin->currency->alphacode);
+
+                            $i++;
+                        }
+                    }
+                }
+
+                $check_port_destination = $this->find_key_value($destination_sales->toArray(), 'port_id', $item->destination_port_id);
+                
+                if($check_port_destination){
+                    foreach ($sale_terms_destination as $sale_term_destination) {
+                        foreach ($sale_term_destination->charge as $sale_destination) {
+                            $col_sale = 'D';
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+
+                            $sale_rates = json_decode($sale_destination->rate, true);
+
+                            $sheet->setCellValue('B' . $i, $sale_destination->charge);
+                            $sheet->setCellValue('C' . $i, $sale_destination->detail);
+                            foreach ($equipmentHides as $k => $hide) {
+                                foreach ($containers as $c) {
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                                    }
+                                }
+                            }
+                            $sheet->setCellValue($col_sale . $i, @$sale_destination->currency->alphacode);
+
+                            $i++;
+                        }
+                    }
                 }
             }
 
@@ -277,30 +401,24 @@ class ExcelController extends Controller
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('E13B24');
 
-            $spreadsheet->getSheet($key)->getStyle('B40:J40')->getFill()
+            $spreadsheet->getSheet($key)->getStyle('B40')->getFill()
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('E13B24');
 
-            $spreadsheet->getSheet($key)->getStyle('A5:P5')->getFont()->setBold( true );
-            $spreadsheet->getSheet($key)->getStyle('A7:P7')->getFont()->setBold( true );
-            $spreadsheet->getSheet($key)->getStyle('B40:P40')->getFont()->setBold( true );
+            $spreadsheet->getSheet($key)->getStyle('A5:P5')->getFont()->setBold(true);
+            $spreadsheet->getSheet($key)->getStyle('A7:P7')->getFont()->setBold(true);
+            $spreadsheet->getSheet($key)->getStyle('B40:P40')->getFont()->setBold(true);
+            $spreadsheet->getSheet($key)->getStyle('B41:P41')->getFont()->setBold(true);
 
             $spreadsheet->getSheet($key)->getStyle('A5:P5')->getFont()->getColor()->setARGB('FFFFFF');
             $spreadsheet->getSheet($key)->getStyle('B40:N40')->getFont()->getColor()->setARGB('FFFFFF');
 
-            $i = $i-1;
+            $i = $i - 1;
             $a = $i + 2;
 
-            for ($i; $i > 40; $i--) { 
-                $spreadsheet->getSheet($key)->getStyle('B'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('C'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('D'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('E'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('F'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('G'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('H'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('I'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('J'.$i)->applyFromArray($styleArray);
+            for ($i; $i > 40; $i--) {
+                $spreadsheet->getSheet($key)->getStyle('B' . $i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('C' . $i)->applyFromArray($styleArray);
             }
         }
 
@@ -310,46 +428,46 @@ class ExcelController extends Controller
         $e = $d + 2;
         $f = $e + 1;
 
-        $sheet->setCellValue('A'.$a, '12)');
-        $sheet->setCellValue('B'.$a, 'Vigencia de tarifa:');
-        $sheet->setCellValue('C'.$a, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$a)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $a, '12)');
+        $sheet->setCellValue('B' . $a, 'Vigencia de tarifa:');
+        $sheet->setCellValue('C' . $a, $quote->validity_start . '/' . $quote->validity_end);
+        $spreadsheet->getSheet($key)->getStyle('C' . $a)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$b, 'Enviar pre-alerta a:');
-        $sheet->setCellValue('C'.$b, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$b)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $b, 'Enviar pre-alerta a:');
+        $sheet->setCellValue('C' . $b, @$quote->company->business_name);
+        $spreadsheet->getSheet($key)->getStyle('C' . $b)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('A'.$c, '13)');
-        $sheet->setCellValue('B'.$c, 'Instrucciones adicionales:');
-        $sheet->setCellValue('C'.$c, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('D'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('E'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('F'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('G'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('H'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('I'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('J'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $c, '13)');
+        $sheet->setCellValue('B' . $c, 'Instrucciones adicionales:');
+        $sheet->setCellValue('C' . $c, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('D' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('E' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('F' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('G' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('I' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('J' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$d, 'Se otorgó benefico de carta garantía:');
-        $sheet->setCellValue('C'.$d, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('D'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('E'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('F'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('G'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('H'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('I'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('J'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $d, 'Se otorgó beneficio de carta garantía:');
+        $sheet->setCellValue('C' . $d, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('D' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('E' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('F' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('G' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('I' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('J' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('A'.$e, '14)');
-        $sheet->setCellValue('B'.$e, 'Vendedor:');
-        $sheet->setCellValue('C'.$e, $quote->user->name.' '.$quote->user->lastname);
-        $spreadsheet->getSheet($key)->getStyle('C'.$e)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $e, '14)');
+        $sheet->setCellValue('B' . $e, 'Vendedor:');
+        $sheet->setCellValue('C' . $e, $quote->user->name . ' ' . $quote->user->lastname);
+        $spreadsheet->getSheet($key)->getStyle('C' . $e)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$f, 'Elaboró:');
-        $sheet->setCellValue('C'.$f, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$f)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $f, 'Elaboró:');
+        $sheet->setCellValue('C' . $f, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $f)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         //Bottom border
         $spreadsheet->getSheet($key)->getStyle('C9')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
@@ -412,15 +530,15 @@ class ExcelController extends Controller
         $spreadsheet->getSheet($key)->getStyle('E7')->getFont()->setUnderline(true);
 
         $writer = new Xlsx($spreadsheet);
-        if($quote->custom_quote_id!=''){
-            $name = $quote->custom_quote_id; 
-        }else{
+        if ($quote->custom_quote_id != '') {
+            $name = $quote->custom_quote_id;
+        } else {
             $name = $quote->quote_id;
         }
 
-        $writer->save(storage_path('app/public/'.$name.'.xlsx'));
+        $writer->save(storage_path('app/public/' . $name . '.xlsx'));
 
-        return response()->download(storage_path('app/public/'.$name.'.xlsx'))->deleteFileAfterSend();
+        return response()->download(storage_path('app/public/' . $name . '.xlsx'))->deleteFileAfterSend();
     }
 
     /**
@@ -489,36 +607,133 @@ class ExcelController extends Controller
         //
     }
 
-    public function calculateFcl($rates){
+    public function calculateFcl($rates, $containers)
+    {
+        $sum = 'sum';
+        $markup = 'markup';
+        $inland = 'inland';
+        $amount = 'amount';
+        $total = 'total';
+
+        foreach ($containers as $c) {
+            ${$sum . '_' . $c->code} = 0;
+            ${$total . '_' . $c->code} = 0;
+            ${$total . '_markup_' . $c->code} = 0;
+        }
+
+        //Charges
+        foreach ($rates->charge as $value) {
+
+            $company = CompanyUser::find(\Auth::user()->company_user_id);
+
+            $typeCurrency =  $company->currency->alphacode;
+
+            $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
+
+            $array_amounts = json_decode($value->amount, true);
+            $array_markups = json_decode($value->markups, true);
+            $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+            $array_markups = $this->processOldContainers($array_markups, 'markups');
+            $pre_c = 'total_c';
+            $pre_m = 'total_m';
+
+            foreach ($containers as $c) {
+                ${$pre_c . $c->code} = 'total_c' . $c->code;
+                ${$pre_m . $c->code} = 'total_m' . $c->code;
+                if (isset($array_amounts['c' . $c->code])) {
+                    ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                    ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
+                    ${$total . '_' . $c->code} = number_format(${$amount . '_' . $total . '_' . $c->code}, 2, '.', '');
+                    $value->${$pre_c . $c->code} = ${$total . '_' . $c->code};
+                }
+
+                if (isset($array_markups['m' . $c->code])) {
+                    ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                    ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
+                    $value->${$pre_m . $c->code} = ${$total . '_markup_' . $c->code};
+                }
+            }
+
+            $currency_charge = Currency::find($value->currency_id);
+            $value->currency_usd = $currency_charge->rates;
+            $value->currency_eur = $currency_charge->rates_eur;
+        }
+
+        //Inland
+        foreach ($rates->inland as $item) {
+            foreach ($containers as $c) {
+                ${$sum . '_' . $inland . '_' . $c->code} = 0;
+                ${$total . '_' . $inland . '_' . $markup . '_' . $c->code} = 0;
+            }
+
+            $company = CompanyUser::find(\Auth::user()->company_user_id);
+
+            $typeCurrency =  $company->currency->alphacode;
+
+            $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
+
+            $array_amounts = json_decode($item->rate, true);
+            $array_markups = json_decode($item->markup, true);
+
+            $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+            $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+            foreach ($containers as $c) {
+                ${$sum . '_' . $total . '_' . $inland . $c->code} = 0;
+                if (isset($array_amounts['c' . $c->code])) {
+                    ${$amount . '_' . $inland . $c->code} = $array_amounts['c' . $c->code];
+                    ${$total . '_' . $inland . $c->code} = ${$amount . '_' . $inland . $c->code} / $currency_rate;
+                    ${$sum . '_' . $total . '_' . $inland . $c->code} = number_format(${$total . '_' . $inland . $c->code}, 2, '.', '');
+                }
+                if (isset($array_markups['m' . $c->code])) {
+                    ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
+                    ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
+                }
+
+                $item->${$total . '_c' . $c->code} = number_format(@${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
+                $item->${$total . '_m' . $c->code} = number_format(@${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
+            }
+
+            $currency_charge = Currency::find($item->currency_id);
+            $item->currency_usd = $currency_charge->rates;
+            $item->currency_eur = $currency_charge->rates_eur;
+        }
 
 
-        $sum20=0;
-        $sum40=0;
-        $sum40hc=0;
-        $sum40nor=0;
-        $sum45=0;
+        return $rates;
+    }
 
-        $total_markup20=0;
-        $total_markup40=0;
-        $total_markup40hc=0;
-        $total_markup40nor=0;
-        $total_markup45=0;
+    public function calculateFclOld($rates)
+    {
 
-        $total_rate20=0;
-        $total_rate40=0;
-        $total_rate40hc=0;
-        $total_rate40nor=0;
-        $total_rate45=0;
 
-        $total_rate_markup20=0;
-        $total_rate_markup40=0;
-        $total_rate_markup40hc=0;
-        $total_rate_markup40nor=0;
-        $total_rate_markup45=0;
+        $sum20 = 0;
+        $sum40 = 0;
+        $sum40hc = 0;
+        $sum40nor = 0;
+        $sum45 = 0;
 
-        $total_lcl_air_freight=0;
-        $total_lcl_air_origin=0;
-        $total_lcl_air_destination=0;
+        $total_markup20 = 0;
+        $total_markup40 = 0;
+        $total_markup40hc = 0;
+        $total_markup40nor = 0;
+        $total_markup45 = 0;
+
+        $total_rate20 = 0;
+        $total_rate40 = 0;
+        $total_rate40hc = 0;
+        $total_rate40nor = 0;
+        $total_rate45 = 0;
+
+        $total_rate_markup20 = 0;
+        $total_rate_markup40 = 0;
+        $total_rate_markup40hc = 0;
+        $total_rate_markup40nor = 0;
+        $total_rate_markup45 = 0;
+
+        $total_lcl_air_freight = 0;
+        $total_lcl_air_origin = 0;
+        $total_lcl_air_destination = 0;
 
         foreach ($rates->charge as $value) {
 
@@ -526,93 +741,107 @@ class ExcelController extends Controller
 
             $typeCurrency =  $company->currency->alphacode;
 
-            $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+            $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
-            $array_amounts = json_decode($value->amount,true);
-            $array_markups = json_decode($value->markups,true);
+            $array_amounts = json_decode($value->amount, true);
+            $array_markups = json_decode($value->markups, true);
 
-            if(isset($array_amounts['c20'])){
-                $amount20=$array_amounts['c20'];
-                $total20=$amount20;
+            if (isset($array_amounts['c20'])) {
+                $amount20 = $array_amounts['c20'];
+                $total20 = $amount20;
                 $sum20 = number_format($total20, 2, '.', '');
             }
 
-            if(isset($array_markups['m20'])){
-                $markup20=$array_markups['m20'];
-                $total_markup20=$markup20;
+            if (isset($array_markups['m20'])) {
+                $markup20 = $array_markups['m20'];
+                $total_markup20 = $markup20;
             }
 
-            if(isset($array_amounts['c40'])){
-                $amount40=$array_amounts['c40'];
-                $total40=$amount40;          
+            if (isset($array_amounts['c40'])) {
+                $amount40 = $array_amounts['c40'];
+                $total40 = $amount40;
                 $sum40 = number_format($total40, 2, '.', '');
             }
 
-            if(isset($array_markups['m40'])){
-                $markup40=$array_markups['m40'];
-                $total_markup40=$markup40;
+            if (isset($array_markups['m40'])) {
+                $markup40 = $array_markups['m40'];
+                $total_markup40 = $markup40;
             }
 
-            if(isset($array_amounts['c40hc'])){
-                $amount40hc=$array_amounts['c40hc'];
-                $total40hc=$amount40hc;          
+            if (isset($array_amounts['c40hc'])) {
+                $amount40hc = $array_amounts['c40hc'];
+                $total40hc = $amount40hc;
                 $sum40hc = number_format($total40hc, 2, '.', '');
             }
 
-            if(isset($array_markups['m40hc'])){
-                $markup40hc=$array_markups['m40hc'];
-                $total_markup40hc=$markup40hc;
+            if (isset($array_markups['m40hc'])) {
+                $markup40hc = $array_markups['m40hc'];
+                $total_markup40hc = $markup40hc;
             }
 
-            if(isset($array_amounts['c40nor'])){
-                $amount40nor=$array_amounts['c40nor'];
-                $total40nor=$amount40nor;
+            if (isset($array_amounts['c40nor'])) {
+                $amount40nor = $array_amounts['c40nor'];
+                $total40nor = $amount40nor;
                 $sum40nor = number_format($total40nor, 2, '.', '');
             }
 
-            if(isset($array_markups['m40nor'])){
-                $markup40nor=$array_markups['m40nor'];
-                $total_markup40nor=$markup40nor;
+            if (isset($array_markups['m40nor'])) {
+                $markup40nor = $array_markups['m40nor'];
+                $total_markup40nor = $markup40nor;
             }
 
-            if(isset($array_amounts['c45'])){
-                $amount45=$array_amounts['c45'];
-                $total45=$amount45;
+            if (isset($array_amounts['c45'])) {
+                $amount45 = $array_amounts['c45'];
+                $total45 = $amount45;
                 $sum45 = number_format($total45, 2, '.', '');
             }
 
-            if(isset($array_markups['m45'])){
-                $markup45=$array_markups['m45'];
-                $total_markup45=$markup45;
+            if (isset($array_markups['m45'])) {
+                $markup45 = $array_markups['m45'];
+                $total_markup45 = $markup45;
             }
 
-            $value->total_20=number_format($sum20, 2, '.', '');
-            $value->total_40=number_format($sum40, 2, '.', '');
-            $value->total_40hc=number_format($sum40hc, 2, '.', '');
-            $value->total_40nor=number_format($sum40nor, 2, '.', '');
-            $value->total_45=number_format($sum45, 2, '.', '');
+            $value->total_20 = number_format($sum20, 2, '.', '');
+            $value->total_40 = number_format($sum40, 2, '.', '');
+            $value->total_40hc = number_format($sum40hc, 2, '.', '');
+            $value->total_40nor = number_format($sum40nor, 2, '.', '');
+            $value->total_45 = number_format($sum45, 2, '.', '');
 
-            $value->total_markup20=number_format($total_markup20, 2, '.', '');
-            $value->total_markup40=number_format($total_markup40, 2, '.', '');
-            $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
-            $value->total_markup40nor=number_format($total_markup40nor, 2, '.', '');
-            $value->total_markup45=number_format($total_markup45, 2, '.', ''); 
-
+            $value->total_markup20 = number_format($total_markup20, 2, '.', '');
+            $value->total_markup40 = number_format($total_markup40, 2, '.', '');
+            $value->total_markup40hc = number_format($total_markup40hc, 2, '.', '');
+            $value->total_markup40nor = number_format($total_markup40nor, 2, '.', '');
+            $value->total_markup45 = number_format($total_markup45, 2, '.', '');
         }
 
         return $value;
-
     }
 
-    public function ratesCurrency($id,$typeCurrency){
-        $rates = Currency::where('id','=',$id)->get();
-        foreach($rates as $rate){
-            if($typeCurrency == "USD"){
+    public function ratesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->get();
+        foreach ($rates as $rate) {
+            if ($typeCurrency == "USD") {
                 $rateC = $rate->rates;
-            }else{
+            } else {
                 $rateC = $rate->rates_eur;
             }
         }
         return $rateC;
+    }
+
+    public function getAmountType($type)
+    {
+        switch ($type) {
+            case 1:
+                return 'Origin';
+                break;
+            case 2:
+                return 'Destination';
+                break;
+            case 3:
+                return 'Freight';
+                break;
+        }
     }
 }
