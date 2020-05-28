@@ -19,7 +19,7 @@
 				<b-card no-body class="card-tabs">
 					<b-tabs card>
 
-						<b-tab title="Ocean Freight" active>
+						<b-tab title="Ocean Freight" active @click="changeView('freight')">
 							<ocean-freight v-if="freight"
 							:equipment="equipment" 
 							:datalists="datalists"
@@ -27,9 +27,9 @@
 							></ocean-freight>
 						</b-tab>
 
-						<b-tab title="Surcharges">
+						<b-tab title="Surcharges" @click="changeView('surcharges')">
 							<surcharges
-									v-if="freight"
+								  v-if="surcharges"
 								  :datalists="datalists"
 								  :actions="actions.surcharges"
 								  >
@@ -92,6 +92,7 @@
 				actions: actions,
 				equipment: {},
 				freight: false,
+				surcharges: false,
 				loaded: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
@@ -173,7 +174,18 @@
 				this.loaded = true;
 				this.equipment = data.gp_container;
 			},
+			changeView(val){
 
+				if(val == 'freight'){
+					this.freight = true;
+					this.surcharges = false;
+				}
+
+				if(val == 'surcharges'){
+					this.freight = false;
+					this.surcharges = true;
+				}
+			},
 			/* Set the Dropdown lists to use in form */
 			setDropdownLists(err, data){
 				this.datalists = data;

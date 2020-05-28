@@ -9,15 +9,14 @@
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-link" v-b-modal.addInland>+ Add Inland</button>
-                                <!--<a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" >+ Import Contracts</a>-->
+                                <button class="btn btn-primary btn-bg" v-b-modal.addInland>+ Add Inland</button>
                             </div>
                         </div>
                     </div>
 
-                    <DataTable 
+                    <DataTable
                         :fields="fields"
-                        :actions="actions.contracts"
+                        :actions="actions.inlands"
                         @onEdit="onEdit"
                         ></DataTable>
                 </b-card>
@@ -33,7 +32,7 @@
                 btnTxt="Add Inland"
                 @exit="closeModal('addInland')"
                 @success="success"
-                :actions="actions.inland"
+                :actions="actions.inlands"
                 >
             </FormView>
         </b-modal>
@@ -58,51 +57,36 @@
             return {
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
-                
-                // Dropdown Lists
-                datalists: {
-                  'carriers': [],
-                  'equipments': [],
-                  'directions': [],
-                  'containers': []
-                },
+                datalists: {},
 
                 /* Table headers */
                 fields: [
-                    { key: "provider", label: "Provider" },
-                    { key: "port", label: "Ports", formatter: (value)=> { return this.badges(value, 'warning') }},
+                    { key: "reference", label: "Reference" },
                     { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` } },
+                    { key: 'type', label: 'Type', formatter: (value)=> { return value.name } },
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
-                    { key: 'type', label: 'Direction', formatter: (value)=> { return '<span class="badge badge-primary">'+ this.badgetypes(value) +'</span>'; } },
-                    { key: "restrictions", label: "Company Restrictions" }, 
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }
                 ],
 
                 /* Form Modal Fields */
                 form_fields: {
-                    provider: { 
-                        label: 'Provider', 
+                    reference: { 
+                        label: 'Reference', 
                         type: 'text', 
                         rules: 'required', 
                         placeholder: 'Reference', 
                         colClass: 'col-sm-12' 
                     },
-                    validity: { 
-                        label: 'Validity', 
-                        rules: 'required', 
-                        type:"daterange", 
-                        sdName: 'validity', 
-                        edName: 'expire'
-                    },
-                    direction: { 
-                        label:'Carriers', 
+                    type: { 
+                        label: 'Type', 
                         searchable: true, 
-                        type: 'multiselect', 
+                        type: 'select', 
                         rules: 'required', 
                         trackby: 'name', 
-                        placeholder: 'Select options', 
-                        options: 'carriers' 
+                        placeholder: 'Select option', 
+                        options: 'types' 
                     },
                     gp_container: { 
                         label: 'Equipment', 
@@ -112,6 +96,13 @@
                         trackby: 'name', 
                         placeholder: 'Select option', 
                         options: 'equipments' 
+                    },
+                    validity: { 
+                        label: 'Validity', 
+                        rules: 'required', 
+                        type: "daterange", 
+                        sdName: 'validity', 
+                        edName: 'expire'
                     },
                     direction: { 
                         label:'Direction', 
@@ -128,7 +119,7 @@
         created() {
 
             /* Return the lists data for dropdowns */
-            api.getData({}, '/api/v2/contracts/data', (err, data) => {
+            api.getData({}, '/api/v2/inland/data', (err, data) => {
                 this.setDropdownLists(err, data.data);
             });
 
@@ -145,45 +136,14 @@
 
             success(id){
                 // After Create the item redirect to:
-                window.location = `/api/contracts/${id}/edit`;
+                window.location = `/api/inland/${id}/edit`;
             },
 
             /* Single Actions */
             onEdit(data){
                 // Single actions to redirect to:
-                window.location = `/api/contracts/${data.id}/edit`;
+                window.location = `/api/inland/${data.id}/edit`;
             },
-
-            /* Badge Types */
-            badgetypes(value) {
-                let variation = "";
-
-                if (value == '1') {
-                    variation += 'Import';
-                    return variation;
-                } else if (value == '2') {
-                    variation += 'Export';
-                    return variation;
-                } else {
-                    variation += "Both";
-                    return variation;
-                }
-            },
-
-            badges(value, color='primary'){
-                let carriers = "";
-
-                if(value){
-                    value.forEach(function(val){
-                        carriers += `<span class='badge badge-${color}'>${val.name}</span>`;
-                    });
-
-                    return carriers;
-                } else {
-                    return '-';
-                }
-
-            }
             
         }
     }
