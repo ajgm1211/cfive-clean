@@ -182,7 +182,7 @@ class ContactController extends Controller
                     $qy->select('id', 'name', 'alphacode', 'api_code_eur', 'api_code', 'rates', 'rates_eur');
                 }]);
             }]);
-        }))->where('id', $id)->first();
+        }))->where('id', $id)->firstOrFail();
 
         if ($request->ajax()) {
             $collection = Collection::make($contact);

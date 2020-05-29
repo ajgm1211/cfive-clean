@@ -489,6 +489,7 @@
         justify-content: flex-start;
         overflow: hidden;
         white-space: nowrap;
+        height: 35px;
         background-color: #f6f6f6;   
     }
     .m-input.date{
@@ -677,6 +678,8 @@
                 {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
                 <!-- {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }} -->
               </div>
+
+            
               <div class="col-lg-2">
                 <label>Company</label>
                 <div class="m-input-icon m-input-icon--right">
@@ -769,9 +772,8 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carriers</label>
-                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
               </div>
-
             
               <div class="col-lg-4 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
@@ -1211,7 +1213,13 @@
                         </div>
                         @else
                         <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
+
+                         @if($arr->contratoFuturo)
+                           <img src="{{ url('images/error.svg')}}" width='20' height='20' >  
+                          @endif
+                            
+
 
                         </div>
                         @endif
@@ -1700,8 +1708,13 @@
 
     $('#carrier_select').selectC5();
     $('#equipment').selectC5();
-    $('.c5-switch').prop('checked', true);
-    $(".c5-switch").trigger("change");
+    var data = '{{$allCarrier}}';
+    if(data==true){
+      $('.c5-switch').prop('checked', true);
+      $('.c5-switch').trigger('change');
+    }
+    
+   
     
 
   });
@@ -1803,22 +1816,23 @@
             var clickOnID = ''+$(this).attr('id')+'';
             var optionSelect = '#'+$(this).attr('id')+' option';
             var selectType = ''+$(this).attr('select-type')+'';
+            var selectContainer = $('select#'+clickOnID+' option').val();
+
             var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
-                                '<ul class="c5-select-dropdown-list">'+
-                                    '<li class="hida">Select an option</li>'+
+                                '<ul class="c5-select-dropdown-list select-list">'+
                                 '</ul>'+
                                 '</span>'+
                                 '<span class="c5-select-multiple-container '+clickOnID+'">'+
                                     '<span class="c5-select-header">Types</span>'+
                                     '<ul class="c5-select-list list-types-carriers">'+
                                         '<li class="c5-case"><label class="c5-label">CMA CGM Spot'+
-                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA">'+
+                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">'+
                                             '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">MAERSK Spot'+
-                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK">'+
+                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK" title="MAERSK">'+
                                             '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">SAFMARINE Spot'+
-                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE">'+
+                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">'+
                                             '<span class="checkmark"></span></label></li>'+
                                     '</ul>'+
                                     '<span class="c5-select-header">Carriers</span>'+
@@ -1837,10 +1851,6 @@
 
             var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
                                     '<ul class="c5-select-dropdown-list select-list">'+
-                                        '<li title="20DV">20DV, </li>'+
-                                        '<li title="40DV">40DV, </li>'+
-                                        '<li title="40HC">40HC, </li>'+
-                                        '<li class="hida">Select an option</li>'+
                                     '</ul>'+
                                     '</span>'+
                                     '<span class="c5-select-multiple-container '+clickOnID+'">'+
@@ -1853,10 +1863,15 @@
                                     '<ul class="c5-select-list list-group2"></ul>'+
                                     '</span>';            
            
+            
             // Select Multiple con swicth
             if(selectType == 'multiple'){
+                var data = '{{$carrierMan}}';
+                var carriersList = JSON.parse(data.replace(/&quot;/g,'"')); 
+                var defaultValuesCarriers = $('#'+clickOnID+'').val();
+
                 $(this).after(multiSelect);
-                
+
                 $(optionSelect).each(function(){
                     var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
                                 '<input type="checkbox" title="'+$(this).text()+
@@ -1864,6 +1879,25 @@
                                 '"><span class="checkmark"></span></label></li>';
                     $('.c5-select-list.select-normal').append(list);    
                 });
+
+                
+
+                for ( var i in defaultValuesCarriers ) {
+                    var ident = defaultValuesCarriers[i];
+                    var name = $('.select-normal .c5-case input[value="'+ident+'"]').attr('title');
+                    
+                    //console.log(name);
+                    
+                    $('.'+clickOnID+' .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    //$('.'+clickOnID+' .select-list').append('<li title="'+nameAPI+'">'+nameAPI+', </li>');
+                    $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                }
+
+                $('.'+clickOnID+' .select-list li[title="1"]').remove();
+
+
+                $('#'+clickOnID+'').val(defaultValuesCarriers);
 
                 $('.'+clickOnID+' .c5-check').on("click", function() {
                     var checkSelected = [];
@@ -1935,13 +1969,18 @@
                 $('.select-normal .c5-case:nth-child(2)').remove();
                 $('.select-normal .c5-case:nth-child(1)').remove();
             }
+            
             // Select Multiple con Lables
-            if(selectType == 'groupLabel'){
+            if(selectType == 'groupLabel') {
                 $(this).after(multiSelectGroup);
                 var showEquip = $('.select-list li.hida');
                 var data = '{{$group_contain}}';
                 var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
                 var defaultValues = $('#'+clickOnID+'').val();
+                var containerType= '{{$containerType}}';
+
+                getContainerByGroup(''+containerType+'');
+                
                 for (var i in newData) {
                     var code = `${newData[i]}`;
                     //console.log(i, code);
@@ -1951,9 +1990,9 @@
                     $('.list-group1').append(list2);
                 }
 
-                $('.list-group1 .c5-case:nth-child(1) input').attr('checked', true);
+                $('.list-group1 .c5-case:nth-child('+containerType+') input').attr('checked', true);
             }
-//conment
+
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
@@ -1981,9 +2020,13 @@
         },
         success: function(data) {
             //console.log(data);
+            var selectValues = $('select#equipment').val();
+            var containerType= '{{$containerType}}';
+
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
-            for (const equip in data) {
+
+            for ( const equip in data ) {
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
@@ -1992,47 +2035,52 @@
                 $('.list-group2').append(list2);
             }
 
-            if(id_group == 1){
-                var defaultValues = ['1','2','3'];
-                for(var i in defaultValues){
-                    var value = `${defaultValues[i]}`;
-                    $('.list-group2 .c5-case:nth-child('+value+') input').attr('checked', true);
+            $('.equipment .select-list').html('');
+
+            if( id_group == containerType ) {
+                
+                for (var i in selectValues) {
+                    var ident = selectValues[i];
+                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title'); 
+                    console.log(ident, selectValues, containerType);
+                    $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true); 
                 }
-                $('#equipment.select-group').val(defaultValues);
-                $('.equipment .select-list').html('');
-                $('.equipment .select-list').append('<li title="20DV">20DV, </li><li title="40DV">40DV, </li><li title="40HC">40HC, </li>');
-            } else if((id_group == 2) || (id_group == 3) || (id_group == 4)){
-                $('.equipment .select-list').html('');
+                $('.equipment .select-list li[title="undefined"]').remove();
+
             }
 
+
             $('.equipment .list-group2 .c5-check').on("click", function() {
-                    var valueEquipment = [];                    
-                    var title = $(this).attr('title');
-                    $('.equipment .list-group2 .c5-check').each(function() {
-                        if (this.checked) {
-                            valueEquipment.push($(this).val());
-                        }
-                    });
+                var valueEquipment = [];                    
+                var title = $(this).attr('title');
 
-                    $('#equipment.select-group').val(valueEquipment);
-                    /*var valor2 = $('#equipment.select-group').val();
-                    console.log(valor2);*/
-
-                    var countEquip = valueEquipment.length;
-                    
-                    if ($(this).is(':checked')) {
-                        var html = '<li title="' + title + '">' + title + ', </li>';                    
-                        $('.equipment .select-list').append(html);
-                        $(".select-list .hida").hide();
-                    } else {
-                        var listLength = $('.equipment .list-group2 .c5-check:checked').length;
-                        $('li[title="' + title + '"]').remove();
-                        if( countEquip == 0 ){
-                            $(".select-list .hida").show();   
-                        }
+                $('.equipment .list-group2 .c5-check').each(function() {
+                    if (this.checked) {
+                        valueEquipment.push($(this).val());
+                        //console.log(valueEquipment);
                     }
+                });
 
-                }); 
+                $('#equipment.select-group').val(valueEquipment);
+                /*var valor2 = $('#equipment.select-group').val();
+                console.log(valor2);*/
+
+                var countEquip = valueEquipment.length;
+                
+                if ($(this).is(':checked')) {
+                    var html = '<li title="' + title + '">' + title + ', </li>';                    
+                    $('.equipment .select-list').append(html);
+                    $(".select-list .hida").hide();
+                } else {
+                    var listLength = $('.equipment .list-group2 .c5-check:checked').length;
+                    $('li[title="' + title + '"]').remove();
+                    if( countEquip == 0 ){
+                        $(".select-list .hida").show();   
+                    }
+                }
+
+            }); 
         },
         error: function (request, status, error) {
             console.log(request.responseText);

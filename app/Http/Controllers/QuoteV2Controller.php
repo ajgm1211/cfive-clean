@@ -514,8 +514,8 @@ class QuoteV2Controller extends Controller
         }
         $charge->update();
         $quote_id = $charge->automatic_rate->quote_id;
-        //$this->updatePdfApi($quote_id);
-        //$this->updateIntegrationQuoteStatus($quote_id);
+        $this->updatePdfApi($quote_id);
+        $this->updateIntegrationQuoteStatus($quote_id);
         return response()->json(['success' => 'Ok']);
     }
 
@@ -2392,6 +2392,8 @@ class QuoteV2Controller extends Controller
         //$group_contain->prepend('Select an option', '');
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
+        $containers = Container::get();
+        
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2426,8 +2428,15 @@ class QuoteV2Controller extends Controller
         $form['equipment'] = array('1', '2', '3');
         $form['company_id_quote'] = '';
         $form['mode'] = '1';
+        $form['containerType'] = '1';
+        $validateEquipment = $this->validateEquipment($form['equipment'], $containers);
+        $containerType = $validateEquipment['gpId'];
+        $carriersSelected = $carrierMan;
+        $allCarrier =true;
         
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain'));
+        //dd($carriersSelected);
+
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','carriersSelected','allCarrier'));
     }
 
     /**
@@ -2438,6 +2447,7 @@ class QuoteV2Controller extends Controller
 
     public function processSearch(Request $request)
     {
+        $allCarrier =false;
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
@@ -2449,8 +2459,8 @@ class QuoteV2Controller extends Controller
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight ='true';
-
-
+        $containerType = $request->input('container_type');
+        $carriersSelected = $request->input('carriers');
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
@@ -2510,7 +2520,8 @@ class QuoteV2Controller extends Controller
         $equipment = $request->input('equipment');
         $carriers =$this->divideCarriers($request->input('carriers'));
 
-
+        //alla
+        //dd($equipment);
         $chargesAPI = isset($carriers['api']['CMA']) ? true : null;
         $chargesAPI_M = isset($carriers['api']['MAERSK']) ? true : null;
         $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
@@ -2598,7 +2609,7 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -2606,7 +2617,7 @@ class QuoteV2Controller extends Controller
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             }
 
@@ -3100,12 +3111,18 @@ class QuoteV2Controller extends Controller
                 $collectionRate->push($array);
 
                 // SCHEDULE TYPE
-                if ($data->schedule_type_id != null) {
+
+                //$trann = $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
+
+
+
+
+               /* if ($data->schedule_type_id != null) {
                     $sheduleType = ScheduleType::find($data->schedule_type_id);
                     $data->setAttribute('sheduleType', $sheduleType->name);
                 } else {
                     $data->setAttribute('sheduleType', null);
-                }
+                }*/
                 //remarks
                 $typeMode = $request->input('mode');
                 $remarks = "";
@@ -3183,7 +3200,10 @@ class QuoteV2Controller extends Controller
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
+                //Contrato Futuro
+                $contratoFuturo = $this->contratoFuturo($dateUntil,$data->contract->expire);
 
+                $data->setAttribute('contratoFuturo', $contratoFuturo);
                 // INLANDS
                 $data->setAttribute('inlandDestiny', $inlandDestiny);
                 //   dd($inlandDestiny);
@@ -3217,8 +3237,9 @@ class QuoteV2Controller extends Controller
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
+        $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF'));
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF', 'containerType', 'carriersSelected','equipment','allCarrier')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)

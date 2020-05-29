@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mt-5">
             <div class="col-12">
                 <b-card>
@@ -136,12 +136,7 @@
         methods: {
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
-                this.datalists = {
-                  'carriers': data.carriers,
-                  'equipments': data.equipments,
-                  'directions': data.directions,
-                  'containers': data.containers,
-                }
+                this.datalists = data;
             },
 
             link(){

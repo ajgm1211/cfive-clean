@@ -8,6 +8,8 @@ use App\Carrier;
 use App\GroupContainer;
 use App\Direction;
 use App\Harbor;
+use App\Currency;
+use App\CalculationType;
 use App\Http\Resources\InlandResource;
 use App\Container;
 use App\InlandPort;
@@ -18,6 +20,7 @@ class InlandController extends Controller
     {
         return view('inlands.index');
     }
+
     public function list(Request $request)
     {
         $results = Inland::filterByCurrentCompany()->filter($request);
@@ -34,16 +37,41 @@ class InlandController extends Controller
             return $direction->only(['id', 'name']);
         });
 
+        $currencies = Currency::get()->map(function ($currency) {
+            return $currency->only(['id', 'alphacode']);
+        });
+
+        /* Example */
+        $types = [
+          [ 'id' => 1, 'name' => "Per KM", 'created_at' => null, 'updated_at' => null ],
+          [ 'id' => 2, 'name' => "Per Locations", 'created_at' => null, 'updated_at' => null ]
+        ];
+        /* Example */
+
         $ports = Harbor::get()->map(function ($harbor) {
             return $harbor->only(['id', 'name']);
         });
 
-        $data = [
-      'ports' => $ports,
-      'equipments' => $equipments,
-      'directions' => $directions
+        $containers = Container::get();
 
-    ];
+        $carriers = Carrier::get()->map(function ($carrier) {
+            return $carrier->only(['id', 'name']);
+        });
+
+        $calculation_types = CalculationType::get()->map(function ($calculation) {
+            return $calculation->only(['id', 'name']);
+        });
+
+        $data = [
+          'ports' => $ports,
+          'equipments' => $equipments,
+          'directions' => $directions,
+          'types' => $types,
+          'containers' => $containers,
+          'currencies' => $currencies,
+          'carriers' => $carriers,
+          'calculation_types' => $calculation_types
+        ];
 
 
         return response()->json(['data' => $data ]);
@@ -113,10 +141,23 @@ class InlandController extends Controller
      */
     public function retrieve(Inland $inland)
     {
-        $direction = Direction::where('id',$inland->type)->first();
-        $inland->type = $direction;        
-        return new InlandResource($inland, true);
+        //$direction = Direction::where('id',$inland->type)->first();
+        //$inland->type = $direction;        
+        return new InlandResource($inland);
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Inland $inland
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Inland $inland)
+    {
+        return new InlandResource($inland);   
+    }
+
 
     public function groupInlandContainer(Inland $inland)
     {        
