@@ -54,7 +54,8 @@
                                 'form-control
                                 m-input']) !!}
                                 <div class="input-group-append">
-                                    <a href="#" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></a>
+                                    <button type="button" class="btn btn-danger btn-sm deleter"><i
+                                            class="fa fa-close"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +74,8 @@
                             'form-control
                             m-input']) !!}
                             <div class="input-group-append">
-                                <a href="#" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></a>
+                                <button type="button" class="btn btn-danger btn-sm deleter"><i
+                                        class="fa fa-close"></i></button>
                             </div>
                         </div>
                     </div>
@@ -92,7 +94,8 @@
                             'form-control
                             m-input']) !!}
                             <div class="input-group-append">
-                                <a href="#" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></a>
+                                <button type="button" class="btn btn-danger btn-sm deleter"><i
+                                        class="fa fa-close"></i></button>
                             </div>
                         </div>
                     </div>
@@ -101,6 +104,7 @@
         </div>
     </div>
 </div>
+<br>
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
         {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
