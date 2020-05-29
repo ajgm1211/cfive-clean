@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Julio
- * Date: 04/06/2018
- * Time: 05:45 PM
- */
-?>
 <div class="modal fade" id="AddIntegrationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -39,7 +31,7 @@
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Module</b></label>
-                    {!! Form::select('module', ['Contacts','Companies'], null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
+                    {!! Form::select('module', ['Contacts'=>'Contacts','Companies'=>'Companies'], null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
                 </div>
                 <br>
                 <hr>

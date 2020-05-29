@@ -345,7 +345,6 @@ $(document).on('click', '#syncCompanies', function(e) {
                 type: 'GET',
                 url: '/api/get/companies',
                 success: function(data) {
-                    console.log(data.message);
                     if (data.message == 'Ok') {
                         swal(
                             'Done!',
@@ -357,10 +356,16 @@ $(document).on('click', '#syncCompanies', function(e) {
 
                         $("#syncCompaniesLoading").addClass("hide");
                         $("#syncCompanies").removeClass("hide");
+                    } else {
+                        toastr.clear();
+                        msg('An error occurred while trying to connect to the external server. Code: ' + data.error, 'error');
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
                     }
                 },
                 error: function(request, status, error) {
-                    msg('An error has occurred!', 'error');
+                    toastr.clear();
+                    msg('An error has occurred', 'error');
                     console.log(request.responseText);
                     $("#syncCompaniesLoading").addClass("hide");
                     $("#syncCompanies").removeClass("hide");
@@ -369,6 +374,23 @@ $(document).on('click', '#syncCompanies', function(e) {
         }
     });
 });
+
+$(document).on('click', '#add_extra_field', function(e) {
+    e.preventDefault();
+    $("#hide_extra_field").append('a');
+
+});
+
+//Functions
+
+function addOriginCharge() {
+    var $template = $('#hide_extra_field'),
+        $clone = $template
+        .clone()
+        .removeClass('hide')
+        .removeAttr('id')
+        .insertAfter($template);
+}
 
 function msg(message, type) {
     switch (type) {
