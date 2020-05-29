@@ -6,7 +6,9 @@ use App\User;
 use GuzzleHttp\Client;
 use App\AutoImportation;
 use App\NewContractRequest;
+use App\Jobs\AutomaticMaerskJob;
 use App\Jobs\SendEmailAutoImporJob;
+use Spatie\MediaLibrary\Models\Media;
 use GuzzleHttp\Exception\RequestException;
 
 use Illuminate\Bus\Queueable;
@@ -48,7 +50,10 @@ class SelectionAutoImportJob implements ShouldQueue
                     $query->whereIn('carrier_id',$request_cont->Requestcarriers->pluck('carrier_id'));
                 })->where('status',1)->first();
                 if(!empty($autoImp)){
-                    try{
+
+                    $mediaItem  = $request_cont->getFirstMedia('document');
+                    AutomaticMaerskJob::dispatch($req_id,$mediaItem->id.'/'.$mediaItem->file_name)->onQueue('automatic');
+                    /* try{
                         if(env('APP_ENV') == 'local'){
                             $client = new Client(['base_uri' => 'http://contractsai/']);                            
                         }else if(env('APP_ENV') == 'developer'){
@@ -73,7 +78,7 @@ class SelectionAutoImportJob implements ShouldQueue
                         foreach($admins as $userNotifique){
                             SendEmailAutoImporJob::dispatch($userNotifique->email,$message);
                         }
-                    }
+                    } */
                 }
             } else{
                 $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {

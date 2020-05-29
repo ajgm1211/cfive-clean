@@ -34,7 +34,7 @@ class SendMaintenanceNotificationEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('info@cargofive.com')
+        return $this->from('info@cargofive.com', 'Cargofive')
             ->view('emails.notifications.maintenance')
             ->subject('Cargofive scheduled maintenance notice | Aviso de mantenimiento')
             ->with(['day' => $this->day,'day_spanish' => $this->day_spanish,'month'=> $this->month,'month_spanish'=> $this->month_spanish,'date'=> $this->date,'hour'=>$this->hour,'duration'=>$this->duration]);

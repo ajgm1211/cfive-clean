@@ -53,6 +53,6 @@ class UpdatePdf implements ShouldQueue
         $idQ = $pdfarray['idQ'];
         $pdf->loadHTML($view)->save(public_path().'/pdf/quote-'.$idQuote.'.pdf');
 
-        ProcessPdfApi::dispatch($quote);
+        ProcessPdfApi::dispatch($quote)->onQueue('default')->delay(now()->addMinutes(1));
     }
 }

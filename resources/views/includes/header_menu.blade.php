@@ -89,6 +89,8 @@
                   </span>
                 </a>
               </li>
+        
+
             </ul>
           </div>
         </li>
@@ -111,7 +113,7 @@
             <span class="m-menu__arrow m-menu__arrow--adjust"></span>
             <ul class="m-menu__subnav">
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                <a  href="{{route('contracts.index')}}" class="m-menu__link ">
+                <a  href="{{route('new.contracts.index')}}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-file"></i>
                   <span class="m-menu__link-text">
                     Sea Freight FCL
@@ -173,12 +175,12 @@
 
               @hasrole('administrator')
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                  <a  href="{{route('globalchargesapi.index')}}" class="m-menu__link ">
-                      <i class="m-menu__link-icon la la-globe"></i>
-                      <span class="m-menu__link-text">
-                          Sea Freight API
-                      </span>
-                  </a>
+                <a  href="{{route('globalchargesapi.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-globe"></i>
+                  <span class="m-menu__link-text">
+                    Sea Freight API
+                  </span>
+                </a>
               </li>
               @endrole
             </ul>
@@ -312,15 +314,14 @@
                         </span>
                       </a>
                     </li>
-
-                    <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('api.settings')}}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-network"></i>
-<span class="m-menu__link-text">
-API Integrations
-</span>
-</a>
-</li>-->
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('api.settings')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon flaticon-network"></i>
+                        <span class="m-menu__link-text">
+                        External API Integrations
+                        </span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -353,6 +354,19 @@ API Integrations
                 </a>
               </li>
               @endrole
+              @role('administrator')
+       
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('ContainerCalculation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-clipboard"></i>
+                  <span class="m-menu__link-text">
+                    Containers Calculation T.
+                  </span>
+                </a>
+              </li>
+              @endrole
+
+
               @role('administrator|data_entry')
 
               <!-- Sub- Menus --------------------------------------------------------------- -->
@@ -541,14 +555,14 @@ Group Surchargers
         </li>
         @endif
         <!-- 
-        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-          <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-            <span class="m-menu__link-text">
-              <b>Support</b>
-            </span>
-          </a>
-        </li> 
-        -->
+<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+<a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+<span class="m-menu__link-text">
+<b>Support</b>
+</span>
+</a>
+</li> 
+-->
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
           <a  href="#" class="m-menu__link m-menu__toggle">
@@ -580,7 +594,7 @@ Group Surchargers
             </ul>
           </div>
         </li>
-      
+
         <div class="row">
           <div class="col-md-6">
             <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
