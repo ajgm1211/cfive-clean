@@ -25,6 +25,8 @@ class StoreCompany extends FormRequest
     {
         return [
             'business_name' => 'required',
+            'logo' => 'max:1000',
+            'options' => 'json',
         ];
     }
 }

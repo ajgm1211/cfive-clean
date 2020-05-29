@@ -2,12 +2,25 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <!--end styles -->
+</div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<br>
 <div class="form-group m-form__group">
     {!! Form::label('Name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'Name','class' => 'form-control m-input','required' => 'required']) !!}
 
-</div>
+
+<br>
+
 
 <div class="form-group m-form__group">
     {!! Form::label('Subject', 'Subject') !!}

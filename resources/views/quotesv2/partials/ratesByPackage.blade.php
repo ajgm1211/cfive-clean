@@ -42,7 +42,11 @@
                                             <li class="size-12px no-border-left d-flex justify-content-end m-width-50">
                                                 <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                                             </li>
-                                            <li class="size-12px m-width-100">
+                                            <li class="size-12px m-width-150">
+                                                <a class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" href="{{route('quotes-v2.cost.page',$rate->id)}}">
+                                                    <i class="la la-download"></i>
+                                                </a>
+
                                                 <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit">
                                                     <i class="la la-edit"></i>
                                                 </button>
@@ -161,7 +165,7 @@
                                                                         <div class="input-group">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                                    {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                                                 </div>
                                                                                 <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                                                     <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -179,7 +183,7 @@
                                                                     <td colspan="4" class="tds"></td>
                                                                     <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
                                                                     <td class="tds"><input type="hidden" value="{{$total_freight}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total sub_total">{{$total_freight}}</span></b></td>
-                                                                    <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                                                                    <td class="tds"><b><span class="td-a"> {{$company_user->currency->alphacode}}</span></b></td>
                                                                 </tr>
                                                                 @endif
                                                             </div>
@@ -300,7 +304,7 @@
                                                                     <div class="input-group">
                                                                         <div class="input-group-btn">
                                                                             <div class="btn-group">
-                                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                                {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                                             </div>
                                                                             <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -317,7 +321,7 @@
                                                                 <td colspan="4" class="tds"></td>
                                                                 <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
                                                                 <td class="tds"><input type="hidden" value="{{$total_origin}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total sub_total">{{$total_origin}}</span></b></td>
-                                                                <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                                                                <td class="tds"><b><span class="td-a"> {{$company_user->currency->alphacode}}</span></b></td>
                                                             </tr>
                                                             @endif                                              
                                                         </tbody>
@@ -439,7 +443,7 @@
                                                                         <div class="input-group">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                                    {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                                                 </div>
                                                                                 <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                                                     <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -456,7 +460,7 @@
                                                                     <td colspan="4" class="tds"></td>
                                                                     <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
                                                                     <td class="tds"><input type="hidden" value="{{$total_destination}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total sub_total">{{$total_destination}}</span></b></td>
-                                                                    <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                                                                    <td class="tds"><b><span class="td-a"> {{$company_user->currency->alphacode}}</span></b></td>
                                                                 </tr>
                                                                 @endif
                                                             </div>
@@ -506,7 +510,7 @@
                                                                 <td class="tds"><span class="bg-rates td-a sum_total_rates">{{$total_rates}}</td>
                                                                 <td class="tds"><span class="bg-rates td-a sum_total_markup">{{$total_markups}}</td>
                                                                 <td class="tds"><span class="bg-rates td-a sum_total_amount">{{$total_freight+$total_origin+$total_destination}}</td>
-                                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                                <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
