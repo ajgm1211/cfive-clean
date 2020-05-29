@@ -32,7 +32,15 @@ rm -f /etc/supervisor/conf.d/queue-worker.conf
 
 #Set new config file
 echo ">>> Setting config"
-cat .ebextensions/supervisord/queue-worker.conf >> /etc/supervisor/conf.d/queue-worker.conf
+echo "[program:queue-worker]" > /etc/supervisor/conf.d/queue-worker.conf
+echo "command=php /var/app/current/artisan queue:work $APP_JOB_WORKER" >> /etc/supervisor/conf.d/queue-worker.conf
+echo "directory=/var/app/current" >> /etc/supervisor/conf.d/queue-worker.conf
+echo "stdout_logfile=/var/app/support/logs/queue-worker.log" >> /etc/supervisor/conf.d/queue-worker.conf
+echo "redirect_stderr=true" >> /etc/supervisor/conf.d/queue-worker.conf
+echo "autostart=true" >> /etc/supervisor/conf.d/queue-worker.conf
+echo "autorestart=true" >> /etc/supervisor/conf.d/queue-worker.conf
+
+#cat .ebextensions/supervisord/queue-worker.conf >> /etc/supervisor/conf.d/queue-worker.conf
 
 #Start supervisor
 echo ">>> Starting supervisor"
