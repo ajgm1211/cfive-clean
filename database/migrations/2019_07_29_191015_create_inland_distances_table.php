@@ -15,12 +15,13 @@ class CreateInlandDistancesTable extends Migration
   {
     Schema::create('inland_distances', function (Blueprint $table) {
       $table->increments('id');
+      $table->string('zip');
+      $table->string('address');
       $table->string('distance');
       $table->integer('harbor_id')->unsigned();
-      $table->integer('inland_location_id')->unsigned();
-      $table->foreign('inland_location_id')->references('id')->on('inland_locations')->onDelete('cascade');
+      $table->integer('province_id')->unsigned()->nullable();
       $table->foreign('harbor_id')->references('id')->on('harbors')->onDelete('cascade');   
-      
+
     });
   }
 

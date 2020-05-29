@@ -15,7 +15,7 @@
     </div>
     <div class="col-lg-3">
         {!! Form::label('carrier', 'Carriers') !!}
-        @if(count(@$contracts->carriers) >=1)
+        @if(count([]) >=1)
         {!! Form::select('carrierAr[]',$carrier,@$contracts->carriers->pluck('carrier_id'), ['class' => 'form-control m-select2-general','required' => 'required','multiple'=>'multiple']) !!}
         @else
         {!! Form::select('carrierAr[]',$carrier,null, ['class' => 'form-control m-select2-general','required' => 'required','multiple'=>'multiple']) !!}

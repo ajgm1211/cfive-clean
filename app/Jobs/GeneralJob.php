@@ -79,8 +79,16 @@ class GeneralJob implements ShouldQueue
             $contract_new->direction_id     = $requestArray['direction_id'];
             $contract_new->company_user_id  = $requestArray['company_user_id'];
             $contract_new->validity         = $validity;
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->expire           = $expire;
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->status           = 'publish';
+
+            if(!empty($contract->gp_container_id)){
+                $contract_new->gp_container_id = $contract->gp_container_id;
+            } else {
+                $contract_new->gp_container_id = 1;
+            }
 
             if($requestArray['requestChange'] == true){   
                 $now                        = new \DateTime();
@@ -95,7 +103,7 @@ class GeneralJob implements ShouldQueue
                 $account->request_dp_id     = $requestArray['request_dp_id'];
                 $account->save();
                 $contract_new->account_id   = $account->id;
-            }
+            } 
 
             $contract_new->save();
             $contract_new_id                = $contract_new->id;
@@ -125,6 +133,7 @@ class GeneralJob implements ShouldQueue
                 $rate_new->fortyhc          = $rate_original->fortyhc;
                 $rate_new->fortynor         = $rate_original->fortynor;
                 $rate_new->fortyfive        = $rate_original->fortyfive;
+                $rate_new->containers       = $rate_original->containers;
                 $rate_new->currency_id      = $rate_original->currency_id;
                 $rate_new->schedule_type_id = $rate_original->schedule_type_id;
                 $rate_new->transit_time     = $rate_original->transit_time;
@@ -375,26 +384,28 @@ class GeneralJob implements ShouldQueue
                 $fortynorVal        = null;
                 $fortyfiveVal       = null;
                 $scheduleTVal       = null;
+                $containers         = null;
 
                 $curreExitBol       = false;
-                $twentyExiBol       = false;
-                $fortyExiBol        = false;
-                $fortyhcExiBol      = false;
-                $values             = true;
                 $carriExitBol       = false;
-                $fortynorExiBol     = false;
-                $fortyfiveExiBol    = false;
                 $scheduleTBol       = false;
+                $containersBol      = false;
 
-                $carrierArr       = explode("_",$failrate['carrier_id']);
-                $currencyArr      = explode("_",$failrate['currency_id']);
-                $twuentyArr       = explode("_",$failrate['twuenty']);
-                $fortyArr         = explode("_",$failrate['forty']);
-                $fortyhcArr       = explode("_",$failrate['fortyhc']);
-                $fortynorArr      = explode("_",$failrate['fortynor']);
-                $fortyfiveArr     = explode("_",$failrate['fortyfive']);
-                $scheduleTArr    = explode("_",$failrate['schedule_type']);
-                //dd($failrate);
+                $carrierArr         = explode("_",$failrate['carrier_id']);
+                $currencyArr        = explode("_",$failrate['currency_id']);
+                $twuentyArr         = explode("_",$failrate['twuenty']);
+                $fortyArr           = explode("_",$failrate['forty']);
+                $fortyhcArr         = explode("_",$failrate['fortyhc']);
+                $fortynorArr        = explode("_",$failrate['fortynor']);
+                $fortyfiveArr       = explode("_",$failrate['fortyfive']);
+                $scheduleTArr       = explode("_",$failrate['schedule_type']);
+                $containers         = json_decode($failrate['containers'],true);
+                foreach($containers as $containerEq){
+                    if(count(explode('_',$containerEq)) > 1){
+                        $containersBol = true;
+                        break;
+                    }
+                }
 
                 $carrierEX     = count($carrierArr);
                 $twuentyEX     = count($twentyArr);
@@ -405,7 +416,8 @@ class GeneralJob implements ShouldQueue
                 if( $twuentyEX  <= 1 &&
                    $fortyEX     <= 1 &&  
                    $fortyhcEX   <= 1 &&
-                   $currencyEX  <= 1 ){
+                   $currencyEX  <= 1 && 
+                   $containersBol == false){
 
                     $originV        = $requestArray['origin_id'];
                     $destinationV   = $requestArray['destiny_id'];
@@ -415,49 +427,23 @@ class GeneralJob implements ShouldQueue
                     $carrierArr      = PrvCarrier::get_carrier($carrierArr[0]);
                     $carriExitBol    = $carrierArr['boolean'];
                     $carrierVal      = $carrierArr['carrier'];
+                    //---------------- Containers -----------------------------------------------------------
+                    $colec = [];
+                    foreach($containers as $key => $containerEq){
+                        $colec[$key] = ''.floatval($containerEq);
+                    }
+                    $containers = json_encode($colec);
 
                     //---------------- 20' ------------------------------------------------------------------
-
-                    if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
-                        $twentyExiBol = true;
-                        $twentyVal   = floatval($twentyArr[0]);
-                    }
-
+                    $twentyVal   = floatval($twentyArr[0]);
                     //----------------- 40' -----------------------------------------------------------------
-
-                    if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
-                        $fortyExiBol = true;
-                        $fortyVal   = floatval($fortyArr[0]);
-                    }
-
+                    $fortyVal   = floatval($fortyArr[0]);
                     //----------------- 40'HC --------------------------------------------------------------
-
-                    if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
-                        $fortyhcExiBol = true;
-                        $fortyhcVal   = floatval($fortyhcArr[0]);
-                    }
-
+                    $fortyhcVal   = floatval($fortyhcArr[0]);
                     //----------------- 40'NOR -------------------------------------------------------------
-
-                    if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
-                        $fortynorExiBol = true;
-                        $fortynorVal   = floatval($fortynorArr[0]);
-                    }
-
+                    $fortynorVal   = floatval($fortynorArr[0]);
                     //----------------- 45' ----------------------------------------------------------------
-
-                    if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
-                        $fortyfiveExiBol = true;
-                        $fortyfiveVal   = floatval($fortyfiveArr[0]);
-                    }
-
-                    if($twentyVal == 0
-                       && $fortyVal == 0
-                       && $fortyhcVal == 0
-                       && $fortynorVal == 0
-                       && $fortyfiveVal == 0){
-                        $values = false;
-                    }
+                    $fortyfiveVal   = floatval($fortyfiveArr[0]);
                     //----------------- Currency -----------------------------------------------------------
 
                     $currenct = Currency::where('alphacode','=',$currencyArr[0])->orWhere('id','=',$currencyArr[0])->first();
@@ -479,12 +465,7 @@ class GeneralJob implements ShouldQueue
                     }
 
                     $array = [
-                        '20'    => $twentyExiBol,
-                        '40'    => $fortyExiBol,
-                        '40h'   => $fortyhcExiBol,
-                        '40n'   => $fortynorExiBol,
-                        '45'    => $fortyfiveExiBol,
-                        'val'   => $values,
+                        'containers' => $containers,
                         'sch'   => $scheduleTBol,
                         'car'   => $carriExitBol,
                         'curr'  => $curreExitBol
@@ -492,10 +473,7 @@ class GeneralJob implements ShouldQueue
                     //dd($array);
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
-                    if($twentyExiBol   == true && $fortyExiBol    == true &&
-                       $fortyhcExiBol  == true && $fortynorExiBol == true &&
-                       $fortyfiveExiBol == true && $values        == true &&
-                       $scheduleTBol == true && $curreExitBol   == true && $carriExitBol == true){
+                    if($scheduleTBol == true && $curreExitBol   == true && $carriExitBol == true){
                         $collecciont = '';
                         $exists = null;
                         $exists = Rate::where('origin_port',$originV)
@@ -507,6 +485,7 @@ class GeneralJob implements ShouldQueue
                             ->where('fortyhc',$fortyhcVal)
                             ->where('fortynor',$fortynorVal)
                             ->where('fortyfive',$fortyfiveVal)
+                            ->where('containers',$containers)
                             ->where('currency_id',$currencyVal)
                             ->where('schedule_type_id',$scheduleTVal)
                             ->where('transit_time',(int)$failrate['transit_time'])
@@ -523,6 +502,7 @@ class GeneralJob implements ShouldQueue
                                 'fortyhc'           => $fortyhcVal,
                                 'fortynor'          => $fortynorVal,
                                 'fortyfive'         => $fortyfiveVal,
+                                'containers'        => $containers,
                                 'currency_id'       => $currencyVal,
                                 'schedule_type_id'  => $scheduleTVal,
                                 'transit_time'      => (int)$failrate['transit_time'],
