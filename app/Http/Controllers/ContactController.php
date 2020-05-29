@@ -8,10 +8,13 @@ use App\Contact;
 use App\Company;
 use App\Http\Requests\StoreContact;
 use App\Http\Resources\ContactResource;
+use App\Http\Traits\EntityTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ContactController extends Controller
 {
+    use EntityTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -128,6 +131,20 @@ class ContactController extends Controller
             return $contact;
         }
 
+        $options = null;
+
+        if ($request->key_name && $request->key_value) {
+            $options_array = array();
+
+            $options_key = $this->processArray($request->key_name);
+            $options_value = $this->processArray($request->key_value);
+
+            $options_array = json_encode(array_combine($options_key, $options_value));
+            $options = $options_array;
+        }
+
+        $request->request->add(['options' => $options]);
+
         $contact = Contact::create($request->all());
 
         $request->session()->flash('message.nivel', 'success');
@@ -154,7 +171,21 @@ class ContactController extends Controller
 
     public function update(Request $request, $id)
     {
-        $contact = Contact::find($id);
+        $contact = Contact::findOrFail($id);
+
+        $options = null;
+
+        if ($request->key_name && $request->key_value) {
+            $options_array = array();
+
+            $options_key = $this->processArray($request->key_name);
+            $options_value = $this->processArray($request->key_value);
+
+            $options_array = json_encode(array_combine($options_key, $options_value));
+            $options = $options_array;
+        }
+
+        $request->request->add(['options' => $options]);
 
         $contact->update($request->all());
 

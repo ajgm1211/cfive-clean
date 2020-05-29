@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreCompany;
+use App\Http\Traits\EntityTrait;
 use App\ViewQuoteV2;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
+    use EntityTrait;
+    
     /**
      * Display a listing of the resource.
      *
@@ -615,15 +618,6 @@ class CompanyController extends Controller
         $companies = Company::where('api_id', '!=', '')->get();
 
         return view('companies.api.index', compact('companies'));
-    }
-
-    public function processArray($array)
-    {
-        $array = array_filter($array, function ($value) {
-            return !is_null($value) && $value !== '';
-        });
-
-        return $array;
     }
 
     public function saveLogo($company, $file)
