@@ -70,7 +70,7 @@ class ContractController extends Controller
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
-            return $harbor->only(['id', 'name']);
+            return $harbor->only(['id', 'display_name']);
         });
 
         $currencies = Currency::get()->map(function ($currency) {
@@ -274,7 +274,7 @@ class ContractController extends Controller
      */
     public function retrieve(Contract $contract)
     {
-        return new ContractResource($contract, true);
+        return new ContractResource($contract);
     }
 
     /**

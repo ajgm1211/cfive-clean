@@ -38,4 +38,9 @@ class InlandRange extends Model
     {
         return $query->where( 'inland_id', '=', $inland_id );
     }
+
+    public function per_container(){
+        /* Return a valid per container if all arrays have the same value */
+        return 100; // Example
+    }
 }

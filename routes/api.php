@@ -67,5 +67,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('surcharge', 'SurchargesController@store');
         Route::put('surcharge', 'SurchargesController@update');
         Route::delete('surcharge', 'SurchargesController@destroy');
+        //Ports
+        Route::get('ports', 'ApiController@ports');
+        //Airports
+        Route::get('airports', 'ApiController@airports');
     });
 });

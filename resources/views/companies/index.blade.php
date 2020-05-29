@@ -99,7 +99,7 @@
                                 <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill hide disabled">
                                     <span>
                                         <span>
-                                            Obtaining data
+                                            Fetching data
                                         </span>
                                         &nbsp;
                                         <i class="la la-refresh la-spin"></i>
@@ -109,7 +109,7 @@
                                 <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill disabled">
                                     <span>
                                         <span>
-                                            Obtaining data
+                                            Fetching data
                                         </span>
                                         &nbsp;
                                         <i class="la la-refresh la-spin"></i>

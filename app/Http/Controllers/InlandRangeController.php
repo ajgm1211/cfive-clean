@@ -15,7 +15,6 @@ class InlandRangeController extends Controller
 
     public function list(Request $request, Inland $inland)
     {
-        $available_containers = Container::all()->pluck('code');
         $results = InlandRange::filterByInland($inland->id)->filter($request);
     	return InlandRangeResource::collection($results);
     }
@@ -25,8 +24,5 @@ class InlandRangeController extends Controller
         
         $range->delete();
     }
-
-
-
 
 }

@@ -529,4 +529,42 @@ trait SearchTrait
 
     }
 
+
+    public function contratoFuturo($date1,$date2){
+
+
+
+        $date1 = new \DateTime($date1);
+        $date2 = new \DateTime($date2);
+        $diff = $date1->diff($date2);
+        
+        if($diff->invert  == "0")
+            $contratoFuturo = true;
+        else
+            $contratoFuturo = false;
+
+
+    return $contratoFuturo;
+
+    }
+
+
+    public function transitTime($date1,$date2){
+
+
+
+        $date1 = new \DateTime($date1);
+        $date2 = new \DateTime($date2);
+        $diff = $date1->diff($date2);
+        
+        if($diff->invert  == "0")
+            $contratoFuturo = true;
+        else
+            $contratoFuturo = false;
+
+
+    return $contratoFuturo;
+
+    }
+
 }
