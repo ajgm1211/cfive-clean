@@ -990,6 +990,7 @@ class QuoteV2Controller extends Controller
         $dataOrigDest = 'col-md-3';
 
         $countEquipment = count($equipmentForm);
+        $calculos = $countEquipment;
         $countEquipment = 5 - $countEquipment;
         if ($countEquipment == 1) {
             $originClass = 'col-md-3';
@@ -1012,6 +1013,34 @@ class QuoteV2Controller extends Controller
             $dataOrigDest = 'col-md-7';
         }
 
+        if ($calculos == 1) {
+            $head_1 = 'col-lg-8';
+            $head_2 = 'col-lg-3';
+            
+        }
+        if ($calculos == 2) {
+            $head_1 = 'col-lg-7';
+            $head_2 = 'col-lg-4';
+            
+        }
+        if ($calculos == 3) {
+            $head_1 = 'col-lg-6';
+            $head_2 = 'col-lg-5';
+            
+        }
+        if ($calculos == 4) {
+            $head_1 = 'col-lg-5';
+            $head_2 = 'col-lg-6';
+            
+        }
+        if ($calculos == 5) {
+            $head_1 = 'col-lg-4';
+            $head_2 = 'col-lg-7';
+            
+        }
+
+        $equipment->put('head_1', $head_1);
+        $equipment->put('head_2', $head_2 );
         $equipment->put('originClass', $originClass);
         $equipment->put('destinyClass', $destinyClass);
         $equipment->put('dataOrigDest', $dataOrigDest);
