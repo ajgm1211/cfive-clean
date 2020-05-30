@@ -561,7 +561,10 @@ trait SearchTrait
         if(!empty($transit)){
             $transitArray['via'] = $transit->via;
             $transitArray['transit_time'] = $transit->transit_time;
-            $transitArray['service'] = $transit->service->name;
+            if( $transit->service->id == '1')
+                $transitArray['service'] = '';
+            else
+                $transitArray['service'] = $transit->service->name;
         }else{
             $transitArray['via'] = "";
             $transitArray['transit_time'] =  "";
