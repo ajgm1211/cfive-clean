@@ -9,7 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   @if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production')
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  @endif
+  @endif 
+
 
   @section('css')
 
