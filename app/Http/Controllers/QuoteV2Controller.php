@@ -76,6 +76,13 @@ class QuoteV2Controller extends Controller
     use QuoteV2Trait;
     use SearchTrait;
 
+    protected $pdf_language = 'English';
+
+    public function __construct() 
+    {
+        //
+    }
+
     /**
      * Show quotes list
      * @param Request $request
@@ -818,6 +825,33 @@ class QuoteV2Controller extends Controller
             $request->session()->flash('message.content', 'Quote duplicated successfully!');
             return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
         }
+    }
+
+    public function savePdfOption($quote, $currency){
+
+        if(\Auth::user()->companyUser->pdf_language == 1){
+            $pdf_language = 'English';
+        }elseif(\Auth::user()->companyUser->pdf_language == 2){
+            $pdf_language = 'Spanish';
+        }elseif(\Auth::user()->companyUser->pdf_language == 3){
+            $pdf_language = 'Portuguese';
+        }else{
+            $pdf_language = 'English';
+        }
+
+        $pdf_option = new PdfOption();
+        $pdf_option->quote_id = $quote->id;
+        $pdf_option->show_type = 'detailed';
+        $pdf_option->grouped_total_currency = 0;
+        $pdf_option->total_in_currency = $currency->alphacode;
+        $pdf_option->freight_charges_currency = $currency->alphacode;
+        $pdf_option->origin_charges_currency = $currency->alphacode;
+        $pdf_option->destination_charges_currency = $currency->alphacode;
+        $pdf_option->show_total_freight_in_currency = $currency->alphacode;
+        $pdf_option->show_schedules = 1;
+        $pdf_option->show_gdp_logo = 1;
+        $pdf_option->language = $pdf_language;
+        $pdf_option->save();
     }
 
     public function savePdfOptionsDuplicate($quote, $quote_duplicate)
@@ -1752,19 +1786,8 @@ class QuoteV2Controller extends Controller
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
+            $this->savePdfOption($quote, $currency);
+            
         } else { // COTIZACION MANUAL
 
             $dateQ = explode('/', $request->input('date'));
@@ -1926,19 +1949,7 @@ class QuoteV2Controller extends Controller
                 }
             }
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
+            $this->savePdfOption($quote, $currency);
 
             // MANUAL RATE
         }
@@ -1961,9 +1972,10 @@ class QuoteV2Controller extends Controller
 
                     $remarks = $info_D->remarks . "<br>";
                     // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
-
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
-
+                    
+                    //$request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks]);
+                    
                     $rate = AutomaticRate::create($request->all());
 
                     $oceanFreight = new Charge();
@@ -6055,20 +6067,9 @@ class QuoteV2Controller extends Controller
                     $package_load->save();
                 }
             }
+            
+            $this->savePdfOption($quote, $currency);
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
         }
 
         //AUTOMATIC QUOTE
