@@ -33,6 +33,7 @@ class InlandController extends Controller
         $equipments = GroupContainer::get()->map(function ($equipment) {
             return $equipment->only(['id', 'name']);
         });
+        
         $directions = Direction::get()->map(function ($direction) {
             return $direction->only(['id', 'name']);
         });
