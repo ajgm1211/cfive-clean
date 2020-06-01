@@ -20,17 +20,7 @@ class Inland extends Model implements Auditable
   use \OwenIt\Auditing\Auditable;
 
   protected $table    = "inlands";
-  protected $fillable =   [
-                            'id', 
-                            'reference', 
-                            'status', 
-                            'inland_type_id', 
-                            'validity', 
-                            'expire', 
-                            'company_user_id', 
-                            'gp_container_id', 
-                            'direction_id' 
-                          ];
+  protected $fillable =   ['id','provider','type','validity','expire','company_user_id','gp_container_id'];
 
   public function inlandadditionalkms(){
 
