@@ -13,6 +13,7 @@ use App\GlobalCharCountry;
 use App\LocalCharPort;
 use App\LocalCharCountry;
 use App\LocalCharge;
+use App\GlobalCharge;
 use App\OauthAccessToken;
 use App\ViewLocalCharges;
 use App\ViewGlobalCharge;
@@ -34,9 +35,13 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\SearchTraitApi;
 
 class ApiController extends Controller
 {
+
+    use SearchTraitApi;
+
     public function index()
     {
 
@@ -710,15 +715,15 @@ class ApiController extends Controller
         if ($request->paginate) {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
-            })->select('id','name','code','display_name','coordinates','country_id','varation as variation')
-            ->with('country')->paginate($request->paginate);
+            })->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation')
+                ->with('country')->paginate($request->paginate);
         } else {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
             })->with('country')
-            ->select('id','name','code','display_name','coordinates','country_id','varation as variation')->take($request->size)->get();
+                ->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation')->take($request->size)->get();
         }
-        
+
         return $ports;
     }
 
@@ -743,6 +748,15 @@ class ApiController extends Controller
         }
 
         return $airports;
+    }
+
+    public function search($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    {
+        try {
+            return $this->processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'An error occurred while performing the operation'], 500);
+        }
     }
 
     public function processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
@@ -897,7 +911,7 @@ class ApiController extends Controller
 
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
             // Rates
-            $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
+            $arregloR = $this->ratesSearch($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
             $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSaveR']);
 
             $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
@@ -1274,9 +1288,6 @@ class ApiController extends Controller
                 $remarks = $data->contract->remarks . "<br>";
             }
 
-            $remarksGeneral = "";
-            $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
-
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
@@ -1322,8 +1333,7 @@ class ApiController extends Controller
             $detalle['Rates']['contract']['ref'] =   $data->contract->name;
             $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
 
-            $detalle['Rates']['remarks']['general'] = $remarksGeneral;
-            $detalle['Rates']['remarks']['contract'] = $remarks;
+            $detalle['Rates']['remarks'] = $remarks;
 
             $general->push($detalle);
         }
@@ -1333,18 +1343,19 @@ class ApiController extends Controller
         $chargeDestination = ($chargesDestination != null) ? true : false;
         $chargeFreight = ($chargesFreight != null) ? true : false;
 
-        // Ordenar por prioridad
-        if (in_array('20', $equipment))
-            $arreglo  =  $arreglo->sortBy('total20');
-        else if (in_array('40', $equipment))
-            $arreglo  =  $arreglo->sortBy('total40');
-        else if (in_array('40HC', $equipment))
-            $arreglo  =  $arreglo->sortBy('total40hc');
-        else if (in_array('40NOR', $equipment))
-            $arreglo  =  $arreglo->sortBy('total40nor');
-        else if (in_array('45', $equipment))
-            $arreglo  =  $arreglo->sortBy('total45');
-
         return response()->json($general);
+    }
+
+    public function ratesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->get();
+        foreach ($rates as $rate) {
+            if ($typeCurrency == "USD") {
+                $rateC = $rate->rates;
+            } else {
+                $rateC = $rate->rates_eur;
+            }
+        }
+        return $rateC;
     }
 }
