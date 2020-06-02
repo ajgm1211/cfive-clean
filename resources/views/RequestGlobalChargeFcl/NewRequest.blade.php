@@ -68,10 +68,6 @@
 
                             <div class="form-group m-form__group row">
 
-                                <div class="col-lg-2">
-                                    <label class="col-form-labe"><b>DATA:</b></label>
-                                </div>
-
                                 <div class="col-lg-3">
                                     <label for="nameid" class="">Name</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
@@ -79,7 +75,13 @@
                                     'required' => 'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
+                                    <label class="" for="groupContainers">Equipments Type</label>
+                                    <div class="">
+                                        {!! Form::select('groupContainers',$equiments,null,['class'=>'m-select2-general form-control','required','inpName' => 'Equipments Type','id'=>'groupContainers'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
@@ -92,162 +94,17 @@
                                     <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required="required" style='display: none;'>
                                     <div id="info" style="color:red"></div>
                                 </div>
+                                <div class="col-lg-2 col-lg-offset-2 ">
+                                    <label><br></label>
+                                    <button type="button" id="button-submit" onclick="fileempty()" class="btn btn-primary form-control">
+                                        Load Request
+                                    </button>
+                                </div>
 
                             </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
-                            <!-- <hr> -->
-                            <div class="form-group m-form__group row" style='display:none;'>
-
-                                <div class="col-lg-2">
-                                    <label class="col-form-label"><b>TYPE:</b></label>
-                                </div>
-
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="1" id="rdRate" type="radio" checked>
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Rates
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="2" id="rdRateSurcharge" type="radio" >
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Rates &nbsp; + &nbsp; Surcharges
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                            </div>
-                            <div class="form-group m-form__group row" hidden="hidden" id="divvaluescurren" style='display:none;'>
-                                <div class="col-2"></div>
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="1"  type="radio" >
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Values Only
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="2"  type="radio" checked>
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Values With Currency
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
                             <!--    <hr> -->
-                            <div class="form-group m-form__group row"style='display:none;'>
-
-                                <div class="col-lg-2">
-                                    <label class="col-form-label"><b>DATA:</b></label>
-                                </div>
-
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatOri" id="originchk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Origin Port Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatDes" id="destinychk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Destiny Port Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" id="destinyinp" hidden="hidden" >
-                                        {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatCar" id="carrierchk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Carrier Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" hidden="hidden" id="carrierinp">
-                                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
-                                    </div>
-                                </div>
-                            </div>
                             <div class="form-group m-form__group row">
 
                             </div>
@@ -256,12 +113,7 @@
                             <div class="form-group m-form__group ">
                                 <div class="col-lg-12 col-lg-offset-12 ">
                                     <center>
-                                        <div class="col-lg-2 col-lg-offset-2 ">
-                                            <br />
-                                            <button type="button" id="button-submit" onclick="fileempty()" class="btn btn-primary form-control">
-                                                Load Request
-                                            </button>
-                                        </div>
+
                                     </center>
                                 </div>
                             </div>
