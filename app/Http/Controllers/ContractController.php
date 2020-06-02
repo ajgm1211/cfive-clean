@@ -122,17 +122,6 @@ class ContractController extends Controller
         return response()->json(['data' => $data ]);
     }
 
-    /**
-     * Render create view 
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        return view('contract.create');
-    }
-
 
     /**
      * Store a newly created resource in storage.

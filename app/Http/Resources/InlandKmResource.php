@@ -5,8 +5,9 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Container;
 
-class InlandRangeResource extends JsonResource
-{
+class InlandKmResource extends JsonResource
+{    
+
     /**
      * @var
      */
@@ -18,7 +19,7 @@ class InlandRangeResource extends JsonResource
         parent::__construct($resource);
         $this->resource = $resource;
 
-        // Get the available containers except dry
+        // Get the available containers
         $this->available_containers = Container::get()->pluck('code');
     }
 
@@ -33,12 +34,7 @@ class InlandRangeResource extends JsonResource
 
         $data = [
             'id' => $this->id,
-            'lower' => $this->lower,
-            'upper' => $this->upper,
-            'details' => json_decode($this->details, true),
-            'inland' => $this->inland,
             'currency' => $this->currency,
-            'gp_container' => $this->gpContainer,
             'per_container' => $this->per_container()
              
           ];
@@ -48,10 +44,8 @@ class InlandRangeResource extends JsonResource
 
     public function addContainers($data) 
     {
-        $containers = json_decode($this->containers, true);
-
         foreach ($this->available_containers as $available_container) {
-           $data['rates_'.$available_container] = isset($containers['C'.$available_container]) ? $containers['C'.$available_container] : '-';
+           $data['rates_'.$available_container] = isset($this->json_containers['C'.$available_container]) ? $this->json_containers['C'.$available_container] : '-';
         }
 
         return $data;

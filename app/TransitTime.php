@@ -86,7 +86,7 @@ class TransitTime extends Model
 	  		['origin_id', '=', $origin_id],
 	  		['destination_id', '=', $destination_id],
 	  		['carrier_id', '=', $carrier_id]
-	  	])->exists();
+	  	])->count() > 0;
 	}
 
 

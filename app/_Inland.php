@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 
 
-class Inland extends Model implements Auditable
+class _Inland extends Model implements Auditable
 {
   use \OwenIt\Auditing\Auditable;
 
