@@ -175,7 +175,7 @@
             }
         },
         created() {
-            this.vdata = this.data;
+            this.vdata = Object.assign({}, this.data);
             this.updateDinamicalFieldOptions();
         },
         methods: {
@@ -309,6 +309,11 @@
                                 this.vdata = {};
                         })
                             .catch(( data ) => {
+                                let errors_key = Object.keys(data.errors);
+
+                                errors_key.forEach(function(key){
+                                    $(`#id_${key} .invalid-feedback`).css({'display':'block'});
+                                });
                                 console.log(data);
                         });
 
@@ -319,8 +324,15 @@
                                 this.$emit('success', response.data.data.id);
                                 this.vdata = {};
                         })
-                            .catch(( data ) => {
-                                console.log(data);
+                            .catch(( error, errors ) => {
+                                console.log('NO FUNCIONAA');
+                                let errors_key = Object.keys(data.errors);
+                                
+                                errors_key.forEach(function(key){
+                                    $(`#id_${key} .invalid-feedback`).css({'display':'block'});
+                                });
+                                console.log(error);
+                                console.log(errors);
                         });
                     }
 

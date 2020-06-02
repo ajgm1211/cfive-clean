@@ -122,7 +122,7 @@ class TransitTimeController extends Controller
 
         $validator->after(function ($validator) use ($val){
             if ($val)
-                $validator->errors()->add('general', 'Something is wrong with this field!');
+                $validator->errors()->add('general', 'This schedule already exists');
         });
 
     	
