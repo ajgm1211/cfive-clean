@@ -90,6 +90,7 @@ class QuoteV2Controller extends Controller
      */
     public function index(Request $request)
     {
+
         $company_user = null;
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
@@ -2425,7 +2426,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+     
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
