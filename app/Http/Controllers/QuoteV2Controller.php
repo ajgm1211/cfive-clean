@@ -1628,7 +1628,7 @@ class QuoteV2Controller extends Controller
 
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
 
-        $language_id = '';
+        $language_id = $company->companyUser->pdf_language;
 
         if ($language_id == '') {
             $language_id = 1;
@@ -1658,27 +1658,34 @@ class QuoteV2Controller extends Controller
         $remarkD = '';
         $rems = '';
 
+        if($remarks_all->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name ."<br>";
+
         foreach ($remarks_all as $remAll) {
             $rems .= "<br>";
-            $remarkA = $origin_port->name . " / " . $carrier->name;
+            //$remarkA .= $origin_port->name . " / " . $carrier->name;
             if ($mode == 1)
                 $remarkA .=  "<br>" . $remAll->remark->export;
             else
                 $remarkA .=  "<br>" . $remAll->remark->import;
         }
 
+        if($remarks_origin->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name;
+        
         foreach ($remarks_origin as $remOrig) {
 
             $rems .= "<br>";
-            $remarkO = $origin_port->name . " / " . $carrier->name;
+            
             if ($mode == 1)
                 $remarkO .=  "<br>" . $remOrig->remark->export;
             else
                 $remarkO .=  "<br>" . $remOrig->remark->import;
         }
+
+        if($remarks_destination->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name;
+
         foreach ($remarks_destination as $remDest) {
             $rems .= "<br>";
-            $remarkD = $destiny_port->name . " / " . $carrier->name;
+            
             if ($mode == 1)
                 $remarkD .=  "<br>" . $remDest->remark->export;
             else
