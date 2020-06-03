@@ -1338,11 +1338,6 @@ class ApiController extends Controller
             $general->push($detalle);
         }
 
-
-        $chargeOrigin = ($chargesOrigin != null) ? true : false;
-        $chargeDestination = ($chargesDestination != null) ? true : false;
-        $chargeFreight = ($chargesFreight != null) ? true : false;
-
         return response()->json($general);
     }
 
