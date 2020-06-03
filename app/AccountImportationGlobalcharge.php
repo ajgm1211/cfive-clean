@@ -21,6 +21,6 @@ class AccountImportationGlobalcharge extends Model
 	public function companyuser(){
 		return $this->belongsTo('App\CompanyUser','company_user_id');
 	}
-
+    
     
 }
