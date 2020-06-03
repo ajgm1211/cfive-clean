@@ -45,7 +45,7 @@
         <div class="m-portlet__foot m-portlet__foot--fit">
             <br>
             <div class="m-form__actions m-form__actions">
-                <a class="btn btn-danger" href="{{url()->previous()}}">
+                <a class="btn btn-danger" href="/remarks/list">
                     Go back
                 </a>
             </div>
