@@ -1626,16 +1626,9 @@ class QuoteV2Controller extends Controller
         $rem_carrier_id[] = $carrier->id;
         array_push($rem_carrier_id, $carrier_all);
 
-
-        /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
-      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
-        $b->wherein('carrier_id',$term_carrier_id);
-      });
-    })->get();*/
-
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
 
-        $language_id = $company->companyUser->pdf_language;
+        $language_id = '';
 
         if ($language_id == '') {
             $language_id = 1;
