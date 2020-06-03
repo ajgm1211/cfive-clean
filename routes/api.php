@@ -17,15 +17,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('currency/{value}', function($value) {
+Route::get('currency/{value}', function ($value) {
     return \App\Currency::find($value);
 });
 
-Route::get('currency/alphacode/{value}', function($value) {
-    return \App\Currency::where('alphacode',$value)->first();
+Route::get('currency/alphacode/{value}', function ($value) {
+    return \App\Currency::where('alphacode', $value)->first();
 });
 
-Route::get('airports/', function() {
+Route::get('airports/', function () {
     return \App\Airport::All();
 });
 
@@ -33,7 +33,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'ApiController@login');
     Route::get('test', 'ApiController@test');
 
-    Route::group(['middleware' => 'auth:api'], function() {
+    Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'ApiController@logout');
         //User
         Route::get('user', 'ApiController@user');
@@ -72,6 +72,6 @@ Route::group(['prefix' => 'v1'], function () {
         //Airports
         Route::get('airports', 'ApiController@airports');
         //Rates
-        Route::get('rates/nogroup/{code_origin}/{code_destination}/{inicio}/{fin}',['as' => 'search.index.v2', 'uses' => 'ApiController@searchV2']);
+        Route::get('rates/nogroup/{code_origin}/{code_destination}/{inicio}/{fin}/{group}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
     });
 });
