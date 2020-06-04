@@ -15,6 +15,7 @@
             </div>
 
             <DynamicalDataTable 
+                v-if="loaded"
                 :initialFields="fields"
                 :initialFormFields="vform_fields"
                 :datalists="datalists"
@@ -76,6 +77,7 @@
         },
         data() {
             return {
+                loaded: true,
                 currentData: {},
                 form_fields: {},
 
@@ -142,6 +144,11 @@
             /* Close modal form by modal name */
             closeModal(modal){
                 this.$bvModal.hide(modal);
+
+                let component = this;
+
+                component.loaded = false;
+                setTimeout(function(){ component.loaded = true; }, 100);
             },
 
             link(){
