@@ -69,5 +69,15 @@ function obtenerRouteKey($keyP)
 
 }
 
+function isDecimal($monto){
+
+  $isDecimal = Auth::user()->companyUser->decimals;
+  if($isDecimal)
+    return $monto;
+  else
+    return round($monto);
+
+}
+
 
 
