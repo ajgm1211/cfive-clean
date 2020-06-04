@@ -36,6 +36,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\SearchTraitApi;
+use App\LocalChargeApi;
 
 class ApiController extends Controller
 {
@@ -406,20 +407,29 @@ class ApiController extends Controller
                 })->where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
                     $q->where('company_user_id', '=', $company_user_id);
                 })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
-                    $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                    $query->with('origin_airport', 'destination_airport', 'airline');
                     $query->with(['origin_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
+                    }]);
+                    $query->with(['currency' => function ($q) {
+                        $q->select('id', 'alphacode');
                     }]);
                     $query->with(['destination_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
                     }]);
                     $query->with(['charge' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['charge_lcl_air' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
@@ -427,18 +437,22 @@ class ApiController extends Controller
                     $query->with('inland');
                     $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
-                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
+                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                 }])->with(['company' => function ($query) {
                     $query->with(['company_user' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['owner' => function ($q) {
-                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
+                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type');
                     }]);
                 }])->with(['contact' => function ($query) {
                     $query->with(['company' => function ($q) {
@@ -461,20 +475,29 @@ class ApiController extends Controller
                 })->where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
                     $q->where('company_user_id', '=', $company_user_id);
                 })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
-                    $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                    $query->with('origin_airport', 'destination_airport', 'airline');
                     $query->with(['origin_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
+                    }]);
+                    $query->with(['currency' => function ($q) {
+                        $q->select('id', 'alphacode');
                     }]);
                     $query->with(['destination_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
                     }]);
                     $query->with(['charge' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['charge_lcl_air' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
@@ -482,18 +505,22 @@ class ApiController extends Controller
                     $query->with('inland');
                     $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
-                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
+                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                 }])->with(['company' => function ($query) {
                     $query->with(['company_user' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['owner' => function ($q) {
-                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
+                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name');
                     }]);
                 }])->with(['contact' => function ($query) {
                     $query->with(['company' => function ($q) {
@@ -518,20 +545,29 @@ class ApiController extends Controller
                 })->whereHas('user', function ($q) use ($company_user_id) {
                     $q->where('company_user_id', '=', $company_user_id);
                 })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
-                    $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                    $query->with('origin_airport', 'destination_airport', 'airline');
                     $query->with(['origin_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
+                    }]);
+                    $query->with(['currency' => function ($q) {
+                        $q->select('id', 'alphacode');
                     }]);
                     $query->with(['destination_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
                     }]);
                     $query->with(['charge' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['charge_lcl_air' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
@@ -539,7 +575,7 @@ class ApiController extends Controller
                     $query->with('inland');
                     $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
-                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
+                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
                         $q->with('currency');
@@ -550,7 +586,7 @@ class ApiController extends Controller
                         $q->with('currency');
                     }]);
                     $query->with(['owner' => function ($q) {
-                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
+                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name');
                     }]);
                 }])->with(['contact' => function ($query) {
                     $query->with(['company' => function ($q) {
@@ -573,20 +609,29 @@ class ApiController extends Controller
                 })->whereHas('user', function ($q) use ($company_user_id) {
                     $q->where('company_user_id', '=', $company_user_id);
                 })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
-                    $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                    $query->with('origin_airport', 'destination_airport', 'airline');
                     $query->with(['origin_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
+                    }]);
+                    $query->with(['currency' => function ($q) {
+                        $q->select('id', 'alphacode');
                     }]);
                     $query->with(['destination_port' => function ($q) {
                         $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                         $q->with('country');
                     }]);
                     $query->with(['charge' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['charge_lcl_air' => function ($q) {
-                        $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                        $q->with('type', 'surcharge', 'calculation_type');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
@@ -594,18 +639,22 @@ class ApiController extends Controller
                     $query->with('inland');
                     $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
-                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
+                    $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                 }])->with(['company' => function ($query) {
                     $query->with(['company_user' => function ($q) {
                         $q->select('id', 'name', 'address', 'phone', 'currency_id');
-                        $q->with('currency');
+                        $q->with(['currency' => function ($q) {
+                            $q->select('id', 'alphacode');
+                        }]);
                     }]);
                     $query->with(['owner' => function ($q) {
-                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
+                        $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company as company_name');
                     }]);
                 }])->with(['contact' => function ($query) {
                     $query->with(['company' => function ($q) {
@@ -750,21 +799,19 @@ class ApiController extends Controller
         return $airports;
     }
 
-    public function search($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
     {
         try {
-            return $this->processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
+            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
         } catch (Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
 
-    public function processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
     {
         $portOrig = Harbor::where('code', $code_origin)->firstOrFail();
-
         $portDest = Harbor::where('code', $code_destination)->firstOrFail();
-        //Variables del usuario conectado
 
         $origin_port[] = $portOrig->id;
         $origin_country[] = $portOrig->country_id;
@@ -776,20 +823,31 @@ class ApiController extends Controller
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
+        $companies = Company::where('api_id', '=', $api_company_id)->first();
+        $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
 
         $chargesOrigin = 'true';
         $chargesDestination = 'true';
         $chargesFreight = 'true';
+        $markup = null;
+        $remarks = "";
+        $remarksGeneral = "";
+
         $equipment = array();
         $totalesCont = array();
-        $markup = null;
+
+        //Colecciones
         $general = new collection();
-        $companyId = User::find($user_id);
-        $company = CompanyUser::where('id', $companyId->company_user_id)->first();
+        $inlandDestiny = new collection();
+        $inlandOrigin = new collection();
+        $collectionRate = new Collection();
+
         $typeCurrency =  $company->currency->alphacode;
         $idCurrency = $company->currency_id;
         $company_user_id = $company->id;
-        $companies = Company::where('api_id', '=', $api_company_id)->first();
+        $dateSince = $inicio;
+        $dateUntil = $fin;
+        $arreglo = null;
 
         if (empty($companies)) {
             $companies_id = 0;
@@ -810,15 +868,6 @@ class ApiController extends Controller
         }
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
-
-        // Fecha Contrato
-
-        $dateSince = $inicio;
-        $dateUntil = $fin;
-
-        //Colecciones
-        $inlandDestiny = new collection();
-        $inlandOrigin = new collection();
 
         // Consulta base de datos rates
 
@@ -848,11 +897,13 @@ class ApiController extends Controller
                     $query->select('id', 'name', 'uncode', 'image');
                 }]);
             }
-        } else {
-            return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
+            $arreglo = $arreglo->get();
         }
 
-        $arreglo = $arreglo->get();
+        //Guard if
+        if ($arreglo == null) {
+            return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
+        }
 
         foreach ($containers as $cont) {
             $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
@@ -861,21 +912,16 @@ class ApiController extends Controller
             $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
         }
 
-        $collectionRate = new Collection();
         foreach ($arreglo as $data) {
             $contractStatus = $data->contract->status;
             $collectionRate = new Collection();
             $totalRates = 0;
             $totalT = 0;
-            //Variables Totalizadoras
-            $totales = array();
-
-            //Variables Totalizadoras
-            $totales = array();
 
             //Arreglo totalizador de freight , destination , origin por contenedor
             $totalesCont = array();
             $arregloRateSum = array();
+
             foreach ($containers as $cont) {
                 $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
                 $totalesCont = array_merge($totalesContainer, $totalesCont);
@@ -901,14 +947,6 @@ class ApiController extends Controller
             //Arreglo para guardar charges
             $arregloCharges['origin'] = array();
 
-            $arregloOrigin = array();
-            $arregloFreight = array();
-            $arregloDestiny = array();
-            // globales
-            $arregloOriginG = array();
-            $arregloFreightG = array();
-            $arregloDestinyG = array();
-
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
             // Rates
             $arregloR = $this->ratesSearch($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
@@ -920,15 +958,18 @@ class ApiController extends Controller
 
             $equipmentFilter = $arregloR['arregloEquipment'];
 
+            $port_all = Harbor::where('name', 'ALL')->select('id')->first();
+            $carrier_all = Carrier::where('name', 'ALL')->select('id')->first();
+            $country_all = Country::where('name', 'ALL')->select('id')->first();
+
             // id de los port  ALL
-            array_push($orig_port, 1485);
-            array_push($dest_port, 1485);
+            array_push($orig_port, $port_all->id);
+            array_push($dest_port, $port_all->id);
             // id de los carrier ALL
-            $carrier_all = 26;
             array_push($carrier, $carrier_all);
             // Id de los paises
-            array_push($origin_country, 250);
-            array_push($destiny_country, 250);
+            array_push($origin_country, $country_all);
+            array_push($destiny_country, $country_all);
 
             // ################### Calculos local  Charges #############################
             if ($contractStatus != 'api') {
@@ -941,7 +982,10 @@ class ApiController extends Controller
                     })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
                         $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
                     });
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->get();
+                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
+                ->with(['currency' => function ($q) {
+                    $q->select('id','alphacode','rates as exchange_usd','rates_eur as exchange_eur');
+                }])->get();
             } else {
 
                 $localChar = LocalChargeApi::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
@@ -952,10 +996,14 @@ class ApiController extends Controller
                     })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
                         $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
                     });
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->get();
+                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
+                ->with(['currency' => function ($q) {
+                    $q->select('id','alphacode','rates as exchange_usd','rates_eur as exchange_eur');
+                }])->get();
             }
-
+            
             foreach ($localChar as $local) {
+
                 $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
                 // Condicion para enviar los terminos de venta o compra
@@ -971,67 +1019,25 @@ class ApiController extends Controller
                         //Origin
                         if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
-                                $band = false;
                                 foreach ($containers as $cont) {
                                     $name_arreglo = 'array' . $cont->code;
                                     if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-
-                                        $montoOrig = number_format($local->ammount, 2, '.', '');
-                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
-                                        $monto = $local->ammount / $rateMount;
-                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                        $monto = number_format($monto, 2, '.', '');
-                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
-                                        $arregloOrigin = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
-                                        //$arregloOrigin = array_merge($arregloOrigin, $markupGe);
-                                        $collectionOrigin->push($arregloOrigin);
-                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
-                                        $band = true;
+                                        $collectionOrigin->push($this->processLocalCharge($cont, $local, $localParams, $rateMount, $totalesCont));
                                     }
                                 }
-                                /*if ($band) {
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
-                                    }
-                                    $collectionOrigin->push($arregloOrigin);
-                                }*/
                             }
                         }
                         //Destiny
                         if ($chargesDestination != null) {
                             if ($local->typedestiny_id == '2') {
-                                $band = false;
                                 foreach ($containers as $cont) {
 
                                     $name_arreglo = 'array' . $cont->code;
 
                                     if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                        $montoOrig = number_format($local->ammount, 2, '.', '');
-                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
-                                        $monto = $local->ammount / $rateMount;
-                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                        $monto = number_format($monto, 2, '.', '');
-                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
-                                        $arregloDestiny = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
-                                        //$arregloDestiny = array_merge($arregloDestiny, $markupGe);
-                                        $collectionDestiny->push($arregloDestiny);
-                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
-                                        $band = true;
+                                        $collectionDestiny->push($this->processLocalCharge($cont, $local, $localParams, $rateMount, $totalesCont));
                                     }
                                 }
-                                /*if ($band) {
-
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
-                                    }
-                                    $collectionDestiny->push($arregloDestiny);
-                                }*/
                             }
                         }
                         //Freight
@@ -1049,29 +1055,9 @@ class ApiController extends Controller
                                     $name_arreglo = 'array' . $cont->code;
 
                                     if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                        $montoOrig = number_format($local->ammount, 2, '.', '');
-                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
-                                        $monto = $local->ammount / $rateMount_Freight;
-                                        $monto = number_format($monto, 2, '.', '');
-                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
-                                        $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
-                                        //$arregloFreight = array_merge($arregloFreight, $markupGe);
-                                        $collectionFreight->push($arregloFreight);
-                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
-                                        $band = true;
+                                        $collectionFreight->push($this->processLocalCharge($cont, $local, $localParams, $rateMount_Freight, $totalesCont));
                                     }
                                 }
-
-                                /*if ($band) {
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
-                                    }
-                                    $collectionFreight->push($arregloFreight);
-                                }*/
                             }
                         }
                     }
@@ -1112,36 +1098,14 @@ class ApiController extends Controller
                             if ($chargesOrigin != null) {
 
                                 if ($global->typedestiny_id == '1') {
-                                    $band = false;
                                     foreach ($containers as $cont) {
 
                                         $name_arreglo = 'array' . $cont->code;
 
                                         if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-
-                                            $montoOrig = number_format($global->ammount, 2, '.', '');
-                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
-                                            $monto = $global->ammount / $rateMount;
-                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
-                                            $monto = number_format($monto, 2, '.', '');
-                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
-                                            $arregloOriginG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
-                                            //$arregloOriginG = array_merge($arregloOriginG, $markupGe);
-                                            $collectionOrigin->push($arregloOriginG);
-                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
-                                            $band = true;
+                                            $collectionOrigin->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount, $totalesCont));
                                         }
                                     }
-
-                                    /*if ($band) {
-                                       if (in_array($global->calculationtype_id, $arrayContainers)) {
-                                            $valores = $this->asociarPerCont($global->calculationtype_id);
-                                            $arregloOriginG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
-                                        } else {
-                                            $arregloOriginG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
-                                        }
-                                        $collectionOrigin->push($arregloOriginG);
-                                    }*/
                                 }
                             }
 
@@ -1152,30 +1116,9 @@ class ApiController extends Controller
                                     foreach ($containers as $cont) {
                                         $name_arreglo = 'array' . $cont->code;
                                         if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-
-                                            $montoOrig = number_format($global->ammount, 2, '.', '');
-                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
-                                            $monto = $global->ammount / $rateMount;
-                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
-                                            $monto = number_format($monto, 2, '.', '');
-                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
-                                            $arregloDestinyG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
-                                            //$arregloDestinyG = array_merge($arregloDestinyG, $markupGe);
-                                            $collectionDestiny->push($arregloDestinyG);
-                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
-                                            $band = true;
+                                            $collectionDestiny->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount, $totalesCont));
                                         }
                                     }
-
-                                    /*if ($band) {
-                                        if (in_array($global->calculationtype_id, $arrayContainers)) {
-                                            $valores = $this->asociarPerCont($global->calculationtype_id);
-                                            $arregloDestinyG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
-                                        } else {
-                                            $arregloDestinyG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
-                                        }
-                                        $collectionDestiny->push($arregloDestinyG);
-                                    }*/
                                 }
                             }
                             //Freight
@@ -1188,34 +1131,14 @@ class ApiController extends Controller
                                     $globalParams['typeCurrency'] = $data->currency->alphacode;
                                     $globalParams['idCurrency'] = $data->currency->id;
                                     //Fin Variables
-                                    $band = false;
+
                                     foreach ($containers as $cont) {
                                         $name_arreglo = 'array' . $cont->code;
 
                                         if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-
-                                            $montoOrig = number_format($global->ammount, 2, '.', '');
-                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
-                                            $monto = $global->ammount / $rateMount_Freight;
-                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
-                                            $monto = number_format($monto, 2, '.', '');
-                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
-                                            $arregloFreightG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
-                                            //$arregloFreightG = array_merge($arregloFreightG, $markupGe);
-                                            $collectionFreight->push($arregloFreightG);
-                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
-                                            $band = true;
+                                            $collectionFreight->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount_Freight, $totalesCont));
                                         }
                                     }
-                                    /*if ($band) {
-                                        if (in_array($global->calculationtype_id, $arrayContainers)) {
-                                            $valores = $this->asociarPerCont($global->calculationtype_id);
-                                            $arregloFreightG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
-                                        } else {
-                                            $arregloFreightG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
-                                        }
-                                        $collectionFreight->push($arregloFreightG);
-                                    }*/
                                 }
                             }
                         }
@@ -1236,10 +1159,42 @@ class ApiController extends Controller
             $data->setAttribute('localfreight', $collectionFreight);
             $data->setAttribute('localdestiny', $collectionDestiny);
             $data->setAttribute('localorigin', $collectionOrigin);
+
             // Valores totales por contenedor
             $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
-            foreach ($containers as $cont) {
 
+            $sum_origin = 'sum_origin_';
+            $sum_freight = 'sum_freight_';
+            $sum_destination = 'sum_destination_';
+
+            foreach ($containers as $cont) {
+                ${$sum_origin . $cont->code} = 0;
+                ${$sum_freight . $cont->code} = 0;
+                ${$sum_destination . $cont->code} = 0;
+            }
+
+            foreach ($containers as $cont) {
+                foreach ($collectionOrigin as $origin) {
+                    if ($cont->code == $origin['type']) {
+                        $rateCurrency = $this->ratesCurrency($origin['currency_id'], $typeCurrency);
+                        ${$sum_origin . $cont->code} +=  $origin['price']/$rateCurrency;
+                    }
+                }
+                foreach ($collectionFreight as $freight) {
+                    if ($cont->code == $freight['type']) {
+                        $rateCurrency = $this->ratesCurrency($freight['currency_id'], $typeCurrency);
+                        ${$sum_freight . $cont->code} +=  $freight['price']/$rateCurrency;
+                    }
+                }
+                foreach ($collectionDestiny as $destination) {
+                    if ($cont->code == $destination['type']) {
+                        $rateCurrency = $this->ratesCurrency($destination['currency_id'], $typeCurrency);
+                        ${$sum_destination . $cont->code} +=  $destination['price']/$rateCurrency;
+                    }
+                }
+            }
+
+            foreach ($containers as $cont) {
                 $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
                 $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
 
@@ -1250,66 +1205,54 @@ class ApiController extends Controller
                 // TOTALES
                 $name_tot = 'total' . $cont->code;
                 $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
+                $$name_tot += ${$sum_origin . $cont->code} + ${$sum_freight . $cont->code} + ${$sum_destination . $cont->code};
                 $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
             }
 
-            //Contrato Futuro
-            $contratoFuturo = $this->contratoFuturo($dateUntil, $data->contract->expire);
-
-            $data->setAttribute('contratoFuturo', $contratoFuturo);
-            // INLANDS
-            $data->setAttribute('inlandDestiny', $inlandDestiny);
-
-            $data->setAttribute('inlandOrigin', $inlandOrigin);
-            $data->setAttribute('typeCurrency', $typeCurrency);
-
-            $data->setAttribute('idCurrency', $idCurrency);
-            // Totales Freight
-            if (!isset($totales['20F']))
-                $totales['20F'] = 0;
-            if (!isset($totales['40F']))
-                $totales['40F'] = 0;
-            if (!isset($totales['40hcF']))
-                $totales['40hcF'] = 0;
-            if (!isset($totales['40norF']))
-                $totales['40norF'] = 0;
-            if (!isset($totales['45F']))
-                $totales['45F'] = 0;
-
-
-            $totalT = $totales['20F'] + $totales['40F'] + $totales['40hcF'] +  $totales['40norF'] + $totales['45F'];
-            $totalT = number_format($totalT, 2, '.', '');
-            $totalRates += $totalT;
-
             //remarks
 
-            $remarks = "";
             if ($data->contract->remarks != "") {
                 $remarks = $data->contract->remarks . "<br>";
             }
+
+            $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
             $routes['ocean_freight']['rates'] = $arregloRate;
 
-            if (!empty($collectionFreight)) {
-                //$collectionFreight = $this->OrdenarCollection($collectionFreight);
-                $routes['freight_charges'] = $collectionFreight;
+            if ($mode == 'group') {
+                if (!empty($collectionFreight)) {
+                    $collectionFreight = $this->groupCollection($collectionFreight);
+                    $routes['freight_charges'] = $collectionFreight;
+                }
+
+                if (!empty($collectionDestiny)) {
+                    $collectionDestiny = $this->groupCollection($collectionDestiny);
+                    $routes['destination_charges'] = $collectionDestiny;
+                }
+
+                if (!empty($collectionOrigin)) {
+                    $collectionOrigin = $this->groupCollection($collectionOrigin);
+                    $routes['origin_charges'] = $collectionOrigin;
+                }
+            } else {
+                if (!empty($collectionFreight)) {
+                    $routes['freight_charges'] = $collectionFreight;
+                }
+
+                if (!empty($collectionDestiny)) {
+                    $routes['destination_charges'] = $collectionDestiny;
+                }
+
+                if (!empty($collectionOrigin)) {
+                    $routes['origin_charges'] = $collectionOrigin;
+                }
             }
 
-            if (!empty($collectionDestiny)) {
-                //$collectionDestiny = $this->OrdenarCollection($collectionDestiny);
-                $routes['destination_charges'] = $collectionDestiny;
-            }
-
-            if (!empty($collectionOrigin)) {
-                //dd($collectionOrigin);
-                //$collectionOrigin = $this->OrdenarCollection($collectionOrigin);
-
-                $routes['origin_charges'] = $collectionOrigin;
-            }
             $detalle['Rates'] = $routes;
+
             //Totals
             foreach ($containers as $cont) {
                 foreach ($equipment as $containers) {
@@ -1319,13 +1262,15 @@ class ApiController extends Controller
                 }
             }
             $detalle['Rates']['currency'] = $typeCurrency;
+
+
             // SET ATRIBUTES
             $detalle['Rates']['transit_time'] = $data->transit_time;
             $detalle['Rates']['via'] = $data->via;
             $detalle['Rates']['schedule'] = @$data->scheduletype->name;
 
             //set carrier logo url
-            $data->carrier['url'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            $data->carrier['image'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
             $detalle['Rates']['carrier'] = $data->carrier;
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
             $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
@@ -1333,15 +1278,10 @@ class ApiController extends Controller
             $detalle['Rates']['contract']['ref'] =   $data->contract->name;
             $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
 
-            $detalle['Rates']['remarks'] = $remarks;
+            $detalle['Rates']['remarks'] = $remarksGeneral . "<br>" . $remarks;
 
             $general->push($detalle);
         }
-
-
-        $chargeOrigin = ($chargesOrigin != null) ? true : false;
-        $chargeDestination = ($chargesDestination != null) ? true : false;
-        $chargeFreight = ($chargesFreight != null) ? true : false;
 
         return response()->json($general);
     }

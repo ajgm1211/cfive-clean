@@ -1367,6 +1367,8 @@ trait QuoteV2Trait
             $sum = 'sum';
             $markup = 'markup';
             $total = 'total';
+            $amount = 'amount';
+            $pre = 'c';
             foreach ($containers as $c) {
                 ${$sum . '_' . $c->code} = 0;
                 ${$total . '_' . $c->code} = 0;
@@ -1387,8 +1389,6 @@ trait QuoteV2Trait
 
                 $array_amounts = json_decode($value->amount, true);
                 $array_markups = json_decode($value->markups, true);
-                $amount = 'amount';
-                $pre = 'c';
 
                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -1473,8 +1473,8 @@ trait QuoteV2Trait
                         ${$total . '_inland_' . $c->code} = ${'markup_inland_' . $c->code} / $currency_rate;
                         ${'sum_inland_' . $c->code} = number_format(${$total . '_inland_' . $c->code}, 2, '.', '');
                     }
-
-                    $value->${'total_' . $c->code} = number_format(${'sum_inland_' . $c->code}, 2, '.', '');
+                    
+                    $inland->${'total_' . $c->code} = number_format(${'sum_inland_' . $c->code}, 2, '.', '');
                 }
 
                 $currency_charge = Currency::find($inland->currency_id);
