@@ -9,10 +9,21 @@ use Illuminate\Http\Request;
 
 class InlandRange extends Model
 {
+    protected $fillable = [
+                            'id',
+                            'lower',
+                            'upper',
+                            'currency_id',
+                            'inland_id',
+                            'json_containers',
+                            'status'
+                          ];
+
     public function inland()
     {
         return $this->belongsTo('App\Inland');
     }
+
     public function currency()
     {
         return $this->belongsTo('App\Currency');
@@ -39,8 +50,30 @@ class InlandRange extends Model
         return $query->where( 'inland_id', '=', $inland_id );
     }
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'json_containers' => 'array',
+    ];
+
+
     public function per_container(){
-        /* Return a valid per container if all arrays have the same value */
-        return 100; // Example
+        $first = true;
+
+        foreach ($this->json_containers as $key => $value) {
+            
+            if($first)
+            {
+                $first_value = $value;
+                $first = false;
+
+            } else 
+                if($value != $first_value) return '-';
+        }
+        
+        return $value;
     }
 }

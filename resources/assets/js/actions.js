@@ -180,22 +180,13 @@ export default {
 	            	callback(error, error.response.data);
 	        	});
     	},
-	    create(data, route) {
-	    	let inland_id = route.params.id;
-	        return api.call('post', `/api/v2/inland/${inland_id}/km/store`, data);
-	    },
 	    update(id, data, route) {
 	    	let inland_id = route.params.id;
 	        return api.call('post', `/api/v2/inland/${inland_id}/km/${id}/update`, data);
 	    },
-	   	delete(id) {
-	        return api.call('delete', `/api/v2/inland/km/${id}/destroy/`, {});
-	    },
-	   	duplicate(id, data){
-			return api.call('post', `/api/v2/inland/km/${id}/duplicate`, data);
-	    },
-	    deleteAll(ids){
-	    	return api.call('post', `/api/v2/inland/km/destroyAll`, { ids:ids });	
+	   	retrieve(route){
+	   		let inland_id = route.params.id;
+			return api.call('get', `/api/v2/inland/${inland_id}/km/retrieve`, {});
 	    }
 	},
 	transit_time: {

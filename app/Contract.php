@@ -36,7 +36,6 @@ class Contract extends Model implements HasMedia, Auditable
 	}
 
 	public function localcharges(){
-//return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
 		return $this->hasMany('App\LocalCharge');
 	}
 
