@@ -131,6 +131,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group m-form__group">
+                                            <label for="address">Decimals</label><br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-success">
+													<input  checked='true' type="radio" name="decimals" value="1">
+																		True
+																		<span></span>
+																	</label><br>
+                                                                    <label class="m-radio m-radio--check-bold m-radio--state-brand">
+																		<input  type="radio" name="decimals" value="0">
+																		False
+																		<span></span>
+																	</label>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-3">
@@ -277,6 +295,24 @@
                                             {{ Form::select('currency_id',$currencies,@$company->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'currency_id','required'=>'true']) }}
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group m-form__group">
+                                            <label for="address">Decimals</label><br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-success">
+													<input  {{ $selectedTrue}} type="radio" name="decimals" value="1">
+																		True
+																		<span></span>
+																	</label><br>
+                                                                    <label class="m-radio m-radio--check-bold m-radio--state-brand">
+																		<input {{ $selectedFalse}} type="radio" name="decimals" value="0">
+																		False
+																		<span></span>
+																	</label>
+                                        </div>
+                                    </div>
+                                   
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
