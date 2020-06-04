@@ -3036,28 +3036,10 @@ class ImportationController extends Controller
 
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        $ratesCh = Rate::where('containers','!=','null')->where('containers','!=',"[]")->get()->chunk(200);
-        $containerRates = [];
-        foreach($ratesCh as $rates){
-            foreach($rates as $rate){
-                if(is_string($rate->containers)){
-                    $containers = json_decode($rate->containers,true);
-                    if(is_string($containers)){
-                        $containerRates[$rate->id] = $containers;
-                        $rate->containers = $containers;
-                    } else {
-                        $rate->containers = json_encode($containers);
-                        $containerRates[$rate->id] = json_encode($containers);;
-                    }
-                    //$rate->update();
-                }
-            }
-        }
 
-        TestJob::dispatch()->onQueue('operaciones');
-        dd($containerRates);
-
-
+        $request_cont = NewContractRequest::find(53);
+        $data = json_decode($request_cont['data'],true);
+        dd($data['group_containers']['id']);
     }
 
 }
