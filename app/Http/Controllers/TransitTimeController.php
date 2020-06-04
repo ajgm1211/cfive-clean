@@ -105,7 +105,7 @@ class TransitTimeController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return Array
      */
-    public function validateData($request)
+    public function validateData($request, $transit_time = null)
     {
         $vdata = [
             'origin' => 'required',
@@ -118,7 +118,7 @@ class TransitTimeController extends Controller
 
         $validator = Validator::make($request->all(), $vdata);
         
-        $val = TransitTime::scheduleExists($request);
+        $val = TransitTime::scheduleExists($request, $transit_time);
 
         $validator->after(function ($validator) use ($val){
             if ($val)
@@ -137,7 +137,7 @@ class TransitTimeController extends Controller
      */
     public function update(Request $request, TransitTime $transit_time)
     {
-        $data = $this->validateData($request);
+        $data = $this->validateData($request, $transit_time);
 
         $prepared_data = $this->prepareData($data);
 
