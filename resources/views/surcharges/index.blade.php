@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        List  Surcharges 
+                        Surcharges list
                     </h3>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                     <li class="nav-item m-tabs__item">
                         <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                             <i class="la la-cog"></i>
-                            List Surcharges 
+                            Surcharges list
                         </a>
                     </li>
                     <li class="nav-item m-tabs__item">

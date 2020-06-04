@@ -1121,14 +1121,14 @@
                 <div class="col-lg-2" >  <span class="portcss"> Carrier</span></div>
                 <div class="col-lg-10">
                   <div class="row">
-                    <div class="col-lg-4">
+                    <div class="{{ $equipmentHides['head_1'] }}">
                       <div class="row">
                         <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-3" ><span class="portcss">Destination</span></div>
+                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destination</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-6 padding-right-table" style="padding-left: 0;">
-                      <div style="display:flex; justify-content:flex-start">
+                    <div class="{{ $equipmentHides['head_2'] }} padding-right-table" style="padding-left: 0;">
+                      <div style="display:flex; justify-content:flex-end">
                         @foreach($containers as $container)
                         <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides[$container->code] }} ><span class="portcss">{{ $container->code }}</span></div>
                         @endforeach
@@ -1160,26 +1160,26 @@
                 </div>
                 <div class="col-lg-10 b-left info-bottom-border">
                   <div class="row">
-                    <div class="col-lg-4 no-padding padding-min-col d-flex justify-content-center">
+                    <div class="{{ $equipmentHides['head_1'] }} no-padding padding-min-col ">
                       <div class="row">
                         <div class="col-lg-4">
                           <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
                           <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                         </div>
-                        <div class="col-lg-4 d-flex flex-column justify-content-center">
+                        <div class="col-lg-4 d-flex flex-column justify-content-center aqui">
                         @if($arr->service != '')
-                              {{$arr->service}} 
+                              {{$arr->service}}
 
                           @endif
                           @if($arr->via != '')
-                              Via : <br> {{$arr->via}} 
+                          <span style="color:#2e0084 align-items-center"><center>Via :</center></span><span style="color:#1d3b6e align-items-center"><center>{{$arr->via}}</center></span>
 
                           @endif
                           <div class="progress m-progress--sm">
                             <div class="progress-bar {{ $arr->color }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           @if($arr->transit_time != '')
-                              Transit : <br> {{$arr->transit_time}} Days
+                          <span style="color:#2e0084"><center>Transit :</center></span> <span style="color:#1d3b6e"><center>{{$arr->transit_time}} Days</center></span>
 
                           @endif
                           
@@ -1193,10 +1193,10 @@
                       <br>
                     </div>
 
-                    <div class="col-lg-6" style="padding-right: 35px;">
-                      <div class="table-r__quotes" style="display: flex; justify-content: flex-start">
+                    <div class="{{ $equipmentHides['head_2'] }}" style="padding-right: 35px;">
+                      <div class="table-r__quotes" style="display: flex; justify-content: flex-end">
                         @foreach($containers as $container)
-                        <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate tot{{$container->code}}-{{$arr->id}}">{{$arr->{'totalT'.$container->code}  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
+                        <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate tot{{$container->code}}-{{$arr->id}}"> {{ isDecimal($arr->{'totalT'.$container->code})  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
                         <input type='hidden' id='tot{{$container->code}}-{{$arr->id}}' value="{{$arr->{'totalT'.$container->code}  }}">
                         
                         @endforeach
@@ -1204,7 +1204,7 @@
 
                       </div>
                     </div>
-                    <div class="col-lg-2 no-padding d-flex align-items-center justify-content-end pos-btn">
+                    <div class="col-lg-1 no-padding d-flex align-items-center justify-content-end pos-btn">
                       <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate checkboxx" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
@@ -1249,11 +1249,11 @@
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> > Via: </span> {{  $arr->via }}
                         </div>-->
                         @endif
-                        <div class="col-lg-2 d-flex align-items-center">
+                        <div class="col-lg-2 d-flex  justify-content-end">
                           <span class="portalphacode" style="margin-right:15px;">Contract: </span>  {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>
                        
-                        <div class="col-lg-2 no-padding d-flex justify-content-end align-items-center">
+                        <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
                           @if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") || ($arr->totalItems !="0") )
                           <div class="downexcel" style="margin-right: 10px;">
 
@@ -1317,7 +1317,7 @@
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
                         <div class="wth" {{ $equipmentHides[$container->code] }}  >
-                          <span class="bg-rates"> {{ isset($localorigin[$container->code]) ?   str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin[$container->code]) ?   str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin[$container->code]) ?   str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('montoMarkup')) : '0.00' }}</b>      
+                          <span class="bg-rates"> {{ isset($localorigin[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('monto'))) : isDecimal('0.00') }}</span> <span class="bg-rates">+ {{ isset($localorigin[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('markup'))) : isDecimal('0.00') }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localorigin[$container->code]->pluck('montoMarkup'))) : isDecimal('0.00') }}</b>      
                         </div>  
                         @endforeach
                       </div>
@@ -1333,7 +1333,7 @@
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
                         
-                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ $arr->{'tot'.$container->code.'O'}  }} </span></div>
+                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ isDecimal($arr->{'tot'.$container->code.'O'})  }} </span></div>
                         @endforeach
                       </div>
                     </div>
@@ -1367,7 +1367,7 @@
                     <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
-                        <div class="wth" {{ $equipmentHides[$container->code] }}> <span class="bg-rates">{{ @$rates['price'.$container->code] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup'.$container->code], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto'.$container->code] }}</b>
+                        <div class="wth" {{ $equipmentHides[$container->code] }}> <span class="bg-rates">{{ isDecimal(@$rates['price'.$container->code]) }}</span> <span class="bg-rates">+{{ isDecimal(number_format(@$rates['markup'.$container->code], 2, '.', ''))   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  isDecimal(@$rates['monto'.$container->code]) }}</b>
                         </div>
                         @endforeach
                       </div>
@@ -1385,7 +1385,7 @@
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
                         <div class="wth" {{ $equipmentHides[$container->code] }}>
-                          <span class="bg-rates"> {{ isset($localfreight[$container->code]) ?   str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight[$container->code]) ?   str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight[$container->code]) ?   str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('montoMarkup')) : '0.00' }} </b>         
+                          <span class="bg-rates"> {{ isset($localfreight[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('monto'))) : isDecimal('0.00') }}</span><span class="bg-rates">+ {{ isset($localfreight[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('markup'))) : isDecimal('0.00') }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localfreight[$container->code]->pluck('montoMarkup'))) : isDecimal('0.00') }} </b>         
                         </div>    
                         @endforeach
                       </div>
@@ -1398,7 +1398,7 @@
                     <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
-                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ $arr->{'tot'.$container->code.'F'}  }} </span></div>
+                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ isDecimal($arr->{'tot'.$container->code.'F'})  }} </span></div>
                         @endforeach
                       </div>
                     </div>
@@ -1434,7 +1434,7 @@
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
                         <div class="wth" {{ $equipmentHides[$container->code] }}>
-                          <span class="bg-rates">   {{ isset($localdestiny[$container->code]) ?   str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('monto')) : '0.00' }} </span><span class="bg-rates"> + {{ isset($localdestiny[$container->code]) ?   str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('markup')) : '0.00' }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny[$container->code]) ?   str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('montoMarkup')) : '0.00' }}   </b>       
+                          <span class="bg-rates">   {{ isset($localdestiny[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('monto'))) : isDecimal('0.00') }} </span><span class="bg-rates"> + {{ isset($localdestiny[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('markup'))) : isDecimal('0.00') }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny[$container->code]) ?   isDecimal(str_replace(["[","]","\""], ' ', $localdestiny[$container->code]->pluck('montoMarkup'))) : isDecimal('0.00') }}   </b>       
                         </div>      
                         @endforeach
                       </div>
@@ -1448,7 +1448,7 @@
                     <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         @foreach($containers as $container)
-                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ $arr->{'tot'.$container->code.'D'}  }} </span></div>
+                        <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ isDecimal($arr->{'tot'.$container->code.'D'})  }} </span></div>
                         @endforeach
                       </div>
                     </div>

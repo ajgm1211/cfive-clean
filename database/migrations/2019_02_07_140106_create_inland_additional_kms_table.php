@@ -13,6 +13,10 @@ class CreateInlandAdditionalKmsTable extends Migration
      */
   public function up()
   {
+    
+    Schema::disableForeignKeyConstraints();
+    Schema::dropIfExists('inland_additional_kms');
+
     Schema::create('inland_additional_kms', function (Blueprint $table) {
       $table->increments('id');
       $table->double('km_20')->default(0);
