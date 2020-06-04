@@ -1172,14 +1172,14 @@
 
                           @endif
                           @if($arr->via != '')
-                          <span style="color:#2e0084">Via :</span><span style="color:#1d3b6e">{{$arr->via}}</span>
+                          <span style="color:#2e0084 align-items-center"><center>Via :</center></span><span style="color:#1d3b6e align-items-center"><center>{{$arr->via}}</center></span>
 
                           @endif
                           <div class="progress m-progress--sm">
                             <div class="progress-bar {{ $arr->color }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           @if($arr->transit_time != '')
-                          <span style="color:#2e0084">Transit :</span> <span style="color:#1d3b6e">{{$arr->transit_time}} Days</span>
+                          <span style="color:#2e0084"><center>Transit :</center></span> <span style="color:#1d3b6e"><center>{{$arr->transit_time}} Days</center></span>
 
                           @endif
                           
