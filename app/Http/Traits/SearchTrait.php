@@ -538,6 +538,8 @@ trait SearchTrait
         $date1 = new \DateTime($date1);
         $date2 = new \DateTime($date2);
         $diff = $date1->diff($date2);
+
+        //dd($date1,$date2,$diff);
         
         if($diff->invert  == "0")
             $contratoFuturo = true;
@@ -561,7 +563,10 @@ trait SearchTrait
         if(!empty($transit)){
             $transitArray['via'] = $transit->via;
             $transitArray['transit_time'] = $transit->transit_time;
-            $transitArray['service'] = $transit->service->name;
+            if( $transit->service->id == '1')
+                $transitArray['service'] = '';
+            else
+                $transitArray['service'] = $transit->service->name;
         }else{
             $transitArray['via'] = "";
             $transitArray['transit_time'] =  "";

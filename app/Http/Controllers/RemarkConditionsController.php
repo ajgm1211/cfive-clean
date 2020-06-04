@@ -10,6 +10,7 @@ use App\Carrier;
 use App\Language;
 use App\RemarkHarbor;
 use App\CompanyUser;
+use App\Http\Requests\StoreRemark;
 use App\RemarkCarrier;
 
 class RemarkConditionsController extends Controller
@@ -49,47 +50,44 @@ class RemarkConditionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRemark $request)
     {
-        if ($request->import != '' || $request->export != '') {
-            $companyUser        = CompanyUser::All();
-            $company           = Auth::user()->company_user_id;
-            $remark                   = new RemarkCondition();
-            $remark->name             = $request->name;
-            $remark->user_id          = Auth::user()->id;
-            $remark->import           = $request->import;
-            $remark->export           = $request->export;
-            $remark->company_user_id  = $company;
-            $remark->language_id      = $request->language;
-            $remark->save();
+        //$request->validated();
+        
+        $companyUser        = CompanyUser::All();
+        $company           = Auth::user()->company_user_id;
+        $remark                   = new RemarkCondition();
+        $remark->name             = $request->name;
+        $remark->user_id          = Auth::user()->id;
+        $remark->import           = $request->import;
+        $remark->export           = $request->export;
+        $remark->company_user_id  = $company;
+        $remark->language_id      = $request->language;
+        $remark->save();
 
-            $ports = $request->ports;
-            $carriers = $request->carriers;
-            if (count($ports) >= 1) {
-                foreach ($ports as $i) {
-                    $remarksport = new RemarkHarbor();
-                    $remarksport->port_id = $i;
-                    $remarksport->remark()->associate($remark);
-                    $remarksport->save();
-                }
+        $ports = $request->ports;
+        $carriers = $request->carriers;
+        if (count($ports) >= 1) {
+            foreach ($ports as $i) {
+                $remarksport = new RemarkHarbor();
+                $remarksport->port_id = $i;
+                $remarksport->remark()->associate($remark);
+                $remarksport->save();
             }
-            if (count($carriers) >= 1) {
-                foreach ($carriers as $carrier) {
-                    RemarkCarrier::create([
-                        'carrier_id'        => $carrier,
-                        'remark_condition_id'  => $remark->id
-                    ]);
-                }
-            }
-
-            $request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.title', 'Well done!');
-            $request->session()->flash('message.content', 'Register completed successfully');
-        } else {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.title', 'Error!');
-            $request->session()->flash('message.content', 'You must add remarks to import or export');
         }
+        if (count($carriers) >= 1) {
+            foreach ($carriers as $carrier) {
+                RemarkCarrier::create([
+                    'carrier_id'        => $carrier,
+                    'remark_condition_id'  => $remark->id
+                ]);
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Register completed successfully');
+
         return redirect('remarks/list');
     }
 
@@ -145,50 +143,47 @@ class RemarkConditionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreRemark $request, $id)
     {
-        if ($request->import == '' || $request->export == '') {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.title', 'Error!');
-            $request->session()->flash('message.content', 'You must add remarks to import or export');
-        } else {
-            $remark = RemarkCondition::find($id);
-            $remark->name         = $request->name;
-            $remark->user_id      = Auth::user()->id;
-            $remark->import       = $request->import;
-            $remark->export       = $request->export;
-            $remark->language_id  = $request->language;
-            $remark->company_user_id = Auth::user()->company_user_id;
-            $remark->update();
+        $request->validated();
 
-            $ports = $request->ports;
-            if (count($ports) >= 1) {
-                RemarkHarbor::where('remark_condition_id', $id)->delete();
+        $remark = RemarkCondition::findOrFail($id);
+        $remark->name         = $request->name;
+        $remark->user_id      = Auth::user()->id;
+        $remark->import       = $request->import;
+        $remark->export       = $request->export;
+        $remark->language_id  = $request->language;
+        $remark->company_user_id = Auth::user()->company_user_id;
+        $remark->update();
 
-                foreach ($ports as $i) {
-                    $remarksport = new RemarkHarbor();
-                    $remarksport->port_id = $i;
-                    $remarksport->remark()->associate($remark);
-                    $remarksport->save();
-                }
+        $ports = $request->ports;
+        if (count($ports) >= 1) {
+            RemarkHarbor::where('remark_condition_id', $id)->delete();
+
+            foreach ($ports as $i) {
+                $remarksport = new RemarkHarbor();
+                $remarksport->port_id = $i;
+                $remarksport->remark()->associate($remark);
+                $remarksport->save();
             }
-
-            $carriers = $request->carriers;
-
-            RemarkCarrier::where('remark_condition_id', $id)->delete();
-            if (count($carriers) >= 1) {
-                foreach ($carriers as $carrier) {
-                    RemarkCarrier::create([
-                        'carrier_id'        => $carrier,
-                        'remark_condition_id'  => $remark->id
-                    ]);
-                }
-            }
-
-            $request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.title', 'Well done!');
-            $request->session()->flash('message.content', 'You upgrade has been success ');
         }
+
+        $carriers = $request->carriers;
+
+        RemarkCarrier::where('remark_condition_id', $id)->delete();
+        if (count($carriers) >= 1) {
+            foreach ($carriers as $carrier) {
+                RemarkCarrier::create([
+                    'carrier_id'        => $carrier,
+                    'remark_condition_id'  => $remark->id
+                ]);
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You upgrade has been success ');
+
         return redirect()->route('remarks.list');
     }
 
