@@ -1073,8 +1073,8 @@ class QuoteV2Controller extends Controller
             
         }
 
-        $equipment->put('head_1', $head_1);
-        $equipment->put('head_2', $head_2 );
+        $equipment->put('head_1', @$head_1);
+        $equipment->put('head_2', @$head_2 );
         $equipment->put('originClass', $originClass);
         $equipment->put('destinyClass', $destinyClass);
         $equipment->put('dataOrigDest', $dataOrigDest);
