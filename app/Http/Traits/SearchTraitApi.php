@@ -271,7 +271,7 @@ trait SearchTraitApi
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => json_decode($local->surcharge->options), 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'calculation_type' => $local->calculationtype->name);
+        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => json_decode($local->surcharge->options), 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name);
         return $arreglo;
     }
 
@@ -528,31 +528,29 @@ trait SearchTraitApi
         $remarkDE = '';
         $rems = '';
 
-        if ($remarks_all->count()>0 || $remarks_origin->count()>0 || $remarks_destination->count()>0) {
+        if ($remarks_all->count() > 0 || $remarks_origin->count() > 0 || $remarks_destination->count() > 0) {
+
             foreach ($remarks_all as $remAll) {
                 $rems .= "<br>";
-                $remarkAE = $origin_port->name . " / " . $carrier->name;
-                $remarkAI = $origin_port->name . " / " . $carrier->name;
 
                 $remarkAE .= "<br>" . $remAll->remark->export;
 
                 $remarkAI .= "<br>" . $remAll->remark->import;
             }
 
+
             foreach ($remarks_origin as $remOrig) {
 
                 $rems .= "<br>";
-                $remarkOE = $origin_port->name . " / " . $carrier->name;
-                $remarkOI = $origin_port->name . " / " . $carrier->name;
 
                 $remarkOE .= "<br>" . $remOrig->remark->export;
 
                 $remarkOI .= "<br>" . $remOrig->remark->import;
             }
+
+
             foreach ($remarks_destination as $remDest) {
                 $rems .= "<br>";
-                $remarkDE = $destiny_port->name . " / " . $carrier->name;
-                $remarkDI = $destiny_port->name . " / " . $carrier->name;
 
                 $remarkDE .= "<br>" . $remDest->remark->export;
 
@@ -560,7 +558,7 @@ trait SearchTraitApi
             }
             $rems = $remarkOE . " " . $remarkOI . " " . $remarkDE . " " . $remarkDI . " " . $remarkAE . " " . $remarkAI;
         }
-        return $rems;
+        return trim($rems);
     }
 
     public function validateEquipment($equipmentForm, $container)
@@ -735,5 +733,40 @@ trait SearchTraitApi
         $equipment->put('destinyClass', $destinyClass);
         $equipment->put('dataOrigDest', $dataOrigDest);
         return ($equipment);
+    }
+
+    public function processLocalCharge($cont, $local, $localParams, $rateMount)
+    {
+        $montoOrig = number_format($local->ammount, 2, '.', '');
+        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+        $monto = $local->ammount / $rateMount;
+        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+        $monto = number_format($monto, 2, '.', '');
+        $arregloOrigin = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+
+        return $arregloOrigin;
+    }
+
+    public function processGlobalCharge($cont, $global, $globalParams, $rateMount, $totalesCont)
+    {
+        $montoOrig = number_format($global->ammount, 2, '.', '');
+        $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
+        $monto = $global->ammount / $rateMount;
+        $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
+        $monto = number_format($monto, 2, '.', '');
+        $arregloOriginG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
+
+        $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $monto;
+
+        return $arregloOriginG;
+    }
+
+    public function groupCollection($collection)
+    {
+        $collection = $collection->groupBy([
+            'surcharge_name',
+        ]);
+
+        return $collection;
     }
 }
