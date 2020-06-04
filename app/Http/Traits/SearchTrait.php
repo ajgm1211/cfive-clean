@@ -538,6 +538,8 @@ trait SearchTrait
         $date1 = new \DateTime($date1);
         $date2 = new \DateTime($date2);
         $diff = $date1->diff($date2);
+
+        //dd($date1,$date2,$diff);
         
         if($diff->invert  == "0")
             $contratoFuturo = true;
