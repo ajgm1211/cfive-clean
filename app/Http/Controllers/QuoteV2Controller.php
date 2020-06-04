@@ -90,6 +90,7 @@ class QuoteV2Controller extends Controller
      */
     public function index(Request $request)
     {
+
         $company_user = null;
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
@@ -1441,7 +1442,7 @@ class QuoteV2Controller extends Controller
     public function remarksCondition($origin_port, $destiny_port, $carrier, $mode)
     {
 
-        // TERMS AND CONDITIONS 
+        // TERMS AND CONDITIONS
         $carrier_all = 26;
         $port_all = harbor::where('name', 'ALL')->first();
         $rem_port_orig = array($origin_port->id);
@@ -1449,10 +1450,15 @@ class QuoteV2Controller extends Controller
         $rem_carrier_id[] = $carrier->id;
         array_push($rem_carrier_id, $carrier_all);
 
+        /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+        });
+        })->get();*/
+
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
 
         $language_id = $company->companyUser->pdf_language;
-
         if ($language_id == '') {
             $language_id = 1;
         }
@@ -1463,14 +1469,13 @@ class QuoteV2Controller extends Controller
             });
         })->get();
 
-
         $remarks_origin = RemarkHarbor::wherein('port_id', $rem_port_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                 $b->wherein('carrier_id', $rem_carrier_id);
             });
         })->get();
 
-        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_port_dest)->with('remark')->whereHas('remark', function ($q)  use ($rem_carrier_id, $language_id) {
+        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_port_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                 $b->wherein('carrier_id', $rem_carrier_id);
             });
@@ -1481,38 +1486,34 @@ class QuoteV2Controller extends Controller
         $remarkD = '';
         $rems = '';
 
-        if($remarks_all->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name ."<br>";
-
         foreach ($remarks_all as $remAll) {
             $rems .= "<br>";
-            //$remarkA .= $origin_port->name . " / " . $carrier->name;
-            if ($mode == 1)
-                $remarkA .=  "<br>" . $remAll->remark->export;
-            else
-                $remarkA .=  "<br>" . $remAll->remark->import;
+            $remarkA = $origin_port->name . " / " . $carrier->name;
+            if ($mode == 1) {
+                $remarkA .= "<br>" . $remAll->remark->export;
+            } else {
+                $remarkA .= "<br>" . $remAll->remark->import;
+            }
         }
 
-        if($remarks_origin->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name;
-        
         foreach ($remarks_origin as $remOrig) {
 
             $rems .= "<br>";
-            
-            if ($mode == 1)
-                $remarkO .=  "<br>" . $remOrig->remark->export;
-            else
-                $remarkO .=  "<br>" . $remOrig->remark->import;
+            $remarkO = $origin_port->name . " / " . $carrier->name;
+            if ($mode == 1) {
+                $remarkO .= "<br>" . $remOrig->remark->export;
+            } else {
+                $remarkO .= "<br>" . $remOrig->remark->import;
+            }
         }
-
-        if($remarks_destination->count()>0) $remarkA .= $origin_port->name . " / " . $carrier->name;
-
         foreach ($remarks_destination as $remDest) {
             $rems .= "<br>";
-            
-            if ($mode == 1)
-                $remarkD .=  "<br>" . $remDest->remark->export;
-            else
-                $remarkD .=  "<br>" . $remDest->remark->import;
+            $remarkD = $destiny_port->name . " / " . $carrier->name;
+            if ($mode == 1) {
+                $remarkD .= "<br>" . $remDest->remark->export;
+            } else {
+                $remarkD .= "<br>" . $remDest->remark->import;
+            }
         }
         $rems = $remarkO . " " . $remarkD . " " . $remarkA;
         return $rems;
@@ -2425,7 +2426,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+     
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
@@ -2650,7 +2651,7 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -3173,10 +3174,10 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('remarksG', $remarksGeneral);
 
                 // EXCEL REQUEST
-                $excelRequestFCL = 0;
-                $excelRequest = 0;   
-                $excelRequestIdFCL = 0;
-                $excelRequestId = 0;
+                $excelRequestFCL = "0";
+                $excelRequest = "0";   
+                $excelRequestIdFCL = "0";
+                $excelRequestId = "0";
                 
                 if ($data->contract->status != 'api') {
 
@@ -3184,7 +3185,7 @@ class QuoteV2Controller extends Controller
                     if (!empty($excelRequestFCL)) {
                         $excelRequestIdFCL = $excelRequestFCL->id;
                     } else {
-                        $excelRequestIdFCL = '0';
+                        $excelRequestIdFCL = "0";
                     }
 
                     $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
