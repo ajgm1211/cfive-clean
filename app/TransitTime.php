@@ -76,17 +76,22 @@ class TransitTime extends Model
 	* @param  \Illuminate\Http\Request $request;
     * @return Boolean
     */
-	public static function scheduleExists($request) 
+	public static function scheduleExists($request,  $transit_time = null) 
 	{
 		$origin_id = $request->input('origin');
 		$destination_id = $request->input('destination'); 
 		$carrier_id = $request->input('carrier');
 
-		return self::where([
-	  		['origin_id', '=', $origin_id],
-	  		['destination_id', '=', $destination_id],
-	  		['carrier_id', '=', $carrier_id]
-	  	])->count() > 0;
+		$query = self::where([
+		  		['origin_id', '=', $origin_id],
+		  		['destination_id', '=', $destination_id],
+		  		['carrier_id', '=', $carrier_id]
+		  	]);
+
+		if($transit_time)
+			$query->where('id', '<>', $transit_time->id);
+
+		return $query->get()->count() > 0;
 	}
 
 
