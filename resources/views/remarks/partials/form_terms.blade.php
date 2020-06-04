@@ -6,40 +6,43 @@
 
 <div class="form-group m-form__group">
     {!! Form::label('Name', 'Name') !!}
-    {!! Form::text('name', null, ['placeholder' => 'Please enter the term name','class' => 'form-control m-input','required' => 'required']) !!}
-    
+    {!! Form::text('name', null, ['placeholder' => 'Please enter the term name','class' => 'form-control
+    m-input','required' => 'required']) !!}
+
 </div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Port', 'Ports') !!}
-    {!! Form::select('ports[]',$harbors,@$selected_harbors, 
+    {!! Form::select('ports[]',$harbors,@$selected_harbors,
     ['class' => 'm-select2-general form-control','required','multiple' => 'multiple']) !!}
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('Carriers', 'Carriers') !!}
-    {!! Form::select('carriers[]',$carriers,@$selected_carriers, 
+    {!! Form::select('carriers[]',$carriers,@$selected_carriers,
     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('Language', 'Language') !!}
-    {!! Form::select('language',$languages,@$remark['language_id'], 
+    {!! Form::select('language',$languages,@$remark['language_id'],
     ['class' => 'm-select2-general form-control']) !!}
 </div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Import', 'Import') !!}
-    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input','id'=>'Import']) !!}
+    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your import text','class' => 'form-control editor
+    m-input','id'=>'Import']) !!}
 
 </div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Export', 'Export') !!}
-    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
+    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor
+    m-input','id'=>'Export']) !!}
 </div>
 
 <!-- tinyMCE script config -->
 <script>
-  var editor_config = {
+    var editor_config = {
     path_absolute : "/",
     selector: "textarea.editor",
     plugins: ["template"],
@@ -77,7 +80,6 @@
   tinymce.init(editor_config);
 </script>
 <script>
-  {!! \File::get(base_path('vendor/barryvdh/laravel-elfinder/resources/assets/js/standalonepopup.min.js')) !!}
+    {!! \File::get(base_path('vendor/barryvdh/laravel-elfinder/resources/assets/js/standalonepopup.min.js')) !!}
 </script>
 <!-- end tinyMCE scripts config -->
-

@@ -5,6 +5,15 @@
     <!--begin::Form-->
     {!! Form::model($remark, ['route' => ['remarks.update', $remark], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissable alert-dismissible">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
                 @include('remarks.partials.form_terms')
@@ -29,7 +38,7 @@
 @section('js')
 @parent
 <script>
-   $('.m-select2-general').select2({
+    $('.m-select2-general').select2({
        placeholder: "Select an option"
    });
 </script>

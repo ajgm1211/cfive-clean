@@ -9,8 +9,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
 
 /* Config files */
-import App from '../components/inlands/App';  // Main Component
-import Inlands from '../components/inlands/Inlands';  // Local Charges
+import App from './views/App';  // Main Component
 import Api from '../api.js'; // Api calls controller
 
 // Install BootstrapVue
