@@ -226,7 +226,7 @@
     background-color: #ececec;
   }
   .wth {
-    width: 22%;
+    width: 25%;
   }
   .table-r__quotes {
     height: 100%;
@@ -1300,7 +1300,7 @@
                     <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
                     <div class="col-lg-2"><span class="portalphacode" style="margin-left: 20px">Detail</span></div>
                     <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
+                      <div class="d-flex justify-content-end">
                         @foreach($containers as $container)
                         <div class="wth" {{ $equipmentHides[$container->code] }}><span class="portalphacode">{{ $container->code }} </span></div>
                         @endforeach
