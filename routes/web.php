@@ -1105,13 +1105,8 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     /** End API Inland Range EndPoints **/
 
     /** API Inland Km EndPoints **/
-    Route::get('{inland}/km', 'InlandKmController@list');
-    Route::post('{inland}/km/store', 'InlandKmController@store');
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update');
-    Route::get('{inland}/km/{km}', 'InlandKmController@retrieve');
-    Route::post('km/{km}/duplicate', 'InlandKmController@duplicate');
-    Route::delete('km/{km}/destroy', 'InlandKmController@destroy');
-    Route::post('km/destroyAll', 'InlandKmController@destroyAll');
+    Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve');
     /** End API Inland Km EndPoints **/
 
     /**
