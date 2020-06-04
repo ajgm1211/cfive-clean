@@ -14,6 +14,7 @@
             </div>
 
             <DataTable 
+                v-if="loaded"
                 :fields="fields"
                 :inputFields="input_fields"
                 :vdatalists="datalists"
@@ -74,6 +75,7 @@
         },
         data() {
             return {
+                loaded: true,
                 isBusy:true, // Loader
                 data: null,
                 currentData: {},
@@ -118,6 +120,11 @@
             /* Dispatched event */
             closeModal(modal){
                 this.$bvModal.hide(modal);
+
+                let component = this;
+
+                component.loaded = false;
+                setTimeout(function(){ component.loaded = true; }, 100);
             },
 
             badges(value, color='primary'){

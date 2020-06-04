@@ -13,6 +13,7 @@ use App\GlobalCharCountry;
 use App\LocalCharPort;
 use App\LocalCharCountry;
 use App\LocalCharge;
+use App\GlobalCharge;
 use App\OauthAccessToken;
 use App\ViewLocalCharges;
 use App\ViewGlobalCharge;
@@ -27,14 +28,20 @@ use App\Airline;
 use App\Airport;
 use App\Http\Resources\SurchargeResource;
 use App\Surcharge;
+use App\ContainerCalculation;
+use App\Container;
 use App\IntegrationQuoteStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\SearchTraitApi;
 
 class ApiController extends Controller
 {
+
+    use SearchTraitApi;
+
     public function index()
     {
 
@@ -708,15 +715,15 @@ class ApiController extends Controller
         if ($request->paginate) {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
-            })->select('id','name','code','display_name','coordinates','country_id','varation as variation')
-            ->with('country')->paginate($request->paginate);
+            })->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation')
+                ->with('country')->paginate($request->paginate);
         } else {
             $ports = Harbor::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
             })->with('country')
-            ->select('id','name','code','display_name','coordinates','country_id','varation as variation')->take($request->size)->get();
+                ->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation')->take($request->size)->get();
         }
-        
+
         return $ports;
     }
 
@@ -741,5 +748,614 @@ class ApiController extends Controller
         }
 
         return $airports;
+    }
+
+    public function search($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    {
+        try {
+            return $this->processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'An error occurred while performing the operation'], 500);
+        }
+    }
+
+    public function processSearch($code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    {
+        $portOrig = Harbor::where('code', $code_origin)->firstOrFail();
+
+        $portDest = Harbor::where('code', $code_destination)->firstOrFail();
+        //Variables del usuario conectado
+
+        $origin_port[] = $portOrig->id;
+        $origin_country[] = $portOrig->country_id;
+
+        $destiny_port[] = $portDest->id;
+        $destiny_country[] = $portDest->country_id;
+
+        $company_user_id = \Auth::user()->company_user_id;
+        $user_id = \Auth::id();
+        $container_calculation = ContainerCalculation::get();
+        $containers = Container::get();
+
+        $chargesOrigin = 'true';
+        $chargesDestination = 'true';
+        $chargesFreight = 'true';
+        $equipment = array();
+        $totalesCont = array();
+        $markup = null;
+        $general = new collection();
+        $companyId = User::find($user_id);
+        $company = CompanyUser::where('id', $companyId->company_user_id)->first();
+        $typeCurrency =  $company->currency->alphacode;
+        $idCurrency = $company->currency_id;
+        $company_user_id = $company->id;
+        $companies = Company::where('api_id', '=', $api_company_id)->first();
+
+        if (empty($companies)) {
+            $companies_id = 0;
+        } else {
+            $companies_id = $companies->id;
+        }
+
+        if (strtoupper($group) == 'DRY') {
+            $equipment = array('1', '2', '3', '4', '5');
+        } elseif (strtoupper($group) == 'REEFER') {
+            $equipment = array('6', '7', '8');
+        } elseif (strtoupper($group) == 'OPENTOP') {
+            $equipment = array('9', '10', '11');
+        } elseif (strtoupper($group) == 'FLATRACK') {
+            $equipment = array('12', '13');
+        } else {
+            abort(404);
+        }
+
+        $validateEquipment = $this->validateEquipment($equipment, $containers);
+
+        // Fecha Contrato
+
+        $dateSince = $inicio;
+        $dateUntil = $fin;
+
+        //Colecciones
+        $inlandDestiny = new collection();
+        $inlandOrigin = new collection();
+
+        // Consulta base de datos rates
+
+        if ($validateEquipment['count'] < 2) {
+            if ($companies_id != null || $companies_id != 0) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id) {
+                    $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
+                        $a->where('user_id', '=', $user_id);
+                    })->orDoesntHave('contract_user_restriction');
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id) {
+                    $q->whereHas('contract_company_restriction', function ($b) use ($companies_id) {
+                        $b->where('company_id', '=', $companies_id);
+                    })->orDoesntHave('contract_company_restriction');
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+                })->with(['carrier' => function ($query) {
+                    $query->select('id', 'name', 'uncode', 'image');
+                }]);
+            } else {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) {
+                    $q->doesnthave('contract_user_restriction');
+                })->whereHas('contract', function ($q) {
+                    $q->doesnthave('contract_company_restriction');
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+                })->with(['carrier' => function ($query) {
+                    $query->select('id', 'name', 'uncode', 'image');
+                }]);
+            }
+        } else {
+            return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
+        }
+
+        $arreglo = $arreglo->get();
+
+        foreach ($containers as $cont) {
+            $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+            $totalesCont = array_merge($totalesContainer, $totalesCont);
+            $var = 'array' . $cont->code;
+            $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
+        }
+
+        $collectionRate = new Collection();
+        foreach ($arreglo as $data) {
+            $contractStatus = $data->contract->status;
+            $collectionRate = new Collection();
+            $totalRates = 0;
+            $totalT = 0;
+            //Variables Totalizadoras
+            $totales = array();
+
+            //Variables Totalizadoras
+            $totales = array();
+
+            //Arreglo totalizador de freight , destination , origin por contenedor
+            $totalesCont = array();
+            $arregloRateSum = array();
+            foreach ($containers as $cont) {
+                $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+                $totalesCont = array_merge($totalesContainer, $totalesCont);
+                // Inicializar arreglo rate
+                $arregloRate = array('c' . $cont->code => '0');
+                $arregloRateSum = array_merge($arregloRateSum, $arregloRate);
+            }
+
+            $carrier[] = $data->carrier_id;
+            $orig_port = array($data->origin_port);
+            $dest_port = array($data->destiny_port);
+
+            $collectionOrigin = new collection();
+            $collectionDestiny = new collection();
+            $collectionFreight = new collection();
+
+            $arregloRate = array();
+            //Arreglos para guardar el rate
+            $array_ocean_freight = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'currency' => $data->currency->alphacode);
+
+            $arregloRateSave['markups'] = array();
+            $arregloRateSave['rate'] = array();
+            //Arreglo para guardar charges
+            $arregloCharges['origin'] = array();
+
+            $arregloOrigin = array();
+            $arregloFreight = array();
+            $arregloDestiny = array();
+            // globales
+            $arregloOriginG = array();
+            $arregloFreightG = array();
+            $arregloDestinyG = array();
+
+            $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
+            // Rates
+            $arregloR = $this->ratesSearch($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
+            $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSaveR']);
+
+            $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
+            //$arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
+            $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
+
+            $equipmentFilter = $arregloR['arregloEquipment'];
+
+            // id de los port  ALL
+            array_push($orig_port, 1485);
+            array_push($dest_port, 1485);
+            // id de los carrier ALL
+            $carrier_all = 26;
+            array_push($carrier, $carrier_all);
+            // Id de los paises
+            array_push($origin_country, 250);
+            array_push($destiny_country, 250);
+
+            // ################### Calculos local  Charges #############################
+            if ($contractStatus != 'api') {
+
+                $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
+                    $q->whereIn('carrier_id', $carrier);
+                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
+                    $query->whereHas('localcharports', function ($q) use ($orig_port, $dest_port) {
+                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+                    })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
+                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+                    });
+                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->get();
+            } else {
+
+                $localChar = LocalChargeApi::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
+                    $q->whereIn('carrier_id', $carrier);
+                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
+                    $query->whereHas('localcharports', function ($q) use ($orig_port, $dest_port) {
+                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+                    })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
+                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+                    });
+                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->get();
+            }
+
+            foreach ($localChar as $local) {
+                $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
+
+                // Condicion para enviar los terminos de venta o compra
+                if (isset($local->surcharge->saleterm->name)) {
+                    $terminos = $local->surcharge->saleterm->name;
+                } else {
+                    $terminos = $local->surcharge->name;
+                }
+
+                foreach ($local->localcharcarriers as $localCarrier) {
+                    if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all) {
+                        $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
+                        //Origin
+                        if ($chargesOrigin != null) {
+                            if ($local->typedestiny_id == '1') {
+                                $band = false;
+                                foreach ($containers as $cont) {
+                                    $name_arreglo = 'array' . $cont->code;
+                                    if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+
+                                        $montoOrig = number_format($local->ammount, 2, '.', '');
+                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+                                        $monto = $local->ammount / $rateMount;
+                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+                                        $monto = number_format($monto, 2, '.', '');
+                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                        $arregloOrigin = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+                                        //$arregloOrigin = array_merge($arregloOrigin, $markupGe);
+                                        $collectionOrigin->push($arregloOrigin);
+                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
+                                        $band = true;
+                                    }
+                                }
+                                /*if ($band) {
+                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                        $valores = $this->asociarPerCont($local->calculationtype_id);
+                                        $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                    } else {
+                                        $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    }
+                                    $collectionOrigin->push($arregloOrigin);
+                                }*/
+                            }
+                        }
+                        //Destiny
+                        if ($chargesDestination != null) {
+                            if ($local->typedestiny_id == '2') {
+                                $band = false;
+                                foreach ($containers as $cont) {
+
+                                    $name_arreglo = 'array' . $cont->code;
+
+                                    if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                                        $montoOrig = number_format($local->ammount, 2, '.', '');
+                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+                                        $monto = $local->ammount / $rateMount;
+                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+                                        $monto = number_format($monto, 2, '.', '');
+                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                        $arregloDestiny = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+                                        //$arregloDestiny = array_merge($arregloDestiny, $markupGe);
+                                        $collectionDestiny->push($arregloDestiny);
+                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
+                                        $band = true;
+                                    }
+                                }
+                                /*if ($band) {
+
+                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                        $valores = $this->asociarPerCont($local->calculationtype_id);
+                                        $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                    } else {
+                                        $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    }
+                                    $collectionDestiny->push($arregloDestiny);
+                                }*/
+                            }
+                        }
+                        //Freight
+                        if ($chargesFreight != null) {
+                            if ($local->typedestiny_id == '3') {
+                                $band = false;
+                                //Se ajusta el calculo para freight tomando en cuenta el rate currency
+                                $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                                $localParams['typeCurrency'] = $data->currency->alphacode;
+                                $localParams['idCurrency'] = $data->currency->id;
+                                //Fin Variables
+
+                                foreach ($containers as $cont) {
+
+                                    $name_arreglo = 'array' . $cont->code;
+
+                                    if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                                        $montoOrig = number_format($local->ammount, 2, '.', '');
+                                        $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+                                        $monto = $local->ammount / $rateMount_Freight;
+                                        $monto = number_format($monto, 2, '.', '');
+                                        $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+                                        //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                        $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+                                        //$arregloFreight = array_merge($arregloFreight, $markupGe);
+                                        $collectionFreight->push($arregloFreight);
+                                        //$totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                        $band = true;
+                                    }
+                                }
+
+                                /*if ($band) {
+                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                        $valores = $this->asociarPerCont($local->calculationtype_id);
+                                        $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                    } else {
+                                        $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    }
+                                    $collectionFreight->push($arregloFreight);
+                                }*/
+                            }
+                        }
+                    }
+                }
+            }
+            // ################## Fin local Charges        #############################
+            //################## Calculos Global Charges #################################
+
+            if ($contractStatus != 'api') {
+
+                $globalChar = GlobalCharge::where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function ($q) use ($carrier) {
+                    $q->whereIn('carrier_id', $carrier);
+                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
+                    $query->orwhereHas('globalcharport', function ($q) use ($orig_port, $dest_port) {
+                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+                    })->orwhereHas('globalcharcountry', function ($q) use ($origin_country, $destiny_country) {
+                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+                    })->orwhereHas('globalcharportcountry', function ($q) use ($orig_port, $destiny_country) {
+                        $q->whereIn('port_orig', $orig_port)->whereIn('country_dest', $destiny_country);
+                    })->orwhereHas('globalcharcountryport', function ($q) use ($origin_country, $dest_port) {
+                        $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
+                    });
+                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
+
+                foreach ($globalChar as $global) {
+                    $rateMount = $this->ratesCurrency($global->currency->id, $typeCurrency);
+                    // Condicion para enviar los terminos de venta o compra
+                    if (isset($global->surcharge->saleterm->name)) {
+                        $terminos = $global->surcharge->saleterm->name;
+                    } else {
+                        $terminos = $global->surcharge->name;
+                    }
+                    foreach ($global->globalcharcarrier as $globalCarrier) {
+
+                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all) {
+                            $globalParams = array('terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier);
+                            //Origin
+                            if ($chargesOrigin != null) {
+
+                                if ($global->typedestiny_id == '1') {
+                                    $band = false;
+                                    foreach ($containers as $cont) {
+
+                                        $name_arreglo = 'array' . $cont->code;
+
+                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+
+                                            $montoOrig = number_format($global->ammount, 2, '.', '');
+                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
+                                            $monto = $global->ammount / $rateMount;
+                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
+                                            $monto = number_format($monto, 2, '.', '');
+                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
+                                            $arregloOriginG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
+                                            //$arregloOriginG = array_merge($arregloOriginG, $markupGe);
+                                            $collectionOrigin->push($arregloOriginG);
+                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
+                                            $band = true;
+                                        }
+                                    }
+
+                                    /*if ($band) {
+                                       if (in_array($global->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($global->calculationtype_id);
+                                            $arregloOriginG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloOriginG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
+                                        }
+                                        $collectionOrigin->push($arregloOriginG);
+                                    }*/
+                                }
+                            }
+
+                            //Destiny
+                            if ($chargesDestination != null) {
+                                if ($global->typedestiny_id == '2') {
+                                    $band = false;
+                                    foreach ($containers as $cont) {
+                                        $name_arreglo = 'array' . $cont->code;
+                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+
+                                            $montoOrig = number_format($global->ammount, 2, '.', '');
+                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
+                                            $monto = $global->ammount / $rateMount;
+                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
+                                            $monto = number_format($monto, 2, '.', '');
+                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
+                                            $arregloDestinyG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
+                                            //$arregloDestinyG = array_merge($arregloDestinyG, $markupGe);
+                                            $collectionDestiny->push($arregloDestinyG);
+                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
+                                            $band = true;
+                                        }
+                                    }
+
+                                    /*if ($band) {
+                                        if (in_array($global->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($global->calculationtype_id);
+                                            $arregloDestinyG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloDestinyG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
+                                        }
+                                        $collectionDestiny->push($arregloDestinyG);
+                                    }*/
+                                }
+                            }
+                            //Freight
+
+                            if ($chargesFreight != null) {
+
+                                if ($global->typedestiny_id == '3') {
+
+                                    $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                    $globalParams['typeCurrency'] = $data->currency->alphacode;
+                                    $globalParams['idCurrency'] = $data->currency->id;
+                                    //Fin Variables
+                                    $band = false;
+                                    foreach ($containers as $cont) {
+                                        $name_arreglo = 'array' . $cont->code;
+
+                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+
+                                            $montoOrig = number_format($global->ammount, 2, '.', '');
+                                            $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
+                                            $monto = $global->ammount / $rateMount_Freight;
+                                            $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
+                                            $monto = number_format($monto, 2, '.', '');
+                                            //$markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
+                                            $arregloFreightG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
+                                            //$arregloFreightG = array_merge($arregloFreightG, $markupGe);
+                                            $collectionFreight->push($arregloFreightG);
+                                            //$totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                            $band = true;
+                                        }
+                                    }
+                                    /*if ($band) {
+                                        if (in_array($global->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($global->calculationtype_id);
+                                            $arregloFreightG = $this->ChargesArray99($globalParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloFreightG = $this->ChargesArray99($globalParams, $global->calculationtype->id, $global->calculationtype->name);
+                                        }
+                                        $collectionFreight->push($arregloFreightG);
+                                    }*/
+                                }
+                            }
+                        }
+                    }
+                }
+            } // fin if contract Api
+            // ############################ Fin global charges ######################
+
+            $totalRates += $totalT;
+            $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
+            $array = array_merge($array, $arregloRate);
+            $array = array_merge($array, $arregloRateSave);
+            $collectionRate->push($array);
+
+            // Valores
+
+            $data->setAttribute('rates', $collectionRate);
+            $data->setAttribute('localfreight', $collectionFreight);
+            $data->setAttribute('localdestiny', $collectionDestiny);
+            $data->setAttribute('localorigin', $collectionOrigin);
+            // Valores totales por contenedor
+            $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+            foreach ($containers as $cont) {
+
+                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
+                $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
+
+                $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
+                $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
+
+                $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
+                // TOTALES
+                $name_tot = 'total' . $cont->code;
+                $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
+                $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
+            }
+
+            //Contrato Futuro
+            $contratoFuturo = $this->contratoFuturo($dateUntil, $data->contract->expire);
+
+            $data->setAttribute('contratoFuturo', $contratoFuturo);
+            // INLANDS
+            $data->setAttribute('inlandDestiny', $inlandDestiny);
+
+            $data->setAttribute('inlandOrigin', $inlandOrigin);
+            $data->setAttribute('typeCurrency', $typeCurrency);
+
+            $data->setAttribute('idCurrency', $idCurrency);
+            // Totales Freight
+            if (!isset($totales['20F']))
+                $totales['20F'] = 0;
+            if (!isset($totales['40F']))
+                $totales['40F'] = 0;
+            if (!isset($totales['40hcF']))
+                $totales['40hcF'] = 0;
+            if (!isset($totales['40norF']))
+                $totales['40norF'] = 0;
+            if (!isset($totales['45F']))
+                $totales['45F'] = 0;
+
+
+            $totalT = $totales['20F'] + $totales['40F'] + $totales['40hcF'] +  $totales['40norF'] + $totales['45F'];
+            $totalT = number_format($totalT, 2, '.', '');
+            $totalRates += $totalT;
+
+            //remarks
+
+            $remarks = "";
+            if ($data->contract->remarks != "") {
+                $remarks = $data->contract->remarks . "<br>";
+            }
+
+            $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
+            $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
+            $routes['ocean_freight'] = $array_ocean_freight;
+            $routes['ocean_freight']['rates'] = $arregloRate;
+
+            if (!empty($collectionFreight)) {
+                //$collectionFreight = $this->OrdenarCollection($collectionFreight);
+                $routes['freight_charges'] = $collectionFreight;
+            }
+
+            if (!empty($collectionDestiny)) {
+                //$collectionDestiny = $this->OrdenarCollection($collectionDestiny);
+                $routes['destination_charges'] = $collectionDestiny;
+            }
+
+            if (!empty($collectionOrigin)) {
+                //dd($collectionOrigin);
+                //$collectionOrigin = $this->OrdenarCollection($collectionOrigin);
+
+                $routes['origin_charges'] = $collectionOrigin;
+            }
+            $detalle['Rates'] = $routes;
+            //Totals
+            foreach ($containers as $cont) {
+                foreach ($equipment as $containers) {
+                    if ($containers == $cont->id) {
+                        $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
+                    }
+                }
+            }
+            $detalle['Rates']['currency'] = $typeCurrency;
+            // SET ATRIBUTES
+            $detalle['Rates']['transit_time'] = $data->transit_time;
+            $detalle['Rates']['via'] = $data->via;
+            $detalle['Rates']['schedule'] = @$data->scheduletype->name;
+
+            //set carrier logo url
+            $data->carrier['url'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            $detalle['Rates']['carrier'] = $data->carrier;
+            $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
+            $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
+            $detalle['Rates']['contract']['number'] =   $data->contract->number;
+            $detalle['Rates']['contract']['ref'] =   $data->contract->name;
+            $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+
+            $detalle['Rates']['remarks'] = $remarks;
+
+            $general->push($detalle);
+        }
+
+
+        $chargeOrigin = ($chargesOrigin != null) ? true : false;
+        $chargeDestination = ($chargesDestination != null) ? true : false;
+        $chargeFreight = ($chargesFreight != null) ? true : false;
+
+        return response()->json($general);
+    }
+
+    public function ratesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->get();
+        foreach ($rates as $rate) {
+            if ($typeCurrency == "USD") {
+                $rateC = $rate->rates;
+            } else {
+                $rateC = $rate->rates_eur;
+            }
+        }
+        return $rateC;
     }
 }

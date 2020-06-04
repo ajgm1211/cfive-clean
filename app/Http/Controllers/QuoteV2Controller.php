@@ -76,6 +76,13 @@ class QuoteV2Controller extends Controller
     use QuoteV2Trait;
     use SearchTrait;
 
+    protected $pdf_language = 'English';
+
+    public function __construct() 
+    {
+        //
+    }
+
     /**
      * Show quotes list
      * @param Request $request
@@ -83,6 +90,7 @@ class QuoteV2Controller extends Controller
      */
     public function index(Request $request)
     {
+
         $company_user = null;
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
@@ -820,6 +828,33 @@ class QuoteV2Controller extends Controller
         }
     }
 
+    public function savePdfOption($quote, $currency){
+
+        if(\Auth::user()->companyUser->pdf_language == 1){
+            $pdf_language = 'English';
+        }elseif(\Auth::user()->companyUser->pdf_language == 2){
+            $pdf_language = 'Spanish';
+        }elseif(\Auth::user()->companyUser->pdf_language == 3){
+            $pdf_language = 'Portuguese';
+        }else{
+            $pdf_language = 'English';
+        }
+
+        $pdf_option = new PdfOption();
+        $pdf_option->quote_id = $quote->id;
+        $pdf_option->show_type = 'detailed';
+        $pdf_option->grouped_total_currency = 0;
+        $pdf_option->total_in_currency = $currency->alphacode;
+        $pdf_option->freight_charges_currency = $currency->alphacode;
+        $pdf_option->origin_charges_currency = $currency->alphacode;
+        $pdf_option->destination_charges_currency = $currency->alphacode;
+        $pdf_option->show_total_freight_in_currency = $currency->alphacode;
+        $pdf_option->show_schedules = 1;
+        $pdf_option->show_gdp_logo = 1;
+        $pdf_option->language = $pdf_language;
+        $pdf_option->save();
+    }
+
     public function savePdfOptionsDuplicate($quote, $quote_duplicate)
     {
         $pdf = PdfOption::where('quote_id', $quote->id)->first();
@@ -990,6 +1025,7 @@ class QuoteV2Controller extends Controller
         $dataOrigDest = 'col-md-3';
 
         $countEquipment = count($equipmentForm);
+        $calculos = $countEquipment;
         $countEquipment = 5 - $countEquipment;
         if ($countEquipment == 1) {
             $originClass = 'col-md-3';
@@ -1012,6 +1048,34 @@ class QuoteV2Controller extends Controller
             $dataOrigDest = 'col-md-7';
         }
 
+        if ($calculos == 1) {
+            $head_1 = 'col-lg-8';
+            $head_2 = 'col-lg-3';
+            
+        }
+        if ($calculos == 2) {
+            $head_1 = 'col-lg-7';
+            $head_2 = 'col-lg-4';
+            
+        }
+        if ($calculos == 3) {
+            $head_1 = 'col-lg-6';
+            $head_2 = 'col-lg-5';
+            
+        }
+        if ($calculos == 4) {
+            $head_1 = 'col-lg-5';
+            $head_2 = 'col-lg-6';
+            
+        }
+        if ($calculos == 5) {
+            $head_1 = 'col-lg-4';
+            $head_2 = 'col-lg-7';
+            
+        }
+
+        $equipment->put('head_1', $head_1);
+        $equipment->put('head_2', $head_2 );
         $equipment->put('originClass', $originClass);
         $equipment->put('destinyClass', $destinyClass);
         $equipment->put('dataOrigDest', $dataOrigDest);
@@ -1723,19 +1787,8 @@ class QuoteV2Controller extends Controller
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
+            $this->savePdfOption($quote, $currency);
+            
         } else { // COTIZACION MANUAL
 
             $dateQ = explode('/', $request->input('date'));
@@ -1897,19 +1950,7 @@ class QuoteV2Controller extends Controller
                 }
             }
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
+            $this->savePdfOption($quote, $currency);
 
             // MANUAL RATE
         }
@@ -1932,9 +1973,10 @@ class QuoteV2Controller extends Controller
 
                     $remarks = $info_D->remarks . "<br>";
                     // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
-
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
-
+                    
+                    //$request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks]);
+                    
                     $rate = AutomaticRate::create($request->all());
 
                     $oceanFreight = new Charge();
@@ -2384,7 +2426,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+     
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
@@ -2609,7 +2651,7 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -3132,10 +3174,10 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('remarksG', $remarksGeneral);
 
                 // EXCEL REQUEST
-                $excelRequestFCL = 0;
-                $excelRequest = 0;   
-                $excelRequestIdFCL = 0;
-                $excelRequestId = 0;
+                $excelRequestFCL = "0";
+                $excelRequest = "0";   
+                $excelRequestIdFCL = "0";
+                $excelRequestId = "0";
                 
                 if ($data->contract->status != 'api') {
 
@@ -3143,7 +3185,7 @@ class QuoteV2Controller extends Controller
                     if (!empty($excelRequestFCL)) {
                         $excelRequestIdFCL = $excelRequestFCL->id;
                     } else {
-                        $excelRequestIdFCL = '0';
+                        $excelRequestIdFCL = "0";
                     }
 
                     $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
@@ -6026,20 +6068,9 @@ class QuoteV2Controller extends Controller
                     $package_load->save();
                 }
             }
+            
+            $this->savePdfOption($quote, $currency);
 
-            $pdf_option = new PdfOption();
-            $pdf_option->quote_id = $quote->id;
-            $pdf_option->show_type = 'detailed';
-            $pdf_option->grouped_total_currency = 0;
-            $pdf_option->total_in_currency = $currency->alphacode;
-            $pdf_option->freight_charges_currency = $currency->alphacode;
-            $pdf_option->origin_charges_currency = $currency->alphacode;
-            $pdf_option->destination_charges_currency = $currency->alphacode;
-            $pdf_option->show_total_freight_in_currency = $currency->alphacode;
-            $pdf_option->show_schedules = 1;
-            $pdf_option->show_gdp_logo = 1;
-            $pdf_option->language = 'English';
-            $pdf_option->save();
         }
 
         //AUTOMATIC QUOTE
