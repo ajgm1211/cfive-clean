@@ -940,6 +940,14 @@ class ApiController extends Controller
             $array = array_merge($array, $arregloRateSave);
             $collectionRate->push($array);
 
+            // SCHEDULE 
+
+            $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id,$data->contract->status);
+                
+            $data->setAttribute('via', $transit_time['via']);
+            $data->setAttribute('transit_time', $transit_time['transit_time']);
+            $data->setAttribute('service', $transit_time['service']);
+
             // Valores
 
             $data->setAttribute('rates', $collectionRate);
@@ -1049,12 +1057,10 @@ class ApiController extends Controller
                 }
             }
             $detalle['Rates']['currency'] = $typeCurrency;
-
-
-            // SET ATRIBUTES
-            $detalle['Rates']['transit_time'] = $data->transit_time;
-            $detalle['Rates']['via'] = $data->via;
-            $detalle['Rates']['schedule'] = @$data->scheduletype->name;
+            //Schedules
+            $detalle['Rates']['schedule']['service'] = $data->service;
+            $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
+            $detalle['Rates']['schedule']['via'] = $data->via;
 
             //set carrier logo url
             $data->carrier['image'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
