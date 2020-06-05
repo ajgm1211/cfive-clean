@@ -286,6 +286,14 @@
                 </a>
               </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('transit_time.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-book"></i>
+                  <span class="m-menu__link-text">
+                    Transit Times
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-book"></i>
                   <span class="m-menu__link-text">

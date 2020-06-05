@@ -38,10 +38,21 @@ class SettingController extends Controller
     $company = User::where('id',\Auth::id())->with('companyUser')->first();
     if($company->companyUser){
       $email_settings = EmailSetting::where('company_user_id',$company->companyUser->id)->first();
+      if($company->companyUser->decimals == '1'){
+        $selectedTrue="checked='true'";
+        $selectedFalse='';
+      }else{
+        $selectedTrue='';
+        $selectedFalse="checked='true'";
+  
+      }
     }
+
+    
+    
     $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
 
-    return view('settings/index',compact('company','currencies','email_settings'));
+    return view('settings/index',compact('company','currencies','email_settings','selectedTrue','selectedFalse'));
   }
 
   public function idPersonalizado($name,$company_id){
@@ -92,11 +103,16 @@ class SettingController extends Controller
       $s3->put($filepath_signature_image, file_get_contents($signature_image), 'public');
       //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
     }
+    if($request->decimals)
+      $decimals = 1;
+    else
+      $decimals = 0;
     if(!$request->company_id){
       //$company=CompanyUser::create($request->all());
       $company = new CompanyUser();
       $company->name = $request->name;
       $company->address = $request->address;
+      $company->decimals = $decimals;
       $company->phone = $request->phone;
       $company->currency_id = $request->currency_id;
       $company->hash = \Hash::make($request->name);
@@ -138,6 +154,7 @@ class SettingController extends Controller
       $company->name=$request->name;
       $company->phone=$request->phone;
       $company->address=$request->address;
+      $company->decimals = $decimals;
       $company->currency_id=$request->currency_id;
       $company->pdf_language = $request->pdf_language;
       $company->footer_type = $request->footer_type;

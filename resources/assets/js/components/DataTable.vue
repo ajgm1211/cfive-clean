@@ -372,6 +372,7 @@
                     .then( ( response ) => {
                         this.clearForm();
                         this.refreshData();
+                        this.updateDinamicalFieldOptions();
                 })
                     .catch(( data ) => {
                 });
