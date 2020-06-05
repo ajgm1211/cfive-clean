@@ -70,7 +70,7 @@
 
                 /* Table headers */
                 fields: [
-                    { key: 'name', label: 'Reference' }, 
+                    { key: 'name', label: 'Reference', formatter: value => { return `<p class="truncate" title="${value}">${value}</p>` } }, 
                     { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` } },
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 

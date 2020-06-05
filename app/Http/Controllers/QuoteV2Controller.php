@@ -90,6 +90,7 @@ class QuoteV2Controller extends Controller
      */
     public function index(Request $request)
     {
+
         $company_user = null;
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
@@ -1073,8 +1074,8 @@ class QuoteV2Controller extends Controller
             
         }
 
-        $equipment->put('head_1', $head_1);
-        $equipment->put('head_2', $head_2 );
+        $equipment->put('head_1', @$head_1);
+        $equipment->put('head_2', @$head_2 );
         $equipment->put('originClass', $originClass);
         $equipment->put('destinyClass', $destinyClass);
         $equipment->put('dataOrigDest', $dataOrigDest);
@@ -2425,7 +2426,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+     
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
@@ -2650,7 +2651,7 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -3173,10 +3174,10 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('remarksG', $remarksGeneral);
 
                 // EXCEL REQUEST
-                $excelRequestFCL = 0;
-                $excelRequest = 0;   
-                $excelRequestIdFCL = 0;
-                $excelRequestId = 0;
+                $excelRequestFCL = "0";
+                $excelRequest = "0";   
+                $excelRequestIdFCL = "0";
+                $excelRequestId = "0";
                 
                 if ($data->contract->status != 'api') {
 
@@ -3184,7 +3185,7 @@ class QuoteV2Controller extends Controller
                     if (!empty($excelRequestFCL)) {
                         $excelRequestIdFCL = $excelRequestFCL->id;
                     } else {
-                        $excelRequestIdFCL = '0';
+                        $excelRequestIdFCL = "0";
                     }
 
                     $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
