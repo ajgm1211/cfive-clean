@@ -120,4 +120,5 @@ class AutomaticRate extends Model
             $query->where('type', $type);
         });
     }
+
 }

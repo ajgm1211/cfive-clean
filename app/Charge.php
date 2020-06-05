@@ -40,4 +40,11 @@ class Charge extends Model
     {
         return $this->hasOne('App\CalculationType','id','calculation_type_id');
     }
+
+    public function scopeCalculationType($query)
+    {
+        return $query->with(['calculation_type' => function ($q) {
+            $q->select('id', 'name', 'display_name', 'code');
+        }]);
+    }
 }
