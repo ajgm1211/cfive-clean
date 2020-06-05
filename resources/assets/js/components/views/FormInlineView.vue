@@ -121,7 +121,7 @@
                                   :timePicker="false"
                                   v-model="vdata[key]"
                                   :linkedCalendars="true"
-                                  @select="onSubmit()">
+                                  @update="onSubmit()">
 
                               </date-range-picker>
                     </b-form-group>
