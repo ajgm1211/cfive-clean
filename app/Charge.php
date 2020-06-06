@@ -47,4 +47,19 @@ class Charge extends Model
             $q->select('id', 'name', 'display_name', 'code');
         }]);
     }
+
+    public function getPriceAttribute($value)
+    {
+        return json_decode(json_decode($value));
+    }
+
+    public function getMarkupAttribute($value)
+    {
+        return json_decode(json_decode($value));
+    }
+
+    public function getTotalPriceAttribute($value)
+    {
+        return json_decode(json_decode($value));
+    }
 }

@@ -1250,7 +1250,7 @@
                         </div>-->
                         @endif
                         <div class="col-lg-2 d-flex  justify-content-end">
-                          <span class="portalphacode" style="margin-right:15px;">Contract: </span>  {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                        <span class="portalphacode" style="margin-right:15px;">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
                         </div>
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
