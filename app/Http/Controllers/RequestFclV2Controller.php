@@ -431,7 +431,7 @@ class RequestFclV2Controller extends Controller
     }
 
     // Descargar archivos, dependiendo si es Storage o Media
-    public function donwloadFiles($id,$selector)
+    public function donwloadFiles(Request $request,$id,$selector)
     {
         if(strnatcasecmp($selector,'media')==0){
             $Ncontract	= NewContractRequest::find($id);

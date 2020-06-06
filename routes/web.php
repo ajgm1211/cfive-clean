@@ -732,6 +732,8 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     //Account
 
     Route::get('DownloadAccountgcfcl/{id}','ImportationGlobachargersFclController@Download')->name('Download.Account.gcfcl');
+    Route::get('changeEquiment/{id}','ImportationGlobachargersFclController@changeEquiment')->name('change.equiment.Account.gcfcl');
+    Route::put('dispChangeEquiment/{id}','ImportationGlobachargersFclController@changeEquimentDispatch')->name('disp.change.equiment.Account.gcfcl');
 
     //failed and good
     Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');
