@@ -96,8 +96,8 @@
                 input_fields: {
                     typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
                     surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
-                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports' },
-                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports' },
+                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
+                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
