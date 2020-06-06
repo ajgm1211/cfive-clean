@@ -116,7 +116,7 @@
                         <!-- End Select -->
 
                         <!-- MultiSelect Input -->
-                        <div v-if="item.type == 'multiselect'">
+                        <div v-if="item.type == 'multiselect' && refresh">
                             <multiselect 
                                  v-model="fdata[key]" 
                                  :multiple="true" 
@@ -127,7 +127,8 @@
                                  track-by="id" 
                                  :label="item.trackby" 
                                  :show-labels="false"
-                                 :placeholder="item.placeholder">>
+                                 :placeholder="item.placeholder"
+                                 @input="refreshValues">
                             </multiselect>
                         </div>
                         <!-- End Select -->
@@ -431,7 +432,7 @@
 
                     for (const key in this.inputFields) {
                         if(this.inputFields[key]['options'] == target)
-                            this.fdata[key] = null;
+                            this.fdata[key] = [];
                     }
             },
 
@@ -440,6 +441,12 @@
                 this.datalists[this.inputFields[item].target] = this.datalists[val.vselected];
                 this.resetDinamicalFields(this.inputFields[item].target);
                 this.refresh = true;
+            },
+        
+            refreshValues(val, item){
+                let component = this;
+                component.refresh = false;
+                setTimeout(function(){ component.refresh = true; }, 0.4);
             },
             
             updateDinamicalFieldOptions(){
