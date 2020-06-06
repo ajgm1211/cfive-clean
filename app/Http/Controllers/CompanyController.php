@@ -44,20 +44,23 @@ class CompanyController extends Controller
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
 
         if (\Auth::user()->hasRole('subuser')) {
+
+            $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
+
             if ($request->paginate) {
-                $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id);
-                })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user', 'user', 'company_user')->get();
+                $companies = $query->paginate($request->paginate);
             } else {
-                $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id);
-                })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user', 'user', 'company_user')->take($request->size)->get();
+                $companies = $query->take($request->size)->get();
             }
         } else {
+            $query = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
+            
             if ($request->paginate) {
-                $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user', 'user', 'company_user')->paginate($request->paginate);
+                $companies = $query->paginate($request->paginate);
             } else {
-                $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user', 'user', 'company_user')->take($request->size)->get();
+                $companies = $query->take($request->size)->get();
             }
         }
 
