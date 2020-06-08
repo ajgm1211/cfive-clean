@@ -1272,7 +1272,7 @@ class QuoteV2Controller extends Controller
             ${$sum_total_destination . $value->code} = 0;
             ${$array_amount . $value->code} = array();
             ${$array_markup . $value->code} = array();
-
+            
             foreach ($request->equipments as $key => $equipment) {
                 if (($key == 'amount_' . $value->code) && $equipment != null) {
                     ${$array_amount . $value->code} = array('c' . $value->code => $equipment);
