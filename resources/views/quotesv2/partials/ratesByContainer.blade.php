@@ -240,7 +240,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
-                                                        <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
+                                                        <td class="tds"><span class="td-a">{{$rate->currency->alphacode}}</span></td>
                                                     </tr>
                                                 @endif
                                             </tbody>
