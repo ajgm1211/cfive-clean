@@ -29,17 +29,37 @@
                 </div>
             </div>
             <br>
-            @forelse(json_decode($contact->options, true) as $key=>$value)
-                <div class="clone">
+            @if($contact->options != null)
+                @forelse($contact->options as $key=>$value)
+                    <div class="clone">
+                        <div class="row">
+                            <div class="col-6">
+                                {!! Form::text('key_name[]', $key, ['placeholder' => 'Please enter a key name','class' =>
+                                'form-control
+                                m-input']) !!}
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mb-3">
+                                    {!! Form::text('key_value[]', $value, ['placeholder' => 'Please enter a value','class' =>
+                                    'form-control
+                                    m-input']) !!}
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
                     <div class="row">
                         <div class="col-6">
-                            {!! Form::text('key_name[]', $key, ['placeholder' => 'Please enter a key name','class' =>
+                            {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' =>
                             'form-control
                             m-input']) !!}
                         </div>
                         <div class="col-6">
                             <div class="input-group mb-3">
-                                {!! Form::text('key_value[]', $value, ['placeholder' => 'Please enter a value','class' =>
+                                {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' =>
                                 'form-control
                                 m-input']) !!}
                                 <div class="input-group-append">
@@ -48,26 +68,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <div class="row">
-                    <div class="col-6">
-                        {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' =>
-                        'form-control
-                        m-input']) !!}
-                    </div>
-                    <div class="col-6">
-                        <div class="input-group mb-3">
-                            {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' =>
-                            'form-control
-                            m-input']) !!}
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforelse
+                @endforelse
+            @endif
             <div class="hide" id="hide_extra_field">
                 <div class="row" style="margin-top:3px;">
                     <div class="col-6">

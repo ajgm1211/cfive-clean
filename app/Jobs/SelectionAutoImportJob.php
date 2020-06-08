@@ -46,14 +46,16 @@ class SelectionAutoImportJob implements ShouldQueue
             $user_adm_rq = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
             $admins = User::where('type','admin')->get();
             if(count($request_cont->Requestcarriers) == 1){
-                $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {
-                    $query->whereIn('carrier_id',$request_cont->Requestcarriers->pluck('carrier_id'));
-                })->where('status',1)->first();
-                if(!empty($autoImp)){
+                $data = json_decode($request_cont['data'],true);
+                if($data['group_containers']['id'] == 1){
+                    $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {
+                        $query->whereIn('carrier_id',$request_cont->Requestcarriers->pluck('carrier_id'));
+                    })->where('status',1)->first();
+                    if(!empty($autoImp)){
 
-                    $mediaItem  = $request_cont->getFirstMedia('document');
-                    AutomaticMaerskJob::dispatch($req_id,$mediaItem->id.'/'.$mediaItem->file_name)->onQueue('automatic');
-                    /* try{
+                        $mediaItem  = $request_cont->getFirstMedia('document');
+                        AutomaticMaerskJob::dispatch($req_id,$mediaItem->id.'/'.$mediaItem->file_name)->onQueue('automatic');
+                        /* try{
                         if(env('APP_ENV') == 'local'){
                             $client = new Client(['base_uri' => 'http://contractsai/']);                            
                         }else if(env('APP_ENV') == 'developer'){
@@ -79,6 +81,7 @@ class SelectionAutoImportJob implements ShouldQueue
                             SendEmailAutoImporJob::dispatch($userNotifique->email,$message);
                         }
                     } */
+                    }
                 }
             } else{
                 $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {

@@ -26,14 +26,16 @@ abstract class AbstractFilter
 
 	public function filter() 
     {
-        if($this->parent_id && $this->parent_model)
+        /*if($this->parent_id && $this->parent_model)
             $this->filterByParent();
 
         else if($this->request->query('filteredby', null) && $this->request->query('filteredval', null))
-        	$this->defaulFilter();
+        	$this->defaulFilter();*/
             
-        if($this->request->query('q', null))
+        if( $this->request->query('q', null) && $this->request->query('q') != ''){
             $this->search();
+            $this->searchByRelation();   
+        }
         
         $this->sort();
 
@@ -79,20 +81,29 @@ abstract class AbstractFilter
     protected function searchByRelation() {
 
     	$filter_by_relations = $this->filter_by_relations;
-        
+
+        $qry = $this->request->query('q');
+
+
         if($filter_by_relations){
 
-            foreach($filter_by_relations as $column){
+            $this->query->where(function ($query) use ($filter_by_relations, $qry){ 
 
-                $col = explode('__', $column);
+                foreach($filter_by_relations as $column){
 
-                $this->query->orWhereHas($col[0], function($q) use ($qry, $col){
+                    $col = explode('__', $column);
 
-                    $q->where($col[1], "LIKE", '%'.$qry.'%');
+                    $query->orWhereHas($col[0], function($q) use ($qry, $col){
 
-                });
-            }
+                        $q->where($col[1], "LIKE", '%'.$qry.'%');
+
+                    });
+                }
+
+
+            });
         }
+
     }
 
     protected function sort() {
