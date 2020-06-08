@@ -90,6 +90,7 @@
 											<tr>
 												<th >ID</th>
 												<th >Company</th>
+												<th >Equiment</th>
 												<th >Contract Name</th>
 												<th >Contract Validation</th>
 												<th >Date</th>
@@ -179,6 +180,13 @@
 			</div>
 		</div>
 	</div>
+    	<div class="modal fade bd-example-modal-lg" id="changeStatusAccount" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content contentAccon">
+
+			</div>
+		</div>
+	</div>
 
 
 	@endsection
@@ -228,6 +236,7 @@
 				columns: [
 					{ data: 'id', name: 'id' },
 					{ data: 'Company', name: 'Company' },
+					{ data: 'equiment', name: 'equiment' },
 					{ data: 'name', name: 'name' },
 					{ data: 'validation', name: 'validation' },
 					{ data: 'date', name: 'date' },
@@ -253,6 +262,15 @@
 
 		});
 
+		function changeEquiment(id){
+            var url = '{{ route("change.equiment.Account.gcfcl",":id") }}';
+			url = url.replace(':id',id);
+            console.log(url);
+			$('.contentAccon').load(url,function(){
+				$('#changeStatusAccount').modal();
+			});
+        }
+        
 		function showModal(id){
 
 			var url = '{{ route("show.status.Request.gc",":id") }}';

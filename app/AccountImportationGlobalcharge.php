@@ -9,6 +9,7 @@ class AccountImportationGlobalcharge extends Model
     protected $table    = "account_importation_globalcharge";
     protected $fillable = ['name',
                            'date',
+                           'data',
                            'requestgc_id',
                            'company_user_id'
                           ];
@@ -21,6 +22,6 @@ class AccountImportationGlobalcharge extends Model
 	public function companyuser(){
 		return $this->belongsTo('App\CompanyUser','company_user_id');
 	}
-
+    
     
 }

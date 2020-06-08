@@ -24,14 +24,14 @@ class ContactController extends Controller
     {
         $company_user_id = \Auth::user()->company_user_id;
 
+        $query = Contact::whereHas('company', function ($query) {
+            $query->where('company_user_id', '=', \Auth::user()->company_user_id);
+        })->Company();
+
         if ($request->paginate) {
-            $contacts = Contact::whereHas('company', function ($query) {
-                $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-            })->with('company')->paginate($request->paginate);
+            $contacts = $query->paginate($request->paginate);
         } else {
-            $contacts = Contact::whereHas('company', function ($query) {
-                $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-            })->with('company')->take($request->size)->get();
+            $contacts = $query->take($request->size)->get();
         }
 
         if (\Auth::user()->hasRole('subuser')) {

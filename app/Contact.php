@@ -14,4 +14,15 @@ class Contact extends Model implements Auditable
     {
         return $this->belongsTo('App\Company','company_id');
     }
+
+    public function scopeCompany($query){
+        $query->with(['company' => function ($q) {
+            $q->select('id', 'business_name', 'phone', 'address', 'tax_number', 'logo as url');
+        }]);
+    }
+
+    public function getOptionsAttribute($value)
+    {
+        return json_decode($value);
+    }
 }

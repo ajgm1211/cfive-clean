@@ -121,6 +121,62 @@ class QuoteV2 extends Model  implements HasMedia
         return json_decode($a);
     }*/
 
+    public function scopeQuoteSelect($q)
+    {
+        return $q->select(
+            'id',
+            'quote_id',
+            'custom_quote_id',
+            'type',
+            'delivery_type as delivery',
+            'equipment',
+            'cargo_type',
+            'total_quantity',
+            'total_volume',
+            'total_weight',
+            'chargeable_weight',
+            'company_id',
+            'contact_id',
+            'price_id',
+            'validity_start as valid_from',
+            'validity_end as valid_until',
+            'commodity',
+            'kind_of_cargo',
+            'gdp',
+            'risk_level',
+            'date_issued',
+            'incoterm_id',
+            'company_user_id',
+            'status',
+            'payment_conditions',
+            'terms_and_conditions',
+            'terms_english',
+            'terms_portuguese',
+            'created_at',
+            'updated_at'
+        );
+    }
+
+    public function scopeConditionalWhen($q, $type, $status, $integration)
+    {
+        return $q->when($type, function ($query, $type) {
+            return $query->where('type', $type);
+        })->when($status, function ($query, $status) {
+            return $query->where('status', $status);
+        })->when($integration, function ($query, $integration) {
+            return $query->whereHas('integration', function ($q) {
+                $q->where('status', 0);
+            });
+        });
+    }
+
+    public function scopeAuthUserCompany($q, $company_user_id)
+    {
+        return $q->where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
+            $q->where('company_user_id', '=', $company_user_id);
+        });
+    }
+
     public function scopeUserRelation($q)
     {
         return $q->with(['user' => function ($query) {
@@ -175,20 +231,51 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeRateV2($q)
     {
         return $q->with(['rates_v2' => function ($query) {
-            $query->with('origin_airport', 'destination_airport', 'airline');
+            $query->select(
+                'id',
+                'quote_id',
+                'contract',
+                'validity_start as valid_from',
+                'validity_end as valid_until',
+                'origin_port_id',
+                'destination_port_id',
+                'origin_port_id',
+                'destination_port_id',
+                'carrier_id',
+                'airline_id',
+                'currency_id',
+                'remarks',
+                'remarks_english',
+                'remarks_spanish',
+                'remarks_portuguese',
+                'schedule_type',
+                'transit_time',
+                'via'
+            );
+            $query->with('origin_airport', 'destination_airport');
+            $query->with(['carrier' => function ($q) {
+                $q->select('id', 'name', 'uncode', 'image as url');
+            }]);
+            $query->with(['airline' => function ($q) {
+                $q->select('id', 'name');
+            }]);
             $query->with(['origin_port' => function ($q) {
-                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
-                $q->with('country');
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id');
+                $q->with(['country' => function ($q) {
+                    $q->select('id', 'code', 'name', 'continent');
+                }]);
             }]);
             $query->with(['currency' => function ($q) {
                 $q->select('id', 'alphacode');
             }]);
             $query->with(['destination_port' => function ($q) {
-                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
-                $q->with('country');
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id');
+                $q->with(['country' => function ($q) {
+                    $q->select('id', 'code', 'name', 'continent');
+                }]);
             }]);
             $query->with(['charge' => function ($q) {
-                $q->select('id', 'automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups as markup', 'total', 'currency_id');
+                $q->select('id', 'automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount as price', 'markups as markup', 'total as total_price', 'currency_id');
                 $q->with('type');
                 $q->with(['surcharge' => function ($q) {
                     $q->select('id', 'name', 'description', 'options');
@@ -212,8 +299,81 @@ class QuoteV2 extends Model  implements HasMedia
                     $q->select('id', 'alphacode');
                 }]);
             }]);
+            $query->with('inland');
+            $query->with('automaticInlandLclAir');
+        }]);
+    }
+
+    public function scopeAutomaticRate($q)
+    {
+        return $q->with(['rates_v2' => function ($query) {
+            $query->select(
+                'id',
+                'quote_id',
+                'contract',
+                'validity_start as valid_from',
+                'validity_end as valid_until',
+                'origin_port_id',
+                'destination_port_id',
+                'origin_port_id',
+                'destination_port_id',
+                'carrier_id',
+                'airline_id',
+                'currency_id',
+                'remarks',
+                'remarks_english',
+                'remarks_spanish',
+                'remarks_portuguese',
+                'schedule_type',
+                'transit_time',
+                'via'
+            );
+            $query->with('origin_airport', 'destination_airport');
             $query->with(['carrier' => function ($q) {
-                $q->select('id', 'name', 'uncode', 'varation as variation');
+                $q->select('id', 'name', 'uncode', 'image as url');
+            }]);
+            $query->with(['airline' => function ($q) {
+                $q->select('id', 'name');
+            }]);
+            $query->with(['origin_port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id');
+                $q->with(['country' => function ($q) {
+                    $q->select('id', 'code', 'name', 'continent');
+                }]);
+            }]);
+            $query->with(['currency' => function ($q) {
+                $q->select('id', 'alphacode');
+            }]);
+            $query->with(['destination_port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id');
+                $q->with(['country' => function ($q) {
+                    $q->select('id', 'code', 'name', 'continent');
+                }]);
+            }]);
+            $query->with(['charge' => function ($q) {
+                $q->select('id', 'automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'total', 'currency_id');
+                $q->with('type');
+                $q->with(['surcharge' => function ($q) {
+                    $q->select('id', 'name', 'description', 'options');
+                }]);
+                $q->with(['calculation_type' => function ($q) {
+                    $q->select('id', 'name', 'code', 'display_name');
+                }]);
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'alphacode');
+                }]);
+            }]);
+            $query->with(['charge_lcl_air' => function ($q) {
+                $q->with('type');
+                $q->with(['surcharge' => function ($q) {
+                    $q->select('id', 'name', 'description', 'options');
+                }]);
+                $q->with(['calculation_type' => function ($q) {
+                    $q->select('id', 'name', 'code', 'display_name');
+                }]);
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'alphacode');
+                }]);
             }]);
             $query->with('inland');
             $query->with('automaticInlandLclAir');

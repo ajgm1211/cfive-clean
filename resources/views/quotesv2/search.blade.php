@@ -281,7 +281,7 @@
     }
 
     .wth {
-        width: 22%;
+        width: 25%;
     }
 
     .table-r__quotes {
@@ -422,7 +422,7 @@
     }
 
     .create-manual {
-        background-color: transparent !important;
+        background-color: #fff !important;
         color: #36a3f7 !important;
         border-width: 2px;
         border-color: #36a3f7 !important;
@@ -1240,18 +1240,18 @@
                                 <div class="row  justify-content-between">
                                     <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                                         @if(isset($validateEquipment))
-                                            @if($validateEquipment['count'] > 1 )
-                                            <p class="warning-p"><span><i class="la la-info-circle"></i>The equipments do
-                                                    not belong to the same group.</span> You can create a quote manually.
-                                            </p>
-                                            @endif
+                                        @if($validateEquipment['count'] > 1 )
+                                        <p class="warning-p"><span><i class="la la-info-circle"></i>The equipments do not
+                                                belong to the same group.</span> You can create a quote manually.</p>
+                                        @endif
                                         @endif
                                         @if(isset($arreglo) && isset($validateEquipment) )
-                                            @if($arreglo->isEmpty() && $validateEquipment['count'] < 2 ) <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates
+                                        @if($arreglo->isEmpty() && $validateEquipment['count'] < 2 ) <p
+                                            class="warning-p"><span><i class="la la-info-circle"></i>No freight rates
                                                 were found for this trade route.</span> You can create a quote manually.
-                                                </p>
+                                            </p>
                                             @endif
-                                        @endif
+                                            @endif
                                     </div>
                                     <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'>
                                         <!-- <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
@@ -1391,17 +1391,14 @@
                                                     <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
                                                     <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                                                 </div>
-                                                <div class="col-lg-4 d-flex flex-column justify-content-center aqui">
+                                                <div class="col-lg-4 d-flex flex-column justify-content-center">
                                                     @if($arr->service != '')
                                                     {{$arr->service}}
 
                                                     @endif
                                                     @if($arr->via != '')
-                                                    <span style="color:#2e0084 align-items-center">
-                                                        <center>Via :</center>
-                                                    </span><span style="color:#1d3b6e align-items-center">
-                                                        <center>{{$arr->via}}</center>
-                                                    </span>
+                                                    <span style="color:#2e0084; text-align: center">Via :</span>
+                                                    <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
 
                                                     @endif
                                                     <div class="progress m-progress--sm">
@@ -1410,11 +1407,10 @@
                                                             aria-valuemax="100"></div>
                                                     </div>
                                                     @if($arr->transit_time != '')
-                                                    <span style="color:#2e0084">
-                                                        <center>Transit :</center>
-                                                    </span> <span style="color:#1d3b6e">
-                                                        <center>{{$arr->transit_time}} Days</center>
-                                                    </span>
+                                                    <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                    <span
+                                                        style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
+                                                        Days</span>
 
                                                     @endif
 
@@ -1509,7 +1505,9 @@
                                                 @endif
                                                 <div class="col-lg-2 d-flex  justify-content-end">
                                                     <span class="portalphacode" style="margin-right:15px;">Contract:
-                                                    </span> {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                                                    </span> <span class="truncate"
+                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                    / {{ $arr->contract->number }}
                                                 </div>
 
                                                 <div
@@ -1563,9 +1561,10 @@
                                     </div>
                                     <div class="row bg-light">
                                         <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                                        <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2"><span class="portalphacode"
+                                                style="margin-left: 20px">Detail</span></div>
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
                                                         class="portalphacode">{{ $container->code }} </span></div>
@@ -1582,11 +1581,11 @@
                                         <div class="col-lg-2 colorphacode">
                                             {{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}
                                         </div>
-                                        <div class="col-lg-1 colorphacode">
+                                        <div class="col-lg-2 colorphacode" style="padding-left: 35px">
                                             {{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}
                                         </div>
-                                        <div class="col-lg-8 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     <span class="bg-rates">
@@ -1608,10 +1607,10 @@
                                     </div>
                                     @endforeach
                                     <div class="row bg-light">
-                                        <div class="col-lg-3 col-lg-offset-"><span class="portalphacode">Subtotal Origin
+                                        <div class="col-lg-4 col-lg-offset-"><span class="portalphacode">Subtotal Origin
                                                 Charges</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
 
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
@@ -1634,9 +1633,10 @@
                                     </div>
                                     <div class="row bg-light">
                                         <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                                        <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2"><span class="portalphacode"
+                                                style="margin-left: 20px">Detail</span></div>
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
                                                         class="portalphacode">{{ $container->code }} </span></div>
@@ -1648,10 +1648,10 @@
                                     @foreach($arr->rates as $rates)
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">{{ $rates['type'] }}</div>
-                                        <div class="col-lg-1 colorphacode" style="white-space: nowrap">
-                                            {{ $rates['detail'] }}</div>
-                                        <div class="col-lg-8 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2 colorphacode"
+                                            style="white-space: nowrap; padding-left: 35px">{{ $rates['detail'] }}</div>
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}> <span
                                                         class="bg-rates">{{ isDecimal(@$rates['price'.$container->code]) }}</span>
@@ -1673,11 +1673,11 @@
                                         <div class="col-lg-2 colorphacode">
                                             {{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}
                                         </div>
-                                        <div class="col-lg-1 colorphacode">
+                                        <div class="col-lg-2 colorphacode" style="padding-left: 35px">
                                             {{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}
                                         </div>
-                                        <div class="col-lg-8 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     <span class="bg-rates">
@@ -1697,10 +1697,10 @@
                                     </div>
                                     @endforeach
                                     <div class="row bg-light">
-                                        <div class="col-lg-3 col-lg-offset-"><span class="portalphacode">Subtotal
+                                        <div class="col-lg-4 col-lg-offset-"><span class="portalphacode">Subtotal
                                                 Freight Charges</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
                                                         class="portalphacode">{{ isDecimal($arr->{'tot'.$container->code.'F'})  }}
@@ -1722,9 +1722,10 @@
                                     </div>
                                     <div class="row bg-light">
                                         <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                                        <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2"><span class="portalphacode"
+                                                style="margin-left: 20px">Detail</span></div>
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
                                                         class="portalphacode">{{ $container->code }} </span></div>
@@ -1739,11 +1740,11 @@
                                         <div class="col-lg-2 colorphacode">
                                             {{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}
                                         </div>
-                                        <div class="col-lg-1 colorphacode">
+                                        <div class="col-lg-2 colorphacode" style="padding-left: 35px">
                                             {{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}
                                         </div>
-                                        <div class="col-lg-8 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     <span class="bg-rates">
@@ -1764,10 +1765,10 @@
                                     </div>
                                     @endforeach
                                     <div class="row bg-light">
-                                        <div class="col-lg-3 col-lg-offset-"><span class="portalphacode">Subtotal
+                                        <div class="col-lg-4 col-lg-offset-"><span class="portalphacode">Subtotal
                                                 Destination Charges</span></div>
-                                        <div class="col-lg-8">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}><span
                                                         class="portalphacode">{{ isDecimal($arr->{'tot'.$container->code.'D'})  }}
@@ -1790,9 +1791,10 @@
                                     </div>
                                     <div class="row bg-light">
                                         <div class="col-lg-2"><span class="portalphacode">Provider</span></div>
-                                        <div class="col-lg-2"><span class="portalphacode">Distance</span></div>
-                                        <div class="col-lg-6">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2"><span class="portalphacode"
+                                                style="margin-left: 20px">Distance</span></div>
+                                        <div class="col-lg-7">
+                                            <div class="d-flex justify-content-end">
                                                 <div class="wth" {{ $equipmentHides['20DV'] }}><span
                                                         class="portalphacode">20'</span></div>
                                                 <div class="wth" {{ $equipmentHides['40DV'] }}><span
@@ -1818,9 +1820,10 @@
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">{{ $inlandDestiny['providerName']  }}</div>
-                                        <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
-                                        <div class="col-lg-6 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-2 colorphacode" style="padding-left: 35px">
+                                            {{ $inlandDestiny['km']  }} KM</div>
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 <div class="wth" {{ $equipmentHies['20DV'] }}>
                                                     {{ $equipmentHides['20DV'] }}
                                                     {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b
@@ -1895,8 +1898,8 @@
                                         <div class="col-lg-2 colorphacode">{{ $inlandOrigin['providerName']  }}</div>
                                         <div class="col-lg-2 colorphacode">{{ $inlandOrigin['km']  }} KM</div>
 
-                                        <div class="col-lg-6 colorphacode">
-                                            <div class="d-flex justify-content-between">
+                                        <div class="col-lg-7 colorphacode">
+                                            <div class="d-flex justify-content-end">
                                                 <div class="wth" {{ $equipmentHides['20DV'] }}>
                                                     {{ $equipmentHides['20DV'] }}
                                                     {{ @$inlandOrigin['inlandDetails']['20DV']['sub_in']  }}
@@ -1971,7 +1974,7 @@
                                         <div class="col-lg-4 col-lg-offset-"><span class="portalphacode">Subtotal
                                                 Inlands Charges</span></div>
                                         <div class="col-lg-6">
-                                            <div class="d-flex justify-content-between">
+                                            <div class="d-flex justify-content-end">
                                                 <div class="wth" {{ $equipmentHides['20DV'] }}><span
                                                         class="portalphacode">
                                                         <div id='sub_inland_20{{ $arr->id }}'>0.00</div>
@@ -2513,9 +2516,6 @@
     });
 
 }
-
-
-
 
 </script>
 
