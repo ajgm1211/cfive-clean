@@ -568,77 +568,77 @@ trait QuoteV2Trait {
                                 $array_amounts = json_decode($value->rate,true);
                                 $array_markups = json_decode($value->markup,true);
 
-                                if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
+                                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
                                     $amount20=$array_amounts['c20'];
-                                    $markup20=$array_markups['m20'];
+                                    $markup20=$array_markups['c20'];
                                     $total20=($amount20+$markup20)/$currency_rate;
                                     $inland20 = number_format($total20, 2, '.', '');
-                                }else if(isset($array_amounts['c20']) && !isset($array_markups['m20'])){
+                                }else if(isset($array_amounts['c20']) && !isset($array_markups['c20'])){
                                     $amount20=$array_amounts['c20'];
                                     $total20=$amount20/$currency_rate;
                                     $inland20 = number_format($total20, 2, '.', '');
-                                }else if(!isset($array_amounts['c20']) && isset($array_markups['m20'])){
-                                    $markup20=$array_markups['m20'];
+                                }else if(!isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                                    $markup20=$array_markups['c20'];
                                     $total20=$markup20/$currency_rate;
                                     $inland20 = number_format($total20, 2, '.', '');
                                 }
 
-                                if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
+                                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
                                     $amount40=$array_amounts['c40'];
-                                    $markup40=$array_markups['m40'];
+                                    $markup40=$array_markups['c40'];
                                     $total40=($amount40+$markup40)/$currency_rate;
                                     $inland40 = number_format($total40, 2, '.', '');
-                                }else if(isset($array_amounts['c40']) && !isset($array_markups['m40'])){
+                                }else if(isset($array_amounts['c40']) && !isset($array_markups['c40'])){
                                     $amount40=$array_amounts['c40'];
                                     $total40=$amount40/$currency_rate;
                                     $inland40 = number_format($total40, 2, '.', '');
-                                }else if(!isset($array_amounts['c40']) && isset($array_markups['m40'])){
-                                    $markup40=$array_markups['m40'];
+                                }else if(!isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                                    $markup40=$array_markups['c40'];
                                     $total40=$markup40/$currency_rate;
                                     $inland40 = number_format($total40, 2, '.', '');
                                 }
 
-                                if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
+                                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
                                     $amount40hc=$array_amounts['c40hc'];
-                                    $markup40hc=$array_markups['m40hc'];
+                                    $markup40hc=$array_markups['c40hc'];
                                     $total40hc=($amount40hc+$markup40hc)/$currency_rate;
                                     $inland40hc = number_format($total40hc, 2, '.', '');
-                                }else if(isset($array_amounts['c40hc']) && !isset($array_markups['m40hc'])){
+                                }else if(isset($array_amounts['c40hc']) && !isset($array_markups['c40hc'])){
                                     $amount40hc=$array_amounts['c40hc'];
                                     $total40hc=$amount40hc/$currency_rate;
                                     $inland40hc = number_format($total40hc, 2, '.', '');
-                                }else if(!isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
-                                    $markup40hc=$array_markups['m40hc'];
+                                }else if(!isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                                    $markup40hc=$array_markups['c40hc'];
                                     $total40hc=$markup40hc/$currency_rate;
                                     $inland40hc = number_format($total40hc, 2, '.', '');
                                 }
 
-                                if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
+                                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
                                     $amount40nor=$array_amounts['c40nor'];
-                                    $markup40nor=$array_markups['m40nor'];
+                                    $markup40nor=$array_markups['c40nor'];
                                     $total40nor=($amount40nor+$markup40nor)/$currency_rate;
                                     $inland40nor = number_format($total40nor, 2, '.', '');
-                                }else if(isset($array_amounts['c40nor']) && !isset($array_markups['m40nor'])){
+                                }else if(isset($array_amounts['c40nor']) && !isset($array_markups['c40nor'])){
                                     $amount40nor=$array_amounts['c40nor'];
                                     $total40nor=$amount40nor/$currency_rate;
                                     $inland40nor = number_format($total40nor, 2, '.', '');
-                                }else if(!isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
-                                    $markup40nor=$array_markups['m40nor'];
+                                }else if(!isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                                    $markup40nor=$array_markups['c40nor'];
                                     $total40nor=$markup40nor/$currency_rate;
                                     $inland40nor = number_format($total40nor, 2, '.', '');
                                 }
 
-                                if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
+                                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
                                     $amount45=$array_amounts['c45'];
-                                    $markup45=$array_markups['m45'];
+                                    $markup45=$array_markups['c45'];
                                     $total45=($amount45+$markup45)/$currency_rate;
                                     $inland45 = number_format($total45, 2, '.', '');
-                                }else if(isset($array_amounts['c45']) && !isset($array_markups['m45'])){
+                                }else if(isset($array_amounts['c45']) && !isset($array_markups['c45'])){
                                     $amount45=$array_amounts['c45'];
                                     $total45=$amount45/$currency_rate;
                                     $inland45 = number_format($total45, 2, '.', '');
-                                }else if(!isset($array_amounts['c45']) && isset($array_markups['m45'])){
-                                    $markup45=$array_markups['m45'];
+                                }else if(!isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                                    $markup45=$array_markups['c45'];
                                     $total45=$markup45/$currency_rate;
                                     $inland45 = number_format($total45, 2, '.', '');
                                 }
@@ -1966,7 +1966,6 @@ trait QuoteV2Trait {
 
         /* Fin consulta de charges */
 
-        $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',$user_id)->with('companyUser')->first();
