@@ -50,6 +50,17 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
 
+             @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <br>
+
 
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">

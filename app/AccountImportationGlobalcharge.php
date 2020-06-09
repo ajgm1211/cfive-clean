@@ -9,6 +9,7 @@ class AccountImportationGlobalcharge extends Model
     protected $table    = "account_importation_globalcharge";
     protected $fillable = ['name',
                            'date',
+                           'data',
                            'requestgc_id',
                            'company_user_id'
                           ];
