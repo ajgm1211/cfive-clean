@@ -3560,6 +3560,7 @@ class QuoteV2Controller extends Controller
                     $ext        = $extObj->getExtension();
                     $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
                     $descarga   = Storage::disk('FclRequest-New')->url($mediaItem->id.'/'.$mediaItem->file_name,$name);
+                    $success = true;
                 }
             } else {
                 $Ncontract = ContractFclFile::find($idFcl);
