@@ -154,6 +154,7 @@ class QuoteV2Controller extends Controller
             if (isset($quote->company)) {
                 $company = $quote->company->business_name;
             }
+
             if ($quote->custom_quote_id != '') {
                 $id = $quote->custom_quote_id;
             } else {
@@ -224,11 +225,18 @@ class QuoteV2Controller extends Controller
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-          <a class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
           <span>
           <i class="la la-edit"></i>
           &nbsp;
           Edit
+          </span>
+          </a>
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
+          <span>
+          <i class="la la-file"></i>
+          &nbsp;
+          PDF
           </span>
           </a>
           <a href="/v2/quotes/duplicate/' . $colletion['idSet'] . '" class="dropdown-item" >
