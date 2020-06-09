@@ -1469,7 +1469,7 @@
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Provider</span></div>
                     <div class="col-lg-2"><span class="portalphacode" style="margin-left: 20px">Distance</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                       <div class="d-flex justify-content-end">
                         <div class="wth" {{ $equipmentHides['20DV'] }}><span class="portalphacode">20'</span></div>
                         <div class="wth" {{ $equipmentHides['40DV'] }}><span class="portalphacode">40'</span></div>
@@ -1492,10 +1492,10 @@
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode" >{{ $inlandDestiny['providerName']  }}</div>
                     <div class="col-lg-2 colorphacode" style="padding-left: 35px">{{ $inlandDestiny['km']  }} KM</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-end">
-                        <div class="wth" {{ $equipmentHies['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
-                          <i class="la la-caret-right></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
+                        <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40DV'] }}>{{ $equipmentHides['40DV'] }}
@@ -1538,7 +1538,7 @@
                     <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['providerName']  }}</div>
                     <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['km']  }} KM</div>
 
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-end">
                         <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }}
                           {{ @$inlandOrigin['inlandDetails']['20DV']['sub_in']  }} 
@@ -1686,8 +1686,12 @@
       method:'get',
       success: function(response){
         if(response.success == true){
-          window.location = response.url;
-        }else {
+          //window.location = response.url;
+          var link = document.createElement("a");
+                            link.href = response.url;
+                            link.download = 'example.csv';
+                            link.click();        
+                            }else {
           toastr.error('File not found');
         }
         ///console.log(response);
@@ -2050,10 +2054,12 @@
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
-                                '<input type="checkbox" class="c5-check" title="'+code+'" value="'+idEquip+
+                                '<input type="checkbox" checked class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
+                      
                 $('.list-group2').append(list2);
             }
+            
 
             $('.equipment .select-list').html('');
 
