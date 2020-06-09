@@ -1,5 +1,6 @@
 <?php
 
+use App\Currency;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,7 +75,20 @@ function isDecimal($monto)
 
     $isDecimal = Auth::user()->companyUser->decimals;
     if ($isDecimal)
-        return number_format($monto, 2, '.', '');
+        return $monto;
     else
         return round($monto);
+}
+
+function ratesCurrencyFunction($id, $typeCurrency)
+{
+    $rates = Currency::where('id', '=', $id)->get();
+    foreach ($rates as $rate) {
+        if ($typeCurrency == "USD") {
+            $rateC = $rate->rates;
+        } else {
+            $rateC = $rate->rates_eur;
+        }
+    }
+    return $rateC;
 }
