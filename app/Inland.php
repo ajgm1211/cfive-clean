@@ -73,23 +73,6 @@ class Inland extends Model implements Auditable
         return (new InlandFilter($request, $builder))->filter();
     }
 
-    public function inlandports()
-    {
-
-        return $this->hasMany('App\InlandPort');
-    }
-
-    public function inlandadditionalkms()
-    {
-
-        return $this->hasOne('App\InlandAdditionalKm');
-    }
-
-    public function inlanddetails()
-    {
-
-        return $this->hasMany('App\InlandDetail');
-    }
     /**
      * Sync Inland Company Restrictions
      *
@@ -106,5 +89,17 @@ class Inland extends Model implements Auditable
                 'inland_id'   => $this->id
             ]);
         }
+    }
+    public function inlandports()
+    {
+        return $this->hasMany('App\InlandPort');
+    }
+    public function inlandadditionalkms()
+    {
+        return $this->hasOne('App\InlandAdditionalKm');
+    }
+    public function inlanddetails()
+    {
+        return $this->hasMany('App\InlandDetail');
     }
 }

@@ -363,7 +363,7 @@ class QuoteV2Controller extends Controller
         $sale_terms = SaleTermV2::where('quote_id', $quote->id)->get();
         $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
         $sale_terms_destination = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
-        
+
         if ($quote->delivery_type == 2 || $quote->delivery_type == 4) {
             $destinationAddressHides = null;
         }
@@ -408,7 +408,7 @@ class QuoteV2Controller extends Controller
         $rates = $quote->rates_v2;
 
         $this->processShowQuoteRates($rates, $company_user, $containers);
-        
+
         if (!$quote->rates_v2->isEmpty()) {
             foreach ($quote->rates_v2 as $item) {
                 $quote->rates_v2->map(function ($item) {
@@ -1066,27 +1066,27 @@ class QuoteV2Controller extends Controller
         if ($calculos == 1) {
             $head_1 = 'col-lg-8';
             $head_2 = 'col-lg-3';
-            
+
         }
         if ($calculos == 2) {
             $head_1 = 'col-lg-7';
             $head_2 = 'col-lg-4';
-            
+
         }
         if ($calculos == 3) {
             $head_1 = 'col-lg-6';
             $head_2 = 'col-lg-5';
-            
+
         }
         if ($calculos == 4) {
             $head_1 = 'col-lg-5';
             $head_2 = 'col-lg-6';
-            
+
         }
         if ($calculos == 5) {
             $head_1 = 'col-lg-4';
             $head_2 = 'col-lg-7';
-            
+
         }
 
         $equipment->put('head_1', @$head_1);
@@ -1803,7 +1803,7 @@ class QuoteV2Controller extends Controller
             $currency = Currency::find($currency_id);
 
             $this->savePdfOption($quote, $currency);
-            
+
         } else { // COTIZACION MANUAL
 
             $dateQ = explode('/', $request->input('date'));
@@ -1988,10 +1988,10 @@ class QuoteV2Controller extends Controller
 
                     $remarks = $info_D->remarks . "<br>";
                     // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
-                    
+
                     //$request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks]);
-                    
+
                     $rate = AutomaticRate::create($request->all());
 
                     $oceanFreight = new Charge();
@@ -2441,7 +2441,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-     
+
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
@@ -2450,7 +2450,7 @@ class QuoteV2Controller extends Controller
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $containers = Container::get();
-        
+
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2490,7 +2490,7 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $carriersSelected = $carrierMan;
         $allCarrier =true;
-        
+
         //dd($carriersSelected);
 
         return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType','containers','carriersSelected','allCarrier'));
@@ -2696,7 +2696,7 @@ class QuoteV2Controller extends Controller
                             $response = $client->request('GET', $url);
                         } catch (\Exception $e) {
                         }
-                        
+
                         //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                         //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     }
@@ -2713,7 +2713,7 @@ class QuoteV2Controller extends Controller
                 foreach ($origin_port as $orig) {
                     foreach ($destiny_port as $dest) {
 
-                       // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
+                        // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
                         $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                         $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
@@ -2757,7 +2757,7 @@ class QuoteV2Controller extends Controller
             if ($chargesAPI != null) {
                 $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo2 = $arreglo2->get();
-                
+
                 $arreglo = $arreglo->merge($arreglo2);
             }
 
@@ -3001,7 +3001,7 @@ class QuoteV2Controller extends Controller
                                         $collectionFreight->push($arregloFreight);
 
                                     }
-                                 
+
                                 }
                             }
                         }
@@ -3108,7 +3108,7 @@ class QuoteV2Controller extends Controller
                                 //Freight
                                 if ($chargesFreight != null) {
                                     if ($global->typedestiny_id == '3') {
-                                        
+
                                         $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
                                         $globalParams['typeCurrency'] = $data->currency->alphacode;
                                         $globalParams['idCurrency'] = $data->currency->id;
@@ -3174,7 +3174,7 @@ class QuoteV2Controller extends Controller
 
                 $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id,$data->contract->status);
 
-                
+
                 $data->setAttribute('via', $transit_time['via']);
                 $data->setAttribute('transit_time', $transit_time['transit_time']);
                 $data->setAttribute('service', $transit_time['service']);
@@ -3196,7 +3196,7 @@ class QuoteV2Controller extends Controller
                 $excelRequest = "0";   
                 $excelRequestIdFCL = "0";
                 $excelRequestId = "0";
-                
+
                 if ($data->contract->status != 'api') {
 
                     $excelRequestFCL = ContractFclFile::where('contract_id', $data->contract->id)->first();
@@ -3546,14 +3546,30 @@ class QuoteV2Controller extends Controller
 
         if ($idContract == 0) {
             $Ncontract = NewContractRequest::find($id);
+            $mode_search = false;
             if (!empty($Ncontract)) {
-
-                $time = new \DateTime();
-                $now = $time->format('d-m-y');
-                $company = CompanyUser::find($Ncontract->company_user_id);
-                $extObj = new \SplFileInfo($Ncontract->namefile);
-                $ext = $extObj->getExtension();
-                $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
+                $success = false;
+                $descarga = null;
+                if(!empty($Ncontract->namefile)){
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $company = CompanyUser::find($Ncontract->company_user_id);
+                    $extObj = new \SplFileInfo($Ncontract->namefile);
+                    $ext = $extObj->getExtension();
+                    $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
+                } else {
+                    $mode_search = true;
+                    $Ncontract->load('companyuser');
+                    $data       = json_decode($Ncontract->data,true);
+                    $time       = new \DateTime();
+                    $now        = $time->format('d-m-y');
+                    $mediaItem  = $Ncontract->getFirstMedia('document');
+                    $extObj     = new \SplFileInfo($mediaItem->file_name);
+                    $ext        = $extObj->getExtension();
+                    $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
+                    $descarga   = Storage::disk('s3_upload')->url('Request/FCL/'.$mediaItem->id.'/'.$mediaItem->file_name,$name);
+                    $success = true;
+                }
             } else {
                 $Ncontract = ContractFclFile::find($idFcl);
                 $time = new \DateTime();
@@ -3563,38 +3579,24 @@ class QuoteV2Controller extends Controller
                 $name = $Ncontract->id . '-' . $now . '-FLC.' . $ext;
             }
 
-            $success = false;
-            $descarga = null;
 
-            if (Storage::disk('s3_upload')->exists('Request/FCL/' . $Ncontract->namefile, $name)) {
-                $success = true;
-                $descarga = Storage::disk('s3_upload')->url('Request/FCL/' . $Ncontract->namefile, $name);
-            } elseif (Storage::disk('s3_upload')->exists('contracts/' . $Ncontract->namefile, $name)) {
-                $success = true;
-                $descarga = Storage::disk('s3_upload')->url('contracts/' . $Ncontract->namefile, $name);
-            } elseif (Storage::disk('FclRequest')->exists($Ncontract->namefile, $name)) {
-                $success = true;
-                $descarga = Storage::disk('FclRequest')->url($Ncontract->namefile, $name);
-            } elseif (Storage::disk('UpLoadFile')->exists($Ncontract->namefile, $name)) {
-                $success = true;
-                $descarga = Storage::disk('UpLoadFile')->url($Ncontract->namefile, $name);
+            if($mode_search == false){
+                if (Storage::disk('s3_upload')->exists('Request/FCL/' . $Ncontract->namefile, $name)) {
+                    $success = true;
+                    $descarga = Storage::disk('s3_upload')->url('Request/FCL/' . $Ncontract->namefile, $name);
+                } elseif (Storage::disk('s3_upload')->exists('contracts/' . $Ncontract->namefile, $name)) {
+                    $success = true;
+                    $descarga = Storage::disk('s3_upload')->url('contracts/' . $Ncontract->namefile, $name);
+                } elseif (Storage::disk('FclRequest')->exists($Ncontract->namefile, $name)) {
+                    $success = true;
+                    $descarga = Storage::disk('FclRequest')->url($Ncontract->namefile, $name);
+                } elseif (Storage::disk('UpLoadFile')->exists($Ncontract->namefile, $name)) {
+                    $success = true;
+                    $descarga = Storage::disk('UpLoadFile')->url($Ncontract->namefile, $name);
+                }
             }
-
             return response()->json(['success' => $success, 'url' => $descarga]);
 
-            /*try{
-        return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
-        } catch(\Exception $e){
-        try{
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-        } catch(\Exception $e){
-        try{
-        return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
-        } catch(\Exception $e){
-        return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        }
-        }
-        }*/
         } else {
             $contract = Contract::find($idContract);
             $downloads = $contract->getMedia('document');
@@ -6086,7 +6088,7 @@ class QuoteV2Controller extends Controller
                     $package_load->save();
                 }
             }
-            
+
             $this->savePdfOption($quote, $currency);
 
         }
