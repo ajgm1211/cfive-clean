@@ -1686,8 +1686,12 @@
       method:'get',
       success: function(response){
         if(response.success == true){
-          window.location = response.url;
-        }else {
+          //window.location = response.url;
+          var link = document.createElement("a");
+                            link.href = response.url;
+                            link.download = 'example.csv';
+                            link.click();        
+                            }else {
           toastr.error('File not found');
         }
         ///console.log(response);
