@@ -3559,7 +3559,7 @@ class QuoteV2Controller extends Controller
                     $extObj     = new \SplFileInfo($mediaItem->file_name);
                     $ext        = $extObj->getExtension();
                     $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
-                    $descarga   = Storage::disk('FclRequest-New')->url($mediaItem->id.'/'.$mediaItem->file_name,$name);
+                    $descarga   = Storage::disk('s3_upload')->url('Request/FCL/'.$mediaItem->id.'/'.$mediaItem->file_name,$name);
                     $success = true;
                 }
             } else {
