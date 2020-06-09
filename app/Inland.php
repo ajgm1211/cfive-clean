@@ -90,5 +90,17 @@ class Inland extends Model implements Auditable
 			]);
 		}
 	}
+	public function inlandports()
+    {
+        return $this->hasMany('App\InlandPort');
+	}
+	public function inlandadditionalkms()
+    {
+        return $this->hasOne('App\InlandAdditionalKm');
+    }
+    public function inlanddetails()
+    {
+        return $this->hasMany('App\InlandDetail');
+    }
 
 }
