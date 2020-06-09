@@ -1688,8 +1688,8 @@
                         if(response.success == true){
                             //window.location = response.url;
                             var link = document.createElement("a");
-                            link.download = 'example.csv';
                             link.href = response.url;
+                            link.download = 'example.csv';
                             link.click();
                         }else {
                             toastr.error('File not found');
