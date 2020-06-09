@@ -59,6 +59,7 @@
                     ${'sum_inland_destination'.$c->code} = 0;
                     ${'total_c'.$c->code} = 'total_c'.$c->code;
                     ${'total_m'.$c->code} = 'total_m'.$c->code;
+                    ${'totalized_'.$c->code} = 'totalized_'.$c->code;
                 }
 
                 $array = array();
@@ -71,15 +72,19 @@
                                 /*${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                 ${'sum_total_'.$c->code} += ${'total_'.$c->code};*/
                                 if($sale_terms_origin->count()>0){
+                                    dd("here 1");
                                     if($value->type_id!=1){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                        ${'sum_total_'.$c->code} += ${'totalized_'.$c->code};
+                                        ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                     }
                                 }elseif($sale_terms_destination->count()>0){
+                                    dd("here 2");
                                     if($value->type_id!=2){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                        ${'sum_total_'.$c->code} += ${'totalized_'.$c->code};
+                                        ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                     }
+                                }else{                                    
+                                    ${'sum_total_'.$c->code} += @$value->${'totalized_'.$c->code}; 
                                 }
                             }
                         }
@@ -102,13 +107,23 @@
                         }
                     }
                 }
-
+                
                 if($sale_terms_destination->count()>0){
                     foreach($sale_terms_destination as $destination=>$v){
                         foreach($v as $values){
                             foreach($values->charge as $item){
                                 foreach ($containers as $c){
-                                    ${'sum_total_destination'.$c->code} += $item->${'sum_'.$c->code};
+                                    $result = 0;
+                                    if ($quote->pdf_option->grouped_total_currency == 1) {
+                                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                                    }else{
+                                        $typeCurrency = @Auth::user()->companyUser->currency->alphacode ;
+                                    }
+                                    $exchange = ratesCurrencyFunction($item->currency_id, $typeCurrency);
+                                    
+                                    $result = $item->${'sum_'.$c->code} / $exchange;
+                                    
+                                    ${'sum_total_destination'.$c->code} += $result;
                                 }
                             }
                         }
@@ -120,7 +135,17 @@
                         foreach($v as $value){
                             foreach($value->charge as $item){
                                 foreach ($containers as $c){
-                                    ${'sum_total_origin'.$c->code} += $item->${'sum_'.$c->code};
+                                    $result = 0;
+                                    if ($quote->pdf_option->grouped_total_currency == 1) {
+                                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                                    }else{
+                                        $typeCurrency = @Auth::user()->companyUser->currency->alphacode ;
+                                    }
+                                    $exchange = ratesCurrencyFunction($item->currency_id, $typeCurrency);
+                                    
+                                    $result = $item->${'sum_'.$c->code} / $exchange;
+
+                                    ${'sum_total_origin'.$c->code} += $result;
                                 }
                             }
                         }
