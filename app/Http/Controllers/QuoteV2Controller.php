@@ -2681,16 +2681,14 @@ class QuoteV2Controller extends Controller
 
                 foreach ($origin_port as $orig) {
                     foreach ($destiny_port as $dest) {
-
+                        //$url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
                         $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                         $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
-
                         try {
                             $response = $client->request('GET', $url);
                         } catch (\Exception $e) {
-                            //
                         }
-
+                        
                         //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                         //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     }
@@ -2707,6 +2705,7 @@ class QuoteV2Controller extends Controller
                 foreach ($origin_port as $orig) {
                     foreach ($destiny_port as $dest) {
 
+                       // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
                         $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                         $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
@@ -2748,16 +2747,20 @@ class QuoteV2Controller extends Controller
             $arreglo = $arreglo->get();
 
             if ($chargesAPI != null) {
+                $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo2 = $arreglo2->get();
+                
                 $arreglo = $arreglo->merge($arreglo2);
             }
 
             if ($chargesAPI_M != null) {
+                $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo3 = $arreglo3->get();
                 $arreglo = $arreglo->merge($arreglo3);
             }
 
             if ($chargesAPI_SF != null) {
+                $arreglo4 = $this->filtrarRate($arreglo4, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo4 = $arreglo4->get();
 
                 $arreglo = $arreglo->merge($arreglo4);
