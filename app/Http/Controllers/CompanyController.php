@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreCompany;
+use App\Http\Traits\EntityTrait;
 use App\ViewQuoteV2;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
+    use EntityTrait;
+    
     /**
      * Display a listing of the resource.
      *
@@ -41,20 +44,23 @@ class CompanyController extends Controller
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
 
         if (\Auth::user()->hasRole('subuser')) {
+
+            $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
+
             if ($request->paginate) {
-                $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id);
-                })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user', 'user', 'company_user')->get();
+                $companies = $query->paginate($request->paginate);
             } else {
-                $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id);
-                })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user', 'user', 'company_user')->take($request->size)->get();
+                $companies = $query->take($request->size)->get();
             }
         } else {
+            $query = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
+            
             if ($request->paginate) {
-                $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user', 'user', 'company_user')->paginate($request->paginate);
+                $companies = $query->paginate($request->paginate);
             } else {
-                $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user', 'user', 'company_user')->take($request->size)->get();
+                $companies = $query->take($request->size)->get();
             }
         }
 
@@ -184,13 +190,9 @@ class CompanyController extends Controller
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
-
-            foreach ($options_key as $key) {
-                foreach ($options_value as $value) {
-                    $options_array[$key] = $value;
-                }
-            }
-            $options_array = json_encode($options_array);
+            
+            $options_array = json_encode(array_combine($options_key, $options_value));
+            
         }
 
         if ($request->ajax()) {
@@ -326,12 +328,7 @@ class CompanyController extends Controller
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
 
-            foreach ($options_key as $key) {
-                foreach ($options_value as $value) {
-                    $options_array[$key] = $value;
-                }
-            }
-            $options_array = json_encode($options_array);
+            $options_array = json_encode(array_combine($options_key, $options_value));
         }
 
         if ($request->ajax()) {
@@ -624,15 +621,6 @@ class CompanyController extends Controller
         $companies = Company::where('api_id', '!=', '')->get();
 
         return view('companies.api.index', compact('companies'));
-    }
-
-    public function processArray($array)
-    {
-        $array = array_filter($array, function ($value) {
-            return !is_null($value) && $value !== '';
-        });
-
-        return $array;
     }
 
     public function saveLogo($company, $file)

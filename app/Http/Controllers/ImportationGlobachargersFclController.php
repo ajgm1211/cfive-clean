@@ -25,6 +25,7 @@ use App\GlobalCharCarrier;
 use App\FailedGlobalcharge;
 use App\FileTmpGlobalcharge;
 use Illuminate\Http\Request;
+use App\Jobs\ChangeEquimentJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
@@ -392,6 +393,7 @@ class ImportationGlobachargersFclController extends Controller
             $account->date             = $request->date;
             $account->status           = 'incomplete';
             $account->requestgc_id     = $request_id;
+            $account->data             = json_encode(['change_equiment' => false]);
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
 
@@ -1363,6 +1365,15 @@ class ImportationGlobachargersFclController extends Controller
                 }
             })
             ->addColumn('action', function ( $account) {
+                $changeEquimen = null;
+                $data = json_decode($account->data,true);
+                if($data == null || $data['change_equiment'] == false){
+                    $changeEquimen = '<a href="#" onclick="changeEquiment('.$account->id.')" class="">
+                            <samp class="la la-exchange" style="font-size:20px; color:#031B4E" title="Change Equiment"></samp>
+                        </a>
+                        &nbsp; &nbsp;';
+                }
+
                 return '<a href="/ImportationGlobalchargesFcl/FailedGlobalchargers/'.$account->id.'/1" class="show"  title="Failed-Good" >
                             <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
                         </a>
@@ -1371,11 +1382,8 @@ class ImportationGlobachargersFclController extends Controller
                         <a href="/ImportationGlobalchargesFcl/DownloadAccountgcfcl/'.$account->id.'" class="">
                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
                         </a>
-                        &nbsp; &nbsp; 
-                        <a href="#" onclick="changeEquiment('.$account->id.')" class="">
-                            <samp class="la la-exchange" style="font-size:20px; color:#031B4E" title="Change Equiment"></samp>
-                        </a>
-                        &nbsp; &nbsp; 
+                        &nbsp; &nbsp; '.$changeEquimen.'
+
                         <a href="#" class="eliminaracount" data-id-acount="'.$account->id.'"  title="Delete" >
                             <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                         </a>';
@@ -1432,37 +1440,28 @@ class ImportationGlobachargersFclController extends Controller
 
     public function changeEquimentDispatch(Request $request,$id){
         //dd($request->all(),$id);
-        $equiment = $request->equiment;
-        $relation = [
-            'DryToRF' => [2=>12,1=>13,3=>14,5=>19, 4=>22],
-            'DryToOT' => [2=>16,1=>18,5=>20, 4=>23],
-            'DryToFR' => [2=>25,1=>26,5=>21, 4=>24],
-            
-//            'RFToDry' => [12=>2,13=>1,14=>3,19=>5, 22=>4]
-//            'RFToOT'  => [12=>16,13=>18,19=>20, 22=>23],
-//            'RFToFR'  => [12=>25,13=>26,19=>21, 22=>24],
-//            
-//            'OTToDry' => [16=>2,18=>1,20=>5, 23=>4],
-//            'OTToRF'  => [16=>12,18=>13,20=>19, 23=>22],
-//            'OTToFR'  => [16=>25,18=>26,20=>21, 23=>24],
-//            
-//            'FRToDry' => [25=>2,26=>1,21=>5, 24=>4],
-//            'FRToRF'  => [25=>12,26=>13,21=>19, 24=>22],
-//            'FRToOT'  => [25=>16,26=>18,21=>20, 24=>23],
-            
-            'exclusions' => [6,9,10,11,15,17]
-        ];
-        $select_relation = null;
-        if($equiment == 2){
-            $select_relation = 'DryToRF';
-        } else if($equiment == 3){
-            $select_relation = 'DryToOT';
-        } else if($equiment == 4){
-            $select_relation = 'DryToFR';
+        $equiment   = $request->equiment;
+        $account    = AccountImportationGlobalcharge::find($id);
+        $data       = json_decode($account->data,true);
+        if($equiment != 1){
+            if($data['change_equiment'] == false){
+                if(env('APP_VIEW') == 'operaciones') {
+                    ChangeEquimentJob::dispatch(['id'=>$id,'equiment'=>$equiment],'gcfcl')->onQueue('operaciones');
+                }else {
+                    ChangeEquimentJob::dispatch(['id'=>$id,'equiment'=>$equiment],'gcfcl');
+                }
+                $request->session()->flash('message.nivel', 'success');
+                $request->session()->flash('message.content', 'The team change will be executed soon');
+            } else {
+                $request->session()->flash('message.nivel', 'warning');
+                $request->session()->flash('message.content', 'The team change has already been carried out');
+            }
+        } else {
+            $request->session()->flash('message.nivel', 'info');
+            $request->session()->flash('message.content', 'The team is already DRY');
         }
-        
-        $globals = GlobalCharge::where('account_importation_globalcharge_id',$id)->get();
-        dd($relation[$select_relation],$globals);
+
+        return redirect()->route('RequestsGlobalchargersFcl.index');
     }
 
     public function testExcelImportation(){
