@@ -400,7 +400,7 @@ class QuoteV2Controller extends Controller
         $rates = $quote->rates_v2;
 
         $this->processShowQuoteRates($rates, $company_user, $containers);
-
+        
         if (!$quote->rates_v2->isEmpty()) {
             foreach ($quote->rates_v2 as $item) {
                 $quote->rates_v2->map(function ($item) {
