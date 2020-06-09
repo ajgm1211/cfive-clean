@@ -16,79 +16,95 @@ use Illuminate\Support\Facades\DB;
 
 class Inland extends Model implements Auditable
 {
-	use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
 
-	protected $table    = "inlands";
-	protected $fillable =   [
-		'id', 
-		'provider', 
-		'status', 
-		'inland_type_id', 
-		'validity', 
-		'expire', 
-		'company_user_id', 
-		'gp_container_id', 
-		'direction_id' 
-	];
+    protected $table    = "inlands";
+    protected $fillable =   [
+        'id',
+        'provider',
+        'status',
+        'inland_type_id',
+        'validity',
+        'expire',
+        'company_user_id',
+        'gp_container_id',
+        'direction_id'
+    ];
 
-	public function inlandRange()
-	{
-		return $this->hasMany('App\InlandRange');
-	}
+    public function inlandRange()
+    {
+        return $this->hasMany('App\InlandRange');
+    }
 
-	public function companyUser()
-	{
-		return $this->belongsTo('App\CompanyUser');
-	}
+    public function companyUser()
+    {
+        return $this->belongsTo('App\CompanyUser');
+    }
 
-	public function inland_type()
-	{
-		return $this->belongsTo('App\CompanyUser');
-	}
+    public function inland_type()
+    {
+        return $this->belongsTo('App\CompanyUser');
+    }
 
-	public function direction()
-	{
-		return $this->belongsTo('App\Direction');
-	}
+    public function direction()
+    {
+        return $this->belongsTo('App\Direction');
+    }
 
-	public function inland_company_restriction()
-	{
-		return $this->HasMany('App\InlandCompanyRestriction');
-	}
+    public function inland_company_restriction()
+    {
+        return $this->HasMany('App\InlandCompanyRestriction');
+    }
 
-	public function scopeFilterByCurrentCompany( $query )
-	{
-		$company_id = Auth::user()->company_user_id;
+    public function scopeFilterByCurrentCompany($query)
+    {
+        $company_id = Auth::user()->company_user_id;
 
-		return $query->where('company_user_id', '=', $company_id);
-	}
+        return $query->where('company_user_id', '=', $company_id);
+    }
 
-	public function gpContainer()
-	{
-		return $this->belongsTo('App\GroupContainer');
-	}
+    public function gpContainer()
+    {
+        return $this->belongsTo('App\GroupContainer');
+    }
 
-	public function scopeFilter(Builder $builder, Request $request)
-	{
-		return (new InlandFilter($request, $builder))->filter();
-	}
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new InlandFilter($request, $builder))->filter();
+    }
 
-	/**
-	* Sync Inland Company Restrictions
-	*
-	* @param  Array $companies
-	* @return void
-	*/
-	public function InlandRestrictionsSync($companies)
-	{
-		DB::table('inlands_company_restrictions')->where('inland_id', '=', $this->id)->delete(); 
+    public function inlandports()
+    {
 
-		foreach($companies as $company_id){
-			InlandCompanyRestriction::create([
-				'company_id'    => $company_id,
-				'inland_id'   => $this->id
-			]);
-		}
-	}
+        return $this->hasMany('App\InlandPort');
+    }
 
+    public function inlandadditionalkms()
+    {
+
+        return $this->hasOne('App\InlandAdditionalKm');
+    }
+
+    public function inlanddetails()
+    {
+
+        return $this->hasMany('App\InlandDetail');
+    }
+    /**
+     * Sync Inland Company Restrictions
+     *
+     * @param  Array $companies
+     * @return void
+     */
+    public function InlandRestrictionsSync($companies)
+    {
+        DB::table('inlands_company_restrictions')->where('inland_id', '=', $this->id)->delete();
+
+        foreach ($companies as $company_id) {
+            InlandCompanyRestriction::create([
+                'company_id'    => $company_id,
+                'inland_id'   => $this->id
+            ]);
+        }
+    }
 }

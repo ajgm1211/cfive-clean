@@ -35,10 +35,10 @@
                     </span>
                 </div>
             </div>
-            @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
+            @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='')
                 <div style="margin-top: 25px;">
                     @if($quote->incoterm_id!='')<p><span class="title" >Incoterm: </span>{{@$quote->incoterm->name}}</p>@endif
-                    <p>@if($quote->kind_of_cargo!='')<span class="title" >{{__('pdf.kind_of_cargo')}}</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >{{__('pdf.commodity')}}:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >{{__('pdf.risk_level')}}:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
+                    <p>@if($quote->kind_of_cargo!='')<span class="title" >{{__('pdf.kind_of_cargo')}}:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >{{__('pdf.commodity')}}:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >{{__('pdf.risk_level')}}:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
                 </div>
             @endif
             <br>

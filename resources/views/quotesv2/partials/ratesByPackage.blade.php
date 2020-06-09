@@ -500,9 +500,9 @@
                                                         </thead>
                                                         <tbody style="background-color: white;">
                                                             <?php
-                                                            $total_units=number_format($total_freight_units+$total_origin_units+$total_destination_units, 2, '.', '');
-                                                            $total_rates=number_format($total_freight_rates+$total_origin_rates+$total_destination_rates, 2, '.', '');
-                                                            $total_markups=number_format($total_freight_markups+$total_origin_markups+$total_destination_markups, 2, '.', '');
+                                                            $total_units=isDecimal($total_freight_units+$total_origin_units+$total_destination_units);
+                                                            $total_rates=isDecimal($total_freight_rates+$total_origin_rates+$total_destination_rates);
+                                                            $total_markups=isDecimal($total_freight_markups+$total_origin_markups+$total_destination_markups);
                                                             ?>
                                                             <tr style="height:40px;">
                                                                 <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
