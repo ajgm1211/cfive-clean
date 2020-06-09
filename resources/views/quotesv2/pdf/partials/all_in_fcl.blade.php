@@ -62,7 +62,7 @@
                 }
 
                 $array = array();
-
+                
                 foreach($rate->charge as $value){
                     array_push($array, $value->type_id);
                     if($quote->pdf_option->show_type=='charges'){
@@ -73,12 +73,12 @@
                                 if($sale_terms_origin->count()>0){
                                     if($value->type_id!=1){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                        ${'sum_total_'.$c->code} += ${'total_'.$c->code};
+                                        ${'sum_total_'.$c->code} += ${'totalized_'.$c->code};
                                     }
                                 }elseif($sale_terms_destination->count()>0){
                                     if($value->type_id!=2){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                        ${'sum_total_'.$c->code} += ${'total_'.$c->code};
+                                        ${'sum_total_'.$c->code} += ${'totalized_'.$c->code};
                                     }
                                 }
                             }
@@ -88,16 +88,16 @@
                             if($sale_terms_origin->count()>0){
                                 if($value->type_id!=1){
                                     ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                    ${'sum_total_'.$c->code} += ${'total_'.$c->code};
+                                    ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                 }
                             }elseif($sale_terms_destination->count()>0){
                                 if($value->type_id!=2){
                                     ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                    ${'sum_total_'.$c->code} += ${'total_'.$c->code};
+                                    ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                 }
                             }else{
                                 ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
-                                ${'sum_total_'.$c->code} += ${'total_'.$c->code};
+                                ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                             }
                         }
                     }
@@ -155,13 +155,13 @@
                     @foreach ($containers as $c)
                         @if($c->code == $key)
                             @if($sale_terms_origin->count()>0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()>0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @endif
                         @endif
                     @endforeach

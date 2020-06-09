@@ -57,7 +57,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{$hide}}>{{round(@${'freight_'.$c->code})}}</td>
+                                                        <td {{$hide}}>{{ @${'freight_'.$c->code} }}</td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -131,9 +131,13 @@
                                             @foreach($r->charge as $v)
                                                 @if($v->type_id==3)
                                                     <?php
+                                                        $amount = json_decode($v->amount);
+                                                        $markup = json_decode($v->markup);
+                                                        
                                                         foreach ($containers as $c){
                                                             ${'total_freight_'.$c->code} = 0;
                                                             ${'total_sum_'.$c->code} = 'total_sum_'.$c->code;
+                                                            ${'sum_amount_markup_'.$c->code} = 'sum_amount_markup_'.$c->code;
                                                         }
                                                     ?>
                                                     @if($quote->pdf_option->show_type!='charges')
@@ -164,7 +168,8 @@
                                                             @foreach ($equipmentHides as $key=>$hide)
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
-                                                                        <td {{ $hide }}>{{round($v->${'total_sum_'.$c->code})}}</td>
+                                                                        <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code})}}</td>-->
+                                                                        <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code} == null ? 0 : @$v->${'sum_amount_markup_'.$c->code} }}</td>
                                                                     @endif
                                                                 @endforeach
                                                             @endforeach
@@ -183,7 +188,7 @@
                                                                 <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                                 <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
                                                             @endif
-                                                            <td>{{$currency_cfg->alphacode}}</td>
+                                                            <td>{{$v->currency->alphacode}}</td>
                                                         </tr>
                                                     @else
                                                         @if($v->surcharge_id!='')
@@ -199,7 +204,7 @@
                                                                 @foreach ($equipmentHides as $key=>$hide)
                                                                     @foreach ($containers as $c)
                                                                         @if($c->code == $key)
-                                                                            <td {{ $hide }}>{{round($v->${'total_sum_'.$c->code})}}</td>
+                                                                            <td {{ $hide }}>{{ $v->${'total_sum_'.$c->code} }}</td>
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach
@@ -235,7 +240,7 @@
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}><b>{{round(@${'sum_freight_'.$c->code})}}</b></td>
+                                                    <td {{ $hide }}><b>{{ @${'sum_freight_'.$c->code} }}</b></td>
                                                 @endif
                                             @endforeach
                                         @endforeach
@@ -244,7 +249,7 @@
                                             <td></td>
                                             <td></td>
                                         @endif
-                                        <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                        <td><b>{{@$r->currency->alphacode}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -306,7 +311,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{ $hide }}>{{round(@${'sum_freight_'.$c->code})}}</td>
+                                                        <td {{ $hide }}>{{ @${'sum_freight_'.$c->code} }}</td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
