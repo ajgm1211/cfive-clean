@@ -90,7 +90,7 @@ trait QuoteV2Trait
                     }
                     $currency_rate = $this->ratesCurrency($destination_charge->currency_id, $typeCurrency);
                     foreach ($containers as $container) {
-                        $destination_charge->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                        $destination_charge->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
                         $destination_charge->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                     }
                 }
@@ -145,7 +145,7 @@ trait QuoteV2Trait
                         }
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         foreach ($containers as $container) {
-                            $item->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                            $item->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
                             $item->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                         }
                     }
@@ -364,10 +364,7 @@ trait QuoteV2Trait
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
 
-                    //Para calculo de total que se muestra en show/edit quotes
-                    $currency_rate_global = $this->ratesCurrency($charge->currency_id,  $currency_cfg);
-
-                    $totalized += ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
+                    $totalized = ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
                     $charge->${'totalized_' . $c->code} = $totalized;
 
                     $charge->${$pre . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
@@ -404,7 +401,7 @@ trait QuoteV2Trait
                     ${$sum . '_' . $total . '_' . $inland . $c->code} = 0;
                     ${$total . '_c' . $c->code} = $total . '_c' . $c->code;
                     ${$total . '_m' . $c->code} = $total . '_m' . $c->code;
-                    
+
                     if (isset($array_amounts['c' . $c->code])) {
                         ${$amount . '_' . $inland . $c->code} = $array_amounts['c' . $c->code];
                         ${$total . '_' . $inland . $c->code} = ${$amount . '_' . $inland . $c->code} / $currency_rate;
@@ -627,7 +624,7 @@ trait QuoteV2Trait
                                     if ($value->type_id == 2) {
                                         $charge_destination++;
                                     }
-                                    $value->${$sum . $total . $c->code} = isDecimal(${$total . $c->code});
+                                    $value->${$sum . $total . $c->code} = round(${$total . $c->code});
                                 }
                             }
                         }
@@ -682,7 +679,7 @@ trait QuoteV2Trait
                                     $inland_destination++;
                                 }
 
-                                $value->${$sum . $total . $c->code} = isDecimal(${$total . $c->code});
+                                $value->${$sum . $total . $c->code} = round(${$total . $c->code});
                             }
                         }
                     }
@@ -794,8 +791,8 @@ trait QuoteV2Trait
                                         if ($amounts->type_id == 2) {
                                             $charge_destination++;
                                         }
-                                        $amounts->${$pre_c . $c->code} = isDecimal(${$total . '_' . $c->code});
-                                        $amounts->${'sum_amount_markup_' . $c->code} = isDecimal(${$sum . '_' . $c->code});
+                                        $amounts->${$pre_c . $c->code} = round(${$total . '_' . $c->code});
+                                        $amounts->${'sum_amount_markup_' . $c->code} = round(${$sum . '_' . $c->code});
                                     }
                                 }
                             }
@@ -932,8 +929,8 @@ trait QuoteV2Trait
 
                                     if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
                                         $charge_freight++;
-                                        $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code});
-                                        $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code});
+                                        $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
+                                        $amounts->${$sum . $amount . $markup . $c->code} = round(${$sum . $c->code});
                                     }
                                 }
                             }
@@ -1436,7 +1433,7 @@ trait QuoteV2Trait
                     //Para calculo de total que se muestra en show/edit quotes
                     $currency_rate_global = $this->ratesCurrency($charge->currency_id,  $company_user->currency->alphacode);
 
-                    $totalized += ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
+                    $totalized = ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
                     $charge->${'totalized_' . $c->code} = $totalized / $currency_rate_global;
 
                     $charge->${$pre . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Currency;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
