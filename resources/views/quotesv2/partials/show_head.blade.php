@@ -168,9 +168,7 @@
                             <span class="equipment_span">
                                 @if($quote->type=='FCL')
                                     @if($quote->equipment!='')
-                                        <?php
-                                            $equipment=json_decode($quote->equipment);
-                                        ?>
+                                        
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @if($hide != 'hidden')
                                                 @foreach ($containers as $c)
