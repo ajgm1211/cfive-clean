@@ -2061,7 +2061,7 @@
                 $('.list-group2').append(list2);
             }
             $('.equipment .select-list').html('');
-            //Cargamos valores de DRY predeterminados
+            //Cargamos valores de DRY predeterminados final
             if( id_group == containerType ) {
                 for (var i in defaultValuesController) {
                     var ident = defaultValuesController[i];
