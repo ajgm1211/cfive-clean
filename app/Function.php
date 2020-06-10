@@ -80,7 +80,9 @@ function isDecimal($monto)
     if ($isDecimal){
       if(is_string($monto))
         return $monto;
-      else
+      else if(is_float($monto))
+        return $monto;
+    else
         return number_format($monto, 2, '.', '');
     }else{
       return round($monto);

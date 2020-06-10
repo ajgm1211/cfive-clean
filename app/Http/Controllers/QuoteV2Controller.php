@@ -154,6 +154,7 @@ class QuoteV2Controller extends Controller
             if (isset($quote->company)) {
                 $company = $quote->company->business_name;
             }
+
             if ($quote->custom_quote_id != '') {
                 $id = $quote->custom_quote_id;
             } else {
@@ -224,11 +225,18 @@ class QuoteV2Controller extends Controller
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-          <a class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
           <span>
           <i class="la la-edit"></i>
           &nbsp;
           Edit
+          </span>
+          </a>
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
+          <span>
+          <i class="la la-file"></i>
+          &nbsp;
+          PDF
           </span>
           </a>
           <a href="/v2/quotes/duplicate/' . $colletion['idSet'] . '" class="dropdown-item" >
@@ -1279,7 +1287,7 @@ class QuoteV2Controller extends Controller
             ${$sum_total_destination . $value->code} = 0;
             ${$array_amount . $value->code} = array();
             ${$array_markup . $value->code} = array();
-
+            
             foreach ($request->equipments as $key => $equipment) {
                 if (($key == 'amount_' . $value->code) && $equipment != null) {
                     ${$array_amount . $value->code} = array('c' . $value->code => $equipment);
@@ -3559,7 +3567,8 @@ class QuoteV2Controller extends Controller
                     $extObj     = new \SplFileInfo($mediaItem->file_name);
                     $ext        = $extObj->getExtension();
                     $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
-                    $descarga   = Storage::disk('FclRequest-New')->url($mediaItem->id.'/'.$mediaItem->file_name,$name);
+                    $descarga   = Storage::disk('s3_upload')->url('Request/FCL/'.$mediaItem->id.'/'.$mediaItem->file_name,$name);
+                    $success = true;
                 }
             } else {
                 $Ncontract = ContractFclFile::find($idFcl);
