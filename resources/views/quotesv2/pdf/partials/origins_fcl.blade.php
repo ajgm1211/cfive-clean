@@ -45,7 +45,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{round(@$item->${'sale_term_'.$c->code})}}</td>
+                                                            <td {{ $hide }}>{{isDecimal(@$item->${'sale_term_'.$c->code})}}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -59,7 +59,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{ $hide }}><b>{{round(@${'sum_total_'.$c->code})}}</b></td>
+                                                        <td {{ $hide }}><b>{{isDecimal(@${'sum_total_'.$c->code})}}</b></td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -210,7 +210,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{round(@${'sum_sale'.$c->code})}}</td>
+                                                            <td {{ $hide }}>{{isDecimal(@${'sum_sale'.$c->code})}}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -313,7 +313,7 @@
                                                                             @php 
                                                                                 ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code}; 
                                                                             @endphp
-                                                                            <td {{ $hide }}>{{ round($v->${'total_inland'.$c->code}) }}</td>
+                                                                            <td {{ $hide }}>{{ isDecimal($v->${'total_inland'.$c->code}) }}</td>
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach
@@ -336,7 +336,7 @@
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}><b>{{ round(@${'sum_origin_'.$c->code}+@${'sum_inland_'.$c->code}) }}</b></td>
+                                                    <td {{ $hide }}><b>{{ isDecimal(@${'sum_origin_'.$c->code}+@${'sum_inland_'.$c->code}) }}</b></td>
                                                 @endif
                                             @endforeach
                                         @endforeach
