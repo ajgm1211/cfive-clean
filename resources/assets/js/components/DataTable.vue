@@ -15,7 +15,7 @@
             </div>
         </div>
         <!-- End Search Input -->
-
+ 
         <!-- DataTable -->
         <b-table-simple hover small responsive borderless>
             
@@ -194,7 +194,7 @@
                   :next-text="'Next'"
                   :page-class="'page-item'"
                   :page-link-class="'page-link'"
-                  :container-class="'pagination justify-content-end'"
+                  :container-class="'pagination'"
                   :prev-class="'page-item'"
                   :prev-link-class="'page-link'"
                   :next-class="'page-item'"
