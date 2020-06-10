@@ -30,4 +30,14 @@ class RateApi extends Model
   public function scheduletype(){
     return $this->belongsTo('App\ScheduleType','schedule_type_id');
   }
+
+
+  public function scopeContain($query, $code)
+  {
+      $valor =  "containers->C".$code;
+      return $query->orwhere($valor, '!=',0);
+  }
+
+
+  
 }

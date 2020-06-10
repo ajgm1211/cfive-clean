@@ -800,22 +800,32 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 //------------------ CALCULATION TYPE ---------------------------------------------------
                                 $calculationvalvaration = '';
+                                $number_for_value = false;
                                 if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
-                                    $calculationvalvaration = 'Per Shipment';
+                                    $number_for_value = true;
+                                    $calculationvalvaration = 6;
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
-                                    $calculationvalvaration = 'Per Container';
+                                    $number_for_value = true;
+                                    $calculationvalvaration = 5;
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TON') == 0){
-                                    $calculationvalvaration = 'Per TON';
+                                    $number_for_value = true;
+                                    $calculationvalvaration = 10;
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_BL') == 0){
-                                    $calculationvalvaration = 'Per BL';
+                                    $number_for_value = true;
+                                    $calculationvalvaration = 9;
                                 }else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TEU') == 0){
-                                    $calculationvalvaration = 'Per TEU';
+                                    $number_for_value = true;
+                                    $calculationvalvaration = 4;
                                 } else{
                                     $calculationvalvaration = $read[$requestobj[$CalculationType]];
                                 }
+                                if($number_for_value){
+                                    $calculationtype = CalculationType::find($calculationvalvaration);
+                                } else {
+                                    $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
+                                }
 
-                                $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
-                                if(empty($calculationtype) != true){
+                                if(!empty($calculationtype)){
                                     $calculationtypeExiBol = true;
                                     $calculationtypeVal = $calculationtype['id'];
                                 } else{

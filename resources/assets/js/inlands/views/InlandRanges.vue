@@ -4,16 +4,17 @@
         <b-card>
             <div class="row">
                 <div class="col-6">
-                    <b-card-title>Per Km</b-card-title>
+                    <b-card-title>Per Range</b-card-title>
                 </div>
                 <div class="col-6">
                     <div class="float-right">
-                        <button class="btn btn-link" v-b-modal.addKm>+ Add Km</button>
+                        <button class="btn btn-link" v-b-modal.addRange>+ Add Range</button>
                     </div>
                 </div>
             </div>
 
             <DynamicalDataTable 
+                v-if="loaded"
                 :initialFields="fields"
                 :initialFormFields="vform_fields"
                 :datalists="datalists"
@@ -21,20 +22,19 @@
                 :actions="actions"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"
-                :onLast="true"
                 ></DynamicalDataTable>
 
         </b-card>
 
         <!-- Edit Form -->
-        <b-modal id="editKm" size="lg" cancel-title="Cancel" hide-header-close title="Update Km" hide-footer>
+        <b-modal id="editRange" size="lg" cancel-title="Cancel" hide-header-close title="Update Range" hide-footer>
             <FormView 
                 :data="currentData" 
                 :fields="form_fields"
                 :vdatalists="datalists"
                 btnTxt="Update"
-                @exit="closeModal('editKm')"
-                @success="closeModal('editKm')"
+                @exit="closeModal('editRange')"
+                @success="closeModal('editRange')"
                 :actions="actions"
                 :update="true"
                 >
@@ -43,14 +43,14 @@
         <!-- End Edit Form -->
 
         <!-- Create Form -->
-        <b-modal id="addKm" size="lg" hide-header-close title="Add Km" hide-footer>
+        <b-modal id="addRange" size="lg" hide-header-close title="Add Range" hide-footer>
             <FormView 
                 :data="{}" 
                 :fields="form_fields"
                 :vdatalists="datalists"
                 btnTxt="Add Ocean Freight"
-                @exit="closeModal('addKm')"
-                @success="closeModal('addKm')"
+                @exit="closeModal('addRange')"
+                @success="closeModal('addRange')"
                 :actions="actions"
                 >
             </FormView>
@@ -61,8 +61,8 @@
 </template>
 
 <script>
-    import DynamicalDataTable from '../views/DynamicalDataTable';
-    import FormView from '../views/FormView';
+    import DynamicalDataTable from '../../components/views/DynamicalDataTable';
+    import FormView from '../../components/views/FormView.vue';
 
     export default {
         components: { 
@@ -76,16 +76,31 @@
         },
         data() {
             return {
+                loaded: true,
                 currentData: {},
                 form_fields: {},
 
                 /* Table headers */
                 fields: [ 
+                    { key: 'lower', label: 'Lower Limit' }, 
+                    { key: 'upper', label: 'Upper Limit' }, 
                     { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } }
                 ],
 
                 /* Table input inline fields */
                 vform_fields: {
+                    lower: { 
+                        label: 'Lower Limit',
+                        type: 'text', 
+                        rules: 'required', 
+                        placeholder: 'Km',  
+                    },
+                    upper: { 
+                        label: 'Upper Limit', 
+                        type: 'text', 
+                        rules: 'required', 
+                        placeholder: 'Km', 
+                    },
                     currency: { 
                         label: 'Currency', 
                         searchable: true, 
@@ -101,7 +116,7 @@
             /* Single Actions */
             onEdit(data){
                 this.currentData = data;
-                this.$bvModal.show('editKm');
+                this.$bvModal.show('editRange');
             },
 
             /* Single Actions */
@@ -112,6 +127,11 @@
             /* Close modal form by modal name */
             closeModal(modal){
                 this.$bvModal.hide(modal);
+
+                let component = this;
+
+                component.loaded = false;
+                setTimeout(function(){ component.loaded = true; }, 100);
             },
 
             link(){

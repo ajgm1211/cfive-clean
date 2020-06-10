@@ -146,7 +146,6 @@
                     via: {
                         label: 'Via', 
                         type: 'text', 
-                        rules: 'required',
                         placeholder: 'Add Via'
                     }
                 }
