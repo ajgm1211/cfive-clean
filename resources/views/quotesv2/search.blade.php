@@ -1037,7 +1037,7 @@
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     @if(isset($validateEquipment))
                     @if($validateEquipment['count'] > 1 )
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>The teams do not belong to the same group.</span> You can create a quote manually.</p>
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>The equipemts do not belong to the same group.</span> You can create a quote manually.</p>
                     @endif
                     @endif
                     @if(isset($arreglo) && isset($validateEquipment) )
