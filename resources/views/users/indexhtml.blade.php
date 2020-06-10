@@ -22,7 +22,7 @@
                     </ul>
                 </div>
             @endif
-            
+           
             @if(Session::has('message.nivel'))
                 <div class="col-md-12">
                     <br>
