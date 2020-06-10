@@ -61,12 +61,12 @@ class ContractController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
-        $equipments = GroupContainer::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name']);
+        $equipments = GroupContainer::get()->map(function ($equipment) {
+            return $equipment->only(['id', 'name']);
         });
         
-        $directions = Direction::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name']);
+        $directions = Direction::get()->map(function ($direction) {
+            return $direction->only(['id', 'name']);
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
@@ -78,7 +78,8 @@ class ContractController extends Controller
         });
 
         $countries = Country::get()->map(function ($country) {
-            return $country->only(['id', 'name']);
+            $country['display_name'] = $country['name'];
+            return $country->only(['id', 'display_name', 'name']);
         });
 
         $surcharges = Surcharge::where('company_user_id', '=' , $company_user_id)->get()->map(function ($surcharge) {
@@ -120,17 +121,6 @@ class ContractController extends Controller
             'users');
 
         return response()->json(['data' => $data ]);
-    }
-
-    /**
-     * Render create view 
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        return view('contract.create');
     }
 
 
