@@ -24,8 +24,8 @@ class StoreGlobalCharges extends FormRequest
     public function rules()
     {
         return [
-            'port_dest' => 'required',
-            'port_orig' => 'required',       
+            //'port_dest' => 'required',
+            //'port_orig' => 'required',       
             'calculationtype' => 'required',
             'localcarrier' => 'required',   
         ];
