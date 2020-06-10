@@ -5,7 +5,7 @@
 {{ $valorSelect = '' }}
 @endif
 <!--begin::Form-->
-{!! Form::open(['route' => 'users.store']) !!}
+{!! Form::open(['route' => 'users.store','novalidate'=>'novalidate']) !!}
 
 <div class="m-form__section m-form__section--first">
     <div class="form-group m-form__group">
