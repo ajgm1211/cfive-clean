@@ -2050,33 +2050,40 @@
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
 
+            //Opciones de equipment list
             for ( const equip in data ) {
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
                                 '<input type="checkbox" checked class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
-                      
+                $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
                 $('.list-group2').append(list2);
             }
-            
 
             $('.equipment .select-list').html('');
 
+            //Cargamos valores de DRY predeterminados
             if( id_group == containerType ) {
-                
                 for (var i in selectValues) {
                     var ident = selectValues[i];
                     var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title'); 
-                    console.log(ident, selectValues, containerType);
                     $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
                     $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true); 
                 }
                 $('.equipment .select-list li[title="undefined"]').remove();
-
+            }else{
+                for ( const equip in data ) {
+                    var code = `${data[equip].code}`;
+                    var idEquip = `${data[equip].id}`;
+                    
+                    $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
+                    $('.list-group2 .c5-case input[value="'+idEquip+'"]').attr('checked', true);
+                }
+                return;
             }
 
-
+            //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
                 var valueEquipment = [];                    
                 var title = $(this).attr('title');
@@ -2089,8 +2096,7 @@
                 });
 
                 $('#equipment.select-group').val(valueEquipment);
-                /*var valor2 = $('#equipment.select-group').val();
-                console.log(valor2);*/
+                
 
                 var countEquip = valueEquipment.length;
                 
