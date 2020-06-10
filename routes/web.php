@@ -827,7 +827,7 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
 
     Route::resource('remarks', 'RemarkConditionsController');
     Route::get('list', 'RemarkConditionsController@index')->name('remarks.list');
-    Route::get('add', 'RemarkConditionsController@add')->name('remarks.add');
+    Route::get('create', 'RemarkConditionsController@create')->name('remarks.add');
     Route::get('edit/{id}', 'RemarkConditionsController@edit')->name('remarks.edit');
     Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
     Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
