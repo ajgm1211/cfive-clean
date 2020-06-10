@@ -7,6 +7,7 @@ use App\Harbor;
 use App\Carrier;
 use Carbon\Carbon;
 use App\CompanyUser;
+use App\GroupContainer;
 use Illuminate\Http\Request;
 use App\Jobs\NotificationsJob;
 use App\Notifications\N_general;
@@ -35,13 +36,13 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		return view('RequestGlobalChargeFcl.indexClient',compact('company_userid'));
 	}
 
-
 	public function create()
 	{
-		$harbor         = harbor::all()->pluck('display_name','id');
-		$carrier        = carrier::all()->pluck('name','id');
-		$user   = \Auth::user();
-		return view('RequestGlobalChargeFcl.NewRequest',compact('harbor','carrier','user'));
+		$harbor       = harbor::all()->pluck('display_name','id');
+		$carrier      = carrier::all()->pluck('name','id');
+        $equiments    = GroupContainer::pluck('name','id');
+		$user         = \Auth::user();
+		return view('RequestGlobalChargeFcl.NewRequest',compact('harbor','carrier','user','equiments'));
 	}
 
 	public function listClient($id){
@@ -88,10 +89,29 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		if($user->hasAnyPermission([1])){
 			$permiso_eliminar = true;
 		}
+        $groupContainers = GroupContainer::all();
 		return Datatables::of($Ncontracts)
 			->addColumn('Company', function ($Ncontracts) {
 				return $Ncontracts->companyuser->name;
 			})
+            ->addColumn('equiment', function ($Ncontracts) use($groupContainers) {
+                $color = '#012586';
+                //$color = '#058b0a';
+                if(json_decode($Ncontracts->data,true) != null){
+                    $data   = json_decode($Ncontracts->data,true);
+                    if(!empty($data['group_containers'])){
+                        $name               = $data['group_containers']['name'];
+                        $groupContainers    = $groupContainers->firstWhere('id', $data['group_containers']['id']);
+                        $data_gp            = json_decode($groupContainers->data,true);
+                        $color              = $data_gp['color'];
+                    } else{
+                        $name = 'DRY \\';
+                    }
+                } else {
+                    $name = 'DRY \\';
+                }
+                return '<span style="color:'.$color.'"><strong>'.$name.'</strong></span>';
+            })
 			->addColumn('name', function ($Ncontracts) {
 				return $Ncontracts->name;
 			})
@@ -162,7 +182,6 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
 				return $buttons;
 			})
-
 			->make();
 	}
 
@@ -194,17 +213,21 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		$file   = $request->file('file');
 		$ext    = strtolower($file->getClientOriginalExtension());
 		//obtenemos el nombre del archivo
-		$nombre = $file->getClientOriginalName();
-		$nombre = $now.'_'.$nombre;
+		$nombre   = $file->getClientOriginalName();
+		$nombre   = $now.'_'.$nombre;
+        $equiment = GroupContainer::with('containers')->find($request->groupContainers);
+        $containers_ar = $equiment->containers->pluck('code','id');
+        $ArrayData['containers'] = [];
+        foreach($containers_ar as $key => $container){
+            $ArrayData['containers'][] = ['id' => $key,'name'=>$container];
+        }
+        $ArrayData['group_containers'] = ['id' => $equiment->id,'name'=>$equiment->name];
+       // dd(json_encode($ArrayData));
+        
 		$fileBoll = \Storage::disk('GCRequest')->put($nombre,\File::get($file));
-
-		$typeVal = 1;
+		$typeVal  = 1;
 		$arreglotype = '';
 
-		$data	= '';
-		$type	= '';
-		$type	= json_encode($type);
-		$data	= json_encode($data);
 		if($fileBoll){
 			$Ncontract  = new NewGlobalchargeRequestFcl();
 			$Ncontract->name			    = $request->name;
@@ -213,8 +236,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			$Ncontract->namefile        = $nombre;
 			$Ncontract->user_id         = $request->user;
 			$Ncontract->created         = $now2;
-			$Ncontract->type            = $type;
-			$Ncontract->data            = $data;
+			$Ncontract->type            = '{}';
+			$Ncontract->data            = json_encode($ArrayData);
 			$Ncontract->save();
 
 			if(env('APP_VIEW') == 'operaciones') {
@@ -236,10 +259,6 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			]);
 
 			foreach($admins as $userNotifique){
-				/*\Mail::to($userNotifique->email)->send(new NewRequestGlobalChargeToAdminMail(
-					$userNotifique->toArray(),
-					$user->toArray(),
-					$Ncontract->toArray()));*/
 				$userNotifique->notify(new N_general($user,$message));
 			}
 
@@ -290,19 +309,15 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
 	}
 
-
-
 	public function edit($id)
 	{
 		//
 	}
 
-
 	public function update(Request $request, $id)
 	{
 		//
 	}
-
 
 	public function destroy($id)
 	{

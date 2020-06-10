@@ -44,9 +44,10 @@
 
 
 <script>
-    import DataTable from '../DataTable';
+
+    import DataTable from '../../components/DataTable';
     import actions from '../../actions';
-    import FormView from '../views/FormView.vue';
+    import FormView from '../../components/views/FormView.vue';
 
     export default {
         components: { 
@@ -136,13 +137,13 @@
 
             success(id){
                 // After Create the item redirect to:
-                window.location = `/api/inland/${id}/edit`;
+                window.location = `/api/inlands/${id}/edit`;
             },
 
             /* Single Actions */
             onEdit(data){
                 // Single actions to redirect to:
-                window.location = `/api/inland/${data.id}/edit`;
+                window.location = `/api/inlands/${data.id}/edit`;
             },
             
         }

@@ -1081,7 +1081,7 @@
                                                                         style="width: 100%;" aria-valuenow="100"
                                                                         aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                                Contract: {{ $arr->contract->name }} /
+                                                                Contract: <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> /
                                                                 {{ $arr->contract->number }}
                                                             </div>
                                                             <div class="col-lg-4 d-flex align-items-center flex-column">

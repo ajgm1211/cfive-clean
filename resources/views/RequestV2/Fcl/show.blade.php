@@ -93,6 +93,9 @@
                                         <div class="col-md-3">
                                             <input placeholder="Contract Validity" class="form-control m-input requestDate" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="{{$date}}">
                                         </div>
+                                        <div class="col-lg-2">
+                                            {!! Form::text('carrierM',null,['class'=>'form-control m-input','id'=>'carrierM','placeholder'=> 'Carrier','required'])!!}
+                                        </div>
                                         <div class="col-md-2">
 
                                             <!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
@@ -288,8 +291,10 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script type="application/x-javascript" src="/js/toarts-config.js"></script>
 
-
 <script>
+    $('.m-select2-general').select2({
+
+    });
 
     function AbrirModal(action,id,request_id){
         action = $.trim(action);
@@ -318,11 +323,41 @@
     $('#btnFiterSubmitSearch').click(function(){
         $('#requesttable').DataTable().draw(true);
     });
-    
+
     $('#btnFiterSubmitSearchAcc').click(function(){
         $('#myatest').DataTable().draw(true);
     });
-    
+
+
+//    $(document).ready(function(){
+//        $('#requesttable thead tr').clone(true).appendTo( '#requesttable thead' );
+//        $('#requesttable thead tr:eq(1) th').each( function (i) {
+//            // alert(i)
+//            var title = $(this).text();
+//            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+//
+//            $( 'input', this ).on( 'keyup change', function () {
+//                if ( requesttableV.column(i).search() !== this.value ) {
+//                    requesttableV
+//                        .column(i)
+//                        .search( this.value )
+//                        .draw();
+//                }
+//            } );
+//        } );
+//    });
+
+    $('#carrierM' ).on( 'keyup change', function () {
+        carriername = $(this).val();
+        i = 5;
+        if ( requesttableV.column(i).search() !== carriername ) {
+            requesttableV
+                .column(i)
+                .search( this.value )
+                .draw();
+        }
+    } );
+
     var requesttableV = '';
     $(function() {    
         $('#myatest').DataTable({
@@ -363,6 +398,7 @@
             ajax: {
                 url:'{!! route("RequestFcl.create") !!}',
                 data: function (d) {
+                    //d.carrierM = $('select#carrierM').val();
                     var date = ($('.requestDate').val()).split(" / ");
                     d.dateS = $.trim(date[0]);
                     d.dateE = $.trim(date[1]);
@@ -383,6 +419,8 @@
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
+            orderCellsTop: true,
+            fixedHeader: true,
             "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,

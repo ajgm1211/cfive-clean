@@ -4,7 +4,7 @@
 			<div class="col-12">
 
 				<!-- Form Contract Inline -->
-				<FormInlineView v-if="freight"
+				<FormInlineView v-if="loaded"
 		            :data="currentData" 
 		            :fields="form_fields"
 		            :datalists="datalists"
@@ -155,6 +155,7 @@
 			api.getData({}, '/api/v2/contracts/data', (err, data) => {
 				this.setDropdownLists(err, data.data);
 				this.freight = true;
+				this.loaded = true;
 			});
 
 			actions.contracts.retrieve(id)
@@ -171,7 +172,6 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				this.loaded = true;
 				this.equipment = data.gp_container;
 			},
 			changeView(val){

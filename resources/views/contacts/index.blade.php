@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Companies | Contacts')
+@section('title', 'Contacts')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/plugins/button-dropdown/css/bootstrap.css">

@@ -732,6 +732,8 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     //Account
 
     Route::get('DownloadAccountgcfcl/{id}','ImportationGlobachargersFclController@Download')->name('Download.Account.gcfcl');
+    Route::get('changeEquiment/{id}','ImportationGlobachargersFclController@changeEquiment')->name('change.equiment.Account.gcfcl');
+    Route::put('dispChangeEquiment/{id}','ImportationGlobachargersFclController@changeEquimentDispatch')->name('disp.change.equiment.Account.gcfcl');
 
     //failed and good
     Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');
@@ -1105,13 +1107,8 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     /** End API Inland Range EndPoints **/
 
     /** API Inland Km EndPoints **/
-    Route::get('{inland}/km', 'InlandKmController@list');
-    Route::post('{inland}/km/store', 'InlandKmController@store');
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update');
-    Route::get('{inland}/km/{km}', 'InlandKmController@retrieve');
-    Route::post('km/{km}/duplicate', 'InlandKmController@duplicate');
-    Route::delete('km/{km}/destroy', 'InlandKmController@destroy');
-    Route::post('km/destroyAll', 'InlandKmController@destroyAll');
+    Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve');
     /** End API Inland Km EndPoints **/
 
     /**

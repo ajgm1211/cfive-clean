@@ -52,4 +52,21 @@ class Company extends Model implements Auditable
 
         return $this->belongsTo('App\CompanyUser');
     }
+
+    public function scopeUser($query){
+        $query->with(['user' => function ($q) {
+            $q->select('id', 'name', 'lastname', 'email','phone');
+        }]);
+    }
+
+    public function scopeCompanyUser($query){
+        $query->with(['company_user' => function ($q) {
+            $q->select('id', 'name', 'address', 'phone');
+        }]);
+    }
+
+    public function getOptionsAttribute($value)
+    {
+        return json_decode($value);
+    }
 }

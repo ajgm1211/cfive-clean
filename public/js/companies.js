@@ -320,75 +320,13 @@ function save_price_level(id) {
     });
 }
 
-//binds to onchange event of your input field
-$(document).on('change', '#logo', function(e) {
-    if (this.files[0].size > 1000000) {
-        $("#logo-error").removeClass('hide');
-    } else {
-        $("#logo-error").addClass('hide');
-    }
-});
-
-$(document).on('click', '#syncCompanies', function(e) {
-    swal({
-        title: 'Are you sure?',
-        text: "Do you want to synchronize your information with the external API?",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes'
-    }).then(function(result) {
-        if (result.value) {
-            $("#syncCompanies").addClass("hide");
-            $("#syncCompaniesLoading").removeClass("hide");
-            msg('Synchronizing. This process may take a few minutes &nbsp;<i class="fa fa-spin fa-spinner"></i>');
-            $.ajax({
-                type: 'GET',
-                url: '/api/get/companies',
-                success: function(data) {
-                    if (data.message == 'Ok') {
-                        swal(
-                            'Done!',
-                            'Synchronization completed successfully.',
-                            'success'
-                        )
-
-                        setTimeout(function() { location.reload(); }, 3000);
-
-                        $("#syncCompaniesLoading").addClass("hide");
-                        $("#syncCompanies").removeClass("hide");
-                    } else {
-                        toastr.clear();
-                        msg('An error occurred while trying to connect to the external server. Code: ' + data.error, 'error');
-                        $("#syncCompaniesLoading").addClass("hide");
-                        $("#syncCompanies").removeClass("hide");
-                    }
-                },
-                error: function(request, status, error) {
-                    toastr.clear();
-                    msg('An error has occurred', 'error');
-                    console.log(request.responseText);
-                    $("#syncCompaniesLoading").addClass("hide");
-                    $("#syncCompanies").removeClass("hide");
-                }
-            });
-        }
-    });
-});
-
-$(document).on('click', '#add_extra_field', function(e) {
-    e.preventDefault();
-    $("#hide_extra_field").append('a');
-
-});
-
-//Functions
-
-function addOriginCharge() {
+function addExtraField() {
     var $template = $('#hide_extra_field'),
         $clone = $template
         .clone()
         .removeClass('hide')
         .removeAttr('id')
+        .addClass('clone')
         .insertAfter($template);
 }
 
@@ -455,3 +393,68 @@ function msg(message, type) {
             toastr.info(message, '');
     }
 }
+
+//binds to onchange event of your input field
+$(document).on('change', '#logo', function(e) {
+    if (this.files[0].size > 1000000) {
+        $("#logo-error").removeClass('hide');
+    } else {
+        $("#logo-error").addClass('hide');
+    }
+});
+
+$(document).on('click', '#syncCompanies', function(e) {
+    swal({
+        title: 'Are you sure?',
+        text: "Do you want to synchronize your information with the external API?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes'
+    }).then(function(result) {
+        if (result.value) {
+            $("#syncCompanies").addClass("hide");
+            $("#syncCompaniesLoading").removeClass("hide");
+            msg('Synchronizing. This process may take a few minutes &nbsp;<i class="fa fa-spin fa-spinner"></i>');
+            $.ajax({
+                type: 'GET',
+                url: '/api/get/companies',
+                success: function(data) {
+                    if (data.message == 'Ok') {
+                        swal(
+                            'Done!',
+                            'Synchronization completed successfully.',
+                            'success'
+                        )
+
+                        setTimeout(function() { location.reload(); }, 3000);
+
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
+                    } else {
+                        toastr.clear();
+                        msg('An error occurred while trying to connect to the external server. Code: ' + data.error, 'error');
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
+                    }
+                },
+                error: function(request, status, error) {
+                    toastr.clear();
+                    msg('An error has occurred', 'error');
+                    console.log(request.responseText);
+                    $("#syncCompaniesLoading").addClass("hide");
+                    $("#syncCompanies").removeClass("hide");
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '#add_extra_field', function(e) {
+    e.preventDefault();
+    $("#hide_extra_field").append('a');
+
+});
+
+$(document).on('click', '.deleter', function() {
+    $(this).closest('div.clone').find('.row').remove();
+});
