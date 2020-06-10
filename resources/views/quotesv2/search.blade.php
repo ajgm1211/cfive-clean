@@ -2040,86 +2040,84 @@
         dataType: 'json',
         url: '/Container/getContainer/',
         data: {
-            'id_group' : id_group            
+            'id_group' : id_group
         },
         success: function(data) {
             //console.log(data);
             var selectValues = $('select#equipment').val();
             var containerType= '{{$containerType}}';
-
+            const defaultValuesController = <?php echo json_encode( $form['equipment']);?>;
+            ;
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
-
             //Opciones de equipment list
             for ( const equip in data ) {
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
-                                '<input type="checkbox" checked class="c5-check" title="'+code+'" value="'+idEquip+
+                                '<input type="checkbox"  class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
                 $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
                 $('.list-group2').append(list2);
             }
-
             $('.equipment .select-list').html('');
-
             //Cargamos valores de DRY predeterminados
             if( id_group == containerType ) {
-                for (var i in selectValues) {
-                    var ident = selectValues[i];
-                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title'); 
+                for (var i in defaultValuesController) {
+                    var ident = defaultValuesController[i];
+                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title');
                     $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
-                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true);
+                    defaultValuesController.push(ident);
+                    //console.log(ident);
                 }
                 $('.equipment .select-list li[title="undefined"]').remove();
+                $('#equipment.select-group').val(defaultValuesController);
+                console.log($('#equipment.select-group').val());
+                //console.log($('#equipment.select-group').val());
             }else{
+                var valueArray = [];
                 for ( const equip in data ) {
                     var code = `${data[equip].code}`;
                     var idEquip = `${data[equip].id}`;
-                    
                     $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
                     $('.list-group2 .c5-case input[value="'+idEquip+'"]').attr('checked', true);
+                    valueArray.push(idEquip);
+                    //console.log(idEquip);
                 }
+                $('#equipment.select-group').val(valueArray);
+                console.log($('#equipment.select-group').val());
                 return;
             }
-
             //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
-                var valueEquipment = [];                    
+                var valueEquipment = [];
                 var title = $(this).attr('title');
-
                 $('.equipment .list-group2 .c5-check').each(function() {
                     if (this.checked) {
                         valueEquipment.push($(this).val());
                         //console.log(valueEquipment);
                     }
                 });
-
                 $('#equipment.select-group').val(valueEquipment);
-                
-
                 var countEquip = valueEquipment.length;
-                
                 if ($(this).is(':checked')) {
-                    var html = '<li title="' + title + '">' + title + ', </li>';                    
+                    var html = '<li title="' + title + '">' + title + ', </li>';
                     $('.equipment .select-list').append(html);
                     $(".select-list .hida").hide();
                 } else {
                     var listLength = $('.equipment .list-group2 .c5-check:checked').length;
                     $('li[title="' + title + '"]').remove();
                     if( countEquip == 0 ){
-                        $(".select-list .hida").show();   
+                        $(".select-list .hida").show();
                     }
                 }
-
-            }); 
+            });
         },
         error: function (request, status, error) {
             console.log(request.responseText);
         }
-
     });
-
 }
 
 
