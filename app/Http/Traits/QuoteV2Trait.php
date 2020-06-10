@@ -624,7 +624,7 @@ trait QuoteV2Trait
                                     if ($value->type_id == 2) {
                                         $charge_destination++;
                                     }
-                                    $value->${$sum . $total . $c->code} = round(${$total . $c->code});
+                                    $value->${$sum . $total . $c->code} = isDecimal(${$total . $c->code});
                                 }
                             }
                         }
@@ -679,7 +679,7 @@ trait QuoteV2Trait
                                     $inland_destination++;
                                 }
 
-                                $value->${$sum . $total . $c->code} = round(${$total . $c->code});
+                                $value->${$sum . $total . $c->code} = isDecimal(${$total . $c->code});
                             }
                         }
                     }
@@ -791,8 +791,8 @@ trait QuoteV2Trait
                                         if ($amounts->type_id == 2) {
                                             $charge_destination++;
                                         }
-                                        $amounts->${$pre_c . $c->code} = round(${$total . '_' . $c->code});
-                                        $amounts->${'sum_amount_markup_' . $c->code} = round(${$sum . '_' . $c->code});
+                                        $amounts->${$pre_c . $c->code} = isDecimal(${$total . '_' . $c->code});
+                                        $amounts->${'sum_amount_markup_' . $c->code} = isDecimal(${$sum . '_' . $c->code});
                                     }
                                 }
                             }
@@ -836,7 +836,7 @@ trait QuoteV2Trait
                                     if ($inland_value->type == 'Destination') {
                                         $inland_destination++;
                                     }
-                                    $inland_value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
+                                    $inland_value->${$total . '_' . $inland . $c->code} = isDecimal(${$total . '_' . $c->code});
                                 }
                             }
                         }
@@ -929,8 +929,8 @@ trait QuoteV2Trait
 
                                     if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
                                         $charge_freight++;
-                                        $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
-                                        $amounts->${$sum . $amount . $markup . $c->code} = round(${$sum . $c->code});
+                                        $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code});
+                                        $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code});
                                     }
                                 }
                             }
@@ -1422,7 +1422,7 @@ trait QuoteV2Trait
                     if (isset($array_amounts['c' . $c->code])) {
                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
                         ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
-                        ${$total . '_' . $c->code} = number_format(${$amount . '_' . $total . '_' . $c->code}, 2, '.', '');
+                        ${$total . '_' . $c->code} = ${$amount . '_' . $total . '_' . $c->code};
                     }
 
                     if (isset($array_markups['m' . $c->code])) {
@@ -1434,10 +1434,10 @@ trait QuoteV2Trait
                     $currency_rate_global = $this->ratesCurrency($charge->currency_id,  $company_user->currency->alphacode);
 
                     $totalized = ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
-                    $charge->${'totalized_' . $c->code} = $totalized / $currency_rate_global;
+                    $charge->${'totalized_' . $c->code} = $totalized;
 
-                    $charge->${$pre . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                    $charge->${$pre . $c->code . '_markup'} = number_format(${$total . '_markup_' . $c->code}, 2, '.', '');
+                    $charge->${$pre . $c->code} = isDecimal(${$total . '_' . $c->code});
+                    $charge->${$pre . $c->code . '_markup'} = isDecimal(${$total . '_markup_' . $c->code});
                 }
 
                 $currency_charge = Currency::find($charge->currency_id);
