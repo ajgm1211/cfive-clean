@@ -1,5 +1,5 @@
 <template>
-	  <b-card class="no-padding">
+	  <b-card class="no-padding no-scroll">
 		<div class="row">
 			<div class="col-12">
 				<vue-dropzone
@@ -10,8 +10,8 @@
 				v-on:vdropzone-removed-file="removeThisFile"
 				>
 				<div class="dropzone-container">
-					  <div class="file-selector">
-					   <h6 class="title-dropzone">Upload</h6>
+					    <div class="file-selector">
+					    <h6 class="title-dropzone">Upload</h6>
 						<figure>
 						  <svg
 							width="104px"
@@ -152,6 +152,8 @@
 	</b-card>
 </template>
 
+
+
 <script>
 	import vue2Dropzone from 'vue2-dropzone';
 	import 'vue2-dropzone/dist/vue2Dropzone.min.css';
@@ -171,6 +173,7 @@
 					maxFilesize: 0.5,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
 					addRemoveLinks: true,
+					previewTemplate: this.template()
 				}
 			}
 		},
@@ -182,7 +185,10 @@
 
 				data.forEach(function(media){
 					vcomponent.$refs.myVueDropzone.manuallyAddFile(media, media.url);
+					$('.img-link').attr('href', ''+media.url+'');
 				});
+
+				
 
 			},
 			removeThisFile(file){
@@ -194,7 +200,22 @@
 				.catch(( data ) => {
 
 				});
-			}
+			},
+			template: function () {
+				return `<div class="dz-preview dz-complete dz-image-preview"><a href="" class="img-link">
+							<div class="dz-image"><img data-dz-thumbnail /></div>
+							<div class="dz-details">
+								<div class="dz-filename"><span data-dz-name></span></div>
+								<div class="dz-size" data-dz-size></div>
+								
+							</div>
+							<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+							<div class="dz-success-mark"><span>✔</span></div>
+							<div class="dz-error-mark"><span>✘</span></div>
+							<div class="dz-error-message"><span data-dz-errormessage></span></div></a>
+						</div>
+				`;
+			},	
 		},
 		created(){
 			let id = this.$route.params.id;
