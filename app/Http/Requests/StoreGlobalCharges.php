@@ -24,14 +24,10 @@ class StoreGlobalCharges extends FormRequest
     public function rules()
     {
         return [
-            'surcharge_id' => 'required',
-            'typedestiny_id' => 'required',
-            'calculationtype_id ' => 'required',
-            'ammount' => 'required',
-            'currency_id' => 'required',
-            
-            
-            
+            'port_dest' => 'required',
+            'port_orig' => 'required',       
+            'calculationtype' => 'required',
+            'localcarrier' => 'required',   
         ];
     }
 }
