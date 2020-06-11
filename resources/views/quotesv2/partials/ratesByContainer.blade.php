@@ -730,7 +730,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
-                                                        <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
+                                                        <td class="tds"><span class="td-a global-currency">{{@$company_user->currency->alphacode}}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -784,7 +784,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
-                                                        <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
+                                                        <td class="tds"><span class="td-a global-currency">{{@$company_user->currency->alphacode}}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
