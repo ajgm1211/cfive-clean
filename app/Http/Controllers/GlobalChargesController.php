@@ -801,7 +801,6 @@ class GlobalChargesController extends Controller
                 $global->company_user_id    = $request->company_user_id; 
                 $global->save();
 
-
                 $detailcarrier = new GlobalCharCarrier();
                 $detailcarrier->carrier_id = $carrier;
                 $detailcarrier->globalcharge()->associate($global);
@@ -958,79 +957,93 @@ class GlobalChargesController extends Controller
 
         $deleteCountryPort = GlobalCharCountryPort::where("globalcharge_id",$id);
         $deleteCountryPort->delete();
-
-        $typerate =  $request->input('typeroute');
-        if($typerate == 'port'){
-            $port_orig = $request->input('port_orig');
-            $port_dest = $request->input('port_dest');
-            foreach($port_orig as  $orig => $valueorig)
-            {
-                foreach($port_dest as $dest => $valuedest)
-                {
-                    $detailport = new GlobalCharPort();
-                    $detailport->port_orig       = $valueorig;
-                    $detailport->port_dest       = $valuedest;
-                    $detailport->typedestiny_id  = $request->input('changetype');
-                    $detailport->globalcharge_id = $id;
-                    $detailport->save();
-                }
+        $global->update();
+        $contador = 1;
+        foreach($carrierInp as $key){
+            if($contador > 1){
+                $global                     = null;
+                $id                         = null;
+                $global                     = new GlobalCharge();
+                $global->validity           = $validation[0];
+                $global->expire             = $validation[1];
+                $global->surcharge_id       = $request->input('surcharge_id');
+                $global->typedestiny_id     = $request->input('changetype');
+                $global->calculationtype_id = $request->input('calculationtype_id');
+                $global->ammount            = $request->input('ammount');
+                $global->currency_id        = $request->input('currency_id');
+                $global->company_user_id    = $request->input('company_user_id');
+                $global->save();
+                $id                         = $global->id;
             }
-        } elseif($typerate == 'country'){
-
-            $detailCountrytOrig = $request->input('country_orig');
-            $detailCountryDest  = $request->input('country_dest');
-            foreach($detailCountrytOrig as $p => $valueC)
-            {
-                foreach($detailCountryDest as $dest => $valuedestC)
+            $typerate =  $request->input('typeroute');
+            if($typerate == 'port'){
+                $port_orig = $request->input('port_orig');
+                $port_dest = $request->input('port_dest');
+                foreach($port_orig as  $orig => $valueorig)
                 {
-                    $detailcountry = new GlobalCharCountry();
-                    $detailcountry->country_orig = $valueC;
-                    $detailcountry->country_dest =  $valuedestC;
-                    $detailcountry->globalcharge()->associate($global);
-                    $detailcountry->save();
+                    foreach($port_dest as $dest => $valuedest)
+                    {
+                        $detailport = new GlobalCharPort();
+                        $detailport->port_orig       = $valueorig;
+                        $detailport->port_dest       = $valuedest;
+                        $detailport->typedestiny_id  = $request->input('changetype');
+                        $detailport->globalcharge_id = $id;
+                        $detailport->save();
+                    }
                 }
-            }
-        }elseif($typerate == 'portcountry'){
-            $detailPortCountrytOrig =$request->input('portcountry_orig');
-            $detailPortCountryDest = $request->input('portcountry_dest');
-            foreach($detailPortCountrytOrig as $p => $valuePCorig)
-            {
-                foreach($detailPortCountryDest as $dest => $valuePCdest)
+            } elseif($typerate == 'country'){
+
+                $detailCountrytOrig = $request->input('country_orig');
+                $detailCountryDest  = $request->input('country_dest');
+                foreach($detailCountrytOrig as $p => $valueC)
                 {
-                    $detail = new GlobalCharPortCountry();
-                    $detail->port_orig = $valuePCorig;
-                    $detail->country_dest =  $valuePCdest;
-                    $detail->globalcharge()->associate($global);
-                    $detail->save();
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig = $valueC;
+                        $detailcountry->country_dest =  $valuedestC;
+                        $detailcountry->globalcharge()->associate($global);
+                        $detailcountry->save();
+                    }
                 }
-            }
-
-        }elseif($typerate == 'countryport'){
-            $detailCountryPortOrig =$request->input('countryport_orig');
-            $detailCountryPortDest = $request->input('countryport_dest');
-            foreach($detailCountryPortOrig as $p => $valueCPorig)
-            {
-                foreach($detailCountryPortDest as $dest => $valueCPdest)
+            }elseif($typerate == 'portcountry'){
+                $detailPortCountrytOrig =$request->input('portcountry_orig');
+                $detailPortCountryDest = $request->input('portcountry_dest');
+                foreach($detailPortCountrytOrig as $p => $valuePCorig)
                 {
-                    $detail = new GlobalCharCountryPort();
-                    $detail->country_orig = $valueCPorig;
-                    $detail->port_dest =  $valueCPdest;
-                    $detail->globalcharge()->associate($global);
-                    $detail->save();
+                    foreach($detailPortCountryDest as $dest => $valuePCdest)
+                    {
+                        $detail = new GlobalCharPortCountry();
+                        $detail->port_orig = $valuePCorig;
+                        $detail->country_dest =  $valuePCdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
                 }
+
+            }elseif($typerate == 'countryport'){
+                $detailCountryPortOrig =$request->input('countryport_orig');
+                $detailCountryPortDest = $request->input('countryport_dest');
+                foreach($detailCountryPortOrig as $p => $valueCPorig)
+                {
+                    foreach($detailCountryPortDest as $dest => $valueCPdest)
+                    {
+                        $detail = new GlobalCharCountryPort();
+                        $detail->country_orig = $valueCPorig;
+                        $detail->port_dest =  $valueCPdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
+                }
+
             }
 
-        }
-
-        foreach($carrierInp as $key)
-        {
             $detailcarrier = new GlobalCharCarrier();
             $detailcarrier->carrier_id      = $key;
             $detailcarrier->globalcharge_id = $id;
             $detailcarrier->save();
+            $contador = $contador + 1;
         }
-
-        $global->update();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
