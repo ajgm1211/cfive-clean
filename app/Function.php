@@ -84,9 +84,28 @@ function isDecimal($monto)
         return number_format($monto, 2, '.', '');
     }else{
       return round($monto);
+    }       
+}
+
+
+
+/**
+ * ratesCurrencyFunction
+ *
+ * @param  mixed $id
+ * @param  mixed $typeCurrency
+ * @return void
+ */
+function ratesCurrencyFunction($id, $typeCurrency)
+{
+    $rates = Currency::where('id', '=', $id)->get();
+    foreach ($rates as $rate) {
+        if ($typeCurrency == "USD") {
+            $rateC = $rate->rates;
+        } else {
+            $rateC = $rate->rates_eur;
+        }
     }
-      
-    
-        
+    return $rateC;
 }
 
