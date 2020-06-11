@@ -10,8 +10,10 @@ use App\Carrier;
 use App\Language;
 use App\RemarkHarbor;
 use App\CompanyUser;
+use App\Country;
 use App\Http\Requests\StoreRemark;
 use App\RemarkCarrier;
+use App\RemarkCountry;
 
 class RemarkConditionsController extends Controller
 {
@@ -21,7 +23,6 @@ class RemarkConditionsController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $data = RemarkCondition::where('company_user_id', Auth::user()->company_user_id)->with('language')->get();
-
 
         return view('remarks.list', compact('data'));
     }
@@ -33,15 +34,11 @@ class RemarkConditionsController extends Controller
      */
     public function create()
     {
-        //
-    }
-
-    public function add()
-    {
         $harbors = Harbor::pluck('name', 'id');
         $carriers = Carrier::pluck('name', 'id');
         $languages = Language::pluck('name', 'id');
-        return view('remarks.add', compact('harbors', 'carriers', 'languages'));
+        $countries = Country::pluck('name', 'id');
+        return view('remarks.add', compact('harbors', 'carriers', 'languages', 'countries'));
     }
 
     /**
@@ -52,36 +49,24 @@ class RemarkConditionsController extends Controller
      */
     public function store(StoreRemark $request)
     {
-        //$request->validated();
-        
-        $companyUser        = CompanyUser::All();
-        $company           = Auth::user()->company_user_id;
-        $remark                   = new RemarkCondition();
-        $remark->name             = $request->name;
-        $remark->user_id          = Auth::user()->id;
-        $remark->import           = $request->import;
-        $remark->export           = $request->export;
-        $remark->company_user_id  = $company;
-        $remark->language_id      = $request->language;
-        $remark->save();
+        $request->request->add(['user_id' => Auth::user()->id, 'company_user_id' => Auth::user()->company_user_id]);
+
+        $remark = RemarkCondition::create($request->all());
 
         $ports = $request->ports;
         $carriers = $request->carriers;
+        $countries = $request->countries;
+
         if (count($ports) >= 1) {
-            foreach ($ports as $i) {
-                $remarksport = new RemarkHarbor();
-                $remarksport->port_id = $i;
-                $remarksport->remark()->associate($remark);
-                $remarksport->save();
-            }
+            $this->storeRelationships($ports, $remark->id, 'port');
         }
+
         if (count($carriers) >= 1) {
-            foreach ($carriers as $carrier) {
-                RemarkCarrier::create([
-                    'carrier_id'        => $carrier,
-                    'remark_condition_id'  => $remark->id
-                ]);
-            }
+            $this->storeRelationships($carriers, $remark->id, 'carrier');
+        }
+
+        if (count($countries) >= 1) {
+            $this->storeRelationships($countries, $remark->id, 'country');
         }
 
         $request->session()->flash('message.nivel', 'success');
@@ -99,21 +84,22 @@ class RemarkConditionsController extends Controller
      */
     public function show($id)
     {
-
         $id = obtenerRouteKey($id);
         $remark = RemarkCondition::where('id', $id)->with('remarksHarbors', 'remarksCarriers', 'language')->first();
-
 
         $languages = Language::pluck('name', 'id');
         $selected_harbors   = collect($remark->remarksHarbors);
         $selected_harbors   = $selected_harbors->pluck('id', 'name');
         $selected_carriers  = collect($remark->remarksCarriers);
         $selected_carriers  = $selected_carriers->pluck('id', 'name');
+        $selected_countries  = collect(@$remark->remarksCountries);
+        $selected_countries  = $selected_countries->pluck('id', 'name');
 
         $harbors = harbor::all()->pluck('name', 'id');
         $carriers = Carrier::pluck('name', 'id');
+        $countries = Country::pluck('name', 'id');
 
-        return view('remarks.show', compact('remark', 'harbors', 'carriers', 'languages', 'selected_harbors', 'selected_carriers'));
+        return view('remarks.show', compact('remark', 'countries', 'harbors', 'carriers', 'languages', 'selected_countries', 'selected_harbors', 'selected_carriers'));
     }
 
     /**
@@ -132,8 +118,11 @@ class RemarkConditionsController extends Controller
         $harbors = harbor::all()->pluck('name', 'id');
         $selected_carriers  = collect(@$remark->remarksCarriers);
         $selected_carriers  = $selected_carriers->pluck('id', 'name');
+        $selected_countries  = collect(@$remark->remarksCountries);
+        $selected_countries  = $selected_countries->pluck('id', 'name');
         $carriers = Carrier::pluck('name', 'id');
-        return view('remarks.edit', compact('remark', 'harbors', 'selected_harbors', 'languages', 'carriers', 'selected_carriers'));
+        $countries = Country::pluck('name', 'id');
+        return view('remarks.edit', compact('remark', 'countries', 'harbors', 'selected_countries', 'selected_harbors', 'languages', 'carriers', 'selected_carriers'));
     }
 
     /**
@@ -145,44 +134,33 @@ class RemarkConditionsController extends Controller
      */
     public function update(StoreRemark $request, $id)
     {
-        $request->validated();
 
-        $remark = RemarkCondition::findOrFail($id);
-        $remark->name         = $request->name;
-        $remark->user_id      = Auth::user()->id;
-        $remark->import       = $request->import;
-        $remark->export       = $request->export;
-        $remark->language_id  = $request->language;
-        $remark->company_user_id = Auth::user()->company_user_id;
-        $remark->update();
+        $request->request->add(['user_id' => Auth::user()->id, 'company_user_id' => Auth::user()->company_user_id]);
 
+        $remark = RemarkCondition::findOrFail($id)->update($request->all());
+        
         $ports = $request->ports;
+        $carriers = $request->carriers;
+        $countries = $request->countries;
+
         if (count($ports) >= 1) {
             RemarkHarbor::where('remark_condition_id', $id)->delete();
-
-            foreach ($ports as $i) {
-                $remarksport = new RemarkHarbor();
-                $remarksport->port_id = $i;
-                $remarksport->remark()->associate($remark);
-                $remarksport->save();
-            }
+            $this->storeRelationships($ports, $id, 'port');
         }
 
-        $carriers = $request->carriers;
-
-        RemarkCarrier::where('remark_condition_id', $id)->delete();
         if (count($carriers) >= 1) {
-            foreach ($carriers as $carrier) {
-                RemarkCarrier::create([
-                    'carrier_id'        => $carrier,
-                    'remark_condition_id'  => $remark->id
-                ]);
-            }
+            RemarkCarrier::where('remark_condition_id', $id)->delete();
+            $this->storeRelationships($carriers, $id, 'carrier');
+        }
+
+        if (count($countries) >= 1) {
+            RemarkCountry::where('remark_condition_id', $id)->delete();
+            $this->storeRelationships($countries, $id, 'country');
         }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You upgrade has been success ');
+        $request->session()->flash('message.content', 'Record updated successfully!');
 
         return redirect()->route('remarks.list');
     }
@@ -211,12 +189,51 @@ class RemarkConditionsController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully delete : ' . $remark->name);
+        $request->session()->flash('message.content', 'Record ' . $remark->name . ' has been deleted!');
         return redirect()->route('remarks.list');
     }
 
     public function destroymsg($id)
     {
         return view('remarks/message', ['id' => $id]);
+    }
+
+
+    /**
+     * storeRelationships
+     *
+     * @param  mixed $values
+     * @param  mixed $remark
+     * @param  mixed $type
+     * @return void
+     */
+    public function storeRelationships($values, $id, $type)
+    {
+        switch ($type) {
+            case 'carrier':
+                foreach ($values as $value) {
+                    RemarkCarrier::create([
+                        'carrier_id' => $value,
+                        'remark_condition_id'  => $id
+                    ]);
+                }
+                break;
+            case 'port':
+                foreach ($values as $value) {
+                    RemarkHarbor::create([
+                        'port_id' => $value,
+                        'remark_condition_id'  => $id
+                    ]);
+                }
+                break;
+            case 'country':
+                foreach ($values as $value) {
+                    RemarkCountry::create([
+                        'country_id' => $value,
+                        'remark_condition_id'  => $id
+                    ]);
+                }
+                break;
+        }
     }
 }
