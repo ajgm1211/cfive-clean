@@ -86,7 +86,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                 }
 
 
-                $global = GlobalCharge::where('validity',$globalOfAr->validity)
+                /* $global = GlobalCharge::where('validity',$globalOfAr->validity)
                     ->where('expire',$globalOfAr->expire)
                     ->where('surcharge_id',$surcharger)
                     ->where('calculationtype_id',$globalOfAr->calculationtype_id)
@@ -96,7 +96,8 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                     ->where('company_user_id',$company_user)
                     ->has($place)
                     ->first();
-                if(empty($global)){
+                if(empty($global)){*/
+                foreach($globalOfAr->globalcharcarrier->pluck('carrier_id') as $c ){
                     $global = GlobalCharge::create([
                         'validity'          => $globalOfAr->validity, 
                         'expire'            => $globalOfAr->expire, 
@@ -107,108 +108,105 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                         'currency_id'       => $globalOfAr->currency_id, 
                         'company_user_id'   => $company_user, 
                     ]);           
-                }
-                $global = $global->id;
+                    //}
+                    $global = $global->id;
 
-                foreach($globalOfAr->globalcharcarrier->pluck('carrier_id') as $c )
-                {
-                    $countgbcarri = GlobalCharCarrier::where('carrier_id',$c)
+                    /*$countgbcarri = GlobalCharCarrier::where('carrier_id',$c)
                         ->where('globalcharge_id',$global)
                         ->get();
-                    if(count($countgbcarri) == 0){
+                    if(count($countgbcarri) == 0){*/
                         $detailcarrier = new GlobalCharCarrier();
                         $detailcarrier->carrier_id      = $c;
                         $detailcarrier->globalcharge_id = $global;
                         $detailcarrier->save();
+                    //}
+
+                    if(count($globalOfAr->globalcharport) >= 1){
+                        $detailport     = $globalOfAr->globalcharport->pluck('portOrig')->pluck('id');
+                        $detailportDest = $globalOfAr->globalcharport->pluck('portDest')->pluck('id');
+                        foreach($detailport as $p => $value)
+                        {
+                            foreach($detailportDest as $dest => $valuedest)
+                            {
+                                $countgbport = GlobalCharPort::where('port_orig',$value)
+                                    ->where('port_dest',$valuedest)
+                                    ->where('typedestiny_id',$globalOfAr->typedestiny_id)
+                                    ->where('globalcharge_id',$global)
+                                    ->get();
+                                if(count($countgbport) == 0){
+                                    $ports                  = new GlobalCharPort();
+                                    $ports->port_orig       = $value;
+                                    $ports->port_dest       = $valuedest;
+                                    $ports->typedestiny_id  = $globalOfAr->typedestiny_id;
+                                    $ports->globalcharge_id = $global;
+                                    $ports->save();
+                                }
+                            }
+                        }
+                    }elseif(count($globalOfAr->globalcharcountry) >= 1){
+                        $detailCountrytOrig = $globalOfAr->globalcharcountry->pluck('countryOrig')->pluck('id');
+                        $detailCountryDest  = $globalOfAr->globalcharcountry->pluck('countryDest')->pluck('id');
+                        foreach($detailCountrytOrig as $p => $valueC)
+                        {
+                            foreach($detailCountryDest as $dest => $valuedestC)
+                            {
+                                $countgbcont = GlobalCharCountry::where('country_orig',$valueC)
+                                    ->where('country_dest',$valuedestC)
+                                    ->where('globalcharge_id',$global)
+                                    ->get();
+                                if(count($countgbcont) == 0){
+                                    $detailcountry = new GlobalCharCountry();
+                                    $detailcountry->country_orig    = $valueC;
+                                    $detailcountry->country_dest    = $valuedestC;
+                                    $detailcountry->globalcharge_id = $global;
+                                    $detailcountry->save();
+                                }
+                            }
+                        }
+                    } elseif(count($globalOfAr->globalcharportcountry) >= 1){
+
+                        $detailPortOrig     = $globalOfAr->globalcharportcountry->pluck('port_orig');
+                        $detailCountryDest  = $globalOfAr->globalcharportcountry->pluck('country_dest');
+                        foreach($detailPortOrig as $p => $valueC)
+                        {
+                            foreach($detailCountryDest as $dest => $valuedestC)
+                            {
+                                $countgbcont = GlobalCharPortCountry::where('port_orig',$valueC)
+                                    ->where('country_dest',$valuedestC)
+                                    ->where('globalcharge_id',$global)
+                                    ->get();
+                                if(count($countgbcont) == 0){
+                                    $detailPortCountry = new GlobalCharPortCountry();
+                                    $detailPortCountry->port_orig       = $valueC;
+                                    $detailPortCountry->country_dest    = $valuedestC;
+                                    $detailPortCountry->globalcharge_id = $global;
+                                    $detailPortCountry->save();
+                                }
+                            }
+                        }
+                    } elseif(count($globalOfAr->globalcharcountryport) >= 1){
+
+                        $detailCountryOrig     = $globalOfAr->globalcharcountryport->pluck('country_orig');
+                        $detailPortDest        = $globalOfAr->globalcharcountryport->pluck('port_dest');
+                        foreach($detailCountryOrig as $p => $valueC)
+                        {
+                            foreach($detailPortDest as $dest => $valuedestC)
+                            {
+                                $countgbcont = GlobalCharCountryPort::where('country_orig',$valueC)
+                                    ->where('port_dest',$valuedestC)
+                                    ->where('globalcharge_id',$global)
+                                    ->get();
+                                if(count($countgbcont) == 0){
+                                    $detailcountryPort = new GlobalCharCountryPort();
+                                    $detailcountryPort->country_orig    = $valueC;
+                                    $detailcountryPort->port_dest       = $valuedestC;
+                                    $detailcountryPort->globalcharge_id = $global;
+                                    $detailcountryPort->save();
+                                }
+                            }
+                        }
                     }
                 }
-
-                if(count($globalOfAr->globalcharport) >= 1){
-                    $detailport     = $globalOfAr->globalcharport->pluck('portOrig')->pluck('id');
-                    $detailportDest = $globalOfAr->globalcharport->pluck('portDest')->pluck('id');
-                    foreach($detailport as $p => $value)
-                    {
-                        foreach($detailportDest as $dest => $valuedest)
-                        {
-                            $countgbport = GlobalCharPort::where('port_orig',$value)
-                                ->where('port_dest',$valuedest)
-                                ->where('typedestiny_id',$globalOfAr->typedestiny_id)
-                                ->where('globalcharge_id',$global)
-                                ->get();
-                            if(count($countgbport) == 0){
-                                $ports                  = new GlobalCharPort();
-                                $ports->port_orig       = $value;
-                                $ports->port_dest       = $valuedest;
-                                $ports->typedestiny_id  = $globalOfAr->typedestiny_id;
-                                $ports->globalcharge_id = $global;
-                                $ports->save();
-                            }
-                        }
-                    }
-                }elseif(count($globalOfAr->globalcharcountry) >= 1){
-                    $detailCountrytOrig = $globalOfAr->globalcharcountry->pluck('countryOrig')->pluck('id');
-                    $detailCountryDest  = $globalOfAr->globalcharcountry->pluck('countryDest')->pluck('id');
-                    foreach($detailCountrytOrig as $p => $valueC)
-                    {
-                        foreach($detailCountryDest as $dest => $valuedestC)
-                        {
-                            $countgbcont = GlobalCharCountry::where('country_orig',$valueC)
-                                ->where('country_dest',$valuedestC)
-                                ->where('globalcharge_id',$global)
-                                ->get();
-                            if(count($countgbcont) == 0){
-                                $detailcountry = new GlobalCharCountry();
-                                $detailcountry->country_orig    = $valueC;
-                                $detailcountry->country_dest    = $valuedestC;
-                                $detailcountry->globalcharge_id = $global;
-                                $detailcountry->save();
-                            }
-                        }
-                    }
-                } elseif(count($globalOfAr->globalcharportcountry) >= 1){
-
-                    $detailPortOrig     = $globalOfAr->globalcharportcountry->pluck('port_orig');
-                    $detailCountryDest  = $globalOfAr->globalcharportcountry->pluck('country_dest');
-                    foreach($detailPortOrig as $p => $valueC)
-                    {
-                        foreach($detailCountryDest as $dest => $valuedestC)
-                        {
-                            $countgbcont = GlobalCharPortCountry::where('port_orig',$valueC)
-                                ->where('country_dest',$valuedestC)
-                                ->where('globalcharge_id',$global)
-                                ->get();
-                            if(count($countgbcont) == 0){
-                                $detailPortCountry = new GlobalCharPortCountry();
-                                $detailPortCountry->port_orig       = $valueC;
-                                $detailPortCountry->country_dest    = $valuedestC;
-                                $detailPortCountry->globalcharge_id = $global;
-                                $detailPortCountry->save();
-                            }
-                        }
-                    }
-                } elseif(count($globalOfAr->globalcharcountryport) >= 1){
-
-                    $detailCountryOrig     = $globalOfAr->globalcharcountryport->pluck('country_orig');
-                    $detailPortDest        = $globalOfAr->globalcharcountryport->pluck('port_dest');
-                    foreach($detailCountryOrig as $p => $valueC)
-                    {
-                        foreach($detailPortDest as $dest => $valuedestC)
-                        {
-                            $countgbcont = GlobalCharCountryPort::where('country_orig',$valueC)
-                                ->where('port_dest',$valuedestC)
-                                ->where('globalcharge_id',$global)
-                                ->get();
-                            if(count($countgbcont) == 0){
-                                $detailcountryPort = new GlobalCharCountryPort();
-                                $detailcountryPort->country_orig    = $valueC;
-                                $detailcountryPort->port_dest       = $valuedestC;
-                                $detailcountryPort->globalcharge_id = $global;
-                                $detailcountryPort->save();
-                            }
-                        }
-                    }
-                }
-
 
             }
         } elseif(strnatcasecmp($selector,'lcl') == 0){
