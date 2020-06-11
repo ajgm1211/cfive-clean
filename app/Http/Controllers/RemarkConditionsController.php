@@ -34,7 +34,7 @@ class RemarkConditionsController extends Controller
      */
     public function create()
     {
-        $harbors = Harbor::pluck('name', 'id');
+        $harbors = Harbor::pluck('display_name', 'id');
         $carriers = Carrier::pluck('name', 'id');
         $languages = Language::pluck('name', 'id');
         $countries = Country::pluck('name', 'id');
@@ -95,7 +95,7 @@ class RemarkConditionsController extends Controller
         $selected_countries  = collect(@$remark->remarksCountries);
         $selected_countries  = $selected_countries->pluck('id', 'name');
 
-        $harbors = harbor::all()->pluck('name', 'id');
+        $harbors = harbor::pluck('display_name', 'id');
         $carriers = Carrier::pluck('name', 'id');
         $countries = Country::pluck('name', 'id');
 
@@ -115,7 +115,7 @@ class RemarkConditionsController extends Controller
         $languages = Language::pluck('name', 'id');
         $selected_harbors = collect(@$remark->remarksHarbors);
         $selected_harbors = $selected_harbors->pluck('id', 'name');
-        $harbors = harbor::all()->pluck('name', 'id');
+        $harbors = harbor::pluck('display_name', 'id');
         $selected_carriers  = collect(@$remark->remarksCarriers);
         $selected_carriers  = $selected_carriers->pluck('id', 'name');
         $selected_countries  = collect(@$remark->remarksCountries);

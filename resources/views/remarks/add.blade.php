@@ -39,6 +39,7 @@
 
 @section('js')
 @parent
+<script src="/js/remarks.js" type="text/javascript"></script>
 <script>
     $('.m-select2-general').select2({
        placeholder: "Select an option"

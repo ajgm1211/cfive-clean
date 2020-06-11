@@ -1,3 +1,17 @@
+$(document).on('change', '#remark_mode', function() {
+    if ($(this).val() == 'port') {
+        $('#remark_port').removeClass('hide');
+        $('#remark_country').addClass('hide');
+        $("#remark_country_select").prop('disabled', true);
+        $("#remark_port_select").prop('disabled', false);
+    } else {
+        $('#remark_country').removeClass('hide');
+        $('#remark_port').addClass('hide');
+        $("#remark_country_select").prop('disabled', false);
+        $("#remark_port_select").prop('disabled', true);
+    }
+});
+
 $(document).on('click', '#delete-remarks', function() {
     var id = $(this).attr('data-remarks-id');
     var theElement = $(this);

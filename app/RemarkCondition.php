@@ -13,6 +13,7 @@ class RemarkCondition extends Model
         'name',
         'import',
         'export',
+        'mode',
         'company_user_id',
         'language_id'
     ];

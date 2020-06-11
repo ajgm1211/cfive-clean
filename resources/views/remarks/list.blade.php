@@ -75,7 +75,7 @@
                             Name
                         </th>
                         <th title="Field #2">
-                            Ports
+                            Apply to
                         </th>
                         <th title="Field #3">
                             Language
@@ -94,17 +94,27 @@
                     <tr>
                         <td>{{ $arr->name }}</td>
                         <td>
-                            @foreach($arr->remarksHarbors as $harbor)
-                            <ul>
-                                <li>{{ $harbor->name }}</li>
-                            </ul>
-                            @endforeach
+                            @if($arr->mode == 'port')
+                                @foreach($arr->remarksHarbors as $harbor)
+                                    <ul>
+                                        <li>{{ $harbor->display_name }}</li>
+                                    </ul>
+                                @endforeach
+                            @endif
+
+                            @if($arr->mode == 'country')
+                                @foreach($arr->remarksCountries as $country)
+                                    <ul>
+                                        <li>{{ $country->name }}</li>
+                                    </ul>
+                                @endforeach
+                            @endif
                         </td>
                         <td>
                             @if(empty($arr['language']) != true)
                             {{ $arr['language']['name'] }}
                             @else
-                            -----
+                            ---
                             @endif
                         </td>
                         <td>
