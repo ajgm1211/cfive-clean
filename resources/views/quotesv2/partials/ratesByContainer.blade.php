@@ -232,11 +232,14 @@
                                                     <tr class="total_freight_{{$v}}">
                                                         <td></td>
                                                         <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                        @php
+                                                            $exchange = ratesCurrencyFunction(Auth::user()->companyUser->currency_id, $rate->currency->alphacode);   
+                                                        @endphp
                                                         @foreach ($equipmentHides as $key=>$hide)
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a total_freight_{{$c->code}}">{{isDecimal( ${'sum'.$c->code} + ${'sum_m'.$c->code})}}</span>
+                                                                        <span class="td-a total_freight_{{$c->code}}">{{isDecimal( (${'sum'.$c->code} + ${'sum_m'.$c->code}) / $exchange)}}</span>
                                                                     </td>
                                                                     <input type="hidden" name="subtotal_c{{$c->code}}_freight" value="{{ ${'sum'.$c->code} }}" class="subtotal_c{{$c->code}}_freight"/>
                                                                     <input type="hidden" name="subtotal_m{{$c->code}}_freight" value="{{ ${'sum_m'.$c->code} }}" class="subtotal_m{{$c->code}}_freight"/>

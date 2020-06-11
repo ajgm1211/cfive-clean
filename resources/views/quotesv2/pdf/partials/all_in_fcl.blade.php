@@ -72,13 +72,11 @@
                                 /*${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                 ${'sum_total_'.$c->code} += ${'total_'.$c->code};*/
                                 if($sale_terms_origin->count()>0){
-                                    dd("here 1");
                                     if($value->type_id!=1){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                         ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                     }
                                 }elseif($sale_terms_destination->count()>0){
-                                    dd("here 2");
                                     if($value->type_id!=2){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                         ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};

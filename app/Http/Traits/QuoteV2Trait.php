@@ -328,11 +328,7 @@ trait QuoteV2Trait
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency =  $quote->pdf_option->total_in_currency;
                 } else {
-                    if ($charge->type_id == 3) {
-                        $typeCurrency = $item->currency->alphacode;
-                    } else {
-                        $typeCurrency =  $currency_cfg;
-                    }
+                    $typeCurrency =  $currency_cfg;
                 }
 
                 $currency_rate = $this->ratesCurrency($charge->currency_id, $typeCurrency);
@@ -1395,14 +1391,10 @@ trait QuoteV2Trait
             //Charges
             foreach ($rate->charge as $charge) {
 
-                if ($charge->type_id == 3) {
-                    $typeCurrency = $rate->currency->alphacode;
-                } else {
-                    $typeCurrency =  $company_user->currency->alphacode;
-                }
-
+                $typeCurrency =  @$company_user->currency->alphacode;
+                
                 $currency_rate = $this->ratesCurrency($charge->currency_id, $typeCurrency);
-
+                
                 $array_amounts = json_decode($charge->amount, true);
                 $array_markups = json_decode($charge->markups, true);
 
@@ -1429,13 +1421,10 @@ trait QuoteV2Trait
                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
-
-                    //Para calculo de total que se muestra en show/edit quotes
-                    $currency_rate_global = $this->ratesCurrency($charge->currency_id,  $company_user->currency->alphacode);
-
+                    
                     $totalized = ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
                     $charge->${'totalized_' . $c->code} = $totalized;
-
+                    
                     $charge->${$pre . $c->code} = isDecimal(${$total . '_' . $c->code});
                     $charge->${$pre . $c->code . '_markup'} = isDecimal(${$total . '_markup_' . $c->code});
                 }
