@@ -1,5 +1,5 @@
 <div class="m-portlet">
-  {!! Form::open(['route' => 'gcadm.store', 'method' => 'post','class' => 'form-group m-form__group','id' => 'frmSurcharges') !!}
+  {!! Form::open(['route' => 'gcadm.store', 'method' => 'post','class' => 'form-group m-form__group','id' => 'frmSurcharges']) !!}
   <div class="m-portlet__body">
     <div class="form-group m-form__group row">
       <div class="col-lg-12">
