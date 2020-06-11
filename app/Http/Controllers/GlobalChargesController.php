@@ -777,6 +777,7 @@ class GlobalChargesController extends Controller
         $calculation_type = $request->input('calculationtype');
 
         //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
+        $detailcarrier = $request->input('localcarrier');
         foreach($detailcarrier as $c => $carrier)
         {
             foreach($calculation_type as $ct => $ctype)
@@ -793,7 +794,6 @@ class GlobalChargesController extends Controller
                 $global->company_user_id    = $request->company_user_id; 
                 $global->save();
 
-                $detailcarrier = $request->input('localcarrier');
 
                 $detailcarrier = new GlobalCharCarrier();
                 $detailcarrier->carrier_id = $carrier;
