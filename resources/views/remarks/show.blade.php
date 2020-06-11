@@ -14,12 +14,18 @@
                 </div>
 
                 <div class="form-group m-form__group">
+                    {!! Form::label('Mode', 'Type') !!}
+                    {!! Form::select('mode',['' => 'Select an option','port'=>'Port','country'=>'Country'],@$remark->mode,
+                    ['class' => 'm-select2-general form-control','id'=>'remark_mode','disabled' => 'true']) !!}
+                </div>
+
+                <div class="form-group m-form__group {{$remark->mode == 'country' ? '':'hide'}}">
                     {!! Form::label('Countries', 'Countries') !!}
                     {!! Form::select('countries[]',$countries,@$selected_countries, 
                     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple','disabled' => 'true']) !!}
                 </div>
                 
-                <div class="form-group m-form__group">
+                <div class="form-group m-form__group {{$remark->mode == 'port' ? '':'hide'}}">
                     {!! Form::label('Port', 'Ports') !!}
                     {!! Form::select('ports[]',$harbors,@$selected_harbors, 
                     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple','disabled' => 'true']) !!}
