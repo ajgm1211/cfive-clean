@@ -1,4 +1,4 @@
-$(document).on('click', '#delete-remarks', function () {
+$(document).on('click', '#delete-remarks', function() {
     var id = $(this).attr('data-remarks-id');
     var theElement = $(this);
     swal({
@@ -13,20 +13,13 @@ $(document).on('click', '#delete-remarks', function () {
                 type: 'get',
                 url: '/remarks/delete/' + id,
                 success: function(data) {
-                    if(data.message=='Ok'){
+                    if (data.message == 'Ok') {
                         swal(
                             'Deleted!',
-                            'Your file has been deleted.',
+                            'Record deleted successfully!',
                             'success'
                         )
                         $(theElement).closest('tr').remove();
-                    }else{
-                        swal(
-                            'Error!',
-                            'Your can\'t delete this contact because have quotes related.',
-                            'warning'
-                        )
-                        console.log(data.message);
                     }
                 }
             });
