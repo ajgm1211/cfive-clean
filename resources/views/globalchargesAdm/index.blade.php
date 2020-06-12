@@ -204,7 +204,7 @@
         }
         if(action == "addGlobalCharge"){
             var url = '{{ route("gcadm.add")}}';
-            $('#global-body').load(url,data,function(){
+            $('#global-body').load(url,function(){
                 $('#global-modal').modal({show:true});
             });
         }
