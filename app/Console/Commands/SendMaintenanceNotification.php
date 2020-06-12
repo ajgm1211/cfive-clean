@@ -48,10 +48,10 @@ class SendMaintenanceNotification extends Command
         $hour = $this->argument('hour');
         $duration = $this->argument('duration');
         try{
-            /*$users=User::where('state',1)->get();
-            foreach ($users as $item) {*/
-                Mail::to('julio@cargofive.com')->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
-            //}
+            $users=User::where('state',1)->get();
+            foreach ($users as $item) {
+                Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
+            }
         } catch(\Exception $e){
             return $this->info($e->getMessage());
         }
