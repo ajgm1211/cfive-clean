@@ -325,8 +325,5 @@
         history.replace(history.forward(1));
     }
 
-
-
-
 </script>
 @stop
