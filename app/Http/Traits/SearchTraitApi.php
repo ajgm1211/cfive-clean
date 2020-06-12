@@ -11,6 +11,7 @@ use App\RemarkHarbor;
 use App\User;
 use App\Container;
 use App\GlobalCharge;
+use App\TransitTime;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
 
@@ -271,7 +272,7 @@ trait SearchTraitApi
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => json_decode($local->surcharge->options), 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name);
+        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name);
         return $arreglo;
     }
 
@@ -644,23 +645,30 @@ trait SearchTraitApi
         return $contratoFuturo;
     }
 
-
-    public function transitTime($date1, $date2)
+    public function transitTime($port_orig, $port_dest, $carrier, $status)
     {
 
+        $transitArray = array();
+        if ($status != 'api') {
 
+            $transit  = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
+            
+            if (!empty($transit)) {
+                $transitArray['via'] = $transit->via;
+                $transitArray['transit_time'] = $transit->transit_time;
+                $transitArray['service'] = $transit->service->name;
+            } else {
+                $transitArray['via'] = "";
+                $transitArray['transit_time'] =  "";
+                $transitArray['service'] =  "";
+            }
+        } else {
 
-        $date1 = new \DateTime($date1);
-        $date2 = new \DateTime($date2);
-        $diff = $date1->diff($date2);
-
-        if ($diff->invert  == "0")
-            $contratoFuturo = true;
-        else
-            $contratoFuturo = false;
-
-
-        return $contratoFuturo;
+            $transitArray['via'] = "";
+            $transitArray['transit_time'] =  "";
+            $transitArray['service'] =  "";
+        }
+        return $transitArray;
     }
 
     /**

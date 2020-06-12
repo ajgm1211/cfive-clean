@@ -29,33 +29,46 @@
             logo_input','required' => 'required','id'=>'logo']) !!}
             <div id="logo-error" class="hide"><b>Image size can not be bigger than 1 mb</b></div>
         </div>
+        <br>
         <hr>
         <div class="form-group m-form__group">
             <div class="row">
                 <div class="col-12">
-                {!! Form::label('extra_fields', 'Extra fields') !!}
-                <button type="button" class="btn btn-primary btn-sm pull-right" onclick="addOriginCharge()">Add <i class="fa fa-plus"></i></button>
+                    {!! Form::label('extra_fields', 'Extra fields') !!}
+                    <button type="button" class="btn btn-primary btn-sm pull-right" onclick="addExtraField()">Add <i
+                            class="fa fa-plus"></i></button>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-6">
-                    {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' => 'form-control
+                    {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' =>
+                    'form-control
                     m-input']) !!}
                 </div>
                 <div class="col-6">
-                    {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' => 'form-control
+                    {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' =>
+                    'form-control
                     m-input']) !!}
                 </div>
             </div>
-            <div class="row hide" id="hide_extra_field" style="margin-top:3px;">
-                <div class="col-6">
-                    {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' => 'form-control
-                    m-input']) !!}
-                </div>
-                <div class="col-6">
-                    {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' => 'form-control
-                    m-input']) !!}
+            <div class="hide" id="hide_extra_field">
+                <div class="row" style="margin-top:3px;">
+                    <div class="col-6">
+                        {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' =>
+                        'form-control
+                        m-input']) !!}
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group mb-3">
+                            {!! Form::text('key_value[]', null, ['placeholder' => 'Please enter a value','class' =>
+                            'form-control
+                            m-input']) !!}
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-danger btn-sm deleter"><i class="fa fa-close"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
