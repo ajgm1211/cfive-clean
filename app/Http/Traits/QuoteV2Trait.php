@@ -1438,6 +1438,8 @@ trait QuoteV2Trait
             //Charges LCL/AIR
             foreach ($rate->charge_lcl_air as $charge_lcl) {
 
+                $typeCurrency =  @$company_user->currency->alphacode;
+
                 $currency_rate = $this->ratesCurrency($charge_lcl->currency_id, $typeCurrency);
 
                 if ($charge_lcl->type_id == 3) {
