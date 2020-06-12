@@ -421,6 +421,7 @@ trait QuoteV2Trait
         return $rates;
     }
 
+
     public function processGlobalRatesWithSales($rates, $quote, $currency_cfg, $origin_ports, $destination_ports, $containers)
     {
 
@@ -1530,6 +1531,7 @@ trait QuoteV2Trait
         }
 
         return $sale_terms;
+
     }
 
     public function updateIntegrationQuoteStatus($quote_id)
