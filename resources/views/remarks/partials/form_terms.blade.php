@@ -8,23 +8,50 @@
     {!! Form::label('Name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'Please enter the term name','class' => 'form-control
     m-input','required' => 'required']) !!}
-
 </div>
 
 <div class="form-group m-form__group">
-    {!! Form::label('Port', 'Ports') !!}
-    {!! Form::select('ports[]',$harbors,@$selected_harbors,
-    ['class' => 'm-select2-general form-control','required','multiple' => 'multiple']) !!}
+    {!! Form::label('Mode', 'Type') !!}
+    {!! Form::select('mode',['' => 'Select an option','port'=>'Port','country'=>'Country'],@$remark->mode,
+    ['class' => 'm-select2-general form-control','id'=>'remark_mode','required']) !!}
 </div>
+
+@if(isset($remark))
+    <div class="form-group m-form__group {{$remark->mode == 'country' ? '':'hide'}}" id="remark_country">
+        {!! Form::label('Countries', 'Countries') !!}
+        {!! Form::select('countries[]',$countries,@$selected_countries,
+        ['class' => 'm-select2-general form-control','required','id'=>'remark_country_select', 'multiple' => 'multiple', $remark->mode == 'country' ? '':'disabled']) !!}
+    </div>
+
+    <div class="form-group m-form__group {{$remark->mode == 'port' ? '':'hide'}}" id="remark_port">
+        {!! Form::label('Port', 'Ports') !!}
+        {!! Form::select('ports[]',$harbors,@$selected_harbors,
+        ['class' => 'm-select2-general form-control','required', 'id'=>'remark_port_select', 'multiple' => 'multiple', $remark->mode == 'port' ? '':'disabled']) !!}
+    </div>
+@else
+    <div class="form-group m-form__group hide" id="remark_country">
+        {!! Form::label('Countries', 'Countries') !!}
+        {!! Form::select('countries[]',$countries,@$selected_countries,
+        ['class' => 'm-select2-general form-control','disabled','id'=>'remark_country_select', 'multiple' => 'multiple']) !!}
+    </div>
+
+    <div class="form-group m-form__group hide" id="remark_port">
+        {!! Form::label('Port', 'Ports') !!}
+        {!! Form::select('ports[]',$harbors,@$selected_harbors,
+        ['class' => 'm-select2-general form-control','disabled', 'id'=>'remark_port_select', 'multiple' => 'multiple']) !!}
+    </div>
+@endif
+
 <div class="form-group m-form__group">
     {!! Form::label('Carriers', 'Carriers') !!}
     {!! Form::select('carriers[]',$carriers,@$selected_carriers,
     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
+
 <div class="form-group m-form__group">
     {!! Form::label('Language', 'Language') !!}
-    {!! Form::select('language',$languages,@$remark['language_id'],
-    ['class' => 'm-select2-general form-control']) !!}
+    {!! Form::select('language_id',$languages,@$remark->language_id,
+    ['class' => 'm-select2-general form-control','placeholder'=>'Select an option','required']) !!}
 </div>
 
 <div class="form-group m-form__group">

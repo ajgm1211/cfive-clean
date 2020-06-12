@@ -2183,6 +2183,20 @@ $(document).on("change keyup keydown", ".units, .rate", function() {
     });
 });
 
+$(document).on('change', '#inland_type', function() {
+    if ($('#inland_type').val() == 'Origin') {
+        $(".origin_port").removeClass('hide');
+        $(".destination_port").addClass('hide');
+        $(".origin_port_select").prop('disabled', false);
+        $(".destination_port_select").prop('disabled', true);
+    } else {
+        $(".origin_port").addClass('hide');
+        $(".destination_port").removeClass('hide');
+        $(".origin_port_select").prop('disabled', true);
+        $(".destination_port_select").prop('disabled', false);
+    }
+});
+
 //Mostrar y ocultar puertos en Sale Terms
 $(document).on('change', '#saleterm_type', function() {
     if ($('#saleterm_type').val() == 'origin') {

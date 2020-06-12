@@ -1037,7 +1037,7 @@
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     @if(isset($validateEquipment))
                     @if($validateEquipment['count'] > 1 )
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>The teams do not belong to the same group.</span> You can create a quote manually.</p>
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>The equipemts do not belong to the same group.</span> You can create a quote manually.</p>
                     @endif
                     @endif
                     @if(isset($arreglo) && isset($validateEquipment) )
@@ -1252,7 +1252,7 @@
                         </div>-->
                         @endif
                         <div class="col-lg-2 d-flex  justify-content-end">
-                          <span class="portalphacode" style="margin-right:15px;">Contract: </span>  {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                        <span class="portalphacode" style="margin-right:15px;">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
                         </div>
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
@@ -1469,7 +1469,7 @@
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Provider</span></div>
                     <div class="col-lg-2"><span class="portalphacode" style="margin-left: 20px">Distance</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                       <div class="d-flex justify-content-end">
                         <div class="wth" {{ $equipmentHides['20DV'] }}><span class="portalphacode">20'</span></div>
                         <div class="wth" {{ $equipmentHides['40DV'] }}><span class="portalphacode">40'</span></div>
@@ -1492,10 +1492,10 @@
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode" >{{ $inlandDestiny['providerName']  }}</div>
                     <div class="col-lg-2 colorphacode" style="padding-left: 35px">{{ $inlandDestiny['km']  }} KM</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-end">
-                        <div class="wth" {{ $equipmentHies['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
-                          <i class="la la-caret-right></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
+                        <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40DV'] }}>{{ $equipmentHides['40DV'] }}
@@ -1538,7 +1538,7 @@
                     <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['providerName']  }}</div>
                     <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['km']  }} KM</div>
 
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-end">
                         <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }}
                           {{ @$inlandOrigin['inlandDetails']['20DV']['sub_in']  }} 
@@ -1686,8 +1686,12 @@
       method:'get',
       success: function(response){
         if(response.success == true){
-          window.location = response.url;
-        }else {
+          //window.location = response.url;
+          var link = document.createElement("a");
+                            link.href = response.url;
+                            link.download = 'example.csv';
+                            link.click();        
+                            }else {
           toastr.error('File not found');
         }
         ///console.log(response);
@@ -2036,78 +2040,84 @@
         dataType: 'json',
         url: '/Container/getContainer/',
         data: {
-            'id_group' : id_group            
+            'id_group' : id_group
         },
         success: function(data) {
             //console.log(data);
             var selectValues = $('select#equipment').val();
             var containerType= '{{$containerType}}';
-
+            const defaultValuesController = <?php echo json_encode( $form['equipment']);?>;
+            ;
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
-
+            //Opciones de equipment list
             for ( const equip in data ) {
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
-                                '<input type="checkbox" class="c5-check" title="'+code+'" value="'+idEquip+
+                                '<input type="checkbox"  class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
+                $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
                 $('.list-group2').append(list2);
             }
-
             $('.equipment .select-list').html('');
-
+            //Cargamos valores de DRY predeterminados final
             if( id_group == containerType ) {
-                
-                for (var i in selectValues) {
-                    var ident = selectValues[i];
-                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title'); 
-                    console.log(ident, selectValues, containerType);
+                for (var i in defaultValuesController) {
+                    var ident = defaultValuesController[i];
+                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title');
                     $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
-                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true);
+                    defaultValuesController.push(ident);
+                    //console.log(ident);
                 }
                 $('.equipment .select-list li[title="undefined"]').remove();
-
+                $('#equipment.select-group').val(defaultValuesController);
+                console.log($('#equipment.select-group').val());
+                //console.log($('#equipment.select-group').val());
+            }else{
+                var valueArray = [];
+                for ( const equip in data ) {
+                    var code = `${data[equip].code}`;
+                    var idEquip = `${data[equip].id}`;
+                    $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
+                    $('.list-group2 .c5-case input[value="'+idEquip+'"]').attr('checked', true);
+                    valueArray.push(idEquip);
+                    //console.log(idEquip);
+                }
+                $('#equipment.select-group').val(valueArray);
+                console.log($('#equipment.select-group').val());
+                return;
             }
-
-
+            //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
-                var valueEquipment = [];                    
+                var valueEquipment = [];
                 var title = $(this).attr('title');
-
                 $('.equipment .list-group2 .c5-check').each(function() {
                     if (this.checked) {
                         valueEquipment.push($(this).val());
                         //console.log(valueEquipment);
                     }
                 });
-
                 $('#equipment.select-group').val(valueEquipment);
-                /*var valor2 = $('#equipment.select-group').val();
-                console.log(valor2);*/
-
                 var countEquip = valueEquipment.length;
-                
                 if ($(this).is(':checked')) {
-                    var html = '<li title="' + title + '">' + title + ', </li>';                    
+                    var html = '<li title="' + title + '">' + title + ', </li>';
                     $('.equipment .select-list').append(html);
                     $(".select-list .hida").hide();
                 } else {
                     var listLength = $('.equipment .list-group2 .c5-check:checked').length;
                     $('li[title="' + title + '"]').remove();
                     if( countEquip == 0 ){
-                        $(".select-list .hida").show();   
+                        $(".select-list .hida").show();
                     }
                 }
-
-            }); 
+            });
         },
         error: function (request, status, error) {
             console.log(request.responseText);
         }
-
     });
-
 }
 
 
