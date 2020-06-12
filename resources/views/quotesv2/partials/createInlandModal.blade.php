@@ -12,7 +12,7 @@
         <div class="modal-content" style="min-width: 900px; right: 200px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
-                    <b>New Inland</b>
+                    <b>Create Inland</b>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-md-4" class="" id="carrier_label">
                         <label>Currency</label>
-                        {{ Form::select('currency_id',$currencies,null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','required'=>'true']) }}
+                        {{ Form::select('currency_id',$currencies,null,['placeholder' => 'Select an option', 'class'=>'form-control m-select2-general','required'=>'true']) }}
                     </div>
                 </div>
                 <br>
