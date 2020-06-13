@@ -101,8 +101,7 @@ class LocalCharge extends Model
 	public function LocalChargeCarrierSync($carriers)
 	{
 		DB::table('localcharcarriers')->where('localcharge_id', '=', $this->id)->delete(); 
-
-		dump($this->id);
+		
 		foreach($carriers as $carrier_id){
 			LocalCharCarrier::create([
 				'carrier_id'    => $carrier_id,
