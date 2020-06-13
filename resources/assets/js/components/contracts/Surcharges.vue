@@ -131,9 +131,21 @@
                 let carriers = "";
 
                 if(value){
-                    value.forEach(function(val){
-                        carriers += `<span class='badge badge-${color}'>${val.display_name}</span>`;
-                    });
+                    if(Array.isArray(value)){
+                        
+                        value.forEach(function(val){
+                            carriers += `<span class='badge badge-${color}'>${val.display_name}</span>`;
+                        });
+
+                    } else {
+
+                        let fields_keys = Object.keys(value);
+
+                        fields_keys.forEach(function(key){
+                            const item = value[key];
+                            carriers += `<span class='badge badge-${color}'>${item.display_name}</span>`;
+                        });                        
+                    }
 
                     return carriers;
                 } else {
