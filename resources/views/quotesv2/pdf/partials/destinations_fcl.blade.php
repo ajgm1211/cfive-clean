@@ -132,7 +132,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{ isDecimal(@${'sum_sale'.$c->code}) }}</td>
+                                                            <td {{ $hide }}>{{ isDecimal(@${'sum_sale'.$c->code}, true) }}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -197,7 +197,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{ isDecimal(@$item->${'sum_'.$c->code}) }}</td>
+                                                            <td {{ $hide }}>{{ isDecimal(@$item->${'sum_'.$c->code}, true) }}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -279,7 +279,7 @@
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
                                                                         <!--<td {{ $hide }}>{{ $v->${'total_c'.$c->code} }}</td>-->
-                                                                        <td {{ $hide }}>{{ isDecimal(@$v->${'sum_amount_markup_'.$c->code }) }}</td>
+                                                                        <td {{ $hide }}>{{ isDecimal(@$v->${'sum_amount_markup_'.$c->code }, true) }}</td>
                                                                     @endif
                                                                 @endforeach
                                                             @endforeach
@@ -330,7 +330,7 @@
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}><b>{{isDecimal(@${'sum_destination_'.$c->code}+@${'sum_inland_'.$c->code})}}</b></td>
+                                                    <td {{ $hide }}><b>{{isDecimal(@${'sum_destination_'.$c->code}+@${'sum_inland_'.$c->code}, true)}}</b></td>
                                                 @endif
                                             @endforeach
                                         @endforeach

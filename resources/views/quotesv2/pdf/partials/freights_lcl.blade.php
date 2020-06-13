@@ -188,12 +188,12 @@
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 @if($quote->pdf_option->show_total_freight_in==1)
                                     @if($quote->pdf_option->show_total_freight_in_currency=='USD')
-                                        <td ><b>{{isDecimal(@$total_freight/$currency_cfg->rates)}}</b></td>
+                                        <td ><b>{{isDecimal(@$total_freight/$currency_cfg->rates, true)}}</b></td>
                                     @else
-                                        <td ><b>{{isDecimal(@$total_freight/$currency_cfg->rates_eur)}}</b></td>
+                                        <td ><b>{{isDecimal(@$total_freight/$currency_cfg->rates_eur, true)}}</b></td>
                                     @endif
                                 @else
-                                    <td ><b>{{isDecimal(@$total_freight)}}</b></td>
+                                    <td ><b>{{isDecimal(@$total_freight, true)}}</b></td>
                                 @endif
                                 @if($quote->pdf_option->show_total_freight_in==1)
                                     <td >{{$quote->pdf_option->show_total_freight_in_currency}}</td>

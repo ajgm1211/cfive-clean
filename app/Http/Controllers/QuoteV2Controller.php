@@ -1318,19 +1318,26 @@ class QuoteV2Controller extends Controller
         $rates = AutomaticRate::whereHas('charge', function ($query) use ($request) {
             $query->where('type_id', $request->type_id);
         })->where('id', $request->automatic_rate_id)->get();
-
-        $charges = Charge::where('automatic_rate_id', $request->automatic_rate_id)->get();
+        
+        $charges = Charge::where('automatic_rate_id', $request->automatic_rate_id)->with('automatic_rate')->get();
 
         //Charges
         foreach ($charges as $value) {
 
-            $typeCurrency = $company_user->currency->alphacode;
-
+            if($request->type_id == 3){
+                $typeCurrency = @$value->automatic_rate->currency->alphacode;
+            }else{
+                $typeCurrency = $company_user->currency->alphacode;
+            }
+            
             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
             $array_amounts = json_decode($value->amount, true);
             $array_markups = json_decode($value->markups, true);
 
+            $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+            $array_markups = $this->processOldContainers($array_markups, 'markups');
+            
             foreach ($containers as $container) {
                 ${$amount . $container->code} = 0;
                 ${$markup . $container->code} = 0;
@@ -2353,7 +2360,12 @@ class QuoteV2Controller extends Controller
             AutomaticInlandLclAir::create($request->all());
         }
 
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        $notification = array(
+            'toastr' => 'Inland saved successfully!',
+            'alert-type' => 'success'
+        );
+
+        return back()->with($notification);
     }
 
     /**
@@ -2411,7 +2423,12 @@ class QuoteV2Controller extends Controller
         $inland->currency_id = $request->currency_id;
         $inland->update();
 
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($inland->quote_id));
+        $notification = array(
+            'toastr' => 'Inland updated successfully!',
+            'alert-type' => 'success'
+        );
+
+        return back()->with($notification);
     }
 
     /**

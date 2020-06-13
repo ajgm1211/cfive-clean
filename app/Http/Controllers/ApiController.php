@@ -626,7 +626,7 @@ class ApiController extends Controller
         }
 
         //Guard if
-        if ($arreglo == null) {
+        if (count($arreglo) == 0) {
             return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
         }
 

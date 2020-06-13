@@ -73,22 +73,44 @@ function obtenerRouteKey($keyP)
 
 
 
-function isDecimal($monto)
+function isDecimal($monto, $quote = false)
 {
 
     $isDecimal = Auth::user()->companyUser->decimals;
-    if ($isDecimal){
-      if(is_string($monto))
-        return $monto;
-      else if(is_float($monto))
-        return $monto;
-    else
-        return number_format($monto, 2, '.', '');
-    }else{
-      return round($monto);
+    if ($isDecimal) {
+        if (!$quote) {
+            if (is_string($monto))
+                return $monto;
+            else if (is_float($monto))
+                return $monto;
+            else
+                return number_format($monto, 2, '.', '');
+        }else{
+            return number_format($monto, 2, '.', '');
+        }
+    } else {
+        return round($monto);
     }
-      
-    
-        
 }
 
+
+
+/**
+ * ratesCurrencyFunction
+ *
+ * @param  mixed $id
+ * @param  mixed $typeCurrency
+ * @return void
+ */
+function ratesCurrencyFunction($id, $typeCurrency)
+{
+    $rates = Currency::where('id', '=', $id)->get();
+    foreach ($rates as $rate) {
+        if ($typeCurrency == "USD") {
+            $rateC = $rate->rates;
+        } else {
+            $rateC = $rate->rates_eur;
+        }
+    }
+    return $rateC;
+}

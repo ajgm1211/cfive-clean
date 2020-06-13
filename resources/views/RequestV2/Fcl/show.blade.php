@@ -329,23 +329,23 @@
     });
 
 
-//    $(document).ready(function(){
-//        $('#requesttable thead tr').clone(true).appendTo( '#requesttable thead' );
-//        $('#requesttable thead tr:eq(1) th').each( function (i) {
-//            // alert(i)
-//            var title = $(this).text();
-//            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-//
-//            $( 'input', this ).on( 'keyup change', function () {
-//                if ( requesttableV.column(i).search() !== this.value ) {
-//                    requesttableV
-//                        .column(i)
-//                        .search( this.value )
-//                        .draw();
-//                }
-//            } );
-//        } );
-//    });
+    //    $(document).ready(function(){
+    //        $('#requesttable thead tr').clone(true).appendTo( '#requesttable thead' );
+    //        $('#requesttable thead tr:eq(1) th').each( function (i) {
+    //            // alert(i)
+    //            var title = $(this).text();
+    //            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    //
+    //            $( 'input', this ).on( 'keyup change', function () {
+    //                if ( requesttableV.column(i).search() !== this.value ) {
+    //                    requesttableV
+    //                        .column(i)
+    //                        .search( this.value )
+    //                        .draw();
+    //                }
+    //            } );
+    //        } );
+    //    });
 
     $('#carrierM' ).on( 'keyup change', function () {
         carriername = $(this).val();
@@ -432,7 +432,30 @@
             "serverSide": true,
             "paging": true
         });
+
+        var state = requesttableV.state.loaded();
+        if(state) {
+            var colSearch = state.columns[5].search;
+            if (colSearch.search) {
+                $('input', requesttableV.column(5).footer()).val(colSearch.search);
+            }
+            requesttableV.draw();
+        }
     });
+
+    //Para resetear otros campos o mostrar save state
+    //    var state = table.state.loaded();
+    //        if (state) {
+    //            table.columns().eq(0).each(function (colIdx) {
+    //                var colSearch = state.columns[colIdx].search;
+    // 
+    //                if (colSearch.search) {
+    //                    $('input', table.column(colIdx).footer()).val(colSearch.search);
+    //                }
+    //            });
+    // 
+    //            table.draw();
+    //        }
 
     function showModal(id){
         var url = '{{ route("RequestFcl.show",":id") }}';

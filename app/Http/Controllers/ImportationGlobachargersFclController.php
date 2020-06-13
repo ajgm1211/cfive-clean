@@ -1100,7 +1100,7 @@ class ImportationGlobachargersFclController extends Controller
         $company_userV       = $failglobal['company_user_id'];
         $carrier             = $request->input('carrier_id');
 
-        $global = GlobalCharge::where('surcharge_id',$surchargerV)
+        /*$global = GlobalCharge::where('surcharge_id',$surchargerV)
             ->where('typedestiny_id',$typedestinyV)
             ->where('company_user_id',$company_userV)
             ->where('calculationtype_id',$calculationtypeV)
@@ -1111,7 +1111,8 @@ class ImportationGlobachargersFclController extends Controller
             ->has($typeplace)
             ->first();
 
-        if(count($global) == 0){
+        if(count($global) == 0){*/
+        foreach($carrier as $key){
             $global                     = new GlobalCharge();
             $global->validity           = $validation[0];
             $global->expire             = $validation[1];
@@ -1123,48 +1124,47 @@ class ImportationGlobachargersFclController extends Controller
             $global->company_user_id    = $company_userV;
             $global->account_importation_globalcharge_id    = $failglobal['account_id'];
             $global->save();
-        }
+            //}
 
-        $id = $global->id;
+            $id = $global->id;
 
-        if($typerate == 'port'){
+            if($typerate == 'port'){
 
-            $port_orig = $request->input('port_orig');
-            $port_dest = $request->input('port_dest');
+                $port_orig = $request->input('port_orig');
+                $port_dest = $request->input('port_dest');
 
-            foreach($port_orig as  $orig => $valueorig)
-            {
-                foreach($port_dest as $dest => $valuedest)
+                foreach($port_orig as  $orig => $valueorig)
                 {
-                    $detailport = new GlobalCharPort();
-                    $detailport->port_orig          = $valueorig;
-                    $detailport->port_dest          = $valuedest;
-                    $detailport->typedestiny_id     = $request->input('changetype');
-                    $detailport->globalcharge_id    = $id;
-                    $detailport->save();
+                    foreach($port_dest as $dest => $valuedest)
+                    {
+                        $detailport = new GlobalCharPort();
+                        $detailport->port_orig          = $valueorig;
+                        $detailport->port_dest          = $valuedest;
+                        $detailport->typedestiny_id     = $request->input('changetype');
+                        $detailport->globalcharge_id    = $id;
+                        $detailport->save();
+                    }
+                }
+
+            }elseif($typerate == 'country'){
+
+                $detailCountrytOrig =$request->input('country_orig');
+                $detailCountryDest = $request->input('country_dest');
+
+                foreach($detailCountrytOrig as $p => $valueC)
+                {
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig = $valueC;
+                        $detailcountry->country_dest =  $valuedestC;
+                        $detailcountry->globalcharge()->associate($global);
+                        $detailcountry->save();
+                    }
                 }
             }
 
-        }elseif($typerate == 'country'){
 
-            $detailCountrytOrig =$request->input('country_orig');
-            $detailCountryDest = $request->input('country_dest');
-
-            foreach($detailCountrytOrig as $p => $valueC)
-            {
-                foreach($detailCountryDest as $dest => $valuedestC)
-                {
-                    $detailcountry = new GlobalCharCountry();
-                    $detailcountry->country_orig = $valueC;
-                    $detailcountry->country_dest =  $valuedestC;
-                    $detailcountry->globalcharge()->associate($global);
-                    $detailcountry->save();
-                }
-            }
-        }
-
-        foreach($carrier as $key)
-        {
             $find_carrier   = GlobalCharCarrier::where('carrier_id',$key)->where('globalcharge_id',$id)->get();
             if(count($find_carrier) == 0){
                 $detailcarrier = new GlobalCharCarrier();
@@ -1193,78 +1193,90 @@ class ImportationGlobachargersFclController extends Controller
     public function updateGlobalChar(Request $request, $id)
     {
 
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcalculation = new CalculationType();
-        $objsurcharge = new Surcharge();
-        $objtypedestiny = new TypeDestiny();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $calculationT = $objcalculation->all()->pluck('name','id');
-        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $objsurcharge   = new Surcharge();
+        $harbor         = Harbor::pluck('display_name','id');
+        $carrierob      = Carrier::pluck('name','id');
+        $currency       = Currency::pluck('alphacode','id');
+        $calculationT   = CalculationType::pluck('name','id');
+        $typedestiny    = TypeDestiny::pluck('description','id');
 
-        $global = GlobalCharge::find($id);
-        $validation = explode('/',$request->validation_expire);
-        $global->validity = $validation[0];
-        $global->expire = $validation[1];
-        $global->surcharge_id = $request->input('surcharge_id');
-        $global->typedestiny_id = $request->input('changetype');
+        $global                     = GlobalCharge::find($id);
+        $validation                 = explode('/',$request->validation_expire);
+        $global->validity           = $validation[0];
+        $global->expire             = $validation[1];
+        $global->surcharge_id       = $request->input('surcharge_id');
+        $global->typedestiny_id     = $request->input('changetype');
         $global->calculationtype_id = $request->input('calculationtype_id');
-        $global->ammount = $request->input('ammount');
-        $global->currency_id = $request->input('currency_id');
+        $global->ammount            = $request->input('ammount');
+        $global->currency_id        = $request->input('currency_id');
 
-        $carrier = $request->input('carrier_id');
-        $deleteCarrier = GlobalCharCarrier::where("globalcharge_id",$id);
+        $carrier                    = $request->input('carrier_id');
+        $deleteCarrier              = GlobalCharCarrier::where("globalcharge_id",$id);
         $deleteCarrier->delete();
-        $deletePort = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort                 = GlobalCharPort::where("globalcharge_id",$id);
         $deletePort->delete();
-        $deleteCountry = GlobalCharCountry::where("globalcharge_id",$id);
+        $deleteCountry              = GlobalCharCountry::where("globalcharge_id",$id);
         $deleteCountry->delete();
-
-        $typerate =  $request->input('typeroute');
-        if($typerate == 'port'){
-            $port_orig = $request->input('port_orig');
-            $port_dest = $request->input('port_dest');
-            foreach($port_orig as  $orig => $valueorig)
-            {
-                foreach($port_dest as $dest => $valuedest)
+        $global->update();
+        $account_importation_globalcharge_id = $global->account_importation_globalcharge_id;
+        $contador = 1;
+        $company_user = $global->company_user_id;
+        foreach($carrier as $key){
+            if($contador > 1){
+                $global                     = null;
+                $id                         = null;
+                $global                     = new GlobalCharge();
+                $global->validity           = $validation[0];
+                $global->expire             = $validation[1];
+                $global->surcharge_id       = $request->input('surcharge_id');
+                $global->typedestiny_id     = $request->input('changetype');
+                $global->calculationtype_id = $request->input('calculationtype_id');
+                $global->ammount            = $request->input('ammount');
+                $global->currency_id        = $request->input('currency_id');
+                $global->company_user_id    = $company_user;
+                $global->account_importation_globalcharge_id = $account_importation_globalcharge_id;
+                $global->save();
+                $id                         = $global->id;
+            }
+            $typerate =  $request->input('typeroute');
+            if($typerate == 'port'){
+                $port_orig = $request->input('port_orig');
+                $port_dest = $request->input('port_dest');
+                foreach($port_orig as  $orig => $valueorig)
                 {
-                    $detailport = new GlobalCharPort();
-                    $detailport->port_orig = $valueorig;
-                    $detailport->port_dest = $valuedest;
-                    $detailport->typedestiny_id = $request->input('changetype');
-                    $detailport->globalcharge_id = $id;
-                    $detailport->save();
+                    foreach($port_dest as $dest => $valuedest)
+                    {
+                        $detailport = new GlobalCharPort();
+                        $detailport->port_orig = $valueorig;
+                        $detailport->port_dest = $valuedest;
+                        $detailport->typedestiny_id = $request->input('changetype');
+                        $detailport->globalcharge_id = $id;
+                        $detailport->save();
+                    }
+                }
+            }elseif($typerate == 'country'){
+
+                $detailCountrytOrig =$request->input('country_orig');
+                $detailCountryDest = $request->input('country_dest');
+                foreach($detailCountrytOrig as $p => $valueC)
+                {
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig = $valueC;
+                        $detailcountry->country_dest =  $valuedestC;
+                        $detailcountry->globalcharge()->associate($global);
+                        $detailcountry->save();
+                    }
                 }
             }
-        }elseif($typerate == 'country'){
 
-            $detailCountrytOrig =$request->input('country_orig');
-            $detailCountryDest = $request->input('country_dest');
-            foreach($detailCountrytOrig as $p => $valueC)
-            {
-                foreach($detailCountryDest as $dest => $valuedestC)
-                {
-                    $detailcountry = new GlobalCharCountry();
-                    $detailcountry->country_orig = $valueC;
-                    $detailcountry->country_dest =  $valuedestC;
-                    $detailcountry->globalcharge()->associate($global);
-                    $detailcountry->save();
-                }
-            }
-        }
-
-        foreach($carrier as $key)
-        {
             $detailcarrier = new GlobalCharCarrier();
             $detailcarrier->carrier_id = $key;
             $detailcarrier->globalcharge_id = $id;
             $detailcarrier->save();
+            $contador = $contador + 1;
         }
-
-        $global->update();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'The Global Charge was updated');
