@@ -8,18 +8,19 @@
                 <!-- Text Field -->
                 <div v-if="item.type == 'text'">
                     <b-form-group
-                            :id="'id_'+key"
                             :label="item.label"
-                            :label-for="'id_'+key"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                                   >
                         <b-form-input
                                 v-model="vdata[key]"
-                                :placeholder="item.placeholder" 
+                                :placeholder="item.placeholder"
+                                :id="'id_fs_'+key"
+                                @change="cleanInput(key)" 
                                     >
                         </b-form-input>
 
+                        <span :id="'id_f_'+key" class="invalid-feedback"></span>
                     </b-form-group>
                 </div>
                 <!-- End Text Field -->
@@ -27,14 +28,13 @@
                 <!-- Based Dinamical Select Input -->
                 <div v-if="item.type == 'pre_select' && refresh">
                     <b-form-group
-                            :id="'id_'+key"
                             :label="item.label"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                           >
                         <multiselect 
                              v-model="vdata[key]"
-                             :id="key"
+                             :id="'id_fs_'+key"
                              :multiple="false" 
                              :options="datalists[item.options]" 
                              :searchable="item.searchable"
@@ -46,6 +46,7 @@
                              :placeholder="item.placeholder"
                              @select="dispatch">
                         </multiselect>
+                        <span :id="'id_f_'+key" class="invalid-feedback" style="margin-top:-5px"></span>
                     </b-form-group>
                 </div>
                 <!-- Based Dinamycal Select -->
@@ -53,12 +54,12 @@
                 <!-- Select Field -->
                 <div v-if="item.type == 'select'">
                     <b-form-group
-                            :id="'id_'+key"
                             :label="item.label"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                           >
                         <multiselect 
+                            :id="'id_fs_'+key"
                              v-model="vdata[key]" 
                              :multiple="false" 
                              :options="datalists[item.options]" 
@@ -68,8 +69,11 @@
                              track-by="id" 
                              :label="item.trackby" 
                              :show-labels="false" 
-                             :placeholder="item.placeholder">
+                             :placeholder="item.placeholder"
+                             @select="cleanInput(key)">
                         </multiselect>
+
+                        <span :id="'id_f_'+key" class="invalid-feedback" style="margin-top:-5px"></span>
                     </b-form-group>
                 </div>
                 <!-- End Select Field -->
@@ -77,12 +81,12 @@
                 <!-- MultiSelect Field -->
                 <div v-if="item.type == 'multiselect'">
                     <b-form-group
-                            :id="'id_'+key"
                             :label="item.label"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                           >
                         <multiselect 
+                            :id="'id_fs_'+key"
                              v-model="vdata[key]"
                              :multiple="true" 
                              :options="datalists[item.options]" 
@@ -92,8 +96,10 @@
                              track-by="id" 
                              :label="item.trackby" 
                              :show-labels="false" 
-                             :placeholder="item.placeholder">
+                             :placeholder="item.placeholder"
+                             @select="cleanInput(key)">
                         </multiselect>
+                        <span :id="'id_f_'+key" class="invalid-feedback" style="margin-top:-5px"></span>
                     </b-form-group>
                 </div>
                 <!-- End MultiSelect Field -->
@@ -101,21 +107,23 @@
                 <!-- DateRange Field -->
                 <div v-if="item.type == 'daterange'">
                     <b-form-group
-                            :id="'id_'+key"
                             :label="item.label"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                             >
                               <date-range-picker
+                                  :id="'id_fs_'+key"
                                   :opens="'center'"
                                   :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
                                   :singleDatePicker="false"
                                   :autoApply="true"
                                   :timePicker="false"
                                   v-model="vdata[key]"
-                                  :linkedCalendars="true">
+                                  :linkedCalendars="true"
+                                  @select="cleanInput(key)">
 
                               </date-range-picker>
+                              <span :id="'id_f_'+key" class="invalid-feedback"></span>
                     </b-form-group>
                 </div>
                 <!-- End DateRange Field -->
@@ -210,6 +218,7 @@
                 this.datalists[this.fields[item].target] = this.datalists[val.vselected];
                 this.resetDynamicalFields(this.fields[item].target);
                 this.refresh = true;
+                $(`#id_f_${item}`).css({'display':'none'});
             },
 
             /* Update Dynamical Fields */
@@ -221,6 +230,11 @@
                     if(this.fields[key]['type'] == 'pre_select')
                         this.datalists[this.fields[key]['target']] = this.datalists[this.fields[key]['initial'].vselected];
                 }
+            },
+
+            /* Clean validation message */
+            cleanInput(key) {
+                $(`#id_f_${key}`).css({'display':'none'});
             },
 
             /* Check if value is empty by type */
@@ -237,6 +251,7 @@
 
             /* Validate Form */
             validateForm(){
+                return true;
                 let validate = true;
                 let component = this;
                 let fields_keys = Object.keys(this.fields);
@@ -278,7 +293,7 @@
                                 data[key] = component.vdata[key].id;
                             break;
                         case 'multiselect':
-                            if(component.vdata[key].length)
+                            if(key in component.vdata && component.vdata[key].length > 0)
                                 data[key] = component.vdata[key].map(e => e.id );
                             break;
                         case 'daterange':
@@ -299,7 +314,6 @@
             onSubmit(){
                 if(this.validateForm()){
                     let data = this.prepareData();
-                    console.log('data', data);
 
                     if(this.update){
 
@@ -308,13 +322,14 @@
                                 this.$emit('success', response.data.data.id);
                                 this.vdata = {};
                         })
-                            .catch(( data ) => {
-                                let errors_key = Object.keys(data.errors);
+                            .catch(( error, errors ) => {
+ 
+                                let errors_key = Object.keys(error.data.errors);
 
-                                errors_key.forEach(function(key){
-                                    $(`#id_${key} .invalid-feedback`).css({'display':'block'});
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_${key}`).css({'display':'block'});
+                                    $(`#id_f_${key}`).html(error.data.errors[key]);
                                 });
-                                console.log(data);
                         });
 
                     } else {
@@ -325,14 +340,13 @@
                                 this.vdata = {};
                         })
                             .catch(( error, errors ) => {
-                                console.log('NO FUNCIONAA');
-                                let errors_key = Object.keys(data.errors);
-                                
-                                errors_key.forEach(function(key){
-                                    $(`#id_${key} .invalid-feedback`).css({'display':'block'});
+
+                                let errors_key = Object.keys(error.data.errors);
+
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_${key}`).css({'display':'block'});
+                                    $(`#id_f_${key}`).html(error.data.errors[key]);
                                 });
-                                console.log(error);
-                                console.log(errors);
                         });
                     }
 
