@@ -71,9 +71,9 @@ class ExcelController extends Controller
         $carrier = null;
 
         foreach ($rates as $key => $item) {
-            $carrier = $item->carrier->name;
+            $carrier = @$item->carrier->name;
             // Create a new worksheet called "My Data"
-            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, @$item->carrier->name);
+            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Data');
 
             // Attach the "My Data" worksheet as the first worksheet in the Spreadsheet object
             $spreadsheet->addSheet($myWorkSheet);

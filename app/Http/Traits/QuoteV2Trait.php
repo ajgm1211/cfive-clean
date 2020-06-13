@@ -421,6 +421,7 @@ trait QuoteV2Trait
         return $rates;
     }
 
+
     public function processGlobalRatesWithSales($rates, $quote, $currency_cfg, $origin_ports, $destination_ports, $containers)
     {
 
@@ -1437,6 +1438,8 @@ trait QuoteV2Trait
             //Charges LCL/AIR
             foreach ($rate->charge_lcl_air as $charge_lcl) {
 
+                $typeCurrency =  @$company_user->currency->alphacode;
+
                 $currency_rate = $this->ratesCurrency($charge_lcl->currency_id, $typeCurrency);
 
                 if ($charge_lcl->type_id == 3) {
@@ -1530,6 +1533,7 @@ trait QuoteV2Trait
         }
 
         return $sale_terms;
+
     }
 
     public function updateIntegrationQuoteStatus($quote_id)
