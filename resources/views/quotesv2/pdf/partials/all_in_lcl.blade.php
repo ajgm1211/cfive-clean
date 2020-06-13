@@ -27,7 +27,6 @@
                     <th ><b>W/M</b></th>
                     <th ><b>Total</b></th>
                     @if($quote->pdf_option->show_schedules==1)
-                        <th ><b>{{__('pdf.type')}}</b></th>
                         <th ><b>TT</b></th>
                         <th ><b>Via</b></th>
                     @endif
@@ -84,18 +83,7 @@
                         @if($quote->type=='LCL') <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td> @else <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td> @endif
                         <td >{{$total_chargeable}}</td>
                         <td >{{$total_sum_inland}}</td>
-                        @if($quote->pdf_option->show_schedules==1)
-                            @if($quote->pdf_option->language=='Spanish')
-                                @if($rate->schedule_type=='Transfer')
-                                    <td>Transbordo</td>
-                                @elseif($rate->schedule_type=='Direct')
-                                    <td>Directo</td>
-                                @else
-                                    <td>-</td>
-                                @endif
-                            @else
-                                <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
-                            @endif                            
+                        @if($quote->pdf_option->show_schedules==1)                          
                             <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                             <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                         @endif
