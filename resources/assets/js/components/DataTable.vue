@@ -483,8 +483,10 @@
                 this.datalists = JSON.parse(JSON.stringify(this.vdatalists));
 
                 for (const key in this.inputFields) {
-                    if(this.inputFields[key]['type'] == 'pre_select')
+                    if(this.inputFields[key]['type'] == 'pre_select'){
+                        this.fdata[key] = this.inputFields[key]['initial'];
                         this.datalists[this.inputFields[key]['target']] = this.datalists[this.inputFields[key]['initial'].vselected];
+                    }      
                 }
             },
             isEmpty(obj){
