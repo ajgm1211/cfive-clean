@@ -22,8 +22,16 @@ class LocalChargeResource extends JsonResource
         }
         else {
             $countries = $this->localcharcountries;
-            $origin = $countries->pluck('countryOrig')->unique('id')->renameIndex('name', 'display_name');
-            $destination = $countries->pluck('countryDest')->unique('id')->renameIndex('name', 'display_name');
+            
+            $origin = $countries->pluck('countryOrig')->unique('id')->map(function ($country) {
+                $country['display_name'] = $country['name'];
+                return $country->only(['id', 'display_name', 'name']);
+            });
+
+            $destination = $countries->pluck('countryDest')->unique('id')->map(function ($country) {
+                $country['display_name'] = $country['name'];
+                return $country->only(['id', 'display_name', 'name']);
+            });
 
             $route = [ 'id' => 'country', 'name' => 'Country', 'vselected' => 'countries' ];
         }
