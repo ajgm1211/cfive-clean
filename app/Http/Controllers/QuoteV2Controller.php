@@ -287,7 +287,7 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
 
-        /*$quote = QuoteV2::when($type, function ($query, $type) {
+        $quote = QuoteV2::when($type, function ($query, $type) {
             return $query->where('type', $type);
         })->when($status, function ($query, $status) {
             return $query->where('status', $status);
@@ -335,13 +335,13 @@ class QuoteV2Controller extends Controller
             $q->select('id', 'name', 'description');
         }])->with(['saleterm' => function ($q) {
             $q->with('charge');
-        }])->with('incoterm')->findOrFail($id);*/
+        }])->with('incoterm')->findOrFail($id);
 
-        $quote = QuoteV2::ConditionalWhen($type, $status, $integration)
+        /*$quote = QuoteV2::ConditionalWhen($type, $status, $integration)
             ->AuthUserCompany($company_user_id)
             ->AutomaticRate()->UserRelation()->CompanyRelation()
             ->ContactRelation()->PriceRelation()->SaletermRelation()
-            ->with('incoterm')->findOrFail($id);
+            ->with('incoterm')->findOrFail($id);*/
 
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
         $inlands = AutomaticInland::where('quote_id', $quote->id)->get();
@@ -1999,6 +1999,15 @@ class QuoteV2Controller extends Controller
                     // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
                     //$request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    if(isset($info_D->transit_time) && $info_D->transit_time !=''){
+                        $transitTime = $info_D->transit_time;
+                        $viaT= $info_D->via;
+                    }else{
+                        $transitTime = '';
+                        $viaT= '';
+
+                    }
+
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks,'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
 
                     $rate = AutomaticRate::create($request->all());
@@ -2623,8 +2632,10 @@ class QuoteV2Controller extends Controller
 
         // Fecha Contrato
         $dateRange = $request->input('date');
+
         $dateRange = explode("/", $dateRange);
         $dateSince = $dateRange[0];
+    
         $dateUntil = $dateRange[1];
 
         //Colecciones
@@ -3278,7 +3289,7 @@ class QuoteV2Controller extends Controller
                 //Contrato Futuro
                 $contratoFuturo = $this->contratoFuturo($dateUntil,$data->contract->expire);
 
-                $data->setAttribute('contratoFuturo', $contratoFuturo);
+                $data->setAttribute('contratoFuturo', false);
                 // INLANDS
                 $data->setAttribute('inlandDestiny', $inlandDestiny);
                 //   dd($inlandDestiny);
