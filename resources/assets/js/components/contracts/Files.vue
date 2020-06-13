@@ -1,5 +1,5 @@
 <template>
-	  <b-card class="no-padding">
+	  <b-card class="no-padding no-scroll">
 		<div class="row">
 			<div class="col-12">
 				<vue-dropzone
@@ -8,10 +8,11 @@
 				id="dropzone"
 				:options="dropzoneOptions"
 				v-on:vdropzone-removed-file="removeThisFile"
+				v-on:vdropzone-success="success"
 				>
 				<div class="dropzone-container">
-					  <div class="file-selector">
-					   <h6 class="title-dropzone">Upload</h6>
+					    <div class="file-selector">
+					    <h6 class="title-dropzone">Upload</h6>
 						<figure>
 						  <svg
 							width="104px"
@@ -152,6 +153,8 @@
 	</b-card>
 </template>
 
+
+
 <script>
 	import vue2Dropzone from 'vue2-dropzone';
 	import 'vue2-dropzone/dist/vue2Dropzone.min.css';
@@ -171,6 +174,7 @@
 					maxFilesize: 0.5,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
 					addRemoveLinks: true,
+					previewTemplate: this.template()
 				}
 			}
 		},
@@ -179,11 +183,15 @@
 				let file = {};
 				let url = '';
 				let vcomponent = this;
+				let i = 0;
+
+				let url_tags = document.getElementsByClassName("img-link");
 
 				data.forEach(function(media){
 					vcomponent.$refs.myVueDropzone.manuallyAddFile(media, media.url);
-				});
-
+					url_tags[i].setAttribute('href', media.url);
+					i+=1;
+				});	
 			},
 			removeThisFile(file){
 				let id = this.$route.params.id;
@@ -194,14 +202,32 @@
 				.catch(( data ) => {
 
 				});
-			}
+			},
+			success(file, response){
+				let url_tags = $(".img-link").last();
+				url_tags.attr('href', response.url);
+			},
+			template: function () {
+				return `<div class="dz-preview dz-complete dz-image-preview"><a href="" class="img-link" target="_blank">
+							<div class="dz-image"><img data-dz-thumbnail /></div>
+							<div class="dz-details">
+								<div class="dz-filename"><span data-dz-name></span></div>
+								<div class="dz-size" data-dz-size></div>
+								
+							</div>
+							<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+							<div class="dz-success-mark"><span>✔</span></div>
+							<div class="dz-error-mark"><span>✘</span></div>
+							<div class="dz-error-message"><span data-dz-errormessage></span></div></a>
+						</div>
+				`;
+			},	
 		},
 		created(){
 			let id = this.$route.params.id;
 
 			this.actions.getfiles(id)
 			.then( ( response ) => {
-				console.log(response);
 				this.setFiles(response.data.data);
 			})
 			.catch(( data ) => {

@@ -7,12 +7,22 @@
                         <div class="col-6">
                             <b-card-title>Transit Times FCL</b-card-title>
                         </div>
+
                         <div class="col-6">
                             <div class="float-right">
                                 <button class="btn btn-link" v-b-modal.addTransitTime>+ Add new</button>
                                 <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" >+ Import file</a>
                             </div>
                         </div>
+
+                        <!--<div class="col-12">
+                            <div class="alert alert-danger alert-dismissible d-none" id="id_general_alert">
+                                <span id="id_general"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>-->
                     </div>
 
 
@@ -105,7 +115,6 @@
                         label: 'Origin Port', 
                         searchable: true, 
                         type: 'select', 
-                        rules: 'required', 
                         trackby: 'display_name', 
                         placeholder: 'Select Origin Port', 
                         options: 'harbors' 
@@ -114,7 +123,6 @@
                         label: 'Destination Port', 
                         searchable: true, 
                         type: 'select', 
-                        rules: 'required', 
                         trackby: 'display_name', 
                         placeholder: 'Select Destination Port', 
                         options: 'harbors' 
@@ -123,7 +131,6 @@
                         label: 'Carrier', 
                         searchable: true, 
                         type: 'select', 
-                        rules: 'required', 
                         trackby: 'name', 
                         placeholder: 'Select Carrier', 
                         options: 'carriers' 
@@ -131,14 +138,12 @@
                     transit_time: {
                         label: 'Transit Time', 
                         type: 'text', 
-                        rules: 'required',
                         placeholder: 'Add Transit Time'
                     },
                     service: { 
                         label: 'Service', 
                         searchable: true, 
                         type: 'select', 
-                        rules: 'required', 
                         trackby: 'name', 
                         placeholder: 'Select Service', 
                         options: 'services' 

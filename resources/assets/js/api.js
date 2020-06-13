@@ -15,8 +15,13 @@ class Api {
 				})
 				.catch( ( { response } ) => { 
 					reject(response);
-					if (response.status === 403) {
-						//Event.$swal("Oops!!", response.data.error, "error"); 
+					if (response.status === 422) {
+
+						if('general' in response.data.errors)
+							event.$swal("Oops!!", response.data.errors.general[0], "error");
+
+						delete response.data.errors['general'];						
+						 
 					} else {
 						//Event.$swal("Oops!!", response.data.message, "error"); 
 					}
