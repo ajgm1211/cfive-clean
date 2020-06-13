@@ -25,9 +25,10 @@ class StoreRemark extends FormRequest
     {
         return [
             'name' => 'required',
-            'ports' => 'required',
+            'ports' => 'sometimes|required',
+            'countries' => 'sometimes|required',
             'carriers' => 'required',
-            'language' => 'required',
+            'language_id' => 'required',
         ];
     }
 }

@@ -153,12 +153,7 @@
                                                                 <td>Ocean freight</td>
                                                             @endif
                                                             @if($v->surcharge_id!='')
-                                                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
-                                                                    @php
-                                                                        //echo str_replace("Per", "Por", $v->calculation_type->name); 
-                                                                    @endphp
-                                                                    {{@$v->calculation_type->name}}
-                                                                </td>
+                                                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
                                                                 <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
                                                                 <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
                                                             @else
@@ -168,7 +163,7 @@
                                                             @foreach ($equipmentHides as $key=>$hide)
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
-                                                                        <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code})}}</td>-->
+                                                                        <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
                                                                         <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code} == null ? 0 : @$v->${'sum_amount_markup_'.$c->code} }}</td>
                                                                     @endif
                                                                 @endforeach
