@@ -22,7 +22,7 @@ class LocalChargeResource extends JsonResource
         }
         else {
             $countries = $this->localcharcountries;
-            
+
             $origin = $countries->pluck('countryOrig')->unique('id')->map(function ($country) {
                 $country['display_name'] = $country['name'];
                 return $country->only(['id', 'display_name', 'name']);
