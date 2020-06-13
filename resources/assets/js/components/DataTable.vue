@@ -71,9 +71,12 @@
                        <div v-if="item.type == 'text'">
                             <b-form-input
                                 v-model="fdata[key]"
-                                :placeholder="item.placeholder" 
+                                :placeholder="item.placeholder"
+                                :id="key"
+                                @change="cleanInput(key)"  
                                     >
                             </b-form-input>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback"></span>
                         </div>
                         <!-- End Text Input -->
 
@@ -93,6 +96,7 @@
                                  :placeholder="item.placeholder"
                                  @select="dispatch">
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- Based Dinamycal Select -->
 
@@ -110,8 +114,10 @@
                                  :label="item.trackby" 
                                  :show-labels="false"
                                  :placeholder="item.placeholder"
+                                 @select="cleanInput(key)"
                                  >
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- End Select -->
 
@@ -125,11 +131,14 @@
                                  :close-on-select="true"
                                  :clear-on-select="true"
                                  track-by="id" 
+                                 :id="key"
                                  :label="item.trackby" 
                                  :show-labels="false"
                                  :placeholder="item.placeholder"
-                                 @input="refreshValues">
+                                 @input="refreshValues"
+                                 @select="cleanInput(key)">
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- End Select -->
 
@@ -338,7 +347,7 @@
 
                     if(this.inputFields[key].type == "text")
                         data[key] = this.fdata[key];
-                    else if(["select", "pre_select"].includes(this.inputFields[key].type))
+                    else if(["select", "pre_select"].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
                         data[key] = this.fdata[key].id;
                     else if(this.inputFields[key].type == "multiselect"){
                         data[key] = [];
@@ -375,7 +384,14 @@
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
                 })
-                    .catch(( data ) => {
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
                 });
 
             },
@@ -437,10 +453,18 @@
             },
 
             dispatch(val, item){
+                console.log(item);
+                console.log(this.inputFields);
                 this.refresh = false;
                 this.datalists[this.inputFields[item].target] = this.datalists[val.vselected];
                 this.resetDinamicalFields(this.inputFields[item].target);
                 this.refresh = true;
+                $(`#id_f_table_${item}`).css({'display':'none'});
+            },
+
+            /* Clean validation message */
+            cleanInput(key) {
+                $(`#id_f_table_${key}`).css({'display':'none'});
             },
         
             refreshValues(val, item){
