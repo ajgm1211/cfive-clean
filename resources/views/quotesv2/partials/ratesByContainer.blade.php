@@ -216,7 +216,7 @@
                                                         <div class="input-group">
                                                             <div class="input-group-btn">
                                                                 <div class="btn-group">
-                                                                    {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
+                                                                    {{ Form::select('currency_id',$currencies,$rate->currency_id,['class'=>'form-control currency_id local_currency select-2-width']) }}
                                                                 </div>
                                                                 <a class="btn btn-xs btn-primary-plus store_charge">
                                                                     <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -232,11 +232,14 @@
                                                     <tr class="total_freight_{{$v}}">
                                                         <td></td>
                                                         <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                        @php
+                                                            $exchange = ratesCurrencyFunction(Auth::user()->companyUser->currency_id, $rate->currency->alphacode);   
+                                                        @endphp
                                                         @foreach ($equipmentHides as $key=>$hide)
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a total_freight_{{$c->code}}">{{isDecimal( ${'sum'.$c->code} + ${'sum_m'.$c->code})}}</span>
+                                                                        <span class="td-a total_freight_{{$c->code}}">{{isDecimal( (${'sum'.$c->code} + ${'sum_m'.$c->code}) / $exchange, true)}}</span>
                                                                     </td>
                                                                     <input type="hidden" name="subtotal_c{{$c->code}}_freight" value="{{ ${'sum'.$c->code} }}" class="subtotal_c{{$c->code}}_freight"/>
                                                                     <input type="hidden" name="subtotal_m{{$c->code}}_freight" value="{{ ${'sum_m'.$c->code} }}" class="subtotal_m{{$c->code}}_freight"/>
@@ -446,7 +449,7 @@
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a total_origin_{{$c->code}}">{{isDecimal( ${'sum_origin'.$c->code} + ${'sum_origin_m'.$c->code})}}</span>
+                                                                        <span class="td-a total_origin_{{$c->code}}">{{isDecimal( ${'sum_origin'.$c->code} + ${'sum_origin_m'.$c->code}, true)}}</span>
                                                                     </td>
                                                                     <input type="hidden" name="subtotal_c{{$c->code}}_origin" value="{{ ${'sum_origin'.$c->code} }}" class="subtotal_c{{$c->code}}_origin"/>
                                                                     <input type="hidden" name="subtotal_m{{$c->code}}_origin" value="{{ ${'sum_origin_m'.$c->code} }}" class="subtotal_m{{$c->code}}_origin"/>
@@ -659,7 +662,7 @@
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a total_destination_{{$c->code}}">{{isDecimal( ${'sum_destination'.$c->code} + ${'sum_destination_m'.$c->code})}}</span>
+                                                                        <span class="td-a total_destination_{{$c->code}}">{{isDecimal( ${'sum_destination'.$c->code} + ${'sum_destination_m'.$c->code}, true)}}</span>
                                                                     </td>
                                                                     <input type="hidden" name="subtotal_c{{$c->code}}_destination" value="{{ ${'sum_destination'.$c->code} }}" class="subtotal_c{{$c->code}}_destination"/>
                                                                     <input type="hidden" name="subtotal_m{{$c->code}}_destination" value="{{ ${'sum_destination_m'.$c->code} }}" class="subtotal_m{{$c->code}}_destination"/>
@@ -712,9 +715,9 @@
                                                         foreach ($equipmentHides as $key=>$hide){
                                                             foreach ($containers as $c){
                                                                 if($c->code == $key){
-                                                                    ${'amount_'.$key}=isDecimal(${'sum'.$c->code}+${'sum_origin'.$c->code}+${'sum_destination'.$c->code});
-                                                                    ${'markup_'.$key}=isDecimal(${'sum_m'.$c->code}+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code});
-                                                                    ${'amount_markup_'.$key}=isDecimal(${'sum_totalized_'.$c->code}+${'sum_totalized_origin_'.$c->code}+${'sum_totalized_destination_'.$c->code});
+                                                                    ${'amount_'.$key}=isDecimal(${'sum'.$c->code}+${'sum_origin'.$c->code}+${'sum_destination'.$c->code}, true);
+                                                                    ${'markup_'.$key}=isDecimal(${'sum_m'.$c->code}+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code}, true);
+                                                                    ${'amount_markup_'.$key}=isDecimal(${'sum_totalized_'.$c->code}+${'sum_totalized_origin_'.$c->code}+${'sum_totalized_destination_'.$c->code}, true);
                                                                 }
                                                             }
                                                         }
@@ -730,7 +733,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
-                                                        <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
+                                                        <td class="tds"><span class="td-a global-currency">{{@$company_user->currency->alphacode}}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -766,9 +769,9 @@
                                                         foreach ($equipmentHides as $key=>$hide){
                                                             foreach ($containers as $c){
                                                                 if($c->code == $key){
-                                                                    ${'amount_'.$key}=isDecimal(${'sum'.$c->code}+${'sum_origin'.$c->code}+${'sum_destination'.$c->code});
-                                                                    ${'markup_'.$key}=isDecimal(${'sum_m'.$c->code}+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code});
-                                                                    ${'amount_markup_'.$key}=isDecimal(${'amount_'.$key}+${'markup_'.$key});
+                                                                    ${'amount_'.$key}=isDecimal(${'sum'.$c->code}+${'sum_origin'.$c->code}+${'sum_destination'.$c->code}, true);
+                                                                    ${'markup_'.$key}=isDecimal(${'sum_m'.$c->code}+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code}, true);
+                                                                    ${'amount_markup_'.$key}=isDecimal(${'amount_'.$key}+${'markup_'.$key}, true);
                                                                 }
                                                             }
                                                         }
@@ -784,7 +787,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
-                                                        <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
+                                                        <td class="tds"><span class="td-a global-currency">{{@$company_user->currency->alphacode}}</span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

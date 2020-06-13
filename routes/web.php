@@ -122,7 +122,7 @@ Route::prefix('globalcharges')->group(function () {
 
     Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator|data_entry']);
     Route::get('createAdm','GlobalChargesController@createAdm_proc')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
-    Route::post('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
+    Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
     Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator|data_entry']);
     Route::post('ShowAdm/{id}','GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth','role:administrator|data_entry']);
@@ -827,7 +827,7 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
 
     Route::resource('remarks', 'RemarkConditionsController');
     Route::get('list', 'RemarkConditionsController@index')->name('remarks.list');
-    Route::get('add', 'RemarkConditionsController@add')->name('remarks.add');
+    Route::get('create', 'RemarkConditionsController@create')->name('remarks.add');
     Route::get('edit/{id}', 'RemarkConditionsController@edit')->name('remarks.edit');
     Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
     Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
