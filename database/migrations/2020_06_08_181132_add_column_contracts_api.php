@@ -14,7 +14,7 @@ class AddColumnContractsApi extends Migration
     public function up()
     {
         Schema::table('contract_apis', function (Blueprint $table){
-            $table->integer('gp_container_id')->nullable()->unsigned()->default(1);
+            $table->integer('gp_container_id')->default(1)->unsigned();
             $table->foreign('gp_container_id')->references('id')->on('group_containers');
         });
     }
