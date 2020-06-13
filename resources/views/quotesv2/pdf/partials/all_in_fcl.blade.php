@@ -31,7 +31,6 @@
                 @endforeach
             @endforeach
             @if($quote->pdf_option->show_schedules==1)
-                <th ><b>{{__('pdf.type')}}</b></th>
                 <th ><b>{{__('pdf.tt')}}</b></th>
                 <th ><b>{{__('pdf.via')}}</b></th>
             @endif
@@ -189,18 +188,7 @@
                         @endif
                     @endforeach
                 @endforeach
-                @if($quote->pdf_option->show_schedules==1)
-                    @if($quote->pdf_option->language=='Spanish')
-                        @if($rate->schedule_type=='Transfer')
-                            <td>Transbordo</td>
-                        @elseif($rate->schedule_type=='Direct')
-                            <td>Directo</td>
-                        @else
-                            <td>-</td>
-                        @endif
-                    @else
-                        <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
-                    @endif                                    
+                @if($quote->pdf_option->show_schedules==1)                                   
                     <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                     <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                 @endif
