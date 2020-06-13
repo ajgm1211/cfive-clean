@@ -287,7 +287,7 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
 
-        /*$quote = QuoteV2::when($type, function ($query, $type) {
+        $quote = QuoteV2::when($type, function ($query, $type) {
             return $query->where('type', $type);
         })->when($status, function ($query, $status) {
             return $query->where('status', $status);
@@ -335,13 +335,13 @@ class QuoteV2Controller extends Controller
             $q->select('id', 'name', 'description');
         }])->with(['saleterm' => function ($q) {
             $q->with('charge');
-        }])->with('incoterm')->findOrFail($id);*/
+        }])->with('incoterm')->findOrFail($id);
 
-        $quote = QuoteV2::ConditionalWhen($type, $status, $integration)
+        /*$quote = QuoteV2::ConditionalWhen($type, $status, $integration)
             ->AuthUserCompany($company_user_id)
             ->AutomaticRate()->UserRelation()->CompanyRelation()
             ->ContactRelation()->PriceRelation()->SaletermRelation()
-            ->with('incoterm')->findOrFail($id);
+            ->with('incoterm')->findOrFail($id);*/
 
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
         $inlands = AutomaticInland::where('quote_id', $quote->id)->get();
