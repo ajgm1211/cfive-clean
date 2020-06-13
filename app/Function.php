@@ -1,5 +1,6 @@
 <?php
 
+use App\CompanyUser;
 use App\Currency;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -76,8 +77,9 @@ function obtenerRouteKey($keyP)
 function isDecimal($monto, $quote = false)
 {
 
-    $isDecimal = Auth::user()->companyUser->decimals;
-    if ($isDecimal) {
+    $isDecimal = @Auth::user()->companyUser->decimals;
+
+    if (isset($isDecimal) && $isDecimal) {
         if (!$quote) {
             if (is_string($monto))
                 return $monto;
@@ -92,8 +94,6 @@ function isDecimal($monto, $quote = false)
         return round($monto);
     }
 }
-
-
 
 /**
  * ratesCurrencyFunction
