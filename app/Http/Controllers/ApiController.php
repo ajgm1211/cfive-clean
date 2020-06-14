@@ -769,7 +769,7 @@ class ApiController extends Controller
                 }
 
                 foreach ($local->localcharcarriers as $localCarrier) {
-                    if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all) {
+                    if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
                         $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
                         if ($chargesOrigin != null) {
@@ -847,7 +847,7 @@ class ApiController extends Controller
                     }
                     foreach ($global->globalcharcarrier as $globalCarrier) {
 
-                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all) {
+                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all->id) {
                             $globalParams = array('terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier);
                             //Origin
                             if ($chargesOrigin != null) {
