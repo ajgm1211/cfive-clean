@@ -988,12 +988,13 @@ class ApiController extends Controller
 
             //Totals
             foreach ($containers as $cont) {
-                foreach ($equipment as $containers) {
-                    if ($containers == $cont->id) {
+                foreach ($equipment as $eq) {
+                    if ($eq == $cont->id) {
                         $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
                     }
                 }
             }
+
             $detalle['Rates']['currency'] = $typeCurrency;
             //Schedules
             $detalle['Rates']['schedule']['service'] = $data->service;
@@ -1002,7 +1003,7 @@ class ApiController extends Controller
 
             //set carrier logo url
             $data->carrier['image'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
-            $detalle['Rates']['carrier'] = $data->carrier;
+            $detalle['Rates']['carrier'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
             $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
             $detalle['Rates']['contract']['number'] =   $data->contract->number;
