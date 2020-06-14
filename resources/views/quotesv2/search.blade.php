@@ -773,7 +773,7 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carriers</label>
-                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple', 'required']) }}
               </div>
             
               <div class="col-lg-4 for-check">   
