@@ -159,7 +159,6 @@
                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                     <td></td>
                                     <td></td>
-                                    <td></td>
                                 @endif
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 @if($quote->pdf_option->show_total_freight_in==1)

@@ -207,7 +207,6 @@
                                         @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                             <td></td>
                                             <td></td>
-                                            <td></td>
                                         @endif
                                         <td><b>{{@$r->currency->alphacode}}</b></td>
                                     </tr>
