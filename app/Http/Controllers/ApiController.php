@@ -420,6 +420,36 @@ class ApiController extends Controller
     }
 
     /**
+     * Show quotes list
+     * @param Request $request 
+     * @return JSON
+     */
+
+    public function quoteById(Request $request, $id)
+    {
+        $type = $request->type;
+        $status = $request->status;
+        $integration = $request->integration;
+        $company_user_id = Auth::user()->company_user_id;
+
+        $quote = QuoteV2::QuoteSelect()->ConditionalWhen($type, $status, $integration)
+            ->AuthUserCompany($company_user_id)
+            ->RateV2()->UserRelation()->CompanyRelation()
+            ->ContactRelation()->PriceRelation()->SaletermRelation()
+            ->with('incoterm')->findOrFail($id);
+
+        //Modify equipment array
+        $this->transformEquipmentSingle($quote);
+
+        //Update Integration Quote Status
+        /*if ($integration) {
+            IntegrationQuoteStatus::where('quote_id', $quote->id)->update(['status' => 1]);
+        }*/
+
+        return $quote;
+    }
+
+    /**
      * Show carriers list
      * @param Request $request 
      * @return JSON
@@ -1001,9 +1031,9 @@ class ApiController extends Controller
             $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
             $detalle['Rates']['schedule']['via'] = $data->via;
 
-            //set carrier logo url
-            $data->carrier['image'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            //Set carrier logo url
             $detalle['Rates']['carrier'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            //Set contract details
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
             $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
             $detalle['Rates']['contract']['number'] =   $data->contract->number;
