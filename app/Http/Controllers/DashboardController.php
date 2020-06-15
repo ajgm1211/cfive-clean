@@ -23,6 +23,7 @@ class DashboardController extends Controller
     {
 
         $company = CompanyUser::where('id', \Auth::User()->company_user_id)->pluck('currency_id');
+        $containers = Container::all();
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
 
@@ -44,9 +45,6 @@ class DashboardController extends Controller
         $totalWon = 0;
         $totalLost = 0;
 
-        $containers = Container::all();
-
-
         foreach ($quotes as $q) {
             $totalRate = 0;
             $charges = AutomaticRate::where('quote_id', $q->id)->with('charge')->get();
@@ -63,7 +61,7 @@ class DashboardController extends Controller
                     $markups = processOldContainers($markups, 'markups');
                     
                     foreach ($containers as $container) {
-                        $totalRate += @$amounts['c'.$container->code] + @$markups['m'.$container->code];
+                        $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code])/$exchange,  2, '.', '');
                     }
 
                     if ($q->status == 'Draft') {
@@ -134,6 +132,7 @@ class DashboardController extends Controller
 
         $pick_up_dates = collect(['start_date' => $dates[0], 'end_date' => $dates[1]]);
         $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
+        $containers = Container::all();
 
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
@@ -145,7 +144,7 @@ class DashboardController extends Controller
         } else {
             $users = User::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
         }
-
+        
         if ($request->user) {
             $quotes = QuoteV2::whereDate('created_at', '>=', $dates[0])
                 ->whereDate('created_at', '<=', $dates[1])->where('user_id', $request->user)->get();
@@ -158,7 +157,7 @@ class DashboardController extends Controller
                     ->whereDate('created_at', '<=', $dates[1])->where('company_user_id', \Auth::user()->company_user_id)->get();
             }
         }
-
+        
         $totalQuotes = $quotes->count();
 
         if ($totalQuotes == 0) {
@@ -168,30 +167,47 @@ class DashboardController extends Controller
         $total = 0;
         $totalDraft = 0;
         $totalSent = 0;
-        $totalNegotiated = 0;
         $totalWon = 0;
-        $totalLost = 0;
 
         foreach ($quotes as $q) {
-            if ($q->status_quote_id == 'Draft') {
-                $totalDraft += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            $totalRate = 0;
+            $charges = AutomaticRate::where('quote_id', $q->id)->with('charge')->get();
+
+            foreach ($charges as $charge) {
+                foreach ($charge->charge as $item) {
+                    
+                    $exchange = ratesCurrencyFunction($item->currency_id, Auth::user()->companyUser->currency->alphacode);
+
+                    $amounts = json_decode($item->amount, true);
+                    $markups = json_decode($item->markups, true);
+
+                    $amounts = processOldContainers($amounts, 'amounts');
+                    $markups = processOldContainers($markups, 'markups');
+                    
+                    foreach ($containers as $container) {
+                        $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code])/$exchange,  2, '.', '');
+                    }
+
+                    if ($q->status == 'Draft') {
+                        $totalDraft += $totalRate;
+                    }
+                    if ($q->status == 'Sent') {
+                        $totalSent += $totalRate;
+                    }
+                    if ($q->status == 'Win') {
+                        $totalWon += $totalRate;
+                    }
+                }
             }
-            if ($q->status_quote_id == 'Sent') {
-                $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
-            }
-            if ($q->status_quote_id == 'Win') {
-                $totalWon += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
-            }
-            $total += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
         }
 
         if ($total == 0) {
             $total = 1;
         }
 
-        $draft = $quotes->where('status_quote_id', 1)->count();
-        $sent = $quotes->where('status_quote_id', 2)->count();
-        $won = $quotes->where('status_quote_id', 5)->count();
+        $draft = $quotes->where('status', 'Draft')->count();
+        $sent = $quotes->where('status', 'Sent')->count();
+        $won = $quotes->where('status', 'Win')->count();
 
         return \View::make(
             'dashboard.index',
