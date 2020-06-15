@@ -2939,7 +2939,7 @@ class ImportationController extends Controller
                     if(empty($account->request_dp_id)){
                         $descarga = '&nbsp;<span style="color:#0072FC;font-size:15px" title="Duplicate Contract">Dp</span>';
                     } else {
-                        $descarga = '&nbsp;<a href="#" onclick="AbrirModal(\'showRequestDp\','.$account->request_dp_id.',0)"><span  style="color:#0072FC;font-size:15px" title="Duplicate Contract">Dp</span></a>';
+                        $descarga = '&nbsp;<a href="#" onclick="AbrirModal(\'showRequestDp\','.$account->request_dp_id.',0)"><span  style="color:#0072FC;font-size:15px" title="Duplicate Contract">'.$account->request_dp_id.'</span></a>';
                     }
 
                 } else {
