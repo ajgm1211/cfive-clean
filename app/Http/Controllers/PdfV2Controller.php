@@ -1130,6 +1130,7 @@ class PdfV2Controller extends Controller
         $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
         $user = User::where('id', \Auth::id())->with('companyUser')->first();
         $email_from = \Auth::user()->email;
+        $containers = Container::all();
 
         if ($quote->equipment != '') {
             $equipmentHides = $this->hideContainer($quote->equipment, 'BD');
@@ -1281,7 +1282,7 @@ class PdfV2Controller extends Controller
 
         /** Rates **/
 
-        $rates = $this->processGlobalRates($rates, $quote, $currency_cfg);
+        $rates = $this->processGlobalRates($rates, $quote, $currency_cfg, $containers);
 
         /* Se manipula la colección de rates para añadir los valores de saleterms */
         $rates = $this->addSaleTermToRate($rates, $origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped);
