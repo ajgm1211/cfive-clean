@@ -32,7 +32,7 @@
         </div>
         @if(isset($pick_up_dates))
         <div class="row">  
-            <div class="col-md-2 col-lg-2 col-xl-2">
+            <div class="col-md-4 col-lg-4 col-xl-4">
                 @if(isset($user))
                 <h4>{{$user->name}} {{$user->lastname}}</h4>
                 <br>
@@ -44,12 +44,12 @@
         <hr class="separator">
         @endif
         <div class="row">
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Draft:
+                            Draft Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:18px;">
@@ -84,12 +84,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Sent:
+                            Sent Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:18px;">
@@ -124,12 +124,12 @@
                     </div>
                 </div>
             </div>          
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Won:
+                            Won Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:18px;">
@@ -273,7 +273,7 @@ Series B:
 </div>
 </div>
 <div class="row">
-<div class="col-md-2 col-lg-2 col-xl-2">
+<div class="col-md-4 col-lg-4 col-xl-4">
 
 <div class="m-portlet m-portlet--full-height">
 <div class="m-portlet__head">
