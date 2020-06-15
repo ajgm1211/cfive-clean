@@ -1147,4 +1147,10 @@ Route::post('api/v2/inlands/store', 'InlandController@store');
 Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
 
 /** End Contracts V2 routes **/
+/** Transit time **/
+
+Route::prefix('ImpTransitTime')->group(function () {
+    Route::resource('ImpTransitTime','ImportationTransitTimeController')->middleware(['role:administrator|data_entry']);
+    route::post('UploadTTimes','ImportationTransitTimeController@storeMedia')->name('ImpTransitTime.storeMedia')->middleware(['role:administrator|data_entry']);
+});
 

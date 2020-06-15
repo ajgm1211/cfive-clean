@@ -47,6 +47,13 @@ return [
             'driver' => 'local',
             'root' => public_path().'/storage',
         ],
+        
+        'local2' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url'  => storage_path('app/public'),
+            'visibility' => 'public',
+        ],
 
         'public' => [
             'driver' => 'local',
@@ -61,7 +68,7 @@ return [
             'url' => 'storage',
             'visibility' => 'public',
         ],
-// FCL -------------------------------------------------
+        // FCL -------------------------------------------------
         'FclAccount' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -96,7 +103,7 @@ return [
             'visibility' => 'public',
         ],
 
-// FCL -------------------------------------------------
+        // FCL -------------------------------------------------
         'LclAccount' => [
             'driver' => 'local',
             'root' => storage_path('app/public/Account/Lcl'),
@@ -222,12 +229,12 @@ return [
             'bucket' => env('AWS_UPLOAD'),
         ],  
         'pdfApiS3' => [
-          'driver' => 's3',
-          'key' => env('AWS_ACCESS_KEY_ID'),
-          'root' => '/pdf_api/',
-          'secret' => env('AWS_SECRET_ACCESS_KEY'),
-          'region' => env('AWS_DEFAULT_REGION'),
-          'bucket' => env('AWS_UPLOAD'),
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'root' => '/pdf_api/',
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_UPLOAD'),
         ],  
         'media' => [
             'driver' => 'local',

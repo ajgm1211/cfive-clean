@@ -74,62 +74,77 @@ class Helpharbors {
 
     public static function get_country($country) {
 
-      $countryExiBol = false;
-      $sin_via = explode(' via ',$country);
+        $countryExiBol = false;
+        $sin_via = explode(' via ',$country);
 
-      $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
 
-      $countryResul = str_replace($caracteres,'',trim(strtolower($sin_via[0])));
+        $countryResul = str_replace($caracteres,'',trim(strtolower($sin_via[0])));
 
-      if(empty($countryResul) != true){
+        if(empty($countryResul) != true){
 
-         $countryExits = Country::where('variation->type','like','%'.$countryResul.'%')
-            ->get();
+            $countryExits = Country::where('variation->type','like','%'.$countryResul.'%')
+                ->get();
 
-         if(count($countryExits) > 1){
-            $country = strtolower(trim($country));
+            if(count($countryExits) > 1){
+                $country = strtolower(trim($country));
 
-            foreach($countryExits as $multiples){
+                foreach($countryExits as $multiples){
 
-               $jsonorigen = json_decode($multiples['variation']);
+                    $jsonorigen = json_decode($multiples['variation']);
 
-               foreach($jsonorigen->type as $parameter){
+                    foreach($jsonorigen->type as $parameter){
 
-                  if (strlen($country) == strlen($parameter)){
-                     if(strcmp($country,$parameter) == 0){
-                        $countryVal = $multiples->id;
-                        $countryExiBol = true;
-                        break;
-                     }
-                  }
-               }
-            }
+                        if (strlen($country) == strlen($parameter)){
+                            if(strcmp($country,$parameter) == 0){
+                                $countryVal = $multiples->id;
+                                $countryExiBol = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 
-            if($countryExiBol == false){
-               $countryVal = $country.'_E_E';
-            }
+                if($countryExiBol == false){
+                    $countryVal = $country.'_E_E';
+                }
 
-         } else{
-
-            if(count($countryExits) == 1){
-               $countryExiBol = true;
-               foreach($countryExits as $portRc){
-                  $countryVal = $portRc['id'];
-               }
             } else{
-               $countryVal = $country.'_E_E';
+
+                if(count($countryExits) == 1){
+                    $countryExiBol = true;
+                    foreach($countryExits as $portRc){
+                        $countryVal = $portRc['id'];
+                    }
+                } else{
+                    $countryVal = $country.'_E_E';
+                }
+
             }
 
-         }
+        } else{
+            $countryVal    = '_E_E';
+            $countryExiBol = false;
+        }
 
-      } else{
-         $countryVal    = '_E_E';
-         $countryExiBol = false;
-      }
+        $data = ['country' => $countryVal, 'boolean' => $countryExiBol];
 
-      $data = ['country' => $countryVal, 'boolean' => $countryExiBol];
+        return ($data);
+    }
 
-      return ($data);
-   }
+    public static function get_harbor_simple($puerto){
+        $data = null;
+        $resp =  false;
+        $place_val     = Harbor::where('varation->type','like','%'.$puerto.'%')->get();
+        if(count($place_val) == 1 ){
+            $resp = true;
+            $data = $place_val[0]->id;
+        } elseif(count($place_val) == 0){
+            $data = $puerto.'(Error)';
+        } elseif(count($place_val) > 1){
+            $data = $puerto.'(Error) ['.$place_val->implode('id', ', ').']';
+        }
+        return ['puerto' => $data,'boolean' => $resp];
+    }
 }
