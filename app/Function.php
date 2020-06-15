@@ -115,7 +115,7 @@ function ratesCurrencyFunction($id, $typeCurrency)
     return $rateC;
 }
 
-function processOldContainers($array, $type)
+function processOldDryContainers($array, $type)
 {
     if (!empty($array)) {
         switch ($type) {
