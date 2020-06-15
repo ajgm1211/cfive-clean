@@ -31,17 +31,17 @@
             </div>
         </div>
         @if(isset($pick_up_dates))
-        <div class="row">  
-            <div class="col-md-4 col-lg-4 col-xl-4">
-                @if(isset($user))
-                <h4>{{$user->name}} {{$user->lastname}}</h4>
-                <br>
-                @endif
-                <h6><b>From:</b> {{$pick_up_dates['start_date']}}</h6>
-                <h6><b>To:</b> {{$pick_up_dates['end_date']}}</h6>
+            <div class="row">  
+                <div class="col-md-4 col-lg-4 col-xl-4">
+                    @if(isset($user))
+                    <h4>{{$user->name}} {{$user->lastname}}</h4>
+                    <br>
+                    @endif
+                    <h6><b>From:</b> {{$pick_up_dates['start_date']}}</h6>
+                    <h6><b>Until:</b> {{$pick_up_dates['end_date']}}</h6>
+                </div>
             </div>
-        </div>
-        <hr class="separator">
+            <hr class="separator">
         @endif
         <div class="row">
             <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px; width: auto;">
+                <!--<div class="m-widget24 card" style="height: 220px; width: auto;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -82,7 +82,7 @@
                         <br>
                         <br>
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px;">
+                <!--<div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -122,7 +122,7 @@
                         <br>
                         <br>
                     </div>
-                </div>
+                </div>-->
             </div>          
             <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
@@ -145,7 +145,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px;">
+                <!--<div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -162,7 +162,7 @@
                         <br>
                         <br>
                     </div>
-                </div>
+                </div>-->
 
             </div>
         </div>
@@ -399,5 +399,6 @@ Export
     @parent
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
     <script src="/js/base.js"></script>
+    <script src="/js/dashboard.js"></script>
 
     @stop

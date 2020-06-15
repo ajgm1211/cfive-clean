@@ -639,7 +639,7 @@ class ApiController extends Controller
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
                 })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image');
+                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) {
@@ -649,7 +649,7 @@ class ApiController extends Controller
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
                 })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image');
+                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
             }
             $arreglo = $arreglo->get();
@@ -1031,8 +1031,8 @@ class ApiController extends Controller
             $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
             $detalle['Rates']['schedule']['via'] = $data->via;
 
-            //Set carrier logo url
-            $detalle['Rates']['carrier'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            //Set carrier
+            $detalle['Rates']['carrier'] = $data->carrier;
             //Set contract details
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
             $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;

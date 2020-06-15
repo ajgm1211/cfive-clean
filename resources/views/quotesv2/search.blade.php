@@ -661,6 +661,16 @@
   {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 
   <div class="col-lg-12">
+      @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<br>
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
@@ -773,7 +783,7 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carriers</label>
-                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple', 'required']) }}
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
               </div>
             
               <div class="col-lg-4 for-check">   

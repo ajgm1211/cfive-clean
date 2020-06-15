@@ -1019,7 +1019,8 @@ Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('ne
 
 /** Inlands V2 view routes **/
 Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
-Route::get('api/inlands/{inland}/edit', 'InlandController@edit')->name('inlands.edit');
+//Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
+Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
 /** End Inlands routes view **/
 
 /** Inlands V2 view routes **/

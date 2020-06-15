@@ -47,21 +47,26 @@ class DashboardController extends Controller
 
         foreach ($quotes as $q) {
             $totalRate = 0;
+
             $charges = AutomaticRate::where('quote_id', $q->id)->with('charge')->get();
 
             foreach ($charges as $charge) {
                 foreach ($charge->charge as $item) {
+                    $rate = 0;
+                    $markup = 0;
                     
-                    $exchange = ratesCurrencyFunction($item->currency_id, Auth::user()->companyUser->currency->alphacode);
+                    $exchange = ratesCurrencyFunction($item->currency_id, @Auth::user()->companyUser->currency->alphacode);
 
                     $amounts = json_decode($item->amount, true);
                     $markups = json_decode($item->markups, true);
 
-                    $amounts = processOldContainers($amounts, 'amounts');
-                    $markups = processOldContainers($markups, 'markups');
+                    $amounts = processOldDryContainers($amounts, 'amounts');
+                    $markups = processOldDryContainers($markups, 'markups');
                     
                     foreach ($containers as $container) {
-                        $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code])/$exchange,  2, '.', '');
+                        $rate = (int) @$amounts['c'.$container->code];
+                        $markup = (int) @$markups['m'.$container->code];
+                        $totalRate += number_format(($rate + $markup)/$exchange,  2, '.', '');
                     }
 
                     if ($q->status == 'Draft') {
@@ -88,6 +93,7 @@ class DashboardController extends Controller
         if ($total == 0) {
             $total = 1;
         }
+        $users->prepend('Select an option');
 
         return view(
             'dashboard.index',
@@ -138,7 +144,7 @@ class DashboardController extends Controller
         $currency = $cur[0];
 
         $user = User::find($request->user);
-
+        
         if (Auth::user()->type == 'admin') {
             $users = User::pluck('name', 'id');
         } else {
@@ -181,8 +187,8 @@ class DashboardController extends Controller
                     $amounts = json_decode($item->amount, true);
                     $markups = json_decode($item->markups, true);
 
-                    $amounts = processOldContainers($amounts, 'amounts');
-                    $markups = processOldContainers($markups, 'markups');
+                    $amounts = processOldDryContainers($amounts, 'amounts');
+                    $markups = processOldDryContainers($markups, 'markups');
                     
                     foreach ($containers as $container) {
                         $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code])/$exchange,  2, '.', '');
@@ -209,12 +215,17 @@ class DashboardController extends Controller
         $sent = $quotes->where('status', 'Sent')->count();
         $won = $quotes->where('status', 'Win')->count();
 
+        $users->prepend('Select an option');
+
+        $pick_up_date = $request->pick_up_date;
+
         return \View::make(
             'dashboard.index',
             compact(
                 'users',
                 'user',
                 'pick_up_dates',
+                'pick_up_date',
                 'draft',
                 'sent',
                 'won',
