@@ -19,7 +19,6 @@
                                     @endforeach
                                 @endforeach
                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                    <th class="unit"><b>{{__('pdf.type')}}</b></th>
                                     <th class="unit"><b>{{__('pdf.tt')}}</b></th>
                                     <th class="unit"><b>{{__('pdf.via')}}</b></th>                                
                                 @endif
@@ -62,17 +61,6 @@
                                                 @endforeach
                                             @endforeach
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                @if($quote->pdf_option->language=='Spanish')
-                                                    @if(@$rate->schedule_type=='Transfer')
-                                                        <td>Transbordo</td>
-                                                    @elseif(@$rate->schedule_type=='Direct')
-                                                        <td>Directo</td>
-                                                    @else
-                                                        <td>-</td>
-                                                    @endif
-                                                @else
-                                                    <td>{{@$rate->schedule_type!='' ? @$rate->schedule_type:'-'}}</td>
-                                                @endif
                                                 <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
                                                 <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
                                             @endif
@@ -113,7 +101,6 @@
                                                 @endforeach
                                             @endforeach
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                <th class="unit"><b>{{__('pdf.type')}}</b></th>
                                                 <th class="unit"><b>{{__('pdf.tt')}}</b></th>
                                                 <th class="unit"><b>{{__('pdf.via')}}</b></th>
                                             @endif                                            
@@ -169,17 +156,6 @@
                                                                 @endforeach
                                                             @endforeach
                                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                                @if($quote->pdf_option->language=='Spanish')
-                                                                    @if(@$r->schedule_type=='Transfer')
-                                                                        <td>Transbordo</td>
-                                                                    @elseif(@$r->schedule_type=='Direct')
-                                                                        <td>Directo</td>
-                                                                    @else
-                                                                        <td>-</td>
-                                                                    @endif
-                                                                @else
-                                                                    <td>{{@$r->schedule_type!='' ? @$r->schedule_type:'-'}}</td>
-                                                                @endif
                                                                 <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                                 <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
                                                             @endif
@@ -204,17 +180,6 @@
                                                                     @endforeach
                                                                 @endforeach
                                                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                                    @if($quote->pdf_option->language=='Spanish')
-                                                                        @if(@$r->schedule_type=='Transfer')
-                                                                            <td>Transbordo</td>
-                                                                        @elseif(@$r->schedule_type=='Direct')
-                                                                            <td>Directo</td>
-                                                                        @else
-                                                                            <td>-</td>
-                                                                        @endif
-                                                                    @else
-                                                                        <td>{{@$r->schedule_type!='' ? @$r->schedule_type:'-'}}</td>
-                                                                    @endif
                                                                     <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                                     <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
                                                                 @endif
@@ -240,7 +205,6 @@
                                             @endforeach
                                         @endforeach
                                         @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                            <td></td>
                                             <td></td>
                                             <td></td>
                                         @endif
@@ -272,7 +236,6 @@
                                         @endforeach
                                     @endforeach
                                     @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                        <th class="unit"><b>{{__('pdf.type')}}</b></th>
                                         <th class="unit"><b>{{__('pdf.tt')}}</b></th>
                                         <th class="unit"><b>{{__('pdf.via')}}</b></th>                                
                                     @endif
@@ -311,17 +274,6 @@
                                                 @endforeach
                                             @endforeach
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                @if($quote->pdf_option->language=='Spanish')
-                                                    @if(@$rate->schedule_type=='Transfer')
-                                                        <td>Transbordo</td>
-                                                    @elseif(@$rate->schedule_type=='Direct')
-                                                        <td>Directo</td>
-                                                    @else
-                                                        <td>-</td>
-                                                    @endif
-                                                @else
-                                                    <td>{{@$rate->schedule_type!='' ? @$rate->schedule_type:'-'}}</td>
-                                                @endif
                                                 <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
                                                 <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
                                             @endif

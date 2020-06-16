@@ -32,6 +32,7 @@
                         :inputFields="form_fields"
                         :vdatalists="datalists"
                         :actions="actions.transit_time"
+                        :singleActions="['edit', 'delete']"
                         @onEdit="onEdit"
                         >
                     </DataTable>

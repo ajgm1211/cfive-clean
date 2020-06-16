@@ -87,23 +87,50 @@ abstract class AbstractFilter
 
         if($filter_by_relations){
 
-            $this->query->where(function ($query) use ($filter_by_relations, $qry){ 
-
-                foreach($filter_by_relations as $column){
-
-                    $col = explode('__', $column);
-
-                    $query->orWhereHas($col[0], function($q) use ($qry, $col){
-
-                        $q->where($col[1], "LIKE", '%'.$qry.'%');
-
-                    });
-                }
-
-
-            });
+            if(empty($this->filter_by))
+                $this->searchByRelationAnd($filter_by_relations, $qry);
+            else
+                $this->searchByRelationOr($filter_by_relations, $qry);
         }
 
+    }
+
+    protected function searchByRelationOr($filter_by_relations, $qry)
+    {
+        $this->query->orWhere(function ($query) use ($filter_by_relations, $qry){ 
+
+            foreach($filter_by_relations as $column){
+
+                $col = explode('__', $column);
+
+                $query->orWhereHas($col[0], function($q) use ($qry, $col){
+
+                    $q->where($col[1], "LIKE", '%'.$qry.'%');
+
+                });
+            }
+
+
+        });
+    }
+
+    protected function searchByRelationAnd($filter_by_relations, $qry)
+    {
+        $this->query->where(function ($query) use ($filter_by_relations, $qry){ 
+
+            foreach($filter_by_relations as $column){
+
+                $col = explode('__', $column);
+
+                $query->orWhereHas($col[0], function($q) use ($qry, $col){
+
+                    $q->where($col[1], "LIKE", '%'.$qry.'%');
+
+                });
+            }
+
+
+        });
     }
 
     protected function sort() {
