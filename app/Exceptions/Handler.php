@@ -61,8 +61,11 @@ class Handler extends ExceptionHandler
         {
             if($request->ajax() || $request->wantsJson()) 
             {
-                return response()->json([
+                /*return response()->json([
                     'message' => $exception->getMessage(),
+                ], 500);*/
+                return response()->json([
+                    'message' => 'Something went wrong on our side',
                 ], 500);
             }
         }

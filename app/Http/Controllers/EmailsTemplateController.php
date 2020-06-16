@@ -95,7 +95,11 @@ class EmailsTemplateController extends Controller
         $template->company_user_id = Auth::user()->company_user_id;
         $template->save();
 
-        return redirect('templates');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Template created successfully!');
+
+        return redirect()->route('templates.index');
 
     }
 
@@ -156,7 +160,7 @@ class EmailsTemplateController extends Controller
         $template->save();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You upgrade has been success ');
+        $request->session()->flash('message.content', 'Template updated successfully!');
         return redirect()->route('templates.index');
     }
 
@@ -229,7 +233,7 @@ class EmailsTemplateController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully delete : '.$template->name);
+        $request->session()->flash('message.content', 'Template deleted successfully!');
         return redirect()->route('templates.index');
 
     }

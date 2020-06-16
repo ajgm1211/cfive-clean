@@ -31,25 +31,25 @@
             </div>
         </div>
         @if(isset($pick_up_dates))
-        <div class="row">  
-            <div class="col-md-2 col-lg-2 col-xl-2">
-                @if(isset($user))
-                <h4>{{$user->name}} {{$user->lastname}}</h4>
-                <br>
-                @endif
-                <h6><b>From:</b> {{$pick_up_dates['start_date']}}</h6>
-                <h6><b>To:</b> {{$pick_up_dates['end_date']}}</h6>
+            <div class="row">  
+                <div class="col-md-4 col-lg-4 col-xl-4">
+                    @if(isset($user))
+                    <h4>{{$user->name}} {{$user->lastname}}</h4>
+                    <br>
+                    @endif
+                    <h6><b>From:</b> {{$pick_up_dates['start_date']}}</h6>
+                    <h6><b>Until:</b> {{$pick_up_dates['end_date']}}</h6>
+                </div>
             </div>
-        </div>
-        <hr class="separator">
+            <hr class="separator">
         @endif
         <div class="row">
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Draft:
+                            Draft Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:18px;">
@@ -59,19 +59,13 @@
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-default " role="progressbar" style="width: {{ round(($draft * 100) / $totalQuotes) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($sent * 100) / $totalQuotes) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px; width: auto;">
+                <!--<div class="m-widget24 card" style="height: 220px; width: auto;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -84,24 +78,18 @@ Change
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-default" role="progressbar" style="width: {{ round(($totalDraft * 100) / $total) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($totalSent * 100) / $total) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
-                </div>
+                </div>-->
             </div>
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Sent:
+                            Sent Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:18px;">
@@ -111,19 +99,13 @@ Change
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-success" role="progressbar" style="width: {{ round(($sent * 100) / $totalQuotes) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($sent * 100) / $totalQuotes) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px;">
+                <!--<div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -136,75 +118,18 @@ Change
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-success" role="progressbar" style="width: {{ round(($totalSent * 100) / $total) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($totalSent * 100) / $total) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
-                <div class="m-widget24 card" style="height: 220px;">
-                    <div class="m-widget24__item">
-                        <h4 class="m-widget24__title">
-                            Quotes Negotiated:
-                        </h4>
-                        <br>
-                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:18px;">
-                            <b>{{ $negotiated }}</b>
-                        </span>
-                        <div class="m--space-10"></div>
-                        <div class="progress m-progress--sm">
-                            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-warning" role="progressbar" style="width: {{ round(($negotiated * 100) / $totalQuotes) }}%;"></div>
-                        </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($negotiated * 100) / $totalQuotes) }}%
-</span>-->
-                        <br>
-                        <br>
-                        <br>
-                    </div>
-                </div>
-                <br>
-                <div class="m-widget24 card" style="height: 220px;">
-                    <div class="m-widget24__item">
-                        <h4 class="m-widget24__title">
-                            Total:
-                        </h4>
-                        <br>
-                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:18px;">
-                            <b>{{ $totalNegotiated }} {{$currency}}</b>
-                        </span>
-                        <div class="m--space-10"></div>
-                        <div class="progress m-progress--sm">
-                            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-warning" role="progressbar" style="width: {{ round(($totalNegotiated * 100) / $total) }}%;"></div>
-                        </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($totalNegotiated * 100) / $total) }}%
-</span>-->
-                        <br>
-                        <br>
-                        <br>
-                    </div>
-                </div>
-            </div>            
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
+                </div>-->
+            </div>          
+            <div class="col-md-4 col-lg-4 col-xl-4" style="padding-top:20px;">
 
                 <div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
-                            Quotes Won:
+                            Won Quotes:
                         </h4>
                         <br>
                         <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:18px;">
@@ -214,19 +139,13 @@ Change
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-info" role="progressbar" style="width: {{ round(($won * 100) / $totalQuotes) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($won * 100) / $totalQuotes) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px;">
+                <!--<div class="m-widget24 card" style="height: 220px;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
@@ -239,70 +158,12 @@ Change
                         <div class="progress m-progress--sm">
                             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-info" role="progressbar" style="width: {{ round(($totalWon * 100) / $total) }}%;"></div>
                         </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($totalWon * 100) / $total) }}%
-</span>-->
                         <br>
                         <br>
                         <br>
                     </div>
-                </div>
+                </div>-->
 
-            </div>
-            <div class="col-md-2 col-lg-2 col-xl-2" style="padding-top:20px;">
-
-                <div class="m-widget24 card" style="height: 220px;">
-                    <div class="m-widget24__item">
-                        <h4 class="m-widget24__title">
-                            Quotes Lost:
-                        </h4>
-                        <br>
-                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:18px;">
-                            <b>{{ $lost }}</b>
-                        </span>
-                        <div class="m--space-10"></div>
-                        <div class="progress m-progress--sm">
-                            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-danger" role="progressbar" style="width: {{ round(($lost * 100) / $totalQuotes) }}%;"></div>
-                        </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($lost * 100) / $totalQuotes) }}%
-</span>-->
-                        <br>
-                        <br>
-                        <br>
-                    </div>
-                </div>
-                <br>
-                <div class="m-widget24 card" style="height: 220px;">
-                    <div class="m-widget24__item">
-                        <h4 class="m-widget24__title">
-                            Total: 
-                        </h4>
-                        <br>
-                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:18px;">
-                            <b>{{ $totalLost }} {{ $currency }}</b>
-                        </span>
-                        <div class="m--space-10"></div>
-                        <div class="progress m-progress--sm">
-                            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar m--bg-danger" role="progressbar" style="width: {{ round(($totalLost * 100) / $total) }}%;"></div>
-                        </div>
-                        <!--<span class="m-widget24__change">
-Change
-</span>
-<span class="m-widget24__number">
-{{ round(($totalLost * 100) / $total) }}%
-</span>-->
-                        <br>
-                        <br>
-                        <br>
-                    </div>
-                </div>
             </div>
         </div>
         <br>
@@ -412,7 +273,7 @@ Series B:
 </div>
 </div>
 <div class="row">
-<div class="col-md-2 col-lg-2 col-xl-2">
+<div class="col-md-4 col-lg-4 col-xl-4">
 
 <div class="m-portlet m-portlet--full-height">
 <div class="m-portlet__head">
@@ -538,5 +399,6 @@ Export
     @parent
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
     <script src="/js/base.js"></script>
+    <script src="/js/dashboard.js"></script>
 
     @stop

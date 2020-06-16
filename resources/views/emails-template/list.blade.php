@@ -54,9 +54,9 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
                         
-                            <a href="{{ route('emails-template.add') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                            <a href="{{ route('emails-template.add') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                             <span>
-                                <i class="la la-user"></i>
+                                <i class="la la-plus"></i>
                                 <span>
                                     Add New
                                 </span>
@@ -96,7 +96,7 @@
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View " onclick="AbrirModal('look',{{  $arr->id }})" >
                                         <i class="la la-search"></i>
                                     </a>
-                                    <a href="{{ route('emails-template.edit', ['id' => setearRouteKey($arr->id)]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
+                                    <a href="{{ route('emails-template.edit', ['id' => setearRouteKey($arr->id)]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit ">
                                         <i class="la la-edit"></i>
                                     </a>
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
@@ -116,7 +116,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">
-                                    Emails Templates
+                                    Email Templates
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">
@@ -128,7 +128,7 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">
                                     Close
                                 </button>
 
