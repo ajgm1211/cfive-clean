@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use HelperAll;
 use PrvHarbor;
 use PrvCarrier;
 use App\Harbor;
 use App\Carrier;
 use App\TransitTime;
+use App\TransitTimeFail;
+use App\DestinationType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -46,6 +49,8 @@ class ImportationTransitTimeController extends Controller
 
     public function store(Request $request)
     {
+        $failsTT = TransitTimeFail::where('via','!=',null)->orWhere('via',null)->delete();
+
         $file 				= $request->input('document');
         if(!empty($file)){
             $load           = null;
@@ -67,9 +72,10 @@ class ImportationTransitTimeController extends Controller
             $origin     = 'ORIGIN';
             $detiny     = 'DESTINY';
             $carrier    = 'CARRIER';
-            $time       = 'DAYS';
-            $type       = 'Schedule Type';
-            $columnsSelected = [$origin,$detiny,$carrier,$time,$type];
+            $time       = 'T\T';
+            $type       = 'DESTINATION TYPE';
+            $via        = 'VIA';
+            $columnsSelected = [$origin,$detiny,$carrier,$time,$type,$via];
 
             $final_columns = collect([]);
             foreach($columnsSelected as $columnSelect){
@@ -90,26 +96,98 @@ class ImportationTransitTimeController extends Controller
                 $carrier_val    = null;
                 $time_val       = null;
                 $type_val       = null;
+                $via_val        = null;
+
+                $type_bol       = false;
+
                 if($fila > 1){
-                    $origin_val     = $row[$final_columns[$origin]];
-                    $destiny_val    = $row[$final_columns[$detiny]];
-                    $carrier_val    = $row[$final_columns[$carrier]];
-                    $time_val       = $row[$final_columns[$time]];
-                    $type_val       = $row[$final_columns[$type]];
+                    $origin_val     = trim($row[$final_columns[$origin]]);
+                    $destiny_val    = trim($row[$final_columns[$detiny]]);
+                    $carrier_val    = trim($row[$final_columns[$carrier]]);
+                    $time_val       = trim($row[$final_columns[$time]]);
+                    $type_val       = trim($row[$final_columns[$type]]);
+                    $via_val        = trim($row[$final_columns[$via]]);
 
                     $carrierArr     = PrvCarrier::get_carrier($carrier_val);
-                    $carriExitBol   = $carrierArr['boolean'];
+                    $carri_Bol      = $carrierArr['boolean'];
                     $carrier_val    = $carrierArr['carrier'];
-                    
+
                     $origin_arr     = PrvHarbor::get_harbor_simple($origin_val);
-                    $originExitBol  = $origin_arr['boolean'];
+                    $origin_Bol     = $origin_arr['boolean'];
                     $origin_val     = $origin_arr['puerto'];
-                    
+
                     $destiny_arr     = PrvHarbor::get_harbor_simple($destiny_val);
-                    $destinyExitBol  = $destiny_arr['boolean'];
+                    $destiny_Bol     = $destiny_arr['boolean'];
                     $destiny_val     = $destiny_arr['puerto'];
-                    
-                    dd($origin_val,$destiny_val,$carrier_val);
+
+                    $destinationTObj = DestinationType::where('code',$type_val)->first();
+                    if(count($destinationTObj) == 1 ){
+                        $type_bol = true;
+                        $type_val = $destinationTObj->id;
+                        if($type_val == 1){
+                            $via_val = ' ';
+                        }
+                    } elseif(count($place_val) == 0){
+                        $type_val = $via_val.'(Error)';
+                    } 
+
+                    if($carri_Bol == true && $origin_Bol == true && $destiny_Bol == true && $type_bol == true && (int)$time_val != 0 ){
+
+                        $transitTime = TransitTime::where('origin_id',$origin_val)
+                            ->where('destination_id',$destiny_val)
+                            ->where('carrier_id',$carrier_val)
+                            //->where('service_id',$type_val)
+                            ->get();
+                        if(count($transitTime) == 0){
+                            $transitTime = new TransitTime();
+                            $transitTime->origin_id         = $origin_val;
+                            $transitTime->destination_id    = $destiny_val;
+                            $transitTime->carrier_id        = $carrier_val;
+                            $transitTime->service_id        = $type_val;
+                            $transitTime->transit_time      = $time_val;
+                            $transitTime->via               = $via_val;
+                            $transitTime->save();
+                        } elseif(count($transitTime) == 1) {
+                            $transitTime[0]->origin_id         = $origin_val;
+                            $transitTime[0]->destination_id    = $destiny_val;
+                            $transitTime[0]->carrier_id        = $carrier_val;
+                            $transitTime[0]->service_id        = $type_val;
+                            $transitTime[0]->transit_time      = $time_val;
+                            $transitTime[0]->via               = $via_val;
+                            $transitTime[0]->update();
+                        }
+                    } else {
+                        if((int)$time_val != 0){
+                            if($carri_Bol){
+                                $carrier_val = Carrier::find($carrier_val);
+                                $carrier_val = $carrier_val->name;
+                            }
+
+                            if($origin_Bol){
+                                $origin_val = Harbor::find($origin_val);
+                                $origin_val = $origin_val->name;
+                            }
+
+                            if($destiny_Bol){
+                                $destiny_val = Harbor::find($destiny_val);
+                                $destiny_val = $destiny_val->name;
+                            }
+
+                            if($type_bol){
+                                $type_val = DestinationType::find($type_val);
+                                $type_val = $type_val->name;
+                            }
+
+                            $transitTimeFail                    = new TransitTimeFail();
+                            $transitTimeFail->origin            = $origin_val;
+                            $transitTimeFail->destiny           = $destiny_val;
+                            $transitTimeFail->carrier           = $carrier_val;
+                            $transitTimeFail->destination_type  = $type_val;
+                            $transitTimeFail->transit_time      = (int)$time_val;
+                            $transitTimeFail->via               = $via_val;
+                            $transitTimeFail->save();
+                        }
+                    }
                 }
                 $fila = $fila + 1;
             }
