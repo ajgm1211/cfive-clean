@@ -5,472 +5,651 @@
 
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 <style>
-    .btn-search__quotes {
-        top: 50px;
-        font-size: 18px;
-        position: relative;
-        padding: 13px 30px;
-        border-radius: 50px !important;
+    body {
+        background: #f6f6f6;
     }
-
-    .q-one,
-    .q-two,
-    .q-three {
-        display: flex;
-        flex-flow: wrap;
-        justify-content: space-between;
-    }
-
-    .q-two {
-        justify-content: flex-start;
-    }
-
-    .q-one div:nth-child(1),
-    .q-one div:nth-child(2),
-    .q-one div:nth-child(3),
-    .q-one div:nth-child(4) {
-        overflow: hidden;
-    }
-
-    .q-one div:nth-child(1),
-    .q-one div:nth-child(2),
-    .q-one div:nth-child(3) {
-        width: 18% !important;
-    }
-
-    .q-one div:nth-child(4) {
-        width: 38% !important;
-    }
-
-    .q-one div:nth-child(5),
-    .q-two div:nth-child(3) {
-        width: 100%;
-    }
-
-    .q-one div:nth-child(1) label {
-        white-space: nowrap;
-    }
-
-    .q-two div:nth-child(1) {
-        width: 66%;
-        margin-right: 10px;
-    }
-
-    .q-three div:nth-child(3) {
-        width: 100%;
-    }
-
-    .q-three div:nth-child(1) {
-        width: 50%;
-    }
-
-    .dfw {
-        width: 100%;
-    }
-
-    .no-shadow {
+    .m-portlet {
         box-shadow: none;
-    }
-
-    .filter-table__quotes,
-    .card-p__quotes,
-    .card__quote-manual {
-        padding: 25px;
-        box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
-    }
-
-    .card__quote-manual {
-        margin: 0 15px;
-        border: 2px;
-    }
-
-    .no-padding {
-        padding: 0px !important;
-    }
-
-    .card-p__quotes {
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
-        margin: 0px;
         border-radius: 5px;
-        border: 2px solid transparent;
-        transition: all 300ms linear;
+        -webkit-border-radius: 5px;
     }
+  .btn-search__quotes {
+    top: 50px;
+    font-size: 18px; 
+    position: relative; 
+    padding: 13px 30px; 
+    border-radius: 50px !important;
+  }
+  .q-one, .q-two, .q-three {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-between;
+  }
+  .q-two {
+    justify-content: flex-start;
+  }
+  .q-one div:nth-child(1), 
+  .q-one div:nth-child(2), 
+  .q-one div:nth-child(3), 
+  .q-one div:nth-child(4) {
+    overflow: hidden;
+  }
+  .q-one div:nth-child(1), 
+  .q-one div:nth-child(2), 
+  .q-one div:nth-child(3) {
+    width: 18% !important;
+  }
+  .q-one div:nth-child(4) {
+    width: 38% !important;
+  }
+  .q-one div:nth-child(5), .q-two div:nth-child(3) {
+    width: 100%;
+  }
+  .q-one div:nth-child(1) label {
+    white-space: nowrap;
+  }
+  .q-two div:nth-child(1) {
+    width: 66%;
+    margin-right: 10px;
+  }
+  .q-three div:nth-child(3) {
+    width: 100%;
+  }
+  .q-three div:nth-child(1) {
+    width: 50%;
+  }
+  .dfw {
+    width: 100%;
+  }
+  .no-shadow{
+    box-shadow: none;
+  }
+  .filter-table__quotes, .card-p__quotes, .card__quote-manual {
+    padding: 25px;
+    box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+    background: #FFFFFF;
+  }
+  .card__quote-manual {
+    margin: 0 15px;
+    border: 2px;
+  }
+  .no-padding {
+    padding: 0px !important;
+  }
+  .card-p__quotes {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin: 0px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    transition: all 300ms linear;
+  }
+  .card-p__quotes:hover {
+    border-color: #0072fc;
+  }
+  .btn-detail__quotes {
+    width: 140px;
+    height: 30px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #ececec;
+    transition: all 300ms ease;
+  }
+  .bg-maersk {
 
-    .card-p__quotes:hover {
-        border-color: #0072fc;
-    }
+    background-color: #41B0D5;    
+  }
 
-    .btn-detail__quotes {
-        width: 140px;
-        height: 30px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: 1px solid #ececec;
-        transition: all 300ms ease;
-    }
+  .bg-safmarine {
 
-    .btn-detail__quotes:hover {
-        border-color: #0072fc;
-        background-color: #0072fc;
-    }
+    background-color: #f99702;      
+    }   
+  .btn-detail__quotes:hover {
+    border-color: #0072fc;
+    background-color: #0072fc;    
+  }
+  .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
+    color: #fff;
+  }
+  .btn-detail__quotes span {
+    font-size: 12px;
+    color: #0072fc;
+  }
+  .btn-detail__quotes a {
+    height: 0px !important;
+  }
+  .btn-detail__quotes a i {
+    color: #a4a2bb;
+  }
+  .btn-input__select, .btn-input__select-add {
+    position: relative;
+    left: 25px;
+    width: 95px;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    color: #cecece;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 0px;
+    border-radius: 5px;
+    border: 2px solid #cecece;
+    transition: all 300ms ease;
+  }
+  .btn-input__select:hover, .btn-input__select-add:hover {
+    border-color: #0072fc; 
+  }
 
-    .btn-detail__quotes:hover span,
-    .btn-detail__quotes:hover a i {
-        color: #fff;
-    }
+  .input-select[type="checkbox"] {
+    display: none; 
+  }
+  .input-select[type="checkbox"]:checked + .btn-input__select {
+    color: #fff;
+    display: flex;
+    width: 120px;
+    border-color: #0072fc;
+    justify-content: center;
+    background-color: #0072fc;
+  }
+  .style__select-add {
+    color: #fff;
+    border-color: #0072fc;
+    background-color: #0072fc;
+  }
+  .add-click {
+    color: #cecece !important;
+  }
+  .input-select[type="checkbox"]:checked + .btn-input__select span {
+    display :none;
+  }
+  .btn-input__select-add {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
+  .btn-input__select-gen {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
 
-    .btn-detail__quotes span {
-        font-size: 12px;
-        color: #0072fc;
-    }
+  .hidden-general{
+    display:none !important;
+  }
+  .visible__select-add {
+    visibility: visible;
+  }
+  .col-txt {
+    font-weight: 600;
+    color: #0072fc;
+    font-size: 18px;
+  }
+  .btn-d {
+    width: 130px;
+  }
+  .padding {
+    padding: 0 25px;
+  }
+  .padding-v2 {
+    padding: 25px;
+  }
+  .no-margin {
+    margin: 0 !important;
+  }
+  .freight__quotes {
+    border-top: none !important;
+    border: 3px solid #0072fc; 
+    border-radius: 0px 0px 3px 3px;
+  }
+  .add-class__card-p {
+    box-shadow: none;
+    border: 3px solid #0072fc; 
+    border-bottom: 1px solid #ececec !important;
+    border-radius: 3px 3px 0px 0px !important;
+  }
+  .bg-light {
+    padding: 5px 25px;
+    border-radius: 3px;
+    background-color: #f4f3f8 !important;
+  }
+  .portalphacode {
+    color: #1d3b6e !important;
+  }
+  .colorphacode {
+    color: #7c83b3;
+  }
+  .bg-rates {
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-align: center;
+    background-color: #ececec;
+  }
+  .wth {
+    width: 25%;
+  }
+  .table-r__quotes {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .table-r__quotes div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .b-top {
+    border-top: 1px solid #ececec;
+  }
+  .padding-min {
+    padding: 10px !important;
+  }
+  .b-left {
+    border-left: 1px solid #ececec;
+  }
+  .padding-min-col {
+    padding: 45px 10px !important;
+  }
+  .pos-btn {
+    position: relative;
+    right: 40px;
+  }
+  .padding-right-table {
+    padding-right: 50px !important;
+  }
+  .btn-date {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+  .data-rates {
+    padding: 5px 25px;
+  }
+  .arrow-down {
+    top: 4px;
+    position: relative;
+  }
+  .monto-down {
+    top: 2px;
+    position: relative;
+  }
+  .min-width-filter span {
+    min-width: 50px !important;
+  }
+  .min-width-filter .select2-search--dropdown {
+    padding: 0px !important;
+  }
+  .margin-card {
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+  }
+  .no-check {
+    display: none !important;
+  }
+  .border-bottom {
+    border-bottom: 1px solid #ececec;
+  }
+  .border-card {
+    border-color: #0072fc !important;
+  }
+  .btn-manual__quotes {
+    background-color: transparent;
+    color: #0072fc !important;
+    border-width: 2px;
+    font-weight: 600;
+    padding: 0.35rem 1rem;
+  }
+  .btn-manual__quotes span {
+    top: 2px;
+    position: relative;
+  }
+  .warning-p {
+    color: #575962;
+    font-size: 14px;
+    font-weight: 600;
 
-    .btn-detail__quotes a {
-        height: 0px !important;
-    }
+  }
+  .warning-p span {
+    color: #e74c3c;
+  }
+  .warning-p i {
+    font-size: 33px;
+    top: 7px;
+    margin-right: 5px;
+    position: relative;
+    transform: rotate(180deg);
+  }
+  .btn-remarks {
+    width: 95px;
+  }
+  .btn-nowrap {
+    white-space: nowrap;
+  }
+  .select-class::before {
+    content:'Select ->';
+    font-size: 13px;
+  }
+  .selected-class:before {
+    content: 'Selected';
+    font-size: 13px;
+  }
+  .full-width {
+    width: 100% !important;
+  }
+  .create-manual {
+    background-color: #fff !important;
+    color: #36a3f7 !important;
+    border-width: 2px;
+    border-color: #36a3f7 !important;
+  }
+  .create-manual:hover {
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+  }
+  .workgreen {
+    color: #6ee99e !important;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    margin-top: 8px !important;
+    font-size: 24px;
+    color: #6ee99e !important;
+  }
+  .btn-plus__form {
+    position: relative;
+    top: 8px;
+  }
+  .include-checkbox[type="checkbox"] {
+    display: none;
+  }
+  .for-check {
+    display: flex;
+    align-items: flex-end;
+    padding-left: 40px;
+    padding-right: 0px;
+  }
+  .label-check {
+    position: relative;
+  }
+  .label-check::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -25px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 2px solid #0000ff;
+    border-radius: 3px;
+    display: flex;
+    /*align-items: center*/
+    justify-content: center;
+  }
+  .include-checkbox[type="checkbox"]:checked + .label-check::before {
+    content: '✔';
+    color: #0000ff;
+    line-height: 15px;
+  }
 
-    .btn-detail__quotes a i {
-        color: #a4a2bb;
-    }
-
-    .btn-input__select,
-    .btn-input__select-add {
-        position: relative;
-        left: 25px;
-        width: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #cecece;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 3px 0px;
-        border-radius: 5px;
-        border: 2px solid #cecece;
-        transition: all 300ms ease;
-    }
-
-    .btn-input__select:hover,
-    .btn-input__select-add:hover {
-        border-color: #0072fc;
-    }
-
-    .input-select[type="checkbox"] {
+   /* c5 select */
+   .c5-select-multiple {
         display: none;
     }
-
-    .input-select[type="checkbox"]:checked+.btn-input__select {
-        color: #fff;
-        display: flex;
-        width: 120px;
-        border-color: #0072fc;
-        justify-content: center;
-        background-color: #0072fc;
+    .c5-select-multiple-dropdown {
+        width: 100%;
+        height: 37px;
+        
     }
-
-    .style__select-add {
-        color: #fff;
-        border-color: #0072fc;
-        background-color: #0072fc;
-    }
-
-    .add-click {
-        color: #cecece !important;
-    }
-
-    .input-select[type="checkbox"]:checked+.btn-input__select span {
+    .c5-select-multiple-container {
+        width: 100%;
+        height: auto;
+        padding: 15px;
         display: none;
-    }
-
-    .btn-input__select-add {
-        width: 60px !important;
-        left: 60px;
-        visibility: hidden;
-    }
-
-    .btn-input__select-gen {
-        width: 60px !important;
-        left: 60px;
-        visibility: hidden;
-    }
-
-    .hidden-general {
-        display: none !important;
-    }
-
-    .visible__select-add {
-        visibility: visible;
-    }
-
-    .col-txt {
-        font-weight: 600;
-        color: #0072fc;
-        font-size: 18px;
-    }
-
-    .btn-d {
-        width: 130px;
-    }
-
-    .padding {
-        padding: 0 25px;
-    }
-
-    .padding-v2 {
-        padding: 25px;
-    }
-
-    .no-margin {
-        margin: 0 !important;
-    }
-
-    .freight__quotes {
-        border-top: none !important;
-        border: 3px solid #0072fc;
-        border-radius: 0px 0px 3px 3px;
-    }
-
-    .add-class__card-p {
-        box-shadow: none;
-        border: 3px solid #0072fc;
-        border-bottom: 1px solid #ececec !important;
-        border-radius: 3px 3px 0px 0px !important;
-    }
-
-    .bg-light {
-        padding: 5px 25px;
-        border-radius: 3px;
-        background-color: #f4f3f8 !important;
-    }
-
-    .portalphacode {
-        color: #1d3b6e !important;
-    }
-
-    .colorphacode {
-        color: #7c83b3;
-    }
-
-    .bg-rates {
-        padding: 2px 5px;
-        border-radius: 3px;
-        text-align: center;
-        background-color: #ececec;
-    }
-
-    .wth {
-        width: 22%;
-    }
-
-    .table-r__quotes {
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .table-r__quotes div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .b-top {
-        border-top: 1px solid #ececec;
-    }
-
-    .padding-min {
-        padding: 10px !important;
-    }
-
-    .b-left {
-        border-left: 1px solid #ececec;
-    }
-
-    .padding-min-col {
-        padding: 45px 10px !important;
-    }
-
-    .pos-btn {
-        position: relative;
-        right: 40px;
-    }
-
-    .padding-right-table {
-        padding-right: 50px !important;
-    }
-
-    .btn-date {
+        border: 1px solid #eee;
+        -webkit-border: 1px solid #eee;
+        background: #fff;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
         position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
+        margin-top: 5px;
+        z-index: 100;
+        box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: 0px 1px 15px 1px rgba(0,0,0, 0.1);
     }
-
-    .data-rates {
-        padding: 5px 25px;
+    .c5-select-container-close {
+        position: absolute;
+        top: 12px;
+        right: 10px;
+        cursor: pointer;
+        padding: 5px 8px;
+        border-radius: 100px;
+        -webkit-border-radius: 100px;
     }
-
-    .arrow-down {
-        top: 4px;
-        position: relative;
+    .c5-select-container-close:hover {
+        background: #f9f9f9;
     }
-
-    .monto-down {
-        top: 2px;
-        position: relative;
-    }
-
-    .min-width-filter span {
-        min-width: 50px !important;
-    }
-
-    .min-width-filter .select2-search--dropdown {
-        padding: 0px !important;
-    }
-
-    .margin-card {
-        margin-top: 50px !important;
-        margin-bottom: 50px !important;
-    }
-
-    .no-check {
-        display: none !important;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid #ececec;
-    }
-
-    .border-card {
-        border-color: #0072fc !important;
-    }
-
-    .btn-manual__quotes {
-        background-color: transparent;
-        color: #0072fc !important;
-        border-width: 2px;
-        font-weight: 600;
-        padding: 0.35rem 1rem;
-    }
-
-    .btn-manual__quotes span {
-        top: 2px;
-        position: relative;
-    }
-
-    .warning-p {
-        color: #575962;
+    .c5-select-header, .c5-select-multiple-switch {
         font-size: 14px;
-        font-weight: 600;
-
+        color: #333;
+        padding: 0px 0px 15px 0px;
+        display: block;
+    }
+    .c5-select-list {
+        height: 165px;
+        padding-left: 0px;
+        margin-bottom: 0px;
+        overflow-y: scroll;
+    }
+    .list-types-carriers {
+        height: auto !important;
+    }
+        /* width */
+    .c5-select-list::-webkit-scrollbar {
+        width: 8px;
     }
 
-    .warning-p span {
-        color: #e74c3c;
+    /* Track */
+    .c5-select-list::-webkit-scrollbar-track {
+        border-radius: 18px;
     }
 
-    .warning-p i {
-        font-size: 33px;
-        top: 7px;
-        margin-right: 5px;
-        position: relative;
-        transform: rotate(180deg);
+    /* Handle */
+    .c5-select-list::-webkit-scrollbar-thumb {
+        background: #ccc; 
+        border-radius: 18px;
     }
 
-    .btn-remarks {
-        width: 95px;
+    /* Handle on hover */
+    .c5-select-list::-webkit-scrollbar-thumb:hover {
+        background: #064acb; 
+    }
+    .c5-select-list li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        list-style: none;
+    }
+    .c5-select-dropdown-list {        
+        padding: 8px 10px 8px 10px;
+        border: 1px solid #eee;
+        -webkit-border: 1px solid #eee;
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        cursor: pointer;
+        margin-bottom: 0px;
+        display: flex;
+        justify-content: flex-start;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 35px;
+        background-color: #f6f6f6;   
+    }
+    .m-input.date{
+        background-color: #f6f6f6;   
+    }
+    .c5-select-dropdown-list li {
+        list-style: none;
+    }
+    .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    float: right;
     }
 
-    .full-width {
-        width: 100% !important;
+    .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
     }
 
-    .create-manual {
-        background-color: #fff !important;
-        color: #36a3f7 !important;
-        border-width: 1.5px;
-        border-color: #36a3f7 !important;
+    .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
     }
 
-    .create-manual:hover {
-        background-color: #36a3f7 !important;
-        border-color: #36a3f7 !important;
+    .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 5px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
     }
 
-    .select-class::before {
-        content: 'Select ->';
-        font-size: 13px;
+    .switch input:checked + .slider {
+    background-color: #2196F3;
     }
 
-    .selected-class:before {
-        content: 'Selected';
-        font-size: 13px;
+    .switch input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
     }
 
-    .workgreen {
-        color: #6ee99e !important;
-        font-size: 12px;
-        font-weight: bold !important;
+    .switch input:checked + .slider:before {
+    -webkit-transform: translateX(18px);
+    -ms-transform: translateX(18px);
+    transform: translateX(18px);
     }
 
-    .downexcel {
-        border-color: #6ee99e !important;
+    /* Rounded sliders */
+    .slider.round {
+    border-radius: 34px;
     }
 
-    .downexcel a {
-        text-decoration: none;
+    .slider.round:before {
+    border-radius: 50%;
+    }
+    .c5-label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     }
 
-    .downexcel:hover {
-        background-color: transparent !important;
+    /* Hide the browser's default checkbox */
+    .c5-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
     }
 
-    .downexcel i {
-        color: #6ee99e !important;
+    /* Create a custom checkbox */
+    .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
     }
 
-    .btn-plus__form {
-        position: relative;
-        top: 8px;
+    /* On mouse-over, add a grey background color */
+    .c5-label:hover input ~ .checkmark {
+    background-color: #eee;
     }
 
-    .include-checkbox[type="checkbox"] {
+    /* When the checkbox is checked, add a blue background */
+    .c5-label input:checked ~ .checkmark {
+    background-color: #2196F3;
+    border: 1px solid #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .c5-label input:checked ~ .checkmark:after {
+    display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .c5-label .checkmark:after {
+    left: 7px;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    }
+    .c5-case:hover {
+        background: #fbfbfb;
+    }
+    .hidden-air {
         display: none;
     }
-
-    .for-check {
-        display: flex;
-        padding-left: 40px;
-        padding-right: 0px;
+    .list-group2 {
+        height: auto !important;
     }
-
-    .label-check {
-        position: relative;
+    .h-hidden {
+        display: none;
     }
-
-    .label-check::before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        left: -25px;
-        width: 15px;
-        height: 15px;
-        background: transparent;
-        border: 2px solid #0000ff;
-        border-radius: 3px;
-        display: flex;
-        /*align-items: center*/
-        justify-content: center;
+    .border-select {
+        border-color: #716aca;
     }
-
-    .include-checkbox[type="checkbox"]:checked+.label-check::before {
-        content: '✔';
-        color: #0000ff;
-        line-height: 15px;
+    .select2-selection, .pac-target-input {
+        background-color: #f6f6f6 !important;
     }
-
-    /* estilos */
+    .hida {
+        display: none;
+    }
+  /* estilos */
 </style>
 @endsection
 
@@ -488,132 +667,149 @@
             <div class="m-portlet__body">
                 <div class="tab-content">
                     <div>
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <label>Quote Type</label>
-                                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$form['type'],['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
-                            </div>
+                    <div class="row">
+              <div class="col-lg-1">
+                <label>Quote Type</label>
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$quoteType,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
+              </div>
+              <div class="col-lg-1">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
+              <div class="col-lg-2" id="equipment_id">
+                <label>Equipment</label>
+                {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
+                <!-- {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }} -->
+              </div>
 
-                            <div class="col-lg-2" id="equipment_id">
-                                <label>Equipment</label>
-                                {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
-                            </div>
+            
+              <div class="col-lg-2">
+                <label>Company</label>
+                <div class="m-input-icon m-input-icon--right">
+                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }} 
+                  <span class="m-input-icon__icon m-input-icon__icon--right">
+                    <span>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-lg-2">
+                <label>Contact</label>
+                <div class="m-input-icon m-input-icon--right">
+                  {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control']) }}
+                  {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
+                  <span class="m-input-icon__icon m-input-icon__icon--right">
+                    <span>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;"></i></a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="col-lg-2">
+                <label>Price level</label>
+                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
+                {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
+              </div>
+              <div class="col-lg-2" id="delivery_type_label">
+                <label>Delivery type</label>
+                {{ Form::select('delivery_type',['1' => 'PORT To PORT','2' => 'PORT To DOOR','3'=>'DOOR To PORT','4'=>'DOOR To DOOR'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+              </div>
+              <div class="col-lg-4 hidden-air" id="delivery_type_air_label">
+                <label>Delivery type</label>          
+                {{ Form::select('delivery_type_air',['5' => 'AIRPORT To AIRPORT','6' => 'AIRPORT To DOOR','7'=>'DOOR To AIRPORT','8'=>'DOOR To DOOR'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
+              </div>
 
-                            <div class="col-lg-2">
-                                <label>Company</label>
 
-                                <div class="m-input-icon m-input-icon--right">
-                                    {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
-                                    <span class="m-input-icon__icon m-input-icon__icon--right">
-                                        <span>
-                                            <a onclick="AbrirModal('add',0)" data-container="body"
-                                                data-toggle="m-tooltip" data-placement="top" title=""
-                                                data-original-title="Add Company if not exist"> <i
-                                                    class="la  la-plus-circle btn-plus__form"
-                                                    style="color:blue; font-size: 18px;"></i> </a>
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <label>Contact</label>
-                                <div class="m-input-icon m-input-icon--right">
-                                    {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control']) }}
-                                    {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
-                                    <span class="m-input-icon__icon m-input-icon__icon--right">
-                                        <span>
-                                            <a onclick="AbrirModal('addContact',0)" data-container="body"
-                                                data-toggle="m-tooltip" data-placement="top" title=""
-                                                data-original-title="Add Contact if not exist"> <i
-                                                    class="la  la-plus-circle btn-plus__form"
-                                                    style="color:blue; font-size: 18px;"></i></a>
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <label>Price level</label>
-                                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
-                                {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
-                            </div>
-                            <div class="col-lg-2">
-                                <label>Direction</label>
-                                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-                            </div>
+            </div><br>
+            <div class="row">
+              <div class="col-lg-4" id="origin_port">
+                <div id="origin_harbor_label">
+                  <label>Origin port</label>
+                  {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
 
-                        </div><br>
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <div id="origin_harbor_label">
-                                    <label>Origin port</label>
-                                    {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
-                                </div>
+                </div>
 
-                                <div id="origin_airport_label" style="display:none;">
-                                    <label>Origin airport</label>
-                                    <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
-                                </div>
+                <div id="origin_airport_label" style="display:none;">
+                  <label>Origin airport</label>
+                  <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
+                </div>
 
-                            </div>
-                            <div class="col-lg-2">
-                                <div id="destination_harbor_label">
-                                    <label>Destination port</label>
-                                    {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
-                                </div>
-                                <div id="destination_airport_label" style="display:none;">
-                                    <label>Destination airport</label>
-                                    <select id="destination_airport" name="destination_airport_id"
-                                        class="form-control"></select>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <label>Date</label>
-                                <div class="input-group date">
-                                    {!! Form::text('date', @$form['date'], ['id' => 'm_daterangepicker_1' ,'placeholder'
-                                    => 'Select date','class' => 'form-control m-input date' ,'required' =>
-                                    'true','autocomplete'=>'off']) !!}
-                                    {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden' => 'true']) !!}
+              </div>
+              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
+                <label>Origin address</label>
+                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+              </div>
+              <div class="col-lg-4" id="destination_port">
+                <div  id="destination_harbor_label">
+                  <label>Destination port</label>
+                  {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                </div>
+                <div id="destination_airport_label" style="display:none;">
+                  <label>Destination airport</label>
+                  <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
+                </div>
+              </div>
+              <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
+                <label>Destination address</label>
+                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+              </div>
+             
+              <div class="col-lg-2">
+                <label>Date</label>
+                <div class="input-group date">
+                  {!! Form::text('date', @$form['date'], ['id' => 'm_daterangepicker_1' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                  {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
 
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">
-                                            <i class="la la-calendar-check-o"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-2" id="delivery_type_label">
-                                <label>Delivery type</label>
-                                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
-                            </div>
-                            <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
-                                <label>Delivery type</label>
-                                {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
-                            </div>
-                            <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
-                                <label>Origin address</label>
-                                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please
-                                enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-                            </div>
-                            <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
-                                <label>Destination address</label>
-                                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' =>
-                                'Please enter a destination address','class' => 'form-control
-                                m-input','id'=>'destination_address']) !!}
-                            </div>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="la la-calendar-check-o"></i>
+                    </span>
+                  </div>
+                </div>
+                
+                <br>
 
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-lg-2 for-check">
-                                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
-                                <label for="mode1" class="label-check">Include origin charges</label></div>
-                            <div class="col-lg-2 for-check">
-                                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
-                                <label for="mode2" class="label-check">Include destination charges</label></div>
-                            <div class="col-lg-2 for-check">
-                                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
-                                <label for="mode3" class="label-check">Include freight charges</label></div>
-                        </div>
+
+              </div>
+
+              <div class="col-lg-2" id="carriers">
+                <label>Carriers</label>
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
+              </div>
+            
+              <div class="col-lg-4 for-check">   
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
+                <label for="mode1" class="label-check">Include origin charges</label>
+              </div>
+              <div class="col-lg-4 for-check">
+                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
+                <label for="mode2" class="label-check">Include destination charges</label>
+              </div>
+              <!-- <div class="col-lg-2 for-check">
+                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
+                <label for="mode3" class="label-check">Include freight charges</label>
+              </div> -->
+            </div>
+            <div class="row">
+               <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
+
+              <!--<div class="col-lg-2 for-check" id="cmadiv">
+                {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
+                <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
+              </div>
+
+              <div class="col-lg-2 for-check" id="maerskdiv">
+                {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
+                <label for="mode5" class="label-check">Include MAERSK Spot</label>
+              </div>
+
+              <div class="col-lg-2 for-check" id="safmarinediv">
+								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
+								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
+							</div>-->
+
+            </div><br>    
 
                     </div>
                 </div><br>
@@ -1591,24 +1787,42 @@
     }
   });
 
-  $(document).ready(function() {
-    var divRow = document.getElementsByClassName('data-rates');
-    var numDivRow = divRow.length;
-    var count = 0;
-    //console.log(numDivRow);
 
-    for(var i = 1; i < numDivRow; i++){
-      if(i%2 == 1){
-        var clase = divRow[i];
-        //console.log(clase);
-        $(clase).css({
-          'background-color' : '#fafafa'
-        });      
-        //console.log(clase);
-      }
-    }
 
-  });
+  $(document).ready(function() {   
+
+var divRow = document.getElementsByClassName('data-rates');
+var numDivRow = divRow.length;
+var count = 0;
+console.log(numDivRow);
+
+for(var i = 1; i < numDivRow; i++){
+  if(i%2 == 1){
+    var clase = divRow[i];
+    console.log(clase);
+    $(clase).css({
+      'background-color' : '#fafafa'
+    });      
+    //console.log(clase);
+  }
+}
+
+$('#carrier_select').selectC5();
+$('#equipment').selectC5();
+var data = '{{$allCarrier}}';
+if(data==true){
+  $('.c5-switch').prop('checked', true);
+  $('.c5-switch').trigger('change');
+}
+
+
+
+
+});
+
+
+
+
 
 
   /*** GOOGLE MAPS API ***/
@@ -1665,6 +1879,333 @@
     }
 
   }
+
+
+
+  $('#delivery_type').on('change', function(){
+        var value = $(this).val();
+        if(value == 1){
+            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if((value == 2) || (value == 3)){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if(value == 4){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
+        }
+    });
+
+    $('#delivery_type_air').on('change', function(){
+        var value = $(this).val();
+        console.log(value);
+        if(value == 5){
+            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if((value == 6) || (value == 7)){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if(value == 8){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
+        }
+    });
+
+    $('#quoteType').on('change', function(){
+        var value = $(this).val();
+        if(value == 3){
+            $('#delivery_type_air_label').css({'display':'block'});
+        }
+    });
+
+    //C5 Select
+   (function($){
+       $.fn.selectC5 = function(){
+            var clickOnID = ''+$(this).attr('id')+'';
+            var optionSelect = '#'+$(this).attr('id')+' option';
+            var selectType = ''+$(this).attr('select-type')+'';
+            var selectContainer = $('select#'+clickOnID+' option').val();
+
+            var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
+                                '<ul class="c5-select-dropdown-list select-list">'+
+                                '</ul>'+
+                                '</span>'+
+                                '<span class="c5-select-multiple-container '+clickOnID+'">'+
+                                    '<span class="c5-select-header">Types</span>'+
+                                    '<ul class="c5-select-list list-types-carriers">'+
+                                        '<li class="c5-case"><label class="c5-label">CMA CGM Spot'+
+                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">'+
+                                            '<span class="checkmark"></span></label></li>'+
+                                        '<li class="c5-case"><label class="c5-label">MAERSK Spot'+
+                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK" title="MAERSK">'+
+                                            '<span class="checkmark"></span></label></li>'+
+                                        '<li class="c5-case"><label class="c5-label">SAFMARINE Spot'+
+                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">'+
+                                            '<span class="checkmark"></span></label></li>'+
+                                    '</ul>'+
+                                    '<span class="c5-select-header">Carriers</span>'+
+                                    '<span class="c5-select-container-close">'+
+                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
+                                    '</span>'+
+                                    '<span class="c5-select-multiple-switch">'+
+                                        'Select All '+
+                                        '<label class="switch">'+
+                                            '<input type="checkbox" class="c5-switch">'+
+                                            '<span class="slider round"></span>'+
+                                        '</label>'+
+                                    '</span>'+
+                                    '<ul class="c5-select-list select-normal"></ul>'+
+                                '</span>';
+
+            var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
+                                    '<ul class="c5-select-dropdown-list select-list">'+
+                                    '</ul>'+
+                                    '</span>'+
+                                    '<span class="c5-select-multiple-container '+clickOnID+'">'+
+                                    '<span class="c5-select-container-close">'+
+                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
+                                    '</span>'+
+                                    '<span class="c5-select-header">Types</span>'+
+                                    '<ul class="c5-select-list list-group1"></ul>'+
+                                    '<span class="c5-select-header h-hidden">Equipment List</span>'+
+                                    '<ul class="c5-select-list list-group2"></ul>'+
+                                    '</span>';            
+           
+            
+            // Select Multiple con swicth
+            if(selectType == 'multiple'){
+                var data = '{{$carrierMan}}';
+                var carriersList = JSON.parse(data.replace(/&quot;/g,'"')); 
+                var defaultValuesCarriers = $('#'+clickOnID+'').val();
+
+                $(this).after(multiSelect);
+
+                $(optionSelect).each(function(){
+                    var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
+                                '<input type="checkbox" title="'+$(this).text()+
+                                '" class="c5-check" value="'+$(this).val()+
+                                '"><span class="checkmark"></span></label></li>';
+                    $('.c5-select-list.select-normal').append(list);    
+                });
+
+                
+
+                for ( var i in defaultValuesCarriers ) {
+                    var ident = defaultValuesCarriers[i];
+                    var name = $('.select-normal .c5-case input[value="'+ident+'"]').attr('title');
+                    
+                    //console.log(name);
+                    
+                    $('.'+clickOnID+' .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    //$('.'+clickOnID+' .select-list').append('<li title="'+nameAPI+'">'+nameAPI+', </li>');
+                    $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                }
+
+                $('.'+clickOnID+' .select-list li[title="1"]').remove();
+
+
+                $('#'+clickOnID+'').val(defaultValuesCarriers);
+
+                $('.'+clickOnID+' .c5-check').on("click", function() {
+                    var checkSelected = [];
+                    var valCheckSelected = $(this).val();
+                    
+                    $('.'+clickOnID+' .c5-check').each(function() {
+                        if (this.checked) {
+                            checkSelected.push($(this).val());
+                        }
+                    });
+
+                    $('#'+clickOnID+'.select-normal').val(checkSelected);
+                    /*var valor1 = $('#'+clickOnID+'.select-normal').val();
+                    console.log(valor1);*/
+                    
+                });
+
+                $('.'+clickOnID+' .c5-select-multiple-switch .c5-switch').on('change', function(){   
+                    var allSelected = [];    
+
+                    $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
+                    $('.'+clickOnID+' .c5-check').each(function() {
+                        if (this.checked) {
+                            allSelected.push($(this).val());
+                        }
+                    }); 
+                    
+                    $('#'+clickOnID+'.select-normal').val(allSelected);
+                    /*var valor = $('#'+clickOnID+'.select-normal').val();
+                    console.log(valor);*/
+
+                    if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
+                        $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
+                    }else{
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
+                    }                    
+
+                });
+
+                $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
+                    var allCarriers = [];
+                    var allOptions = $('.'+clickOnID+' .c5-check').length;
+
+                    $('.'+clickOnID+' .select-normal .c5-check').each(function() {
+                        if (this.checked) {
+                            allCarriers.push($(this).val());
+                        }
+                    });
+
+                    $('.'+clickOnID+' .select-normal').val(allCarriers);
+                    /*var valor = $('.'+clickOnID+' .select-normal').val();
+                    console.log(valor);*/
+
+                    var allCarriersLength = allCarriers.length;
+
+                    if( allCarriers.length > 0 ){
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''+allCarriers.length+' has been Selected');
+                    } else if ( allCarriers.length == 0 ){
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('Select an option');
+                    }
+                    $('.'+clickOnID+' .c5-switch').prop('checked', false);
+                    
+                    
+                });
+                $('.select-normal .c5-case:nth-child(1)').remove();
+                $('.select-normal .c5-case:nth-child(2)').remove();
+                $('.select-normal .c5-case:nth-child(1)').remove();
+            }
+            
+            // Select Multiple con Lables
+            if(selectType == 'groupLabel') {
+                $(this).after(multiSelectGroup);
+                var showEquip = $('.select-list li.hida');
+                var data = '{{$group_contain}}';
+                var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
+                var defaultValues = $('#'+clickOnID+'').val();
+                var containerType= '{{$containerType}}';
+
+                getContainerByGroup(''+containerType+'');
+                
+                for (var i in newData) {
+                    var code = `${newData[i]}`;
+                    //console.log(i, code);
+                    var list2 = '<li class="c5-case"><label class="c5-label">'+code+
+                                    '<input type="radio" name="container_type" onclick="getContainerByGroup('+i+')" class="c5-check" title="'+code+'" value="'+i+
+                                    '"><span class="checkmark"></span></label></li>';
+                    $('.list-group1').append(list2);
+                }
+
+                $('.list-group1 .c5-case:nth-child('+containerType+') input').attr('checked', true);
+            }
+
+            $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
+            });
+
+            $('.select2').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').css({'display':'none'});
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#eee'});
+            });
+
+            $('.'+clickOnID+' .c5-select-container-close').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
+            });
+            
+       }
+   })(jQuery);
+
+   function getContainerByGroup(id_group){
+        $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '/Container/getContainer/',
+        data: {
+            'id_group' : id_group
+        },
+        success: function(data) {
+            //console.log(data);
+            var selectValues = $('select#equipment').val();
+            var containerType= '{{$containerType}}';
+            const defaultValuesController = <?php echo json_encode( $form['equipment']);?>;
+            ;
+            $('.h-hidden').css({'display':'block'});
+            $('.list-group2 li').remove();
+            //Opciones de equipment list
+            for ( const equip in data ) {
+                var code = `${data[equip].code}`;
+                var idEquip = `${data[equip].id}`;
+                var list2 = '<li class="c5-case"><label class="c5-label">'+code+
+                                '<input type="checkbox"  class="c5-check" title="'+code+'" value="'+idEquip+
+                                '"><span class="checkmark"></span></label></li>';
+                $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
+                $('.list-group2').append(list2);
+            }
+            $('.equipment .select-list').html('');
+            //Cargamos valores de DRY predeterminados final
+            if( id_group == containerType ) {
+                for (var i in defaultValuesController) {
+                    var ident = defaultValuesController[i];
+                    var name = $('.list-group2 .c5-case input[value="'+ident+'"]').attr('title');
+                    $('.equipment .select-list').append('<li title="'+name+'">'+name+', </li>');
+                    $('.list-group2 .c5-case input[value="'+ident+'"]').attr('checked', true);
+                    defaultValuesController.push(ident);
+                    //console.log(ident);
+                }
+                $('.equipment .select-list li[title="undefined"]').remove();
+                $('#equipment.select-group').val(defaultValuesController);
+                //console.log($('#equipment.select-group').val());
+                //console.log($('#equipment.select-group').val());
+            }else{
+                var valueArray = [];
+                for ( const equip in data ) {
+                    var code = `${data[equip].code}`;
+                    var idEquip = `${data[equip].id}`;
+                    $('.equipment .select-list').append('<li title="'+code+'">'+code+', </li>');
+                    $('.list-group2 .c5-case input[value="'+idEquip+'"]').attr('checked', true);
+                    valueArray.push(idEquip);
+                    //console.log(idEquip);
+                }
+                $('#equipment.select-group').val(valueArray);
+                //console.log($('#equipment.select-group').val());
+                
+            }
+            //Cargamos valores al click de equipment list
+            $('.equipment .list-group2 .c5-check').on("click", function() {
+                var valueEquipment = [];
+                var title = $(this).attr('title');
+                $('.equipment .list-group2 .c5-check').each(function() {
+                    if (this.checked) {
+                        valueEquipment.push($(this).val());
+                        //console.log(valueEquipment);
+                    }
+                });
+                $('#equipment.select-group').val(valueEquipment);
+                var countEquip = valueEquipment.length;
+                if ($(this).is(':checked')) {
+                    var html = '<li title="' + title + '">' + title + ', </li>';
+                    $('.equipment .select-list').append(html);
+                    $(".select-list .hida").hide();
+                } else {
+                    var listLength = $('.equipment .list-group2 .c5-check:checked').length;
+                    $('li[title="' + title + '"]').remove();
+                    if( countEquip == 0 ){
+                        $(".select-list .hida").show();
+                    }
+                }
+            });
+            
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+}
+
 
 </script>
 
