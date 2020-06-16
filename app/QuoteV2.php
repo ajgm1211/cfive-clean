@@ -193,6 +193,7 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeCompanyRelation($q)
     {
         return $q->with(['company' => function ($query) {
+            $query->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'owner', 'options');
             $query->with(['company_user' => function ($q) {
                 $q->select('id', 'name', 'address', 'phone', 'currency_id');
                 $q->with(['currency' => function ($q) {
@@ -209,7 +210,7 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return $q->with(['contact' => function ($query) {
             $query->with(['company' => function ($q) {
-                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number');
+                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'options');
             }]);
         }]);
     }
