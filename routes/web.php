@@ -1012,20 +1012,23 @@ Route::prefix('Container')->group(function () {
     route::get('getContainer','ContainerController@getContainerByGroup')->name('container.get');
 });
 
-/** Contracts V2 view routes **/
-Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
-Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit');
-/** End Contracts routes view **/
 
-/** Inlands V2 view routes **/
-Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
-//Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-/** End Inlands routes view **/
+Route::group(['middleware' => ['auth']], function () {
+    /** Contracts V2 view routes **/
+    Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
+    Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit');
+    /** End Contracts routes view **/
 
-/** Inlands V2 view routes **/
-Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index');
-/** End Inlands routes view **/
+    /** Inlands V2 view routes **/
+    Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+    //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
+    Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
+    /** End Inlands routes view **/
+
+    /** Inlands V2 view routes **/
+    Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
+    /** End Inlands routes view **/
+});
 
 
 /*****************************************************************************************
@@ -1148,4 +1151,10 @@ Route::post('api/v2/inlands/store', 'InlandController@store');
 Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
 
 /** End Contracts V2 routes **/
+/** Transit time **/
+
+Route::prefix('ImpTransitTime')->group(function () {
+    Route::resource('ImpTransitTime','ImportationTransitTimeController')->middleware(['role:administrator|data_entry']);
+    route::post('UploadTTimes','ImportationTransitTimeController@storeMedia')->name('ImpTransitTime.storeMedia')->middleware(['role:administrator|data_entry']);
+});
 
