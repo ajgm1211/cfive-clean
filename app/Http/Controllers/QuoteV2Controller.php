@@ -5974,15 +5974,33 @@ class QuoteV2Controller extends Controller
         $chargeFreight = ($chargesFreight != null) ? true : false;
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
+        $chargeAPI_SF = ($chargesAPI_M != null) ? true : false;
+
+
 
         $hideO = 'hide';
         $hideD = 'hide';
         $form = $request->all();
+
+
+        $group_contain = GroupContainer::pluck('name', 'id');
+        $carrierMan = Carrier::pluck('name', 'id');
+        $carriersSelected = $request->input('carriers');
+        $allCarrier = true;
+        $form['equipment'] = array('1', '2', '3');
+        $containers = Container::get();
+        $validateEquipment = $this->validateEquipment($form['equipment'], $containers);
+        $containerType = $validateEquipment['gpId'];
+        $quoteType =  $request->input('type');
+
+
+
+
         //dd($form);
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name', 'id');
 
-        return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain'));
+        return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'chargeAPI_SF','contain','group_contain','carrierMan','carriersSelected','allCarrier','containerType','quoteType'));
     }
 
     /**
