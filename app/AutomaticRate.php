@@ -44,6 +44,11 @@ class AutomaticRate extends Model
         return $this->hasMany('App\AutomaticInlandLclAir','automatic_rate_id');
     }
 
+    public function inland_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir','automatic_rate_id');
+    }
+
     public function currency()
     {
         return $this->hasOne('App\Currency','id','currency_id');
