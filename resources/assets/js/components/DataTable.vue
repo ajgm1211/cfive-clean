@@ -178,9 +178,9 @@
                     <b-td>
                         <b-button v-bind:id="'popover'+item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                            <button class="btn-action" v-on:click="onEdit(item)">Edit</button>
-                            <button class="btn-action" v-on:click="onDuplicate(item.id)">Duplicate</button>
-                            <button class="btn-action" v-on:click="onDelete(item.id)">Delete</button>
+                            <button class="btn-action" v-if="singleActions.includes('edit')" v-on:click="onEdit(item)">Edit</button>
+                            <button class="btn-action" v-if="singleActions.includes('duplicate')" v-on:click="onDuplicate(item.id)">Duplicate</button>
+                            <button class="btn-action" v-if="singleActions.includes('delete')" v-on:click="onDelete(item.id)">Delete</button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -236,6 +236,11 @@
                 type: Array,
                 required: false,
                 default: () => { return ['delete'] }
+            },
+            singleActions: {
+                type: Array,
+                required: false,
+                default: () => { return ['edit', 'duplicate', 'delete'] }                
             },
             actions: Object,
             firstEmpty: {
@@ -478,8 +483,10 @@
                 this.datalists = JSON.parse(JSON.stringify(this.vdatalists));
 
                 for (const key in this.inputFields) {
-                    if(this.inputFields[key]['type'] == 'pre_select')
+                    if(this.inputFields[key]['type'] == 'pre_select'){
+                        this.fdata[key] = this.inputFields[key]['initial'];
                         this.datalists[this.inputFields[key]['target']] = this.datalists[this.inputFields[key]['initial'].vselected];
+                    }      
                 }
             },
             isEmpty(obj){

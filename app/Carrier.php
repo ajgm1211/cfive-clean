@@ -36,9 +36,8 @@ class Carrier extends Model
         return $this->hasMany('App\GlobalCharPortCarrier');
     }
 
-    public function getUrlAttribute($value)
+    public function getUrlAttribute()
     {
-
-        return 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' .$value;
+        return "https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/".$this->image;
     }
 }

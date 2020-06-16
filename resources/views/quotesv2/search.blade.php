@@ -661,6 +661,16 @@
   {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 
   <div class="col-lg-12">
+      @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<br>
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
