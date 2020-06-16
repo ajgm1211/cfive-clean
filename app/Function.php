@@ -1,5 +1,6 @@
 <?php
 
+use App\CompanyUser;
 use App\Currency;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -73,23 +74,26 @@ function obtenerRouteKey($keyP)
 
 
 
-function isDecimal($monto)
+function isDecimal($monto, $quote = false)
 {
 
-    $isDecimal = Auth::user()->companyUser->decimals;
-    if ($isDecimal){
-      if(is_string($monto))
-        return $monto;
-      else if(is_float($monto))
-        return $monto;
-    else
-        return number_format($monto, 2, '.', '');
-    }else{
-      return round($monto);
-    }       
+    $isDecimal = optional(Auth::user()->companyUser)->decimals;
+    
+    if ($isDecimal != null && $isDecimal == 1) {
+        if (!$quote) {
+            if (is_string($monto))
+                return $monto;
+            else if (is_float($monto))
+                return $monto;
+            else
+                return number_format($monto, 2, '.', '');
+        }else{
+            return number_format($monto, 2, '.', '');
+        }
+    } else {
+        return round($monto);
+    }
 }
-
-
 
 /**
  * ratesCurrencyFunction
@@ -111,3 +115,52 @@ function ratesCurrencyFunction($id, $typeCurrency)
     return $rateC;
 }
 
+function processOldDryContainers($array, $type)
+{
+    if (!empty($array)) {
+        switch ($type) {
+            case 'amounts':
+                foreach ($array as $k => $amount_value) {
+                    if ($k == 'c20') {
+                        $array['c20DV'] = $amount_value;
+                        unset($array['c20']);
+                    } elseif ($k == 'c40') {
+                        $array['c40DV'] = $amount_value;
+                        unset($array['c40']);
+                    } elseif ($k == 'c40hc') {
+                        $array['c40HC'] = $amount_value;
+                        unset($array['c40hc']);
+                    } elseif ($k == 'c40nor') {
+                        $array['c40NOR'] = $amount_value;
+                        unset($array['c40nor']);
+                    } elseif ($k == 'c45hc') {
+                        $array['c45HC'] = $amount_value;
+                        unset($array['c45hc']);
+                    }
+                }
+                return $array;
+                break;
+            case 'markups':
+                foreach ($array as $k => $markup_value) {
+                    if ($k == 'm20') {
+                        $array['m20DV'] = $markup_value;
+                        unset($array['m20']);
+                    } elseif ($k == 'm40') {
+                        $array['m40DV'] = $markup_value;
+                        unset($array['m40']);
+                    } elseif ($k == 'm40hc') {
+                        $array['m40HC'] = $markup_value;
+                        unset($array['m40hc']);
+                    } elseif ($k == 'm40nor') {
+                        $array['m40NOR'] = $markup_value;
+                        unset($array['m40nor']);
+                    } elseif ($k == 'm45hc') {
+                        $array['m45HC'] = $markup_value;
+                        unset($array['m45hc']);
+                    }
+                }
+                return $array;
+                break;
+        }
+    }
+}

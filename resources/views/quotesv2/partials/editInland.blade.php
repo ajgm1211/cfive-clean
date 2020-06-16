@@ -30,7 +30,7 @@
                 <div class="row">
                     <div class="col-md-4" class="" id="carrier_label"> 
                         <label>Currency</label>
-                        {{ Form::select('currency_id',$currencies,$inland->currency_id,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit','required'=>'true']) }}
+                        {{ Form::select('currency_id',$currencies,$inland->currency_id,['placeholder' => 'Select an option', 'class'=>'form-control m-select2-edit','required'=>'true']) }}
                     </div>
                 </div>
                 <hr>

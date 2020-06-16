@@ -420,6 +420,36 @@ class ApiController extends Controller
     }
 
     /**
+     * Show quotes list
+     * @param Request $request 
+     * @return JSON
+     */
+
+    public function quoteById(Request $request, $id)
+    {
+        $type = $request->type;
+        $status = $request->status;
+        $integration = $request->integration;
+        $company_user_id = Auth::user()->company_user_id;
+
+        $quote = QuoteV2::QuoteSelect()->ConditionalWhen($type, $status, $integration)
+            ->AuthUserCompany($company_user_id)
+            ->RateV2()->UserRelation()->CompanyRelation()
+            ->ContactRelation()->PriceRelation()->SaletermRelation()
+            ->with('incoterm')->findOrFail($id);
+
+        //Modify equipment array
+        $this->transformEquipmentSingle($quote);
+
+        //Update Integration Quote Status
+        /*if ($integration) {
+            IntegrationQuoteStatus::where('quote_id', $quote->id)->update(['status' => 1]);
+        }*/
+
+        return $quote;
+    }
+
+    /**
      * Show carriers list
      * @param Request $request 
      * @return JSON
@@ -609,7 +639,7 @@ class ApiController extends Controller
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
                 })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image');
+                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) {
@@ -619,14 +649,14 @@ class ApiController extends Controller
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
                 })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image');
+                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
             }
             $arreglo = $arreglo->get();
         }
 
         //Guard if
-        if ($arreglo == null) {
+        if (count($arreglo) == 0) {
             return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
         }
 
@@ -739,7 +769,7 @@ class ApiController extends Controller
                 }
 
                 foreach ($local->localcharcarriers as $localCarrier) {
-                    if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all) {
+                    if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
                         $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
                         if ($chargesOrigin != null) {
@@ -817,7 +847,7 @@ class ApiController extends Controller
                     }
                     foreach ($global->globalcharcarrier as $globalCarrier) {
 
-                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all) {
+                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all->id) {
                             $globalParams = array('terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier);
                             //Origin
                             if ($chargesOrigin != null) {
@@ -988,21 +1018,22 @@ class ApiController extends Controller
 
             //Totals
             foreach ($containers as $cont) {
-                foreach ($equipment as $containers) {
-                    if ($containers == $cont->id) {
+                foreach ($equipment as $eq) {
+                    if ($eq == $cont->id) {
                         $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
                     }
                 }
             }
+
             $detalle['Rates']['currency'] = $typeCurrency;
             //Schedules
             $detalle['Rates']['schedule']['service'] = $data->service;
             $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
             $detalle['Rates']['schedule']['via'] = $data->via;
 
-            //set carrier logo url
-            $data->carrier['image'] = 'https://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/' . $data->carrier->image;
+            //Set carrier
             $detalle['Rates']['carrier'] = $data->carrier;
+            //Set contract details
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
             $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
             $detalle['Rates']['contract']['number'] =   $data->contract->number;

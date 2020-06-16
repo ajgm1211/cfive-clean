@@ -26,7 +26,21 @@ class StoreEmailTemplate extends FormRequest
         return [
             'name' => 'required',
             'subject' => 'required',
-            'message' => 'required',
+            'menssage' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required'  => 'A name is required',
+            'subject.required'  => 'A subject is required',
+            'menssage.required'  => 'A message is required',
         ];
     }
 }

@@ -36,7 +36,6 @@
                                                 @endif
                                             </li>
                                             <li class="size-12px long-text m-width-200 desktop"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
-                                            <li class="size-12px long-text m-width-100 desktop"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
                                             <li class="size-12px long-text m-width-100 desktop"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
                                             <li class="size-12px long-text m-width-100 desktop"><b>Via:</b> &nbsp;{{$rate->via}}</li>
                                             <li class="size-12px no-border-left d-flex justify-content-end m-width-50">
