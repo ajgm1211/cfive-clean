@@ -194,7 +194,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
                 }
             }
-
+            $collection = collect([]);
             $countRow = 1;
             foreach($sheetData as $row){
                 if($countRow > 1){
@@ -292,7 +292,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     //--- PORT/CONTRY/REGION BOOL -------------------------------------
                     $differentiatorVal = '';
                     if($statusPortCountry){
-                        $differentiatorVal = $row[$differentiator];
+                        $differentiatorVal = trim($row[$differentiator]);
                     } else {
                         $differentiatorVal = 'port';
                     }
@@ -383,7 +383,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $calculation_type_exc   = $row[$calculationtypeExc];
                             $chargeExc_val          = $row[$chargeExc];
 
-
                             //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
                             if($statusPortCountry){
                                 if(strnatcasecmp($differentiatorVal,'country') == 0 || strnatcasecmp($differentiatorVal,'region') == 0){
@@ -408,6 +407,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 }
                                 $originVal  = $resultadocountrytOri['country'];
                             }
+                            //$collection->push([$countRow => [$originVal,$statusPortCountry,$differentiatorBol,$differentiatorVal]]);
 
                             //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
                             $destinyVal = trim($destinyMult);// hacer validacion de puerto en DB
@@ -1387,6 +1387,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 }
                 $countRow++;
             }
+            //dd($collection);
 
             $nopalicaHs = Harbor::where('name','No Aplica')->get();
             $nopalicaCs = Country::where('name','No Aplica')->get();

@@ -136,7 +136,7 @@ class Helpharbors {
     public static function get_harbor_simple($puerto){
         $data = null;
         $resp =  false;
-        $place_val     = Harbor::where('varation->type','like','%'.$puerto.'%')->get();
+        $place_val     = Harbor::where('varation->type','like','%'.strtolower($puerto).'%')->get();
         if(count($place_val) == 1 ){
             $resp = true;
             $data = $place_val[0]->id;
