@@ -45,7 +45,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{isDecimal(@$item->${'sale_term_'.$c->code})}}</td>
+                                                            <td {{ $hide }}>{{isDecimal(@$item->${'sale_term_'.$c->code}, true)}}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach

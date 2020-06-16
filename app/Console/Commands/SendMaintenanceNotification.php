@@ -21,7 +21,7 @@ class SendMaintenanceNotification extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send notifications by email when a maintenance activity is scheduled';
 
     /**
      * Create a new command instance.

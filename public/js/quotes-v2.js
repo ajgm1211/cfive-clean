@@ -981,6 +981,7 @@ $(document).on('click', '.store_charge', function() {
         },
         success: function(data) {
             if (data.message == 'Ok') {
+                toastr.clear();
                 swal(
                     'Done!',
                     'Charge saved successfully',
@@ -1000,7 +1001,9 @@ $(document).on('click', '.store_charge', function() {
             var currency_cfg = '';
 
             $.each(containers, function(index, value) {
-                window["total_" + value] = parseFloat(amounts['c' + value]) + parseFloat(markups['m' + value]);
+                window["amount_from_db_" + value] = amounts['c' + value] || 0;
+                window["markup_from_db_" + value] = markups['m' + value] || 0;
+                window["total_" + value] = parseFloat(window["amount_from_db_" + value]) + parseFloat(window["markup_from_db_" + value]);
             });
 
             //Si es Freight
@@ -1009,7 +1012,7 @@ $(document).on('click', '.store_charge', function() {
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
                 $.each(containers, function(index, value) {
-                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
@@ -1034,9 +1037,9 @@ $(document).on('click', '.store_charge', function() {
                 });
 
                 $.each(containers, function(index, value) {
-                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
-                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
-
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
+                    console.log(window["amount_currency_" + value]);
                     //Calculando subtotal de rates
                     window["subtotal_c" + value] = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c' + value + '_freight').val());
                     $('.total_freight_' + number).closest('div.rates').find('.subtotal_c' + value + '_freight').val(window["subtotal_c" + value] + parseFloat(window["amount_currency_" + value]));
@@ -1064,7 +1067,7 @@ $(document).on('click', '.store_charge', function() {
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
                 $.each(containers, function(index, value) {
-                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
@@ -1089,8 +1092,8 @@ $(document).on('click', '.store_charge', function() {
                 });
 
                 $.each(containers, function(index, value) {
-                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
-                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
                     //Calculando subtotal de rates
                     window["subtotal_c" + value] = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c' + value + '_destination').val());
@@ -1119,7 +1122,7 @@ $(document).on('click', '.store_charge', function() {
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
                 $.each(containers, function(index, value) {
-                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
@@ -1144,8 +1147,8 @@ $(document).on('click', '.store_charge', function() {
                 });
 
                 $.each(containers, function(index, value) {
-                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
-                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
                     //Calculando subtotal de rates
                     window["subtotal_c" + value] = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c' + value + '_origin').val());

@@ -103,7 +103,7 @@
                                         <tr class="text-left color-table">
                                             <td >{{__('pdf.total_destination')}}</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td {{ @$equipmentHides['40hc'] }}>{{isDecimal(@$total_destination)}}</td>
+                                            <td {{ @$equipmentHides['40hc'] }}>{{isDecimal(@$total_destination, true)}}</td>
                                             @if($quote->pdf_option->grouped_destination_charges==1)
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
@@ -167,7 +167,7 @@
                                 <td></td>
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                <td ><b>{{isDecimal(@$total_destination)}}</b></td>
+                                <td ><b>{{isDecimal(@$total_destination, true)}}</b></td>
                                 @if($quote->pdf_option->grouped_destintion_charges==1)
                                     <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                                 @else
@@ -267,7 +267,7 @@
                                 <td></td>
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                <td ><b>{{isDecimal(@$total_destination+@$total_inland)}}</b></td>
+                                <td ><b>{{isDecimal(@$total_destination+@$total_inland, true)}}</b></td>
                                 @if($quote->pdf_option->grouped_destintion_charges==1)
                                     <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                                 @else
