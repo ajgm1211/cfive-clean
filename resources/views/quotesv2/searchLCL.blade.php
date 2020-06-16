@@ -1239,12 +1239,12 @@
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localorigin['subtotal_local'] /   $localorigin['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localorigin['monto'] /   $localorigin['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localorigin['subtotal_local']}} </span>
+                                                                    {{ $localorigin['monto']}} </span>
                                                             </div>
 
                                                             <div class="wth">
@@ -1356,12 +1356,12 @@
 
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localfreight['subtotal_local'] /   $localfreight['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localfreight['subtotal_local']}} </span>
+                                                                    {{ $localfreight['monto']}} </span>
                                                             </div>
 
                                                             <div class="wth">
@@ -1442,12 +1442,12 @@
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localdestiny['subtotal_local'] /   $localdestiny['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localdestiny['monto'] /   $localdestiny['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localdestiny['subtotal_local']}} </span>
+                                                                    {{ $localdestiny['monto']}} </span>
                                                             </div>
 
                                                             <div class="wth">

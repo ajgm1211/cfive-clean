@@ -481,7 +481,7 @@ class QuoteV2Controller extends Controller
             $charge->$name = $request->value;
         }
         $charge->update();
-        $this->updatePdfApi($charge->quote_id);
+        //$this->updatePdfApi($charge->quote_id);
         $this->updateIntegrationQuoteStatus($charge->quote_id);
         return response()->json(['success' => 'Ok']);
     }
@@ -537,7 +537,7 @@ class QuoteV2Controller extends Controller
         }
         $charge->update();
         $quote_id = $charge->automatic_rate->quote_id;
-        $this->updatePdfApi($quote_id);
+        //$this->updatePdfApi($quote_id);
         $this->updateIntegrationQuoteStatus($quote_id);
         return response()->json(['success' => 'Ok']);
     }
@@ -559,7 +559,7 @@ class QuoteV2Controller extends Controller
                 $quote->$name = $request->value;
             }
             $quote->update();
-            $this->updatePdfApi($quote->id);
+            //$this->updatePdfApi($quote->id);
         }
         return response()->json(['success' => 'Ok']);
     }
@@ -682,7 +682,7 @@ class QuoteV2Controller extends Controller
         $quote->origin_address = $request->origin_address;
         $quote->destination_address = $request->destination_address;
         $quote->update();
-        $this->updatePdfApi($quote->id);
+        //$this->updatePdfApi($quote->id);
 
         if ($request->contact_id != '') {
             $contact_name = $quote->contact->first_name . ' ' . $quote->contact->last_name;
@@ -713,7 +713,7 @@ class QuoteV2Controller extends Controller
 
         $quote->payment_conditions = $request->payments;
         $quote->update();
-        $this->updatePdfApi($quote->id);
+        //$this->updatePdfApi($quote->id);
 
         return response()->json(['message' => 'Ok', 'quote' => $quote]);
     }
@@ -730,7 +730,7 @@ class QuoteV2Controller extends Controller
         $name = $request->name;
         $quote->$name = $request->terms;
         $quote->update();
-        $this->updatePdfApi($quote->id);
+        //$this->updatePdfApi($quote->id);
         $this->updateIntegrationQuoteStatus($quote->id);
         return response()->json(['message' => 'Ok', 'quote' => $quote]);
     }
@@ -760,7 +760,7 @@ class QuoteV2Controller extends Controller
 
         $rate->update();
 
-        $this->updatePdfApi($rate->quote_id);
+        //$this->updatePdfApi($rate->quote_id);
         $this->updateIntegrationQuoteStatus($rate->quote_id);
 
         return response()->json(['message' => 'Ok', 'rate' => $rate]);
@@ -2003,12 +2003,12 @@ class QuoteV2Controller extends Controller
                         $transitTime = $info_D->transit_time;
                         $viaT= $info_D->via;
                     }else{
-                        $transitTime = '';
+                        $transitTime = null;
                         $viaT= '';
 
                     }
 
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks,'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks,'transit_time' => $transitTime, 'via' => $viaT]);
 
                     $rate = AutomaticRate::create($request->all());
 
@@ -2603,7 +2603,18 @@ class QuoteV2Controller extends Controller
         }
 
         $equipment = $request->input('equipment');
-        $carriers =$this->divideCarriers($request->input('carriers'));
+
+        if($request->input('equipment') != null){ 
+            $carriers =$this->divideCarriers($request->input('carriers'));
+        }else{
+
+            $carriers =  Carrier::all()->pluck('id')->toArray();
+            $carriers =$this->divideCarriers($carriers);
+        }
+
+
+
+      //  dd($carriers);
 
         //alla
         //dd($equipment);
@@ -2696,7 +2707,8 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->                    
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -2704,7 +2716,7 @@ class QuoteV2Controller extends Controller
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             }
 
