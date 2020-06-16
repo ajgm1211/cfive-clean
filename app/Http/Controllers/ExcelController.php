@@ -68,9 +68,12 @@ class ExcelController extends Controller
 
         $rates = $quote->rates_v2;
 
+        $carrier = null;
+
         foreach ($rates as $key => $item) {
+            $carrier = @$item->carrier->name;
             // Create a new worksheet called "My Data"
-            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, @$item->carrier->name);
+            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'Data');
 
             // Attach the "My Data" worksheet as the first worksheet in the Spreadsheet object
             $spreadsheet->addSheet($myWorkSheet);
@@ -536,9 +539,9 @@ class ExcelController extends Controller
             $name = $quote->quote_id;
         }
 
-        $writer->save(storage_path('app/public/' . $name . '.xlsx'));
+        $writer->save(storage_path('app/public/' . $name . '-' . $carrier . '.xlsx'));
 
-        return response()->download(storage_path('app/public/' . $name . '.xlsx'))->deleteFileAfterSend();
+        return response()->download(storage_path('app/public/' . $name . '-' . $carrier . '.xlsx'))->deleteFileAfterSend();
     }
 
     /**

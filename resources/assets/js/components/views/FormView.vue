@@ -15,7 +15,7 @@
                         <b-form-input
                                 v-model="vdata[key]"
                                 :placeholder="item.placeholder"
-                                :id="'id_fs_'+key"
+                                :id="key"
                                 @change="cleanInput(key)" 
                                     >
                         </b-form-input>
@@ -34,7 +34,7 @@
                           >
                         <multiselect 
                              v-model="vdata[key]"
-                             :id="'id_fs_'+key"
+                             :id="key"
                              :multiple="false" 
                              :options="datalists[item.options]" 
                              :searchable="item.searchable"
@@ -59,7 +59,7 @@
                             valid-feedback="key+' is done!'"
                           >
                         <multiselect 
-                            :id="'id_fs_'+key"
+                            :id="key"
                              v-model="vdata[key]" 
                              :multiple="false" 
                              :options="datalists[item.options]" 
@@ -86,7 +86,7 @@
                             valid-feedback="key+' is done!'"
                           >
                         <multiselect 
-                            :id="'id_fs_'+key"
+                            :id="key"
                              v-model="vdata[key]"
                              :multiple="true" 
                              :options="datalists[item.options]" 
@@ -112,7 +112,7 @@
                             valid-feedback="key+' is done!'"
                             >
                               <date-range-picker
-                                  :id="'id_fs_'+key"
+                                  :id="key"
                                   :opens="'center'"
                                   :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
                                   :singleDatePicker="false"
