@@ -7,7 +7,7 @@ use App\Http\Filters\AbstractFilter;
 class ContractFilter extends AbstractFilter
 {
     protected $paginate = 10;
-    //protected $filter_by = [ 'name', 'status' ];
+    protected $filter_by = [ 'name', 'status' ];
     protected $filter_by_relations = [ 'carriers.carrier__name', 'gpContainer__name'];
     protected $default_filter_by = [];
     protected $with = [
