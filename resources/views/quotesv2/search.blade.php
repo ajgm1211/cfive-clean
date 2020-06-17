@@ -1258,11 +1258,11 @@
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap">  TT:  </span>  {{ $arr->transit_time   }}
                         </div>
                         <div class="col-lg-2 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> > Via: </span> {{  $arr->via }}
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> >  Via: </span> {{  $arr->via }}
                         </div>-->
                         @endif
-                        <div class="col-lg-2 d-flex  justify-content-end">
-                        <span class="portalphacode" style="margin-right:15px;">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
+                        <div class="col-lg-3 d-flex align-items-center justify-content-end">
+                        <span class="portalphacode" style="margin-right:15px; text-align: right">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / 12345{{ $arr->contract->number }}
                         </div>
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
@@ -2041,6 +2041,7 @@
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
+            
        }
    })(jQuery);
 
@@ -2083,7 +2084,7 @@
                 }
                 $('.equipment .select-list li[title="undefined"]').remove();
                 $('#equipment.select-group').val(defaultValuesController);
-                console.log($('#equipment.select-group').val());
+                //console.log($('#equipment.select-group').val());
                 //console.log($('#equipment.select-group').val());
             }else{
                 var valueArray = [];
@@ -2096,8 +2097,8 @@
                     //console.log(idEquip);
                 }
                 $('#equipment.select-group').val(valueArray);
-                console.log($('#equipment.select-group').val());
-                return;
+                //console.log($('#equipment.select-group').val());
+                
             }
             //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
@@ -2123,6 +2124,7 @@
                     }
                 }
             });
+            
         },
         error: function (request, status, error) {
             console.log(request.responseText);
