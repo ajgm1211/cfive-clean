@@ -83,8 +83,8 @@ class ImportationTransitTimeController extends Controller
             foreach($columnsSelected as $columnSelect){
                 foreach($sheetData[0] as $key => $cells){
                     //dd($key,$cells);
-                    if($columnSelect ==  $cells){
-                        $final_columns->put($cells,$key);
+                    if($columnSelect ==  trim($cells)){
+                        $final_columns->put(trim($cells),$key);
                     }
 
                 }
