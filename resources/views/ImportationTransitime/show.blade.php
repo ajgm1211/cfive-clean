@@ -77,6 +77,8 @@
                                         <div class="col-md-2">
                                             <a href="{{route('ImpTransitTime.index')}}" class="btn btn-primary form-control">Importation</a>
                                         </div>
+                                        <label><br></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <h5>[ORIGIN] [DESTINY] [CARRIER] [T\T] [DESTINATION TYPE] [VIA]</h5>
                                     </div>
                                     <br />
                                     <table class="table tableData "  id="tableFail" width="100%" style="width:100%">
