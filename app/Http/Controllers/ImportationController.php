@@ -3037,9 +3037,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $request_cont = NewContractRequest::find(53);
-        $data = json_decode($request_cont['data'],true);
-        dd($data['group_containers']['id']);
+        $resultadocountrytOri = PrvHarbor::get_harbor_simple('Itapoa-brioa-brazil');
+        dd($resultadocountrytOri);
     }
 
 }
