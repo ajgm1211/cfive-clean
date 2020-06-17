@@ -11,6 +11,8 @@ use App\TransitTime;
 use App\TransitTimeFail;
 use App\DestinationType;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -44,7 +46,7 @@ class ImportationTransitTimeController extends Controller
 
     public function create()
     {
-        //
+        return view('ImportationTransitime.show');
     }
 
     public function store(Request $request)
@@ -124,7 +126,7 @@ class ImportationTransitTimeController extends Controller
                     if(count($destinationTObj) == 1 ){
                         $type_bol = true;
                         $type_val = $destinationTObj->id;
-                        if($type_val == 1){
+                        if($type_val == 2){
                             $via_val = ' ';
                         }
                     } elseif(count($place_val) == 0){
@@ -192,11 +194,32 @@ class ImportationTransitTimeController extends Controller
                 $fila = $fila + 1;
             }
         }
+        return redirect()->route('ImpTransitTime.create');
     }
 
     public function show($id)
     {
-        //
+        if($id == 0){
+            $transitTime = DB::select('call proc_transit_times()');
+            return DataTables::of($transitTime)
+                ->addColumn('action', function ($transitTime) {
+                    return '
+                <a href="#"  class=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-Rate" class=""><i class="la la-trash"></i></a>';
+                })
+                ->editColumn('id', '{{$id}}')->toJson();
+        } elseif($id == 1){
+            $transitTimeFail = TransitTimeFail::all();
+            return DataTables::of($transitTimeFail)
+                ->addColumn('action', function ($transitTimeFail) {
+                    return '
+                <a href="#" onclick="showModalsavetorate('.$transitTimeFail['id'].','.$transitTimeFail['operation'].')" class=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-Rate" data-id-rate="'.$transitTimeFail['id'].'" class=""><i class="la la-trash"></i></a>';
+                })
+                ->editColumn('id', '{{$id}}')->toJson();
+        }
     }
 
     public function edit($id)
