@@ -34058,7 +34058,31 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
   overflow: hidden !important;
-  max-width: 50px !important;
+  max-width: 125px !important;
+}
+
+@media only screen and (min-width: 990px) {
+  .truncate {
+    max-width: 110px !important
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .truncate {
+    max-width: 46px !important
+  }
+}
+
+@media only screen and (min-width: 1366px) {
+  .truncate {
+    max-width: 110px !important
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .truncate {
+    max-width: 150px !important
+  }
 }
 
 #logo-error {
