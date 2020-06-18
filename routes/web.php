@@ -19,7 +19,6 @@ Route::get('/', function () {
     } elseif(env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
-
 });
 
 Route::get('/home', function () {
@@ -27,7 +26,7 @@ Route::get('/home', function () {
        || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'){
         return redirect()->route('quotes-v2.search');
     } elseif(env('APP_VIEW') == 'operaciones') {
-        return redirect()->route('RequestImportation.index');
+        return redirect()->route('RequestFcl.index');
     }
 });
 
