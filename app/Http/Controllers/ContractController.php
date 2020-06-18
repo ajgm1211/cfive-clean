@@ -346,7 +346,9 @@ class ContractController extends Controller
 
         $file->move($path, $name);
 
-        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->toMediaCollection('document', 'contracts3');
+        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
+            'ACL' => 'public-read'
+        ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
