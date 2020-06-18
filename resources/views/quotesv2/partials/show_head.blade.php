@@ -91,7 +91,7 @@
                             <br>
                             <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
                             {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
-                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status!='' ? $quote->status:'Winner' }} <i class="fa fa-check"></i></span>
+                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
                         </div>
                         @if($quote->type!='AIR')
                         <div class="col-md-4">
