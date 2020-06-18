@@ -30,7 +30,7 @@ class ContractController extends Controller
      */
     public function index(Request $request)
     {
-    	return view('contract.index');
+        return view('contract.index');
     }
 
     /**
@@ -40,10 +40,10 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function list(Request $request)
-    {        
+    {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
-    	return ContractResource::collection($results);
+        return ContractResource::collection($results);
     }
 
 
@@ -54,7 +54,7 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function data(Request $request)
-    {        
+    {
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
@@ -64,7 +64,7 @@ class ContractController extends Controller
         $equipments = GroupContainer::get()->map(function ($equipment) {
             return $equipment->only(['id', 'name']);
         });
-        
+
         $directions = Direction::get()->map(function ($direction) {
             return $direction->only(['id', 'name']);
         });
@@ -82,7 +82,7 @@ class ContractController extends Controller
             return $country->only(['id', 'display_name', 'name']);
         });
 
-        $surcharges = Surcharge::where('company_user_id', '=' , $company_user_id)->get()->map(function ($surcharge) {
+        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name']);
         });
 
@@ -98,7 +98,7 @@ class ContractController extends Controller
             return $company->only(['id', 'business_name']);
         });
 
-        $users = User::whereHas('companyUser', function($q) use ($company_user_id) { 
+        $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($company) {
             return $company->only(['id', 'name']);
@@ -118,9 +118,10 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
-            'users');
+            'users'
+        );
 
-        return response()->json(['data' => $data ]);
+        return response()->json(['data' => $data]);
     }
 
 
@@ -189,7 +190,7 @@ class ContractController extends Controller
             'gp_container' => 'required',
             'carriers' => 'required'
         ]);
-        
+
         $contract->update([
             'name' => $data['name'],
             'direction_id' => $data['direction'],
@@ -201,7 +202,7 @@ class ContractController extends Controller
 
         $contract->ContractCarrierSync($data['carriers']);
 
-        return new ContractResource($contract);   
+        return new ContractResource($contract);
     }
 
     /**
@@ -217,11 +218,11 @@ class ContractController extends Controller
             'companies' => 'sometimes',
             'users' => 'sometimes'
         ]);
-        
+
         $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
         $contract->ContractUsersRestrictionsSync($data['users'] ?? []);
 
-        return new ContractResource($contract);   
+        return new ContractResource($contract);
     }
 
 
@@ -237,10 +238,10 @@ class ContractController extends Controller
         $data = $request->validate([
             'remarks' => 'sometimes'
         ]);
-        
+
         $contract->update(['remarks' => $data['remarks']]);
 
-        return new ContractResource($contract);   
+        return new ContractResource($contract);
     }
 
     /**
@@ -275,7 +276,7 @@ class ContractController extends Controller
      */
     public function duplicate(Contract $contract)
     {
-        $new_contract = $contract->duplicate(); 
+        $new_contract = $contract->duplicate();
 
         return new ContractResource($new_contract);
     }
@@ -287,7 +288,7 @@ class ContractController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
@@ -301,7 +302,7 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        $media->delete(); 
+        $media->delete();
 
         return response()->json(null, 204);
     }
@@ -313,7 +314,7 @@ class ContractController extends Controller
      */
     public function getFiles(Request $request, Contract $contract)
     {
-        $contract_media = $contract->getMedia('document')->map(function ($media, $key){
+        $contract_media = $contract->getMedia('document')->map(function ($media, $key) {
             return [
                 'id' => $media->id,
                 'name' => substr($media->name, 14),
@@ -321,9 +322,9 @@ class ContractController extends Controller
                 'type' => $media->mime_type,
                 'url' => $media->getFullUrl()
             ];
-        }); 
+        });
 
-        return response()->json(['data' => $contract_media ]);
+        return response()->json(['data' => $contract_media]);
     }
 
     /**
@@ -355,5 +356,71 @@ class ContractController extends Controller
             'url' => $media->getFullUrl()
         ]);
     }
-   
+
+    /**
+     * Store contract from API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function upload(Request $request)
+    {
+        $direction = null;
+        $api = true;
+
+        $regex = "/^\d+(?:,\d+)*$/";
+        $carriers = str_replace(' ', '', $request->carriers);
+        
+        if (!preg_match($regex, $carriers)) {
+            return response()->json([
+                'message' => 'The format for carriers is not correct',
+            ], 400);
+        }
+
+        if($request->direction){
+            $direction = $this->replaceDirection($request->direction);
+        }
+
+        $contract = Contract::create([
+            'name' => $request->reference,
+            'company_user_id' => Auth::user()->company_user_id,
+            'direction_id' => $direction,
+            'validity' =>  $request->valid_from,
+            'expire' => $request->valid_until,
+            'type' => $request->type,
+        ]);
+
+        $contract->ContractCarrierSync($carriers, $api);
+
+        $contract->addMedia($request->file)->toMediaCollection('document', 'public');
+
+        return response()->json([
+            'message' => 'Contract created successfully!',
+        ]);
+    }
+    
+    /**
+     * Check direction string and replace by id
+     *
+     * @param  mixed $direction
+     * @return void
+     */
+    public function replaceDirection($direction){
+        switch ($direction) {
+            case 'import':
+                $direction = 1;
+                break;
+            case 'export':
+                $direction = 2;
+                break;
+            case 'both':
+                $direction = 3;
+                break;
+            default:
+                $direction = 3;
+                break;
+        }
+
+        return $direction;
+    }
 }
