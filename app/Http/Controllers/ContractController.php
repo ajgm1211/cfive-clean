@@ -18,6 +18,11 @@ use App\Company;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
+use App\Jobs\NotificationsJob;
+use App\Jobs\ProcessContractFile;
+use App\NewContractRequest;
+use App\Notifications\N_general;
+use App\Notifications\SlackNotification;
 use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
@@ -347,7 +352,9 @@ class ContractController extends Controller
 
         $file->move($path, $name);
 
-        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->toMediaCollection('document', 'contracts3');
+        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
+            'ACL' => 'public-read'
+        ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
@@ -367,20 +374,23 @@ class ContractController extends Controller
     {
         $direction = null;
         $api = true;
+        $user = User::find(Auth::user()->id);
+        $admins = User::where('type', 'admin')->get();
 
         $regex = "/^\d+(?:,\d+)*$/";
         $carriers = str_replace(' ', '', $request->carriers);
-        
+
         if (!preg_match($regex, $carriers)) {
             return response()->json([
                 'message' => 'The format for carriers is not correct',
             ], 400);
         }
 
-        if($request->direction){
+        if ($request->direction) {
             $direction = $this->replaceDirection($request->direction);
         }
 
+        //Saving contract
         $contract = Contract::create([
             'name' => $request->reference,
             'company_user_id' => Auth::user()->company_user_id,
@@ -390,22 +400,60 @@ class ContractController extends Controller
             'type' => $request->type,
         ]);
 
+        //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
-        $contract->addMedia($request->file)->toMediaCollection('document', 'public');
+        //Uploading file to storage
+        $contract->addMedia($request->file)->addCustomHeaders([
+            'ACL' => 'public-read'
+        ])->toMediaCollection('document', 'public');
+
+        //Saving request FCL
+        $Ncontract  = NewContractRequest::create([
+            'namecontract' => $contract->name,
+            'validation' => $contract->expire,
+            'direction' => $contract->direction_id,
+            'company_user_id' => $contract->company_user_id,
+            'nameFile' => date("dmY_His") . '_' . $request->file->getClientOriginalName(),
+            'user_id' => Auth::user()->id,
+            'created' => date("Y-m-d H:i:s"),
+            'username_load' => 'Not assigned',
+            'contract_id' => $contract->id,
+        ]);
+
+        //Saving request and carriers in RequestCarriers
+        $Ncontract->ContractRequestCarrierSync($carriers);
+
+        //Dispatching jobs
+        if (env('APP_VIEW') == 'operaciones') {
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+        } else {
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+        }
+
+        //Notifications
+        $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
+
+        NotificationsJob::dispatch('Request-Fcl', [
+            'user' => $user,
+            'ncontract' => $Ncontract->toArray()
+        ]);
+
+        $Ncontract->NotifyNewRequest($admins);
 
         return response()->json([
             'message' => 'Contract created successfully!',
         ]);
     }
-    
+
     /**
      * Check direction string and replace by id
      *
-     * @param  mixed $direction
+     * @param string $direction
      * @return void
      */
-    public function replaceDirection($direction){
+    public function replaceDirection($direction)
+    {
         switch ($direction) {
             case 'import':
                 $direction = 1;
