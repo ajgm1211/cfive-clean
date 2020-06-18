@@ -143,7 +143,7 @@ class Helpharbors {
         } elseif(count($place_val) == 0){
             $data = $puerto.'(Error)';
         } elseif(count($place_val) > 1){
-            $data = $puerto.'(Error) ['.$place_val->implode('id', ', ').']';
+            $data = $puerto.' (Error) ['.$place_val->implode('id', ', ').']';
         }
         return ['puerto' => $data,'boolean' => $resp];
     }
