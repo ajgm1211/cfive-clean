@@ -71,20 +71,20 @@ class ImportationTransitTimeController extends Controller
             $spreadsheet    = $reader->load(Storage::disk('local2')->url($file));
             $sheetData      = $spreadsheet->getActiveSheet()->toArray();
             //dd($sheetData);
-            $origin     = 'ORIGIN';
-            $detiny     = 'DESTINY';
-            $carrier    = 'CARRIER';
-            $time       = 'T\T';
-            $type       = 'DESTINATION TYPE';
-            $via        = 'VIA';
+            $origin     = strtolower('ORIGIN');
+            $detiny     = strtolower('DESTINY');
+            $carrier    = strtolower('CARRIER');
+            $time       = strtolower('T\T');
+            $type       = strtolower('DESTINATION TYPE');
+            $via        = strtolower('VIA');
             $columnsSelected = [$origin,$detiny,$carrier,$time,$type,$via];
 
             $final_columns = collect([]);
             foreach($columnsSelected as $columnSelect){
                 foreach($sheetData[0] as $key => $cells){
                     //dd($key,$cells);
-                    if($columnSelect ==  trim($cells)){
-                        $final_columns->put(trim($cells),$key);
+                    if($columnSelect ==  strtolower(trim($cells))){
+                        $final_columns->put(strtolower(trim($cells)),$key);
                     }
 
                 }
