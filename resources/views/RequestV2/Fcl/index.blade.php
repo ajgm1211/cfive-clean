@@ -393,7 +393,7 @@
 
     Dropzone.options.documentDropzone = {
         url: '{{ route("request.fcl.storeMedia") }}',
-        maxFilesize: 15, // MB
+        maxFilesize: 32, // MB
         maxFiles: 1,
         addRemoveLinks: true,
         headers: {
