@@ -2710,7 +2710,9 @@ class QuoteV2Controller extends Controller
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where(function ($query) use ($dateSince) {
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->                    
                 });
             } else {
@@ -2719,7 +2721,9 @@ class QuoteV2Controller extends Controller
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    $q->where(function ($query) use ($dateSince) {
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             }
 
@@ -3316,18 +3320,18 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('color', $color);
             }
 
-            // Ordenar por prioridad
-            if (in_array('1', $equipmentFilter)) {
-                $arreglo = $arreglo->sortBy('total20');
-            } else if (in_array('2', $equipmentFilter)) {
-                $arreglo = $arreglo->sortBy('total40');
-            } else if (in_array('3', $equipmentFilter)) {
-                $arreglo = $arreglo->sortBy('total40hc');
-            } else if (in_array('5', $equipmentFilter)) {
-                $arreglo = $arreglo->sortBy('total40nor');
-            } else if (in_array('4', $equipmentFilter)) {
-                $arreglo = $arreglo->sortBy('total45');
+            // Ordenar por Monto Total  de contenedor de menor a mayor
+            
+            foreach ($containers as $cont) {
+                $name_tot = 'totalT' . $cont->code;
+
+                if (in_array($cont->id, $equipmentFilter)) {
+                    $arreglo = $arreglo->sortBy($name_tot);
+                break;
+                } 
+
             }
+          
         } // fin validate equipment
 
 
