@@ -108,6 +108,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
                                     @foreach($item as $rate)
                                         <?php
                                             foreach ($containers as $c){
@@ -119,7 +120,7 @@
                                                 @if($v->type_id==3)
                                                     <?php
                                                         $amount = json_decode($v->amount);
-                                                        $markup = json_decode($v->markup);
+                                                        $markup = json_decode($v->markups);
                                                         
                                                         foreach ($containers as $c){
                                                             ${'total_freight_'.$c->code} = 0;
