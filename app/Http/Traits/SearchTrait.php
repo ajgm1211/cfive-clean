@@ -531,17 +531,15 @@ trait SearchTrait
     }
 
 
-    public function contratoFuturo($date1,$date2){
+    public function contratoFuturo($contractStart,$starDate,$contractExpire,$endDate){
 
+        $contractStart = trim($contractStart);
+        $starDate =  trim($starDate);
+        $endDate =  trim($endDate);
 
-
-        $date1 = new \DateTime($date1);
-        $date2 = new \DateTime($date2);
-        $diff = $date1->diff($date2);
-
-        //dd($date1,$date2,$diff);
+       // dd($contractStart,$endDate);
         
-        if($diff->invert  == "0")
+        if(($contractStart > $starDate) &&  ($contractStart > $endDate))
             $contratoFuturo = true;
         else
             $contratoFuturo = false;

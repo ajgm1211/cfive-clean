@@ -3303,9 +3303,9 @@ class QuoteV2Controller extends Controller
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
                 //Contrato Futuro
-                $contratoFuturo = $this->contratoFuturo($dateUntil, $data->contract->expire);
+                $contratoFuturo = $this->contratoFuturo($data->contract->validity,$dateSince ,$data->contract->expire,$dateUntil);
 
-                $data->setAttribute('contratoFuturo', false);
+                $data->setAttribute('contratoFuturo', $contratoFuturo);
                 // INLANDS
                 $data->setAttribute('inlandDestiny', $inlandDestiny);
                 //   dd($inlandDestiny);
