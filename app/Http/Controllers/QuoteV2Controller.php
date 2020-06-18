@@ -2516,10 +2516,12 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $carriersSelected = $carrierMan;
         $allCarrier = true;
+        $destinationClass = 'col-lg-4';
+        $origenClass = 'col-lg-4';
 
-        //dd($carriersSelected);
-
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier'));
+        //dd($origen);
+        
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass'));
     }
 
     /**
@@ -3327,6 +3329,24 @@ class QuoteV2Controller extends Controller
                 $arreglo = $arreglo->sortBy('total45');
             }
         } // fin validate equipment
+
+
+        // Clases Origin y Destination Delivery type FCL
+        if( $delivery_type == 1 ) {
+            $destinationClass = 'col-lg-4';
+            $origenClass = 'col-lg-4';
+        }
+
+        if( $delivery_type == 2 || $delivery_type == 3 ) {
+            $destinationClass = 'col-lg-2';
+            $origenClass = 'col-lg-4';
+        }
+
+        if( $delivery_type == 4 ) {
+            $destinationClass = 'col-lg-2';
+            $origenClass = 'col-lg-2';
+        }
+        
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
         $chargeDestination = ($chargesDestination != null) ? true : false;
         $chargeFreight = ($chargesFreight != null) ? true : false;
@@ -3335,7 +3355,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
         $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
