@@ -731,7 +731,7 @@
 
             </div><br>
             <div class="row">
-              <div class="col-lg-4" id="origin_port">
+              <div class="{{ $origenClass }}" id="origin_port">
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
@@ -748,7 +748,7 @@
                 <label>Origin address</label>
                 {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
               </div>
-              <div class="col-lg-4" id="destination_port">
+              <div class="{{ $destinationClass }}" id="destination_port">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
                   {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
@@ -1134,7 +1134,7 @@
                     <div class="{{ $equipmentHides['head_1'] }}">
                       <div class="row">
                         <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destination</span></div>
+                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destinationestinationestination</span></div>
                       </div>
                     </div>
                     <div class="{{ $equipmentHides['head_2'] }} padding-right-table" style="padding-left: 0;">
@@ -1261,8 +1261,8 @@
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> >  Via: </span> {{  $arr->via }}
                         </div>-->
                         @endif
-                        <div class="col-lg-3 d-flex align-items-center justify-content-end">
-                        <span class="portalphacode" style="margin-right:15px; text-align: right">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / 12345{{ $arr->contract->number }}
+                        <div class="col-lg-3 d-flex align-items-center justify-content-start">
+                        <span class="portalphacode" style="margin-right:15px; text-align: right">Contract: </span> {{ $arr->contract->company_user_id }} &nbsp;<span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
                         </div>
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
