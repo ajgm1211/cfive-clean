@@ -54,22 +54,24 @@ class Charge extends Model
 
         $value = array();
 
-        foreach ($array as $k => $amount_value) {
-            if ($k == 'c20') {
-                $value['c20DV'] = $amount_value;
-            } elseif ($k == 'c40') {
-                $value['c40DV'] = $amount_value;
-            } elseif ($k == 'c40hc') {
-                $value['c40HC'] = $amount_value;
-            } elseif ($k == 'c40nor') {
-                $value['c40NOR'] = $amount_value;
-            } elseif ($k == 'c45hc') {
-                $value['c45HC'] = $amount_value;
-            } else {
-                $containers = Container::all();
-                foreach ($containers as $container) {
-                    if ($k == 'c' . $container->code) {
-                        $value['c' . $container->code] = $amount_value;
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount_value) {
+                if ($k == 'c20') {
+                    $value['c20DV'] = $amount_value;
+                } elseif ($k == 'c40') {
+                    $value['c40DV'] = $amount_value;
+                } elseif ($k == 'c40hc') {
+                    $value['c40HC'] = $amount_value;
+                } elseif ($k == 'c40nor') {
+                    $value['c40NOR'] = $amount_value;
+                } elseif ($k == 'c45hc') {
+                    $value['c45HC'] = $amount_value;
+                } else {
+                    $containers = Container::all();
+                    foreach ($containers as $container) {
+                        if ($k == 'c' . $container->code) {
+                            $value['c' . $container->code] = $amount_value;
+                        }
                     }
                 }
             }
@@ -84,22 +86,24 @@ class Charge extends Model
 
         $value = array();
 
-        foreach ($array as $k => $amount_value) {
-            if ($k == 'm20') {
-                $value['m20DV'] = $amount_value;
-            } elseif ($k == 'm40') {
-                $value['m40DV'] = $amount_value;
-            } elseif ($k == 'm40hc') {
-                $value['m40HC'] = $amount_value;
-            } elseif ($k == 'm40nor') {
-                $value['m40NOR'] = $amount_value;
-            } elseif ($k == 'm45hc') {
-                $value['m45HC'] = $amount_value;
-            } else {
-                $containers = Container::all();
-                foreach ($containers as $container) {
-                    if ($k == 'm' . $container->code) {
-                        $value['m' . $container->code] = $amount_value;
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount_value) {
+                if ($k == 'm20') {
+                    $value['m20DV'] = $amount_value;
+                } elseif ($k == 'm40') {
+                    $value['m40DV'] = $amount_value;
+                } elseif ($k == 'm40hc') {
+                    $value['m40HC'] = $amount_value;
+                } elseif ($k == 'm40nor') {
+                    $value['m40NOR'] = $amount_value;
+                } elseif ($k == 'm45hc') {
+                    $value['m45HC'] = $amount_value;
+                } else {
+                    $containers = Container::all();
+                    foreach ($containers as $container) {
+                        if ($k == 'm' . $container->code) {
+                            $value['m' . $container->code] = $amount_value;
+                        }
                     }
                 }
             }
@@ -115,7 +119,6 @@ class Charge extends Model
         $value = array();
 
         if ($array != null || $array != '') {
-
             foreach ($array as $k => $amount_value) {
                 if ($k == 'c20') {
                     $value['c20DV'] = $amount_value;

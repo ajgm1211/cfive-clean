@@ -225,7 +225,16 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeSaletermRelation($q)
     {
         return $q->with(['saleterm' => function ($q) {
-            $q->with('charge');
+            $q->select('id', 'quote_id', 'port_id', 'type');
+            $q->with(['port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name');
+            }]);
+            $q->with(['charge' => function ($q) {
+                $q->select('id', 'sale_term_id', 'charge', 'detail', 'c20 as c20DV', 'c40 as c40DV', 'c40hc as c40HC', 'c40nor as c40NOR', 'c45 as c45HC', 'units', 'amount', 'rate', 'markup', 'currency_id');
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'alphacode');
+                }]);
+            }]);
         }]);
     }
 
@@ -301,7 +310,7 @@ class QuoteV2 extends Model  implements HasMedia
                 }]);
             }]);
             $query->with(['inland' => function ($q) {
-                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'rate as price','currency_id','validity_start as valid_from','validity_start as valid_until');
+                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'rate as price', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
                 $q->with(['currency' => function ($q) {
                     $q->select('id', 'name', 'alphacode');
                 }]);
@@ -310,7 +319,7 @@ class QuoteV2 extends Model  implements HasMedia
                 }]);
             }]);
             $query->with(['inland_lcl' => function ($q) {
-                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'units', 'price_per_unit', 'markup', 'currency_id','validity_start as valid_from','validity_start as valid_until');
+                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'units', 'price_per_unit', 'markup', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
                 $q->with(['currency' => function ($q) {
                     $q->select('id', 'name', 'alphacode');
                 }]);

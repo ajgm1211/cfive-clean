@@ -77,14 +77,12 @@ class PdfV2Controller extends Controller
     public function pdf(Request $request, $id)
     {
         $id = obtenerRouteKey($id);
-        $equipmentHides = '';
+        $company_user = "";
+        $currency_cfg = "";
 
         if (Auth::user()->company_user_id) {
             $company_user = CompanyUser::find(Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
-        } else {
-            $company_user = "";
-            $currency_cfg = "";
         }
 
         $pdfarray = $this->generatepdf($id, $company_user, $currency_cfg, \Auth::user()->id);
@@ -1112,29 +1110,11 @@ class PdfV2Controller extends Controller
 
         $sign = null;
         $sign_type = null;
-        $equipmentHides = null;
 
         $quote = QuoteV2::findOrFail($request->id);
-        $rates = AutomaticRate::where('quote_id', $quote->id)->with('charge')->get();
-        $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
-            $query->where('type_id', 1);
-        })->where('quote_id', $quote->id)->get();
-        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-            $query->where('type_id', 3);
-        })->where('quote_id', $quote->id)->get();
-        $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
-            $query->where('type_id', 2);
-        })->where('quote_id', $quote->id)->get();
         $contact_email = Contact::find($quote->contact_id);
-        $origin_harbor = Harbor::where('id', $quote->origin_harbor_id)->first();
-        $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
-        $user = User::where('id', \Auth::id())->with('companyUser')->first();
         $email_from = \Auth::user()->email;
-        $containers = Container::all();
 
-        if ($quote->equipment != '') {
-            $equipmentHides = $this->hideContainer($quote->equipment, 'BD');
-        }
 
         if (\Auth::user()->company_user_id) {
             $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -1156,166 +1136,18 @@ class PdfV2Controller extends Controller
             }
         }
 
-        /* Sale terms */
+        $pdfarray = $this->generatepdf($quote->id, $company_user, $currency_cfg, \Auth::user()->id);
+        $pdf = $pdfarray['pdf'];
+        $view = $pdfarray['view'];
+        $idQuote = $pdfarray['idQuote'];
+        $idQ = $pdfarray['idQ'];
 
-        $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
-        $sale_terms_destination = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
-        $sale_terms_origin_grouped = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
-        $sale_terms_destination_grouped = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
-
-        foreach ($sale_terms_origin_grouped as $origin_sale) {
-            foreach ($origin_sale->charge as $origin_charge) {
-                if ($origin_charge->currency_id != '') {
-                    if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
-                    } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
-                    }
-                    $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
-                    $origin_charge->sum20 += $origin_charge->c20 / $currency_rate;
-                    $origin_charge->sum40 += $origin_charge->c40 / $currency_rate;
-                    $origin_charge->sum40hc += $origin_charge->c40hc / $currency_rate;
-                    $origin_charge->sum40nor += $origin_charge->c40nor / $currency_rate;
-                    $origin_charge->sum45 += $origin_charge->c45 / $currency_rate;
-                }
-            }
-        }
-
-        foreach ($sale_terms_destination_grouped as $value) {
-            foreach ($value->charge as $item) {
-                if ($item->currency_id != '') {
-                    if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
-                    } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
-                    }
-                    $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
-                    $item->sum20 += $item->c20 / $currency_rate;
-                    $item->sum40 += $item->c40 / $currency_rate;
-                    $item->sum40hc += $item->c40hc / $currency_rate;
-                    $item->sum40nor += $item->c40nor / $currency_rate;
-                    $item->sum45 += $item->c45 / $currency_rate;
-                }
-            }
-        }
-
-        $sale_terms_origin = collect($sale_terms_origin);
-
-        $sale_terms_origin = $sale_terms_origin->groupBy([
-            function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
-            },
-        ], $preserveKeys = true);
-
-        foreach ($sale_terms_origin as $value) {
-            foreach ($value as $origin_sale) {
-                foreach ($origin_sale->charge as $origin_charge) {
-
-                    if ($origin_charge->currency_id != '') {
-                        if ($quote->pdf_option->grouped_origin_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                        } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
-                        }
-                        $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
-                        $origin_charge->sum20 += $origin_charge->c20 / $currency_rate;
-                        $origin_charge->sum40 += $origin_charge->c40 / $currency_rate;
-                        $origin_charge->sum40hc += $origin_charge->c40hc / $currency_rate;
-                        $origin_charge->sum40nor += $origin_charge->c40nor / $currency_rate;
-                        $origin_charge->sum45 += $origin_charge->c45 / $currency_rate;
-                    }
-                }
-            }
-        }
-
-        $sale_terms_destination = collect($sale_terms_destination);
-
-        $sale_terms_destination = $sale_terms_destination->groupBy([
-            function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
-            },
-        ], $preserveKeys = true);
-
-        foreach ($sale_terms_destination as $destination_sale) {
-            foreach ($destination_sale as $value) {
-                foreach ($value->charge as $item) {
-                    if ($item->currency_id != '') {
-                        if ($quote->pdf_option->grouped_destination_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
-                        } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
-                        }
-                        $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
-                        $item->sum20 += $item->c20 / $currency_rate;
-                        $item->sum40 += $item->c40 / $currency_rate;
-                        $item->sum40hc += $item->c40hc / $currency_rate;
-                        $item->sum40nor += $item->c40nor / $currency_rate;
-                        $item->sum45 += $item->c45 / $currency_rate;
-                    }
-                }
-            }
-        }
-
-        /* Fin Saleterms */
-
-        /* Arrays de puertos incluidos en los Saleterms */
-
-        $origin_ports = $this->getPortsInArray($sale_terms_origin_grouped);
-
-        $destination_ports = $this->getPortsInArray($sale_terms_destination_grouped);
-
-        /* Fin arrays */
-
-        /* Consulta de charges relacionados al Rate */
-
-        $origin_charges = AutomaticRate::whereNotIn('origin_port_id', $origin_ports)->where('quote_id', $quote->id)
-            ->Charge(1, 'Origin')->with('charge')->get();
-
-        $destination_charges = AutomaticRate::whereNotIn('destination_port_id', $destination_ports)->where('quote_id', $quote->id)
-            ->Charge(2, 'Destination')->with('charge')->get();
-
-        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-            $query->where('type_id', 3);
-        })->with('charge')->where('quote_id', $quote->id)->get();
-
-        /* Fin consulta de charges */
-
-        /** Rates **/
-
-        $rates = $this->processGlobalRates($rates, $quote, $currency_cfg, $containers);
-
-        /* Se manipula la colección de rates para añadir los valores de saleterms */
-        $rates = $this->addSaleTermToRate($rates, $origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped);
-
-        /** Origin Charges **/
-
-        $origin_charges_grouped = $this->processOriginGrouped($origin_charges, $quote, $currency_cfg);
-
-        $origin_charges_detailed = $this->processOriginDetailed($origin_charges, $quote, $currency_cfg);
-
-        /** Destination Charges **/
-
-        $destination_charges_grouped = $this->processDestinationGrouped($destination_charges, $quote, $currency_cfg);
-
-        $destination_charges = $this->processDestinationDetailed($destination_charges, $quote, $currency_cfg);
-
-        /** Freight Charges **/
-
-        $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
-
-        $view = \View::make('quotesv2.pdf.index', ['quote' => $quote, 'rates' => $rates, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'origin_charges_detailed' => $origin_charges_detailed, 'destination_charges_grouped' => $destination_charges_grouped, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped]);
-
-        // EVENTO INTERCOM 
-        //$event = new  EventIntercom();
-        //$event->event_quoteEmail();
-
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
         $to = $request->to;
-
+        
         $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
 
         //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
