@@ -15,6 +15,7 @@ use App\CalculationType;
 use App\TypeDestiny;
 use App\Country;
 use App\Company;
+use App\Http\Requests\UploadContractFile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
@@ -23,6 +24,7 @@ use App\Jobs\ProcessContractFile;
 use App\NewContractRequest;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
@@ -370,26 +372,72 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function upload(Request $request)
+    public function processUploadRequest(UploadContractFile $request)
     {
-        $direction = null;
-        $api = true;
-        $user = User::find(Auth::user()->id);
-        $admins = User::where('type', 'admin')->get();
 
-        $regex = "/^\d+(?:,\d+)*$/";
-        $carriers = str_replace(' ', '', $request->carriers);
+        try {
 
-        if (!preg_match($regex, $carriers)) {
+            $direction = null;
+            $api = true;
+            $user = User::findOrFail(Auth::user()->id);
+            $admins = User::isAdmin()->get();
+            $type = strtoupper($request->type);
+
+            $regex = "/^\d+(?:,\d+)*$/";
+            $carriers = str_replace(' ', '', $request->carriers);
+
+            if (!preg_match($regex, $carriers)) {
+                return response()->json([
+                    'message' => 'The format for carriers is not correct',
+                ], 400);
+            }
+
+            if ($request->direction) {
+                $direction = $this->replaceDirection($request->direction);
+            }
+
+            if ($type == 'FCL') {
+                $Ncontract = $this->uploadFcl($request, $carriers, $api, $direction, $type);
+            } else {
+                $Ncontract = $this->uploadLcl($request, $carriers, $api, $direction, $type);
+            }
+
+            //Dispatching jobs
+            /*if (env('APP_VIEW') == 'operaciones') {
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+            } else {
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+            }
+
+            //Notifications
+            $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
+
+            NotificationsJob::dispatch('Request-Fcl', [
+                'user' => $user,
+                'ncontract' => $Ncontract->toArray()
+            ]);
+
+            $Ncontract->NotifyNewRequest($admins);*/
+
             return response()->json([
-                'message' => 'The format for carriers is not correct',
-            ], 400);
-        }
+                'message' => 'Contract created successfully!',
+            ]);
 
-        if ($request->direction) {
-            $direction = $this->replaceDirection($request->direction);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong on our side',
+            ], 500);
         }
+    }
 
+    /**
+     * Store contract from API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadFcl($request, $carriers, $api, $direction, $type)
+    {
         //Saving contract
         $contract = Contract::create([
             'name' => $request->reference,
@@ -397,16 +445,14 @@ class ContractController extends Controller
             'direction_id' => $direction,
             'validity' =>  $request->valid_from,
             'expire' => $request->valid_until,
-            'type' => $request->type,
+            'type' => $type,
         ]);
 
         //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
         //Uploading file to storage
-        $contract->addMedia($request->file)->addCustomHeaders([
-            'ACL' => 'public-read'
-        ])->toMediaCollection('document', 'public');
+        $contract->StoreInMedia($request->file);
 
         //Saving request FCL
         $Ncontract  = NewContractRequest::create([
@@ -418,29 +464,24 @@ class ContractController extends Controller
             'user_id' => Auth::user()->id,
             'created' => date("Y-m-d H:i:s"),
             'username_load' => 'Not assigned',
+            'data' => json_encode(''),
             'contract_id' => $contract->id,
         ]);
 
         //Saving request and carriers in RequestCarriers
-        $Ncontract->ContractRequestCarrierSync($carriers);
+        $Ncontract->ContractRequestCarrierSync($carriers, $api);
 
-        //Dispatching jobs
-        if (env('APP_VIEW') == 'operaciones') {
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
-        } else {
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
-        }
+        return $Ncontract;
+    }
 
-        //Notifications
-        $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
-
-        NotificationsJob::dispatch('Request-Fcl', [
-            'user' => $user,
-            'ncontract' => $Ncontract->toArray()
-        ]);
-
-        $Ncontract->NotifyNewRequest($admins);
-
+    /**
+     * Store contract LCL from API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadLcl($request, $carriers, $api, $direction, $type)
+    {
         return response()->json([
             'message' => 'Contract created successfully!',
         ]);

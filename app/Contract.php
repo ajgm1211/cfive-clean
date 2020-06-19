@@ -165,6 +165,19 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
+     * Store file in storage
+     *
+     * @param  blob  $file
+     * @return void
+     */
+    public function StoreInMedia($file)
+    {
+        $this->addMedia($file)->addCustomHeaders([
+            'ACL' => 'public-read'
+        ])->toMediaCollection('document', 'FclRequest');
+    }
+
+    /**
      * Sync Contract User Restrictions
      *
      * @param  Array $users
