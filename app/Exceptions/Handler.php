@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -54,6 +55,16 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     'message' => 'Resource not found',
                 ], 404);
+            }
+        }
+
+        if ($exception instanceof HttpException) 
+        {
+            if($request->ajax() || $request->wantsJson()) 
+            {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                ], 403);
             }
         }
 
