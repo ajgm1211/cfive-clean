@@ -18,31 +18,31 @@ class User extends Authenticatable implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'id','name','lastname', 'password', 'email','phone','type','company_user_id','position','verified','access'
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
-    public function subuser(){
+    public function subuser()
+    {
 
         return $this->hasOne('App\Subuser');
-
     }
-    public function contracts(){
+    public function contracts()
+    {
 
         return $this->hasMany('App\Contract');
-
     }
-    public function surcharges(){
+    public function surcharges()
+    {
 
         return $this->hasMany('App\Surcharge');
-
     }
-    public function emailsTemplates(){
+    public function emailsTemplates()
+    {
 
         return $this->hasMany('App\EmailTemplate');
-
     }
     public function verifyUser()
     {
@@ -56,12 +56,19 @@ class User extends Authenticatable implements Auditable
     {
         return $this->hasOne('App\OauthAccessToken');
     }
-    public function NewContractRequests(){
+    public function NewContractRequests()
+    {
         return $this->hasMany('App\NewContractRequest');
     }
-    public function userConfiguration(){
+    public function userConfiguration()
+    {
         return $this->hasOne('App\UserConfiguration');
     }
+    public function scopeIsAdmin($query)
+    {
+        return $query->where('type', 'admin');
+    }
+
     /**
      * Send the password reset notification.
      *

@@ -47,7 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('fcl/global/charges', 'ApiController@globalCharges');
         //Contracts
         Route::get('_contracts', 'ApiController@contracts');
-        Route::post('upload/contract', 'ContractController@upload');
+        Route::post('upload/contract', 'ContractController@processUploadRequest');
         //Companies
         Route::get('companies', 'CompanyController@index');
         Route::post('company', 'CompanyController@store');
