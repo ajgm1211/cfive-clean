@@ -731,7 +731,7 @@
 
             </div><br>
             <div class="row">
-              <div class="col-lg-4" id="origin_port">
+              <div class="{{ $origenClass }}" id="origin_port">
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
@@ -748,7 +748,7 @@
                 <label>Origin address</label>
                 {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
               </div>
-              <div class="col-lg-4" id="destination_port">
+              <div class="{{ $destinationClass }}" id="destination_port">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
                   {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
@@ -1224,30 +1224,28 @@
                       <div class="row justify-content-between">
 
                         @if(!empty($arr->remarks) || !empty($arr->remarksG))
-                        <div class="col-lg-1">
-                          <div class="btn-detail__quotes btn-remarks">
-                            <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l btn-nowrap"  title="Cancel" >
-                              <span class="workblue">Remarks</span>  
-                              <i  class="la la-angle-down blue"></i></a>
-                          </div>
-                        </div>
+                            <div class="col-lg-1">
+                            <div class="btn-detail__quotes btn-remarks">
+                                <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l btn-nowrap"  title="Remarks" >
+                                <span class="workblue">Remarks</span>  
+                                <i  class="la la-angle-down blue"></i></a>
+                            </div>
+                            </div>
                         @endif
 
                         @if(isset($arr->sheduleType))
-                        <div class="col-lg-4 d-flex align-items-center" style="padding-left: 60px;">
-                          <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-                        </div>
+                            <div class="col-lg-4 d-flex align-items-center" style="padding-left: 60px;">
+                            <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                            </div>
                         @else
-                        <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
+                            <div class="col-lg-6 d-flex align-items-center">
+                                <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
 
-                         @if($arr->contratoFuturo)
-                           <img src="{{ url('images/error.svg')}}" width='20' height='20' >  
-                          @endif
-                            
+                                @if($arr->contratoFuturo)
+                                    &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20" title="Attention! This rate is valid for a date range later than the one selected">
+                                @endif
 
-
-                        </div>
+                            </div>
                         @endif
 
                         @if(isset($arr->sheduleType))
@@ -1258,11 +1256,11 @@
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap">  TT:  </span>  {{ $arr->transit_time   }}
                         </div>
                         <div class="col-lg-2 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> > Via: </span> {{  $arr->via }}
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> >  Via: </span> {{  $arr->via }}
                         </div>-->
                         @endif
-                        <div class="col-lg-2 d-flex  justify-content-end">
-                        <span class="portalphacode" style="margin-right:15px;">Contract: </span>  <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
+                        <div class="col-lg-3 d-flex align-items-center justify-content-start">
+                        <span class="portalphacode" style="margin-right:15px; text-align: right">Contract: </span> {{ $arr->contract->company_user_id }} &nbsp;<span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
                         </div>
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
@@ -1270,12 +1268,12 @@
                           <div class="downexcel" style="margin-right: 10px;">
 
                             @if($arr->idContract !="0")
-                            <a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Download" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
                               <i class="la la-file-excel-o"></i>
                             </a>
                             @else
-                            <a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})" class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})" class="l detailed-cost"  title="Download" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>
@@ -1284,7 +1282,7 @@
                           </div>
                           @endif
                           <div class="btn-detail__quotes btn-d">
-                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost btn-nowrap"  title="Cancel" >
+                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost btn-nowrap"  title="Details" >
                               <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
@@ -2041,6 +2039,7 @@
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
+            
        }
    })(jQuery);
 
@@ -2083,7 +2082,7 @@
                 }
                 $('.equipment .select-list li[title="undefined"]').remove();
                 $('#equipment.select-group').val(defaultValuesController);
-                console.log($('#equipment.select-group').val());
+                //console.log($('#equipment.select-group').val());
                 //console.log($('#equipment.select-group').val());
             }else{
                 var valueArray = [];
@@ -2096,8 +2095,8 @@
                     //console.log(idEquip);
                 }
                 $('#equipment.select-group').val(valueArray);
-                console.log($('#equipment.select-group').val());
-                return;
+                //console.log($('#equipment.select-group').val());
+                
             }
             //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
@@ -2123,6 +2122,7 @@
                     }
                 }
             });
+            
         },
         error: function (request, status, error) {
             console.log(request.responseText);

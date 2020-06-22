@@ -58,55 +58,17 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <h5 class="m-portlet__head-text">
-                        <strong  style="color:#0062ff;">Import Contract - Sea Freight FCL</strong>
+                        <strong  style="color:#0062ff;">Import Transit Time</strong>
                     </h5>
                     <br>
                     <div class="row">
                         <div class="col-lg-12">
-                            {!! Form::open(['route'=>'RequestFcl.store','method'=>'POST','id'=>'form','files'=>true])!!}
+                            {!! Form::open(['route'=>'ImpTransitTime.store','method'=>'POST','id'=>'form','files'=>true])!!}
                             @csrf
                             <div class="form-group m-form__group row">
-                                <div class="col-lg-2">
-                                    <label class="">Carrier</label>
-                                    <div class="" id="carrierMul">
-                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','inpName' => 'Carrier','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="" for="groupContainers">Equipments Type</label>
-                                    <div class="">
-                                        {!! Form::select('groupContainers',$groupContainer,null,['class'=>'m-select2-general form-control','required','inpName' => 'Equipments Type','onchange' => 'loadContainers()','id'=>'groupContainers'])!!}
-                                    </div>
-                                </div>
-                                <div class="col-lg-2" >
-                                    <label class="">Equipments</label>
-                                    <div class="" id="containers_div">
-                                        {!! Form::select('containers[]',$containers,null,['class'=>'b-select form-control','id'=>'containerID','inpName' => 'Equipments','required','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="validation_expire" class=" ">Validity</label>
-                                    <input placeholder="Contract Validity" inpName="Validation" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="nameid" class="">Reference</label>
-                                    {!!  Form::text('name',null,['id'=>'nameid',
-                                    'placeholder'=>'References  ',
-                                    'required','inpName' => 'References',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="">Direction</label>
-                                    <div class="" id="direction">
-                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','inpName' => 'Direction','required','id'=>'direction'])!!}
-                                    </div>
-                                </div>
                             </div>
                             <div class="form-group m-form__group row">
                             </div>
-
-                            <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
-                            <input type="hidden" name="user" value="{{$user->id}}" />
 
                             <div class="col-md-4 col-md-offset-4">&nbsp;</div>
                             <div class="form-group m-form__group row">
@@ -208,7 +170,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
-                        Load Request
+                        Load File
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -274,106 +236,14 @@
         }
     });
 
-    function AbrirModal(action,id,request_id){
-        action = $.trim(action);
-        if(action == "DuplicatedContractOtherCompany"){
-            var url = '{{ route("contract.duplicated.other.company",[":id","*id"]) }}';
-            url = url.replace(':id', id);
-            url = url.replace('*id', request_id);
-            $('#global-body').load(url,function(){
-                $('#global-modal').modal({show:true});
-            });
-        } else if(action == "showRequestDp"){
-            var url = '{{ route("show.request.dp.cfcl",":id") }}';
-            url = url.replace(':id', id);
-            $('#global-body').load(url,function(){
-                $('#global-modal').modal({show:true});
-            });
-        }
-    }
-
-    function editcontract(id){
-        var url = '{{ route("show.contract.edit",":id") }}';
-        url = url.replace(':id',id);
-        $('#modal-bodys').load(url,function(){
-            $('#contrac').modal();
-        });
-    }
-
-    function loadContainers(){
-        var groupContainers  = $("#groupContainers").select2('val');
-        var url = '{!! route("request.fcl.get.containers") !!}';
-        //        $('.b-select').remove();
-        //        $('#containers_div').load(url,{groupContainers:groupContainers},function(){
-        //			
-        //		});
-        $.ajax({
-            cache: false,
-            type:'get',
-            data:{groupContainers},
-            url: url,
-            success: function (response, textStatus, request) {
-                //console.log(response);
-                if (request.status === 200) {
-                    var arr = $('#containerID').val();
-                    $('#containerID').multiselect('deselect',arr);
-                    $('#containerID').multiselect('select',response.data.values)
-                    //$('#containerID').val(response.data.values).trigger('change');
-                }
-            },
-            error: function (ajaxContext) {
-                toastr.error('Export error: '+ajaxContext.responseText);
-            }
-        });
-    }
-
-    $('.m-select2-general').select2({
-        placeholder: "Select an option"
-    });
     $("#submitRequest").on('click', function(e){
         var $fileVal = $('#existsFile').val();
-        var carrierM = $('#carrierM').val();
-
-        var fail = false;
-        var name;
-        if(!carrierM.length >= 1){
-            fail = true;
-            toastr.error('Select Carrier is required ');
+        if($fileVal >= 1){
+            $("#modaledit").modal('show');
+            $("#form").submit();
+        }else {
+            toastr.error('Select a file! ');
         }
-        $( '#form' ).find( 'select, textarea, input' ).each(function(){
-            if( ! $( this ).prop( 'required' )){
-            } else {
-                if ( ! $( this ).val() ) {
-                    var fail_log = '';
-                    fail = true;
-                    name = $( this ).attr( 'inpName' );
-                    fail_log = name + " is required \n";
-                    toastr.error(fail_log);
-                }
-            }
-        });
-        if(!fail) {
-            if($fileVal >= 1){
-                var date = $('#m_daterangepicker_1').val().split(' / ');
-                var date_star = $.trim(date[0]);
-                var date_end  = $.trim(date[1]);
-                //e.preventDefault();
-                if(date_star == date_end){
-                    swal(
-                        "Error",
-                        "Error, Please select the date!", "error",
-                        true,
-                    );
-                }else {
-                    $("#modaledit").modal('show');
-                    $("#form").submit();
-                }
-
-            }else {
-                toastr.error('Select a file! ');
-            }
-        }
-
     });
 
     var uploadedDocumentMap = {}
@@ -392,8 +262,8 @@
     }
 
     Dropzone.options.documentDropzone = {
-        url: '{{ route("request.fcl.storeMedia") }}',
-        maxFilesize: 32, // MB
+        url: '{{ route("ImpTransitTime.storeMedia") }}',
+        maxFilesize: 15, // MB
         maxFiles: 1,
         addRemoveLinks: true,
         headers: {
@@ -417,7 +287,7 @@
         }
     }
 
-  
+
 </script>
 
 @stop
