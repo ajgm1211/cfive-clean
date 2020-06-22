@@ -559,8 +559,7 @@ class RequestFclV2Controller extends Controller
 
     public function getContainers(Request $request){
         $groupContainers = $request->groupContainers;
-        //$containers 	 = Container::where('gp_container_id',$groupContainers)->where('name','!=','45 HC')->where('name','!=','40 NOR')->pluck('id');
-        $containers 	 = Container::where('gp_container_id',$groupContainers)->pluck('id');
+        $containers 	 = Container::where('gp_container_id',$groupContainers)->where('name','!=','45 HC')->where('name','!=','40 NOR')->pluck('id');
         return response()->json(['success' => true,'data' => ['values' => $containers->all() ]]);
         //return view('RequestV2.Fcl.select',compact('containers'));
     }
