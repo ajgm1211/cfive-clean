@@ -52,10 +52,11 @@ class InlandDistanceController extends Controller
     }else{
       
       $data = InlandDistance::where('harbor_id',$harbors->first())->pluck('address','distance');
-      if(empty($data)){
+     // dd($data->toArray());
+      if(empty($data->toArray())){
         return response()->json(['message' => 'empty']);
       }else{
-        return response()->json(['message' => 'ok','data' =>$data]);
+        return response()->json(['message' => 'Ok','data' =>$data]);
 
       }
       
