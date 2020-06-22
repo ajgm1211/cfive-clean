@@ -78,7 +78,7 @@ class NewContractRequest extends Model implements HasMedia
     /**
      * Notify a new request
      *
-     * @param  Array  $carrier
+     * @param  Array  $admins
      * @return void
      */
     public function NotifyNewRequest($admins)
