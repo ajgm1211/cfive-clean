@@ -33,8 +33,9 @@ class InlandDistanceController extends Controller
 
   public function add($id)
   {
+    $harborCollect= Harbor::where('id',$id)->first();
+    $inlandL = InlandLocation::where('country_id',$harborCollect->country_id)->pluck('region','id');
     $harbor = $id;
-    $inlandL = InlandLocation::pluck('region','id');
     return view('inlandDistances/add',compact('harbor','inlandL'));
   }
 
