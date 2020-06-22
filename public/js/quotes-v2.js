@@ -4008,17 +4008,20 @@ function notification(message, type) {
 $(document).on('change', '#origin_harbor', function(e) {
   
   
-  var id = $('#origin_harbor').val();
+  var ids = $('#origin_harbor').val();
 
   $.ajax({
-    type: 'GET',
-    url: '/inlanD/getDistance',
-    data: {
-        'origPort': $id        
-    },
+    type: 'GET', 
+    url: '/inlandD/getDistance/'+ids,
     success: function(data) {
+        $('select[name="originA"]').empty();
+
         if (data.message == 'Ok') {
-            //$(this).attr('checked', true).val(0);
+  
+       $.each(data.data, function(key, value) {
+           
+                $('select[name="originA"]').append('<option  value="' + key + '">' + value + '</option>');
+            });
         }
     }
 });
