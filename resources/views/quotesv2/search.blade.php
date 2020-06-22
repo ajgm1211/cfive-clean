@@ -1134,7 +1134,7 @@
                     <div class="{{ $equipmentHides['head_1'] }}">
                       <div class="row">
                         <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destinationestinationestination</span></div>
+                        <div class="col-lg-3" style="text-align: right" ><span class="portcss">Destination</span></div>
                       </div>
                     </div>
                     <div class="{{ $equipmentHides['head_2'] }} padding-right-table" style="padding-left: 0;">
@@ -1224,30 +1224,28 @@
                       <div class="row justify-content-between">
 
                         @if(!empty($arr->remarks) || !empty($arr->remarksG))
-                        <div class="col-lg-1">
-                          <div class="btn-detail__quotes btn-remarks">
-                            <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l btn-nowrap"  title="Cancel" >
-                              <span class="workblue">Remarks</span>  
-                              <i  class="la la-angle-down blue"></i></a>
-                          </div>
-                        </div>
+                            <div class="col-lg-1">
+                            <div class="btn-detail__quotes btn-remarks">
+                                <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l btn-nowrap"  title="Remarks" >
+                                <span class="workblue">Remarks</span>  
+                                <i  class="la la-angle-down blue"></i></a>
+                            </div>
+                            </div>
                         @endif
 
                         @if(isset($arr->sheduleType))
-                        <div class="col-lg-4 d-flex align-items-center" style="padding-left: 60px;">
-                          <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-                        </div>
+                            <div class="col-lg-4 d-flex align-items-center" style="padding-left: 60px;">
+                            <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                            </div>
                         @else
-                        <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
+                            <div class="col-lg-6 d-flex align-items-center">
+                                <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
 
-                         @if($arr->contratoFuturo)
-                           <img src="{{ url('images/error.svg')}}" width='20' height='20' >  
-                          @endif
-                            
+                                @if($arr->contratoFuturo)
+                                    &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20" title="Attention! This rate is valid for a date range later than the one selected">
+                                @endif
 
-
-                        </div>
+                            </div>
                         @endif
 
                         @if(isset($arr->sheduleType))
@@ -1270,12 +1268,12 @@
                           <div class="downexcel" style="margin-right: 10px;">
 
                             @if($arr->idContract !="0")
-                            <a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Download" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
                               <i class="la la-file-excel-o"></i>
                             </a>
                             @else
-                            <a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})" class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})" class="l detailed-cost"  title="Download" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>
@@ -1284,7 +1282,7 @@
                           </div>
                           @endif
                           <div class="btn-detail__quotes btn-d">
-                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost btn-nowrap"  title="Cancel" >
+                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost btn-nowrap"  title="Details" >
                               <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
