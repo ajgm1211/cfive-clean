@@ -194,7 +194,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
                 }
             }
-
+            $collection = collect([]);
             $countRow = 1;
             foreach($sheetData as $row){
                 if($countRow > 1){
@@ -292,7 +292,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     //--- PORT/CONTRY/REGION BOOL -------------------------------------
                     $differentiatorVal = '';
                     if($statusPortCountry){
-                        $differentiatorVal = $row[$differentiator];
+                        $differentiatorVal = trim($row[$differentiator]);
                     } else {
                         $differentiatorVal = 'port';
                     }
@@ -383,7 +383,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $calculation_type_exc   = $row[$calculationtypeExc];
                             $chargeExc_val          = $row[$chargeExc];
 
-
                             //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
                             if($statusPortCountry){
                                 if(strnatcasecmp($differentiatorVal,'country') == 0 || strnatcasecmp($differentiatorVal,'region') == 0){
@@ -408,6 +407,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 }
                                 $originVal  = $resultadocountrytOri['country'];
                             }
+                            //$collection->push([$countRow => [$originVal,$statusPortCountry,$differentiatorBol,$differentiatorVal]]);
 
                             //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
                             $destinyVal = trim($destinyMult);// hacer validacion de puerto en DB
@@ -623,12 +623,15 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             foreach($columna_cont as $key => $conta_row){
                                                 if($conta_row[4] == false){
                                                     $container_json['C'.$key] = ''.$conta_row[0];
-                                                }              
-                                                $currency_val = $conta_row[1];
+                                                }   
+                                                if($conta_row[3] != true){
+                                                    $currency_val = $conta_row[1];
+                                                }
                                             }
                                             $container_json = json_encode($container_json);
 
                                         } else { // DRY
+                                            //dd($columna_cont);
                                             foreach($columna_cont as $key => $conta_row){
                                                 if($conta_row[4] == false){ // columna contenedores
                                                     $container_json['C'.$key] = ''.$conta_row[0];
@@ -645,7 +648,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         $fortyfive_val = $conta_row[0];                                        
                                                     }
                                                 }  
-                                                $currency_val = $conta_row[1];
+                                                if($conta_row[3] != true){
+                                                    $currency_val = $conta_row[1];
+                                                }
                                             }
                                             $container_json = json_encode($container_json);
 
@@ -1382,6 +1387,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 }
                 $countRow++;
             }
+            //dd($collection);
 
             $nopalicaHs = Harbor::where('name','No Aplica')->get();
             $nopalicaCs = Country::where('name','No Aplica')->get();
@@ -1392,23 +1398,23 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $nopalicaC = $nopalicaC['id'];
             }
 
-//            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_orig','LIKE','%No Aplica%')->delete();
-//            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_dest','LIKE','%No Aplica%')->delete();
-//
-//            $surchargecollection = LocalCharge::where('contract_id',$this->contract_id)
-//                ->whereHas('localcharcountries',function($query) use($nopalicaC){
-//                    $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
-//                })
-//                ->orWhereHas('localcharports',function($q) use($nopalicaH){
-//                    $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
-//                })->forceDelete();
+            //            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_orig','LIKE','%No Aplica%')->delete();
+            //            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_dest','LIKE','%No Aplica%')->delete();
+            //
+            //            $surchargecollection = LocalCharge::where('contract_id',$this->contract_id)
+            //                ->whereHas('localcharcountries',function($query) use($nopalicaC){
+            //                    $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            //                })
+            //                ->orWhereHas('localcharports',function($q) use($nopalicaH){
+            //                    $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            //                })->forceDelete();
 
             // dd($collection);
 
-//            $userNotifique = User::find($this->user_id);
-//            $message = 'The file imported was processed :' .$this->contract_id ;
-//            $userNotifique->notify(new SlackNotification($message));
-//            $userNotifique->notify(new N_general($userNotifique,$message)); 
+            //            $userNotifique = User::find($this->user_id);
+            //            $message = 'The file imported was processed :' .$this->contract_id ;
+            //            $userNotifique->notify(new SlackNotification($message));
+            //            $userNotifique->notify(new N_general($userNotifique,$message)); 
         } else {
             //imprimir en el log error
             Log::error('Container calculation type relationship error');
