@@ -853,6 +853,7 @@ Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
     Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');
     Route::get('delete/{inlandd_id}', ['uses' => 'InlandDistanceController@destroy', 'as' => 'delete-inlandd']);
     Route::get('find/{id}', ['uses' => 'InlandDistanceController@index', 'as' => 'inlandD.find']);
+    Route::get('getDistance/{id}', ['uses' => 'InlandDistanceController@getDistance', 'as' => 'inlandD.getDistance']);
 
 });
 Route::resource('inlandD', 'InlandDistanceController')->middleware('auth');

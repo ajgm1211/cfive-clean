@@ -746,7 +746,7 @@
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
-                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                {{ Form::select('originA',[],null,['id'=>'originA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}
               </div>
               <div class="{{ $destinationClass }}" id="destination_port">
                 <div  id="destination_harbor_label">
@@ -760,7 +760,7 @@
               </div>
               <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                 <label>Destination address</label>
-                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+                {{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}
               </div>
              
               <div class="col-lg-2">
