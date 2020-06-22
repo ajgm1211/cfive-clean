@@ -249,7 +249,7 @@ $(document).on('click', '.delete-inlandd', function() {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'inlandD/delete/' + id,
+                url: '/inlandD/delete/' + id,
                 success: function(data) {
                     if (data.message == 'Ok') {
                         swal(
@@ -266,6 +266,9 @@ $(document).on('click', '.delete-inlandd', function() {
                         )
                         console.log(data.message);
                     }
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
                 }
             });
         }
