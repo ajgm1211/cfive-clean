@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 class AccountImportationContractFcl extends Model implements HasMedia,Auditable
 {
+    
     use HasMediaTrait;
     use \OwenIt\Auditing\Auditable;
     protected $table    = "accounts_import_cfcl";

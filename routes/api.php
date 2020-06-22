@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('user/{id}', 'UsersController@update');
         //Quotes
         Route::get('quotes', 'ApiController@quotes');
-        Route::get('quotes/{id}', 'QuoteV2Controller@show');
+        Route::get('quotes/{id}', 'ApiController@quoteById');
         //Rates&Charges
         Route::get('fcl/rates', 'ApiController@rates');
         Route::get('fcl/charges', 'ApiController@charges');

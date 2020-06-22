@@ -6,7 +6,7 @@
  * Time: 05:45 PM
  */
 ?>
-<div class="modal fade" id="editRateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="editRateModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog text-left" role="document">
         <div class="modal-content" style="min-width: 900px; right: 200px;">
             <div class="modal-header">

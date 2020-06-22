@@ -31,7 +31,6 @@
                 @endforeach
             @endforeach
             @if($quote->pdf_option->show_schedules==1)
-                <th ><b>{{__('pdf.type')}}</b></th>
                 <th ><b>{{__('pdf.tt')}}</b></th>
                 <th ><b>{{__('pdf.via')}}</b></th>
             @endif
@@ -72,13 +71,11 @@
                                 /*${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                 ${'sum_total_'.$c->code} += ${'total_'.$c->code};*/
                                 if($sale_terms_origin->count()>0){
-                                    dd("here 1");
                                     if($value->type_id!=1){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                         ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
                                     }
                                 }elseif($sale_terms_destination->count()>0){
-                                    dd("here 2");
                                     if($value->type_id!=2){
                                         ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
                                         ${'sum_total_'.$c->code} += $value->{'totalized_'.$c->code};
@@ -180,29 +177,18 @@
                     @foreach ($containers as $c)
                         @if($c->code == $key)
                             @if($sale_terms_origin->count()>0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code}, true)}}</td>
                             @elseif($sale_terms_origin->count()>0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code}, true)}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code}, true)}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
+                                <td {{ $hide }}>{{isDecimal(@${'sum_total_'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code}, true)}}</td>
                             @endif
                         @endif
                     @endforeach
                 @endforeach
-                @if($quote->pdf_option->show_schedules==1)
-                    @if($quote->pdf_option->language=='Spanish')
-                        @if($rate->schedule_type=='Transfer')
-                            <td>Transbordo</td>
-                        @elseif($rate->schedule_type=='Direct')
-                            <td>Directo</td>
-                        @else
-                            <td>-</td>
-                        @endif
-                    @else
-                        <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
-                    @endif                                    
+                @if($quote->pdf_option->show_schedules==1)                                   
                     <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                     <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                 @endif

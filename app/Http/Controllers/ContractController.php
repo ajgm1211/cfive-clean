@@ -238,7 +238,7 @@ class ContractController extends Controller
             'remarks' => 'sometimes'
         ]);
         
-        $contract->update(['remarks' => $data['remarks']]);
+        $contract->update(['remarks' => @$data['remarks']]);
 
         return new ContractResource($contract);   
     }
@@ -346,12 +346,15 @@ class ContractController extends Controller
 
         $file->move($path, $name);
 
-        $contract->addMedia(storage_path('tmp/uploads/' . $name))->toMediaCollection('document','contracts3');
+        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
+            'ACL' => 'public-read'
+        ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
             'name'          => $name,
             'original_name' => $file->getClientOriginalName(),
+            'url' => $media->getFullUrl()
         ]);
     }
    

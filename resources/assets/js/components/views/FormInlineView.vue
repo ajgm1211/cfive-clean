@@ -14,16 +14,17 @@
                             :id="'id_'+key"
                             :label="item.label"
                             class="d-block"
-                            :label-for="'id_'+key"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                                   >
                         <b-form-input
                                 v-model="vdata[key]"
                                 :placeholder="item.placeholder"
-                                v-on:blur="onSubmit()" 
+                                v-on:blur="onSubmit()"
+                                @change="cleanInput(key)"  
                                     >
                         </b-form-input>
+                        <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
 
                     </b-form-group>
                 </div>
@@ -35,7 +36,6 @@
                             :id="'id_'+key"
                             :label="item.label"
                             class="d-block"
-                            :label-for="'id_'+key"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                                   >
@@ -43,8 +43,10 @@
                                 id="inline-form-input-name"
                                 v-model="vdata[key]"
                                 class="mb-2 mr-sm-2 mb-sm-0 remarks"
-                                v-on:blur="onSubmit()" 
+                                v-on:blur="onSubmit()"
+                                @change="cleanInput(key)"  
                          ></b-textarea>
+                        <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
                         <span class="update-remark"><i class="fa fa-repeat" aria-hidden="true"></i></span>
                     </b-form-group>
                 </div>
@@ -71,8 +73,10 @@
                              :show-labels="false" 
                              :placeholder="item.placeholder"
                              @input="onSubmit()"
+                             @select="cleanInput(key)"
                              >
                         </multiselect>
+                        <span :id="'id_f_inline_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                     </b-form-group>
                 </div>
                 <!-- End Select Field -->
@@ -98,8 +102,10 @@
                              :show-labels="false" 
                              :placeholder="item.placeholder"
                              @input="onSubmit()"
+                             @select="cleanInput(key)"
                              >
                         </multiselect>
+                        <span :id="'id_f_inline_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                     </b-form-group>
                 </div>
                 <!-- End MultiSelect Field -->
@@ -121,9 +127,10 @@
                                   :timePicker="false"
                                   v-model="vdata[key]"
                                   :linkedCalendars="true"
-                                  @update="onSubmit()">
+                                  @update="cleanInputSubmit(key)">
 
                               </date-range-picker>
+                              <span :id="'id_f_inline_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                     </b-form-group>
                 </div>
                 <!-- End DateRange Field -->
@@ -218,6 +225,7 @@
             },
 
             validateForm(){
+                return true;
                 let validate = true;
                 let component = this;
                 let fields_keys = Object.keys(this.fields);
@@ -273,6 +281,17 @@
                 return data;
             },
 
+            /* Clean validation message */
+            cleanInputSubmit(key) {
+                $(`#id_f_inline_${key}`).css({'display':'none'});
+                this.onSubmit();
+            },
+
+            /* Clean validation message */
+            cleanInput(key) {
+                $(`#id_f_inline_${key}`).css({'display':'none'});
+            },
+
             /* Handle the submit Form and 
               send the data to store the item */
             onSubmit(){
@@ -285,8 +304,14 @@
                             .then( ( response ) => {
                                 this.$emit('success', response.data.data);
                         })
-                            .catch(( data ) => {
-                                console.log(data);
+                            .catch(( error, errors ) => {
+                                
+                                let errors_key = Object.keys(error.data.errors);
+
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_inline_${key}`).css({'display':'block'});
+                                    $(`#id_f_inline_${key}`).html(error.data.errors[key]);
+                                });
                         });
 
                     } else {
@@ -295,8 +320,14 @@
                             .then( ( response ) => {
                                 this.$emit('success', response.data.data);
                         })
-                            .catch(( data ) => {
-                                console.log(data);
+                            .catch(( error, errors ) => {
+                                
+                                let errors_key = Object.keys(error.data.errors);
+
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_inline_${key}`).css({'display':'block'});
+                                    $(`#id_f_inline_${key}`).html(error.data.errors[key]);
+                                });
                         });
                     }
 
