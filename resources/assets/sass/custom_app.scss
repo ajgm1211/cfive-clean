@@ -629,10 +629,12 @@ input.multiselect__input:focus {
 .tab-pane .card-body {
     overflow-x: scroll;
 }
+
 .btn-adds {
-    right: 60px; 
+    right: 60px;
     position: fixed;
 }
+
 .dropzone.dz-started .dz-message {
     width: 382px !important;
     float: left !important;
@@ -644,42 +646,49 @@ input.multiselect__input:focus {
     height: 100% !important;
 }
 
-  #dropzone .dz-preview {
+#dropzone .dz-preview {
     width: 160px;
     height: 200px;
     display: inline-block;
     border-radius: 5px;
-  }
- #dropzone .dz-preview .dz-image {
+}
+
+#dropzone .dz-preview .dz-image {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-  }
-  #dropzone .dz-preview .dz-image > div {
+}
+
+#dropzone .dz-preview .dz-image>div {
     width: inherit;
     height: inherit;
     border-radius: 50%;
     background-size: contain;
-  }
-  #dropzone .dz-preview .dz-image > img {
-    width: 100%;
-  }
+}
 
-   #dropzone .dz-preview .dz-details {
+#dropzone .dz-preview .dz-image>img {
+    width: 100%;
+}
+
+#dropzone .dz-preview .dz-details {
     color: white;
     transition: opacity .2s linear;
     text-align: center;
     border-radius: 5px;
-  }
-  #dropzone .dz-success-mark, .dz-error-mark, .dz-remove {
+}
+
+#dropzone .dz-success-mark,
+.dz-error-mark,
+.dz-remove {
     display: none;
-  }
-  #dropzone .dz-remove {
+}
+
+#dropzone .dz-remove {
     border-radius: 5px !important;
     padding: 5px !important;
     margin-left: 0px !important;
     right: 19%;
-  }
+}
 
 .no-scroll .card-body {
     overflow-x: inherit !important;
@@ -688,5 +697,5 @@ input.multiselect__input:focus {
 .pagination {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    //justify-content: flex-end;
 }
