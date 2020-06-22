@@ -26,7 +26,7 @@ class InlandDistanceController extends Controller
     /*  $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
       $a->where('company_user_id', '=',$company_user_id);
     })->get();*/
-    $data = InlandDistance::where('harbor_id',$harbor_id)->get();
+    $data = InlandDistance::where('harbor_id',$harbor_id)->with('inlandLocation')->get();
     return view('inlandDistances/index', compact('data','harbor'));
 
   }
