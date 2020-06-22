@@ -15,6 +15,7 @@ use App\CalculationType;
 use App\TypeDestiny;
 use App\Country;
 use App\Company;
+use App\ContractLcl;
 use App\Http\Requests\UploadContractFile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ use App\Http\Resources\ContractResource;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
 use App\NewContractRequest;
+use App\NewContractRequestLcl;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use Exception;
@@ -374,9 +376,7 @@ class ContractController extends Controller
      */
     public function processUploadRequest(UploadContractFile $request)
     {
-
         try {
-
             $direction = null;
             $api = true;
             $user = User::findOrFail(Auth::user()->id);
@@ -396,14 +396,10 @@ class ContractController extends Controller
                 $direction = $this->replaceDirection($request->direction);
             }
 
-            if ($type == 'FCL') {
-                $Ncontract = $this->uploadFcl($request, $carriers, $api, $direction, $type);
-            } else {
-                $Ncontract = $this->uploadLcl($request, $carriers, $api, $direction, $type);
-            }
-
+            $Ncontract = $this->uploadContract($request, $carriers, $api, $direction, $type);
+            
             //Dispatching jobs
-            /*if (env('APP_VIEW') == 'operaciones') {
+            if (env('APP_VIEW') == 'operaciones') {
                 ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
             } else {
                 ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
@@ -412,86 +408,142 @@ class ContractController extends Controller
             //Notifications
             $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
 
-            NotificationsJob::dispatch('Request-Fcl', [
+            NotificationsJob::dispatch('Request-'.$type, [
                 'user' => $user,
                 'ncontract' => $Ncontract->toArray()
             ]);
 
-            $Ncontract->NotifyNewRequest($admins);*/
+            $Ncontract->NotifyNewRequest($admins);
 
             return response()->json([
                 'message' => 'Contract created successfully!',
             ]);
-
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'Something went wrong on our side',
+                'message' => 'Something when wrong on our side',
             ], 500);
         }
     }
-
+   
     /**
-     * Store contract from API
+     * process contract and create request from API
      *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  mixed $request
+     * @param  mixed $carriers
+     * @param  mixed $api
+     * @param  mixed $direction
+     * @param  mixed $type
+     * @return object
      */
-    public function uploadFcl($request, $carriers, $api, $direction, $type)
+    public function uploadContract($request, $carriers, $api, $direction, $type)
     {
         //Saving contract
-        $contract = Contract::create([
-            'name' => $request->reference,
-            'company_user_id' => Auth::user()->company_user_id,
-            'direction_id' => $direction,
-            'validity' =>  $request->valid_from,
-            'expire' => $request->valid_until,
-            'type' => $type,
-        ]);
-
+        $contract = $this->storeContractApi($request, $direction, $type);
+        
         //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
         //Uploading file to storage
         $contract->StoreInMedia($request->file);
-
+        
+        $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
+        
         //Saving request FCL
-        $Ncontract  = NewContractRequest::create([
-            'namecontract' => $contract->name,
-            'validation' => $contract->expire,
-            'direction' => $contract->direction_id,
-            'company_user_id' => $contract->company_user_id,
-            'nameFile' => date("dmY_His") . '_' . $request->file->getClientOriginalName(),
-            'user_id' => Auth::user()->id,
-            'created' => date("Y-m-d H:i:s"),
-            'username_load' => 'Not assigned',
-            'data' => json_encode(''),
-            'contract_id' => $contract->id,
-        ]);
+        $Ncontract = $this->storeContractRequest($contract, $filename, $type);
 
         //Saving request and carriers in RequestCarriers
         $Ncontract->ContractRequestCarrierSync($carriers, $api);
 
         return $Ncontract;
     }
-
+    
     /**
-     * Store contract LCL from API
+     * store contract from API in DB 
      *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  mixed $request
+     * @param  mixed $direction
+     * @param  mixed $type
+     * @return object
      */
-    public function uploadLcl($request, $carriers, $api, $direction, $type)
+    public function storeContractApi($request, $direction, $type)
     {
-        return response()->json([
-            'message' => 'Contract created successfully!',
-        ]);
+        switch ($type) {
+            case 'FCL':
+                $contract = Contract::create([
+                    'name' => $request->reference,
+                    'company_user_id' => Auth::user()->company_user_id,
+                    'direction_id' => $direction,
+                    'validity' =>  $request->valid_from,
+                    'expire' => $request->valid_until,
+                    'type' => $type,
+                ]);
+                break;
+            case 'LCL':
+                $contract = ContractLcl::create([
+                    'name' => $request->reference,
+                    'company_user_id' => Auth::user()->company_user_id,
+                    'validation' => $request->valid_until,
+                    'direction_id' => $direction,
+                    'validity' =>  $request->valid_from,
+                    'expire' => $request->valid_until,
+                    'type' => $type,
+                ]);
+                break;
+        }
+
+        return $contract;
+    }
+    
+    /**
+     * store request of contract in DB
+     *
+     * @param  mixed $contract
+     * @param  mixed $filename
+     * @param  mixed $type
+     * @return object
+     */
+    public function storeContractRequest($contract, $filename, $type)
+    {
+        switch ($type) {
+            case 'FCL':
+                $request = NewContractRequest::create([
+                    'namecontract' => $contract->name,
+                    'validation' => $contract->expire,
+                    'direction_id' => $contract->direction_id,
+                    'company_user_id' => $contract->company_user_id,
+                    'namefile' => $filename,
+                    'user_id' => Auth::user()->id,
+                    'created' => date("Y-m-d H:i:s"),
+                    'username_load' => 'Not assigned',
+                    'data' => json_encode(''),
+                    'contract_id' => $contract->id,
+                ]);
+                break;
+            case 'LCL':
+                $request = NewContractRequestLcl::create([
+                    'namecontract' => $contract->name,
+                    'validation' => $contract->expire,
+                    'direction' => $contract->direction_id,
+                    'company_user_id' => $contract->company_user_id,
+                    'namefile' => $filename,
+                    'user_id' => Auth::user()->id,
+                    'created' => date("Y-m-d H:i:s"),
+                    'username_load' => 'Not assigned',
+                    'type' => json_encode(''),
+                    'data' => json_encode(''),
+                    'contract_id' => $contract->id,
+                ]);
+                break;
+        }
+
+        return $request;
     }
 
     /**
      * Check direction string and replace by id
      *
      * @param string $direction
-     * @return void
+     * @return integer
      */
     public function replaceDirection($direction)
     {
