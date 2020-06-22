@@ -16,19 +16,19 @@ class LocalChargeResource extends JsonResource
     {
         if($this->localcharports->count() > 0){
             $ports = $this->localcharports;
-            $origin = $ports->pluck('portOrig')->unique('id');
-            $destination = $ports->pluck('portDest')->unique('id');
+            $origin = $ports->pluck('portOrig')->unique('id')->values();
+            $destination = $ports->pluck('portDest')->unique('id')->values();
             $route = [ 'id' => 'port', 'name' => 'Port', 'vselected' => 'harbors' ];
         }
         else {
             $countries = $this->localcharcountries;
 
-            $origin = $countries->pluck('countryOrig')->unique('id')->map(function ($country) {
+            $origin = $countries->pluck('countryOrig')->unique('id')->values()->map(function ($country) {
                 $country['display_name'] = $country['name'];
                 return $country->only(['id', 'display_name', 'name']);
             });
 
-            $destination = $countries->pluck('countryDest')->unique('id')->map(function ($country) {
+            $destination = $countries->pluck('countryDest')->unique('id')->values()->map(function ($country) {
                 $country['display_name'] = $country['name'];
                 return $country->only(['id', 'display_name', 'name']);
             });

@@ -193,6 +193,7 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeCompanyRelation($q)
     {
         return $q->with(['company' => function ($query) {
+            $query->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'owner', 'options');
             $query->with(['company_user' => function ($q) {
                 $q->select('id', 'name', 'address', 'phone', 'currency_id');
                 $q->with(['currency' => function ($q) {
@@ -209,7 +210,7 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return $q->with(['contact' => function ($query) {
             $query->with(['company' => function ($q) {
-                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number');
+                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'options');
             }]);
         }]);
     }
@@ -224,7 +225,16 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeSaletermRelation($q)
     {
         return $q->with(['saleterm' => function ($q) {
-            $q->with('charge');
+            $q->select('id', 'quote_id', 'port_id', 'type');
+            $q->with(['port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name');
+            }]);
+            $q->with(['charge' => function ($q) {
+                $q->select('id', 'sale_term_id', 'charge', 'detail', 'c20 as c20DV', 'c40 as c40DV', 'c40hc as c40HC', 'c40nor as c40NOR', 'c45 as c45HC', 'units', 'amount', 'rate', 'markup', 'currency_id');
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'alphacode');
+                }]);
+            }]);
         }]);
     }
 
@@ -299,8 +309,24 @@ class QuoteV2 extends Model  implements HasMedia
                     $q->select('id', 'alphacode');
                 }]);
             }]);
-            $query->with('inland');
-            $query->with('automaticInlandLclAir');
+            $query->with(['inland' => function ($q) {
+                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'rate as price', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'name', 'alphacode');
+                }]);
+                $q->with(['port' => function ($q) {
+                    $q->select('id', 'name', 'code', 'display_name');
+                }]);
+            }]);
+            $query->with(['inland_lcl' => function ($q) {
+                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'units', 'price_per_unit', 'markup', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+                $q->with(['currency' => function ($q) {
+                    $q->select('id', 'name', 'alphacode');
+                }]);
+                $q->with(['port' => function ($q) {
+                    $q->select('id', 'name', 'code', 'display_name');
+                }]);
+            }]);
         }]);
     }
 
