@@ -248,8 +248,8 @@ class ContractController extends Controller
             'remarks' => 'sometimes'
         ]);
 
-        $contract->update(['remarks' => $data['remarks']]);
-
+        $contract->update(['remarks' => @$data['remarks']]);
+        
         return new ContractResource($contract);
     }
 
