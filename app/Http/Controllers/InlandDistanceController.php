@@ -8,6 +8,7 @@ use App\User;
 use App\InlandLocation;
 use App\Harbor;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection as Collection;
 
 class InlandDistanceController extends Controller
 {
@@ -28,6 +29,38 @@ class InlandDistanceController extends Controller
     })->get();*/
     $data = InlandDistance::where('harbor_id',$harbor_id)->with('inlandLocation')->get();
     return view('inlandDistances/index', compact('data','harbor'));
+
+  }
+
+
+  public function getDistance($ids)
+  {
+    $ids = explode(',',$ids);
+   // $country = new Collection();
+    $harbors = new Collection();
+
+    foreach($ids as $id){
+      $info = explode('-',$id);
+     // $country->push($info[1]);
+      $harbors->push($info[0]);
+    }
+
+   // $country = $country->unique();
+
+    if($harbors->count() > 1  ){
+      return response()->json(['message' => 'maxOne']);
+    }else{
+      
+      $data = InlandDistance::where('harbor_id',$harbors->first())->pluck('address','distance');
+      if(empty($data)){
+        return response()->json(['message' => 'empty']);
+      }else{
+        return response()->json(['message' => 'ok','data' =>$data]);
+
+      }
+      
+
+    }
 
   }
 

@@ -4002,3 +4002,27 @@ function notification(message, type) {
             toastr.info(message, '');
     }
 }
+
+
+
+$(document).on('change', '#origin_harbor', function(e) {
+  
+  
+  var id = $('#origin_harbor').val();
+
+  $.ajax({
+    type: 'GET',
+    url: '/inlanD/getDistance',
+    data: {
+        'origPort': $id        
+    },
+    success: function(data) {
+        if (data.message == 'Ok') {
+            //$(this).attr('checked', true).val(0);
+        }
+    }
+});
+    
+
+
+});
