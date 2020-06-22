@@ -8,7 +8,7 @@
                 <div class="col-6">
                     <div class="float-right">
                         <!--<button class="btn btn-link" v-b-modal.addSurcharge>+ Add Surcharge</button>-->
-                        <button class="btn btn-primary btn-bg" v-b-modal.addSurcharge>+ Add Surcharge</button>
+                        <button class="btn btn-primary btn-bg btn-adds" v-b-modal.addSurcharge>+ Add Surcharge</button>
                     </div>
                 </div>
             </div>
@@ -83,8 +83,8 @@
                 /* Table headers */
                 fields: [
                     { key: 'surcharge', label: 'Type', formatter: (value)=> { return value.name } }, 
-                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
-                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
+                    { key: 'origin', label: 'Origin', formatter: (value)=> { return this.badges(value, 'warning') } }, 
+                    { key: 'destination', label: 'Destination', formatter: (value)=> { return this.badges(value, 'warning') } }, 
                     { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgescarriers(value) } }, 
                     { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
@@ -96,8 +96,8 @@
                 input_fields: {
                     typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
                     surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
-                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
-                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
+                    origin: { label: 'Origin', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
+                    destination: { label: 'Destination', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
@@ -131,9 +131,21 @@
                 let carriers = "";
 
                 if(value){
-                    value.forEach(function(val){
-                        carriers += `<span class='badge badge-${color}'>${val.display_name}</span>`;
-                    });
+                    if(Array.isArray(value)){
+                        
+                        value.forEach(function(val){
+                            carriers += `<span class='badge badge-${color}'>${val.display_name}</span>`;
+                        });
+
+                    } else {
+
+                        let fields_keys = Object.keys(value);
+
+                        fields_keys.forEach(function(key){
+                            const item = value[key];
+                            carriers += `<span class='badge badge-${color}'>${item.display_name}</span>`;
+                        });                        
+                    }
 
                     return carriers;
                 } else {

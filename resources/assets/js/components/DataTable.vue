@@ -15,7 +15,7 @@
             </div>
         </div>
         <!-- End Search Input -->
-
+ 
         <!-- DataTable -->
         <b-table-simple hover small responsive borderless>
             
@@ -71,9 +71,12 @@
                        <div v-if="item.type == 'text'">
                             <b-form-input
                                 v-model="fdata[key]"
-                                :placeholder="item.placeholder" 
+                                :placeholder="item.placeholder"
+                                :id="key"
+                                @change="cleanInput(key)"  
                                     >
                             </b-form-input>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback"></span>
                         </div>
                         <!-- End Text Input -->
 
@@ -93,6 +96,7 @@
                                  :placeholder="item.placeholder"
                                  @select="dispatch">
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- Based Dinamycal Select -->
 
@@ -110,8 +114,10 @@
                                  :label="item.trackby" 
                                  :show-labels="false"
                                  :placeholder="item.placeholder"
+                                 @select="cleanInput(key)"
                                  >
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- End Select -->
 
@@ -125,11 +131,14 @@
                                  :close-on-select="true"
                                  :clear-on-select="true"
                                  track-by="id" 
+                                 :id="key"
                                  :label="item.trackby" 
                                  :show-labels="false"
                                  :placeholder="item.placeholder"
-                                 @input="refreshValues">
+                                 @input="refreshValues"
+                                 @select="cleanInput(key)">
                             </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- End Select -->
 
@@ -169,9 +178,9 @@
                     <b-td>
                         <b-button v-bind:id="'popover'+item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                            <button class="btn-action" v-on:click="onEdit(item)">Edit</button>
-                            <button class="btn-action" v-on:click="onDuplicate(item.id)">Duplicate</button>
-                            <button class="btn-action" v-on:click="onDelete(item.id)">Delete</button>
+                            <button class="btn-action" v-if="singleActions.includes('edit')" v-on:click="onEdit(item)">Edit</button>
+                            <button class="btn-action" v-if="singleActions.includes('duplicate')" v-on:click="onDuplicate(item.id)">Duplicate</button>
+                            <button class="btn-action" v-if="singleActions.includes('delete')" v-on:click="onDelete(item.id)">Delete</button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -194,7 +203,7 @@
                   :next-text="'Next'"
                   :page-class="'page-item'"
                   :page-link-class="'page-link'"
-                  :container-class="'pagination justify-content-end'"
+                  :container-class="'pagination'"
                   :prev-class="'page-item'"
                   :prev-link-class="'page-link'"
                   :next-class="'page-item'"
@@ -227,6 +236,11 @@
                 type: Array,
                 required: false,
                 default: () => { return ['delete'] }
+            },
+            singleActions: {
+                type: Array,
+                required: false,
+                default: () => { return ['edit', 'duplicate', 'delete'] }                
             },
             actions: Object,
             firstEmpty: {
@@ -338,7 +352,7 @@
 
                     if(this.inputFields[key].type == "text")
                         data[key] = this.fdata[key];
-                    else if(["select", "pre_select"].includes(this.inputFields[key].type))
+                    else if(["select", "pre_select"].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
                         data[key] = this.fdata[key].id;
                     else if(this.inputFields[key].type == "multiselect"){
                         data[key] = [];
@@ -375,7 +389,14 @@
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
                 })
-                    .catch(( data ) => {
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
                 });
 
             },
@@ -437,10 +458,18 @@
             },
 
             dispatch(val, item){
+                console.log(item);
+                console.log(this.inputFields);
                 this.refresh = false;
                 this.datalists[this.inputFields[item].target] = this.datalists[val.vselected];
                 this.resetDinamicalFields(this.inputFields[item].target);
                 this.refresh = true;
+                $(`#id_f_table_${item}`).css({'display':'none'});
+            },
+
+            /* Clean validation message */
+            cleanInput(key) {
+                $(`#id_f_table_${key}`).css({'display':'none'});
             },
         
             refreshValues(val, item){
@@ -454,8 +483,10 @@
                 this.datalists = JSON.parse(JSON.stringify(this.vdatalists));
 
                 for (const key in this.inputFields) {
-                    if(this.inputFields[key]['type'] == 'pre_select')
+                    if(this.inputFields[key]['type'] == 'pre_select'){
+                        this.fdata[key] = this.inputFields[key]['initial'];
                         this.datalists[this.inputFields[key]['target']] = this.datalists[this.inputFields[key]['initial'].vselected];
+                    }      
                 }
             },
             isEmpty(obj){

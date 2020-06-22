@@ -90,8 +90,8 @@
                         <div class="col-md-4">
                             <br>
                             <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
-                            {{ Form::select('status',['Draft'=>'Draft','Winner'=>'Winner','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
-                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status!='' ? $quote->status:'Winner' }} <i class="fa fa-check"></i></span>
+                            {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
+                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
                         </div>
                         @if($quote->type!='AIR')
                         <div class="col-md-4">
@@ -100,21 +100,21 @@
                             {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
                             <span class="delivery_type_span">
                                 @switch($quote->delivery_type)
-                                @case(1)
-                                Port to Port
-                                @break
-                                @case(2)
-                                Port to Door
-                                @break
-                                @case(3)
-                                Door to Port
-                                @break
-                                @case(4)
-                                Door to Door
-                                @break
-                                @default
-                                Port to Port
-                                @break
+                                    @case(1)
+                                        Port to Port
+                                    @break
+                                    @case(2)
+                                        Port to Door
+                                    @break
+                                    @case(3)
+                                        Door to Port
+                                    @break
+                                    @case(4)
+                                        Door to Door
+                                    @break
+                                    @default
+                                        Port to Port
+                                    @break
                                 @endswitch
                             </span>
                         </div>

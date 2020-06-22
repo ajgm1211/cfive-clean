@@ -2939,7 +2939,7 @@ class ImportationController extends Controller
                     if(empty($account->request_dp_id)){
                         $descarga = '&nbsp;<span style="color:#0072FC;font-size:15px" title="Duplicate Contract">Dp</span>';
                     } else {
-                        $descarga = '&nbsp;<a href="#" onclick="AbrirModal(\'showRequestDp\','.$account->request_dp_id.',0)"><span  style="color:#0072FC;font-size:15px" title="Duplicate Contract">Dp</span></a>';
+                        $descarga = '&nbsp;<a href="#" onclick="AbrirModal(\'showRequestDp\','.$account->request_dp_id.',0)"><span  style="color:#0072FC;font-size:15px" title="Duplicate Contract">'.$account->request_dp_id.'</span></a>';
                     }
 
                 } else {
@@ -3037,9 +3037,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $request_cont = NewContractRequest::find(53);
-        $data = json_decode($request_cont['data'],true);
-        dd($data['group_containers']['id']);
+        $resultadocountrytOri = PrvHarbor::get_harbor_simple('Itapoa-brioa-brazil');
+        dd($resultadocountrytOri);
     }
 
 }

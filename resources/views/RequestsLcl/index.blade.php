@@ -291,7 +291,7 @@
         });
 
         $(function() {
-           requesttableV = $('#requesttable').DataTable({
+            requesttableV = $('#requesttable').DataTable({
                 processing: true,
                 //serverSide: true,
                 ajax: '{!! route("RequestImportationLcl.create") !!}',
@@ -324,6 +324,14 @@
                 "paging": true
             });
 
+            var state = requesttableV.state.loaded();
+            if(state) {
+                var colSearch = state.columns[4].search;
+                if (colSearch.search) {
+                    $('input', requesttableV.column(4).footer()).val(colSearch.search);
+                }
+                requesttableV.draw();
+            }
         });
 
         function showModal(id){

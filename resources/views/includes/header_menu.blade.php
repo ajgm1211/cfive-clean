@@ -213,7 +213,7 @@
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('inlands.index')}}" class="m-menu__link ">
+                                <a href="{{url('inlands')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-truck"></i>
                                     <span class="m-menu__link-text">
                                         Sea Freight FCL
