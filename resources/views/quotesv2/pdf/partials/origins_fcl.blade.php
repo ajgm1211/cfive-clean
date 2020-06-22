@@ -264,8 +264,7 @@
                                                 ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
                                                 ${'total_inland'.$c->code} = 'total_inland'.$c->code;
                                                 ${'sum_inland_'.$c->code} = 0;
-                                                ${'inland_'.$c->code} = 0;
-                                                
+                                                ${'inland_'.$c->code} = 0;                                  
                                             }
                                             $show_inland='hide';
                                         ?>
