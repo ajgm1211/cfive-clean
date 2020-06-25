@@ -1091,9 +1091,17 @@ pre code {
 .table .table {
   background-color: #fff; }
 
+.table-sm tr:nth-child(even) {
+    background: #F8F8F8 !important
+}
+.table-sm tr:nth-child(odd) {
+    background: #FFF !important
+}
+
 .table-sm th,
 .table-sm td {
-  padding: 0.3rem; }
+  padding: 0.3rem;
+}
 
 .table-bordered {
   border: 1px solid #f4f5f8; }
