@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        List of terms & conditions V2
+                        Terms & Conditions
                     </h3>
                 </div>
             </div>
