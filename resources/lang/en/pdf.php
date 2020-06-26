@@ -50,4 +50,5 @@ return [
     "width" => "Width",
     "height" => "Height",
     "cargo_details" => "Cargo details",
+    "payment_conditions" => "Payment conditions",
 ];
