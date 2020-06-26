@@ -287,7 +287,7 @@ trait QuoteV2Trait
         $origin_charges_grouped = $this->localChargesGrouped($origin_charges, 'origin', $quote, $company_user->currency->alphacode, $containers);
 
         $origin_charges_detailed = $this->localChargesDetailed($origin_charges, 'origin', $quote, $company_user->currency->alphacode, $containers);
-
+        
         /** Destination Charges **/
 
         $destination_charges_grouped = $this->localChargesGrouped($destination_charges, 'destination', $quote, $company_user->currency->alphacode, $containers);
@@ -563,12 +563,12 @@ trait QuoteV2Trait
         $amount = 'amount_';
         $markup = 'markup_';
         $inland = 'inland_';
-        $charge_origin = 0;
-        $charge_destination = 0;
-        $inland_origin = 0;
-        $inland_destination = 0;
 
         foreach ($charges_grouped as $origin => $detail) {
+            $charge_origin = 0;
+            $charge_destination = 0;
+            $inland_origin = 0;
+            $inland_destination = 0;
             foreach ($detail as $item) {
                 foreach ($item as $rate) {
 
@@ -733,6 +733,8 @@ trait QuoteV2Trait
             ]);
         }
 
+        $collection = new Collection($charges_detailed);
+
         $sum = 'sum';
         $markup = 'markup';
         $inland = 'inland';
@@ -740,17 +742,18 @@ trait QuoteV2Trait
         $total = 'total';
         $pre_c = 'total_c';
         $pre_m = 'total_m';
-        $charge_origin = 0;
-        $charge_destination = 0;
-        $inland_origin = 0;
-        $inland_destination = 0;
 
-        foreach ($charges_detailed as $origin => $item) {
+        foreach ($collection as $origin => $item) {
+            $charge_origin = 0;
+            $charge_destination = 0;
+            $inland_origin = 0;
+            $inland_destination = 0;
             foreach ($item as $destination => $items) {
                 foreach ($items as $carrier => $itemsDetail) {
                     foreach ($itemsDetail as $value) {
-                        if (!$value->charge->isEmpty()) {
+                        if ($value->charge->count() > 0) {
                             foreach ($value->charge as $amounts) {
+
                                 foreach ($containers as $c) {
                                     ${$sum . '_' . $c->code} = 0;
                                     ${$total . '_' . $c->code} = 0;
@@ -771,21 +774,25 @@ trait QuoteV2Trait
                                     $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                                     foreach ($containers as $c) {
+                                        $flat = 0;
                                         ${$pre_c . $c->code} = 'total_c' . $c->code;
                                         if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                             ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
                                             ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                            $flat = 1;
                                         } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
                                             ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code];
                                             ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                            $flat = 1;
                                         } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                             ${$sum . '_' . $c->code} = $array_markups['m' . $c->code];
                                             ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                            $flat = 1;
                                         }
-                                        if ($amounts->type_id == 1) {
+                                        if ($amounts->type_id == 1 && $flat == 1) {
                                             $charge_origin++;
                                         }
-                                        if ($amounts->type_id == 2) {
+                                        if ($amounts->type_id == 2 && $flat == 1) {
                                             $charge_destination++;
                                         }
                                         $amounts->${$pre_c . $c->code} = isDecimal(${$total . '_' . $c->code}, true);
@@ -813,6 +820,7 @@ trait QuoteV2Trait
                                 $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                                 foreach ($containers as $c) {
+                                    $flat = 0;
                                     ${$inland . '_' . $c->code} = 0;
                                     ${$total . '_' . $inland . $c->code} = 'total_inland' . $c->code;
 
@@ -820,17 +828,20 @@ trait QuoteV2Trait
                                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
                                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
                                         ${$total . '_' . $c->code} = (${$amount . '_' . $c->code} + ${$markup . '_' . $c->code}) / $currency_rate;
+                                        $flat = 1;
                                     } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
                                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
                                         ${$total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
+                                        $flat = 1;
                                     } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
                                         ${$total . '_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
+                                        $flat = 1;
                                     }
-                                    if ($inland_value->type == 'Origin') {
+                                    if ($inland_value->type == 'Origin' && $flat == 1) {
                                         $inland_origin++;
                                     }
-                                    if ($inland_value->type == 'Destination') {
+                                    if ($inland_value->type == 'Destination' && $flat == 1) {
                                         $inland_destination++;
                                     }
                                     $inland_value->${$total . '_' . $inland . $c->code} = isDecimal(${$total . '_' . $c->code}, true);
@@ -846,7 +857,7 @@ trait QuoteV2Trait
             $item->inland_destination = $inland_destination;
         }
 
-        return $charges_detailed;
+        return $collection;
     }
 
     /**
@@ -947,13 +958,13 @@ trait QuoteV2Trait
 
         $charges_grouped = $charges_grouped->groupBy([
 
-            function ($item) use($type){
+            function ($item) use ($type) {
                 return $item[$type]['name'] . ', ' . $item[$type]['code'];
             },
-            function ($item) use($carrier){
+            function ($item) use ($carrier) {
                 return $item[$carrier]['name'];
             },
-            function ($item) use($type_2) {
+            function ($item) use ($type_2) {
                 return $item[$type_2]['name'];
             },
         ], $preserveKeys = true);
@@ -1393,9 +1404,9 @@ trait QuoteV2Trait
             foreach ($rate->charge as $charge) {
 
                 $typeCurrency =  @$company_user->currency->alphacode;
-                
+
                 $currency_rate = $this->ratesCurrency($charge->currency_id, $typeCurrency);
-                
+
                 $array_amounts = json_decode($charge->amount, true);
                 $array_markups = json_decode($charge->markups, true);
 
@@ -1422,10 +1433,10 @@ trait QuoteV2Trait
                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
-                    
+
                     $totalized = ${$total . '_' . $c->code} + ${$total . '_markup_' . $c->code};
                     $charge->${'totalized_' . $c->code} = $totalized;
-                    
+
                     $charge->${$pre . $c->code} = isDecimal(${$total . '_' . $c->code}, true);
                     $charge->${$pre . $c->code . '_markup'} = isDecimal(${$total . '_markup_' . $c->code}, true);
                 }
@@ -1533,7 +1544,6 @@ trait QuoteV2Trait
         }
 
         return $sale_terms;
-
     }
 
     public function updateIntegrationQuoteStatus($quote_id)
