@@ -4006,26 +4006,36 @@ function notification(message, type) {
 
 
 $(document).on('change', '#origin_harbor', function(e) {
-  
-  
   var ids = $('#origin_harbor').val();
-
   $.ajax({
     type: 'GET', 
     url: '/inlandD/getDistance/'+ids,
     success: function(data) {
         $('select[name="originA"]').empty();
-
         if (data.message == 'Ok') {
-  
-       $.each(data.data, function(key, value) {
-           
+         $.each(data.data, function(key, value) {      
                 $('select[name="originA"]').append('<option  value="' + key + '">' + value + '</option>');
             });
         }
     }
 });
-    
-
-
 });
+
+
+$(document).on('change', '#destination_harbor', function(e) {
+    var ids = $('#destination_harbor').val();
+    $.ajax({
+      type: 'GET', 
+      url: '/inlandD/getDistance/'+ids,
+      success: function(data) {
+          $('select[name="destinationA"]').empty();
+          if (data.message == 'Ok') {
+           $.each(data.data, function(key, value) {      
+                  $('select[name="destinationA"]').append('<option  value="' + key + '">' + value + '</option>');
+              });
+          }
+      }
+  });
+  });
+
+
