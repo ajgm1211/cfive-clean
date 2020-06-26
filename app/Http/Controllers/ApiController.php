@@ -615,9 +615,9 @@ class ApiController extends Controller
         } elseif (strtoupper($group) == 'REEFER') {
             $equipment = array('6', '7', '8');
         } elseif (strtoupper($group) == 'OPENTOP') {
-            $equipment = array('9', '10', '11');
+            $equipment = array('9', '10');
         } elseif (strtoupper($group) == 'FLATRACK') {
-            $equipment = array('12', '13');
+            $equipment = array('11', '12');
         } else {
             abort(404);
         }
