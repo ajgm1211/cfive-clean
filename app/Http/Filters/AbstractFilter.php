@@ -124,7 +124,7 @@ abstract class AbstractFilter
 
                 $col = explode('__', $column);
 
-                $query->orWhereHas($col[0], function($q) use ($qry, $col){
+                $qr->orWhereHas($col[0], function($q) use ($qry, $col){
 
                     $q->where($col[1], "LIKE", '%'.$qry.'%');
 
