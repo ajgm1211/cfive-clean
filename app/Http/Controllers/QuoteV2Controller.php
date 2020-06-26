@@ -201,7 +201,7 @@ class QuoteV2Controller extends Controller
                 'client' => $company,
                 'contact' => $contact,
                 'user' => $quote->owner,
-                'created' => date_format($quote->created_at, 'M d, Y H:i'),
+                'created' => $quote->created_at,
                 'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   See origins
                                   </button>
@@ -219,7 +219,12 @@ class QuoteV2Controller extends Controller
             $colletions->push($data);
         }
         return DataTables::of($colletions)
-
+            ->editColumn('created', function ($colletion) {
+                return [
+                    'display' => e($colletion['created']->format('M d, Y H:i')),
+                    'timestamp' => $colletion['created']->timestamp
+                ];
+            })
             ->addColumn('action', function ($colletion) {
                 return
                     '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
