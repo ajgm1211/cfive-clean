@@ -250,17 +250,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php
+                                            foreach($containers as $c){
+                                                ${'sum_destination_'.$c->code} = 0;
+                                                ${'total_c'.$c->code }= 'total_c'.$c->code;
+                                                ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
+                                                ${'total_inland'.$c->code} = 'total_inland'.$c->code;
+                                                ${'sum_inland_'.$c->code} = 0;
+                                            }
+                                            $show_inland='hide';
+                                        ?>                                        
                                         @foreach($destiny as $rate)
-                                            <?php
-                                                foreach($containers as $c){
-                                                    ${'sum_destination_'.$c->code} = 0;
-                                                    ${'total_c'.$c->code }= 'total_c'.$c->code;
-                                                    ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
-                                                    ${'total_inland'.$c->code} = 'total_inland'.$c->code;
-                                                    ${'sum_inland_'.$c->code} = 0;
-                                                }
-                                                $show_inland='hide';
-                                            ?>
                                             @foreach($rate as $r)
                                                 @foreach($r->charge as $v)
                                                     @if($v->type_id==2)
