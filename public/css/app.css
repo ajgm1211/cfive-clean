@@ -12606,8 +12606,14 @@ yx-axis
 .mCSB_scrollTools_vertical.mCSB_scrollTools_onDrag_expand .mCSB_draggerRail,
 .mCSB_scrollTools_horizontal.mCSB_scrollTools_onDrag_expand .mCSB_dragger_bar,
 .mCSB_scrollTools_horizontal.mCSB_scrollTools_onDrag_expand .mCSB_draggerRail {
-  -webkit-transition: width .2s ease-out .2s, height .2s ease-out .2s, margin-left .2s ease-out .2s, margin-right .2s ease-out .2s, margin-top .2s ease-out .2s, margin-bottom .2s ease-out .2s, opacity .2s ease-in-out, background-color .2s ease-in-out;
-  transition: width .2s ease-out .2s, height .2s ease-out .2s, margin-left .2s ease-out .2s, margin-right .2s ease-out .2s, margin-top .2s ease-out .2s, margin-bottom .2s ease-out .2s, opacity .2s ease-in-out, background-color .2s ease-in-out;
+  -webkit-transition: width .2s ease-out .2s, height .2s ease-out .2s,
+ margin-left .2s ease-out .2s, margin-right .2s ease-out .2s,
+ margin-top .2s ease-out .2s, margin-bottom .2s ease-out .2s,
+ opacity .2s ease-in-out, background-color .2s ease-in-out;
+  transition: width .2s ease-out .2s, height .2s ease-out .2s,
+ margin-left .2s ease-out .2s, margin-right .2s ease-out .2s,
+ margin-top .2s ease-out .2s, margin-bottom .2s ease-out .2s,
+ opacity .2s ease-in-out, background-color .2s ease-in-out;
 }
 
 /*
@@ -34063,25 +34069,25 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
 
 @media only screen and (min-width: 990px) {
   .truncate {
-    max-width: 110px !important
+    max-width: 110px !important;
   }
 }
 
 @media only screen and (min-width: 1024px) {
   .truncate {
-    max-width: 46px !important
+    max-width: 46px !important;
   }
 }
 
 @media only screen and (min-width: 1366px) {
   .truncate {
-    max-width: 110px !important
+    max-width: 110px !important;
   }
 }
 
 @media only screen and (min-width: 1440px) {
   .truncate {
-    max-width: 150px !important
+    max-width: 150px !important;
   }
 }
 
@@ -36590,9 +36596,21 @@ pre code {
   background-color: #fff;
 }
 
+.table-sm tr:nth-child(even) {
+  background: #F8F8F8 !important;
+}
+
+.table-sm tr:nth-child(odd) {
+  background: #FFF !important;
+}
+
 .table-sm th,
 .table-sm td {
-  padding: 0.3rem;
+  padding: 0.3rem !important;
+}
+
+.table-padding {
+  padding: 0.3rem 2.5rem 0.3rem 2.5rem !important;
 }
 
 .table-bordered {

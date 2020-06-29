@@ -12,7 +12,7 @@ use App\Price;
 use App\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-
+use App\Http\Requests\StorePriceLevels;
 
 class PriceController extends Controller
 {
@@ -34,7 +34,7 @@ class PriceController extends Controller
   }
 
 
-  public function store(Request $request)
+  public function store(StorePriceLevels $request)
   {
     $input = Input::all();
 

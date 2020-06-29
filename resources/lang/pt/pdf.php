@@ -51,4 +51,5 @@ return [
     "width" => "Largura",
     "height" => "Alta",
     "cargo_details" => "Carregando detalhes",
+    "payment_conditions" => "Condições de pagamento",
 ];
