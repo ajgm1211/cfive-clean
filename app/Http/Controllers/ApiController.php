@@ -615,9 +615,9 @@ class ApiController extends Controller
         } elseif (strtoupper($group) == 'REEFER') {
             $equipment = array('6', '7', '8');
         } elseif (strtoupper($group) == 'OPENTOP') {
-            $equipment = array('9', '10', '11');
+            $equipment = array('9', '10');
         } elseif (strtoupper($group) == 'FLATRACK') {
-            $equipment = array('12', '13');
+            $equipment = array('11', '12');
         } else {
             abort(404);
         }
@@ -636,8 +636,10 @@ class ApiController extends Controller
                     $q->whereHas('contract_company_restriction', function ($b) use ($companies_id) {
                         $b->where('company_id', '=', $companies_id);
                     })->orDoesntHave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
+                    $q->where(function ($query) use ($dateSince) {
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
@@ -646,8 +648,10 @@ class ApiController extends Controller
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
+                    $q->where(function ($query) use ($dateSince) {
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);

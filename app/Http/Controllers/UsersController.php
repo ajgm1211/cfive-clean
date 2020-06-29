@@ -19,6 +19,8 @@ use App\Notifications\SlackNotification;
 use App\QuoteV2;
 use App\TermAndConditionV2;
 use EventCrisp;
+use App\Http\Requests\StoreUsers;
+use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
@@ -44,7 +46,7 @@ class UsersController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(StoreUsers $request)
   {
 
     try {
@@ -86,15 +88,17 @@ class UsersController extends Controller
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
-      $request->session()->flash('message.content', 'You successfully added this user.');
+      $request->session()->flash('message.content', 'Record created successfully.');
 
       return redirect('users/home');
     } catch (\Exception $e) {
-      if ($e->errorInfo[0] == '23000') {
-        $error = 'The email address entered is already registered';
-      } else {
-        $error = 'An error has occurred. Try again';
-      }
+
+       $error = 'An error has occurred. Try again';
+      // if ($e->errorInfo[0] == '23000') {
+      //   $error = 'The email address entered is already registered';
+      // } else {
+      //   $error = 'An error has occurred. Try again';
+      // }
       $request->session()->flash('message.nivel', 'danger');
       $request->session()->flash('message.title', '');
       $request->session()->flash('message.content', $error);
@@ -152,6 +156,17 @@ class UsersController extends Controller
    */
   public function update(Request $request, $id)
   {
+
+    $request->validate([
+            'name' => 'required',
+            'lastname' => 'required',
+            'email' => [
+                'required',
+                Rule::unique('users')->ignore($id),
+            ],
+            'password' => 'sometimes|required',
+        ]);
+
     $requestForm = $request->all();
     $user = User::find($id);
     $roles = $user->getRoleNames();
@@ -181,7 +196,7 @@ class UsersController extends Controller
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You upgrade has been success ');
+    $request->session()->flash('message.content', 'Record updated successfully ');
 
     return redirect()->route('users.home');
   }

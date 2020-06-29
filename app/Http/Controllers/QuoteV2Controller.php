@@ -201,7 +201,7 @@ class QuoteV2Controller extends Controller
                 'client' => $company,
                 'contact' => $contact,
                 'user' => $quote->owner,
-                'created' => date_format($quote->created_at, 'M d, Y H:i'),
+                'created' => $quote->created_at,
                 'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   See origins
                                   </button>
@@ -219,7 +219,12 @@ class QuoteV2Controller extends Controller
             $colletions->push($data);
         }
         return DataTables::of($colletions)
-
+            ->editColumn('created', function ($colletion) {
+                return [
+                    'display' => e($colletion['created']->format('M d, Y H:i')),
+                    'timestamp' => $colletion['created']->timestamp
+                ];
+            })
             ->addColumn('action', function ($colletion) {
                 return
                     '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -2755,7 +2760,7 @@ class QuoteV2Controller extends Controller
                 });
             }
 
-            if ($chargesAPI_M != null) {
+           /* if ($chargesAPI_M != null) {
 
                 $client = new Client();
 
@@ -2776,9 +2781,9 @@ class QuoteV2Controller extends Controller
                 $arreglo3 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '>=', $dateSince)->where('number', 'MAERSK');
                 });
-            }
+            }*/
 
-            if ($chargesAPI_SF != null) {
+         /*   if ($chargesAPI_SF != null) {
 
                 $client = new Client();
                 foreach ($origin_port as $orig) {
@@ -2797,7 +2802,7 @@ class QuoteV2Controller extends Controller
                 $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
                 });
-            }
+            }*/
 
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
 
@@ -2810,7 +2815,7 @@ class QuoteV2Controller extends Controller
                 $arreglo = $arreglo->merge($arreglo2);
             }
 
-            if ($chargesAPI_M != null) {
+        /*    if ($chargesAPI_M != null) {
                 $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo3 = $arreglo3->get();
                 $arreglo = $arreglo->merge($arreglo3);
@@ -2821,7 +2826,7 @@ class QuoteV2Controller extends Controller
                 $arreglo4 = $arreglo4->get();
 
                 $arreglo = $arreglo->merge($arreglo4);
-            }
+            }*/
 
             $formulario = $request;
             $arrayContainers = CalculationType::where('options->group', true)->pluck('id')->toArray();
@@ -3776,7 +3781,7 @@ class QuoteV2Controller extends Controller
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
-        $chargesFreight = $request->input('chargeFreight');
+        $chargesFreight = true;
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
         $chargesAPI_SF = $request->input('chargeAPI_SF');
