@@ -129,8 +129,8 @@ class ImportationTransitTimeController extends Controller
                         if($type_val == 2){
                             $via_val = ' ';
                         }
-                    } elseif(count($place_val) == 0){
-                        $type_val = $via_val.'(Error)';
+                    } elseif(count($destinationTObj) == 0){
+                        $type_val = $type_val.'(Error)';
                     } 
 
                     if($carri_Bol == true && $origin_Bol == true && $destiny_Bol == true && $type_bol == true && (int)$time_val != 0 ){
