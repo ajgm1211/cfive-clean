@@ -199,7 +199,7 @@
             searching: true,
             processing: false,
             serverSide: false,
-            order: [[ 0, "desc" ]],
+            order: [[ 3, "desc" ]],
             ajax:  "{{ route('quotes-v2.index.datatable') }}",
             "columnDefs": [
                 { "width": "5%", "targets": 0 },
@@ -214,7 +214,15 @@
                 {data: 'client', name: 'client'},
                 //{data: 'contact', name: 'contact'},
                 {data: 'user', name: 'user'},
-                {data: 'created', name: 'created'},
+                {
+                    data: 'created',
+                    type: 'num',
+                    name:'created',
+                    render: {
+                        _: 'display',
+                        sort: 'timestamp'
+                    }
+                },
                 {data: 'origin', name: 'origin', className: 'details-control'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
