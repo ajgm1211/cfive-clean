@@ -123,6 +123,39 @@ class ContractController extends Controller
         return response()->json(['data' => $data ]);
     }
 
+    /**
+     * Display the specified resource collection.
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function surcharge_data(Request $request, Contract $contract)
+    {        
+        $rates = $contract->rates;
+
+        $ori_countries = $rates->map(function ($rate) {
+                $country = ['id' => $rate->port_origin->country->id, 'display_name' => $rate->port_origin->country->name  ];
+                return $country;
+            })->unique('id')->values();
+
+        $des_countries = $rates->map(function ($rate) {
+                $country = ['id' => $rate->port_destiny->country->id, 'display_name' => $rate->port_destiny->country->name  ];
+                return $country;
+            })->unique('id')->values();
+
+        $ori_harbors = $rates->pluck('port_origin')->unique('id')->values();
+        $des_harbors = $rates->pluck('port_destiny')->unique('id')->values();
+
+        $data = compact(
+            'ori_harbors',
+            'des_harbors',
+            'ori_countries',
+            'des_countries'
+        );
+
+        return response()->json(['data' => $data ]);
+    }
+
 
     /**
      * Store a newly created resource in storage.
