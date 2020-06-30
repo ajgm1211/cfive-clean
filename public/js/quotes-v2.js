@@ -4013,10 +4013,26 @@ $(document).on('change', '#origin_harbor', function(e) {
     success: function(data) {
         $('select[name="originA"]').empty();
         if (data.message == 'Ok') {
-         $.each(data.data, function(key, value) {      
+
+            $("#selectA").removeClass('hide');
+            $("#textA").addClass('hide');
+            
+          $.each(data.data, function(key, value) {      
                 $('select[name="originA"]').append('<option  value="' + key + '">' + value + '</option>');
             });
         }
+        if (data.message == 'maxOne') {
+            $("#selectA").removeClass('hide');
+            $("#textA").addClass('hide');
+
+            $('#select2-originA-container').text('Select one Origin Harbor');
+           }
+           if (data.message == 'empty') {
+            $("#selectA").addClass('hide');
+            $("#textA").removeClass('hide');
+    
+            
+           }
     }
 });
 });
@@ -4034,6 +4050,14 @@ $(document).on('change', '#destination_harbor', function(e) {
                   $('select[name="destinationA"]').append('<option  value="' + key + '">' + value + '</option>');
               });
           }
+
+          if (data.message == 'maxOne') {
+            $('#select2-destinationA-container').text('Select one Dest Harbor');
+           }
+
+          
+
+         
       }
   });
   });
