@@ -252,7 +252,7 @@ class NewContractRequestsController extends Controller
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
 			$user->notify(new SlackNotification($message));
 			$admins = User::where('type','admin')->get();
-			$message = 'has created an new request: '.$Ncontract->id;
+			$message = 'A new request has been created - '.$Ncontract->id;
 			NotificationsJob::dispatch('Request-Fcl',[
 				'user' => $request->user,
 				'ncontract' => $Ncontract->toArray()

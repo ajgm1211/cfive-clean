@@ -1021,7 +1021,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-    Route::get('inlands/{inland}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
+    Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
 
     /** Inlands V2 view routes **/
@@ -1114,7 +1114,7 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /** End API Inland Km EndPoints **/
 
-    /**
+    /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
       // INLAND RANGE 
     Route::get('range/{inland}', 'InlandKmController@list');
