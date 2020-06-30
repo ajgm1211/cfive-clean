@@ -21,6 +21,13 @@ trait SearchTrait
         $address = $inlandParams['destination_address'];
         $typeCurrency = $inlandParams['typeCurrency'];
 
+        foreach ($contain as $cont) {
+
+            $km = 'km' . $cont->code;
+            $$km = true;
+
+        }
+
         if ($type == 'destino') {
             $port = $inlandParams['destiny_port'];
         } elseif ($type == 'origen') {
