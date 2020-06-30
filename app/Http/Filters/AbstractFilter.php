@@ -33,8 +33,10 @@ abstract class AbstractFilter
         	$this->defaulFilter();*/
             
         if( $this->request->query('q', null) && $this->request->query('q') != ''){
-            $this->search();
-            $this->searchByRelation();   
+            $this->query->where(function($query) {
+                $this->search($query);
+                $this->searchByRelation($query);   
+            });
         }
         
         $this->sort();
@@ -60,11 +62,11 @@ abstract class AbstractFilter
 
     }
 
-    protected function search() {
+    protected function search($query) {
 
     	$qry = $this->request->query('q');
 
-		$this->query->where(function($q) use ($qry) {
+		$query->where(function($q) use ($qry) {
 
             $filter_by = $this->filter_by;
 
@@ -78,7 +80,7 @@ abstract class AbstractFilter
 
     }
 
-    protected function searchByRelation() {
+    protected function searchByRelation($query) {
 
     	$filter_by_relations = $this->filter_by_relations;
 
@@ -88,22 +90,22 @@ abstract class AbstractFilter
         if($filter_by_relations){
 
             if(empty($this->filter_by))
-                $this->searchByRelationAnd($filter_by_relations, $qry);
+                $this->searchByRelationAnd($filter_by_relations, $qry, $query);
             else
-                $this->searchByRelationOr($filter_by_relations, $qry);
+                $this->searchByRelationOr($filter_by_relations, $qry, $query);
         }
 
     }
 
-    protected function searchByRelationOr($filter_by_relations, $qry)
+    protected function searchByRelationOr($filter_by_relations, $qry, $query)
     {
-        $this->query->orWhere(function ($query) use ($filter_by_relations, $qry){ 
+        $query->orWhere(function ($qr) use ($filter_by_relations, $qry){ 
 
             foreach($filter_by_relations as $column){
 
                 $col = explode('__', $column);
 
-                $query->orWhereHas($col[0], function($q) use ($qry, $col){
+                $qr->orWhereHas($col[0], function($q) use ($qry, $col){
 
                     $q->where($col[1], "LIKE", '%'.$qry.'%');
 
@@ -114,9 +116,9 @@ abstract class AbstractFilter
         });
     }
 
-    protected function searchByRelationAnd($filter_by_relations, $qry)
+    protected function searchByRelationAnd($filter_by_relations, $qry, $query)
     {
-        $this->query->where(function ($query) use ($filter_by_relations, $qry){ 
+        $query->where(function ($qr) use ($filter_by_relations, $qry){ 
 
             foreach($filter_by_relations as $column){
 

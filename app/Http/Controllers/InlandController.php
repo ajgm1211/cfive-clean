@@ -73,7 +73,7 @@ class InlandController extends Controller
      */
     public function store(Request $request)
     {
-        $company_user_id = Auth::user()->company_user_id;
+        $company_user_id = \Auth::user()->company_user_id;
 
         $data = $request->validate([
             'reference' => 'required',
