@@ -6,9 +6,10 @@
         :inputFields="form_fields"
         :vdatalists="datalists"
         :actions="actions"
-        :massiveactions="['changecontainersview', 'delete']"
+        :massiveactions="massiveactions"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
+        @onOpenModalContainerView="openModalContainerView"
         >
     </DataTable>
 
@@ -26,6 +27,11 @@
         props: {
             equipment: Object,
             datalists: Object,
+            massiveactions: {
+                type: Array,
+                required: false,
+                default: () => { return ['delete'] }
+            },
             actions: Object,
             initialFields: Array,
             initialFormFields: Object,
@@ -143,6 +149,9 @@
             },
             onChangeContainersView(value){
                 this.extra_field_state = !this.extra_field_state;
+            },
+            openModalContainerView(ids){
+                this.$emit('onOpenModalContainer', ids);
             }
            
         },
