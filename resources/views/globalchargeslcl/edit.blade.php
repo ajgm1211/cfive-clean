@@ -16,10 +16,10 @@ $portRadio = false;
     activarCountry('divcountry');
 </script>
 @endif
+    {{ Form::model($globalcharges, array('route' => array('update-global-charge-lcl', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
 
 <div class="m-portlet">
 
-    {{ Form::model($globalcharges, array('route' => array('update-global-charge-lcl', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
     <div class="m-portlet__body">
         <div class="form-group m-form__group row">
             <div class="col-lg-12">
@@ -167,7 +167,6 @@ $portRadio = false;
             </div>
         </div>
     </div>
-    {!! Form::close() !!}
 </div>
 
 <div class="m-portlet__foot m-portlet__foot--fit">
@@ -178,6 +177,7 @@ $portRadio = false;
         </button>
     </div>
 </div>
+    {!! Form::close() !!}
 <br>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript">
 </script>
