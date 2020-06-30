@@ -12,7 +12,7 @@ use App\Language;
 use App\TermsPort;
 use App\CompanyUser;
 use App\TermConditionCarrier;
-
+use App\Http\Requests\StoreTermsAndConditions;
 class TermsAndConditionV2sController extends Controller
 {
 
@@ -41,7 +41,7 @@ class TermsAndConditionV2sController extends Controller
   {
 
     $languages = Language::pluck('name','id');
-    return view('termsv2.add', compact('harbors','carriers','languages'));
+    return view('termsv2.add', compact('languages'));
   }
 
   /**
@@ -50,49 +50,19 @@ class TermsAndConditionV2sController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-  public function store(Request $request)
+  public function store(StoreTermsAndConditions $request)
   {
-    if($request->import!='' || $request->export!=''){
-      $companyUser        = CompanyUser::All();
-      $company           = Auth::user()->company_user_id;
-      $term                   = new TermAndConditionV2();
-      $term->name             = $request->name;
-      $term->type           =$request->type;
-      $term->user_id          = Auth::user()->id;
-      $term->import           = $request->import;
-      $term->export           = $request->export;
-      $term->company_user_id  = $company;
-      $term->language_id      = $request->language;
-      $term->save();
-      /*
-      $ports = $request->ports;
-      $carriers = $request->carriers;
-      if(count($ports) >= 1){
-        foreach($ports as $i){
-          $termsport = new TermsPort();
-          $termsport->port_id = $i;
-          $termsport->term()->associate($term);
-          $termsport->save();
-        }
-      }
-      if(count($carriers) >= 1){
-        foreach($carriers as $carrier){
-          TermConditionCarrier::create([
-            'carrier_id'        => $carrier,
-            'termcondition_id'  => $term->id
-          ]);
-        }
-      }*/
+    
+      $request->request->add(['company_user_id' => Auth::user()->company_user_id, 'user_id' => Auth::user()->id]);
+      
+      TermAndConditionV2::create($request->all());
 
+   
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
-      $request->session()->flash('message.content', 'Register completed successfully');
-    }else{
-      $request->session()->flash('message.nivel', 'danger');
-      $request->session()->flash('message.title', 'Error!');
-      $request->session()->flash('message.content', 'You must add terms to import or export');
-    }
-    return redirect('termsv2/list');
+      $request->session()->flash('message.content', 'Record saved successfully');
+    
+      return redirect('termsv2/list');
   }
 
   /**
@@ -145,51 +115,18 @@ class TermsAndConditionV2sController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  public function update(Request $request, $id)
+  public function update(Request $request, $id) //simplifcar 
+
   {
-    if($request->import=='' || $request->export==''){
-      $request->session()->flash('message.nivel', 'danger');
-      $request->session()->flash('message.title', 'Error!');
-      $request->session()->flash('message.content', 'You must add terms to import or export');
-    }else{
+    
       $term = TermAndConditionV2::find($id);
-      $term->name         = $request->name;
-      $term->user_id      = Auth::user()->id;
-      $term->import       = $request->import;
-      $term->export       = $request->export;
-      $term->type       = $request->type;
-      $term->language_id  = $request->language;
-      $term->company_user_id = Auth::user()->company_user_id;
-      $term->update();
-
-      /*$ports = $request->ports;
-      if(count($ports) >= 1){
-        TermsPort::where('term_id',$id)->delete();
-
-        foreach($ports as $i){
-          $termsport = new TermsPort();
-          $termsport->port_id = $i;
-          $termsport->term()->associate($term);
-          $termsport->save();
-        }
-      }
-
-      $carriers = $request->carriers;
-
-      TermConditionCarrier::where('termcondition_id',$id)->delete();
-      if(count($carriers) >= 1){
-        foreach($carriers as $carrier){
-          TermConditionCarrier::create([
-            'carrier_id'        => $carrier,
-            'termcondition_id'  => $term->id
-          ]);
-        }
-      }*/
+      $term->fill($request->all())->save();
+      
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
-      $request->session()->flash('message.content', 'You upgrade has been success ');
-    }
+      $request->session()->flash('message.content', 'Record updated successfully ');
+    
     return redirect()->route('termsv2.list');
   }
 

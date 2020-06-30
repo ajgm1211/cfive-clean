@@ -236,7 +236,7 @@
                     @if($value->charge_origin>=1 || $value->inland_origin>=1)
                         @foreach($value as $origin => $item)
                             <div>
-                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
                                 <br>
                             </div>
                             <table border="0" cellspacing="1" cellpadding="1">
@@ -256,18 +256,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php
+                                        foreach($containers as $c){
+                                            ${'sum_origin_'.$c->code} = 0;
+                                            ${'total_c'.$c->code }= 'total_c'.$c->code;
+                                            ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
+                                            ${'total_inland'.$c->code} = 'total_inland'.$c->code;
+                                            ${'sum_inland_'.$c->code} = 0;
+                                            ${'inland_'.$c->code} = 0;                                  
+                                        }
+                                        $show_inland='hide';
+                                    ?>
                                     @foreach($item as $rate)
-                                        <?php
-                                            foreach($containers as $c){
-                                                ${'sum_origin_'.$c->code} = 0;
-                                                ${'total_c'.$c->code }= 'total_c'.$c->code;
-                                                ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
-                                                ${'total_inland'.$c->code} = 'total_inland'.$c->code;
-                                                ${'sum_inland_'.$c->code} = 0;
-                                                ${'inland_'.$c->code} = 0;                                  
-                                            }
-                                            $show_inland='hide';
-                                        ?>
                                         @foreach($rate as $r)
                                             @foreach($r->charge as $v)
                                                 @if($v->type_id==1)

@@ -7,6 +7,16 @@
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
+                @if ($errors->any())
+                 <div class="alert alert-danger">
+                     <ul>
+                         @foreach ($errors->all() as $error)
+                             <li>{{ $error }}</li>
+                         @endforeach
+                     </ul>
+                 </div>
+                @endif                
+                <br>
                 @include('termsv2.partials.form_terms')
             </div>
         </div>
@@ -14,7 +24,7 @@
             <br>
             <div class="m-form__actions m-form__actions">
                 {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-                <a class="btn btn-danger" href="{{url()->previous()}}">
+                <a class="btn btn-danger" href="{{url()->route('termsv2.list')}}">
                     Cancel
                 </a>
             </div>
