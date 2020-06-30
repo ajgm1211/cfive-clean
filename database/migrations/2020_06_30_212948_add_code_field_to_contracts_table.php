@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFieldContactApi extends Migration
+class AddCodeFieldToContractsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class AddFieldContactApi extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('contracts', function (Blueprint $table) {
+            $table->string('code')->after('type')->unique()->nullable();
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class AddFieldContactApi extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('contracts', function (Blueprint $table) {
+            //
+        });
     }
 }

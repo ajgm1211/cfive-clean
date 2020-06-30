@@ -8,6 +8,7 @@ use App\OauthClient;
 use App\User;
 use App\Rate;
 use App\Contract;
+use App\ContractLcl;
 use App\GlobalCharPort;
 use App\GlobalCharCountry;
 use App\LocalCharPort;
@@ -1052,9 +1053,24 @@ class ApiController extends Controller
         return response()->json($general);
     }
 
-    public function processSearchById($contract,  $api_company_id = 0)
-    {
+    public function processSearchByContract($code,  $api_company_id = 0){
+        $contract = Contract::where('code',$code)->first();
+        $contract_lcl = ContractLcl::where('code',$code)->first();
 
+        if($contract != null){
+            $this->processSearchById($contract,  $type = 'FCL',  $api_company_id = 0);
+        }elseif($contract_lcl != null){
+            $type = 'LCL';
+        }else{
+            return response()->json(['message' => 'The requested contract does not exist'], 200);
+        }
+
+        $this->processSearchById($contract, $type,  $api_company_id = 0);
+    }
+
+    public function processSearchById($contract,  $type,  $api_company_id = 0)
+    {
+        dd($type);
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
@@ -1429,6 +1445,7 @@ class ApiController extends Controller
 
             $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
+            $routes['type'] = 'FCL';
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
@@ -1460,7 +1477,6 @@ class ApiController extends Controller
 
             $detalle['Rates']['currency'] = $typeCurrency;
             //Schedules
-            $detalle['Rates']['schedule']['service'] = $data->service;
             $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
             $detalle['Rates']['schedule']['via'] = $data->via;
 
