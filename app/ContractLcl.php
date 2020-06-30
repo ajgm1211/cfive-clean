@@ -94,4 +94,16 @@ class ContractLcl extends Model implements HasMedia, Auditable
             'ACL' => 'public-read'
         ])->toMediaCollection('document', 'LclRequest');
     }
+    
+    /**
+     * processSearchByIdLcl
+     *
+     * @param  mixed $code
+     * @param  mixed $api_company_id
+     * @return void
+     */
+    public function processSearchByIdLcl($code, $api_company_id = 0)
+    {
+        //
+    }
 }
