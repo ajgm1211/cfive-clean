@@ -64,8 +64,19 @@
                     </div>
                 </div>
             @endif
+           
             <div class="m-portlet__body">
                 {!! Form::open(['route' => 'prices.store','class' => 'form-group m-form__group']) !!}
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                    <br>
                     <div class="row">
                         <div class="col-md-3">
                             <label>Name</label>

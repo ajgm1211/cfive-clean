@@ -15,18 +15,24 @@
         <span class="color-title text-left"><b>{{__('pdf.remarks')}}</b><br><br/></span>
 
         @foreach($rates as $rate)
-            @if($rate->remarks != '')
+            @if(trim(strip_tags($rate->remarks)) !== '')
                 <span class="text-justify">{!! $rate->remarks !!}</span><br/>
             @endif
             @switch($quote->pdf_option->language)
                 @case("English")
-                    <span class="text-justify">{!! $rate->remarks_english !!}</span>
+                    @if(trim(strip_tags($rate->remarks_english)) !== '')
+                        <span class="text-justify">{!! $rate->remarks_english !!}</span>
+                    @endif
                     @break
                 @case("Portuguese")
-                    <span class="text-justify">{!! $rate->remarks_portuguese !!}</span>
+                    @if(trim(strip_tags($rate->remarks_portuguese)) !== '')
+                        <span class="text-justify">{!! $rate->remarks_portuguese !!}</span>
+                    @endif
                     @break
                 @case("Spanish")
-                    <span class="text-justify">{!! $rate->remarks_spanish !!}</span>
+                    @if(trim(strip_tags($rate->remarks_spanish)) !== '')
+                        <span class="text-justify">{!! $rate->remarks_spanish !!}</span>
+                    @endif
                     @break
             @endswitch
         @endforeach
