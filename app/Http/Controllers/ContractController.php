@@ -420,7 +420,7 @@ class ContractController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'Something when wrong on our side',
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -443,10 +443,10 @@ class ContractController extends Controller
         //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
-        //Uploading file to storage
-        $contract->StoreInMedia($request->file);
-        
         $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
+
+        //Uploading file to storage
+        $contract->StoreInMedia($request->file, $filename);
         
         //Saving request FCL
         $Ncontract = $this->storeContractRequest($contract, $filename, $type);
@@ -476,6 +476,7 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
+                    'gp_container_id' => 1,
                 ]);
                 break;
             case 'LCL':
@@ -515,7 +516,7 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => json_encode(''),
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
