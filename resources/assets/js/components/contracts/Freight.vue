@@ -21,8 +21,10 @@
                 :datalists="datalists"
                 :equipment="equipment"
                 :actions="actions"
+                :massiveactions="['openmodalcontainer', 'delete']"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"
+                @onOpenModalContainer="openModalContainer"
                 ></DynamicalDataTable>
 
         </b-card>
@@ -58,6 +60,24 @@
         </b-modal>
         <!-- End Create Form -->
 
+        <!-- Edit Form -->
+        <b-modal id="editContainers" size="lg" cancel-title="Cancel" hide-header-close title="Edit Containers" hide-footer>
+            <FormView 
+                :data="{}"
+                :massivedata="ids_selected" 
+                :fields="containers_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Containers"
+                @exit="closeModal('editContainers')"
+                @success="closeModal('editContainers')"
+                :actions="actions"
+                :update="true"
+                :massivechange="true"
+                >
+            </FormView>
+        </b-modal>
+        <!-- End Edit Form -->
+
     </div>
 </template>
 
@@ -80,6 +100,8 @@
                 loaded: true,
                 currentData: {},
                 form_fields: {},
+                containers_fields: {},
+                ids_selected: [],
 
                 /* Table headers */
                 fields: [ 
@@ -138,12 +160,20 @@
 
             /* Single Actions */
             formFieldUpdated(containers_fields){
+                this.containers_fields = containers_fields;
                 this.form_fields = {...this.vform_fields, ...containers_fields};
+            },
+
+            openModalContainer(ids){
+                console.log('test modal');
+                this.ids_selected = ids;
+                this.$bvModal.show('editContainers');
             },
 
             /* Close modal form by modal name */
             closeModal(modal){
                 this.$bvModal.hide(modal);
+                this.ids_selected = [];
 
                 let component = this;
 
