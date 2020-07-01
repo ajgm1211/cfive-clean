@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\InlandRange;
-use App\Inland;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\InlandRangeResource;
 use App\Container;
+use App\Http\Resources\InlandRangeResource;
+use App\Inland;
+use App\InlandRange;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Validator;
 
 class InlandRangeController extends Controller
 {
 
-    public function list(Request $request, Inland $inland)
-    {
+    function list(Request $request, Inland $inland) {
         $results = InlandRange::filterByInland($inland->id)->filter($request);
-    	return InlandRangeResource::collection($results);
+        return InlandRangeResource::collection($results);
     }
 
     /**
@@ -28,7 +26,7 @@ class InlandRangeController extends Controller
      */
     public function store(Request $request, Inland $inland)
     {
-    	$available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
+        $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
 
         $data = $this->validateData($request, $inland, $available_containers);
 
@@ -48,9 +46,9 @@ class InlandRangeController extends Controller
      */
     public function update(Request $request, Inland $inland, InlandRange $range)
     {
-    	$available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
+        $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
 
-    	$data = $this->validateData($request, $inland, $range, $available_containers);
+        $data = $this->validateData($request, $inland, $range, $available_containers);
 
         $prepared_data = $this->prepareData($data, $inland, $available_containers);
 
@@ -72,23 +70,22 @@ class InlandRangeController extends Controller
             'lower' => $data['lower'],
             'upper' => $data['upper'],
             'currency_id' => $data['currency'],
-            'inland_id' => $inland->id
+            'inland_id' => $inland->id,
         ];
 
         $containers = [];
-        
-        if(isset($data['per_container']))
-        {
-        	foreach ($available_containers as $code) {
-        		$containers['C'.$code] = number_format(floatval($data['per_container']), 2, '.', '');
-        	}
+
+        if (isset($data['per_container'])) {
+            foreach ($available_containers as $code) {
+                $containers['C' . $code] = number_format(floatval($data['per_container']), 2, '.', '');
+            }
 
         } else {
 
-        	foreach ($available_containers as $code) {
-        		$value = isset($data['rates_'.$code]) ? number_format(floatval($data['rates_'.$code]), 2, '.', '') : 0;
-        		$containers['C'.$code] = $value;
-        	}
+            foreach ($available_containers as $code) {
+                $value = isset($data['rates_' . $code]) ? number_format(floatval($data['rates_' . $code]), 2, '.', '') : 0;
+                $containers['C' . $code] = $value;
+            }
         }
 
         $prepared_data['json_containers'] = $containers;
@@ -103,46 +100,50 @@ class InlandRangeController extends Controller
      * @param  \App\Inland $inland
      * @return Array data validated
      */
-    public function validateData($request, $inland,  $available_containers,$range = null)
+    public function validateData($request, $inland, $available_containers, $range = null)
     {
         $vdata = [
             'lower' => 'required',
             'upper' => 'required',
             'currency' => 'required',
-            'per_container' => 'sometimes|required'
+            'per_container' => 'sometimes|required',
         ];
 
         foreach ($available_containers as $container) {
-           $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_' . $container] = 'sometimes|nullable';
         }
 
         $validator = Validator::make($request->all(), $vdata);
 
         $query_lower = InlandRange::where('lower', '<=', $request->input('lower'))->where('upper', '>=', $request->input('lower'));
-        
-        if($range)
-        	$query_lower->where('id', '<>', $range->id);
+
+        if ($range) {
+            $query_lower->where('id', '<>', $range->id);
+        }
 
         $validated_lower = $query_lower->get()->count() > 0;
 
         $query_upper = InlandRange::where('lower', '<=', $request->input('upper'))->where('upper', '>=', $request->input('upper'));
 
-        if($range)
-        	$query_upper->where('id', '<>', $range->id);
+        if ($range) {
+            $query_upper->where('id', '<>', $range->id);
+        }
 
         $validated_upper = $query_upper->get()->count() > 0;
 
-        $validator->after(function ($validator) use ($validated_lower, $validated_upper){
-           
-            if ($validated_lower)
-                $validator->errors()->add('lower', 'This value isn\'t available');
+        $validator->after(function ($validator) use ($validated_lower, $validated_upper) {
 
-            if ($validated_upper)
+            if ($validated_lower) {
+                $validator->errors()->add('lower', 'This value isn\'t available');
+            }
+
+            if ($validated_upper) {
                 $validator->errors()->add('upper', 'This value isn\'t available');
+            }
 
         });
 
-    	return $validator->validate();
+        return $validator->validate();
 
     }
 

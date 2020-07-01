@@ -193,7 +193,7 @@ trait SearchTrait
                 }
             }
         }
-        dd($dataDest);
+        
         return $dataDest;
     }
 
