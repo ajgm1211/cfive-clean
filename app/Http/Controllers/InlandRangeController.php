@@ -103,7 +103,7 @@ class InlandRangeController extends Controller
      * @param  \App\Inland $inland
      * @return Array data validated
      */
-    public function validateData($request, $inland, $range = null, $available_containers)
+    public function validateData($request, $inland,  $available_containers,$range = null)
     {
         $vdata = [
             'lower' => 'required',
