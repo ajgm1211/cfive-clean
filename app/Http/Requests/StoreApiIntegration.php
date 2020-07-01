@@ -27,8 +27,9 @@ class StoreApiIntegration extends FormRequest
             'name' => 'required',
             'url' => 'required',
             'api_key' => 'required',
-            'module' => 'required',
             'partner_id' => 'required',
+            'module' => 'required',
+
         ];
     }
 }

@@ -64,7 +64,11 @@ export default {
 	    },
 	    deleteAll(ids){
 	    	return api.call('post', `/api/v2/contracts/ocean_freight/destroyAll`, { ids:ids });	
-	    }
+	    },
+	    massiveChange(data, route){
+	    	let contract_id = route.params.id;
+	    	return api.call('post', `/api/v2/contracts/${contract_id}/ocean_freight/massiveContainerChange`, data);	
+	    },
 	},
 	surcharges: {
 		list(params, callback, route) {

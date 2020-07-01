@@ -328,6 +328,14 @@ API Integrations
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('MasterSurcharge.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-list-1"></i>
+                                    <span class="m-menu__link-text">
+                                        Master Surcharge
+                                    </span>
+                                </a>
+                            </li>
 
                             <!-- Sub- Menus --------------------------------------------------------------- -->
 
