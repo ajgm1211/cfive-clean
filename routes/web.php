@@ -1144,13 +1144,10 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
 **                                   END API ENDPOINTS                                   **
 *****************************************************************************************/
 
-//Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
-
-/*
+/*Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 Route::get('api/inlands', 'InlandController@index');
-
-Route::post('api/v2/inlands/store', 'InlandController@store');
-Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
+Route::post('api/v2/inlands/store', 'InlandController@store');*/
+Route::get('api/inlands/{contract}/edit', 'InlandController@edit');
 
 /** End Contracts V2 routes **/
 /** Transit time **/

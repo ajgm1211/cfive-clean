@@ -11,7 +11,7 @@ use Illuminate\Support\Collection as Collection;
 trait SearchTrait
 {
 
-    public function inlands($inlandParams, $markup, $equipment, $contain, $type, $mode)
+    public function inlands($inlandParams, $markup, $equipment, $contain, $type, $mode,$groupContainer,$distancia = 0)
     {
 
         $modality_inland = $mode; // FALTA AGREGAR EXPORT
@@ -39,13 +39,14 @@ trait SearchTrait
             $a->where('company_id', '=', $company_inland);
         })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function ($q) use ($port) {
             $q->whereIn('port', $port);
-        })->where('company_user_id', '=', $company_user_id)->with('inlandadditionalkms', 'inlandports.ports', 'inlanddetails.currency');
+        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id',$groupContainer)->with('inlandRange', 'inlandports.ports', 'inlanddetails.currency');
 
         $inlands->where(function ($query) use ($modality_inland) {
             $query->where('type', $modality_inland)->orwhere('type', '3');
         });
 
         $inlands = $inlands->get();
+        
         $dataDest = array();
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
@@ -55,120 +56,144 @@ trait SearchTrait
                 $monto = 0;
                 if (in_array($ports->ports->id, $port)) {
 
-                    if ($type == 'destino') {
-                        $origin = $ports->ports->coordinates;
-                        $destination = $inlandParams['destination_address'];
-                    } elseif ($type == 'origen') {
-                        $origin = $inlandParams['origin_address'];
-                        $destination = $ports->ports->coordinates;
+                    if($distancia ==0 ){
+
+                        if ($type == 'destino') {
+                            $origin = $ports->ports->coordinates;
+                            $destination = $inlandParams['destination_address'];
+                        } elseif ($type == 'origen') {
+                            $origin = $inlandParams['origin_address'];
+                            $destination = $ports->ports->coordinates;
+                        } 
+                           $response = GoogleMaps::load('directions')
+                            ->setParam([
+                                'origin' => $origin,
+                                'destination' => $destination,
+                                'mode' => 'driving',
+                                'language' => 'es',
+                            ])->get();
+                        $var = json_decode($response);
+                        //Google MAPS
+                        foreach ($var->routes as $resp) {
+                            foreach ($resp->legs as $dist) {
+    
+                                $km = explode(" ", $dist->distance->text);
+                                $distancia = str_replace(".", "", $km[0]);
+                                $distancia = floatval($distancia);
+                                if ($distancia < 1) {
+                                    $distancia = 1;
+                                }                               
+                            }
+                        }
+                     // Fin Google Maps
                     }
+//dd($inlandsValue->inlandRange);
 
-                    $response = GoogleMaps::load('directions')
-                        ->setParam([
-                            'origin' => $origin,
-                            'destination' => $destination,
-                            'mode' => 'driving',
-                            'language' => 'es',
-                        ])->get();
-                    $var = json_decode($response);
-                    foreach ($var->routes as $resp) {
-                        foreach ($resp->legs as $dist) {
+                    foreach ($inlandsValue->inlandRange as $range) {
+                        $rateI = $this->ratesCurrency($range->currency->id, $typeCurrency);
+                        $jsonContainer = json_encode($range->json_containers, JSON_FORCE_OBJECT);
+                        $json=  json_decode($jsonContainer);
+                                    
+                    
+                        foreach ($contain as $cont) {
 
-                            $km = explode(" ", $dist->distance->text);
-                            $distancia = str_replace(".", "", $km[0]);
-                            $distancia = floatval($distancia);
-                            if ($distancia < 1) {
-                                $distancia = 1;
+                            $km = 'km' . $cont->code;
+                            //$$km = true;
+                           /* $options = json_decode($cont->options);
+                            if (@$options->field_rate != 'containers') {
+                                $tipo = $options->field_rate;
+                            } else {
+                                $tipo = $cont->code;
                             }
+*/
+                            if ( in_array($cont->id, $equipment)) {
+                         
 
-                            foreach ($inlandsValue->inlanddetails as $details) {
-                                $rateI = $this->ratesCurrency($details->currency->id, $typeCurrency);
+                                if ($distancia >= $range->lower && $distancia <= $range->upper) {
+                       
+                                    
 
-                                foreach ($contain as $cont) {
-
-                                    $km = 'km' . $cont->code;
-                                    $$km = true;
-                                    $options = json_decode($cont->options);
-                                    if (@$options->field_rate != 'containers') {
-                                        $tipo = $options->field_rate;
+                                    if (isset($json->{'C' . $cont->code})) {
+                                
+                                        
+                                        $rateMount = $json->{'C' . $cont->code};
+                                        $sub_20 = number_format($rateMount / $rateI, 2, '.', '');
+                                        $amount_inland = number_format($rateMount, 2, '.', '');
+                                        $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
                                     } else {
-                                        $tipo = $cont->code;
-                                    }
+                                
+                                        $rateMount = 0;
+                                        $amount_inland = 0;
+                                        $price_per_unit=0;
+                                        $sub_20 = 0;
+                                    }                           
+                                    $monto += number_format($sub_20, 2, '.', '');   
+                                    $$km = false;
+                                    // CALCULO MARKUPS
+                                    $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
-                                    if ($details->type == $tipo && in_array($cont->id, $equipment)) {
-
-                                        if ($distancia >= $details->lower && $distancia <= $details->upper) {
-
-                                            $sub_20 = number_format($details->ammount / $rateI, 2, '.', '');
-                                            $monto += number_format($sub_20, 2, '.', '');
-                                            $amount_inland = number_format($details->ammount, 2, '.', '');
-                                            $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
-                                            $$km = false;
-                                            // CALCULO MARKUPS
-                                            $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
-
-                                            // FIN CALCULO MARKUPS
-                                            $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, 'amount' => $amount_inland, 'currency' => $details->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
-                                            $arrayInland20 = array_merge($markupI20, $arrayInland20);
-                                            $inlandDetails[] = $arrayInland20;
-                                        }
-                                    }
+                                    // FIN CALCULO MARKUPS
+                                    $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, 'amount' => $amount_inland, 'currency' => $range->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
+                                    $arrayInland20 = array_merge($markupI20, $arrayInland20);
+                                    $inlandDetails[] = $arrayInland20;
                                 }
-                            }
-                            // KILOMETROS ADICIONALES
-
-                            if (isset($inlandsValue->inlandadditionalkms)) {
-
-                                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id, $typeCurrency);
-
-                                foreach ($contain as $cont) {
-
-                                    $km = 'km' . $cont->code;
-                                    $options = json_decode($cont->options);
-                                    $texto20 = 'Inland ' . $cont->code . ' x 1';
-
-                                    if (isset($options->field_inland)) {
-
-                                        if ($$km && in_array($cont->id, $equipment)) {
-
-                                            $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland}) / $rateGeneral;
-                                            $sub_20 = number_format($montoKm, 2, '.', '');
-                                            $monto += $sub_20;
-                                            $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland};
-                                            $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
-                                            $amount_inland = number_format($amount_inland, 2, '.', '');
-                                            // CALCULO MARKUPS
-                                            $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
-
-                                            // FIN CALCULO MARKUPS
-                                            $sub_20 = number_format($sub_20, 2, '.', '');
-                                            $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, "des_in" => $texto20, 'amount' => $amount_inland, 'currency' => $inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
-                                            $arrayInland20 = array_merge($markupI20, $arrayInland20);
-                                            $inlandDetails[] = $arrayInland20;
-                                        }
-                                    }
-                                }
-                            }
-
-                            $monto = number_format($monto, 2, '.', '');
-
-                            if ($monto > 0) {
-                                $inlandDetails = Collection::make($inlandDetails);
-                                $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => 'Destination', 'type_currency' => $inlandsValue->inlandadditionalkms->currency->alphacode, 'idCurrency' => $inlandsValue->currency_id);
-                                $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) {
-                                    $minimoD = $item->where('sub_in', '>', 0);
-                                    $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
-                                    return $minimoDetails;
-                                });
-
-                                $dataDest[] = $arregloInland;
-
                             }
                         }
                     }
+                    // KILOMETROS ADICIONALES
+
+                    /*if (isset($inlandsValue->inlandadditionalkms)) {
+
+                        $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id, $typeCurrency);
+
+                        foreach ($contain as $cont) {
+
+                            $km = 'km' . $cont->code;
+                            $options = json_decode($cont->options);
+                            $texto20 = 'Inland ' . $cont->code . ' x 1';
+
+                            if (isset($options->field_inland)) {
+
+                                if ($$km && in_array($cont->id, $equipment)) {
+
+                                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland}) / $rateGeneral;
+                                    $sub_20 = number_format($montoKm, 2, '.', '');
+                                    $monto += $sub_20;
+                                    $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland};
+                                    $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
+                                    $amount_inland = number_format($amount_inland, 2, '.', '');
+                                    // CALCULO MARKUPS
+                                    $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
+
+                                    // FIN CALCULO MARKUPS
+                                    $sub_20 = number_format($sub_20, 2, '.', '');
+                                    $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, "des_in" => $texto20, 'amount' => $amount_inland, 'currency' => $inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
+                                    $arrayInland20 = array_merge($markupI20, $arrayInland20);
+                                    $inlandDetails[] = $arrayInland20;
+                                }
+                            }
+                        }
+                    }*/
+                    
+
+                    $monto = number_format($monto, 2, '.', '');
+
+                    if ($monto > 0) {
+                        $inlandDetails = Collection::make($inlandDetails);
+                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => 'Destination', 'type_currency' => @$inlandsValue->inlandadditionalkms->currency->alphacode, 'idCurrency' => $inlandsValue->currency_id);
+                        $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) {
+                            $minimoD = $item->where('sub_in', '>', 0);
+                            $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
+                            return $minimoDetails;
+                        });
+
+                        $dataDest[] = $arregloInland;
+                    }
+
                 }
             }
         }
+        dd($dataDest);
         return $dataDest;
     }
 

@@ -73,7 +73,7 @@ class InlandController extends Controller
      */
     public function store(Request $request)
     {
-        $company_user_id = Auth::user()->company_user_id;
+        $company_user_id = \Auth::user()->company_user_id;
 
         $data = $request->validate([
             'reference' => 'required',
@@ -91,7 +91,7 @@ class InlandController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => 'publish',
-            'inland_type_id' => $data['type'],
+            'inland_type_id' => '1',
             'gp_container_id' => $data['gp_container']
         ]);
 
