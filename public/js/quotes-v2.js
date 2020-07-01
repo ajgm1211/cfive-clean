@@ -2878,20 +2878,20 @@ $('.inlands').on('click', function () {
 
     var sub20RFo = $("#sub_inland_20RF_o" + idRate);
     var sub40RFo = $("#sub_inland_40RF_o" + idRate);
-    var sub40HCRFo = $("#sub_inland_40RFHC_o" + idRate);
+    var sub40HCRFo = $("#sub_inland_40HCRF_o" + idRate);
 
     var sub20RFd = $("#sub_inland_20RF_d" + idRate);
     var sub40RFd = $("#sub_inland_40RF_d" + idRate);
     var sub40HCRFd = $("#sub_inland_40HCRF_d" + idRate);
 
+  
 
     var sub20RF = $("#sub_inland_20RF" + idRate).html();
     var sub40RF = $("#sub_inland_40RF" + idRate).html();
-    var sub40HCRF = $("#sub_inland_40RFHC" + idRate).html();
-
+    var sub40HCRF = $("#sub_inland_40HCRF" + idRate).html();
 
     // Totaless
-
+    
 
     if (theElement.prop('checked')) {
 
@@ -2919,12 +2919,14 @@ $('.inlands').on('click', function () {
 
         sub20RF = parseFloat(sub20RFo.val()) + parseFloat(sub20RFd.val());
         sub40RF = parseFloat(sub40RFo.val()) + parseFloat(sub40RFd.val());
+
         sub40HCRF = parseFloat(sub40HCRFo.val()) + parseFloat(sub40HCRFd.val());
+
 
         tot_20rf = parseFloat(tot20rf_val) + parseFloat(sub20RF);
         tot_40rf = parseFloat(tot40rf_val) + parseFloat(sub40RF);
         tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
-
+  
 
     } else {
 
@@ -2985,16 +2987,16 @@ $('.inlands').on('click', function () {
 
         tot_40rf = parseFloat(tot40rf_val) - parseFloat(sub40RF);
 
-
-        if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()))
+  
+        if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()) )
             sub40HCRF = parseFloat(sub40HCRFo.val()) - parseFloat(sub40HCRFd.val());
         else
             sub40HCRF = parseFloat(sub40HCRFo.val() - parseFloat(sub40HCRFd.val()));
 
         tot_40hcrf = parseFloat(tot40hcrf_val) - parseFloat(sub40HCRF);
 
-
     }
+    
     //DRY
     $("#sub_inland_20DV" + idRate).html(sub20);
     $("#sub_inland_40DV" + idRate).html(sub40);
@@ -3009,11 +3011,11 @@ $('.inlands').on('click', function () {
 
     $("#sub_inland_20RF" + idRate).html(sub20RF);
     $("#sub_inland_40RF" + idRate).html(sub40RF);
-    $("#sub_inland_40RF" + idRate).html(sub40HCRF);
+    $("#sub_inland_40HCRF" + idRate).html(sub40HCRF);
 
-    tot20rf_html.html(tot_20rf);
-    tot40rf_html.html(tot_40rf);
-    tot40hcrf_html.html(tot_40hcrf);
+    tot20rf_html.html(tot_20rf.toFixed(2));
+    tot40rf_html.html(tot_40rf.toFixed(2));
+    tot40hcrf_html.html(tot_40hcrf.toFixed(2));
 
 
 

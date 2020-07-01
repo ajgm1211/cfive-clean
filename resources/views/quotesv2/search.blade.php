@@ -1803,8 +1803,6 @@ body {
                             @endif
 
 
-
-
                             <!-- Gastos Inlands-->
                             @if(!$arr->inlandDestiny->isEmpty() || !$arr->inlandOrigin->isEmpty() )
                             <div class="row no-margin margin-card" id='inland{{$loop->iteration}}' hidden='true'>
@@ -2443,7 +2441,7 @@ function getContainerByGroup(id_group) {
             //console.log(data);
             var selectValues = $('select#equipment').val();
             var containerType = '{{$containerType}}';
-            const defaultValuesController = < ? php echo json_encode($form['equipment']); ? > ;;
+            const defaultValuesController = <?php echo json_encode($form['equipment']); ?> ;
             $('.h-hidden').css({
                 'display': 'block'
             });
