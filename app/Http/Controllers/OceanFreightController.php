@@ -55,6 +55,13 @@ class OceanFreightController extends Controller
             'via' => isset($data['via']) ? $data['via'] : null
         ];
 
+        $prepared_data = $this->prepareContainer($prepared_data, $data);
+
+        return $prepared_data;
+    }
+
+    public function prepareContainer($prepared_data, $data, $contract)
+    {
         $containers = [];
         
         if($contract->isDRY()){
@@ -174,4 +181,31 @@ class OceanFreightController extends Controller
 
         return response()->json(null, 204);
     }
+
+        /**
+     * Remove the specified resource from storage.
+     *
+     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
+     * @return \Illuminate\Http\Response
+     */
+    public function massiveContainerChange(Request $request, Contract $contract)
+    {
+        $vdata = [];
+        
+        $available_containers = Container::where('gp_container_id', $contract->gpContainer->id)->get()->pluck('code');
+
+        foreach ($available_containers as $container) {
+           $vdata['rates_'.$container] = 'sometimes|nullable';
+        }
+
+        $data = $request->validate($vdata);
+
+        $prepared_data = $this->prepareContainer([], $data, $contract);
+
+        DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
+
+        return response()->json(null, 204);
+    }
+
+    
 }
