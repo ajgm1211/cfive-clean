@@ -3043,17 +3043,18 @@ $('.inlandsO').on('click', function () {
 
 
 
-
+// DRY 
     var i20 = $("#valor-o20DV" + id + "-" + idRate).html();
     var i40 = $("#valor-o40DV" + id + "-" + idRate).html();
     var i40h = $("#valor-o40HC" + id + "-" + idRate).html();
-
 
     var sub20o = $("#sub_inland_20_o" + idRate);
     var sub40o = $("#sub_inland_40_o" + idRate);
     var sub40ho = $("#sub_inland_40h_o" + idRate);
 
-    // Totaless
+    var sub20d = $("#sub_inland_20_d" + idRate);
+    var sub40d = $("#sub_inland_40_d" + idRate);
+    var sub40hd = $("#sub_inland_40h_d" + idRate);
 
     var tot20dv_html = $(".tot20DV-" + idRate);
     var tot20dv_val = $("#tot20DV-" + idRate).val();
@@ -3068,14 +3069,47 @@ $('.inlandsO').on('click', function () {
     var tot_40hc = '';
 
 
-    var sub20d = $("#sub_inland_20_d" + idRate);
-    var sub40d = $("#sub_inland_40_d" + idRate);
-    var sub40hd = $("#sub_inland_40h_d" + idRate);
 
 
     var sub20 = $("#sub_inland_20" + idRate).html();
     var sub40 = $("#sub_inland_40" + idRate).html();
     var sub40h = $("#sub_inland_40h" + idRate).html();
+
+
+    //Refeeer 
+
+    var i20RF = $("#valor-o20RF" + id + "-" + idRate).html();
+    var i40RF = $("#valor-o40RF" + id + "-" + idRate).html();
+    var i40HCRF = $("#valor-o40HCRF" + id + "-" + idRate).html();
+
+    var tot20rf_html = $(".tot20RF-" + idRate);
+    var tot20rf_val = $("#tot20RF-" + idRate).val();
+    var tot_20rf = '';
+
+    var tot40rf_html = $(".tot40RF-" + idRate);
+    var tot40rf_val = $("#tot40RF-" + idRate).val();
+    var tot_40rf = '';
+
+    var tot40hcrf_html = $(".tot40HCRF-" + idRate);
+    var tot40hcrf_val = $("#tot40HCRF-" + idRate).val();
+    var tot_40hcrf = '';
+
+    var sub20RFo = $("#sub_inland_20RF_o" + idRate);
+    var sub40RFo = $("#sub_inland_40RF_o" + idRate);
+    var sub40HCRFo = $("#sub_inland_40HCRF_o" + idRate);
+
+    var sub20RFd = $("#sub_inland_20RF_d" + idRate);
+    var sub40RFd = $("#sub_inland_40RF_d" + idRate);
+    var sub40HCRFd = $("#sub_inland_40HCRF_d" + idRate);
+
+  
+
+    var sub20RF = $("#sub_inland_20RF" + idRate).html();
+    var sub40RF = $("#sub_inland_40RF" + idRate).html();
+    var sub40HCRF = $("#sub_inland_40HCRF" + idRate).html();
+
+
+
     if (theElement.prop('checked')) {
 
 
