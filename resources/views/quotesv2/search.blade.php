@@ -1894,9 +1894,9 @@ body {
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">{{ $inlandOrigin['providerName']  }}</div>
-                                        <div class="col-lg-2 colorphacode">{{ $inlandOrigin['km']  }} KM</div>
+                                        <div class="col-lg-1 colorphacode" style="padding-left: 35px">{{ $inlandOrigin['km']  }} KM</div>
 
-                                        <div class="col-lg-6 colorphacode">
+                                        <div class="col-lg-7 colorphacode">
                                             <div class="d-flex justify-content-end">
 
                                                 @foreach($containers as $container)
