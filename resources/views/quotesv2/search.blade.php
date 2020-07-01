@@ -763,7 +763,7 @@
               <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                 <label>Destination address</label>
                 <span id ='selectD'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                <span id ='textD'>{!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}</span>
+                <span id ='textD'  class='hide'>{!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}</span>
                 
               </div>
              

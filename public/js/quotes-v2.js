@@ -4046,13 +4046,24 @@ $(document).on('change', '#destination_harbor', function(e) {
       success: function(data) {
           $('select[name="destinationA"]').empty();
           if (data.message == 'Ok') {
+            $("#selectD").removeClass('hide');
+            $("#textD").addClass('hide');
            $.each(data.data, function(key, value) {      
                   $('select[name="destinationA"]').append('<option  value="' + key + '">' + value + '</option>');
               });
           }
 
           if (data.message == 'maxOne') {
+            $("#selectD").removeClass('hide');
+            $("#textD").addClass('hide');
             $('#select2-destinationA-container').text('Select one Dest Harbor');
+           }
+
+           if (data.message == 'empty') {
+            $("#selectD").addClass('hide');
+            $("#textD").removeClass('hide');
+    
+            
            }
 
           

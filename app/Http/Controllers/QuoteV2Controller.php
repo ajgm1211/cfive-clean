@@ -2554,6 +2554,10 @@ class QuoteV2Controller extends Controller
         $chargesFreight = 'true';
         $containerType = $request->input('container_type');
         $carriersSelected = $request->input('carriers');
+        //Combos del distanciero para inlands
+        $destinationA = $request->input('destinationA');
+        $originA = $request->input('originA');
+        //resquest completo del form
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
@@ -2645,6 +2649,7 @@ class QuoteV2Controller extends Controller
         $destination_address = $request->input('destination_address');
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
+        $groupContainer = $validateEquipment['gpId'];
 
         // Historial de busqueda
         // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
@@ -2680,7 +2685,12 @@ class QuoteV2Controller extends Controller
 
             $hideD = '';
             $dataDest = array();
-            $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode);
+        
+        
+            if($destinationA == null)
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer);
+            else
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer,$destinationA);
 
             if (!empty($dataDest)) {
                 $inlandDestiny = Collection::make($dataDest);
@@ -2691,7 +2701,10 @@ class QuoteV2Controller extends Controller
         if ($delivery_type == "3" || $delivery_type == "4") {
             $hideO = '';
             $dataOrig = array();
-            $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode);
+            if($originA == null )
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer);
+            else
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer,$originA);
 
             if (!empty($dataOrig)) {
                 $inlandOrigin = Collection::make($dataOrig);
