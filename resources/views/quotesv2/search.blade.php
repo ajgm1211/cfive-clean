@@ -1494,7 +1494,7 @@ body {
                                                     {{ \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                                                 </div>
                                                 @else
-                                                <div class="col-lg-6 d-flex align-items-center">
+                                                <div class="col-lg-9 d-flex align-items-center justify-content-start">
                                                     <span class="portalphacode" style="margin-right:15px;">Validity:
                                                     </span>
                                                     {{ \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
@@ -1505,6 +1505,12 @@ body {
                                                     &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20"
                                                         title="Attention! This rate is valid for a date range later than the one selected">
                                                     @endif
+
+                                                    <span class="portalphacode"
+                                                        style="margin-left: 20px; margin-right:15px; text-align: left">Contract: </span>
+                                                    {{ $arr->contract->company_user_id }} &nbsp;<span
+                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                    / {{ $arr->contract->number }}
 
                                                 </div>
                                                 @endif
@@ -1520,13 +1526,9 @@ body {
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> >  Via: </span> {{  $arr->via }}
                         </div>-->
                                                 @endif
-                                                <div class="col-lg-3 d-flex align-items-center justify-content-start">
-                                                    <span class="portalphacode"
-                                                        style="margin-right:15px; text-align: right">Contract: </span>
-                                                    {{ $arr->contract->company_user_id }} &nbsp;<span class="truncate"
-                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
-                                                    / {{ $arr->contract->number }}
-                                                </div>
+                                                <!-- <div class="col-lg-3 d-flex align-items-center justify-content-start">
+                                                    
+                                                </div> -->
 
                                                 <div
                                                     class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
