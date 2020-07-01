@@ -82,9 +82,9 @@ class SyncCompaniesJob implements ShouldQueue
         
                     $i++;
                 }
-        
-                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
-                    $query->where('company_user_id', $this->user->company_user_id);
+                $company_user = $this->user->company_user_id;
+                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) use($company_user) {
+                    $query->where('company_user_id', $company_user);
                 })->first();
                 $setting->status = 0;
                 $setting->save();
@@ -92,7 +92,7 @@ class SyncCompaniesJob implements ShouldQueue
 
             case 'Visualtrans':
                 $i = 0;
-                
+
                 foreach ($this->response['entidades'] as $item) {
                     //if ($item->es_emp) {
         
@@ -113,9 +113,10 @@ class SyncCompaniesJob implements ShouldQueue
         
                     $i++;
                 }
-        
-                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
-                    $query->where('company_user_id', $this->user->company_user_id);
+                $company_user = $this->user->company_user_id;
+                
+                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) use($company_user) {
+                    $query->where('company_user_id', $company_user);
                 })->first();
                 $setting->status = 0;
                 $setting->save();
