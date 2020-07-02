@@ -874,9 +874,10 @@ body {
                             </div>
                             <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                                 <label>Origin address</label>
-                                <span id='selectA'>
+                                {{ Form::hidden('origComb', @$form['originA'] , ['id' => 'origComb'  ])  }}
+                                <span id='selectA' class='{{ @$origA[ocultarorigComb] }}'>
                                     {{ Form::select('originA',[],null,['id'=>'originA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                                <span id='textA' class='hide'>{!! Form::text('origin_address',@$form['origin_address'],
+                                <span id='textA' class='{{ @origA[ocultarDestA] }}'>{!! Form::text('origin_address',@$form['origin_address'],
                                     ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input
                                     ','id'=>'origin_address']) !!}</span>
 
@@ -894,9 +895,10 @@ body {
                             </div>
                             <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                                 <label>Destination address</label>
+                                {{ Form::hidden('destComb', @$form['destinationA'] , ['id' => 'destComb'  ])  }}
                                 <span
-                                    id='selectD'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                                <span id='textD' class='hide'>{!!
+                                    id='selectD' class='{{ @$destA[ocultarDestComb] }}'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
+                                <span id='textD' class='{{ @$destA[ocultarDestA] }}'>{!!
                                     Form::text('destination_address',@$form['destination_address'] , ['placeholder' =>
                                     'Please enter a destination address','class' => 'form-control
                                     m-input','id'=>'destination_address']) !!}</span>
