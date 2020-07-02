@@ -2778,18 +2778,17 @@ $('.btn-input__select').on('click', function () {
     $('.labelOrig' + idRate).toggleClass('visible__select-add');
     $('.labelDest' + idRate).toggleClass('visible__select-add');
     if ($cantidadDestino == 1) {
-        $('.labelDest' + idRate).addClass('style__select-add');
-        $('#inputID-select1-' + idRate).attr('checked', true);
-
-        calcularInlands('destino', idRate);
+        //   $('.labelDest' + idRate).addClass('style__select-add');
+        //   $('#inputID-select1-' + idRate).attr('checked', true);
+        //   calcularInlands('destino', idRate);
 
     }
 
     if ($cantidadOrigen == 1) {
 
-        $('.labelOrig' + idRate).addClass('style__select-add');
-        $('#inputIO-select1-' + idRate).attr('checked', true);
-        calcularInlands('origen', idRate);
+         //   $('.labelOrig' + idRate).addClass('style__select-add');
+         //   $('#inputIO-select1-' + idRate).attr('checked', true);
+         //   calcularInlands('origen', idRate);
     }
 
 });
@@ -3783,6 +3782,93 @@ function show_hide_element($element, $button) {
 }
 
 function precargar() {
+    //Otros 
+    
+    
+    var origComb = $("#origComb").val();
+    var destComb = $("#destComb").val();
+
+    var ids = $('#origin_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="originA"]').empty();
+            if (data.message == 'Ok') {
+
+      
+               
+
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $.each(data.data, function (key, value) {
+                    if (key == origComb) {
+                        selected = 'selected';
+                    } else {
+                        selected = '';
+                    }
+                    $('select[name="originA"]').append('<option ' + selected + ' value="' + key + '">' + value + '</option>');
+                });
+            }
+            if (data.message == 'maxOne') {
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $('#select2-originA-container').text('Select one Origin Harbor');
+            }
+            if (data.message == 'empty') {
+                $("#selectA").addClass('hide');
+                $("#textA").removeClass('hide');
+
+
+            }
+        }
+    });
+    var ids = $('#destination_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="destinationA"]').empty();
+
+    
+   
+
+            if (data.message == 'Ok') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $.each(data.data, function (key, value) {
+                    if (key == destComb) {
+                        selected = 'selected';
+                    } else {
+                        selected = '';
+                    }
+                    $('select[name="destinationA"]').append('<option ' + selected + '  value="' + key + '">' + value + '</option>');
+                });
+            }
+
+            if (data.message == 'maxOne') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $('#select2-destinationA-container').text('Select one Dest Harbor');
+            }
+
+            if (data.message == 'empty') {
+                $("#selectD").addClass('hide');
+                $("#textD").removeClass('hide');
+
+
+            }
+
+
+
+
+        }
+    });
+
+
+    //Companiasss 
     var company_id = $("#m_select2_2_modal").val();
     var contact_id = $("#contact_id_num").val();
     var price_id = $("#price_id_num").val();
