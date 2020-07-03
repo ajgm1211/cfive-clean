@@ -8,7 +8,7 @@ class MasterSurcharge extends Model
 {
 
     protected $fillable = ['id',
-                           'name',
+                           'surcharge_id',
                            'carrier_id',
                            'typedestiny_id',
                            'calculationtype_id',
