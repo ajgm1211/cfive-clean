@@ -1,7 +1,7 @@
 {{ Form::model($masterSurcharge, array('route' => array('MasterSurcharge.update', $masterSurcharge->id), 'method' => 'put', 'id' => 'frmSurcharges')) }}
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle">
-        Add - Master Surcharge 
+        Update - Surcharge Detail
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">

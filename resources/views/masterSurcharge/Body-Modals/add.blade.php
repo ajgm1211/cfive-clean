@@ -1,7 +1,7 @@
 {!! Form::open(['route' => 'MasterSurcharge.store', 'method' => 'post','class' => 'form-group m-form__group','id' => 'frmSurcharges']) !!}
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle">
-        Add - Master Surcharge 
+        Add - Surcharge Detail
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
