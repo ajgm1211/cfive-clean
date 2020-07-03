@@ -1038,6 +1038,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     /** API Contracts endpoint (Pending to check) **/
     Route::get('', 'ContractController@list');
     Route::get('data', 'ContractController@data');
+    Route::get('{contract}/surcharge_data', 'ContractController@surcharge_data');
     Route::post('store', 'ContractController@store');
     Route::get('{contract}', 'ContractController@retrieve')->middleware('check_company:contract');
     Route::post('{contract}/update', 'ContractController@update')->middleware('check_company:contract');
@@ -1057,6 +1058,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
     Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
     Route::post('ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
+    Route::post('{contract}/ocean_freight/massiveContainerChange', 'OceanFreightController@massiveContainerChange');
     /** End API Contracts Ocean Freights EndPoints **/
 
 
@@ -1155,5 +1157,9 @@ Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
 Route::prefix('ImpTransitTime')->group(function () {
     Route::resource('ImpTransitTime','ImportationTransitTimeController')->middleware(['role:administrator|data_entry']);
     route::post('UploadTTimes','ImportationTransitTimeController@storeMedia')->name('ImpTransitTime.storeMedia')->middleware(['role:administrator|data_entry']);
+});
+
+Route::prefix('MasterSurcharge')->group(function(){
+     Route::resource('MasterSurcharge','MasterSurchargeController')->middleware(['role:administrator|data_entry']);
 });
 

@@ -3037,8 +3037,20 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $resultadocountrytOri = PrvHarbor::get_harbor_simple('Itapoa-brioa-brazil');
-        dd($resultadocountrytOri);
+        $resultadocountrytOri = Harbor::where('varation->type','like','%'.strtolower('durban-zadur-south africa').'%')->orderBy('name', 'desc')->get();
+        //        $var = $resultadocountrytOri->where('varation->type','=',strtolower('durban'));
+        if($resultadocountrytOri->count() > 1){
+            foreach($resultadocountrytOri as  $vale){
+                $var2 = json_decode($vale->varation,true);                
+                $colletion = collect([]);
+                if(in_array('durban-zadur-south africa',$var2['type'])){
+                    dd($vale);
+                }
+                
+            }
+        } else {
+            dd($resultadocountrytOri);
+        }
     }
 
 }

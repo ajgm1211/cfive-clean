@@ -1234,19 +1234,23 @@
                         @endif
 
                         @if(isset($arr->sheduleType))
-                            <div class="col-lg-4 d-flex align-items-center" style="padding-left: 60px;">
+                            <div class="col-lg-9 d-flex align-items-center justify-content-start" style="padding-left: 60px;">
                             <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                             </div>
                         @else
-                            <div class="col-lg-6 d-flex align-items-center">
+                            <div class="col-lg-9 d-flex align-items-center">
                                 <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
 
                                 @if($arr->contratoFuturo)
                                     &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20" title="Attention! This rate is valid for a date range later than the one selected">
                                 @endif
 
+                                <span class="portalphacode" style="margin-left: 20px; margin-right: 10px; text-align: right">Contract: </span> <span title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
+
                             </div>
                         @endif
+
+                        
 
                         @if(isset($arr->sheduleType))
                         <!--<div class="col-lg-2 d-flex align-items-center">
@@ -1259,9 +1263,7 @@
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> >  Via: </span> {{  $arr->via }}
                         </div>-->
                         @endif
-                        <div class="col-lg-3 d-flex align-items-center justify-content-start">
-                        <span class="portalphacode" style="margin-right:15px; text-align: right">Contract: </span>&nbsp;<span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> / {{ $arr->contract->number }}
-                        </div>
+                        
                        
                         <div class="col-lg-1 no-padding d-flex justify-content-end align-items-center">
                           @if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") || ($arr->totalItems !="0") )
