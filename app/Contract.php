@@ -178,7 +178,7 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function StoreInMedia($file, $name)
     {
-        \Storage::disk('FclRequest')->put($name,\File::get($file));
+        \Storage::disk('FclRequest')->put($name, \File::get($file));
         /*$this->addMedia($file)->addCustomHeaders([
             'ACL' => 'public-read'
         ])->toMediaCollection('document', 'FclRequest');*/
@@ -266,20 +266,19 @@ class Contract extends Model implements HasMedia, Auditable
 
         return $new_contract;
     }
-    
+
     /**
      * processSearchByIdFcl
      *
      * @param  mixed $api_company_id
      * @return void
      */
-    public function processSearchByIdFcl($api_company_id = 0)
+    public function processSearchByIdFcl()
     {
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
-        $companies = Company::where('api_id', '=', $api_company_id)->first();
         $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
 
         $chargesOrigin = 'true';
@@ -301,12 +300,6 @@ class Contract extends Model implements HasMedia, Auditable
         $company_user_id = $company->id;
         $arreglo = null;
 
-        if (empty($companies)) {
-            $companies_id = 0;
-        } else {
-            $companies_id = $companies->id;
-        }
-
         $equipment = array('1', '2', '3', '4', '5');
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
@@ -314,34 +307,17 @@ class Contract extends Model implements HasMedia, Auditable
         // Consulta base de datos rates
 
         if ($validateEquipment['count'] < 2) {
-            if ($companies_id != null || $companies_id != 0) {
-                $arreglo = Rate::whereHas('contract', function ($q) use ($user_id, $company_user_id, $companies_id) {
-                    $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
-                        $a->where('user_id', '=', $user_id);
-                    })->orDoesntHave('contract_user_restriction');
-                })->whereHas('contract', function ($q) use ($user_id, $company_user_id, $companies_id) {
-                    $q->whereHas('contract_company_restriction', function ($b) use ($companies_id) {
-                        $b->where('company_id', '=', $companies_id);
-                    })->orDoesntHave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($company_user_id, $validateEquipment) {
-                    $q->where('company_user_id', '=', $company_user_id)->where('code', $this->code);
-                })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
-                }]);
-            } else {
-                $arreglo = Rate::whereHas('contract', function ($q) {
-                    $q->doesnthave('contract_user_restriction');
-                })->whereHas('contract', function ($q) {
-                    $q->doesnthave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($company_user_id, $validateEquipment) {
-                    $q->where('company_user_id', '=', $company_user_id)->where('code', $this->code);
-                })->with(['carrier' => function ($query) {
-                    $query->select('id', 'name', 'uncode', 'image', 'image as url');
-                }]);
-            }
-            $arreglo = $arreglo->get();
+            $arreglo = Rate::whereHas('contract', function ($q) {
+                $q->doesnthave('contract_user_restriction');
+            })->whereHas('contract', function ($q) {
+                $q->doesnthave('contract_company_restriction');
+            })->whereHas('contract', function ($q) use ($company_user_id) {
+                $q->where('company_user_id', '=', $company_user_id)->where('code', $this->code);
+            })->with(['carrier' => function ($query) {
+                $query->select('id', 'name', 'uncode', 'image', 'image as url');
+            }])->get();
         }
-        
+
         //Guard if
         if (count($arreglo) == 0) {
             return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
@@ -389,7 +365,7 @@ class Contract extends Model implements HasMedia, Auditable
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
             // Rates
             $arregloR = $this->ratesSearch($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
-            
+
             $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSaveR']);
 
             $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
@@ -404,7 +380,7 @@ class Contract extends Model implements HasMedia, Auditable
 
             // ################### Calculos local  Charges #############################
             if ($contractStatus != 'api') {
-                
+
                 $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
                     $q->whereIn('carrier_id', $carrier);
                 })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
@@ -420,9 +396,9 @@ class Contract extends Model implements HasMedia, Auditable
                         $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
                     }])->get();
             }
-            
+
             foreach ($localChar as $local) {
-                
+
                 $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
                 // Condicion para enviar los terminos de venta o compra
@@ -482,96 +458,13 @@ class Contract extends Model implements HasMedia, Auditable
                     }
                 }
             }
-            // ################## Fin local Charges        #############################
-            //################## Calculos Global Charges #################################
-
-            /*if ($contractStatus != 'api') {
-
-                $globalChar = GlobalCharge::whereHas('globalcharcarrier', function ($q) use ($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
-                    $query->orwhereHas('globalcharport', function ($q) use ($orig_port, $dest_port) {
-                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
-                    })->orwhereHas('globalcharcountry', function ($q) use ($origin_country, $destiny_country) {
-                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
-                    })->orwhereHas('globalcharportcountry', function ($q) use ($orig_port, $destiny_country) {
-                        $q->whereIn('port_orig', $orig_port)->whereIn('country_dest', $destiny_country);
-                    })->orwhereHas('globalcharcountryport', function ($q) use ($origin_country, $dest_port) {
-                        $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
-                    });
-                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
-
-                foreach ($globalChar as $global) {
-                    $rateMount = $this->ratesCurrency($global->currency->id, $typeCurrency);
-                    // Condicion para enviar los terminos de venta o compra
-                    if (isset($global->surcharge->saleterm->name)) {
-                        $terminos = $global->surcharge->saleterm->name;
-                    } else {
-                        $terminos = $global->surcharge->name;
-                    }
-                    foreach ($global->globalcharcarrier as $globalCarrier) {
-
-                        if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all->id) {
-                            $globalParams = array('terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier);
-                            //Origin
-                            if ($chargesOrigin != null) {
-
-                                if ($global->typedestiny_id == '1') {
-                                    foreach ($containers as $cont) {
-
-                                        $name_arreglo = 'array' . $cont->code;
-
-                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                            $collectionOrigin->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount, $totalesCont));
-                                        }
-                                    }
-                                }
-                            }
-
-                            //Destiny
-                            if ($chargesDestination != null) {
-                                if ($global->typedestiny_id == '2') {
-                                    $band = false;
-                                    foreach ($containers as $cont) {
-                                        $name_arreglo = 'array' . $cont->code;
-                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                            $collectionDestiny->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount, $totalesCont));
-                                        }
-                                    }
-                                }
-                            }
-                            //Freight
-
-                            if ($chargesFreight != null) {
-
-                                if ($global->typedestiny_id == '3') {
-
-                                    $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
-                                    $globalParams['typeCurrency'] = $data->currency->alphacode;
-                                    $globalParams['idCurrency'] = $data->currency->id;
-                                    //Fin Variables
-
-                                    foreach ($containers as $cont) {
-                                        $name_arreglo = 'array' . $cont->code;
-
-                                        if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                            $collectionFreight->push($this->processGlobalCharge($cont, $global, $globalParams, $rateMount_Freight, $totalesCont));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }*/ // fin if contract Api
-            // ############################ Fin global charges ######################
 
             $totalRates += $totalT;
             $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
             $array = array_merge($array, $arregloRate);
             $array = array_merge($array, $arregloRateSave);
             $collectionRate->push($array);
-            
+
             // SCHEDULE 
 
             $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
