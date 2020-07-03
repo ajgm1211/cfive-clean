@@ -1,7 +1,7 @@
 {{ Form::model($masterSurcharge, array('route' => array('MasterSurcharge.update', $masterSurcharge->id), 'method' => 'put', 'id' => 'frmSurcharges')) }}
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle">
-        Add - Master Surcharge 
+        Update - Surcharge Detail
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
@@ -12,8 +12,8 @@
 <div class="modal-body" id="global-body">
     <div class="form-group m-form__group row">
         <div class="col-lg-4">
-            {!! Form::label('name', 'Name') !!}
-            {{ Form::text('name', $masterSurcharge->name,['id' => 'name_id','class'=>'form-control' ,'required' => 'true']) }}
+            {!! Form::label('surcharger', 'Surcharger') !!}
+            {{ Form::select('surcharger',$surchargers, $masterSurcharge->surcharger_id,['id' => 'surcharger_id','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
         </div>
         <div class="col-lg-4">
             {!! Form::label('carrier', 'Carrier') !!}
