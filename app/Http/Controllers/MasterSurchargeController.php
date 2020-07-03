@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Carrier;
 use App\Direction;
+use App\Surcharge;
 use App\TypeDestiny;
 use App\CalculationType;
 use App\MasterSurcharge;
@@ -24,26 +25,28 @@ class MasterSurchargeController extends Controller
         $directions         = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::pluck('description','id');
         $calculationtype    = CalculationType::pluck('name','id');
-        return view('masterSurcharge.Body-Modals.add',compact('carriers','directions','typedestiny','calculationtype'));
+        $surchargers        = Surcharge::pluck('name','id');
+        return view('masterSurcharge.Body-Modals.add',compact('carriers','directions','typedestiny','calculationtype','surchargers'));
     }
 
     public function store(Request $request)
     {
         //dd($request->all());
-        $name               = $request->name;
+        $surcharger         = $request->surcharger;
         $carrier            = $request->carrier;
         $typedestiny        = $request->typedestiny;
         $calculationtype    = $request->calculationtype;
         $direction          = $request->direction;
 
         $masterSurcharge = MasterSurcharge::where('carrier_id',$carrier)
+            ->where('surcharge_id',$surcharger)
             ->where('typedestiny_id',$typedestiny)
             ->where('calculationtype_id',$calculationtype)
             ->where('direction_id',$direction)
             ->get();
         if(count($masterSurcharge) == 0){
             $masterSurcharge = new MasterSurcharge();
-            $masterSurcharge->name                  = $name;
+            $masterSurcharge->surcharge_id         = $surcharger;
             $masterSurcharge->carrier_id            = $carrier;
             $masterSurcharge->typedestiny_id        = $typedestiny;
             $masterSurcharge->calculationtype_id    = $calculationtype;
@@ -83,25 +86,27 @@ class MasterSurchargeController extends Controller
         $directions         = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::pluck('description','id');
         $calculationtype    = CalculationType::pluck('name','id');
-        return view('masterSurcharge.Body-Modals.edit',compact('masterSurcharge','carriers','directions','typedestiny','calculationtype'));
+        $surchargers        = Surcharge::pluck('name','id');
+        return view('masterSurcharge.Body-Modals.edit',compact('masterSurcharge','carriers','directions','typedestiny','calculationtype','surchargers'));
     }
 
     public function update(Request $request, $id)
     {
-        $name               = $request->name;
+        $surcharger         = $request->surcharger;
         $carrier            = $request->carrier;
         $typedestiny        = $request->typedestiny;
         $calculationtype    = $request->calculationtype;
         $direction          = $request->direction;
 
         $masterSurcharge = MasterSurcharge::where('carrier_id',$carrier)
+            ->where('surcharge_id',$surcharger)
             ->where('typedestiny_id',$typedestiny)
             ->where('calculationtype_id',$calculationtype)
             ->where('direction_id',$direction)
             ->get();
         if(count($masterSurcharge) == 0){
             $masterSurcharge = MasterSurcharge::find($id);
-            $masterSurcharge->name                  = $name;
+            $masterSurcharge->surcharge_id         = $surcharger;
             $masterSurcharge->carrier_id            = $carrier;
             $masterSurcharge->typedestiny_id        = $typedestiny;
             $masterSurcharge->calculationtype_id    = $calculationtype;
