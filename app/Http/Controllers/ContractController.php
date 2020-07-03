@@ -563,8 +563,6 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'type' => json_encode(''),
-                    'data' => json_encode(''),
                     'contract_id' => $contract->id,
                 ]);
                 break;

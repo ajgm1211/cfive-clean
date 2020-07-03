@@ -559,7 +559,7 @@ class ApiController extends Controller
     {
         try {
             return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
@@ -639,7 +639,7 @@ class ApiController extends Controller
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
@@ -651,7 +651,7 @@ class ApiController extends Controller
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
@@ -1053,16 +1053,21 @@ class ApiController extends Controller
         return response()->json($general);
     }
 
-    public function processSearchByContract($code,  $api_company_id = 0){
-        $contract = Contract::where('code',$code)->first();
-        $contract_lcl = ContractLcl::where('code',$code)->first();
+    public function processSearchByContract($code,  $api_company_id = 0)
+    {
+        try {
+            $contract = Contract::where('code', $code)->first();
+            $contract_lcl = ContractLcl::where('code', $code)->first();
 
-        if($contract != null){
-            return $contract->processSearchByIdFcl($api_company_id = 0);
-        }elseif($contract_lcl != null){
-            return $contract_lcl->processSearchByIdLcl($api_company_id = 0);
-        }else{
-            return response()->json(['message' => 'The requested contract does not exist'], 200);
+            if ($contract != null) {
+                return $contract->processSearchByIdFcl();
+            } elseif ($contract_lcl != null) {
+                return $contract_lcl->processSearchByIdLcl();
+            } else {
+                return response()->json(['message' => 'The requested contract does not exist'], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
 }
