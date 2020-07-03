@@ -15,12 +15,13 @@ class CreateMasterSurchargesTable extends Migration
     {
         Schema::create('master_surcharges', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->integer('surcharge_id')->unsigned();
             $table->integer('carrier_id')->unsigned();
             $table->integer('typedestiny_id')->unsigned();
             $table->integer('calculationtype_id')->unsigned();
             $table->integer('direction_id')->unsigned();
             
+            $table->foreign('surcharge_id')->references('id')->on('surcharges');
             $table->foreign('typedestiny_id')->references('id')->on('typedestiny');
             $table->foreign('calculationtype_id')->references('id')->on('calculationtype');
             $table->foreign('carrier_id')->references('id')->on('carriers');
