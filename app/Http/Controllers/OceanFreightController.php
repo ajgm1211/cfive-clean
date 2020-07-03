@@ -55,7 +55,7 @@ class OceanFreightController extends Controller
             'via' => isset($data['via']) ? $data['via'] : null
         ];
 
-        $prepared_data = $this->prepareContainer($prepared_data, $data);
+        $prepared_data = $this->prepareContainer($prepared_data, $data, $contract);
 
         return $prepared_data;
     }
