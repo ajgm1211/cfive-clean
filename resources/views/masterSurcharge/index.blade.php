@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ' Manager - Master Surcharge')
+@section('title', ' Manager - Surcharge Detail')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -13,7 +13,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Master Surcharge
+                        Surcharge Detail
                     </h3>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#fails" role="tab">
                                 <i class="la la-cog"></i>
-                                Master &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Detail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </a>
                         </li>
                     </ul>
@@ -196,7 +196,7 @@
                         if(data.success == 1){
                             swal(
                                 'Deleted!',
-                                'The Request has been deleted.',
+                                'The Surcharge Detail has been deleted.',
                                 'success'
                             )
                             $('#masterSurcharge').DataTable().ajax.reload();
@@ -208,7 +208,7 @@
             } else if (result.dismiss === 'cancel') {
                 swal(
                     'Cancelled',
-                    'Your rate is safe :)',
+                    'Your Surcharge is safe :)',
                     'error'
                 )
             }

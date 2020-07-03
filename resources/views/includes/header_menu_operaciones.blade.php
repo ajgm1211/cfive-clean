@@ -332,7 +332,7 @@ API Integrations
                                 <a  href="{{route('MasterSurcharge.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-list-1"></i>
                                     <span class="m-menu__link-text">
-                                        Master Surcharge
+                                        Surcharge Detail
                                     </span>
                                 </a>
                             </li>
