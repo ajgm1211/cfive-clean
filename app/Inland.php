@@ -36,6 +36,10 @@ class Inland extends Model implements Auditable
         return $this->hasMany('App\InlandRange');
     }
 
+    public function inlandkms()
+    {
+        return $this->hasMany('App\InlandKm');
+    }
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
