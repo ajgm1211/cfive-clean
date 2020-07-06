@@ -1157,3 +1157,7 @@ Route::prefix('ImpTransitTime')->group(function () {
     route::post('UploadTTimes','ImportationTransitTimeController@storeMedia')->name('ImpTransitTime.storeMedia')->middleware(['role:administrator|data_entry']);
 });
 
+Route::prefix('MasterSurcharge')->group(function(){
+     Route::resource('MasterSurcharge','MasterSurchargeController')->middleware(['role:administrator|data_entry']);
+});
+
