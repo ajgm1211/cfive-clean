@@ -145,7 +145,7 @@ class ApiIntegrationController extends Controller
         $setting->status = 1;
         $setting->save();
 
-        $endpoint = $setting->url . "=" . $setting->api_key;
+        $endpoint = $setting->url . $setting->api_key;
 
         try {
 

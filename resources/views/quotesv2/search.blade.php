@@ -830,7 +830,7 @@ body {
                                 <label>Contact</label>
                                 <div class="m-input-icon m-input-icon--right">
                                     {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control']) }}
-                                    {{ Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
+                                    {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
                                         <span>
                                             <a onclick="AbrirModal('addContact',0)" data-container="body"
@@ -845,7 +845,7 @@ body {
                             <div class="col-lg-2">
                                 <label>Price level</label>
                                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
-                                {{ Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
+                                {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
                             </div>
                             <div class="col-lg-2" id="delivery_type_label">
                                 <label>Delivery type</label>
@@ -877,7 +877,8 @@ body {
                                 {{ Form::hidden('origComb', @$form['originA'] , ['id' => 'origComb'  ])  }}
                                 <span id='selectA' class='{{ @$origA[ocultarorigComb] }}'>
                                     {{ Form::select('originA',[],null,['id'=>'originA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                                <span id='textA' class='{{ @origA[ocultarDestA] }}'>{!! Form::text('origin_address',@$form['origin_address'],
+                                <span id='textA' class='{{ @origA[ocultarDestA] }}'>{!!
+                                    Form::text('origin_address',@$form['origin_address'],
                                     ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input
                                     ','id'=>'origin_address']) !!}</span>
 
@@ -896,8 +897,8 @@ body {
                             <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                                 <label>Destination address</label>
                                 {{ Form::hidden('destComb', @$form['destinationA'] , ['id' => 'destComb'  ])  }}
-                                <span
-                                    id='selectD' class='{{ @$destA[ocultarDestComb] }}'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
+                                <span id='selectD'
+                                    class='{{ @$destA[ocultarDestComb] }}'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
                                 <span id='textD' class='{{ @$destA[ocultarDestA] }}'>{!!
                                     Form::text('destination_address',@$form['destination_address'] , ['placeholder' =>
                                     'Please enter a destination address','class' => 'form-control
@@ -1408,8 +1409,8 @@ body {
                                         <div class="{{ $equipmentHides['head_1'] }} no-padding padding-min-col ">
                                             <div class="row">
                                                 <div class="col-lg-4">
-                                                    <span class="portcss"> {{$arr->port_origin->name }}</span><br>
-                                                    <span class="portalphacode"> {{$arr->port_origin->code }}</span>
+                                                    <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
+                                                    <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                                                 </div>
                                                 <div class="col-lg-4 d-flex flex-column justify-content-center">
                                                     @if($arr->service != '')
@@ -1487,21 +1488,21 @@ body {
                                                 @endif
 
                                                 @if(isset($arr->sheduleType))
-                                                <div class="col-lg-4 d-flex align-items-center"
+                                                <div class="col-lg-9 d-flex align-items-center justify-content-start"
                                                     style="padding-left: 60px;">
                                                     <span class="portalphacode" style="margin-right:15px;">Validity:
                                                     </span>
-                                                    {{ \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
+                                                    {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
                                                     -
-                                                    {{ \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                                                    {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                                                 </div>
                                                 @else
-                                                <div class="col-lg-9 d-flex align-items-center justify-content-start">
+                                                <div class="col-lg-9 d-flex align-items-center">
                                                     <span class="portalphacode" style="margin-right:15px;">Validity:
                                                     </span>
-                                                    {{ \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
+                                                    {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
                                                     -
-                                                    {{ \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                                                    {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
 
                                                     @if($arr->contratoFuturo)
                                                     &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20"
@@ -1509,13 +1510,15 @@ body {
                                                     @endif
 
                                                     <span class="portalphacode"
-                                                        style="margin-left: 20px; margin-right:15px; text-align: left">Contract: </span>
-                                                    {{ $arr->contract->company_user_id }} &nbsp;<span
+                                                        style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
+                                                    </span> <span
                                                         title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
                                                     / {{ $arr->contract->number }}
 
                                                 </div>
                                                 @endif
+
+
 
                                                 @if(isset($arr->sheduleType))
                                                 <!--<div class="col-lg-2 d-flex align-items-center">
@@ -1601,10 +1604,10 @@ body {
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">
-                                            {{ str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}
                                         </div>
                                         <div class="col-lg-2 colorphacode" style="padding-left: 35px">
-                                            {{ str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}
                                         </div>
                                         <div class="col-lg-7 colorphacode">
                                             <div class="d-flex justify-content-end">
@@ -1622,7 +1625,7 @@ body {
                                             </div>
                                         </div>
                                         <div class="col-lg-1"><span
-                                                class="colorphacode">{{ str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span>
+                                                class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span>
                                         </div>
                                         <div class="col-lg-1"></div>
 
@@ -1680,7 +1683,7 @@ body {
                                                     <span
                                                         class="bg-rates">+{{ isDecimal(number_format(@$rates['markup'.$container->code], 2, '.', ''))   }}</span>
                                                     <i class="la la-caret-right arrow-down"></i> <b
-                                                        class="monto-down">{{ isDecimal(@$rates['monto'.$container->code]) }}</b>
+                                                        class="monto-down">{{  isDecimal(@$rates['monto'.$container->code]) }}</b>
                                                 </div>
                                                 @endforeach
                                             </div>
@@ -1693,10 +1696,10 @@ body {
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">
-                                            {{ str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}
                                         </div>
                                         <div class="col-lg-2 colorphacode" style="padding-left: 35px">
-                                            {{ str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}
                                         </div>
                                         <div class="col-lg-7 colorphacode">
                                             <div class="d-flex justify-content-end">
@@ -1714,7 +1717,7 @@ body {
                                             </div>
                                         </div>
                                         <div class="col-lg-1 colorphacode">
-                                            {{ str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  ) }}
                                         </div>
                                     </div>
                                     @endforeach
@@ -1761,10 +1764,10 @@ body {
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">
-                                            {{ str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}
                                         </div>
                                         <div class="col-lg-2 colorphacode" style="padding-left: 35px">
-                                            {{ str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}
+                                            {{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}
                                         </div>
                                         <div class="col-lg-7 colorphacode">
                                             <div class="d-flex justify-content-end">
@@ -1782,7 +1785,7 @@ body {
                                             </div>
                                         </div>
                                         <div class="col-lg-1"><span
-                                                class="colorphacode">{{ str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span>
+                                                class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span>
                                         </div>
                                         <div class="col-lg-1"></div>
                                     </div>
@@ -1898,7 +1901,8 @@ body {
 
                                     <div class="row data-rates">
                                         <div class="col-lg-2 colorphacode">{{ $inlandOrigin['providerName']  }}</div>
-                                        <div class="col-lg-1 colorphacode" style="padding-left: 35px">{{ $inlandOrigin['km']  }} KM</div>
+                                        <div class="col-lg-1 colorphacode" style="padding-left: 35px">
+                                            {{ $inlandOrigin['km']  }} KM</div>
 
                                         <div class="col-lg-7 colorphacode">
                                             <div class="d-flex justify-content-end">
