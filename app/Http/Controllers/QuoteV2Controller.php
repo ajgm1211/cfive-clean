@@ -2524,9 +2524,15 @@ class QuoteV2Controller extends Controller
         $destinationClass = 'col-lg-4';
         $origenClass = 'col-lg-4';
 
+        $origA['ocultarOrigA'] = 'hide';
+        $origA['ocultarorigComb'] = '';
+
+        $destA['ocultarDestA'] = 'hide';
+        $destA['ocultarDestComb'] = '';
+
         //dd($origen);
         
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass'));
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass','origA' ,'origD')); 
     }
 
     /**
@@ -2554,6 +2560,10 @@ class QuoteV2Controller extends Controller
         $chargesFreight = 'true';
         $containerType = $request->input('container_type');
         $carriersSelected = $request->input('carriers');
+        //Combos del distanciero para inlands
+        $destinationA = $request->input('destinationA');
+        $originA = $request->input('originA');
+        //resquest completo del form
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
@@ -2645,6 +2655,7 @@ class QuoteV2Controller extends Controller
         $destination_address = $request->input('destination_address');
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
+        $groupContainer = $validateEquipment['gpId'];
 
         // Historial de busqueda
         // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
@@ -2675,12 +2686,25 @@ class QuoteV2Controller extends Controller
             'origin_address' => $origin_address, 'destination_address' => $destination_address,
             'typeCurrency' => $typeCurrency,
         );
+        $destA = array();
+        $origA = array();
 
         if ($delivery_type == "2" || $delivery_type == "4") {
 
             $hideD = '';
             $dataDest = array();
-            $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode);
+        
+        
+            if($destinationA == null){ 
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer);
+                $destA['ocultarDestA'] = '';
+                $destA['ocultarDestComb'] = 'hide';
+
+            }else{ 
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer,$destinationA);
+                $destA['ocultarDestA'] = 'hide';
+                $destA['ocultarDestComb'] = '';
+            }
 
             if (!empty($dataDest)) {
                 $inlandDestiny = Collection::make($dataDest);
@@ -2691,7 +2715,17 @@ class QuoteV2Controller extends Controller
         if ($delivery_type == "3" || $delivery_type == "4") {
             $hideO = '';
             $dataOrig = array();
-            $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode);
+            if($originA == null ){ 
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer);
+                $origA['ocultarOrigA'] = '';
+                $origA['ocultarorigComb'] = 'hide';
+                
+            }else{ 
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer,$originA);
+                $origA['ocultarOrigA'] = 'hide';
+                $origA['ocultarorigComb'] = '';
+  
+            }
 
             if (!empty($dataOrig)) {
                 $inlandOrigin = Collection::make($dataOrig);
@@ -3364,7 +3398,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
         $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass','destA' ,'origA', 'destinationA' ,'originA')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
