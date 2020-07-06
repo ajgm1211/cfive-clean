@@ -853,6 +853,7 @@ Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
     Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');
     Route::get('delete/{inlandd_id}', ['uses' => 'InlandDistanceController@destroy', 'as' => 'delete-inlandd']);
     Route::get('find/{id}', ['uses' => 'InlandDistanceController@index', 'as' => 'inlandD.find']);
+    Route::get('getDistance/{id}', ['uses' => 'InlandDistanceController@getDistance', 'as' => 'inlandD.getDistance']);
 
 });
 Route::resource('inlandD', 'InlandDistanceController')->middleware('auth');
@@ -1143,13 +1144,10 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
 **                                   END API ENDPOINTS                                   **
 *****************************************************************************************/
 
-//Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
-
-/*
+/*Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 Route::get('api/inlands', 'InlandController@index');
-
-Route::post('api/v2/inlands/store', 'InlandController@store');
-Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
+Route::post('api/v2/inlands/store', 'InlandController@store');*/
+Route::get('api/inlands/{contract}/edit', 'InlandController@edit');
 
 /** End Contracts V2 routes **/
 /** Transit time **/

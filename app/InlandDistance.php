@@ -14,6 +14,6 @@ class InlandDistance extends Model
   }
   public function inlandLocation()
   {
-    return $this->belongsTo('App\InlandLocation');
+    return $this->belongsTo('App\InlandLocation','province_id');
   }
 }
