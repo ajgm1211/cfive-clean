@@ -8,6 +8,7 @@ use App\OauthClient;
 use App\User;
 use App\Rate;
 use App\Contract;
+use App\ContractLcl;
 use App\GlobalCharPort;
 use App\GlobalCharCountry;
 use App\LocalCharPort;
@@ -558,7 +559,7 @@ class ApiController extends Controller
     {
         try {
             return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
@@ -638,7 +639,7 @@ class ApiController extends Controller
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
@@ -650,7 +651,7 @@ class ApiController extends Controller
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
@@ -1052,16 +1053,21 @@ class ApiController extends Controller
         return response()->json($general);
     }
 
-    public function ratesCurrency($id, $typeCurrency)
+    public function processSearchByContract($code,  $api_company_id = 0)
     {
-        $rates = Currency::where('id', '=', $id)->get();
-        foreach ($rates as $rate) {
-            if ($typeCurrency == "USD") {
-                $rateC = $rate->rates;
+        try {
+            $contract = Contract::where('code', $code)->first();
+            $contract_lcl = ContractLcl::where('code', $code)->first();
+
+            if ($contract != null) {
+                return $contract->processSearchByIdFcl();
+            } elseif ($contract_lcl != null) {
+                return $contract_lcl->processSearchByIdLcl();
             } else {
-                $rateC = $rate->rates_eur;
+                return response()->json(['message' => 'The requested contract does not exist'], 200);
             }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
-        return $rateC;
     }
 }

@@ -175,7 +175,7 @@ class ApiIntegrationController extends Controller
         } catch (\Exception $e) {
             $setting->status = 0;
             $setting->save();
-            return response()->json(['error' => $e->getCode()]);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 
