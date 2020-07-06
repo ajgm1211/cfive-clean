@@ -91,7 +91,7 @@ class InlandController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => 'publish',
-            'inland_type_id' => $data['type'],
+            'inland_type_id' => '1',
             'gp_container_id' => $data['gp_container']
         ]);
 

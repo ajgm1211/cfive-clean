@@ -20,7 +20,8 @@ class CreateInlandDistancesTable extends Migration
       $table->string('distance');
       $table->integer('harbor_id')->unsigned();
       $table->integer('province_id')->unsigned()->nullable();
-      $table->foreign('harbor_id')->references('id')->on('harbors')->onDelete('cascade');   
+      $table->foreign('harbor_id')->references('id')->on('harbors')->onDelete('cascade');
+      $table->foreign('province_id')->references('id')->on('inland_locations')->onDelete('cascade');   
 
     });
   }
