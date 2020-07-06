@@ -159,7 +159,7 @@ class ImportationTransitTimeController extends Controller
                             $transitTime[0]->update();
                         }
                     } else {
-                        if((int)$time_val != 0){
+                        //if((int)$time_val != 0){
                             if($carri_Bol){
                                 $carrier_val = Carrier::find($carrier_val);
                                 $carrier_val = $carrier_val->name;
@@ -179,17 +179,21 @@ class ImportationTransitTimeController extends Controller
                                 $type_val = DestinationType::find($type_val);
                                 $type_val = $type_val->name;
                             }
+                        
+                            if(empty($time_val)){
+                                $time_val = 'Error';
+                            }
 
                             $transitTimeFail                    = new TransitTimeFail();
                             $transitTimeFail->origin            = $origin_val;
                             $transitTimeFail->destiny           = $destiny_val;
                             $transitTimeFail->carrier           = $carrier_val;
                             $transitTimeFail->destination_type  = $type_val;
-                            $transitTimeFail->transit_time      = (int)$time_val;
+                            $transitTimeFail->transit_time      = $time_val;
                             $transitTimeFail->via               = $via_val;
                             $transitTimeFail->save();
                         }
-                    }
+                    //}
                 }
                 $fila = $fila + 1;
             }
