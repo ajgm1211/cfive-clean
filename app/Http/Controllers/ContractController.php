@@ -15,9 +15,18 @@ use App\CalculationType;
 use App\TypeDestiny;
 use App\Country;
 use App\Company;
+use App\ContractLcl;
+use App\Http\Requests\UploadContractFile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
+use App\Jobs\NotificationsJob;
+use App\Jobs\ProcessContractFile;
+use App\NewContractRequest;
+use App\NewContractRequestLcl;
+use App\Notifications\N_general;
+use App\Notifications\SlackNotification;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
@@ -30,7 +39,7 @@ class ContractController extends Controller
      */
     public function index(Request $request)
     {
-    	return view('contract.index');
+        return view('contract.index');
     }
 
     /**
@@ -40,10 +49,10 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function list(Request $request)
-    {        
+    {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
-    	return ContractResource::collection($results);
+        return ContractResource::collection($results);
     }
 
 
@@ -54,7 +63,7 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function data(Request $request)
-    {        
+    {
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
@@ -64,7 +73,7 @@ class ContractController extends Controller
         $equipments = GroupContainer::get()->map(function ($equipment) {
             return $equipment->only(['id', 'name']);
         });
-        
+
         $directions = Direction::get()->map(function ($direction) {
             return $direction->only(['id', 'name']);
         });
@@ -82,7 +91,7 @@ class ContractController extends Controller
             return $country->only(['id', 'display_name', 'name']);
         });
 
-        $surcharges = Surcharge::where('company_user_id', '=' , $company_user_id)->get()->map(function ($surcharge) {
+        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name']);
         });
 
@@ -98,7 +107,7 @@ class ContractController extends Controller
             return $company->only(['id', 'business_name']);
         });
 
-        $users = User::whereHas('companyUser', function($q) use ($company_user_id) { 
+        $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($company) {
             return $company->only(['id', 'name']);
@@ -118,9 +127,10 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
-            'users');
+            'users'
+        );
 
-        return response()->json(['data' => $data ]);
+        return response()->json(['data' => $data]);
     }
 
     /**
@@ -222,7 +232,7 @@ class ContractController extends Controller
             'gp_container' => 'required',
             'carriers' => 'required'
         ]);
-        
+
         $contract->update([
             'name' => $data['name'],
             'direction_id' => $data['direction'],
@@ -234,7 +244,7 @@ class ContractController extends Controller
 
         $contract->ContractCarrierSync($data['carriers']);
 
-        return new ContractResource($contract);   
+        return new ContractResource($contract);
     }
 
     /**
@@ -250,11 +260,11 @@ class ContractController extends Controller
             'companies' => 'sometimes',
             'users' => 'sometimes'
         ]);
-        
+
         $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
         $contract->ContractUsersRestrictionsSync($data['users'] ?? []);
 
-        return new ContractResource($contract);   
+        return new ContractResource($contract);
     }
 
 
@@ -270,10 +280,10 @@ class ContractController extends Controller
         $data = $request->validate([
             'remarks' => 'sometimes'
         ]);
-        
-        $contract->update(['remarks' => @$data['remarks']]);
 
-        return new ContractResource($contract);   
+        $contract->update(['remarks' => @$data['remarks']]);
+        
+        return new ContractResource($contract);
     }
 
     /**
@@ -308,7 +318,7 @@ class ContractController extends Controller
      */
     public function duplicate(Contract $contract)
     {
-        $new_contract = $contract->duplicate(); 
+        $new_contract = $contract->duplicate();
 
         return new ContractResource($new_contract);
     }
@@ -320,7 +330,7 @@ class ContractController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
@@ -334,7 +344,7 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        $media->delete(); 
+        $media->delete();
 
         return response()->json(null, 204);
     }
@@ -346,7 +356,7 @@ class ContractController extends Controller
      */
     public function getFiles(Request $request, Contract $contract)
     {
-        $contract_media = $contract->getMedia('document')->map(function ($media, $key){
+        $contract_media = $contract->getMedia('document')->map(function ($media, $key) {
             return [
                 'id' => $media->id,
                 'name' => substr($media->name, 14),
@@ -354,9 +364,9 @@ class ContractController extends Controller
                 'type' => $media->mime_type,
                 'url' => $media->getFullUrl()
             ];
-        }); 
+        });
 
-        return response()->json(['data' => $contract_media ]);
+        return response()->json(['data' => $contract_media]);
     }
 
     /**
@@ -390,5 +400,200 @@ class ContractController extends Controller
             'url' => $media->getFullUrl()
         ]);
     }
+
+    /**
+     * Store contract from API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function processUploadRequest(UploadContractFile $request)
+    {
+        try {
+            $direction = null;
+            $api = true;
+            $user = User::findOrFail(Auth::user()->id);
+            $admins = User::isAdmin()->get();
+            $type = strtoupper($request->type);
+
+            $regex = "/^\d+(?:,\d+)*$/";
+            $carriers = str_replace(' ', '', $request->carriers);
+
+            if (!preg_match($regex, $carriers)) {
+                return response()->json([
+                    'message' => 'The format for carriers is not correct',
+                ], 400);
+            }
+
+            if ($request->direction) {
+                $direction = $this->replaceDirection($request->direction);
+            }
+
+            $Ncontract = $this->uploadContract($request, $carriers, $api, $direction, $type);
+            
+            //Dispatching jobs
+            if (env('APP_VIEW') == 'operaciones') {
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+            } else {
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+            }
+
+            //Notifications
+            $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
+
+            NotificationsJob::dispatch('Request-'.$type, [
+                'user' => $user,
+                'ncontract' => $Ncontract->toArray()
+            ]);
+
+            $Ncontract->NotifyNewRequest($admins);
+
+            return response()->json([
+                'message' => 'Contract created successfully!',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
    
+    /**
+     * process contract and create request from API
+     *
+     * @param  mixed $request
+     * @param  mixed $carriers
+     * @param  mixed $api
+     * @param  mixed $direction
+     * @param  mixed $type
+     * @return object
+     */
+    public function uploadContract($request, $carriers, $api, $direction, $type)
+    {
+        //Saving contract
+        $contract = $this->storeContractApi($request, $direction, $type);
+        
+        //Saving contracts and carriers in ContractCarriers
+        $contract->ContractCarrierSync($carriers, $api);
+
+        $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
+
+        //Uploading file to storage
+        $contract->StoreInMedia($request->file, $filename);
+        
+        //Saving request FCL
+        $Ncontract = $this->storeContractRequest($contract, $filename, $type);
+
+        //Saving request and carriers in RequestCarriers
+        $Ncontract->ContractRequestCarrierSync($carriers, $api);
+
+        return $Ncontract;
+    }
+    
+    /**
+     * store contract from API in DB 
+     *
+     * @param  mixed $request
+     * @param  mixed $direction
+     * @param  mixed $type
+     * @return object
+     */
+    public function storeContractApi($request, $direction, $type)
+    {
+        switch ($type) {
+            case 'FCL':
+                $contract = Contract::create([
+                    'name' => $request->reference,
+                    'company_user_id' => Auth::user()->company_user_id,
+                    'direction_id' => $direction,
+                    'validity' =>  $request->valid_from,
+                    'expire' => $request->valid_until,
+                    'type' => $type,
+                    'gp_container_id' => 1,
+                ]);
+                break;
+            case 'LCL':
+                $contract = ContractLcl::create([
+                    'name' => $request->reference,
+                    'company_user_id' => Auth::user()->company_user_id,
+                    'validation' => $request->valid_until,
+                    'direction_id' => $direction,
+                    'validity' =>  $request->valid_from,
+                    'expire' => $request->valid_until,
+                    'type' => $type,
+                ]);
+                break;
+        }
+
+        return $contract;
+    }
+    
+    /**
+     * store request of contract in DB
+     *
+     * @param  mixed $contract
+     * @param  mixed $filename
+     * @param  mixed $type
+     * @return object
+     */
+    public function storeContractRequest($contract, $filename, $type)
+    {
+        switch ($type) {
+            case 'FCL':
+                $request = NewContractRequest::create([
+                    'namecontract' => $contract->name,
+                    'validation' => $contract->expire,
+                    'direction_id' => $contract->direction_id,
+                    'company_user_id' => $contract->company_user_id,
+                    'namefile' => $filename,
+                    'user_id' => Auth::user()->id,
+                    'created' => date("Y-m-d H:i:s"),
+                    'username_load' => 'Not assigned',
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}}',
+                    'contract_id' => $contract->id,
+                ]);
+                break;
+            case 'LCL':
+                $request = NewContractRequestLcl::create([
+                    'namecontract' => $contract->name,
+                    'validation' => $contract->expire,
+                    'direction' => $contract->direction_id,
+                    'company_user_id' => $contract->company_user_id,
+                    'namefile' => $filename,
+                    'user_id' => Auth::user()->id,
+                    'created' => date("Y-m-d H:i:s"),
+                    'username_load' => 'Not assigned',
+                    'contract_id' => $contract->id,
+                ]);
+                break;
+        }
+
+        return $request;
+    }
+
+    /**
+     * Check direction string and replace by id
+     *
+     * @param string $direction
+     * @return integer
+     */
+    public function replaceDirection($direction)
+    {
+        switch ($direction) {
+            case 'import':
+                $direction = 1;
+                break;
+            case 'export':
+                $direction = 2;
+                break;
+            case 'both':
+                $direction = 3;
+                break;
+            default:
+                $direction = 3;
+                break;
+        }
+
+        return $direction;
+    }
 }

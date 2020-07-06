@@ -47,6 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('fcl/global/charges', 'ApiController@globalCharges');
         //Contracts
         Route::get('_contracts', 'ApiController@contracts');
+        Route::post('upload/contract', 'ContractController@processUploadRequest');
         //Companies
         Route::get('companies', 'CompanyController@index');
         Route::post('company', 'CompanyController@store');
@@ -73,5 +74,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('airports', 'ApiController@airports');
         //Rates
         Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
+        Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
     });
 });
