@@ -415,9 +415,14 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-
+            $contract = Contract::where('code', $request->reference)->first();
+            $contract_lcl = ContractLcl::where('code', $request->reference)->first();
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
+    
+            if ($contract != null || $contract_lcl != null) {
+                return response()->json(['message' => 'There is already a contract with the ID/Reference entered'], 200);
+            }
 
             if (!preg_match($regex, $carriers)) {
                 return response()->json([
@@ -470,13 +475,6 @@ class ContractController extends Controller
      */
     public function uploadContract($request, $carriers, $api, $direction, $type)
     {
-        $contract = Contract::where('code', $request->reference)->first();
-        $contract_lcl = ContractLcl::where('code', $request->reference)->first();
-
-        if ($contract != null || $contract_lcl != null) {
-            return response()->json(['message' => 'There is already a contract with the ID/Reference entered'], 200);
-        }
-
         //Saving contract
         $contract = $this->storeContractApi($request, $direction, $type);
 
