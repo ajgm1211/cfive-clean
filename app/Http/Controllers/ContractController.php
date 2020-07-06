@@ -140,18 +140,18 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function surcharge_data(Request $request, Contract $contract)
-    {        
+    {
         $rates = $contract->rates;
 
         $ori_countries = $rates->map(function ($rate) {
-                $country = ['id' => $rate->port_origin->country->id, 'display_name' => $rate->port_origin->country->name  ];
-                return $country;
-            })->unique('id')->values();
+            $country = ['id' => $rate->port_origin->country->id, 'display_name' => $rate->port_origin->country->name];
+            return $country;
+        })->unique('id')->values();
 
         $des_countries = $rates->map(function ($rate) {
-                $country = ['id' => $rate->port_destiny->country->id, 'display_name' => $rate->port_destiny->country->name  ];
-                return $country;
-            })->unique('id')->values();
+            $country = ['id' => $rate->port_destiny->country->id, 'display_name' => $rate->port_destiny->country->name];
+            return $country;
+        })->unique('id')->values();
 
         $ori_harbors = $rates->pluck('port_origin')->unique('id')->values();
         $des_harbors = $rates->pluck('port_destiny')->unique('id')->values();
@@ -163,7 +163,7 @@ class ContractController extends Controller
             'des_countries'
         );
 
-        return response()->json(['data' => $data ]);
+        return response()->json(['data' => $data]);
     }
 
 
@@ -282,7 +282,7 @@ class ContractController extends Controller
         ]);
 
         $contract->update(['remarks' => @$data['remarks']]);
-        
+
         return new ContractResource($contract);
     }
 
@@ -430,7 +430,7 @@ class ContractController extends Controller
             }
 
             $Ncontract = $this->uploadContract($request, $carriers, $api, $direction, $type);
-            
+
             //Dispatching jobs
             if (env('APP_VIEW') == 'operaciones') {
                 ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
@@ -441,7 +441,7 @@ class ContractController extends Controller
             //Notifications
             $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
 
-            NotificationsJob::dispatch('Request-'.$type, [
+            NotificationsJob::dispatch('Request-' . $type, [
                 'user' => $user,
                 'ncontract' => $Ncontract->toArray()
             ]);
@@ -457,7 +457,7 @@ class ContractController extends Controller
             ], 500);
         }
     }
-   
+
     /**
      * process contract and create request from API
      *
@@ -470,9 +470,16 @@ class ContractController extends Controller
      */
     public function uploadContract($request, $carriers, $api, $direction, $type)
     {
+        $contract = Contract::where('code', $request->reference)->first();
+        $contract_lcl = ContractLcl::where('code', $request->reference)->first();
+
+        if ($contract != null || $contract_lcl != null) {
+            return response()->json(['message' => 'There is already a contract with the ID/Reference entered'], 200);
+        }
+
         //Saving contract
         $contract = $this->storeContractApi($request, $direction, $type);
-        
+
         //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
@@ -480,7 +487,7 @@ class ContractController extends Controller
 
         //Uploading file to storage
         $contract->StoreInMedia($request->file, $filename);
-        
+
         //Saving request FCL
         $Ncontract = $this->storeContractRequest($contract, $filename, $type);
 
@@ -489,7 +496,7 @@ class ContractController extends Controller
 
         return $Ncontract;
     }
-    
+
     /**
      * store contract from API in DB 
      *
@@ -527,7 +534,7 @@ class ContractController extends Controller
 
         return $contract;
     }
-    
+
     /**
      * store request of contract in DB
      *
