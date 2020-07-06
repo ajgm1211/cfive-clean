@@ -27,7 +27,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     use UtilTrait;
     use \OwenIt\Auditing\Auditable;
     protected $table    = "contracts_lcl";
-    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code'];
 
     public function companyUser()
     {
