@@ -458,7 +458,7 @@ class ContractController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
+                'message' => 'Something went wrong on our side',
             ], 500);
         }
     }
