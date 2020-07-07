@@ -415,13 +415,11 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-            $code = $request->code;
-            $reference = $request->reference;
-            $contract = Contract::ConditionalWhen($code, $reference)->first();
-            $contract_lcl = ContractLcl::ConditionalWhen($code, $reference)->first();
+            $contract = Contract::where('code', $request->code)->first();
+            $contract_lcl = ContractLcl::where('code', $request->code)->first();
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
-            
+    
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code entered'], 400);
             }
