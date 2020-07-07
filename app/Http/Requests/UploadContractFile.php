@@ -38,7 +38,7 @@ class UploadContractFile extends FormRequest
             'valid_from' => 'required',
             'valid_until' => 'required',
             'carriers' => 'required',
-            'code' => 'required',
+            //'code' => 'required',
         ];
     }
 }
