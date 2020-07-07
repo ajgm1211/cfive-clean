@@ -515,7 +515,7 @@ class ContractController extends Controller
                     'expire' => $request->valid_until,
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $request->reference,
+                    'code' => $request->code,
                 ]);
                 break;
             case 'LCL':
@@ -527,7 +527,7 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
-                    'code' => $request->reference,
+                    'code' => $request->code,
                 ]);
                 break;
         }
