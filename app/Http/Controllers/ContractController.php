@@ -421,7 +421,7 @@ class ContractController extends Controller
             $carriers = str_replace(' ', '', $request->carriers);
     
             if ($contract != null || $contract_lcl != null) {
-                return response()->json(['message' => 'There is already a contract with the ID/Reference entered'], 400);
+                return response()->json(['message' => 'There is already a contract with the code entered'], 400);
             }
 
             if (!preg_match($regex, $carriers)) {
