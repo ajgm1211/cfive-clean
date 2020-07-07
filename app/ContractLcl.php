@@ -72,15 +72,6 @@ class ContractLcl extends Model implements HasMedia, Auditable
         return $this->belongsTo('App\Direction', 'direction_id');
     }
 
-    public function scopeConditionalWhen($q, $code, $reference)
-    {
-        return $q->when($code, function ($query, $code, $reference) {
-            return $query->where('code', $code);
-        }, function ($query, $reference) {
-            return $query->where('code', $reference);
-        });
-    }
-
     /**
      * ContractCarrierSync
      *
