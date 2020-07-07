@@ -30,11 +30,15 @@ class UploadContractFile extends FormRequest
                 'required',
                 Rule::in(['FCL', 'fcl', 'LCL', 'lcl']),
             ],
-            'direction' => 'required',
+            'direction' => [
+                'required',
+                Rule::in(['IMPORT', 'import', 'EXPORT', 'export','BOTH','both']),
+            ],
             'file' => 'required|file',
             'valid_from' => 'required',
             'valid_until' => 'required',
             'carriers' => 'required',
+            'code' => 'required',
         ];
     }
 }
