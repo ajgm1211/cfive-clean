@@ -507,12 +507,6 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
-        if($request->code){
-            $code = $request->code;
-        }else{
-            $code = $request->reference;
-        }
-
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -523,7 +517,7 @@ class ContractController extends Controller
                     'expire' => $request->valid_until,
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $code,
+                    'code' => $request->code,
                 ]);
                 break;
             case 'LCL':
@@ -535,7 +529,7 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
-                    'code' => $code,
+                    'code' => $request->code,
                 ]);
                 break;
         }
