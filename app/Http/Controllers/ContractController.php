@@ -415,8 +415,8 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-            $contract = Contract::where('code', $request->reference)->first();
-            $contract_lcl = ContractLcl::where('code', $request->reference)->first();
+            $contract = Contract::where('code', $request->code)->first();
+            $contract_lcl = ContractLcl::where('code', $request->code)->first();
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
     
