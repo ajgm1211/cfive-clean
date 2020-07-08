@@ -1161,3 +1161,11 @@ Route::prefix('MasterSurcharge')->group(function(){
      Route::resource('MasterSurcharge','MasterSurchargeController')->middleware(['role:administrator|data_entry']);
 });
 
+
+// Provinces
+Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
+    Route::get('add', 'ProvinceController@add')->name('prov.add');
+    Route::get('delete/{prov_id}', ['uses' => 'ProvinceController@destroy', 'as' => 'delete-prov']);
+});
+Route::resource('provinces', 'ProvinceController')->middleware('auth');
+
