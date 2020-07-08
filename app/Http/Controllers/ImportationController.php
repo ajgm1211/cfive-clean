@@ -55,6 +55,7 @@ use App\MyClass\Excell\MyReadFilter;
 use App\Jobs\ImportationRatesFclJob;
 use Spatie\MediaLibrary\MediaStream;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\Models\Media;
 use App\Jobs\ReprocessSurchargersJob;
 use App\MyClass\Excell\ChunkReadFilter;
@@ -828,7 +829,7 @@ class ImportationController extends Controller
                 }
                 return redirect()->route('redirect.Processed.Information',$contract_id);
             } else {
-                Log::error('Json-Account data load error. Reload the page and try again please."');
+                Log::error('Json-Account data load error. Reload the page and try again please. '.Auth::user()->email);
                 $request->session()->flash('message.nivel', 'error');
                 $request->session()->flash('message.content', 'Json-Account data load error. Reload the page and try again please');
                 return back();
@@ -3047,7 +3048,7 @@ class ImportationController extends Controller
 
         $account = AccountFcl::find(145);
         $json_account = json_decode($account->data,true);
-        dd($json_account,isset($json_account['final_columns']));
+        dd($json_account,isset($json_account['final_columns']),Auth::user()->email);
     }
 
 }
