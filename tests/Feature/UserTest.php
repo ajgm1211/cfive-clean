@@ -1,97 +1,41 @@
 <?php
 
-namespace Tests\Feature;
+// namespace Tests\Feature;
 
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+// use App\User;
+// use Tests\TestCase;
+// use Illuminate\Support\Facades\Auth;
+// use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Illuminate\Foundation\Testing\WithoutMiddleware;
+// use Illuminate\Auth\AuthenticationException;
 
-class UserTest extends TestCase
-{
+// class UserTest extends TestCase
+// {
 
-    use RefreshDataBase;
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
 
-    public function testAddUser()
-    {
-        $user = factory(User::class)->create();
+//     /**
+//      * A basic test example.
+//      *
+//      * @return void
+//      */
+//     public function testExample()
+//     {
+//         $this->assertTrue(true);
+//     }
 
-        $this->actingAs($user);
+//     public function testUserCanLogin()
+//     {
 
-        $this->visit('/users/add')
-            ->post(route('users.store'), $user->toArray());
+//         $user = factory(User::class)->create();
 
-        $this->seeInDatabase('users', $user->toArray());
-    }
+//         $response = $this->actingAs($user)->get('/login');
 
-    public function testEditUser()
-    {
-        $this->withoutExceptionHandling();
+//         $response->assertRedirect('/v2/quotes/search');
+ 
+//     }
 
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
 
-        $this->put(route('users.update', $user), $user->toArray());
 
-        $this->seeInDatabase('users', $user->toArray());
-    }
-
-    public function testDeleteUser()
-    {
-        $this->withoutExceptionHandling();
-
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
-
-        $this->delete(route('users.destroy', $user->id), $user->toArray());
-
-        $this->dontSeeInDatabase('users' ,$user->toArray());
-    }
-
-    public function testUserCanLogin()
-    {
-        $user = factory(User::class)->create(['verified' => 1]);
-
-        $data = [
-            '_token' => $user->remember_token,
-            'email' => $user->email,
-            'password' => $user->password,
-        ];
-
-        $this->post(route('login'), $data);
-        $this->assertResponseStatus(302);
-    }
-
-    public function testUserCantLogin()
-    {
-        $user = factory(User::class)->create();
-
-        $this->visit('/')
-            ->see('login')
-            ->type($user->email, 'email')
-            ->type($user->password, 'password')
-            ->press('Login')
-            ->see('These credentials do not match our records.');
-
-    }
-
-    public function testActivateUser()
-    {
-        $user = factory(User::class)->create();
-        $this->actingAs($user);
-        $this->put(route('users.activate', $user->id), $user->toArray());
-        $this->notSeeInDatabase('users', $user->toArray());
-    }
-}
+//     }
