@@ -415,14 +415,24 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-            $contract = Contract::where('code', $request->code)->first();
-            $contract_lcl = ContractLcl::where('code', $request->code)->first();
-            $regex = "/^\d+(?:,\d+)*$/";
-            $carriers = str_replace(' ', '', $request->carriers);
+
+            if($request->code){
+                $query =  Contract::where('code', $request->code);
+                $query_lcl =  ContractLcl::where('code', $request->code);
+            }else{
+                $query = Contract::where('code', $request->reference);
+                $query_lcl = ContractLcl::where('code', $request->reference);
+            }
+
+            $contract = $query->first();
+            $contract_lcl = $query_lcl->first();
     
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code entered'], 400);
             }
+
+            $regex = "/^\d+(?:,\d+)*$/";
+            $carriers = str_replace(' ', '', $request->carriers);
 
             if (!preg_match($regex, $carriers)) {
                 return response()->json([
@@ -505,6 +515,13 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
+
+        if($request->code){
+            $code = $request->code;
+        }else{
+            $code = $request->reference;
+        }
+
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -515,7 +532,7 @@ class ContractController extends Controller
                     'expire' => $request->valid_until,
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $request->code,
+                    'code' => $code,
                 ]);
                 break;
             case 'LCL':
@@ -527,7 +544,7 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
-                    'code' => $request->code,
+                    'code' => $code,
                 ]);
                 break;
         }
