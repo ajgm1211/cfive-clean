@@ -11,8 +11,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable implements Auditable
-{
-
+{   
     use HasApiTokens, Notifiable;
     use HasRoles;
     use \OwenIt\Auditing\Auditable;
