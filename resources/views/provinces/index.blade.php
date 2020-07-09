@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Inland Distance')
+@section('title', 'Provinces')
 @section('content')
 
 <div class="m-content">
@@ -8,7 +8,7 @@
       <div class="m-portlet__head-caption">
         <div class="m-portlet__head-title">
           <h3 class="m-portlet__head-text">
-            Inland Distance 
+            Provinces
           </h3>
         </div>
       </div>
@@ -35,7 +35,7 @@
           <li class="nav-item m-tabs__item">
             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
               <i class="la la-cog"></i>
-              Inland Distance 
+             Provinces 
             </a>
           </li>
 
@@ -59,27 +59,13 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="form-group m-form__group row align-items-center">
-                  <div class="col-md-4">
-                    <div class="m-input-icon m-input-icon--left">
-                        <h5 >
-															Harbor 
-														</h5>
-                      <h5 class="m--font-primary">
-															 {{ $harbor->name }}
-														</h5>
-                    </div>
-                  </div>
-                </div>
-
               </div>
               <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',{{  $harbor->id }})">
+                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                   <span>
                     <i class="la la-plus"></i>
                     <span>
-                      Add Distance
+                      Add Province
                     </span>
                   </span>
                 </button>
@@ -90,23 +76,15 @@
           <table class="m-datatable" id="html_table" width="100%">
             <thead>
               <tr>
+
                 <th title="Field #1">
-                  ID
-                </th>
-                <th title="Field #1">
-                  Zip Code
+                  Name
                 </th>
                 <th title="Field #2">
-                  Address
+                  Region
                 </th>
                 <th title="Field #2">
-                  Province/State
-                </th>
-                <th title="Field #2">
-                  Display Name
-                </th>
-                <th title="Field #6">
-                  Distance
+                  Country
                 </th>
                 <th title="Field #6">
                   Options
@@ -117,18 +95,15 @@
             <tbody>
               @foreach ($data as $arr)
               <tr>
-                <td>{{ $arr->id }}</td>
-                <td>{{ $arr->zip }}</td>
-                <td>{{ $arr->address }}</td>
-                <td>{{ @$arr->province->name }}</td>
-                <td>{{ $arr->display_name }} </td>
-                <td>{{ $arr->distance }}</td>
+                <td>{{ $arr->name }}</td>
+                <td>{{ $arr->region }}</td>
+                <td>{{ $arr->country->name}}</td>
                 <td>
                   <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                     <i class="la la-edit"></i>
                   </a>
 
-                  <a href="#"  data-inlandd-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill delete-inlandd" title="Delete" >
+                  <a href="#"  data-prov-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill delete-province" title="Delete" >
                     <i class="la la-eraser"></i>
                   </a>
 
@@ -142,7 +117,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">
-                    Inland Distance
+         Provinces
                   </h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">
@@ -181,7 +156,7 @@
   function AbrirModal(action,id){
 
     if(action == "edit"){
-      var url = '{{ route("inlandD.edit", ":id") }}';
+      var url = '{{ route("provinces.edit", ":id") }}';
       url = url.replace(':id', id);
 
 
@@ -190,14 +165,21 @@
       });
     }
     if(action == "add"){
-      var url = '{{ route("inlandD.add", ":id") }}';
-      url = url.replace(':id', id);
+      var url = 'provinces/add';
       $('.modal-body').load(url,function(){
         $('#m_modal_6').modal({show:true});
       });
 
     }
+    if(action == "delete"){
+      var url = '{{ route("surcharges.msg", ":id") }}';
+      url = url.replace(':id', id);
 
+      $('.modal-body').load(url,function(){
+        $('#m_modal_6').modal({show:true});
+      });
+
+    }
   }
 
 
