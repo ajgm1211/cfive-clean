@@ -231,6 +231,15 @@
                                             </a>
                                         </li>
 
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('provinces.index')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-business"></i>
+                                                <span class="m-menu__link-text">
+                                                    Provinces
+                                                </span>
+                                            </a>
+                                        </li>
+
                             <!-- <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('inlandL.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-truck"></i>
