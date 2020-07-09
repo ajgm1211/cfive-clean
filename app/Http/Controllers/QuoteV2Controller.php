@@ -28,6 +28,7 @@ use App\GlobalCharge;
 use App\GlobalChargeLcl;
 use App\GroupContainer;
 use App\Harbor;
+use App\Http\Requests\SearchRate as SearchRateForm;
 use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
@@ -52,8 +53,9 @@ use App\Schedule;
 use App\ScheduleType;
 use App\SearchPort;
 use App\SearchRate;
-use App\Surcharge;
+use App\RemarkCountry;
 //LCL
+use App\Surcharge;
 use App\TermAndConditionV2;
 use App\TermsPort;
 use App\User;
@@ -69,7 +71,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
-use App\Http\Requests\SearchRate as SearchRateForm;
 
 class QuoteV2Controller extends Controller
 {
@@ -222,7 +223,7 @@ class QuoteV2Controller extends Controller
             ->editColumn('created', function ($colletion) {
                 return [
                     'display' => e($colletion['created']->format('M d, Y H:i')),
-                    'timestamp' => $colletion['created']->timestamp
+                    'timestamp' => $colletion['created']->timestamp,
                 ];
             })
             ->addColumn('action', function ($colletion) {
@@ -344,10 +345,10 @@ class QuoteV2Controller extends Controller
         }])->with('incoterm')->findOrFail($id);
 
         /*$quote = QuoteV2::ConditionalWhen($type, $status, $integration)
-            ->AuthUserCompany($company_user_id)
-            ->AutomaticRate()->UserRelation()->CompanyRelation()
-            ->ContactRelation()->PriceRelation()->SaletermRelation()
-            ->with('incoterm')->findOrFail($id);*/
+        ->AuthUserCompany($company_user_id)
+        ->AutomaticRate()->UserRelation()->CompanyRelation()
+        ->ContactRelation()->PriceRelation()->SaletermRelation()
+        ->with('incoterm')->findOrFail($id);*/
 
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
         $inlands = AutomaticInland::where('quote_id', $quote->id)->get();
@@ -1364,7 +1365,7 @@ class QuoteV2Controller extends Controller
                 }
 
                 //Calculando el total de tarifas+recargos
-                ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code} + ${$total_markup . $container->code};
+                ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code}+${$total_markup . $container->code};
 
                 //Sumando totales de freight
                 if ($value->type_id == 3) {
@@ -1466,81 +1467,117 @@ class QuoteV2Controller extends Controller
         return $terms;
     }
 
-    public function remarksCondition($origin_port, $destiny_port, $carrier, $mode)
+    public function remarksCondition($origin, $destiny, $carrier, $mode, $type = 'port')
     {
 
-        // TERMS AND CONDITIONS 
+        // TERMS AND CONDITIONS
         $carrier_all = 26;
         $port_all = harbor::where('name', 'ALL')->first();
-        $rem_port_orig = array($origin_port->id);
-        $rem_port_dest = array($destiny_port->id);
+        $country_all = Country::where('name', 'ALL')->first();
+        $rem_orig = array($origin->id);
+        $rem_dest = array($destiny->id);
         $rem_carrier_id[] = $carrier->id;
+
         array_push($rem_carrier_id, $carrier_all);
-
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
-
         $language_id = $company->companyUser->pdf_language;
 
         if ($language_id == '') {
             $language_id = 1;
         }
 
-        $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+        if ($type == 'port') {
 
+            $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
 
-        $remarks_origin = RemarkHarbor::wherein('port_id', $rem_port_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+            $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
 
-        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_port_dest)->with('remark')->whereHas('remark', function ($q)  use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+            $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+        }
+        if ($type == 'country') {
+
+            $remarks_all = RemarkCountry::where('country_id', $country_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+            $remarks_origin = RemarkCountry::wherein('country_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+            $remarks_destination = RemarkCountry::wherein('country_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+        }
 
         $remarkA = '';
         $remarkO = '';
         $remarkD = '';
         $rems = '';
 
-        if ($remarks_all->count() > 0) $remarkA .= $origin_port->name . " / " . $carrier->name . "<br>";
+        if ($remarks_all->count() > 0) {
+            $remarkA .= $origin->name . " / " . $destiny->name . " / " . $carrier->name . "<br>";
+        }
 
         foreach ($remarks_all as $remAll) {
             $rems .= "<br>";
             //$remarkA .= $origin_port->name . " / " . $carrier->name;
-            if ($mode == 1)
-                $remarkA .=  "<br>" . $remAll->remark->export;
-            else
-                $remarkA .=  "<br>" . $remAll->remark->import;
+            if ($mode == 1) {
+                $remarkA .= "<br>" . $remAll->remark->export;
+            } else {
+                $remarkA .= "<br>" . $remAll->remark->import;
+            }
+
         }
 
-        if ($remarks_origin->count() > 0) $remarkA .= $origin_port->name . " / " . $carrier->name;
+        if ($remarks_origin->count() > 0) {
+            $remarkO .= $origin->name . " / " . $carrier->name;
+        }
 
         foreach ($remarks_origin as $remOrig) {
 
             $rems .= "<br>";
 
-            if ($mode == 1)
-                $remarkO .=  "<br>" . $remOrig->remark->export;
-            else
-                $remarkO .=  "<br>" . $remOrig->remark->import;
+            if ($mode == 1) {
+                $remarkO .= "<br>" . $remOrig->remark->export;
+            } else {
+                $remarkO .= "<br>" . $remOrig->remark->import;
+            }
+
         }
 
-        if ($remarks_destination->count() > 0) $remarkA .= $origin_port->name . " / " . $carrier->name;
+        if ($remarks_destination->count() > 0) {
+            $remarkD .= $destiny->name . " / " . $carrier->name;
+        }
 
         foreach ($remarks_destination as $remDest) {
             $rems .= "<br>";
 
-            if ($mode == 1)
-                $remarkD .=  "<br>" . $remDest->remark->export;
-            else
-                $remarkD .=  "<br>" . $remDest->remark->import;
+            if ($mode == 1) {
+                $remarkD .= "<br>" . $remDest->remark->export;
+            } else {
+                $remarkD .= "<br>" . $remDest->remark->import;
+            }
+
         }
 
         $rems = $remarkO . " " . $remarkD . " " . $remarkA;
@@ -1548,20 +1585,24 @@ class QuoteV2Controller extends Controller
         return $rems;
     }
 
-    public function saveRemarks($rateId, $orig, $dest, $carrier, $modo)
+    public function saveRemarks($rateId, $orig, $dest, $carrier, $modo, $type = 'port')
     {
 
         $carrier_all = 26;
         $port_all = harbor::where('name', 'ALL')->first();
+        $country_all = Country::where('name', 'ALL')->first();
         $nameOrig = $orig->name;
-        $rem_port_orig[] = $orig->id;
+        $rem_orig[] = $orig->id;
         $nameDest = $dest->name;
-        $rem_port_dest[] = $dest->id;
+        $rem_dest[] = $dest->id;
         $rem_carrier_id[] = $carrier;
+       
+       
         array_push($rem_carrier_id, $carrier_all);
-
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
         $language_id = $company->companyUser->pdf_language;
+
+        if ($type == 'port') {
 
         $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
@@ -1569,17 +1610,40 @@ class QuoteV2Controller extends Controller
             });
         })->get();
 
-        $remarks_origin = RemarkHarbor::wherein('port_id', $rem_port_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+        $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                 $b->wherein('carrier_id', $rem_carrier_id);
             });
         })->get();
 
-        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_port_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                 $b->wherein('carrier_id', $rem_carrier_id);
             });
         })->get();
+        }
+
+        if ($type == 'country') {
+
+            $remarks_all = RemarkCountry::where('country_id', $country_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+            $remarks_origin = RemarkCountry::wherein('country_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+            $remarks_destination = RemarkCountry::wherein('country_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
+
+        }
 
         $remarks_english = "";
         $remarks_spanish = "";
@@ -2006,7 +2070,7 @@ class QuoteV2Controller extends Controller
                     if (isset($info_D->transit_time) && $info_D->transit_time != '') {
                         $transitTime = $info_D->transit_time;
                         $viaT = $info_D->via;
-                    }else{
+                    } else {
                         $transitTime = null;
                         $viaT = null;
                     }
@@ -2109,10 +2173,14 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             $inlandOrig->save();
+
+
                         }
                     }
 
                     $this->saveRemarks($rate->id, $info_D->port_origin, $info_D->port_destiny, $info_D->carrier->id, $form->mode);
+                    //Por pais 
+                    $this->saveRemarks($rate->id, $info_D->port_origin->country, $info_D->port_destiny->country, $info_D->carrier->id, $form->mode,'country');
                 }
                 //CHARGES ORIGIN
                 foreach ($info_D->localorigin as $localorigin) {
@@ -2376,7 +2444,7 @@ class QuoteV2Controller extends Controller
 
         $notification = array(
             'toastr' => 'Inland saved successfully!',
-            'alert-type' => 'success'
+            'alert-type' => 'success',
         );
 
         return back()->with($notification);
@@ -2439,7 +2507,7 @@ class QuoteV2Controller extends Controller
 
         $notification = array(
             'toastr' => 'Inland updated successfully!',
-            'alert-type' => 'success'
+            'alert-type' => 'success',
         );
 
         return back()->with($notification);
@@ -2481,7 +2549,6 @@ class QuoteV2Controller extends Controller
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $containers = Container::get();
-
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2531,8 +2598,8 @@ class QuoteV2Controller extends Controller
         $destA['ocultarDestComb'] = '';
 
         //dd($origen);
-        
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass','origA' ,'origD')); 
+
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'origD'));
     }
 
     /**
@@ -2622,17 +2689,15 @@ class QuoteV2Controller extends Controller
 
         $equipment = $request->input('equipment');
 
-        if($request->input('equipment') != null){ 
-            $carriers =$this->divideCarriers($request->input('carriers'));
-        }else{
+        if ($request->input('equipment') != null) {
+            $carriers = $this->divideCarriers($request->input('carriers'));
+        } else {
 
-            $carriers =  Carrier::all()->pluck('id')->toArray();
-            $carriers =$this->divideCarriers($carriers);
+            $carriers = Carrier::all()->pluck('id')->toArray();
+            $carriers = $this->divideCarriers($carriers);
         }
 
-
-
-      //  dd($carriers);
+        //  dd($carriers);
 
         //alla
         //dd($equipment);
@@ -2641,8 +2706,6 @@ class QuoteV2Controller extends Controller
         $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
 
         $arregloCarrier = $carriers['carriers'];
-
-
 
         $equipmentFilter = array();
         $delivery_type = $request->input('delivery_type');
@@ -2693,15 +2756,14 @@ class QuoteV2Controller extends Controller
 
             $hideD = '';
             $dataDest = array();
-        
-        
-            if($destinationA == null){ 
-                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer);
+
+            if ($destinationA == null) {
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode, $groupContainer);
                 $destA['ocultarDestA'] = '';
                 $destA['ocultarDestComb'] = 'hide';
 
-            }else{ 
-                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer,$destinationA);
+            } else {
+                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode, $groupContainer, $destinationA);
                 $destA['ocultarDestA'] = 'hide';
                 $destA['ocultarDestComb'] = '';
             }
@@ -2715,16 +2777,16 @@ class QuoteV2Controller extends Controller
         if ($delivery_type == "3" || $delivery_type == "4") {
             $hideO = '';
             $dataOrig = array();
-            if($originA == null ){ 
-                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer);
+            if ($originA == null) {
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode, $groupContainer);
                 $origA['ocultarOrigA'] = '';
                 $origA['ocultarorigComb'] = 'hide';
-                
-            }else{ 
-                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer,$originA);
+
+            } else {
+                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode, $groupContainer, $originA);
                 $origA['ocultarOrigA'] = 'hide';
                 $origA['ocultarorigComb'] = '';
-  
+
             }
 
             if (!empty($dataOrig)) {
@@ -2750,9 +2812,9 @@ class QuoteV2Controller extends Controller
                     })->orDoesntHave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
-                    // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->                    
+                    // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
                 });
             } else {
                 $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
@@ -2761,17 +2823,14 @@ class QuoteV2Controller extends Controller
                     $q->doesnthave('contract_company_restriction');
                 })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
                     $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);   
+                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                     })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             }
 
             // ************************* CONSULTA RATE API ******************************
 
-
             if ($chargesAPI != null) {
-
-
 
                 $client = new Client();
 
@@ -2794,48 +2853,48 @@ class QuoteV2Controller extends Controller
                 });
             }
 
-           /* if ($chargesAPI_M != null) {
+            /* if ($chargesAPI_M != null) {
 
-                $client = new Client();
+            $client = new Client();
 
-                foreach ($origin_port as $orig) {
-                    foreach ($destiny_port as $dest) {
+            foreach ($origin_port as $orig) {
+            foreach ($destiny_port as $dest) {
 
-                        // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
-                        $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
+            // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
+            $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+            $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
-                        try {
-                            $response = $client->request('GET', $url);
-                        } catch (\Exception $e) {
-                        }
-                    }
-                }
+            try {
+            $response = $client->request('GET', $url);
+            } catch (\Exception $e) {
+            }
+            }
+            }
 
-                $arreglo3 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-                    $q->where('validity', '>=', $dateSince)->where('number', 'MAERSK');
-                });
+            $arreglo3 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+            $q->where('validity', '>=', $dateSince)->where('number', 'MAERSK');
+            });
             }*/
 
-         /*   if ($chargesAPI_SF != null) {
+            /*   if ($chargesAPI_SF != null) {
 
-                $client = new Client();
-                foreach ($origin_port as $orig) {
-                    foreach ($destiny_port as $dest) {
+            $client = new Client();
+            foreach ($origin_port as $orig) {
+            foreach ($destiny_port as $dest) {
 
-                        $url = env('SAFMARINE_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
+            $url = env('SAFMARINE_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+            $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
 
-                        try {
-                            $response = $client->request('GET', $url);
-                        } catch (\Exception $e) {
-                        }
-                    }
-                }
+            try {
+            $response = $client->request('GET', $url);
+            } catch (\Exception $e) {
+            }
+            }
+            }
 
-                $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-                    $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
-                });
+            $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+            $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
+            });
             }*/
 
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
@@ -2849,17 +2908,17 @@ class QuoteV2Controller extends Controller
                 $arreglo = $arreglo->merge($arreglo2);
             }
 
-        /*    if ($chargesAPI_M != null) {
-                $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
-                $arreglo3 = $arreglo3->get();
-                $arreglo = $arreglo->merge($arreglo3);
+            /*    if ($chargesAPI_M != null) {
+            $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
+            $arreglo3 = $arreglo3->get();
+            $arreglo = $arreglo->merge($arreglo3);
             }
 
             if ($chargesAPI_SF != null) {
-                $arreglo4 = $this->filtrarRate($arreglo4, $equipment, $validateEquipment['gpId'], $containers);
-                $arreglo4 = $arreglo4->get();
+            $arreglo4 = $this->filtrarRate($arreglo4, $equipment, $validateEquipment['gpId'], $containers);
+            $arreglo4 = $arreglo4->get();
 
-                $arreglo = $arreglo->merge($arreglo4);
+            $arreglo = $arreglo->merge($arreglo4);
             }*/
 
             $formulario = $request;
@@ -3255,10 +3314,9 @@ class QuoteV2Controller extends Controller
                 $array = array_merge($array, $arregloRateSave);
                 $collectionRate->push($array);
 
-                // SCHEDULE 
+                // SCHEDULE
 
                 $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
-
 
                 $data->setAttribute('via', $transit_time['via']);
                 $data->setAttribute('transit_time', $transit_time['transit_time']);
@@ -3273,6 +3331,9 @@ class QuoteV2Controller extends Controller
 
                 $remarksGeneral = "";
                 $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
+                //Remark Por pais
+                $remarksGeneral .= $this->remarksCondition($data->port_origin->country, $data->port_destiny->country, $data->carrier, $typeMode,'country');
+
                 $data->setAttribute('remarks', $remarks);
                 $data->setAttribute('remarksG', $remarksGeneral);
 
@@ -3335,14 +3396,14 @@ class QuoteV2Controller extends Controller
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                     $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
-                    $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
+                    $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] / $rateTot;
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
                 //Contrato Futuro
-                $contratoFuturo = $this->contratoFuturo($data->contract->validity,$dateSince ,$data->contract->expire,$dateUntil);
+                $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
 
                 $data->setAttribute('contratoFuturo', $contratoFuturo);
                 // INLANDS
@@ -3360,36 +3421,35 @@ class QuoteV2Controller extends Controller
             }
 
             // Ordenar por Monto Total  de contenedor de menor a mayor
-            
+
             foreach ($containers as $cont) {
                 $name_tot = 'totalT' . $cont->code;
 
                 if (in_array($cont->id, $equipmentFilter)) {
                     $arreglo = $arreglo->sortBy($name_tot);
-                break;
-                } 
+                    break;
+                }
 
             }
-          
+
         } // fin validate equipment
 
-
         // Clases Origin y Destination Delivery type FCL
-        if( $delivery_type == 1 ) {
+        if ($delivery_type == 1) {
             $destinationClass = 'col-lg-4';
             $origenClass = 'col-lg-4';
         }
 
-        if( $delivery_type == 2 || $delivery_type == 3 ) {
+        if ($delivery_type == 2 || $delivery_type == 3) {
             $destinationClass = 'col-lg-2';
             $origenClass = 'col-lg-4';
         }
 
-        if( $delivery_type == 4 ) {
+        if ($delivery_type == 4) {
             $destinationClass = 'col-lg-2';
             $origenClass = 'col-lg-2';
         }
-        
+
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
         $chargeDestination = ($chargesDestination != null) ? true : false;
         $chargeFreight = ($chargesFreight != null) ? true : false;
@@ -3398,7 +3458,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
         $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass','destA' ,'origA', 'destinationA' ,'originA')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
@@ -3613,7 +3673,7 @@ class QuoteV2Controller extends Controller
                 $montoMarkup = 0;
                 $totalMarkup = 0;
 
-                }*/ else {
+                }*/else {
                     $monto = 0;
                     $montoMarkup = 0;
                     $markup = 0;
@@ -3663,14 +3723,14 @@ class QuoteV2Controller extends Controller
                 } else {
                     $mode_search = true;
                     $Ncontract->load('companyuser');
-                    $data       = json_decode($Ncontract->data, true);
-                    $time       = new \DateTime();
-                    $now        = $time->format('d-m-y');
-                    $mediaItem  = $Ncontract->getFirstMedia('document');
-                    $extObj     = new \SplFileInfo($mediaItem->file_name);
-                    $ext        = $extObj->getExtension();
-                    $name       = $Ncontract->id . '-' . $Ncontract->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
-                    $descarga   = Storage::disk('s3_upload')->url('Request/FCL/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $data = json_decode($Ncontract->data, true);
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $mediaItem = $Ncontract->getFirstMedia('document');
+                    $extObj = new \SplFileInfo($mediaItem->file_name);
+                    $ext = $extObj->getExtension();
+                    $name = $Ncontract->id . '-' . $Ncontract->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
+                    $descarga = Storage::disk('s3_upload')->url('Request/FCL/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
                     $success = true;
                 }
             } else {
@@ -3681,7 +3741,6 @@ class QuoteV2Controller extends Controller
                 $ext = $extObj->getExtension();
                 $name = $Ncontract->id . '-' . $now . '-FLC.' . $ext;
             }
-
 
             if ($mode_search == false) {
                 if (Storage::disk('s3_upload')->exists('Request/FCL/' . $Ncontract->namefile, $name)) {
@@ -4156,7 +4215,7 @@ class QuoteV2Controller extends Controller
             array_push($destiny_country, 250);
 
             //Calculation type
-            $arrayBlHblShip = array('1', '2', '3', '16','18'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
+            $arrayBlHblShip = array('1', '2', '3', '16', '18'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
             $arraytonM3 = array('4', '11', '17'); //  calculation type 4 = Per ton/m3
             $arraytonCompli = array('6', '7', '12', '13'); //  calculation type 4 = Per ton/m3
             $arrayPerTon = array('5', '10'); //  calculation type 5 = Per  TON
@@ -6039,12 +6098,9 @@ class QuoteV2Controller extends Controller
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
         $chargeAPI_SF = ($chargesAPI_M != null) ? true : false;
 
-
-
         $hideO = 'hide';
         $hideD = 'hide';
         $form = $request->all();
-
 
         $group_contain = GroupContainer::pluck('name', 'id');
         $carrierMan = Carrier::pluck('name', 'id');
@@ -6054,16 +6110,13 @@ class QuoteV2Controller extends Controller
         $containers = Container::get();
         $validateEquipment = $this->validateEquipment($form['equipment'], $containers);
         $containerType = $validateEquipment['gpId'];
-        $quoteType =  $request->input('type');
-
-
-
+        $quoteType = $request->input('type');
 
         //dd($form);
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name', 'id');
 
-        return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'chargeAPI_SF','contain','group_contain','carrierMan','carriersSelected','allCarrier','containerType','quoteType'));
+        return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'chargeAPI_SF', 'contain', 'group_contain', 'carrierMan', 'carriersSelected', 'allCarrier', 'containerType', 'quoteType'));
     }
 
     /**
