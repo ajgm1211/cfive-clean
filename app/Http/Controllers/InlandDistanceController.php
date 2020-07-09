@@ -170,4 +170,21 @@ class InlandDistanceController extends Controller
       return response()->json(['message' => $e]);
     }  
   }
+
+  /*public function updateInfo()
+  {
+  
+      $inlandD = InlandDistance::all();
+      foreach($inlandD as $ind){
+
+        $province= Province::where('id',$ind->province_id)->first();
+       
+        $ind->display_name = $ind->zip  . "," . $ind->address . "," . $province->name ;
+
+        $ind->save();
+
+
+      }
+
+  }*/
 }

@@ -1169,3 +1169,4 @@ Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
 });
 Route::resource('provinces', 'ProvinceController')->middleware('auth');
 
+//Route::get('upd', 'InlandDistanceController@updateInfo')->name('upd.upd');
