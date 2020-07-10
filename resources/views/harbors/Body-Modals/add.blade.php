@@ -69,6 +69,20 @@
 	$('.m-select2-general').select2({
 
 	});
+    
+       function agregarcampo(){
+		var newtr = '<div class="col-lg-4 ">';
+		newtr = newtr + '<label class="form-control-label">Variation:</label>';
+		newtr = newtr + '<input type="text" name="variation[]" class="form-control" required="required">';
+		newtr = newtr + '<a href="#" class="borrado"><span class="la la-remove"></span></a>';
+		newtr = newtr + '</div>';
+		$('#variatiogroup').append(newtr);
+	}
+
+	$(document).on('click','.borrado', function(e){
+		var elemento = $(this);
+		$(elemento).closest('div').remove();
+	});
 
 	$.ajaxSetup({
 		headers: {
