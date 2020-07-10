@@ -22,7 +22,11 @@ class SurchargesController extends Controller
     public function index()
     {
 
-        $data = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->with('companyUser')->get();
+        if(Auth::user()->hasRole(['administrator','data_entry'])){
+            $data = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->orWhere('company_user_id',null)->with('companyUser')->get();
+        } else {
+            $data = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->with('companyUser')->get();
+        }
         $saleterms = SaleTerm::where('company_user_id','=',Auth::user()->company_user_id)->get();
         return view('surcharges/index', ['surcharges' => $data,'saleterms'=>$saleterms]);
     }
