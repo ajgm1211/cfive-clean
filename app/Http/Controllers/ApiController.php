@@ -1053,16 +1053,18 @@ class ApiController extends Controller
         return response()->json($general);
     }
 
-    public function processSearchByContract($code,  $api_company_id = 0)
+    public function processSearchByContract(Request $request, $code)
     {
         try {
             $contract = Contract::where('code', $code)->first();
             $contract_lcl = ContractLcl::where('code', $code)->first();
 
+            $response = $request->response;
+
             if ($contract != null) {
-                return $contract->processSearchByIdFcl();
+                return $contract->processSearchByIdFcl($response);
             } elseif ($contract_lcl != null) {
-                return $contract_lcl->processSearchByIdLcl();
+                return $contract_lcl->processSearchByIdLcl($response);
             } else {
                 return response()->json(['message' => 'The requested contract does not exist'], 200);
             }
