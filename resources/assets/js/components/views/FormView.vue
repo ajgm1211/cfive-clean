@@ -163,6 +163,11 @@
                 required: false,
                 default: () => { return {} }
             },
+            massivedata: {
+                type: Array,
+                required: false,
+                default: () => { return [] }
+            },
             btnTxt: {
                 type: String,
                 required: false,
@@ -170,6 +175,11 @@
             },
             actions: Object,
             update: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            massivechange: {
                 type: Boolean,
                 required: false,
                 default: false
@@ -215,7 +225,8 @@
             /* Execute when pre select field is updated */
             dispatch(val, item){
                 this.refresh = false;
-                this.datalists[this.fields[item].target] = this.datalists[val.vselected];
+                this.datalists['ori_'+this.fields[item].target] = this.datalists['ori_'+val.vselected];
+                this.datalists['des_'+this.fields[item].target] = this.datalists['des_'+val.vselected];
                 this.resetDynamicalFields(this.fields[item].target);
                 this.refresh = true;
                 $(`#id_f_${item}`).css({'display':'none'});
@@ -227,8 +238,10 @@
                 this.datalists = JSON.parse(JSON.stringify(this.vdatalists));
 
                 for (const key in this.fields) {
-                    if(this.fields[key]['type'] == 'pre_select')
-                        this.datalists[this.fields[key]['target']] = this.datalists[this.fields[key]['initial'].vselected];
+                    if(this.fields[key]['type'] == 'pre_select'){
+                        this.datalists['ori_'+this.fields[key]['target']] = this.datalists['ori_'+this.fields[key]['initial'].vselected];
+                        this.datalists['des_'+this.fields[key]['target']] = this.datalists['des_'+this.fields[key]['initial'].vselected];
+                    }
                 }
             },
 
@@ -304,6 +317,9 @@
                             break;
 
                     }
+
+                    if(component.massivechange)
+                        data['ids'] = component.massivedata;
                 });
 
                 return data;
@@ -315,7 +331,16 @@
                 if(this.validateForm()){
                     let data = this.prepareData();
 
-                    if(this.update){
+                    if(this.massivechange){
+                        this.actions.massiveChange(data, this.$route)
+                            .then( ( response ) => {
+                                this.$emit('success', true);
+                                this.vdata = {};
+                        })
+                            .catch(( data ) => {
+                        });
+
+                    } else if(this.update){
 
                         this.actions.update(this.vdata.id, data, this.$route)
                             .then( ( response ) => {

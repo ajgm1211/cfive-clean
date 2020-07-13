@@ -120,8 +120,8 @@
                 <td>{{ $arr->id }}</td>
                 <td>{{ $arr->zip }}</td>
                 <td>{{ $arr->address }}</td>
-                <td>{{ $arr->province }}</td>
-                <td>{{ $arr->zip }}, {{ $arr->address }}, {{ $arr->province }} </td>
+                <td>{{ @$arr->inlandLocation->name }}</td>
+                <td>{{ $arr->zip }}, {{ $arr->address }}, {{ @$arr->inlandLocation->name }} </td>
                 <td>{{ $arr->distance }}</td>
                 <td>
                   <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">

@@ -25,7 +25,8 @@ class InlandResource extends JsonResource
 			'status' => $this->status,
 			'gp_container' => $this->gpContainer ?? [ 'id' => 1, 'name' => 'DRY' ],
 			'direction' => $this->direction,
-			'restrictions' => $this->inland_company_restriction->pluck('company')
+			'ports' => $this->inlandports->pluck('ports'),
+			'restrictions' => $this->inland_company_restriction->pluck('company'),
 		];
 	}
 }

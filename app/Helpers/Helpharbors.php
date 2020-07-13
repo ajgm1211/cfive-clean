@@ -136,6 +136,7 @@ class Helpharbors {
     public static function get_harbor_simple($puerto){
         $data = null;
         $resp =  false;
+        $find =  false;
         $place_val     = Harbor::where('varation->type','like','%'.strtolower($puerto).'%')->get();
         if(count($place_val) == 1 ){
             $resp = true;
@@ -143,7 +144,18 @@ class Helpharbors {
         } elseif(count($place_val) == 0){
             $data = $puerto.'(Error)';
         } elseif(count($place_val) > 1){
-            $data = $puerto.' (Error) ['.$place_val->implode('id', ', ').']';
+            foreach($place_val as  $place_one){
+                $array_varation = json_decode($place_one->varation,true);                
+                if(in_array(strtolower($puerto),$array_varation['type'])){
+                    $find = true;
+                    $resp = true;
+                    $data = $place_one->id; 
+                    break;
+                }                
+            }
+            if(!$find){
+                $data = $puerto.' (Error) ['.$place_val->implode('id', ', ').']';
+            }
         }
         return ['puerto' => $data,'boolean' => $resp];
     }

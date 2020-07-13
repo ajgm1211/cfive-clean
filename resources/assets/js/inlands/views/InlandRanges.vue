@@ -20,6 +20,7 @@
                 :datalists="datalists"
                 :equipment="equipment"
                 :actions="actions"
+                :massiveactions="['changecontainersview', 'delete']"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"
                 ></DynamicalDataTable>
