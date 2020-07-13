@@ -117,7 +117,7 @@
                         </tbody>
                     </table>
                     <div class="modal fade" id="m_modal_6" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">
@@ -276,6 +276,20 @@
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script>
 
+    function agregarcampo(){
+		var newtr = '<div class="col-lg-4 ">';
+		newtr = newtr + '<label class="form-control-label">Variation:</label>';
+		newtr = newtr + '<input type="text" name="variation[]" class="form-control" required="required">';
+		newtr = newtr + '<a href="#" class="borrado"><span class="la la-remove"></span></a>';
+		newtr = newtr + '</div>';
+		$('#variatiogroup').append(newtr);
+	}
+
+	$(document).on('click','.borrado', function(e){
+		var elemento = $(this);
+		$(elemento).closest('div').remove();
+	});
+    
     function AbrirModal(action,id){
 
         if(action == "edit"){
