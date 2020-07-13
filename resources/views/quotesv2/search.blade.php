@@ -877,7 +877,7 @@ body {
                                 {{ Form::hidden('origComb', @$form['originA'] , ['id' => 'origComb'  ])  }}
                                 <span id='selectA' class='{{ @$origA[ocultarorigComb] }}'>
                                     {{ Form::select('originA',[],null,['id'=>'originA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                                <span id='textA' class='{{ @origA[ocultarDestA] }}'>{!!
+                                <span id='textA' class='{{ @origA[ocultarDestA] }} hide'>{!!
                                     Form::text('origin_address',@$form['origin_address'],
                                     ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input
                                     ','id'=>'origin_address']) !!}</span>
@@ -899,7 +899,7 @@ body {
                                 {{ Form::hidden('destComb', @$form['destinationA'] , ['id' => 'destComb'  ])  }}
                                 <span id='selectD'
                                     class='{{ @$destA[ocultarDestComb] }}'>{{ Form::select('destinationA',[],null,['id'=>'destinationA','placeholder'=>'Select','class'=>'m-select2-general form-control']) }}</span>
-                                <span id='textD' class='{{ @$destA[ocultarDestA] }}'>{!!
+                                <span id='textD' class='{{ @$destA[ocultarDestA]  }}hide'>{!!
                                     Form::text('destination_address',@$form['destination_address'] , ['placeholder' =>
                                     'Please enter a destination address','class' => 'form-control
                                     m-input','id'=>'destination_address']) !!}</span>
