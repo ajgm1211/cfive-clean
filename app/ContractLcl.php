@@ -114,7 +114,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
      *
      * @return json
      */
-    public function processSearchByIdLcl()
+    public function processSearchByIdLcl($response = false)
     {
 
         //Variables del usuario conectado
@@ -1812,57 +1812,62 @@ class ContractLcl extends Model implements HasMedia, Auditable
         $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
         $totalQuoteSin = number_format($totalQuote, 2, ',', '');
 
-        $detalle['Rates']['type'] = 'LCL';
-        $detalle['Rates']['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
-        $detalle['Rates']['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
+        $routes = array();
+        $routes['Rates']['type'] = 'LCL';
+        $routes['Rates']['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
+        $routes['Rates']['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
 
         //Ocean Freight
-        $detalle['Rates']['ocean_freight'] = $array_ocean_freight;
+        $routes['Rates']['ocean_freight'] = $array_ocean_freight;
 
         //Local Charges
         if (!empty($collectionOrig)) {
-            $detalle['Rates']['origin_charges'] = $collectionOrig;
+            $routes['Rates']['origin_charges'] = $collectionOrig;
         }
 
         if (!empty($collectionDest)) {
-            $detalle['Rates']['destination_charges'] = $collectionDest;
+            $routes['Rates']['destination_charges'] = $collectionDest;
         }
 
         if (!empty($collectionFreight)) {
-            $detalle['Rates']['freight_charges'] = $collectionFreight;
+            $routes['Rates']['freight_charges'] = $collectionFreight;
         }
 
-        // SCHEDULE TYPE
-        if ($data->schedule_type_id != null) {
-            $sheduleType = ScheduleType::find($data->schedule_type_id);
-            $data->setAttribute('sheduleType', $sheduleType->name);
-        } else {
-            $data->setAttribute('sheduleType', null);
-        }
-        //remarks
-        $remarks = "";
-        if ($data->contract->comments != "") {
-            $remarks = $data->contract->comments . "<br>";
-        }
+        $routes['Rates']['total'] = $totalQuote;
+        $routes['Rates']['currency'] = $typeCurrency;
 
-        $typeMode = 1;
-        $remarks .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
-        $remarks = trim($remarks);
+        $detail = $this->compactResponse($routes, $data, $typeCurrency, $totalQuote, $response);
 
-        //Schedules
-        $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
-        $detalle['Rates']['schedule']['via'] = $data->via;
-
-        //set carrier logo url
-        $detalle['Rates']['carrier'] = $data->carrier;
-        $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-        $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-        $detalle['Rates']['contract']['number'] =   $data->contract->number;
-        $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-        $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
-
-        $general->push($detalle);
+        $general->push($detail);
 
         return response()->json($general);
+    }
+
+    public function compactResponse($routes, $data, $currency, $totalQuote, $response)
+    {
+
+        switch ($response) {
+            case 'compact':
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $totalQuote, $currency, $data->contract->remarks);
+                break;
+            default:
+                $detalle = $routes;
+
+                //Schedules
+                $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
+                $detalle['Rates']['schedule']['via'] = $data->via;
+
+                //set carrier logo url
+                $detalle['Rates']['carrier'] = $data->carrier;
+                $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
+                $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
+                $detalle['Rates']['contract']['number'] =   $data->contract->number;
+                $detalle['Rates']['contract']['ref'] =   $data->contract->name;
+                $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+                $detalle['Rates']['remarks'] = $data->contract->remarks;
+                break;
+        }
+
+        return $detalle;
     }
 }
