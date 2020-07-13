@@ -316,7 +316,7 @@ class Contract extends Model implements HasMedia, Auditable
 
         //Guard if
         if (count($data) == 0) {
-            return response()->json(['message' => 'No freight rates were found for this trade route'], 404);
+            return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
         }
 
         foreach ($containers as $cont) {
