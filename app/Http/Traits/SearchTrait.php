@@ -46,12 +46,13 @@ trait SearchTrait
         });
 
         $inlands = $inlands->get();
-
+    
         
 
         $dataDest = array();
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
+            
 
             $inlandDetails = array();
             foreach ($inlandsValue->inlandports as $ports) {
@@ -139,8 +140,7 @@ trait SearchTrait
                     // KILOMETROS ADICIONALES
 
                     if (isset($inlandsValue->inlandkms)) {
-
-                        
+              
 
                         foreach ($inlandsValue->inlandkms as $inlandk) {
 
@@ -148,7 +148,7 @@ trait SearchTrait
                             $rateGeneral = $this->ratesCurrency($inlandk->currency_id, $typeCurrency);
                             $jsonContainerkm = json_encode($inlandk->json_containers, JSON_FORCE_OBJECT);
                             $jsonkm = json_decode($jsonContainerkm);
-
+                   
                             foreach ($contain as $cont) {
 
                                 $km = 'km' . $cont->code;
@@ -157,8 +157,9 @@ trait SearchTrait
                                 //  if (isset($options->field_inland)) {
 
                                 if ($$km && in_array($cont->id, $equipment)) {
+                           
 
-                                    if (isset($json->{'C' . $cont->code})) {
+                                    if (isset($jsonkm->{'C' . $cont->code})) {
 
                                         $rateMount = $jsonkm->{'C' . $cont->code};
                                         $montoKm = ($distancia * $rateMount) / $rateGeneral;
