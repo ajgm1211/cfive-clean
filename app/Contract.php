@@ -273,7 +273,7 @@ class Contract extends Model implements HasMedia, Auditable
      * @param  mixed $api_company_id
      * @return void
      */
-    public function processSearchByIdFcl()
+    public function processSearchByIdFcl($response = false)
     {
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
@@ -545,35 +545,58 @@ class Contract extends Model implements HasMedia, Auditable
             $routes['origin_charges'] = $collectionOrigin;
         }
 
-        $detalle['Rates'] = $routes;
+        $routes['remarks'] = $remarksGeneral . "<br>" . $remarks;
 
-        //Totals
-        foreach ($containers as $cont) {
-            foreach ($equipment as $eq) {
-                if ($eq == $cont->id) {
-                    $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
-                }
-            }
-        }
+        $detail = $this->compactResponse($containers, $equipment, $routes, $data, $typeCurrency, $response);
 
-        $detalle['Rates']['currency'] = $typeCurrency;
-        //Schedules
-        $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
-        $detalle['Rates']['schedule']['via'] = $data->via;
-
-        //Set carrier
-        $detalle['Rates']['carrier'] = $data->carrier;
-        //Set contract details
-        $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-        $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-        $detalle['Rates']['contract']['number'] =   $data->contract->number;
-        $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-        $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
-
-        $detalle['Rates']['remarks'] = $remarksGeneral . "<br>" . $remarks;
-
-        $general->push($detalle);
+        $general->push($detail);
 
         return response()->json($general);
+    }
+
+    public function compactResponse($containers, $equipment, $routes, $data, $currency, $response)
+    {
+
+        switch ($response) {
+            case 'compact':
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $currency);
+                foreach ($containers as $cont) {
+                    foreach ($equipment as $eq) {
+                        if ($eq == $cont->id) {
+                            array_push($detalle, (float) $data['total' . $cont->code]);
+                        }
+                    }
+                }
+                array_push($detalle, $data->contract->remarks);
+                break;
+            default:
+                $detalle['Rates'] = $routes;
+
+                //Totals
+                foreach ($containers as $cont) {
+                    foreach ($equipment as $eq) {
+                        if ($eq == $cont->id) {
+                            $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
+                        }
+                    }
+                }
+
+                $detalle['Rates']['currency'] = $currency;
+                //Schedules
+                $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
+                $detalle['Rates']['schedule']['via'] = $data->via;
+
+                //Set carrier
+                $detalle['Rates']['carrier'] = $data->carrier;
+                //Set contract details
+                $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
+                $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
+                $detalle['Rates']['contract']['number'] =   $data->contract->number;
+                $detalle['Rates']['contract']['ref'] =   $data->contract->name;
+                $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+                break;
+        }
+
+        return $detalle;
     }
 }
