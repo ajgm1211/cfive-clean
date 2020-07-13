@@ -172,6 +172,11 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $q->where('company_user_id', '=', $company_user_id)->where('status', 'publish')->where('code', $this->code);
         })->first();
 
+        //Guard if
+        if (count($data) == 0) {
+            return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
+        }
+
         $totalFreight = 0;
         $FreightCharges = 0;
         $totalRates = 0;
