@@ -8,6 +8,7 @@ use App\User;
 use App\InlandLocation;
 use App\Harbor;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection as Collection;
 
 class InlandDistanceController extends Controller
 {
@@ -26,8 +27,41 @@ class InlandDistanceController extends Controller
     /*  $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
       $a->where('company_user_id', '=',$company_user_id);
     })->get();*/
-    $data = InlandDistance::where('harbor_id',$harbor_id)->get();
+    $data = InlandDistance::where('harbor_id',$harbor_id)->with('inlandLocation')->get();
     return view('inlandDistances/index', compact('data','harbor'));
+
+  }
+
+
+  public function getDistance($ids)
+  {
+    $ids = explode(',',$ids);
+   // $country = new Collection();
+    $harbors = new Collection();
+
+    foreach($ids as $id){
+      $info = explode('-',$id);
+     // $country->push($info[1]);
+      $harbors->push($info[0]);
+    }
+
+   // $country = $country->unique();
+
+    if($harbors->count() > 1  ){
+      return response()->json(['message' => 'maxOne']);
+    }else{
+      
+      $data = InlandDistance::where('harbor_id',$harbors->first())->pluck('address','distance');
+     // dd($data->toArray());
+      if(empty($data->toArray())){
+        return response()->json(['message' => 'empty']);
+      }else{
+        return response()->json(['message' => 'Ok','data' =>$data]);
+
+      }
+      
+
+    }
 
   }
 
