@@ -133,6 +133,39 @@ class ContractController extends Controller
         return response()->json(['data' => $data]);
     }
 
+    /**
+     * Display the specified resource collection.
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function surcharge_data(Request $request, Contract $contract)
+    {
+        $rates = $contract->rates;
+
+        $ori_countries = $rates->map(function ($rate) {
+            $country = ['id' => $rate->port_origin->country->id, 'display_name' => $rate->port_origin->country->name];
+            return $country;
+        })->unique('id')->values();
+
+        $des_countries = $rates->map(function ($rate) {
+            $country = ['id' => $rate->port_destiny->country->id, 'display_name' => $rate->port_destiny->country->name];
+            return $country;
+        })->unique('id')->values();
+
+        $ori_harbors = $rates->pluck('port_origin')->unique('id')->values();
+        $des_harbors = $rates->pluck('port_destiny')->unique('id')->values();
+
+        $data = compact(
+            'ori_harbors',
+            'des_harbors',
+            'ori_countries',
+            'des_countries'
+        );
+
+        return response()->json(['data' => $data]);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -249,7 +282,7 @@ class ContractController extends Controller
         ]);
 
         $contract->update(['remarks' => @$data['remarks']]);
-        
+
         return new ContractResource($contract);
     }
 
@@ -382,9 +415,14 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-
+            $contract = Contract::where('code', $request->code)->first();
+            $contract_lcl = ContractLcl::where('code', $request->code)->first();
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
+    
+            if ($contract != null || $contract_lcl != null) {
+                return response()->json(['message' => 'There is already a contract with the code entered'], 400);
+            }
 
             if (!preg_match($regex, $carriers)) {
                 return response()->json([
@@ -397,7 +435,7 @@ class ContractController extends Controller
             }
 
             $Ncontract = $this->uploadContract($request, $carriers, $api, $direction, $type);
-            
+
             //Dispatching jobs
             if (env('APP_VIEW') == 'operaciones') {
                 ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
@@ -408,7 +446,7 @@ class ContractController extends Controller
             //Notifications
             $user->notify(new SlackNotification("There is a new request from " . $user->name . " - " . $user->companyUser->name));
 
-            NotificationsJob::dispatch('Request-'.$type, [
+            NotificationsJob::dispatch('Request-' . $type, [
                 'user' => $user,
                 'ncontract' => $Ncontract->toArray()
             ]);
@@ -420,11 +458,11 @@ class ContractController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'Something when wrong on our side',
+                'message' => 'Something went wrong on our side',
             ], 500);
         }
     }
-   
+
     /**
      * process contract and create request from API
      *
@@ -439,15 +477,15 @@ class ContractController extends Controller
     {
         //Saving contract
         $contract = $this->storeContractApi($request, $direction, $type);
-        
+
         //Saving contracts and carriers in ContractCarriers
         $contract->ContractCarrierSync($carriers, $api);
 
-        //Uploading file to storage
-        $contract->StoreInMedia($request->file);
-        
         $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
-        
+
+        //Uploading file to storage
+        $contract->StoreInMedia($request->file, $filename);
+
         //Saving request FCL
         $Ncontract = $this->storeContractRequest($contract, $filename, $type);
 
@@ -456,7 +494,7 @@ class ContractController extends Controller
 
         return $Ncontract;
     }
-    
+
     /**
      * store contract from API in DB 
      *
@@ -467,6 +505,12 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
+        if($request->code){
+            $code = $request->code;
+        }else{
+            $code = $request->reference;
+        }
+
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -476,6 +520,8 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
+                    'gp_container_id' => 1,
+                    'code' => $code,
                 ]);
                 break;
             case 'LCL':
@@ -487,13 +533,14 @@ class ContractController extends Controller
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
                     'type' => $type,
+                    'code' => $code,
                 ]);
                 break;
         }
 
         return $contract;
     }
-    
+
     /**
      * store request of contract in DB
      *
@@ -515,7 +562,7 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => json_encode(''),
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
@@ -529,8 +576,6 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'type' => json_encode(''),
-                    'data' => json_encode(''),
                     'contract_id' => $contract->id,
                 ]);
                 break;

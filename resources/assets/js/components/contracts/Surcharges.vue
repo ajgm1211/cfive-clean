@@ -17,7 +17,7 @@
                 v-if="loaded"
                 :fields="fields"
                 :inputFields="input_fields"
-                :vdatalists="datalists"
+                :vdatalists="fdatalists"
                 :actions="actions"
                 @onEdit="onEdit"
                 :firstEmpty="false"
@@ -31,7 +31,7 @@
             <FormView 
                 :data="currentData" 
                 :fields="input_fields"
-                :vdatalists="datalists"
+                :vdatalists="fdatalists"
                 btnTxt="Update Surcharge"
                 @exit="closeModal('editSurcharge')"
                 @success="closeModal('editSurcharge')"
@@ -47,7 +47,7 @@
             <FormView 
                 :data="{ typeofroute: { id: 'port', name: 'Port', vselected: 'harbors' } }" 
                 :fields="input_fields"
-                :vdatalists="datalists"
+                :vdatalists="fdatalists"
                 btnTxt="Add Surcharge"
                 @exit="closeModal('addSurcharge')"
                 @success="closeModal('addSurcharge')"
@@ -75,7 +75,7 @@
         },
         data() {
             return {
-                loaded: true,
+                loaded: false,
                 isBusy:true, // Loader
                 data: null,
                 currentData: {},
@@ -96,8 +96,8 @@
                 input_fields: {
                     typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
                     surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
-                    origin: { label: 'Origin', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
-                    destination: { label: 'Destination', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'dynamical_ports', initial: [] },
+                    origin: { label: 'Origin', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'ori_dynamical_ports', initial: [] },
+                    destination: { label: 'Destination', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'des_dynamical_ports', initial: [] },
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
@@ -108,6 +108,17 @@
             }
         },
         created() {
+
+            let id = this.$route.params.id;
+            this.fdatalists = JSON.parse(JSON.stringify(this.datalists));
+
+            /* Return the lists data for dropdowns */
+            api.getData({}, `/api/v2/contracts/${id}/surcharge_data`, (err, data) => {
+                this.fdatalists = {...this.fdatalists, ...data.data};
+                this.loaded = true;
+
+                console.log('fdatalists', this.fdatalists);
+            });
             
         },
         methods: {
