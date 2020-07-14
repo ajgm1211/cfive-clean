@@ -43,6 +43,28 @@ class GlobalChargesController extends Controller
 
     public function store(StoreGlobalCharges $request){ // cambio de request 
 
+
+        // PORT TO PORT
+        if($request->input('allOriginPort') != NULL ){
+            $all_port = array($request->input('allOriginPort'));
+            $request->request->add(['port_orig' => $all_port]);
+        }
+        if($request->input('allDestinationPort') != NULL ){
+            $all_portD = array($request->input('allDestinationPort'));
+            $request->request->add(['port_dest' => $all_portD]);
+        }
+        //COUNTRY TO COUNTRY
+        if($request->input('allOriginCountry') != NULL ){
+            $all_country = array($request->input('allOriginCountry'));
+            $request->request->add(['country_orig' => $all_country]);
+        }
+
+        if($request->input('allDestinationCountry') != NULL ){
+            $all_countryD = array($request->input('allDestinationCountry'));
+            $request->request->add(['country_dest' => $all_countryD]);
+        }
+
+        
         $request->validated();
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
