@@ -222,6 +222,9 @@ function activarCountry(act){
         countryport_orig.removeAttr('required');
         countryport_dest.removeAttr('required');
 
+        $('.excepcionPortOrig').attr('hidden','true');
+        $('.excepcionPortDest').attr('hidden','true');
+
 
 
     }else if(act == 'divport'){
@@ -242,6 +245,9 @@ function activarCountry(act){
 
         countryport_orig.removeAttr('required');
         countryport_dest.removeAttr('required');
+
+        $('.excepcionCountryOrig').attr('hidden','true');
+        $('.excepcionCountryDest').attr('hidden','true');
 
 
     }else if(act == 'divportcountry'){
@@ -348,3 +354,73 @@ function activarRegions(act){
 
 
 
+
+
+$( '#allOriginPort' ).on( 'click', function() {
+    if( $(this).is(':checked') ){
+        // Hacer algo si el checkbox ha sido seleccionado
+        $('.excepcionPortOrig').removeAttr('hidden');
+
+        $('#port_orig').attr('disabled','true');
+        $("#port_orig").select2().val('1485').trigger('change.select2');
+
+        
+    } else {
+ 
+        // Hacer algo si el checkbox ha sido deseleccionado
+        $('.excepcionPortOrig').attr('hidden','true');
+        $('#port_orig').removeAttr('disabled');
+        $("#port_orig").select2().val('').trigger('change.select2');
+    }
+});
+
+
+$( '#allDestinationPort' ).on( 'click', function() {
+    if( $(this).is(':checked') ){
+        // Hacer algo si el checkbox ha sido seleccionado
+        $('.excepcionPortDest').removeAttr('hidden');
+
+        $('#port_dest').attr('disabled','true');
+        $("#port_dest").select2().val('1485').trigger('change.select2');
+
+    } else {
+        // Hacer algo si el checkbox ha sido deseleccionado
+        $('.excepcionPortDest').attr('hidden','true');
+
+        $('#port_dest').removeAttr('disabled');
+        $("#port_dest").select2().val('').trigger('change.select2');
+    }
+});
+
+$( '#allOriginCountry' ).on( 'click', function() {
+    if( $(this).is(':checked') ){
+        // Hacer algo si el checkbox ha sido seleccionado
+        $('.excepcionCountryOrig').removeAttr('hidden');
+        $('#country_orig').attr('disabled','true');
+        $("#country_orig").select2().val('250').trigger('change.select2');
+
+    } else {
+        // Hacer algo si el checkbox ha sido deseleccionado
+        $('.excepcionCountryOrig').attr('hidden','true');
+
+        $('#country_orig').removeAttr('disabled');
+        $("#country_orig").select2().val('').trigger('change.select2');
+        
+    }
+});
+
+$( '#allDestinationCountry' ).on( 'click', function() {
+    if( $(this).is(':checked') ){
+        // Hacer algo si el checkbox ha sido seleccionado
+        $('.excepcionCountryDest').removeAttr('hidden');
+
+        $('#country_dest').attr('disabled','true');
+        $("#country_dest").select2().val('250').trigger('change.select2');
+    } else {
+        // Hacer algo si el checkbox ha sido deseleccionado
+        $('.excepcionCountryDest').attr('hidden','true');
+
+        $('#country_dest').removeAttr('disabled');
+        $("#country_dest").select2().val('').trigger('change.select2');
+    }
+});
