@@ -153,43 +153,57 @@ class GlobalChargesController extends Controller
 
                 }
                 //Excepciones Ports
-                $exceptionPortOrig = $request->input('exceptionPortOrig');
-                foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
-                    $ports = new GlobalCharPortException();
-                    $ports->port_orig = $exPortOrig;
-                    $ports->port_dest = "";
-                    $ports->globalcharge()->associate($global);
-                    $ports->save();
-                }
+                if($request->input('exceptionPortOrig') != NULL ){
+                    $exceptionPortOrig = $request->input('exceptionPortOrig');
+                    foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
+                        $ports = new GlobalCharPortException();
+                        $ports->port_orig = $exPortOrig;
+                        $ports->port_dest = "";
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
 
-                $exceptionPortDest = $request->input('exceptionPortDest');
-                foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
-                    $ports = new GlobalCharPortException();
-                    $ports->port_orig = "";
-                    $ports->port_dest = $exPortDest;
-                    $ports->globalcharge()->associate($global);
-                    $ports->save();
                 }
+          
+                if($request->input('exceptionPortDest') != NULL ){
+                    $exceptionPortDest = $request->input('exceptionPortDest');
+                    foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
+                        $ports = new GlobalCharPortException();
+                        $ports->port_orig = "";
+                        $ports->port_dest = $exPortDest;
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
+                }
+         
                
                 // Excepciones Country
-                $exceptionCountryOrig = $request->input('exceptionCountryOrig');
-                foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
-                    $countries = new GlobalCharCountryException();
-                    $countries->country_orig = $exCountOrig;
-                    $countries->country_dest = "";
-                    $countries->globalcharge()->associate($global);
-                    $countries->save();
+                if($request->input('exceptionCountryOrig') != NULL ){
+                    $exceptionCountryOrig = $request->input('exceptionCountryOrig');
+                    foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
+                        $countries = new GlobalCharCountryException();
+                        $countries->country_orig = $exCountOrig;
+                        
+                        $countries->globalcharge()->associate($global);
+                        $countries->save();
+                    }
                 }
 
-                $exceptionCountryDest = $request->input('exceptionCountryDest');
-                foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
-                    $countries = new GlobalCharCountryException();
-                    $countries->country_orig = "";
-                    $countries->country_dest = $exCountDest;
-                    $countries->globalcharge()->associate($global);
-                    $countries->save();
-                }
+                if($request->input('exceptionCountryDest') != NULL ){
+                    $exceptionCountryDest = $request->input('exceptionCountryDest');
+                    foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
+                        $countries = new GlobalCharCountryException();
+                        
+                        $countries->country_dest = $exCountDest;
+                        $countries->globalcharge()->associate($global);
+                        $countries->save();
+                    }
+    
 
+                }
+              
+
+           
 
             }
 
