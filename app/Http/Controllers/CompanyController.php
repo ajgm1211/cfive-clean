@@ -22,11 +22,12 @@ use App\ViewQuoteV2;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class CompanyController extends Controller
 {
     use EntityTrait;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -48,20 +49,14 @@ class CompanyController extends Controller
             $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
-
-            if ($request->paginate) {
-                $companies = $query->paginate($request->paginate);
-            } else {
-                $companies = $query->take($request->size)->get();
-            }
         } else {
             $query = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
-            
-            if ($request->paginate) {
-                $companies = $query->paginate($request->paginate);
-            } else {
-                $companies = $query->take($request->size)->get();
-            }
+        }
+
+        if ($request->paginate) {
+            $companies = $query->paginate($request->paginate);
+        } else {
+            $companies = $query->take($request->size)->get();
         }
 
         if ($request->ajax()) {
@@ -69,6 +64,56 @@ class CompanyController extends Controller
         }
 
         return view('companies/index', ['companies' => $companies, 'users' => $users, 'api' => $api]);
+    }
+
+    /**
+     * LoadDatatableIndex
+     *
+     * @return void
+     */
+    public function LoadDatatableIndex()
+    {
+
+        $company_user_id = \Auth::user()->company_user_id;
+        $user_id = \Auth::user()->id;
+
+        if (\Auth::user()->hasRole('subuser')) {
+
+            $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
+        } else {
+            $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
+        }
+
+        $companies = $companies->get();
+
+        $colletions = collect([]);
+        foreach ($companies as $company) {
+
+            $data = [
+                'id' => $company->id,
+                'idSet' => setearRouteKey($company->id),
+                'business_name' => $company->business_name,
+                'phone' => $company->phone,
+                'email' => $company->email,
+                'tax_number' => $company->tax_number,
+                'address' => $company->address,
+            ];
+            $colletions->push($data);
+        }
+        return DataTables::of($colletions)->addColumn('action', function ($colletion) {
+            return
+                '<a href="companies/' . $colletion['idSet'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                    <i class="la la-eye"></i>
+                </a>
+                <button onclick="AbrirModal(\'edit\',' . $colletion['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                    <i class="la la-edit"></i>
+                </button>
+                <button id="delete-company" data-company-id="' . $colletion['id'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
+                    <i class="la la-eraser"></i>
+                </button>';
+        })->make(true);
     }
 
     /**
@@ -190,9 +235,8 @@ class CompanyController extends Controller
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
-            
+
             $options_array = json_encode(array_combine($options_key, $options_value));
-            
         }
 
         if ($request->ajax()) {
@@ -353,7 +397,7 @@ class CompanyController extends Controller
         if ($file != "") {
             $this->saveLogo($company, $file);
         }
-        
+
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
             CompanyPrice::where('company_id', $company->id)->delete();
             $this->saveExtraData($input['price_id'], $company, 'price');

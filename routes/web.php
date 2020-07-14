@@ -458,7 +458,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
     Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
     Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
-
+    Route::get('datatable', 'CompanyController@LoadDatatableIndex')->name('companies.index.datatable');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 

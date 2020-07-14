@@ -9,7 +9,7 @@ var DatatableHtmlTableDemo = function() {
 
         var datatable = $('.m-datatable').mDatatable({
             data: {
-                saveState: {cookie: false},
+                saveState: { cookie: false },
                 pageSize: 5,
 
             },
@@ -35,12 +35,11 @@ var DatatableHtmlTableDemo = function() {
                 items: {
                     // pagination
                     pagination: {
-                        pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+                        pageSizeSelect: [5, 10, 20, 30, 50, 100 /*, -1*/ ] // display dropdown to select pagination size. -1 is used for "ALl" option
                     }
                 }
             },
-            columns: [
-                {
+            columns: [{
                     field: "Business Name",
                     title: "Business Name",
                     width: 100,
@@ -66,17 +65,17 @@ var DatatableHtmlTableDemo = function() {
                     overflow: 'visible',
                 },
                 {
-                    field: 'Status',
-                    title: 'Status',
+                    field: 'Action',
+                    title: 'Action',
                     width: 100,
                 },
             ],
         });
 
 
-        var datatable2 =  $('.m-datatable2').mDatatable({
+        var datatable2 = $('.m-datatable2').mDatatable({
             data: {
-                saveState: {cookie: false},
+                saveState: { cookie: false },
                 pageSize: 5,
 
             },
@@ -101,13 +100,13 @@ var DatatableHtmlTableDemo = function() {
                 items: {
                     // pagination
                     pagination: {
-                        pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+                        pageSizeSelect: [5, 10, 20, 30, 50, 100 /*, -1*/ ] // display dropdown to select pagination size. -1 is used for "ALl" option
                     }
                 }
             },
 
             columns: [],
-            
+
         });
 
         $('#m_form_type').on('change', function() {
