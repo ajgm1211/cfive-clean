@@ -415,6 +415,10 @@ class GlobalChargesController extends Controller
             $activacion['act'] = 'divport';
         }
 
+        //Exepciones 
+
+    //dd($globalcharges->globalexceptioncountry->pluck('country_orig')->unique()->pluck('country_orig'));
+
         //dd($activacion);
 
         return view('globalcharges.edit', compact('globalcharges', 'harbor', 'carrier', 'currency', 'calculationT', 'typedestiny', 'surcharge', 'countries', 'activacion', 'route', 'amount'));
