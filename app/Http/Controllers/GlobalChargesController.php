@@ -9,10 +9,12 @@ use App\Country;
 use App\Currency;
 use App\GlobalCharCarrier;
 use App\GlobalCharCountry;
+use App\GlobalCharCountryException;
 use App\GlobalCharCountryPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharPortCountry;
+use App\GlobalCharPortException;
 use App\Harbor;
 use App\Http\Requests\StoreGlobalCharges;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
@@ -26,8 +28,7 @@ use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
-use App\GlobalCharPortException;
-use App\GlobalCharCountryException;
+
 //inclui
 
 class GlobalChargesController extends Controller
@@ -65,6 +66,32 @@ class GlobalChargesController extends Controller
             $all_countryD = array($request->input('allDestinationCountry'));
             $request->request->add(['country_dest' => $all_countryD]);
         }
+
+        //PORT TO COUNTRY
+
+        if ($request->input('allOriginPortCountry') != null) {
+            $all_country = array($request->input('allOriginPortCountry'));
+            $request->request->add(['portcountry_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationPortCountry') != null) {
+            $all_countryD = array($request->input('allDestinationPortCountry'));
+            $request->request->add(['portcountry_dest' => $all_countryD]);
+        }
+
+        //COUNTRY  TO PORT 
+      
+        
+        if ($request->input('allOriginCountryPort') != null) {
+            $all_country = array($request->input('allOriginCountryPort'));
+            $request->request->add(['countryport_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationCountryPort') != null) {
+            $all_countryD = array($request->input('allDestinationCountryPort'));
+            $request->request->add(['countryport_dest' => $all_countryD]);
+        }
+
 
         $request->validated();
         $detailscharges = $request->input('type');
@@ -153,57 +180,52 @@ class GlobalChargesController extends Controller
 
                 }
                 //Excepciones Ports
-                if($request->input('exceptionPortOrig') != NULL ){
+                if ($request->input('exceptionPortOrig') != null) {
                     $exceptionPortOrig = $request->input('exceptionPortOrig');
                     foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
                         $ports = new GlobalCharPortException();
                         $ports->port_orig = $exPortOrig;
-                        $ports->port_dest = "";
+
                         $ports->globalcharge()->associate($global);
                         $ports->save();
                     }
 
                 }
-          
-                if($request->input('exceptionPortDest') != NULL ){
+
+                if ($request->input('exceptionPortDest') != null) {
                     $exceptionPortDest = $request->input('exceptionPortDest');
                     foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
                         $ports = new GlobalCharPortException();
-                        $ports->port_orig = "";
+
                         $ports->port_dest = $exPortDest;
                         $ports->globalcharge()->associate($global);
                         $ports->save();
                     }
                 }
-         
-               
+
                 // Excepciones Country
-                if($request->input('exceptionCountryOrig') != NULL ){
+                if ($request->input('exceptionCountryOrig') != null) {
                     $exceptionCountryOrig = $request->input('exceptionCountryOrig');
                     foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
                         $countries = new GlobalCharCountryException();
                         $countries->country_orig = $exCountOrig;
-                        
+
                         $countries->globalcharge()->associate($global);
                         $countries->save();
                     }
                 }
 
-                if($request->input('exceptionCountryDest') != NULL ){
+                if ($request->input('exceptionCountryDest') != null) {
                     $exceptionCountryDest = $request->input('exceptionCountryDest');
                     foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
                         $countries = new GlobalCharCountryException();
-                        
+
                         $countries->country_dest = $exCountDest;
                         $countries->globalcharge()->associate($global);
                         $countries->save();
                     }
-    
 
                 }
-              
-
-           
 
             }
 
