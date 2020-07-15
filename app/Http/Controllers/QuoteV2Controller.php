@@ -4092,7 +4092,9 @@ class QuoteV2Controller extends Controller
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
         })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil) {
-            $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+            $q->where(function ($query) use ($dateSince) {
+                $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+            })->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
         })->get();
 
         foreach ($arreglo as $data) {
