@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalCharCountryException extends Model
 {
+    protected $table    = "global_char_country_exceptions";
+	protected $fillable =   ['country_orig','country_dest','globalcharge_id'];
     public $timestamps = false;
 	public function globalcharge()
 	{
