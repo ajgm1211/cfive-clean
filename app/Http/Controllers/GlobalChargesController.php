@@ -558,6 +558,8 @@ class GlobalChargesController extends Controller
     public function duplicateGlobalCharges($id)
     {
 
+        
+
         $countries = Country::pluck('name', 'id');
         $calculationT = CalculationType::all()->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
