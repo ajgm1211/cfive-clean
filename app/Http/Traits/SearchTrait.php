@@ -21,6 +21,14 @@ trait SearchTrait
         $address = $inlandParams['destination_address'];
         $typeCurrency = $inlandParams['typeCurrency'];
 
+        if ($type == 'destino') {
+
+            $textType = 'Destination';
+        } elseif ($type == 'origen') {
+        
+            $textType = 'Origin';
+        }
+
         foreach ($contain as $cont) {
 
             $km = 'km' . $cont->code;
@@ -64,9 +72,11 @@ trait SearchTrait
                         if ($type == 'destino') {
                             $origin = $ports->ports->coordinates;
                             $destination = $inlandParams['destination_address'];
+                       
                         } elseif ($type == 'origen') {
                             $origin = $inlandParams['origin_address'];
                             $destination = $ports->ports->coordinates;
+                         
                         }
                         $response = GoogleMaps::load('directions')
                             ->setParam([
@@ -199,7 +209,7 @@ trait SearchTrait
 
                     if ($monto > 0) {
                         $inlandDetails = Collection::make($inlandDetails);
-                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => 'Destination', 'type_currency' => '', 'idCurrency' => $typeCurrency);
+                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => $textType, 'type_currency' => '', 'idCurrency' => $typeCurrency);
                         $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) {
                             $minimoD = $item->where('sub_in', '>', 0);
                             $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
