@@ -667,6 +667,13 @@ class CompanyController extends Controller
         return view('companies.api.index', compact('companies'));
     }
 
+    /**
+     * saveLogo
+     *
+     * @param  mixed $company
+     * @param  mixed $file
+     * @return void
+     */
     public function saveLogo($company, $file)
     {
         $update_company_url = Company::findOrFail($company->id);
@@ -680,6 +687,14 @@ class CompanyController extends Controller
         //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
     }
 
+    /**
+     * saveExtraData
+     *
+     * @param  mixed $data
+     * @param  mixed $company
+     * @param  mixed $type
+     * @return void
+     */
     public function saveExtraData($data, $company, $type)
     {
         switch ($type) {
@@ -701,5 +716,27 @@ class CompanyController extends Controller
                 }
                 break;
         }
+    }
+
+    /**
+     * searchCompanies
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function searchCompanies(Request $request)
+    {
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->where('business_name', 'like', '%' . $term . '%')->get();
+
+        $formatted_companies = [];
+        foreach ($companies as $company) {
+            $formatted_companies[] = ['id' => $company->id, 'text' => $company->business_name];
+        }
+        return \Response::json($formatted_companies);
     }
 }
