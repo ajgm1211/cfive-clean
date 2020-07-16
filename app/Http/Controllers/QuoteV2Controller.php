@@ -4023,6 +4023,8 @@ class QuoteV2Controller extends Controller
                 // Monto original
                 $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
                 // monto aplicado al currency
+                if($localMarkup == 0)
+                    $localMarkup = 1;
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
             } else {
@@ -4037,6 +4039,9 @@ class QuoteV2Controller extends Controller
                 // monto original
                 $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
                 // monto aplicado al currency
+                if($localMarkup == 0)
+                    $localMarkup = 1;
+
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
             }
@@ -4054,6 +4059,8 @@ class QuoteV2Controller extends Controller
                 // Monto original
                 $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_export')));
                 // monto aplicado al currency
+                if($inlandMarkup == 0)
+                    $inlandMarkup = 1;
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
             } else {
@@ -4071,6 +4078,8 @@ class QuoteV2Controller extends Controller
                 // monto original
                 $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_import')));
                 // monto aplicado al currency
+                if($inlandMarkup == 0)
+                    $inlandMarkup = 1;
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
 
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
@@ -4092,7 +4101,9 @@ class QuoteV2Controller extends Controller
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
         })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil) {
-            $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+            $q->where(function ($query) use ($dateSince) {
+                $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+            })->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
         })->get();
 
         foreach ($arreglo as $data) {
