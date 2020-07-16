@@ -3106,9 +3106,9 @@ $('.inlands').on('click', function () {
     $("#sub_inland_40DV" + idRate).html(sub40);
     $("#sub_inland_40HC" + idRate).html(sub40h);
 
-    tot20dv_html.html(tot_20);
-    tot40dv_html.html(tot_40);
-    tot40hc_html.html(tot_40hc);
+    tot20dv_html.html(tot_20.toFixed(2));
+    tot40dv_html.html(tot_40.toFixed(2));
+    tot40hc_html.html(tot_40hc.toFixed(2));
 
     //Refeer
 
@@ -3440,9 +3440,9 @@ $('.inlandsO').on('click', function () {
     $("#sub_inland_20DV" + idRate).html(sub20);
     $("#sub_inland_40DV" + idRate).html(sub40);
     $("#sub_inland_40HC" + idRate).html(sub40h);
-    tot20dv_html.html(tot_20);
-    tot40dv_html.html(tot_40);
-    tot40hc_html.html(tot_40hc);
+    tot20dv_html.html(tot_20.toFixed(2));
+    tot40dv_html.html(tot_40.toFixed(2));
+    tot40hc_html.html(tot_40hc.toFixed(2));
 
 
     //refeer
