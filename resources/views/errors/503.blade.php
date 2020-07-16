@@ -40,6 +40,10 @@
                 font-size: 60px;
                 font-weight: bold !important;
             }
+            .size-40{
+                font-size: 40px;
+                font-weight: bold !important;
+            }
             .ichead{
                 font-size: 30px;
             }
@@ -71,7 +75,7 @@
                 </div>
                 <div class="col-md-12 ">
                     <div class="title" style="">
-                        <h1 class="size-60">We’ll be back in a few minutes</h1>
+                        <h1 class="size-40">We’ll be back in a few minutes</h1>
                         <p>
                             <b>
                                 We are making improvements to the platform.
