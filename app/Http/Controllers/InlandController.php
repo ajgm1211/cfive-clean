@@ -104,7 +104,7 @@ class InlandController extends Controller
             'gp_container_id' => $data['gp_container']
         ]);
 
-        $inland->InlandPortsSync($data['ports'] ?? []);
+        $inland->InlandPortsSync($data['ports']);
 
         return new InlandResource($inland);
     }
@@ -126,7 +126,8 @@ class InlandController extends Controller
             'expire' => 'required',
             'direction' => 'required',
             'gp_container' => 'required',
-            'restrictions' => 'sometimes'
+            'restrictions' => 'sometimes',
+            'ports' => 'required'
         ]);
         
         $inland->update([
