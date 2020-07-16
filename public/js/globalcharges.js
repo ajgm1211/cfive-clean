@@ -360,14 +360,14 @@ if($country_dest == '250'){
 
 }
 $portcountry_dest = $( "#portcountry_dest").val();
-if($portcountry_dest == '1485'){
+if($portcountry_dest == '250'){
        $('.excepcionCountryDest').removeAttr('hidden');
        $('#portcountry_dest').attr('disabled','true');
        $("#portcountry_dest").select2().val('250').trigger('change.select2');
        $('#allDestinationPortCountry').prop('checked', true);
 }
 $countryport_dest = $( "#countryport_dest").val();
-if($countryport_dest == '250'){
+if($countryport_dest == '1485'){
     
     $('#allDestinationCountryPort').prop('checked', true);
     $('.excepcionPortDest').removeAttr('hidden');
