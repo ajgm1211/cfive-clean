@@ -138,7 +138,7 @@ class InlandController extends Controller
             'gp_container_id' => $data['gp_container']
         ]);
 
-        $inland->InlandPortsSync($data['ports'] ?? []);
+        $inland->InlandPortsSync($data['ports']);
         
         $inland->InlandRestrictionsSync($data['restrictions'] ?? []);
 
