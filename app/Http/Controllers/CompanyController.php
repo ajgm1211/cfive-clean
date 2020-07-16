@@ -18,6 +18,7 @@ use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreCompany;
 use App\Http\Traits\EntityTrait;
+use App\Repositories\CompanyRepositoryInterface;
 use App\ViewQuoteV2;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
@@ -27,6 +28,14 @@ use Yajra\DataTables\Facades\DataTables;
 class CompanyController extends Controller
 {
     use EntityTrait;
+
+    /** @var CompanyRepositoryInterface */
+    private $repository;
+
+    public function __construct(CompanyRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * Display a listing of the resource.
@@ -186,7 +195,7 @@ class CompanyController extends Controller
             $collection = Collection::make($company);
             return $collection;
         } else {
-            $company = Company::find($id);
+            $company = $this->repository->find($id);
         }
 
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
@@ -287,8 +296,8 @@ class CompanyController extends Controller
 
         $input = Input::all();
 
-        $company = Company::find($input['company_id']);
-
+        $company = $this->repository->find($input['company_id']);
+        
         if ((isset($input['users'])) && (count($input['users']) > 0)) {
             foreach ($input['users'] as $key => $item) {
                 $userCompany_group = new GroupUserCompany();
@@ -330,7 +339,7 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
 
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->where('id', '!=', $company->owner)->pluck('name', 'id');
 
@@ -426,7 +435,7 @@ class CompanyController extends Controller
      */
     public function delete($id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
 
         if (count($company->contact) > 0) {
             return response()->json(['message' => count($company->contact)]);
@@ -540,7 +549,7 @@ class CompanyController extends Controller
      */
     public function updateName(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->business_name = $request->business_name;
         $company->update();
 
@@ -556,7 +565,7 @@ class CompanyController extends Controller
      */
     public function updatePhone(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->phone = $request->phone;
         $company->update();
 
@@ -572,7 +581,7 @@ class CompanyController extends Controller
      */
     public function updateAddress(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->address = $request->address;
         $company->update();
 
@@ -588,7 +597,7 @@ class CompanyController extends Controller
      */
     public function updateEmail(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->email = $request->email;
         $company->update();
 
@@ -604,7 +613,7 @@ class CompanyController extends Controller
      */
     public function updateTaxNumber(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->tax_number = $request->tax_number;
         $company->update();
 
@@ -620,7 +629,7 @@ class CompanyController extends Controller
      */
     public function updatePdfLanguage(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->pdf_language = $request->pdf_language;
         $company->update();
 
@@ -731,7 +740,7 @@ class CompanyController extends Controller
             return \Response::json([]);
         }
 
-        $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->where('business_name', 'like', '%' . $term . '%')->get();
+        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->where('business_name', 'like', '%' . $term . '%')->get();
 
         $formatted_companies = [];
         foreach ($companies as $company) {
