@@ -70,6 +70,7 @@ use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\SearchRate as SearchRateForm;
+use App\Http\Requests\StoreAddRatesQuotes;
 
 class QuoteV2Controller extends Controller
 {
@@ -194,30 +195,92 @@ class QuoteV2Controller extends Controller
             } else {
                 $contact = '---';
             }
+            
+            $ValueOrig=count($explode_orig);
+            $valueDest=count($explode_dest);
+      
+            if ($ValueOrig ==1 && $valueDest ==1 ) {
+               
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
 
-            $data = [
-                'id' => $id,
-                'idSet' => setearRouteKey($quote->id),
-                'client' => $company,
-                'contact' => $contact,
-                'user' => $quote->owner,
-                'created' => $quote->created_at,
-                'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  See origins
-                                  </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                  <small>' . $origin_li . '</small>
-                                  </div>',
-                'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  See destinations
-                                  </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                  <small>' . $destination_li . '</small>
-                                  </div>',
-                'type' => $quote->type,
-            ];
-            $colletions->push($data);
+            } elseif($ValueOrig <>1 && $valueDest ==1) {
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+
+            } elseif($ValueOrig ==1 && $valueDest <>1) {
+                
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            
+            }else{
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            }   
         }
+           
         return DataTables::of($colletions)
             ->editColumn('created', function ($colletion) {
                 return [
@@ -2234,7 +2297,7 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return STRING Json
      */
-    public function storeRates(Request $request)
+    public function storeRates(StoreAddRatesQuotes $request)
     {
 
         $arregloNull = array();
@@ -2524,15 +2587,9 @@ class QuoteV2Controller extends Controller
         $destinationClass = 'col-lg-4';
         $origenClass = 'col-lg-4';
 
-        $origA['ocultarOrigA'] = 'hide';
-        $origA['ocultarorigComb'] = '';
-
-        $destA['ocultarDestA'] = 'hide';
-        $destA['ocultarDestComb'] = '';
-
         //dd($origen);
         
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass','origA' ,'origD')); 
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass'));
     }
 
     /**
@@ -2560,10 +2617,6 @@ class QuoteV2Controller extends Controller
         $chargesFreight = 'true';
         $containerType = $request->input('container_type');
         $carriersSelected = $request->input('carriers');
-        //Combos del distanciero para inlands
-        $destinationA = $request->input('destinationA');
-        $originA = $request->input('originA');
-        //resquest completo del form
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
@@ -2655,7 +2708,6 @@ class QuoteV2Controller extends Controller
         $destination_address = $request->input('destination_address');
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
-        $groupContainer = $validateEquipment['gpId'];
 
         // Historial de busqueda
         // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
@@ -2686,25 +2738,12 @@ class QuoteV2Controller extends Controller
             'origin_address' => $origin_address, 'destination_address' => $destination_address,
             'typeCurrency' => $typeCurrency,
         );
-        $destA = array();
-        $origA = array();
 
         if ($delivery_type == "2" || $delivery_type == "4") {
 
             $hideD = '';
             $dataDest = array();
-        
-        
-            if($destinationA == null){ 
-                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer);
-                $destA['ocultarDestA'] = '';
-                $destA['ocultarDestComb'] = 'hide';
-
-            }else{ 
-                $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode,$groupContainer,$destinationA);
-                $destA['ocultarDestA'] = 'hide';
-                $destA['ocultarDestComb'] = '';
-            }
+            $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode);
 
             if (!empty($dataDest)) {
                 $inlandDestiny = Collection::make($dataDest);
@@ -2715,17 +2754,7 @@ class QuoteV2Controller extends Controller
         if ($delivery_type == "3" || $delivery_type == "4") {
             $hideO = '';
             $dataOrig = array();
-            if($originA == null ){ 
-                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer);
-                $origA['ocultarOrigA'] = '';
-                $origA['ocultarorigComb'] = 'hide';
-                
-            }else{ 
-                $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode,$groupContainer,$originA);
-                $origA['ocultarOrigA'] = 'hide';
-                $origA['ocultarorigComb'] = '';
-  
-            }
+            $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode);
 
             if (!empty($dataOrig)) {
                 $inlandOrigin = Collection::make($dataOrig);
@@ -3398,7 +3427,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
         $containerType = $validateEquipment['gpId'];
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass','destA' ,'origA', 'destinationA' ,'originA')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
