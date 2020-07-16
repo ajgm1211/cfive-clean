@@ -243,21 +243,21 @@ activarCountry('{{ $activacion['act'] }}');
 
         <div class="form-group m-form__group row">
 
-            <div class="excepcionPortOrig" hidden='true' >
+            <div class="excepcionPortOrig" hidden='true'>
                 <div class="col-lg-9">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
                     {{ Form::select('exceptionPortOrig[]', $harbor,
                       $globalcharges->globalexceptionport->pluck('port_orig'),['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
                 </div>
             </div>
-            <div class="excepcionPortDest" hidden='true' >
+            <div class="excepcionPortDest" hidden='true'>
                 <div class="col-lg-9">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
                     {{ Form::select('exceptionPortDest[]', $harbor,
                       $globalcharges->globalexceptionport->pluck('port_dest'),['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
                 </div>
             </div>
-            <div class="excepcionCountryOrig" hidden='true' >
+            <div class="excepcionCountryOrig" hidden='true'>
                 <div class="col-lg-9">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Country') !!}
@@ -265,7 +265,7 @@ activarCountry('{{ $activacion['act'] }}');
                       $globalcharges->globalexceptioncountry->pluck('country_orig'),['id' => 'exceptionCountryOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
                 </div>
             </div>
-            <div class="excepcionCountryDest" hidden='true' >
+            <div class="excepcionCountryDest" hidden='true'>
                 <div class="col-lg-9">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Destination Country') !!}

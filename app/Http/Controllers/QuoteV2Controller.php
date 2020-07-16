@@ -47,13 +47,13 @@ use App\QuoteV2;
 use App\Rate;
 use App\RateApi;
 use App\RateLcl;
+use App\RemarkCountry;
 use App\RemarkHarbor;
 use App\SaleTermV2;
 use App\Schedule;
 use App\ScheduleType;
 use App\SearchPort;
 use App\SearchRate;
-use App\RemarkCountry;
 //LCL
 use App\Surcharge;
 use App\TermAndConditionV2;
@@ -1596,31 +1596,30 @@ class QuoteV2Controller extends Controller
         $nameDest = $dest->name;
         $rem_dest[] = $dest->id;
         $rem_carrier_id[] = $carrier;
-       
-       
+
         array_push($rem_carrier_id, $carrier_all);
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
         $language_id = $company->companyUser->pdf_language;
 
         if ($type == 'port') {
 
-        $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+            $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
 
-        $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+            $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
 
-        $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-            $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
-                $b->wherein('carrier_id', $rem_carrier_id);
-            });
-        })->get();
+            $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                    $b->wherein('carrier_id', $rem_carrier_id);
+                });
+            })->get();
         }
 
         if ($type == 'country') {
@@ -2174,13 +2173,12 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             $inlandOrig->save();
 
-
                         }
                     }
 
                     $this->saveRemarks($rate->id, $info_D->port_origin, $info_D->port_destiny, $info_D->carrier->id, $form->mode);
-                    //Por pais 
-                    $this->saveRemarks($rate->id, $info_D->port_origin->country, $info_D->port_destiny->country, $info_D->carrier->id, $form->mode,'country');
+                    //Por pais
+                    $this->saveRemarks($rate->id, $info_D->port_origin->country, $info_D->port_destiny->country, $info_D->carrier->id, $form->mode, 'country');
                 }
                 //CHARGES ORIGIN
                 foreach ($info_D->localorigin as $localorigin) {
@@ -3169,9 +3167,9 @@ class QuoteV2Controller extends Controller
                         })->orwhereHas('globalcharcountryport', function ($q) use ($origin_country, $dest_port) {
                             $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
                         });
-                    })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_country,$destiny_country) {
+                    })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_country, $destiny_country) {
                         $q->whereIn('country_orig', $origin_country)->orwhereIn('country_dest', $destiny_country);;
-                    })->whereDoesntHave('globalexceptionport', function ($q) use ($orig_port,$dest_port) {
+                    })->whereDoesntHave('globalexceptionport', function ($q) use ($orig_port, $dest_port) {
                         $q->whereIn('port_orig', $orig_port)->orwhereIn('port_dest', $dest_port);;
                     })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
 
@@ -3336,7 +3334,7 @@ class QuoteV2Controller extends Controller
                 $remarksGeneral = "";
                 $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier, $typeMode);
                 //Remark Por pais
-                $remarksGeneral .= $this->remarksCondition($data->port_origin->country, $data->port_destiny->country, $data->carrier, $typeMode,'country');
+                $remarksGeneral .= $this->remarksCondition($data->port_origin->country, $data->port_destiny->country, $data->carrier, $typeMode, 'country');
 
                 $data->setAttribute('remarks', $remarks);
                 $data->setAttribute('remarksG', $remarksGeneral);
