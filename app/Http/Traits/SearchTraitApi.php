@@ -652,7 +652,7 @@ trait SearchTraitApi
         if ($status != 'api') {
 
             $transit  = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
-            
+
             if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
@@ -776,5 +776,125 @@ trait SearchTraitApi
         ]);
 
         return $collection;
+    }
+
+    /*  **************************  LCL  ******************************************** */
+
+    /**
+     * totalPalletPackage
+     *
+     * @param  mixed $total_quantity
+     * @param  mixed $cargo_type
+     * @param  mixed $type_load_cargo
+     * @param  mixed $quantity
+     * @return void
+     */
+    public function totalPalletPackage($total_quantity, $cargo_type = 1, $type_load_cargo = array(), $quantity = array())
+    {
+
+        $cantidad_pack_pallet = array();
+
+        if ($total_quantity != null) {
+            if ($cargo_type == '1') { //Pallet
+                $cantidad_pack_pallet = array('pallet' => ['cantidad' => $total_quantity], 'package' => ['cantidad' => 0]);
+            } else {
+                $cantidad_pack_pallet = array('pallet' => ['cantidad' => 0], 'package' => ['cantidad' => $total_quantity]);
+            }
+        } else {
+            $cantidadPallet = 0;
+            $cantidadPackage = 0;
+            $type_load_cargo = array_values(array_filter($type_load_cargo));
+            $quantity = array_values(array_filter($quantity));
+            $count = count($type_load_cargo);
+            for ($i = 0; $i < $count; $i++) {
+                if ($type_load_cargo[$i] == '1') { //Pallet
+                    $cantidadPallet += $quantity[$i];
+                } else {
+                    $cantidadPackage += $quantity[$i];
+                }
+            }
+            $cantidad_pack_pallet = array('pallet' => ['cantidad' => $cantidadPallet], 'package' => ['cantidad' => $cantidadPackage]);
+        }
+
+        return $cantidad_pack_pallet;
+    }
+
+    /**
+     * storeSearchV2
+     *
+     * @param  mixed $origPort
+     * @param  mixed $destPort
+     * @param  mixed $pickUpDate
+     * @param  mixed $equipment
+     * @param  mixed $delivery
+     * @param  mixed $direction
+     * @param  mixed $company
+     * @param  mixed $type
+     * @return void
+     */
+    public function storeSearchV2($origPort, $destPort, $pickUpDate, $equipment, $delivery, $direction, $company, $type)
+    {
+
+        $searchRate = new SearchRate();
+        $searchRate->pick_up_date = $pickUpDate;
+        $searchRate->equipment = json_encode($equipment);
+        $searchRate->delivery = $delivery;
+        $searchRate->direction = $direction;
+        $searchRate->company_user_id = $company;
+        $searchRate->type = $type;
+
+        $searchRate->user_id = \Auth::id();
+        $searchRate->save();
+        foreach ($origPort as $orig => $valueOrig) {
+            foreach ($destPort as $dest => $valueDest) {
+                $detailport = new SearchPort();
+                $detailport->port_orig = $valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                $detailport->port_dest = $valueDest; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                $detailport->search_rate()->associate($searchRate);
+                $detailport->save();
+            }
+        }
+    }
+
+    /**
+     * skipPluck
+     *
+     * @param  mixed $pluck
+     * @return void
+     */
+    public function skipPluck($pluck)
+    {
+        $skips = ["[", "]", "\""];
+        return str_replace($skips, '', $pluck);
+    }
+
+    /**
+     * localMarkups
+     *
+     * @param  mixed $localPercentage
+     * @param  mixed $localAmmount
+     * @param  mixed $localMarkup
+     * @param  mixed $monto
+     * @param  mixed $typeCurrency
+     * @param  mixed $markupLocalCurre
+     * @return void
+     */
+    public function localMarkups($localPercentage, $localAmmount, $localMarkup, $monto, $typeCurrency, $markupLocalCurre)
+    {
+
+        if ($localPercentage != 0) {
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto);
+        } else {
+            $markup = $localAmmount;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto);
+        }
+
+        return $arraymarkup;
     }
 }

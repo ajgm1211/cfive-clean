@@ -1,6 +1,6 @@
 $.fn.editable.defaults.mode = 'inline';
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $.ajaxSetup({
         headers: {
@@ -8,16 +8,16 @@ $(document).ready(function() {
         }
     });
 
-    $(".open-inland-modal").click(function() {
+    $(".open-inland-modal").click(function () {
         var rate_id = $(this).data('rate-id');
         $(".modal-body .automatic_rate_id").val(rate_id);
     });
 
     //Modal para editar rates
-    $(document).on('click', '.edit_rate_modal', function() {
+    $(document).on('click', '.edit_rate_modal', function () {
         var url = "/v2/quotes/rates/edit";
         var rate_id = $(this).data('rate-id');
-        $.get(url + '/' + rate_id, function(data) {
+        $.get(url + '/' + rate_id, function (data) {
             //success data
             console.log(data.origin_port_id);
             $('.origin_port_id').val(data.origin_port_id);
@@ -39,57 +39,57 @@ $(document).ready(function() {
 
     //Mostrar montos totales en Freight
     var sum_freight = 0;
-    $(".total_freight_20").each(function() {
+    $(".total_freight_20").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40").each(function() {
+    $(".total_freight_40").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40hc").each(function() {
+    $(".total_freight_40hc").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40nor").each(function() {
+    $(".total_freight_40nor").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_45").each(function() {
+    $(".total_freight_45").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
     $("#sub_total_freight").html(sum_freight + " USD");
 
     //Mostrar montos totales en Origin
     var sum_origin = 0;
-    $(".total_origin_20").each(function() {
+    $(".total_origin_20").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40").each(function() {
+    $(".total_origin_40").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40hc").each(function() {
+    $(".total_origin_40hc").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40nor").each(function() {
+    $(".total_origin_40nor").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_45").each(function() {
+    $(".total_origin_45").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
     $("#sub_total_origin").html(sum_origin + " USD");
 
     //Mostrar montos totales en destination
     var sum_destination = 0;
-    $(".total_destination_20").each(function() {
+    $(".total_destination_20").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40").each(function() {
+    $(".total_destination_40").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40hc").each(function() {
+    $(".total_destination_40hc").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40nor").each(function() {
+    $(".total_destination_40nor").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_45").each(function() {
+    $(".total_destination_45").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
     $("#sub_total_destination").html(sum_destination + " USD");
@@ -101,7 +101,7 @@ $(document).ready(function() {
     $('.editable').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             if (!response) {
                 return "Unknown error!";
@@ -116,7 +116,7 @@ $(document).ready(function() {
     $('.editable-saleterms').editable({
         url: '/v2/quotes/sale/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             if (!response) {
                 return "Unknown error!";
@@ -131,7 +131,7 @@ $(document).ready(function() {
     $('.editable-rate').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -146,7 +146,7 @@ $(document).ready(function() {
     $('.editable-quote-info').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             var total_volume = parseFloat($('#total-volume').html());
             var weight = parseFloat($('#total-weight').html());
@@ -184,7 +184,7 @@ $(document).ready(function() {
     $('.editable-quote-weight').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             var total_volume = parseFloat($('#total-volume').html());
             var weight = newValue;
@@ -222,7 +222,7 @@ $(document).ready(function() {
     $('.editable-quote-volume').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             var total_volume = newValue;
             var weight = parseFloat($('#total-weight').html());
@@ -266,7 +266,7 @@ $(document).ready(function() {
             data: {
                 "chargeable_weight": chargeable_weight,
             },
-            success: function(data) {
+            success: function (data) {
                 //
             }
         });
@@ -276,7 +276,7 @@ $(document).ready(function() {
     $('.editable-lcl-air').editable({
         url: '/v2/quotes/lcl/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var sum = 0;
             var sum_total = 0;
             var sub_total = 0;
@@ -296,7 +296,7 @@ $(document).ready(function() {
 
             $(this).editable('setValue', newValue);
 
-            $(this).closest('table').find('.total-amount').each(function() {
+            $(this).closest('table').find('.total-amount').each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
@@ -320,7 +320,7 @@ $(document).ready(function() {
 
             $(this).closest('table').find('.sub_total').html(sum);
 
-            $(this).closest('div.amount_charges').find('.sub_total').each(function() {
+            $(this).closest('div.amount_charges').find('.sub_total').each(function () {
                 if ($(this).html()) {
                     sub_total = parseFloat($(this).html());
                     sum_total += sub_total;
@@ -330,7 +330,7 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.amount_charges').find('.sum_total_amount').html(sum_total.toFixed(2));
 
-            $(this).closest('div.amount_charges').find('.markup').each(function() {
+            $(this).closest('div.amount_charges').find('.markup').each(function () {
                 if ($(this).html()) {
                     sub_total_markup = parseFloat($(this).html());
                     sum_total_markup += sub_total_markup;
@@ -353,7 +353,7 @@ $(document).ready(function() {
     $('.editable-lcl-air-inland').editable({
         url: '/v2/quotes/lcl/inland/charge/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -368,7 +368,7 @@ $(document).ready(function() {
     $('.editable-inland').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -383,7 +383,7 @@ $(document).ready(function() {
     $('.editable-inland-rate').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var code = $(this).attr('data-container');
             var amount = parseFloat($(this).closest('tr').find('.inland_markup_' + code).html());
 
@@ -416,7 +416,7 @@ $(document).ready(function() {
     $('.editable-inland-markup').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var code = $(this).attr('data-container');
             var amount = parseFloat($(this).closest('tr').find('.inland_amount_' + code).html());
 
@@ -451,7 +451,7 @@ $(document).ready(function() {
     $('.editable-amount-rate').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var code = $(this).attr('data-container');
             var sum = 0;
@@ -479,7 +479,7 @@ $(document).ready(function() {
             $(this).closest('tr').find('.total_' + code).html(total);
 
             //Conversión de monedas dinámica
-            $(this).closest('table').find('.total_' + code).each(function() {
+            $(this).closest('table').find('.total_' + code).each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
@@ -498,7 +498,7 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.amount_' + code).each(function() {
+            $(this).closest('div.rates').find('.amount_' + code).each(function () {
                 console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
@@ -524,7 +524,7 @@ $(document).ready(function() {
     $('.editable-amount-markup').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var code = $(this).attr('data-container');
             var sum = 0;
@@ -553,7 +553,7 @@ $(document).ready(function() {
             $(this).closest('tr').find('.total_' + code).html(total);
 
             //Conversión de monedas dinámica
-            $(this).closest('table').find('.total_' + code).each(function() {
+            $(this).closest('table').find('.total_' + code).each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
@@ -572,7 +572,7 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.markup_' + code).each(function() {
+            $(this).closest('div.rates').find('.markup_' + code).each(function () {
                 console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
@@ -599,7 +599,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-20').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
@@ -617,7 +617,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-20').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
@@ -635,7 +635,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
@@ -653,7 +653,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
@@ -671,7 +671,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40hc').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
@@ -690,7 +690,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40hc').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
@@ -708,7 +708,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40nor').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -726,7 +726,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40nor').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -744,7 +744,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-45').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
@@ -762,7 +762,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-45').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
@@ -784,7 +784,7 @@ $(document).ready(function() {
             weekStart: 1
         },
         url: '/v2/quotes/update/details',
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             if (!response) {
                 return "Unknown error!";
             }
@@ -797,7 +797,7 @@ $(document).ready(function() {
 });
 
 //Guardar cargos LCL/AIR
-$(document).on('click', '.store_charge_lcl', function() {
+$(document).on('click', '.store_charge_lcl', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
     var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
@@ -814,7 +814,7 @@ $(document).on('click', '.store_charge_lcl', function() {
     if (surcharge_id == '' || calculation_type_id == '' || units == '' || price_per_unit == '') {
         notification('There are empty fields. Please verify and try again', 'error');
     } else {
-        $(this).closest("table").find('.total-amount').each(function() {
+        $(this).closest("table").find('.total-amount').each(function () {
             var sub_total = parseFloat($(this).html());
             var currency = $(this).closest('tr').find('.local_currency').html();
             var currency_cfg = $("#currency_id").val();
@@ -853,7 +853,7 @@ $(document).on('click', '.store_charge_lcl', function() {
                 "type_id": type_id,
                 "currency_id": currency_id
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.message == 'Ok') {
                     swal(
                         'Done!',
@@ -901,12 +901,12 @@ $(document).on('click', '.store_charge_lcl', function() {
     }
 });
 
-$(document).on('click', '.store_sale_charge', function() {
+$(document).on('click', '.store_sale_charge', function () {
     var theElement = $(this);
     var containers = ['20DV', '40DV', '40HC', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'];
     var equipments = {};
 
-    $.each(containers, function(index, value) {
+    $.each(containers, function (index, value) {
         equipments['c' + value] = theElement.closest("tr").find(".c" + value).val();
     });
     var id = $(this).closest("tr").find(".sale_term_id").val();
@@ -929,7 +929,7 @@ $(document).on('click', '.store_sale_charge', function() {
             "total": total,
             "currency_id": currency_id,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Success!',
@@ -942,7 +942,7 @@ $(document).on('click', '.store_sale_charge', function() {
 });
 
 //Guardar cargos FCL
-$(document).on('click', '.store_charge', function() {
+$(document).on('click', '.store_charge', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var number = $(this).closest("tr").find(".number").val();
     var theElement = $(this);
@@ -952,7 +952,7 @@ $(document).on('click', '.store_charge', function() {
     var equipments = {};
 
     //Creando variables para guardar en BD
-    $.each(containers, function(index, value) {
+    $.each(containers, function (index, value) {
         window['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
         window['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
         window['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
@@ -976,10 +976,10 @@ $(document).on('click', '.store_charge', function() {
             "type_id": type_id,
             "currency_id": currency_id
         },
-        beforeSend: function() {
+        beforeSend: function () {
             notification('Saving data &nbsp;<i class="fa fa-spinner fa-spin"></i>');
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 toastr.clear();
                 swal(
@@ -1000,7 +1000,7 @@ $(document).on('click', '.store_charge', function() {
             var currency = '';
             var currency_cfg = '';
 
-            $.each(containers, function(index, value) {
+            $.each(containers, function (index, value) {
                 window["amount_from_db_" + value] = amounts['c' + value] || 0;
                 window["markup_from_db_" + value] = markups['m' + value] || 0;
                 window["total_" + value] = parseFloat(window["amount_from_db_" + value]) + parseFloat(window["markup_from_db_" + value]);
@@ -1011,14 +1011,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_freight_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_freight_' + number).find('.total_freight_' + value).html('');
                     $('.total_freight_' + number).find('.total_freight_' + value).html(data.sum_total_freight[value]);
                 });
@@ -1027,7 +1027,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1036,7 +1036,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
                     console.log(window["amount_currency_" + value]);
@@ -1066,14 +1066,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_destination_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_destination_' + number).find('.total_destination_' + value).html('');
                     $('.total_destination_' + number).find('.total_destination_' + value).html(data.sum_total_destination[value]);
                 });
@@ -1082,7 +1082,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1091,7 +1091,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
@@ -1121,14 +1121,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_origin_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_origin_' + number).find('.total_origin_' + value).html('');
                     $('.total_origin_' + number).find('.total_origin_' + value).html(data.sum_total_origin[value]);
                 });
@@ -1137,7 +1137,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1146,7 +1146,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
@@ -1176,7 +1176,7 @@ $(document).on('click', '.store_charge', function() {
 });
 
 //Borrar quote
-$(document).on('click', '#delete-quote-v2', function() {
+$(document).on('click', '#delete-quote-v2', function () {
     var id = $(this).attr('data-quote-id');
     var theElement = $(this);
     swal({
@@ -1185,13 +1185,13 @@ $(document).on('click', '#delete-quote-v2', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
+    }).then(function (result) {
 
         if (result.value) {
             $.ajax({
                 type: 'get',
                 url: '/v2/quotes/delete/' + id,
-                success: function(data) {
+                success: function (data) {
                     swal(
                         'Deleted!',
                         'Your file has been deleted.',
@@ -1207,7 +1207,7 @@ $(document).on('click', '#delete-quote-v2', function() {
 });
 
 
-$(document).on('click', '#delete-quote-show', function() {
+$(document).on('click', '#delete-quote-show', function () {
     var id = $(this).attr('data-quote-show-id');
     var theElement = $(this);
 
@@ -1217,13 +1217,13 @@ $(document).on('click', '#delete-quote-show', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
+    }).then(function (result) {
 
         if (result.value) {
             $.ajax({
                 type: 'get',
                 url: '/v2/quotes/delete/' + id,
-                success: function(data) {
+                success: function (data) {
                     swal(
                         'Deleted!',
                         'Your file has been deleted.',
@@ -1238,7 +1238,7 @@ $(document).on('click', '#delete-quote-show', function() {
 });
 
 //Borrar rates
-$(document).on('click', '.delete-rate', function() {
+$(document).on('click', '.delete-rate', function () {
     var id = $(this).attr('data-rate-id');
     var theElement = $(this);
     swal({
@@ -1247,12 +1247,12 @@ $(document).on('click', '.delete-rate', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/rate/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1270,7 +1270,7 @@ $(document).on('click', '.delete-rate', function() {
 
 //Guardar Sale Terms
 
-$('#saveSaleTerm').on('click', function(e) {
+$('#saveSaleTerm').on('click', function (e) {
     e.preventDefault();
     var origin_port = $("#origin_port_select").val();
     var destination_port = $("#destination_port_select").val();
@@ -1288,7 +1288,7 @@ $('#saveSaleTerm').on('click', function(e) {
 });
 
 //Borrar sale terms
-$(document).on('click', '.delete-sale-term', function() {
+$(document).on('click', '.delete-sale-term', function () {
     var id = $(this).attr('data-saleterm-id');
     var theElement = $(this);
     swal({
@@ -1297,12 +1297,12 @@ $(document).on('click', '.delete-sale-term', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/saleterm/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1319,7 +1319,7 @@ $(document).on('click', '.delete-sale-term', function() {
 });
 
 //Borrar cargo FCL
-$(document).on('click', '.delete-charge', function() {
+$(document).on('click', '.delete-charge', function () {
     var id = $(this).closest('tr').find('.charge_id').val();
     var type = $(this).closest('tr').find('.type').val();
     var theElement = $(this);
@@ -1329,7 +1329,7 @@ $(document).on('click', '.delete-charge', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
@@ -1337,7 +1337,7 @@ $(document).on('click', '.delete-charge', function() {
                     'type': type,
                 },
                 url: '/v2/quotes/delete/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1357,7 +1357,7 @@ $(document).on('click', '.delete-charge', function() {
 });
 
 //Borrar cargos SaleTerms
-$(document).on('click', '.delete-saleterm-charge', function() {
+$(document).on('click', '.delete-saleterm-charge', function () {
     var id = $(this).closest('tr').find('.saleterm_charge_id').val();
     var theElement = $(this);
     swal({
@@ -1366,12 +1366,12 @@ $(document).on('click', '.delete-saleterm-charge', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/saleterm/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1387,7 +1387,7 @@ $(document).on('click', '.delete-saleterm-charge', function() {
 });
 
 //Borrar cargo LCL/AIR
-$(document).on('click', '.delete-charge-lcl', function() {
+$(document).on('click', '.delete-charge-lcl', function () {
     var id = $(this).closest('tr').find('.charge_id').val();
     var type = $(this).closest('tr').find('.type').val();
     var theElement = $(this);
@@ -1397,7 +1397,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
@@ -1405,7 +1405,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
                     'type': type,
                 },
                 url: '/v2/quotes/lcl/delete/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1425,7 +1425,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
 });
 
 //Borrar inland
-$(document).on('click', '.delete-inland', function() {
+$(document).on('click', '.delete-inland', function () {
     var id = $(this).closest('ul').find('.inland_id').val();
     var theElement = $(this);
     swal({
@@ -1434,12 +1434,12 @@ $(document).on('click', '.delete-inland', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/inland/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1455,21 +1455,21 @@ $(document).on('click', '.delete-inland', function() {
 });
 
 //Editar payments
-$(document).on('click', '#edit-payments', function() {
+$(document).on('click', '#edit-payments', function () {
     $(".payment_conditions_span").attr('hidden', 'true');
     $(".payment_conditions_textarea").removeAttr('hidden');
     $("#update_payments").removeAttr('hidden');
 });
 
 //Cancelar editar payments
-$(document).on('click', '#cancel-payments', function() {
+$(document).on('click', '#cancel-payments', function () {
     $(".payment_conditions_span").removeAttr('hidden');
     $(".payment_conditions_textarea").attr('hidden', 'true');
     $("#update_payments").attr('hidden', 'true');
 });
 
 //Actualizar payments
-$(document).on('click', '#update-payments', function() {
+$(document).on('click', '#update-payments', function () {
     var id = $(".id").val();
     var payments = tinymce.get("payment_conditions").getContent();
     $.ajax({
@@ -1478,7 +1478,7 @@ $(document).on('click', '#update-payments', function() {
         data: {
             'payments': payments,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1496,45 +1496,45 @@ $(document).on('click', '#update-payments', function() {
 });
 
 //Editar terms
-$(document).on('click', '#edit-terms', function() {
+$(document).on('click', '#edit-terms', function () {
     $(".terms_and_conditions_span").attr('hidden', 'true');
     $(".terms_and_conditions_textarea").removeAttr('hidden');
     $("#update_terms").removeAttr('hidden');
 });
 
-$(document).on('click', '#edit-terms-english', function() {
+$(document).on('click', '#edit-terms-english', function () {
     $(".terms_and_conditions_english_span").attr('hidden', 'true');
     $(".terms_and_conditions_english_textarea").removeAttr('hidden');
     $("#update_terms_english").removeAttr('hidden');
 });
 
-$(document).on('click', '#edit-terms-portuguese', function() {
+$(document).on('click', '#edit-terms-portuguese', function () {
     $(".terms_and_conditions_portuguese_span").attr('hidden', 'true');
     $(".terms_and_conditions_portuguese_textarea").removeAttr('hidden');
     $("#update_terms_portuguese").removeAttr('hidden');
 });
 
 //Cancelar editar terms
-$(document).on('click', '#cancel-terms', function() {
+$(document).on('click', '#cancel-terms', function () {
     $(".terms_and_conditions_span").removeAttr('hidden');
     $(".terms_and_conditions_textarea").attr('hidden', 'true');
     $("#update_terms").attr('hidden', 'true');
 });
 
-$(document).on('click', '#cancel-terms-english', function() {
+$(document).on('click', '#cancel-terms-english', function () {
     $(".terms_and_conditions_english_span").removeAttr('hidden');
     $(".terms_and_conditions_english_textarea").attr('hidden', 'true');
     $("#update_terms_english").attr('hidden', 'true');
 });
 
-$(document).on('click', '#cancel-terms-portuguese', function() {
+$(document).on('click', '#cancel-terms-portuguese', function () {
     $(".terms_and_conditions_portuguese_span").removeAttr('hidden');
     $(".terms_and_conditions_portuguese_textarea").attr('hidden', 'true');
     $("#update_terms_portuguese").attr('hidden', 'true');
 });
 
 //Actualizar terms
-$(document).on('click', '#update-terms', function() {
+$(document).on('click', '#update-terms', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions").getContent();
     $.ajax({
@@ -1544,7 +1544,7 @@ $(document).on('click', '#update-terms', function() {
             'name': 'terms_and_conditions',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1561,7 +1561,7 @@ $(document).on('click', '#update-terms', function() {
     });
 });
 
-$(document).on('click', '#update-terms-english', function() {
+$(document).on('click', '#update-terms-english', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions_english").getContent();
     $.ajax({
@@ -1571,7 +1571,7 @@ $(document).on('click', '#update-terms-english', function() {
             'name': 'terms_english',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1589,7 +1589,7 @@ $(document).on('click', '#update-terms-english', function() {
 });
 
 
-$(document).on('click', '#update-terms-portuguese', function() {
+$(document).on('click', '#update-terms-portuguese', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions_portuguese").getContent();
     $.ajax({
@@ -1599,7 +1599,7 @@ $(document).on('click', '#update-terms-portuguese', function() {
             'name': 'terms_portuguese',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1617,7 +1617,7 @@ $(document).on('click', '#update-terms-portuguese', function() {
 });
 
 //Mostrar inputs Origin/Destination address
-$(document).on('change', '.delivery_type', function(e) {
+$(document).on('change', '.delivery_type', function (e) {
 
     if ($(this).val() == 1) {
         $(".origin_address_label").addClass('hide');
@@ -1659,7 +1659,7 @@ $(document).on('change', '.delivery_type', function(e) {
 });
 
 //Habilitar edicion campos de la cotizacion
-$(document).on('click', '#edit-quote', function() {
+$(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden', 'true');
     $(".company_span").attr('hidden', 'true');
     $(".status_span").attr('hidden', 'true');
@@ -1722,7 +1722,7 @@ $(document).on('click', '#edit-quote', function() {
 });
 
 //Cancelar actualizacion de datos de cotizacion
-$(document).on('click', '#cancel', function() {
+$(document).on('click', '#cancel', function () {
     $(".quote_id_span").removeAttr('hidden');
     $(".company_span").removeAttr('hidden');
     $(".status_span").removeAttr('hidden');
@@ -1777,7 +1777,7 @@ $(document).on('click', '#cancel', function() {
 });
 
 //Actualizar datos de cotización
-$(document).on('click', '#update', function() {
+$(document).on('click', '#update', function () {
     var id = $(".id").val();
     var quote_id = $(".quote_id").val();
     var company_id = $(".company_id").val();
@@ -1825,7 +1825,7 @@ $(document).on('click', '#update', function() {
             'origin_address': origin_address,
             'destination_address': destination_address,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1909,7 +1909,7 @@ $(document).on('click', '#update', function() {
                 $(".equipment").val(data.quote['equipment']);
                 $(".equipment_span").empty();
                 var length = $.parseJSON(data.quote['equipment']).length;
-                $.each($.parseJSON(data.quote['equipment']), function(index, value) {
+                $.each($.parseJSON(data.quote['equipment']), function (index, value) {
                     if (index === (length - 1)) {
                         $(".equipment_span").append(value);
                     } else {
@@ -1988,22 +1988,22 @@ $(document).on('click', '#update', function() {
 /** Cargos dinámicos **/
 
 //Remover campos en freight
-$(document).on('click', '.removeFreightCharge', function(e) {
+$(document).on('click', '.removeFreightCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Remover campos en origin
-$(document).on('click', '.removeOriginCharge', function(e) {
+$(document).on('click', '.removeOriginCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Remover campos en destination
-$(document).on('click', '.removeDestinationCharge', function(e) {
+$(document).on('click', '.removeDestinationCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Enviando cotizaciones FCL
-$(document).on('click', '#send-pdf-quotev2', function() {
+$(document).on('click', '#send-pdf-quotev2', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2016,11 +2016,11 @@ $(document).on('click', '#send-pdf-quotev2', function() {
             type: 'POST',
             url: '/v2/quotes/send',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2055,7 +2055,7 @@ $(document).on('click', '#send-pdf-quotev2', function() {
 });
 
 //Enviando cotizaciones LCL
-$(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
+$(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2068,11 +2068,11 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
             type: 'POST',
             url: '/v2/quotes/send/lcl',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2-lcl-air').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2-lcl-air').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2107,7 +2107,7 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
 });
 
 //Enviando cotizaciones AIR
-$(document).on('click', '#send-pdf-quotev2-air', function() {
+$(document).on('click', '#send-pdf-quotev2-air', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2120,11 +2120,11 @@ $(document).on('click', '#send-pdf-quotev2-air', function() {
             type: 'POST',
             url: '/v2/quotes/send/air',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2-air').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2-air').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2160,7 +2160,7 @@ $(document).on('click', '#send-pdf-quotev2-air', function() {
 
 //Calculando el total de un cargo en Saleterm
 
-$(document).on("change keyup keydown", ".units, .rate", function() {
+$(document).on("change keyup keydown", ".units, .rate", function () {
     var sum = 0;
     var total_amount = 0;
     var sum_total = 0;
@@ -2171,8 +2171,8 @@ $(document).on("change keyup keydown", ".units, .rate", function() {
     var self = this;
     var data = '';
     var currency_cfg = $("#currency_id").val();
-    $(".rate").each(function() {
-        $(this).each(function() {
+    $(".rate").each(function () {
+        $(this).each(function () {
             var quantity = $(this).closest('tr').find('.units').val();
 
             if (quantity > 0) {
@@ -2186,7 +2186,7 @@ $(document).on("change keyup keydown", ".units, .rate", function() {
     });
 });
 
-$(document).on('change', '#inland_type', function() {
+$(document).on('change', '#inland_type', function () {
     if ($('#inland_type').val() == 'Origin') {
         $(".origin_port").removeClass('hide');
         $(".destination_port").addClass('hide');
@@ -2201,7 +2201,7 @@ $(document).on('change', '#inland_type', function() {
 });
 
 //Mostrar y ocultar puertos en Sale Terms
-$(document).on('change', '#saleterm_type', function() {
+$(document).on('change', '#saleterm_type', function () {
     if ($('#saleterm_type').val() == 'origin') {
         $(".origin_port").removeClass('hide');
 
@@ -2225,7 +2225,7 @@ $(document).on('change', '#saleterm_type', function() {
 });
 
 //Mostrar y ocultar opciones pdf
-$(document).on('change', '#show_hide_select', function() {
+$(document).on('change', '#show_hide_select', function () {
     if ($('#show_hide_select').val() == 'total in') {
         $(".group_origin_charges").addClass('hide');
         $(".group_destination_charges").addClass('hide');
@@ -2239,7 +2239,7 @@ $(document).on('change', '#show_hide_select', function() {
 });
 
 //Actualizando opciones PDF
-$(document).on('change', '.pdf-feature', function() {
+$(document).on('change', '.pdf-feature', function () {
     var id = $(this).attr('data-quote-id');
     var name = $(this).attr('data-name');
     var value = 0;
@@ -2254,7 +2254,7 @@ $(document).on('change', '.pdf-feature', function() {
         type: 'POST',
         url: '/v2/quotes/feature/pdf/update',
         data: { "value": value, "name": name, "id": id },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 //$(this).attr('checked', true).val(0);
             }
@@ -2263,7 +2263,7 @@ $(document).on('change', '.pdf-feature', function() {
 });
 
 //GDP
-$(document).on('change', '.gdp', function() {
+$(document).on('change', '.gdp', function () {
     if ($(this).val() == 1) {
         $(".risk_level").removeAttr('hidden');
         $(".div_risk_level").removeAttr('hidden');
@@ -2275,7 +2275,7 @@ $(document).on('change', '.gdp', function() {
 });
 
 //King of cargo
-$(document).on('change', '.kind_of_cargo', function() {
+$(document).on('change', '.kind_of_cargo', function () {
     if ($(this).val() == 'Pharma') {
         $(".gdp").removeAttr('hidden');
         $(".gdp_span").attr('hidden', 'true');
@@ -2291,7 +2291,7 @@ $(document).on('change', '.kind_of_cargo', function() {
 
 //Calculando total en cada cargo LCL/AIR
 
-$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function() {
+$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function () {
     var sum = 0;
     var total_amount = 0;
     var sum_total = 0;
@@ -2302,8 +2302,8 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     var self = this;
     var data = '';
     var currency_cfg = $("#currency_id").val();
-    $(".price_per_unit").each(function() {
-        $(this).each(function() {
+    $(".price_per_unit").each(function () {
+        $(this).each(function () {
             var quantity = $(this).closest('tr').find('.units').val();
             var currency_id = $(self).closest('tr').find('.currency_id').val();
             var number = $(self).closest('tr').find('.number').val();
@@ -2313,7 +2313,7 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
                     $.ajax({
                         url: '/api/currency/' + currency_id,
                         dataType: 'json',
-                        success: function(json) {
+                        success: function (json) {
                             var amount = $(self).closest('tr').find('.price_per_unit').val();
                             var quantity = $(self).closest('tr').find('.units').val();
                             markup = $(self).closest('tr').find('.markup').val();
@@ -2349,10 +2349,10 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     });
 });
 
-$(document).on("change", ".total_22", function() {
+$(document).on("change", ".total_22", function () {
     var sum = 0;
     var value = 0;
-    $(this).each(function() {
+    $(this).each(function () {
         value = Number($(this).closest('table').find('.total-amount').html());
         sum += value;
     });
@@ -2361,22 +2361,22 @@ $(document).on("change", ".total_22", function() {
 
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     if ($("select[name='company_id']").val() == '') {
         $('select[name="contact_id"]').empty();
     }
 
-    $("select[name='company_id']").on('change', function() {
+    $("select[name='company_id']").on('change', function () {
         var company_id = $(this).val();
         if (company_id) {
             $('select[name="contact_id"]').empty();
             $.ajax({
                 url: "/quotes/company/contact/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="client"]').empty();
                     $('select[name="contact_id"]').append('<option value="">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2384,10 +2384,10 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/price/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="price_id"]').empty();
                     $('select[name="price_id"]').append('<option value="">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="price_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2401,7 +2401,7 @@ $(document).ready(function() {
 
 /** Search **/
 
-$(document).on('change', '#quoteType', function(e) {
+$(document).on('change', '#quoteType', function (e) {
 
 
     if ($(this).val() == 1) {
@@ -2638,7 +2638,7 @@ $(document).on('change', '#quoteType', function(e) {
     }
 });
 
-$(document).on('change', '#delivery_type', function(e) {
+$(document).on('change', '#delivery_type', function (e) {
 
     if ($(this).val() == 1) {
         $("#origin_address_label").addClass('hide');
@@ -2663,13 +2663,13 @@ $(document).on('change', '#delivery_type', function(e) {
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('.select2-selection__rendered').removeAttr('title');
     $('#select2-price_id-container').text('Please an option');
 
     // CLEARING COMPANIES SELECT
 
-    $("select[name='company_id_quote']").on('change', function() {
+    $("select[name='company_id_quote']").on('change', function () {
         var company_id = $(this).val();
         $("#contact_id").val('');
         if ($("#m_select2_2_modal").val() != '0')
@@ -2685,9 +2685,9 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/contact/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="contact_id"]').empty();
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2696,10 +2696,10 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/price/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="price_id"]').empty();
                     $('select[name="price_id"]').append('<option value="0">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="price_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
 
@@ -2723,7 +2723,7 @@ $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
 
-$(".quote_search").on("click", function() {
+$(".quote_search").on("click", function () {
 
     //FCL
     if ($('#quoteType').val() == 1) {
@@ -2737,12 +2737,12 @@ $(".quote_search").on("click", function() {
     $(".quote_search").attr("type", "submit");
 
     var form = $(this).parents('form');
-    $(form).submit(function() {
+    $(form).submit(function () {
         notification('Searching  &nbsp;&nbsp;<i class="fa fa-spinner fa-spin"></i>', 'info');
     });
 });
 
-$(".quote_man").on("click", function() {
+$(".quote_man").on("click", function () {
 
 
 
@@ -2767,7 +2767,7 @@ $(".quote_man").on("click", function() {
     $(".quote_man").attr("type", "submit");
 });
 
-$('.btn-input__select').on('click', function() {
+$('.btn-input__select').on('click', function () {
 
     var idRate = $(this).attr('rate-id');
     $cantidadDestino = $('.labelDest' + idRate).length;
@@ -2778,32 +2778,31 @@ $('.btn-input__select').on('click', function() {
     $('.labelOrig' + idRate).toggleClass('visible__select-add');
     $('.labelDest' + idRate).toggleClass('visible__select-add');
     if ($cantidadDestino == 1) {
-        $('.labelDest' + idRate).addClass('style__select-add');
-        $('#inputID-select1-' + idRate).attr('checked', true);
-
-        calcularInlands('destino', idRate);
+        //   $('.labelDest' + idRate).addClass('style__select-add');
+        //   $('#inputID-select1-' + idRate).attr('checked', true);
+        //   calcularInlands('destino', idRate);
 
     }
 
     if ($cantidadOrigen == 1) {
 
-        $('.labelOrig' + idRate).addClass('style__select-add');
-        $('#inputIO-select1-' + idRate).attr('checked', true);
-        calcularInlands('origen', idRate);
+        //   $('.labelOrig' + idRate).addClass('style__select-add');
+        //   $('#inputIO-select1-' + idRate).attr('checked', true);
+        //   calcularInlands('origen', idRate);
     }
 
 });
 
-$('.btn-input__select-add').on('click', function() {
+$('.btn-input__select-add').on('click', function () {
     $(this).toggleClass('style__select-add');
 });
 
-$('.input-select').on('click', function() {
+$('.input-select').on('click', function () {
     var ident = $(this).attr('id');
     $('.' + ident + '').toggleClass('border-card');
 });
 
-$('.inlands').on('click', function() {
+$('.inlands').on('click', function () {
     $('.card-p__quotes').toggleClass('border-card-p');
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
@@ -2826,12 +2825,10 @@ $('.inlands').on('click', function() {
 
 
 
-
-    var i20 = $("#valor-d20" + id + "-" + idRate).html();
-    var i40 = $("#valor-d40" + id + "-" + idRate).html();
-    var i40h = $("#valor-d40h" + id + "-" + idRate).html();
-
-    // Totaless
+    //DRY
+    var i20 = $("#valor-d20DV" + id + "-" + idRate).html();
+    var i40 = $("#valor-d40DV" + id + "-" + idRate).html();
+    var i40h = $("#valor-d40HC" + id + "-" + idRate).html();
 
     var tot20dv_html = $(".tot20DV-" + idRate);
     var tot20dv_val = $("#tot20DV-" + idRate).val();
@@ -2845,20 +2842,110 @@ $('.inlands').on('click', function() {
     var tot40hc_val = $("#tot40HC-" + idRate).val();
     var tot_40hc = '';
 
+    var sub20o = $("#sub_inland_20DV_o" + idRate);
+    var sub40o = $("#sub_inland_40DV_o" + idRate);
+    var sub40ho = $("#sub_inland_40HC_o" + idRate);
 
-    var sub20o = $("#sub_inland_20_o" + idRate);
-    var sub40o = $("#sub_inland_40_o" + idRate);
-    var sub40ho = $("#sub_inland_40h_o" + idRate);
-
-    var sub20d = $("#sub_inland_20_d" + idRate);
-    var sub40d = $("#sub_inland_40_d" + idRate);
-    var sub40hd = $("#sub_inland_40h_d" + idRate);
+    var sub20d = $("#sub_inland_20DV_d" + idRate);
+    var sub40d = $("#sub_inland_4DV_d" + idRate);
+    var sub40hd = $("#sub_inland_40HC_d" + idRate);
 
 
-    var sub20 = $("#sub_inland_20" + idRate).html();
-    var sub40 = $("#sub_inland_40" + idRate).html();
-    var sub40h = $("#sub_inland_40h" + idRate).html();
+    var sub20 = $("#sub_inland_20DV" + idRate).html();
+    var sub40 = $("#sub_inland_40DV" + idRate).html();
+    var sub40h = $("#sub_inland_40HC" + idRate).html();
+
+
+
+    //REFEER
+
+    var i20RF = $("#valor-d20RF" + id + "-" + idRate).html();
+    var i40RF = $("#valor-d40RF" + id + "-" + idRate).html();
+    var i40HCRF = $("#valor-d40HCRF" + id + "-" + idRate).html();
+
+    var tot20rf_html = $(".tot20RF-" + idRate);
+    var tot20rf_val = $("#tot20RF-" + idRate).val();
+    var tot_20rf = '';
+
+    var tot40rf_html = $(".tot40RF-" + idRate);
+    var tot40rf_val = $("#tot40RF-" + idRate).val();
+    var tot_40rf = '';
+
+    var tot40hcrf_html = $(".tot40HCRF-" + idRate);
+    var tot40hcrf_val = $("#tot40HCRF-" + idRate).val();
+    var tot_40hcrf = '';
+
+    var sub20RFo = $("#sub_inland_20RF_o" + idRate);
+    var sub40RFo = $("#sub_inland_40RF_o" + idRate);
+    var sub40HCRFo = $("#sub_inland_40HCRF_o" + idRate);
+
+    var sub20RFd = $("#sub_inland_20RF_d" + idRate);
+    var sub40RFd = $("#sub_inland_40RF_d" + idRate);
+    var sub40HCRFd = $("#sub_inland_40HCRF_d" + idRate);
+
+
+
+    var sub20RF = $("#sub_inland_20RF" + idRate).html();
+    var sub40RF = $("#sub_inland_40RF" + idRate).html();
+    var sub40HCRF = $("#sub_inland_40HCRF" + idRate).html();
+
+    // OT 
+
+    var i20OT = $("#valor-d20OT" + id + "-" + idRate).html();
+    var i40OT = $("#valor-d40OT" + id + "-" + idRate).html();
+
+
+    var tot20ot_html = $(".tot20OT-" + idRate);
+    var tot20ot_val = $("#tot20OT-" + idRate).val();
+    var tot_20ot = '';
+
+    var tot40ot_html = $(".tot40OT-" + idRate);
+    var tot40ot_val = $("#tot40OT-" + idRate).val();
+    var tot_40ot = '';
+
+
+    var sub20OTo = $("#sub_inland_20OT_o" + idRate);
+    var sub40OTo = $("#sub_inland_40OT_o" + idRate);
+    var sub20OTd = $("#sub_inland_20OT_d" + idRate);
+    var sub40OTd = $("#sub_inland_40OT_d" + idRate);
+
+
+    var sub20OT = $("#sub_inland_20OT" + idRate).html();
+    var sub40OT = $("#sub_inland_40OT" + idRate).html();
+
+
+    // RACK
+
+    var i20FR = $("#valor-d20FR" + id + "-" + idRate).html();
+    var i40FR = $("#valor-d40FR" + id + "-" + idRate).html();
+
+
+    var tot20fr_html = $(".tot20FR-" + idRate);
+    var tot20fr_val = $("#tot20FR-" + idRate).val();
+    var tot_20fr = '';
+
+    var tot40fr_html = $(".tot40FR-" + idRate);
+    var tot40fr_val = $("#tot40FR-" + idRate).val();
+    var tot_40fr = '';
+
+    var sub20FRo = $("#sub_inland_20FR_o" + idRate);
+    var sub40FRo = $("#sub_inland_40FR_o" + idRate);
+    var sub20FRd = $("#sub_inland_20FR_d" + idRate);
+    var sub40FRd = $("#sub_inland_40FR_d" + idRate);
+
+
+    var sub20FR = $("#sub_inland_20FR" + idRate).html();
+    var sub40FR = $("#sub_inland_40FR" + idRate).html();
+
+
+
+
+
+
     if (theElement.prop('checked')) {
+
+
+        //Dry 
 
         sub20d.val(parseFloat(i20));
         sub40d.val(parseFloat(i40));
@@ -2872,13 +2959,60 @@ $('.inlands').on('click', function() {
         tot_40 = parseFloat(tot40dv_val) + parseFloat(sub40);
         tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
+        //Refeer
+        sub20RFd.val(parseFloat(i20RF));
+        sub40RFd.val(parseFloat(i40RF));
+        sub40HCRFd.val(parseFloat(i40HCRF));
+
+        sub20RF = parseFloat(sub20RFo.val()) + parseFloat(sub20RFd.val());
+        sub40RF = parseFloat(sub40RFo.val()) + parseFloat(sub40RFd.val());
+        sub40HCRF = parseFloat(sub40HCRFo.val()) + parseFloat(sub40HCRFd.val());
+
+        tot_20rf = parseFloat(tot20rf_val) + parseFloat(sub20RF);
+        tot_40rf = parseFloat(tot40rf_val) + parseFloat(sub40RF);
+        tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
+
+
+        //OT
+        sub20OTd.val(parseFloat(i20OT));
+        sub40OTd.val(parseFloat(i40OT));
+
+        sub20OT = parseFloat(sub20OTo.val()) + parseFloat(sub20OTd.val());
+        sub40OT = parseFloat(sub40OTo.val()) + parseFloat(sub40OTd.val());
+
+        tot_20ot = parseFloat(tot20ot_val) + parseFloat(sub20OT);
+        tot_40ot = parseFloat(tot40ot_val) + parseFloat(sub40OT);
+
+
+        //RACK 
+
+
+        sub20FRd.val(parseFloat(i20FR));
+        sub40FRd.val(parseFloat(i40FR));
+
+        sub20FR = parseFloat(sub20FRo.val()) + parseFloat(sub20FRd.val());
+        sub40FR = parseFloat(sub40FRo.val()) + parseFloat(sub40FRd.val());
+
+        tot_20fr = parseFloat(tot20fr_val) + parseFloat(sub20FR);
+        tot_40fr = parseFloat(tot40fr_val) + parseFloat(sub40FR);
+
+
 
     } else {
 
+        //Dry
         sub20d.val(0.00);
         sub40d.val(0.00);
         sub40hd.val(0.00);
 
+        //Refeer
+
+        sub20RFd.val(0.00);
+        sub40RFd.val(0.00);
+        sub40HCRFd.val(0.00);
+
+
+        // Dry
         if (parseFloat(sub20o.val()) > parseFloat(sub20d.val()))
             sub20 = parseFloat(sub20o.val()) - parseFloat(sub20d.val());
         else
@@ -2904,18 +3038,112 @@ $('.inlands').on('click', function() {
         tot_40hc = parseFloat(tot40hc_val) - parseFloat(sub40h);
 
 
+        //Refeer
+
+        if (parseFloat(sub20RFo.val()) > parseFloat(sub20RFd.val()))
+            sub20RF = parseFloat(sub20RFo.val()) - parseFloat(sub20RFd.val());
+        else
+            sub20RF = parseFloat(sub20RFd.val()) - parseFloat(sub20RFo.val());
+
+        tot_20rf = parseFloat(tot20rf_val) + parseFloat(sub20RF);
+
+
+        if (parseFloat(sub40RFo.val()) > parseFloat(sub40RFd.val()))
+            sub40RF = parseFloat(sub40RFo.val()) - parseFloat(sub40RFd.val());
+        else
+            sub40RF = parseFloat(sub40RFo.val()) - parseFloat(sub40RFd.val());
+
+
+        tot_40rf = parseFloat(tot40rf_val) - parseFloat(sub40RF);
+
+
+        if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()))
+            sub40HCRF = parseFloat(sub40HCRFo.val()) - parseFloat(sub40HCRFd.val());
+        else
+            sub40HCRF = parseFloat(sub40HCRFo.val() - parseFloat(sub40HCRFd.val()));
+
+        tot_40hcrf = parseFloat(tot40hcrf_val) - parseFloat(sub40HCRF);
+
+
+        //OT
+
+        if (parseFloat(sub20OTo.val()) > parseFloat(sub20OTd.val()))
+            sub20OT = parseFloat(sub20OTo.val()) - parseFloat(sub20OTd.val());
+        else
+            sub20OT = parseFloat(sub20OTd.val()) - parseFloat(sub20OTo.val());
+
+        tot_20ot = parseFloat(tot20ot_val) + parseFloat(sub20OT);
+
+
+        if (parseFloat(sub40OTo.val()) > parseFloat(sub40OTd.val()))
+            sub40OT = parseFloat(sub40OTo.val()) - parseFloat(sub40OTd.val());
+        else
+            sub40OT = parseFloat(sub40OTo.val()) - parseFloat(sub40OTd.val());
+
+        tot_40ot = parseFloat(tot40ot_val) - parseFloat(sub40OT);
+
+        //Flat Rack 
+
+        if (parseFloat(sub20FRo.val()) > parseFloat(sub20FRd.val()))
+            sub20FR = parseFloat(sub20FRo.val()) - parseFloat(sub20FRd.val());
+        else
+            sub20FR = parseFloat(sub20FRd.val()) - parseFloat(sub20FRo.val());
+
+        tot_20fr = parseFloat(tot20fr_val) + parseFloat(sub20FR);
+
+
+        if (parseFloat(sub40FRo.val()) > parseFloat(sub40FRd.val()))
+            sub40FR = parseFloat(sub40FRo.val()) - parseFloat(sub40FRd.val());
+        else
+            sub40FR = parseFloat(sub40FRo.val()) - parseFloat(sub40FRd.val());
+
+        tot_40fr = parseFloat(tot40fr_val) - parseFloat(sub40FR);
+
     }
 
-    $("#sub_inland_20" + idRate).html(sub20);
-    $("#sub_inland_40" + idRate).html(sub40);
-    $("#sub_inland_40h" + idRate).html(sub40h);
-    tot20dv_html.html(tot_20);
-    tot40dv_html.html(tot_40);
-    tot40hc_html.html(tot_40hc);
+    //DRY
+    $("#sub_inland_20DV" + idRate).html(sub20);
+    $("#sub_inland_40DV" + idRate).html(sub40);
+    $("#sub_inland_40HC" + idRate).html(sub40h);
+
+    tot20dv_html.html(tot_20.toFixed(2));
+    tot40dv_html.html(tot_40.toFixed(2));
+    tot40hc_html.html(tot_40hc.toFixed(2));
+
+    //Refeer
+
+    $("#sub_inland_20RF" + idRate).html(sub20RF);
+    $("#sub_inland_40RF" + idRate).html(sub40RF);
+    $("#sub_inland_40HCRF" + idRate).html(sub40HCRF);
+
+    tot20rf_html.html(tot_20rf.toFixed(2));
+    tot40rf_html.html(tot_40rf.toFixed(2));
+    tot40hcrf_html.html(tot_40hcrf.toFixed(2));
+
+    //OT
+
+    $("#sub_inland_20OT" + idRate).html(sub20OT);
+    $("#sub_inland_40OT" + idRate).html(sub40OT);
+
+
+    tot20ot_html.html(tot_20ot.toFixed(2));
+    tot40ot_html.html(tot_40ot.toFixed(2));
+
+
+    //FR
+
+    $("#sub_inland_20FR" + idRate).html(sub20FR);
+    $("#sub_inland_40FR" + idRate).html(sub40FR);
+
+    tot20fr_html.html(tot_20fr.toFixed(2));
+    tot40fr_html.html(tot_40fr.toFixed(2));
+
+
+
 
 });
 
-$('.inlandsO').on('click', function() {
+$('.inlandsO').on('click', function () {
     $('.card-p__quotes').toggleClass('border-card-p');
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
@@ -2937,17 +3165,18 @@ $('.inlandsO').on('click', function() {
 
 
 
-
-    var i20 = $("#valor-o20" + id + "-" + idRate).html();
-    var i40 = $("#valor-o40" + id + "-" + idRate).html();
-    var i40h = $("#valor-o40h" + id + "-" + idRate).html();
-
+    // DRY 
+    var i20 = $("#valor-o20DV" + id + "-" + idRate).html();
+    var i40 = $("#valor-o40DV" + id + "-" + idRate).html();
+    var i40h = $("#valor-o40HC" + id + "-" + idRate).html();
 
     var sub20o = $("#sub_inland_20_o" + idRate);
     var sub40o = $("#sub_inland_40_o" + idRate);
     var sub40ho = $("#sub_inland_40h_o" + idRate);
 
-    // Totaless
+    var sub20d = $("#sub_inland_20_d" + idRate);
+    var sub40d = $("#sub_inland_40_d" + idRate);
+    var sub40hd = $("#sub_inland_40h_d" + idRate);
 
     var tot20dv_html = $(".tot20DV-" + idRate);
     var tot20dv_val = $("#tot20DV-" + idRate).val();
@@ -2961,18 +3190,100 @@ $('.inlandsO').on('click', function() {
     var tot40hc_val = $("#tot40HC-" + idRate).val();
     var tot_40hc = '';
 
-
-    var sub20d = $("#sub_inland_20_d" + idRate);
-    var sub40d = $("#sub_inland_40_d" + idRate);
-    var sub40hd = $("#sub_inland_40h_d" + idRate);
-
-
     var sub20 = $("#sub_inland_20" + idRate).html();
     var sub40 = $("#sub_inland_40" + idRate).html();
     var sub40h = $("#sub_inland_40h" + idRate).html();
+
+
+    //Refeeer 
+
+    var i20RF = $("#valor-o20RF" + id + "-" + idRate).html();
+    var i40RF = $("#valor-o40RF" + id + "-" + idRate).html();
+    var i40HCRF = $("#valor-o40HCRF" + id + "-" + idRate).html();
+
+    var tot20rf_html = $(".tot20RF-" + idRate);
+    var tot20rf_val = $("#tot20RF-" + idRate).val();
+    var tot_20rf = '';
+
+    var tot40rf_html = $(".tot40RF-" + idRate);
+    var tot40rf_val = $("#tot40RF-" + idRate).val();
+    var tot_40rf = '';
+
+    var tot40hcrf_html = $(".tot40HCRF-" + idRate);
+    var tot40hcrf_val = $("#tot40HCRF-" + idRate).val();
+    var tot_40hcrf = '';
+
+    var sub20RFo = $("#sub_inland_20RF_o" + idRate);
+    var sub40RFo = $("#sub_inland_40RF_o" + idRate);
+    var sub40HCRFo = $("#sub_inland_40HCRF_o" + idRate);
+
+    var sub20RFd = $("#sub_inland_20RF_d" + idRate);
+    var sub40RFd = $("#sub_inland_40RF_d" + idRate);
+    var sub40HCRFd = $("#sub_inland_40HCRF_d" + idRate);
+
+
+
+    var sub20RF = $("#sub_inland_20RF" + idRate).html();
+    var sub40RF = $("#sub_inland_40RF" + idRate).html();
+    var sub40HCRF = $("#sub_inland_40HCRF" + idRate).html();
+
+
+    // OT 
+
+    var i20OT = $("#valor-o20OT" + id + "-" + idRate).html();
+    var i40OT = $("#valor-o40OT" + id + "-" + idRate).html();
+
+
+    var tot20ot_html = $(".tot20OT-" + idRate);
+    var tot20ot_val = $("#tot20OT-" + idRate).val();
+    var tot_20ot = '';
+
+    var tot40ot_html = $(".tot40OT-" + idRate);
+    var tot40ot_val = $("#tot40OT-" + idRate).val();
+    var tot_40ot = '';
+
+
+    var sub20OTo = $("#sub_inland_20OT_o" + idRate);
+    var sub40OTo = $("#sub_inland_40OT_o" + idRate);
+
+    var sub20OTd = $("#sub_inland_20OT_d" + idRate);
+    var sub40OTd = $("#sub_inland_40OT_d" + idRate);
+
+
+    var sub20OT = $("#sub_inland_20OT" + idRate).html();
+    var sub40OT = $("#sub_inland_40OT" + idRate).html();
+
+
+    // RACK
+
+    var i20FR = $("#valor-o20FR" + id + "-" + idRate).html();
+    var i40FR = $("#valor-o40FR" + id + "-" + idRate).html();
+
+
+    var tot20fr_html = $(".tot20FR-" + idRate);
+    var tot20fr_val = $("#tot20FR-" + idRate).val();
+    var tot_20fr = '';
+
+    var tot40fr_html = $(".tot40FR-" + idRate);
+    var tot40fr_val = $("#tot40FR-" + idRate).val();
+    var tot_40fr = '';
+
+    var sub20FRo = $("#sub_inland_20FR_o" + idRate);
+    var sub40FRo = $("#sub_inland_40FR_o" + idRate);
+    var sub20FRd = $("#sub_inland_20FR_d" + idRate);
+    var sub40FRd = $("#sub_inland_40FR_d" + idRate);
+
+
+    var sub20FR = $("#sub_inland_20FR" + idRate).html();
+    var sub40FR = $("#sub_inland_40FR" + idRate).html();
+
+
+
+
     if (theElement.prop('checked')) {
 
 
+        //Dry
         sub20o.val(parseFloat(i20));
         sub40o.val(parseFloat(i40));
         sub40ho.val(parseFloat(i40h));
@@ -2986,18 +3297,59 @@ $('.inlandsO').on('click', function() {
         tot_40 = parseFloat(tot40dv_val) + parseFloat(sub40);
         tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
+        //Refeer
+
+        sub20RFo.val(parseFloat(i20RF));
+        sub40RFo.val(parseFloat(i40RF));
+        sub40HCRFo.val(parseFloat(i40HCRF));
+
+        sub20RF = parseFloat(sub20RFo.val()) + parseFloat(sub20RFd.val());
+        sub40RF = parseFloat(sub40RFo.val()) + parseFloat(sub40RFd.val());
+        sub40HCRF = parseFloat(sub40HCRFo.val()) + parseFloat(sub40HCRFd.val());
+
+        tot_20rf = parseFloat(tot20rf_val) + parseFloat(sub20RF);
+        tot_40rf = parseFloat(tot40rf_val) + parseFloat(sub40RF);
+        tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
+
+        //OT
+        sub20OTd.val(parseFloat(i20OT));
+        sub40OTd.val(parseFloat(i40OT));
+
+        sub20OT = parseFloat(sub20OTo.val()) + parseFloat(sub20OTd.val());
+        sub40OT = parseFloat(sub40OTo.val()) + parseFloat(sub40OTd.val());
+
+        tot_20ot = parseFloat(tot20ot_val) + parseFloat(sub20OT);
+        tot_40ot = parseFloat(tot40ot_val) + parseFloat(sub40OT);
+
+
+        //RACK 
+
+
+        sub20FRd.val(parseFloat(i20FR));
+        sub40FRd.val(parseFloat(i40FR));
+
+        sub20FR = parseFloat(sub20FRo.val()) + parseFloat(sub20FRd.val());
+        sub40FR = parseFloat(sub40FRo.val()) + parseFloat(sub40FRd.val());
+
+        tot_20fr = parseFloat(tot20fr_val) + parseFloat(sub20FR);
+        tot_40fr = parseFloat(tot40fr_val) + parseFloat(sub40FR);
 
 
 
     } else {
 
 
-
+        //Dry
         sub20o.val(0.00);
         sub40o.val(0.00);
         sub40ho.val(0.00);
 
+        //Refeer
+        sub20RFo.val(0.00);
+        sub40RFo.val(0.00);
+        sub40HCRFo.val(0.00);
 
+        // DRY
         if (parseFloat(sub20o.val()) > parseFloat(sub20d.val()))
             sub20 = parseFloat(sub20o.val()) - parseFloat(sub20d.val());
 
@@ -3005,8 +3357,6 @@ $('.inlandsO').on('click', function() {
             sub20 = parseFloat(sub20d.val()) - parseFloat(sub20o.val());
 
         tot_20 = parseFloat(tot20dv_val) + parseFloat(sub20);
-
-
 
         if (parseFloat(sub40o.val()) > parseFloat(sub40d.val()))
             sub40 = parseFloat(sub40o.val()) - parseFloat(sub40d.val());
@@ -3023,20 +3373,109 @@ $('.inlandsO').on('click', function() {
 
         tot_40hc = parseFloat(tot40hc_val) - parseFloat(sub40h);
 
+        // Refeer
+
+        if (parseFloat(sub20RFo.val()) > parseFloat(sub20RFd.val()))
+            sub20RF = parseFloat(sub20RFo.val()) - parseFloat(sub20RFd.val());
+        else
+            sub20RF = parseFloat(sub20RFd.val()) - parseFloat(sub20RFo.val());
+
+        tot_20rf = parseFloat(tot20rf_val) + parseFloat(sub20RF);
+
+
+        if (parseFloat(sub40RFo.val()) > parseFloat(sub40RFd.val()))
+            sub40RF = parseFloat(sub40RFo.val()) - parseFloat(sub40RFd.val());
+        else
+            sub40RF = parseFloat(sub40RFd.val()) - parseFloat(sub40RFo.val());
+
+
+        tot_40rf = parseFloat(tot40rf_val) - parseFloat(sub40RF);
+
+
+        if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()))
+            sub40HCRF = parseFloat(sub40HCRFo.val()) - parseFloat(sub40HCRFd.val());
+        else
+            sub40HCRF = parseFloat(sub40HCRFd.val() - parseFloat(sub40HCRFo.val()));
+
+        tot_40hcrf = parseFloat(tot40hcrf_val) - parseFloat(sub40HCRF);
+
+        //OT
+
+        if (parseFloat(sub20OTo.val()) > parseFloat(sub20OTd.val()))
+            sub20OT = parseFloat(sub20OTo.val()) - parseFloat(sub20OTd.val());
+        else
+            sub20OT = parseFloat(sub20OTd.val()) - parseFloat(sub20OTo.val());
+
+        tot_20ot = parseFloat(tot20ot_val) + parseFloat(sub20OT);
+
+
+        if (parseFloat(sub40OTo.val()) > parseFloat(sub40OTd.val()))
+            sub40OT = parseFloat(sub40OTo.val()) - parseFloat(sub40OTd.val());
+        else
+            sub40OT = parseFloat(sub40OTd.val()) - parseFloat(sub40OTo.val());
+
+        tot_40ot = parseFloat(tot40ot_val) - parseFloat(sub40OT);
+
+        //Flat Rack 
+
+        if (parseFloat(sub20FRo.val()) > parseFloat(sub20FRd.val()))
+            sub20FR = parseFloat(sub20FRo.val()) - parseFloat(sub20FRd.val());
+        else
+            sub20FR = parseFloat(sub20FRd.val()) - parseFloat(sub20FRo.val());
+
+        tot_20fr = parseFloat(tot20fr_val) + parseFloat(sub20FR);
+
+
+        if (parseFloat(sub40FRo.val()) > parseFloat(sub40FRd.val()))
+            sub40FR = parseFloat(sub40FRo.val()) - parseFloat(sub40FRd.val());
+        else
+            sub40FR = parseFloat(sub40FRd.val()) - parseFloat(sub40FRo.val());
+
+        tot_40fr = parseFloat(tot40fr_val) - parseFloat(sub40FR);
+
 
 
     }
-    $("#sub_inland_20" + idRate).html(sub20);
-    $("#sub_inland_40" + idRate).html(sub40);
-    $("#sub_inland_40h" + idRate).html(sub40h);
-    tot20dv_html.html(tot_20);
-    tot40dv_html.html(tot_40);
-    tot40hc_html.html(tot_40hc);
+    //DRY
+    $("#sub_inland_20DV" + idRate).html(sub20);
+    $("#sub_inland_40DV" + idRate).html(sub40);
+    $("#sub_inland_40HC" + idRate).html(sub40h);
+    tot20dv_html.html(tot_20.toFixed(2));
+    tot40dv_html.html(tot_40.toFixed(2));
+    tot40hc_html.html(tot_40hc.toFixed(2));
+
+
+    //refeer
+    $("#sub_inland_20RF" + idRate).html(sub20RF);
+    $("#sub_inland_40RF" + idRate).html(sub40RF);
+    $("#sub_inland_40HCRF" + idRate).html(sub40HCRF);
+
+    tot20rf_html.html(tot_20rf.toFixed(2));
+    tot40rf_html.html(tot_40rf.toFixed(2));
+    tot40hcrf_html.html(tot_40hcrf.toFixed(2));
+
+    //OT
+
+    $("#sub_inland_20OT" + idRate).html(sub20OT);
+    $("#sub_inland_40OT" + idRate).html(sub40OT);
+
+
+    tot20ot_html.html(tot_20ot.toFixed(2));
+    tot40ot_html.html(tot_40ot.toFixed(2));
+
+
+    //FR
+
+    $("#sub_inland_20FR" + idRate).html(sub20FR);
+    $("#sub_inland_40FR" + idRate).html(sub40FR);
+
+    tot20fr_html.html(tot_20fr.toFixed(2));
+    tot40fr_html.html(tot_40fr.toFixed(2));
 
 });
 
 //Calcular el volumen individual
-$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function() {
+$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function () {
     var sumAl = 0;
     var sumAn = 0;
     var sumLa = 0;
@@ -3048,32 +3487,32 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
     var quantity = 0;
     var weight = 0;
     var volume = 0;
-    $(".width").each(function() {
-        $(this).each(function() {
+    $(".width").each(function () {
+        $(this).each(function () {
             width = $(this).val();
             if (!isNaN(width)) {
                 width = parseInt(width);
             }
         });
     });
-    $(".height").each(function() {
-        $(this).each(function() {
+    $(".height").each(function () {
+        $(this).each(function () {
             thickness = $(this).val();
             if (!isNaN(thickness)) {
                 thickness = parseInt(thickness);
             }
         });
     });
-    $(".quantity").each(function() {
-        $(this).each(function() {
+    $(".quantity").each(function () {
+        $(this).each(function () {
             quantity = $(this).val();
             if (!isNaN(quantity)) {
                 quantity = parseInt(quantity);
             }
         });
     });
-    $(".weight").each(function() {
-        $(this).each(function() {
+    $(".weight").each(function () {
+        $(this).each(function () {
             weight = $(this).val();
             if (weight != '') {
                 weight = parseFloat(weight);
@@ -3081,8 +3520,8 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
         });
     });
 
-    $(".large").each(function() {
-        $(this).each(function() {
+    $(".large").each(function () {
+        $(this).each(function () {
             length = $(this).val();
             if (!isNaN(length)) {
                 length = parseInt(length);
@@ -3115,10 +3554,10 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
 });
 
 //Calculos por cantidad
-$(document).on("change keydown keyup", ".quantity_input", function() {
+$(document).on("change keydown keyup", ".quantity_input", function () {
     var sum = 0;
     //iterate through each textboxes and add the values
-    $(".quantity_input").each(function() {
+    $(".quantity_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseInt($(this).val());
@@ -3131,10 +3570,10 @@ $(document).on("change keydown keyup", ".quantity_input", function() {
 });
 
 //Calculos por volumen
-$(document).on("change keydown keyup", ".volume_input", function() {
+$(document).on("change keydown keyup", ".volume_input", function () {
     var sum = 0;
     //iterate through each textboxes and add the values
-    $(".volume_input").each(function() {
+    $(".volume_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseFloat($(this).val());
@@ -3148,12 +3587,12 @@ $(document).on("change keydown keyup", ".volume_input", function() {
 });
 
 //Calculos por peso
-$(document).on("change keydown keyup", ".weight_input", function() {
+$(document).on("change keydown keyup", ".weight_input", function () {
     var sum = 0;
     var sum_vol = 0;
 
     //iterate through each textboxes and add the values
-    $(".weight_input").each(function() {
+    $(".weight_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseFloat($(this).val());
@@ -3162,7 +3601,7 @@ $(document).on("change keydown keyup", ".weight_input", function() {
     $("#total_weight_pkg").html(sum + " kg");
     $("#total_weight_pkg_input").val(sum);
 
-    $(".volume_input").each(function() {
+    $(".volume_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum_vol += parseFloat($(this).val());
@@ -3197,7 +3636,7 @@ $(document).on("change keydown keyup", ".weight_input", function() {
 });
 
 //Calcular peso tasable
-$(document).on('change keyup keydown', '#total_volume, #total_weight', function() {
+$(document).on('change keyup keydown', '#total_volume, #total_weight', function () {
     var chargeable_weight = 0;
     var volume = 0;
     var total_volume = 0;
@@ -3232,7 +3671,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function(
 });
 
 //Cambiar tipo de envio
-$(document).on('change', '#delivery_type_air', function(e) {
+$(document).on('change', '#delivery_type_air', function (e) {
 
     if ($(this).val() == 5) {
         $("#origin_address_label").addClass('hide');
@@ -3257,7 +3696,7 @@ $(document).on('change', '#delivery_type_air', function(e) {
 });
 
 //Agregar inputs dinámicos en LCL/AIR
-$(document).on('click', '#add_load_lcl_air', function(e) {
+$(document).on('click', '#add_load_lcl_air', function (e) {
     var $template = $('#lcl_air_load_template');
     $clone = $template.clone().removeClass('hide').removeAttr('id');
 
@@ -3275,7 +3714,7 @@ $(document).on('click', '#add_load_lcl_air', function(e) {
 });
 
 //Guardar compañía
-$(document).on('click', '#savecompany', function() {
+$(document).on('click', '#savecompany', function () {
 
     var $element = $('#addContactModal');
 
@@ -3293,17 +3732,17 @@ $(document).on('click', '#savecompany', function() {
                 'email': $('.email_input').val(),
 
             },
-            success: function(data) {
+            success: function (data) {
                 $.ajax({
                     url: "company/companies",
                     dataType: 'json',
-                    success: function(dataC) {
+                    success: function (dataC) {
                         $('select[name="company_id_quote"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="company_id_quote"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('select[name="company_id"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="company_id"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#companyModal').modal('hide');
@@ -3317,12 +3756,12 @@ $(document).on('click', '#savecompany', function() {
                             'success'
                         )
                     },
-                    error: function(request, status, error) {
+                    error: function (request, status, error) {
                         alert(request.responseText);
                     }
                 });
             },
-            error: function(request, status, error) {
+            error: function (request, status, error) {
                 swal(
                     'Error!',
                     'Please contact administrator',
@@ -3342,7 +3781,7 @@ $(document).on('click', '#savecompany', function() {
 });
 
 //Guardar contacto
-$(document).on('click', '#savecontact', function() {
+$(document).on('click', '#savecontact', function () {
 
     var $element = $('#contactModal');
 
@@ -3363,14 +3802,14 @@ $(document).on('click', '#savecontact', function() {
                 'company_id': $('.companyc_input').val(),
 
             },
-            success: function(data) {
+            success: function (data) {
                 var company_id = $("select[name='company_id_quote']").val();
                 $.ajax({
                     url: "contacts/contact/" + company_id,
                     dataType: 'json',
-                    success: function(dataC) {
+                    success: function (dataC) {
                         $('select[name="contact_id"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#contactModal').modal('hide');
@@ -3381,7 +3820,7 @@ $(document).on('click', '#savecontact', function() {
                             'success'
                         )
                     },
-                    error: function(request, status, error) {
+                    error: function (request, status, error) {
                         swal(
                             'Error!',
                             'Please contact administrator',
@@ -3390,7 +3829,7 @@ $(document).on('click', '#savecontact', function() {
                     }
                 });
             },
-            error: function(request, status, error) {
+            error: function (request, status, error) {
                 swal(
                     'Error!',
                     'Please contact administrator',
@@ -3419,7 +3858,7 @@ $(document).on('click', '#savecontact', function() {
 });
 
 //Remover inputs LCL/AIR
-$(document).on('click', '.remove_lcl_air_load', function(e) {
+$(document).on('click', '.remove_lcl_air_load', function (e) {
     var $row = $(this).closest('.template').remove();
     $row.remove();
 
@@ -3446,12 +3885,12 @@ $('#origin_airport_create').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -3466,12 +3905,12 @@ $('#destination_airport_create').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -3492,12 +3931,12 @@ $('#origin_airport').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -3512,12 +3951,12 @@ $('#destination_airport').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -3594,6 +4033,93 @@ function show_hide_element($element, $button) {
 }
 
 function precargar() {
+    //Otros 
+
+
+    var origComb = $("#origComb").val();
+    var destComb = $("#destComb").val();
+
+    var ids = $('#origin_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="originA"]').empty();
+            if (data.message == 'Ok') {
+
+
+
+
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $.each(data.data, function (key, value) {
+                    if (key == origComb) {
+                        selected = 'selected';
+                    } else {
+                        selected = '';
+                    }
+                    $('select[name="originA"]').append('<option ' + selected + ' value="' + key + '">' + value + '</option>');
+                });
+            }
+            if (data.message == 'maxOne') {
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $('#select2-originA-container').text('Select one Origin Harbor');
+            }
+            if (data.message == 'empty') {
+                $("#selectA").addClass('hide');
+                $("#textA").removeClass('hide');
+
+
+            }
+        }
+    });
+    var ids = $('#destination_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="destinationA"]').empty();
+
+
+
+
+            if (data.message == 'Ok') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $.each(data.data, function (key, value) {
+                    if (key == destComb) {
+                        selected = 'selected';
+                    } else {
+                        selected = '';
+                    }
+                    $('select[name="destinationA"]').append('<option ' + selected + '  value="' + key + '">' + value + '</option>');
+                });
+            }
+
+            if (data.message == 'maxOne') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $('#select2-destinationA-container').text('Select one Dest Harbor');
+            }
+
+            if (data.message == 'empty') {
+                $("#selectD").addClass('hide');
+                $("#textD").removeClass('hide');
+
+
+            }
+
+
+
+
+        }
+    });
+
+
+    //Companiasss 
     var company_id = $("#m_select2_2_modal").val();
     var contact_id = $("#contact_id_num").val();
     var price_id = $("#price_id_num").val();
@@ -3608,9 +4134,9 @@ function precargar() {
         $.ajax({
             url: "/quotes/company/contact/id/" + company_id,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 $('select[name="client"]').empty();
-                $.each(data, function(key, value) {
+                $.each(data, function (key, value) {
                     if (key == contact_id) {
                         selected = 'selected';
                     } else {
@@ -3625,11 +4151,11 @@ function precargar() {
         $.ajax({
             url: "/quotes/company/price/id/" + company_id,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
 
 
                 $('select[name="price_id"]').empty();
-                $.each(data, function(key, value) {
+                $.each(data, function (key, value) {
                     if (key == price_id) {
                         selected_price = 'selected';
                     } else {
@@ -3788,10 +4314,10 @@ function addSaleCharge($value) {
 
     var $template = $('#sale_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -3800,10 +4326,10 @@ function addSaleCharge($value) {
 function addFreightCharge($value) {
     var $template = $('#freight_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -3812,10 +4338,10 @@ function addFreightCharge($value) {
 function addOriginCharge($value) {
     var $template = $('#origin_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -3824,10 +4350,10 @@ function addOriginCharge($value) {
 function addDestinationCharge($value) {
     var $template = $('#destination_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -3836,10 +4362,10 @@ function addDestinationCharge($value) {
 function addInlandCharge($value) {
     var $template = $('#inland_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -3870,7 +4396,7 @@ function update_remark($id, $content, $v, $language) {
             'remarks': remarks,
             'language': $language,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -3927,7 +4453,7 @@ function changeType(type, id) {
         type: 'POST',
         url: '/v2/quotes/feature/pdf/update',
         data: { "value": type, "name": "show_type", "id": id },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 //$(this).attr('checked', true).val(0);
             }
@@ -3940,7 +4466,7 @@ function currencyRate(currency, currency_cfg, amount) {
         url: '/api/currency/' + currency,
         dataType: 'json',
         async: false,
-        success: function(json) {
+        success: function (json) {
             if (currency_cfg + json.alphacode == json.api_code) {
                 amount = parseFloat(amount) / json.rates;
             } else {
@@ -3958,7 +4484,7 @@ function currencyRateAlphacode(currency, currency_cfg, value) {
         url: '/api/currency/alphacode/' + currency,
         dataType: 'json',
         async: false,
-        success: function(json) {
+        success: function (json) {
             if (currency_cfg + json.alphacode == json.api_code) {
                 total_currency = value / json.rates;
             } else {
@@ -4002,3 +4528,75 @@ function notification(message, type) {
             toastr.info(message, '');
     }
 }
+
+
+
+$(document).on('change', '#origin_harbor', function (e) {
+    var ids = $('#origin_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="originA"]').empty();
+            if (data.message == 'Ok') {
+
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $.each(data.data, function (key, value) {
+                    $('select[name="originA"]').append('<option  value="' + key + '">' + value + '</option>');
+                });
+            }
+            if (data.message == 'maxOne') {
+                $("#selectA").removeClass('hide');
+                $("#textA").addClass('hide');
+
+                $('#select2-originA-container').text('Select one Origin Harbor');
+            }
+            if (data.message == 'empty') {
+                $("#selectA").addClass('hide');
+                $("#textA").removeClass('hide');
+
+
+            }
+        }
+    });
+});
+
+
+$(document).on('change', '#destination_harbor', function (e) {
+    var ids = $('#destination_harbor').val();
+    $.ajax({
+        type: 'GET',
+        url: '/inlandD/getDistance/' + ids,
+        success: function (data) {
+            $('select[name="destinationA"]').empty();
+            if (data.message == 'Ok') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $.each(data.data, function (key, value) {
+                    $('select[name="destinationA"]').append('<option  value="' + key + '">' + value + '</option>');
+                });
+            }
+
+            if (data.message == 'maxOne') {
+                $("#selectD").removeClass('hide');
+                $("#textD").addClass('hide');
+                $('#select2-destinationA-container').text('Select one Dest Harbor');
+            }
+
+            if (data.message == 'empty') {
+                $("#selectD").addClass('hide');
+                $("#textD").removeClass('hide');
+
+
+            }
+
+
+
+
+        }
+    });
+});
+
+

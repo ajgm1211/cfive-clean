@@ -13,6 +13,8 @@ use App\Contact;
 use App\Jobs\SyncCompaniesJob;
 use App\Partner;
 use App\Http\Requests\StoreApiIntegration;
+use App\Visualtrans;
+use App\Vforwarding;
 
 class ApiIntegrationController extends Controller
 {
@@ -145,38 +147,33 @@ class ApiIntegrationController extends Controller
         $setting->status = 1;
         $setting->save();
 
-        $endpoint = $setting->url . $setting->api_key;
+        $client = new Client([
+            'verify' => false,
+            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
+        ]);
 
-        try {
-
-            $client = new Client([
-                'verify' => false,
-                'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
-            ]);
-
-            $response = $client->get($endpoint);
-
-            $type = $response->getHeader('content-type');
-
-            $type = explode(';', $type[0]);
-
-            $api_response = $response->getBody()->getContents();
-
-            if ($type[1] == 'charset=iso-8859-1') {
-                $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
-            }
-
-            $result = json_decode($api_response, true);
-
-            SyncCompaniesJob::dispatch($result, \Auth::user(), $setting->partner);
-
-            return response()->json(['message' => 'Ok']);
-
-        } catch (\Exception $e) {
-            $setting->status = 0;
-            $setting->save();
-            return response()->json(['error' => $e->getCode()]);
+        switch($setting->partner->name){
+            case 'vForwarding':
+                $endpoint = $setting->url . $setting->api_key;
+                $data = new Vforwarding();
+                $response = $data->getData($client, $endpoint, $setting);
+            break;
+            case 'Visualtrans':
+                $endpoint = $setting->url . $setting->api_key;
+                $data = new Visualtrans();
+                $response = $data->getData($client, $endpoint, $setting);
+            break;
         }
+
+        if(!$response){
+            return response()->json(['message' => 'Something went wrong on our side']);
+        }
+
+        $setting->status = 0;
+        $setting->save();
+
+        return response()->json(['message' => 'Ok']);
+
     }
 
     public function getContacts($company_id)

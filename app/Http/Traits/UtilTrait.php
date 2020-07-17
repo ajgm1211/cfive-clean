@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use App\Container;
+use App\Currency;
 use Illuminate\Support\Collection as Collection;
 
 trait UtilTrait
@@ -40,7 +41,7 @@ trait UtilTrait
     public function transformEquipmentSingle($quote)
     {
         $containers = Container::select('id', 'code')->get();
-        
+
         $array = array();
         foreach (json_decode($quote->equipment) as $val) {
             if ($val == '20') {
@@ -62,5 +63,18 @@ trait UtilTrait
                 }
             }
         }
+    }
+
+    public function ratesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->get();
+        foreach ($rates as $rate) {
+            if ($typeCurrency == "USD") {
+                $rateC = $rate->rates;
+            } else {
+                $rateC = $rate->rates_eur;
+            }
+        }
+        return $rateC;
     }
 }
