@@ -132,19 +132,25 @@ class ContractController extends Controller
     public function surcharge_data(Request $request, Contract $contract)
     {        
         $rates = $contract->rates;
+        $all_harbor_row = Harbor::find(1485);
+        $all_country_row = Country::find(250);
 
-        $ori_countries = $rates->map(function ($rate) {
-                $country = ['id' => $rate->port_origin->country->id, 'display_name' => $rate->port_origin->country->name  ];
+        $origin_harbors = $rates->pluck('port_origin')->push($all_harbor_row);
+        $destiny_harbors = $rates->pluck('port_destiny')->push($all_harbor_row);
+
+        $ori_harbors = $origin_harbors->unique('id')->values();
+        $des_harbors = $destiny_harbors->unique('id')->values();
+
+        $ori_countries = $origin_harbors->map(function ($harbor) {
+                $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name  ];
                 return $country;
             })->unique('id')->values();
 
-        $des_countries = $rates->map(function ($rate) {
-                $country = ['id' => $rate->port_destiny->country->id, 'display_name' => $rate->port_destiny->country->name  ];
+        $des_countries = $destiny_harbors->map(function ($harbor) {
+                $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name  ];
                 return $country;
             })->unique('id')->values();
 
-        $ori_harbors = $rates->pluck('port_origin')->unique('id')->values();
-        $des_harbors = $rates->pluck('port_destiny')->unique('id')->values();
 
         $data = compact(
             'ori_harbors',
