@@ -25,7 +25,7 @@ class MasterSurchargeController extends Controller
         $directions         = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::pluck('description','id');
         $calculationtype    = CalculationType::pluck('name','id');
-        $surchargers        = Surcharge::pluck('name','id');
+        $surchargers        = Surcharge::where('company_user_id','=',null)->pluck('name','id');
         return view('masterSurcharge.Body-Modals.add',compact('carriers','directions','typedestiny','calculationtype','surchargers'));
     }
 

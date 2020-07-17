@@ -38,5 +38,7 @@ class DatabaseSeeder extends Seeder
         $this->call(GroupContainersTableSeeder::class);
         $this->call(ContainersTableSeeder::class);
         $this->call(ContainerCalculationsTableSeeder::class);
+        $this->call(ProvincesTableSeeder::class);
+        $this->call(InlandDistancesTableSeeder::class);
     }
 }
