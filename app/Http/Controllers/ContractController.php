@@ -434,7 +434,7 @@ class ContractController extends Controller
             $contract_lcl = $query_lcl->first();
     
             if ($contract != null || $contract_lcl != null) {
-                return response()->json(['message' => 'There is already a contract with the code entered'], 400);
+                return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
             }
 
             $regex = "/^\d+(?:,\d+)*$/";
