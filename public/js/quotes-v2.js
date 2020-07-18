@@ -556,8 +556,11 @@ $(document).ready(function() {
             $(this).closest('table').find('.total_' + code).each(function() {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
+                var isOceanFreight = $(this).closest('tr').find('.ocean_freight_rate').html();
                 var currency_cfg = $("#currency_id").val();
-
+                if (isOceanFreight == 1) {
+                    currency_cfg = $(this).closest('tr').find('.local_currency').html();
+                }
                 total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);
             });
