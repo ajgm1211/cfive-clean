@@ -2842,7 +2842,7 @@ class QuoteV2Controller extends Controller
                 });
             }
 
-            if ($chargesAPI_M != null) {
+           /* if ($chargesAPI_M != null) {
 
                 $client = new Client();
 
@@ -2883,7 +2883,7 @@ class QuoteV2Controller extends Controller
                 $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
                 });
-            }
+            }*/
 
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
 
