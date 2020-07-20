@@ -51,7 +51,7 @@ class InlandRangeController extends Controller
     {
         $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
 
-        $data = $this->validateData($request, $inland, $range, $available_containers, $inland);
+        $data = $this->validateData($request, $inland, $available_containers, $range);
 
         $prepared_data = $this->prepareData($data, $inland, $available_containers);
 
@@ -102,7 +102,7 @@ class InlandRangeController extends Controller
      * @param  \App\Inland $inland
      * @return Array data validated
      */
-    public function validateData($request, $inland, $available_containers, $range = null, $inland)
+    public function validateData($request, $inland, $available_containers, $range = null)
     {
         $company_id = Auth::user()->company_user_id;
 
@@ -118,7 +118,7 @@ class InlandRangeController extends Controller
         }
 
         $validator = Validator::make($request->all(), $vdata);
-
+        
         $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('lower'))->where('upper', '>=', $request->input('lower'))->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
@@ -131,7 +131,7 @@ class InlandRangeController extends Controller
         $query_upper = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('upper'))->where('upper', '>=', $request->input('upper'))->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
-
+        
         if ($range) {
             $query_upper->where('id', '<>', $range->id);
         }
