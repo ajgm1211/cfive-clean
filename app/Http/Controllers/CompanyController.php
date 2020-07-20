@@ -18,15 +18,25 @@ use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreCompany;
 use App\Http\Traits\EntityTrait;
+use App\Repositories\CompanyRepositoryInterface;
 use App\ViewQuoteV2;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class CompanyController extends Controller
 {
     use EntityTrait;
-    
+
+    /** @var CompanyRepositoryInterface */
+    private $repository;
+
+    public function __construct(CompanyRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,20 +58,14 @@ class CompanyController extends Controller
             $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
-
-            if ($request->paginate) {
-                $companies = $query->paginate($request->paginate);
-            } else {
-                $companies = $query->take($request->size)->get();
-            }
         } else {
             $query = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
-            
-            if ($request->paginate) {
-                $companies = $query->paginate($request->paginate);
-            } else {
-                $companies = $query->take($request->size)->get();
-            }
+        }
+
+        if ($request->paginate) {
+            $companies = $query->paginate($request->paginate);
+        } else {
+            $companies = $query->take($request->size)->get();
         }
 
         if ($request->ajax()) {
@@ -69,6 +73,56 @@ class CompanyController extends Controller
         }
 
         return view('companies/index', ['companies' => $companies, 'users' => $users, 'api' => $api]);
+    }
+
+    /**
+     * LoadDatatableIndex
+     *
+     * @return void
+     */
+    public function LoadDatatableIndex()
+    {
+
+        $company_user_id = \Auth::user()->company_user_id;
+        $user_id = \Auth::user()->id;
+
+        if (\Auth::user()->hasRole('subuser')) {
+
+            $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
+        } else {
+            $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
+        }
+
+        $companies = $companies->get();
+
+        $colletions = collect([]);
+        foreach ($companies as $company) {
+
+            $data = [
+                'id' => $company->id,
+                'idSet' => setearRouteKey($company->id),
+                'business_name' => $company->business_name,
+                'phone' => $company->phone,
+                'email' => $company->email,
+                'tax_number' => $company->tax_number,
+                'address' => $company->address,
+            ];
+            $colletions->push($data);
+        }
+        return DataTables::of($colletions)->addColumn('action', function ($colletion) {
+            return
+                '<a href="companies/' . $colletion['idSet'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                    <i class="la la-eye"></i>
+                </a>
+                <button onclick="AbrirModal(\'edit\',' . $colletion['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                    <i class="la la-edit"></i>
+                </button>
+                <button id="delete-company" data-company-id="' . $colletion['id'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
+                    <i class="la la-eraser"></i>
+                </button>';
+        })->make(true);
     }
 
     /**
@@ -141,7 +195,7 @@ class CompanyController extends Controller
             $collection = Collection::make($company);
             return $collection;
         } else {
-            $company = Company::find($id);
+            $company = $this->repository->find($id);
         }
 
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
@@ -190,9 +244,8 @@ class CompanyController extends Controller
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
-            
+
             $options_array = json_encode(array_combine($options_key, $options_value));
-            
         }
 
         if ($request->ajax()) {
@@ -243,8 +296,8 @@ class CompanyController extends Controller
 
         $input = Input::all();
 
-        $company = Company::find($input['company_id']);
-
+        $company = $this->repository->find($input['company_id']);
+        
         if ((isset($input['users'])) && (count($input['users']) > 0)) {
             foreach ($input['users'] as $key => $item) {
                 $userCompany_group = new GroupUserCompany();
@@ -286,7 +339,7 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
 
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->where('id', '!=', $company->owner)->pluck('name', 'id');
 
@@ -353,7 +406,7 @@ class CompanyController extends Controller
         if ($file != "") {
             $this->saveLogo($company, $file);
         }
-        
+
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
             CompanyPrice::where('company_id', $company->id)->delete();
             $this->saveExtraData($input['price_id'], $company, 'price');
@@ -382,7 +435,7 @@ class CompanyController extends Controller
      */
     public function delete($id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
 
         if (count($company->contact) > 0) {
             return response()->json(['message' => count($company->contact)]);
@@ -496,7 +549,7 @@ class CompanyController extends Controller
      */
     public function updateName(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->business_name = $request->business_name;
         $company->update();
 
@@ -512,7 +565,7 @@ class CompanyController extends Controller
      */
     public function updatePhone(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->phone = $request->phone;
         $company->update();
 
@@ -528,7 +581,7 @@ class CompanyController extends Controller
      */
     public function updateAddress(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->address = $request->address;
         $company->update();
 
@@ -544,7 +597,7 @@ class CompanyController extends Controller
      */
     public function updateEmail(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->email = $request->email;
         $company->update();
 
@@ -560,7 +613,7 @@ class CompanyController extends Controller
      */
     public function updateTaxNumber(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->tax_number = $request->tax_number;
         $company->update();
 
@@ -576,7 +629,7 @@ class CompanyController extends Controller
      */
     public function updatePdfLanguage(Request $request, $id)
     {
-        $company = Company::find($id);
+        $company = $this->repository->find($id);
         $company->pdf_language = $request->pdf_language;
         $company->update();
 
@@ -623,6 +676,13 @@ class CompanyController extends Controller
         return view('companies.api.index', compact('companies'));
     }
 
+    /**
+     * saveLogo
+     *
+     * @param  mixed $company
+     * @param  mixed $file
+     * @return void
+     */
     public function saveLogo($company, $file)
     {
         $update_company_url = Company::findOrFail($company->id);
@@ -636,6 +696,14 @@ class CompanyController extends Controller
         //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
     }
 
+    /**
+     * saveExtraData
+     *
+     * @param  mixed $data
+     * @param  mixed $company
+     * @param  mixed $type
+     * @return void
+     */
     public function saveExtraData($data, $company, $type)
     {
         switch ($type) {
@@ -657,5 +725,27 @@ class CompanyController extends Controller
                 }
                 break;
         }
+    }
+
+    /**
+     * searchCompanies
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function searchCompanies(Request $request)
+    {
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->where('business_name', 'like', '%' . $term . '%')->get();
+
+        $formatted_companies = [];
+        foreach ($companies as $company) {
+            $formatted_companies[] = ['id' => $company->id, 'text' => $company->business_name];
+        }
+        return \Response::json($formatted_companies);
     }
 }

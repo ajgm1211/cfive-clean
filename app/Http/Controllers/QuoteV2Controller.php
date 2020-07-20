@@ -379,6 +379,7 @@ class QuoteV2Controller extends Controller
             $originAddressHides = null;
         }
 
+        //Get ports with sale terms
         $sale_terms_origin = $this->processSaleTerms($sale_terms_origin, $quote, $company_user, 'origin');
         $sale_terms_destination = $this->processSaleTerms($sale_terms_destination, $quote, $company_user, 'destination');
 
