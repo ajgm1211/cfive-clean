@@ -273,7 +273,7 @@ class Contract extends Model implements HasMedia, Auditable
      * @param  mixed $api_company_id
      * @return void
      */
-    public function processSearchByIdFcl($response = false)
+    public function processSearchByIdFcl($response = false, $convert = false)
     {
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
@@ -295,7 +295,6 @@ class Contract extends Model implements HasMedia, Auditable
         $general = new collection();
         $collectionRate = new Collection();
 
-        $typeCurrency =  $company->currency->alphacode;
         $idCurrency = $company->currency_id;
         $company_user_id = $company->id;
         $data = null;
@@ -313,7 +312,13 @@ class Contract extends Model implements HasMedia, Auditable
                 $query->select('id', 'name', 'uncode', 'image', 'image as url');
             }])->first();
         }
-
+        
+        if($convert){
+            $typeCurrency =  $company->currency->alphacode;
+        }else{
+            $typeCurrency =  $data->currency->alphacode;
+        }
+        
         //Guard if
         if (count($data) == 0) {
             return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
@@ -559,7 +564,7 @@ class Contract extends Model implements HasMedia, Auditable
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $currency);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via);
                 foreach ($containers as $cont) {
                     foreach ($equipment as $eq) {
                         if ($eq == $cont->id) {
@@ -567,7 +572,7 @@ class Contract extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-                array_push($detalle, $data->contract->remarks);
+                array_push($detalle, $currency, $data->transit_time ? $data->transit_time:0, $data->contract->remarks);
                 break;
             default:
                 $detalle['Rates'] = $routes;

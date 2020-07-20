@@ -114,7 +114,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
      *
      * @return json
      */
-    public function processSearchByIdLcl($response = false)
+    public function processSearchByIdLcl($response = false, $convert = false)
     {
 
         //Variables del usuario conectado
@@ -135,7 +135,6 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         if ($company_setting->currency_id != null) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-            $typeCurrency = $company_setting->currency->alphacode;
             $idCurrency = $company_setting->currency_id;
         }
 
@@ -149,8 +148,6 @@ class ContractLcl extends Model implements HasMedia, Auditable
         $localAmmount = 0;
         $freighMarkup = 0;
         $localMarkup = 0;
-        $markupFreightCurre = $typeCurrency;
-        $markupLocalCurre = $typeCurrency;
 
         // Traer cantidad total de paquetes y pallet segun sea el caso
         $package_pallet = $this->totalPalletPackage($total_quantity);
@@ -177,6 +174,14 @@ class ContractLcl extends Model implements HasMedia, Auditable
             return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
         }
 
+        if($convert){
+            $typeCurrency = $company_setting->currency->alphacode;
+        }else{
+            $typeCurrency =  $data->currency->alphacode;
+        }
+
+        $markupFreightCurre = $typeCurrency;
+        $markupLocalCurre = $typeCurrency;
         $totalFreight = 0;
         $FreightCharges = 0;
         $totalRates = 0;
@@ -1841,7 +1846,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
         $routes['Rates']['total'] = $totalQuote;
         $routes['Rates']['currency'] = $typeCurrency;
 
-        $detail = $this->compactResponse($routes, $data, $typeCurrency, $totalQuote, $response);
+        $detail = $this->compactResponse($routes, $data, $typeCurrency, $totalQuoteSin, $response);
 
         $general->push($detail);
 
@@ -1853,7 +1858,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $totalQuote, $currency, $data->contract->remarks);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, $totalQuote, $currency, $data->transit_time, $data->contract->remarks);
                 break;
             default:
                 $detalle = $routes;

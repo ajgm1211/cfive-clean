@@ -1060,11 +1060,12 @@ class ApiController extends Controller
             $contract_lcl = ContractLcl::where('code', $code)->first();
 
             $response = $request->response;
+            $convert = $request->convert;
 
             if ($contract != null) {
-                return $contract->processSearchByIdFcl($response);
+                return $contract->processSearchByIdFcl($response, $convert);
             } elseif ($contract_lcl != null) {
-                return $contract_lcl->processSearchByIdLcl($response);
+                return $contract_lcl->processSearchByIdLcl($response, $convert);
             } else {
                 return response()->json(['message' => 'The requested contract does not exist'], 200);
             }

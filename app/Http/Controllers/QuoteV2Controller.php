@@ -47,13 +47,13 @@ use App\QuoteV2;
 use App\Rate;
 use App\RateApi;
 use App\RateLcl;
+use App\RemarkCountry;
 use App\RemarkHarbor;
 use App\SaleTermV2;
 use App\Schedule;
 use App\ScheduleType;
 use App\SearchPort;
 use App\SearchRate;
-use App\RemarkCountry;
 //LCL
 use App\Surcharge;
 use App\TermAndConditionV2;
@@ -379,6 +379,7 @@ class QuoteV2Controller extends Controller
             $originAddressHides = null;
         }
 
+        //Get ports with sale terms
         $sale_terms_origin = $this->processSaleTerms($sale_terms_origin, $quote, $company_user, 'origin');
         $sale_terms_destination = $this->processSaleTerms($sale_terms_destination, $quote, $company_user, 'destination');
 
@@ -1591,7 +1592,6 @@ class QuoteV2Controller extends Controller
         $nameDest = $dest->name;
         $rem_dest[] = $dest->id;
         $rem_carrier_id[] = $carrier;
-
 
         array_push($rem_carrier_id, $carrier_all);
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
@@ -3157,6 +3157,10 @@ class QuoteV2Controller extends Controller
                         })->orwhereHas('globalcharcountryport', function ($q) use ($origin_country, $dest_port) {
                             $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
                         });
+                    })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_country, $destiny_country) {
+                        $q->whereIn('country_orig', $origin_country)->orwhereIn('country_dest', $destiny_country);;
+                    })->whereDoesntHave('globalexceptionport', function ($q) use ($orig_port, $dest_port) {
+                        $q->whereIn('port_orig', $orig_port)->orwhereIn('port_dest', $dest_port);;
                     })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
 
                     foreach ($globalChar as $global) {
