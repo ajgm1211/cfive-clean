@@ -1365,7 +1365,7 @@ class QuoteV2Controller extends Controller
                 }
 
                 //Calculando el total de tarifas+recargos
-                ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code}+${$total_markup . $container->code};
+                ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code} + ${$total_markup . $container->code};
 
                 //Sumando totales de freight
                 if ($value->type_id == 3) {
@@ -1505,7 +1505,6 @@ class QuoteV2Controller extends Controller
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
-
         }
         if ($type == 'country') {
 
@@ -1526,7 +1525,6 @@ class QuoteV2Controller extends Controller
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
-
         }
 
         $remarkA = '';
@@ -1546,7 +1544,6 @@ class QuoteV2Controller extends Controller
             } else {
                 $remarkA .= "<br>" . $remAll->remark->import;
             }
-
         }
 
         if ($remarks_origin->count() > 0) {
@@ -1562,7 +1559,6 @@ class QuoteV2Controller extends Controller
             } else {
                 $remarkO .= "<br>" . $remOrig->remark->import;
             }
-
         }
 
         if ($remarks_destination->count() > 0) {
@@ -1577,7 +1573,6 @@ class QuoteV2Controller extends Controller
             } else {
                 $remarkD .= "<br>" . $remDest->remark->import;
             }
-
         }
 
         $rems = $remarkO . " " . $remarkD . " " . $remarkA;
@@ -1641,7 +1636,6 @@ class QuoteV2Controller extends Controller
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
-
         }
 
         $remarks_english = "";
@@ -2172,12 +2166,11 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             $inlandOrig->save();
-
                         }
                     }
 
                     $this->saveRemarks($rate->id, $info_D->port_origin, $info_D->port_destiny, $info_D->carrier->id, $form->mode);
-                    //Por pais
+                    //Por pais 
                     $this->saveRemarks($rate->id, $info_D->port_origin->country, $info_D->port_destiny->country, $info_D->carrier->id, $form->mode, 'country');
                 }
                 //CHARGES ORIGIN
@@ -2759,7 +2752,6 @@ class QuoteV2Controller extends Controller
                 $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode, $groupContainer);
                 $destA['ocultarDestA'] = '';
                 $destA['ocultarDestComb'] = 'hide';
-
             } else {
                 $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode, $groupContainer, $destinationA);
                 $destA['ocultarDestA'] = 'hide';
@@ -2779,12 +2771,10 @@ class QuoteV2Controller extends Controller
                 $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode, $groupContainer);
                 $origA['ocultarOrigA'] = '';
                 $origA['ocultarorigComb'] = 'hide';
-
             } else {
                 $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode, $groupContainer, $originA);
                 $origA['ocultarOrigA'] = 'hide';
                 $origA['ocultarorigComb'] = '';
-
             }
 
             if (!empty($dataOrig)) {
@@ -2851,48 +2841,47 @@ class QuoteV2Controller extends Controller
                 });
             }
 
-            /* if ($chargesAPI_M != null) {
+           /* if ($chargesAPI_M != null) {
 
-            $client = new Client();
+                $client = new Client();
 
-            foreach ($origin_port as $orig) {
-            foreach ($destiny_port as $dest) {
+                foreach ($origin_port as $orig) {
+                    foreach ($destiny_port as $dest) {
 
-            // $url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
-            $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-            $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
+                        $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
-            try {
-            $response = $client->request('GET', $url);
-            } catch (\Exception $e) {
-            }
-            }
-            }
+                        try {
+                            $response = $client->request('GET', $url);
+                        } catch (\Exception $e) {
+                        }
+                    }
+                }
 
-            $arreglo3 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-            $q->where('validity', '>=', $dateSince)->where('number', 'MAERSK');
-            });
-            }*/
-
-            /*   if ($chargesAPI_SF != null) {
-
-            $client = new Client();
-            foreach ($origin_port as $orig) {
-            foreach ($destiny_port as $dest) {
-
-            $url = env('SAFMARINE_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-            $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
-
-            try {
-            $response = $client->request('GET', $url);
-            } catch (\Exception $e) {
-            }
-            }
+                $arreglo3 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+                    $q->where('validity', '>=', $dateSince)->where('number', 'MAERSK');
+                });
             }
 
-            $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-            $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
-            });
+            if ($chargesAPI_SF != null) {
+
+                $client = new Client();
+                foreach ($origin_port as $orig) {
+                    foreach ($destiny_port as $dest) {
+
+                        $url = env('SAFMARINE_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
+
+                        try {
+                            $response = $client->request('GET', $url);
+                        } catch (\Exception $e) {
+                        }
+                    }
+                }
+
+                $arreglo4 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+                    $q->where('validity', '>=', $dateSince)->where('number', 'SAFMARINE');
+                });
             }*/
 
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
@@ -3431,9 +3420,7 @@ class QuoteV2Controller extends Controller
                     $arreglo = $arreglo->sortBy($name_tot);
                     break;
                 }
-
             }
-
         } // fin validate equipment
 
         // Clases Origin y Destination Delivery type FCL
@@ -3675,7 +3662,7 @@ class QuoteV2Controller extends Controller
                 $montoMarkup = 0;
                 $totalMarkup = 0;
 
-                }*/else {
+                }*/ else {
                     $monto = 0;
                     $montoMarkup = 0;
                     $markup = 0;
@@ -4025,6 +4012,8 @@ class QuoteV2Controller extends Controller
                 // Monto original
                 $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
                 // monto aplicado al currency
+                if ($localMarkup == 0)
+                    $localMarkup = 1;
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
             } else {
@@ -4039,6 +4028,9 @@ class QuoteV2Controller extends Controller
                 // monto original
                 $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
                 // monto aplicado al currency
+                if ($localMarkup == 0)
+                    $localMarkup = 1;
+
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
             }
@@ -4056,6 +4048,8 @@ class QuoteV2Controller extends Controller
                 // Monto original
                 $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_export')));
                 // monto aplicado al currency
+                if ($inlandMarkup == 0)
+                    $inlandMarkup = 1;
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
             } else {
@@ -4073,6 +4067,8 @@ class QuoteV2Controller extends Controller
                 // monto original
                 $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_import')));
                 // monto aplicado al currency
+                if ($inlandMarkup == 0)
+                    $inlandMarkup = 1;
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
 
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
