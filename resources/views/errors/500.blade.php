@@ -71,7 +71,7 @@
 				</div>
 				<div class="col-md-12 ">
 					<div class="title" style="">
-						<h1 class="size-60">Ops!!!</h1>
+						<h1 class="size-60">Ops!</h1>
 						<p>
 							<b>
 								An error has occurred while we were processing your request, please try again.
