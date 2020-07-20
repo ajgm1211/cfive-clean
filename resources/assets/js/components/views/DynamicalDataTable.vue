@@ -46,7 +46,7 @@
                 fields: [],
                 form_fields: {},
                 isLoaded: true,
-                extra_field_state: false
+                extra_field_state: true
             }
         },
         created() { 
