@@ -57,6 +57,7 @@ trait QuoteV2Trait
 
         foreach ($containers as $container) {
             ${$sum . $container->code} = $sum . $container->code;
+            ${$sum .'raw_'. $container->code} = $sum .'raw_'. $container->code;
             ${$total . $container->code} = $total . $container->code;
             ${$sale_term . $container->code} = 'sale_term_' . $container->code;
         }
@@ -117,6 +118,7 @@ trait QuoteV2Trait
                         }
                         $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
                         foreach ($containers as $container) {
+                            $origin_charge->${$sum .'raw_'. $container->code} = @$sale_rates['c' . $container->code];
                             $origin_charge->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
                             $origin_charge->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                         }
@@ -145,6 +147,7 @@ trait QuoteV2Trait
                         }
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         foreach ($containers as $container) {
+                            $item->${$sum .'raw_'. $container->code} = @$sale_rates['c' . $container->code];
                             $item->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
                             $item->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                         }
@@ -806,6 +809,7 @@ trait QuoteV2Trait
                                 foreach ($containers as $c) {
                                     ${$sum . '_' . $c->code} = 0;
                                     ${$total . '_' . $c->code} = 0;
+                                    ${$total . '_raw_' . $c->code} = 0;
                                     ${$total . '_markup_' . $c->code} = 0;
                                 }
 
@@ -822,19 +826,23 @@ trait QuoteV2Trait
                                 foreach ($containers as $c) {
                                     $flat = 0;
                                     ${$inland . '_' . $c->code} = 0;
+                                    ${$total . '_raw_' . $inland . $c->code} = 'total_inland_raw_' . $c->code;
                                     ${$total . '_' . $inland . $c->code} = 'total_inland' . $c->code;
 
                                     if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
                                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_raw_' . $c->code} = ${$amount . '_' . $c->code} + ${$markup . '_' . $c->code};
                                         ${$total . '_' . $c->code} = (${$amount . '_' . $c->code} + ${$markup . '_' . $c->code}) / $currency_rate;
                                         $flat = 1;
                                     } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
                                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . '_raw_' . $c->code} = ${$amount . '_' . $c->code};
                                         ${$total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
                                         $flat = 1;
                                     } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_raw_' . $c->code} = ${$markup . '_' . $c->code};
                                         ${$total . '_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                                         $flat = 1;
                                     }
@@ -844,6 +852,7 @@ trait QuoteV2Trait
                                     if ($inland_value->type == 'Destination' && $flat == 1) {
                                         $inland_destination++;
                                     }
+                                    $inland_value->${$total . '_raw_' . $inland . $c->code} = isDecimal(${$total . '_raw_' . $c->code}, true);
                                     $inland_value->${$total . '_' . $inland . $c->code} = isDecimal(${$total . '_' . $c->code}, true);
                                 }
                             }

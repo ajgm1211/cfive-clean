@@ -127,7 +127,7 @@
                                                 @endphp
                                             @endforeach
                                             <tr class="text-left color-table">
-                                                <td colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.total_destination')}}</td>
+                                                <td colspan="2">{{__('pdf.total_destination')}}</td>
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
@@ -182,6 +182,7 @@
                                             foreach ($containers as $c){
                                                 ${'sum_total_'.$c->code}=0;
                                                 ${'sum_'.$c->code}='sum_'.$c->code;
+                                                ${'sale_term_'.$c->code} = 'sale_term_'.$c->code;
                                             }
                                         @endphp
                                         @foreach($value->charge as $item)
@@ -197,7 +198,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{ isDecimal(@$item->${'sum_'.$c->code}, true) }}</td>
+                                                            <td {{ $hide }}>{{ isDecimal(@$item->${'sale_term_'.$c->code}, true) }}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -211,7 +212,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{ $hide }}><b>{{ isDecimal(@${'sum_total_'.$c->code}) }}</b></td>
+                                                        <td {{ $hide }}><b>{{ isDecimal(@${'sum_total_'.$c->code}, true) }}</b></td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -256,6 +257,7 @@
                                                 ${'total_c'.$c->code }= 'total_c'.$c->code;
                                                 ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
                                                 ${'total_inland'.$c->code} = 'total_inland'.$c->code;
+                                                ${'total_inland_raw_'.$c->code} = 'total_inland_raw_'.$c->code;
                                                 ${'sum_inland_'.$c->code} = 0;
                                             }
                                             $show_inland='hide';
@@ -304,9 +306,9 @@
                                                                         @foreach ($containers as $c)
                                                                             @if($c->code == $key)
                                                                                 @php 
-                                                                                    ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code}; 
+                                                                                    ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code};
                                                                                 @endphp
-                                                                                <td {{ $hide }}>{{ $v->${'total_inland'.$c->code} }}</td>
+                                                                                <td {{ $hide }}>{{ $v->${'total_inland_raw_'.$c->code} }}</td>
                                                                             @endif
                                                                         @endforeach
                                                                     @endforeach
@@ -358,7 +360,7 @@
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     @php 
-                                                                        ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code}; 
+                                                                        ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code};
                                                                     @endphp
                                                                     <td {{ $hide }}>{{ $v->${'total_inland'.$c->code} }}</td>
                                                                 @endif
