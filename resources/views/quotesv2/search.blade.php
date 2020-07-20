@@ -814,12 +814,12 @@ body {
                             <div class="col-lg-2">
                                 <label>Company</label>
                                 <div class="m-input-icon m-input-icon--right">
-                                    {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
+                                    <select id="company_dropdown" name="company_id_quote" class="form-control"></select>
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
                                         <span>
                                             <a onclick="AbrirModal('add',0)" data-container="body"
                                                 data-toggle="m-tooltip" data-placement="top" title=""
-                                                data-original-title="Add Company if not exist"> <i
+                                                data-original-title="Add new company"> <i
                                                     class="la  la-plus-circle btn-plus__form"
                                                     style="color:blue; font-size: 18px;"></i> </a>
                                         </span>
@@ -835,7 +835,7 @@ body {
                                         <span>
                                             <a onclick="AbrirModal('addContact',0)" data-container="body"
                                                 data-toggle="m-tooltip" data-placement="top" title=""
-                                                data-original-title="Add Contact if not exist"> <i
+                                                data-original-title="Add new contact"> <i
                                                     class="la  la-plus-circle btn-plus__form"
                                                     style="color:blue; font-size: 18px;"></i></a>
                                         </span>
