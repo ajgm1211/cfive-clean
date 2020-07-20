@@ -17,23 +17,23 @@ activarCountry('{{ $activacion['act'] }}');
                         </label>
                         <div class="m-radio-inline">
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'port', $activacion['rdrouteP'] ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }}
+                                {{ Form::radio('typeroute', 'port', $activacion['rdrouteP'] ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\',false)' ]) }}
                                 Port
                                 <span></span>
                             </label>
                             @if ($route == 'update-global-charge')
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }}
+                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\',false)' ]) }}
                                 Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\')' ]) }}
+                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\',false)' ]) }}
                                 Port to Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\')' ]) }}
+                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\',false)' ]) }}
                                 Country to Port
                                 <span></span>
                             </label>
