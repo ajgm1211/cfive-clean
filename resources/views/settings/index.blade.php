@@ -132,24 +132,36 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-2">
                                         <div class="form-group m-form__group">
                                             <label for="address">Decimals</label><br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-success">
-													<input  checked='true' type="radio" name="decimals" value="1">
-																		True
-																		<span></span>
-																	</label><br>
-                                                                    <label class="m-radio m-radio--check-bold m-radio--state-brand">
-																		<input  type="radio" name="decimals" value="0">
-																		False
-																		<span></span>
-																	</label>
+												<input  checked='true' type="radio" name="decimals" value="1">														
+													<span></span>True
+                                            </label>
+                                            <br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-brand">
+												<input  type="radio" name="decimals" value="0">
+	                                                <span></span>False
+							                </label>
                                         </div>
                                     </div>
-                                   
-                                </div>
-                                <hr>
+                                    <div class="col-md-2">
+                                        <div class="form-group m-form__group">
+                                            <label for="address">Future Dates</label><br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-success">
+												<input type="radio" name="future_dates" value="1">														
+													<span></span>Yes
+                                            </label>
+                                            <br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-brand">
+												<input  checked='No' type="radio" name="future_dates" value="0">
+	                                                <span></span>No
+							                </label>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <br>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group m-form__group">
@@ -297,23 +309,36 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-2">
                                         <div class="form-group m-form__group">
                                             <label for="address">Decimals</label><br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-success">
-													<input  {{ $selectedTrue}} type="radio" name="decimals" value="1">
-																		True
-																		<span></span>
-																	</label><br>
-                                                                    <label class="m-radio m-radio--check-bold m-radio--state-brand">
-																		<input {{ $selectedFalse}} type="radio" name="decimals" value="0">
-																		False
-																		<span></span>
-																	</label>
+											    <input  {{ $selectedTrue}} type="radio" name="decimals" value="1">	
+											        <span></span>True
+                                            </label>
+                                            <br>
+                                            <label  class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <input {{ $selectedFalse}} type="radio" name="decimals" value="0">
+                                                    <span></span>False
+											</label>
                                         </div>
-                                    </div>
-                                   
+                                    </div>   
+                                    <div class="col-md-2">
+                                        <div class="form-group m-form__group">
+                                            <label for="address">Future Dates</label><br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-success">
+											    <input  {{ $selectedDatesTrue}} type="radio" name="future_dates" value="1">	
+											        <span></span>Yes
+                                            </label>
+                                            <br>
+                                            <label class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <input {{ $selectedDatesFalse}} type="radio" name="future_dates" value="0">
+                                                    <span></span>No
+											</label>
+                                        </div>
+                                    </div>                             
                                 </div>
+                                <br>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <br>
