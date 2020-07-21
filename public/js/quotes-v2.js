@@ -2859,7 +2859,7 @@ $('.inlands').on('click', function () {
     var sub45ho = $("#sub_inland_45HC_o" + idRate);
 
     var sub20d = $("#sub_inland_20DV_d" + idRate);
-    var sub40d = $("#sub_inland_4DV_d" + idRate);
+    var sub40d = $("#sub_inland_40DV_d" + idRate);
     var sub40hd = $("#sub_inland_40HC_d" + idRate);
     var sub40nord = $("#sub_inland_40NOR_d" + idRate);
     var sub45hd = $("#sub_inland_45HC_d" + idRate);
@@ -3053,7 +3053,6 @@ $('.inlands').on('click', function () {
             sub20 = parseFloat(sub20d.val()) - parseFloat(sub20o.val());
 
         tot_20 = parseFloat(tot20dv_val) + parseFloat(sub20);
-
 
         if (parseFloat(sub40o.val()) > parseFloat(sub40d.val()))
             sub40 = parseFloat(sub40o.val()) - parseFloat(sub40d.val());
@@ -3252,15 +3251,15 @@ $('.inlandsO').on('click', function () {
     var tot45hc_val = $("#tot45HC-" + idRate).val();
     var tot_45hc = '';
 
-    var sub20o = $("#sub_inland_20_o" + idRate);
-    var sub40o = $("#sub_inland_40_o" + idRate);
-    var sub40ho = $("#sub_inland_40h_o" + idRate);
+    var sub20o = $("#sub_inland_20DV_o" + idRate);
+    var sub40o = $("#sub_inland_40DV_o" + idRate);
+    var sub40ho = $("#sub_inland_40HC_o" + idRate);
     var sub40noro = $("#sub_inland_40NOR_o" + idRate);
     var sub45ho = $("#sub_inland_45HC_o" + idRate);
 
-    var sub20d = $("#sub_inland_20_d" + idRate);
-    var sub40d = $("#sub_inland_40_d" + idRate);
-    var sub40hd = $("#sub_inland_40h_d" + idRate);
+    var sub20d = $("#sub_inland_20DV_d" + idRate);
+    var sub40d = $("#sub_inland_40DV_d" + idRate);
+    var sub40hd = $("#sub_inland_40HC_d" + idRate);
     var sub40nord = $("#sub_inland_40NOR_d" + idRate);
     var sub45hd = $("#sub_inland_45HC_d" + idRate);
 
