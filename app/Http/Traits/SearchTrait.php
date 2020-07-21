@@ -29,12 +29,7 @@ trait SearchTrait
             $textType = 'Origin';
         }
 
-        foreach ($contain as $cont) {
-
-            $km = 'km' . $cont->code;
-            $$km = true;
-
-        }
+  
 
         if ($type == 'destino') {
             $port = $inlandParams['destiny_port'];
@@ -61,6 +56,12 @@ trait SearchTrait
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
             
+            foreach ($contain as $cont) {
+
+                $km = 'km' . $cont->code;
+                $$km = true;
+    
+            }
 
             $inlandDetails = array();
             foreach ($inlandsValue->inlandports as $ports) {
