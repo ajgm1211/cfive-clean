@@ -53,10 +53,12 @@ class InlandDistanceController extends Controller
             $data = InlandDistance::where('harbor_id', $harbors->first())->get();
             $array2 = array();
             foreach ($data as $dat) {
-
+                
                 $array = array($dat->distance => $dat->display_name);
-                $array2 = array_merge($array, $array2);
+                $array2 =$array2 + $array;
+                
             }
+    
             $data = new Collection($array2);
 
         }

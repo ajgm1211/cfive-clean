@@ -3008,7 +3008,11 @@ $('.inlands').on('click', function() {
         sub20RFd.val(0.00);
         sub40RFd.val(0.00);
         sub40HCRFd.val(0.00);
-
+        
+        
+                //OT
+                sub20OTd.val(0.00);
+                sub40OTd.val(0.00);
 
         // Dry
         if (parseFloat(sub20o.val()) > parseFloat(sub20d.val()))
@@ -3025,7 +3029,7 @@ $('.inlands').on('click', function() {
             sub40 = parseFloat(sub40d.val()) - parseFloat(sub40o.val());
 
 
-        tot_40 = parseFloat(tot40dv_val) - parseFloat(sub40);
+        tot_40 = parseFloat(tot40dv_val) + parseFloat(sub40);
 
 
         if (parseFloat(sub40ho.val()) > parseFloat(sub40hd.val()))
@@ -3033,7 +3037,7 @@ $('.inlands').on('click', function() {
         else
             sub40h = parseFloat(sub40hd.val() - parseFloat(sub40ho.val()));
 
-        tot_40hc = parseFloat(tot40hc_val) - parseFloat(sub40h);
+        tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
 
         //Refeer
@@ -3052,7 +3056,7 @@ $('.inlands').on('click', function() {
             sub40RF = parseFloat(sub40RFo.val()) - parseFloat(sub40RFd.val());
 
 
-        tot_40rf = parseFloat(tot40rf_val) - parseFloat(sub40RF);
+        tot_40rf = parseFloat(tot40rf_val) + parseFloat(sub40RF);
 
 
         if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()))
@@ -3060,7 +3064,7 @@ $('.inlands').on('click', function() {
         else
             sub40HCRF = parseFloat(sub40HCRFo.val() - parseFloat(sub40HCRFd.val()));
 
-        tot_40hcrf = parseFloat(tot40hcrf_val) - parseFloat(sub40HCRF);
+        tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
 
 
         //OT
@@ -3076,9 +3080,9 @@ $('.inlands').on('click', function() {
         if (parseFloat(sub40OTo.val()) > parseFloat(sub40OTd.val()))
             sub40OT = parseFloat(sub40OTo.val()) - parseFloat(sub40OTd.val());
         else
-            sub40OT = parseFloat(sub40OTo.val()) - parseFloat(sub40OTd.val());
+            sub40OT = parseFloat(sub40OTd.val()) - parseFloat(sub40OTo.val());
 
-        tot_40ot = parseFloat(tot40ot_val) - parseFloat(sub40OT);
+        tot_40ot = parseFloat(tot40ot_val) + parseFloat(sub40OT);
 
         //Flat Rack 
 
@@ -3093,9 +3097,9 @@ $('.inlands').on('click', function() {
         if (parseFloat(sub40FRo.val()) > parseFloat(sub40FRd.val()))
             sub40FR = parseFloat(sub40FRo.val()) - parseFloat(sub40FRd.val());
         else
-            sub40FR = parseFloat(sub40FRo.val()) - parseFloat(sub40FRd.val());
+            sub40FR = parseFloat(sub40FRd.val()) - parseFloat(sub40FRo.val());
 
-        tot_40fr = parseFloat(tot40fr_val) - parseFloat(sub40FR);
+        tot_40fr = parseFloat(tot40fr_val) + parseFloat(sub40FR);
 
     }
 
@@ -3242,9 +3246,10 @@ $('.inlandsO').on('click', function() {
 
 
     var sub20OTo = $("#sub_inland_20OT_o" + idRate);
-    var sub40OTo = $("#sub_inland_40OT_o" + idRate);
-
     var sub20OTd = $("#sub_inland_20OT_d" + idRate);
+
+
+    var sub40OTo = $("#sub_inland_40OT_o" + idRate);
     var sub40OTd = $("#sub_inland_40OT_d" + idRate);
 
 
@@ -3310,8 +3315,8 @@ $('.inlandsO').on('click', function() {
         tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
 
         //OT
-        sub20OTd.val(parseFloat(i20OT));
-        sub40OTd.val(parseFloat(i40OT));
+        sub20OTo.val(parseFloat(i20OT));
+        sub40OTo.val(parseFloat(i40OT));
 
         sub20OT = parseFloat(sub20OTo.val()) + parseFloat(sub20OTd.val());
         sub40OT = parseFloat(sub40OTo.val()) + parseFloat(sub40OTd.val());
@@ -3323,8 +3328,8 @@ $('.inlandsO').on('click', function() {
         //RACK 
 
 
-        sub20FRd.val(parseFloat(i20FR));
-        sub40FRd.val(parseFloat(i40FR));
+        sub20FRo.val(parseFloat(i20FR));
+        sub40FRo.val(parseFloat(i40FR));
 
         sub20FR = parseFloat(sub20FRo.val()) + parseFloat(sub20FRd.val());
         sub40FR = parseFloat(sub40FRo.val()) + parseFloat(sub40FRd.val());
@@ -3347,6 +3352,10 @@ $('.inlandsO').on('click', function() {
         sub40RFo.val(0.00);
         sub40HCRFo.val(0.00);
 
+        //OT
+        sub20OTo.val(0.00);
+        sub40OTo.val(0.00);              
+
         // DRY
         if (parseFloat(sub20o.val()) > parseFloat(sub20d.val()))
             sub20 = parseFloat(sub20o.val()) - parseFloat(sub20d.val());
@@ -3361,7 +3370,7 @@ $('.inlandsO').on('click', function() {
         else
             sub40 = parseFloat(sub40d.val()) - parseFloat(sub40o.val());
 
-        tot_40 = parseFloat(tot40dv_val) - parseFloat(sub40);
+        tot_40 = parseFloat(tot40dv_val) + parseFloat(sub40);
 
 
         if (parseFloat(sub40ho.val()) > parseFloat(sub40hd.val()))
@@ -3369,7 +3378,7 @@ $('.inlandsO').on('click', function() {
         else
             sub40h = parseFloat(sub40hd.val() - parseFloat(sub40ho.val()));
 
-        tot_40hc = parseFloat(tot40hc_val) - parseFloat(sub40h);
+        tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
         // Refeer
 
@@ -3387,7 +3396,7 @@ $('.inlandsO').on('click', function() {
             sub40RF = parseFloat(sub40RFd.val()) - parseFloat(sub40RFo.val());
 
 
-        tot_40rf = parseFloat(tot40rf_val) - parseFloat(sub40RF);
+        tot_40rf = parseFloat(tot40rf_val) + parseFloat(sub40RF);
 
 
         if (parseFloat(sub40HCRFo.val()) > parseFloat(sub40HCRFd.val()))
@@ -3395,7 +3404,7 @@ $('.inlandsO').on('click', function() {
         else
             sub40HCRF = parseFloat(sub40HCRFd.val() - parseFloat(sub40HCRFo.val()));
 
-        tot_40hcrf = parseFloat(tot40hcrf_val) - parseFloat(sub40HCRF);
+        tot_40hcrf = parseFloat(tot40hcrf_val) + parseFloat(sub40HCRF);
 
         //OT
 
@@ -3412,7 +3421,7 @@ $('.inlandsO').on('click', function() {
         else
             sub40OT = parseFloat(sub40OTd.val()) - parseFloat(sub40OTo.val());
 
-        tot_40ot = parseFloat(tot40ot_val) - parseFloat(sub40OT);
+        tot_40ot = parseFloat(tot40ot_val) + parseFloat(sub40OT);
 
         //Flat Rack 
 
@@ -3429,7 +3438,7 @@ $('.inlandsO').on('click', function() {
         else
             sub40FR = parseFloat(sub40FRd.val()) - parseFloat(sub40FRo.val());
 
-        tot_40fr = parseFloat(tot40fr_val) - parseFloat(sub40FR);
+        tot_40fr = parseFloat(tot40fr_val) + parseFloat(sub40FR);
 
 
 
@@ -3453,6 +3462,7 @@ $('.inlandsO').on('click', function() {
     tot40hcrf_html.html(tot_40hcrf.toFixed(2));
 
     //OT
+
 
     $("#sub_inland_20OT" + idRate).html(sub20OT);
     $("#sub_inland_40OT" + idRate).html(sub40OT);
