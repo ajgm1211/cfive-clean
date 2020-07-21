@@ -48,7 +48,7 @@ class InlandController extends Controller
             return $currency->only(['id', 'alphacode']);
         });
 
-        $types = InlandType::where('id', 1)->map(function ($type) {
+        $types = InlandType::where('id', 1)->get()->map(function ($type) {
             return $type->only(['id', 'name']);
         });
 
