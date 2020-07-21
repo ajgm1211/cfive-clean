@@ -29,12 +29,7 @@ trait SearchTrait
             $textType = 'Origin';
         }
 
-        foreach ($contain as $cont) {
-
-            $km = 'km' . $cont->code;
-            $$km = true;
-
-        }
+  
 
         if ($type == 'destino') {
             $port = $inlandParams['destiny_port'];
@@ -61,6 +56,12 @@ trait SearchTrait
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
             
+            foreach ($contain as $cont) {
+
+                $km = 'km' . $cont->code;
+                $$km = true;
+    
+            }
 
             $inlandDetails = array();
             foreach ($inlandsValue->inlandports as $ports) {
@@ -86,6 +87,9 @@ trait SearchTrait
                                 'language' => 'es',
                             ])->get();
                         $var = json_decode($response);
+                        if(empty($var->routes)){
+                            $distancia = 1;
+                        }
                         //Google MAPS
                         foreach ($var->routes as $resp) {
                             foreach ($resp->legs as $dist) {
@@ -98,10 +102,11 @@ trait SearchTrait
                                 }
                             }
                         }
+                     
                         // Fin Google Maps
                     }
-
-                    foreach ($inlandsValue->inlandRange as $range) {
+         
+       foreach ($inlandsValue->inlandRange as $range) {
                         $rateI = $this->ratesCurrency($range->currency->id, $typeCurrency);
                         $jsonContainer = json_encode($range->json_containers, JSON_FORCE_OBJECT);
                         $json = json_decode($jsonContainer);
@@ -173,7 +178,7 @@ trait SearchTrait
 
                                         $rateMount = $jsonkm->{'C' . $cont->code};
                                         $montoKm = ($distancia * $rateMount) / $rateGeneral;
-                                      //  dd($distancia,$rateGeneral,$rateMount,$montoKm);   
+                                      // dd($distancia,$rateGeneral,$rateMount,$montoKm);   
                                         $sub_20 = number_format($montoKm, 2, '.', '');
                                         $monto += $sub_20;
                                         $amount_inland = $distancia * $rateMount;
