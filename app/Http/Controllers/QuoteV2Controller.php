@@ -3399,9 +3399,12 @@ class QuoteV2Controller extends Controller
 
                 $data->setAttribute('contratoFuturo', $contratoFuturo);
                 // INLANDS
-                $data->setAttribute('inlandDestiny', $inlandDestiny);
+
+
+                
+                $data->setAttribute('inlandDestiny', $inlandDestiny->where('port_id',$data->destiny_port));
                 //   dd($inlandDestiny);
-                $data->setAttribute('inlandOrigin', $inlandOrigin);
+                $data->setAttribute('inlandOrigin', $inlandOrigin->where('port_id',$data->origin_port));
                 $data->setAttribute('typeCurrency', $typeCurrency);
 
                 $data->setAttribute('idCurrency', $idCurrency);
