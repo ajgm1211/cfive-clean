@@ -788,12 +788,14 @@
             
               <div class="col-lg-4 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
-                <label for="mode1" class="label-check">Include origin charges</label>
+                <label for="mode1" class="label-check">Include Origin Charges</label>
               </div>
+
               <div class="col-lg-4 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
-                <label for="mode2" class="label-check">Include destination charges</label>
+                <label for="mode2" class="label-check">Include Destination Charges</label>
               </div>
+              
               <!-- <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
