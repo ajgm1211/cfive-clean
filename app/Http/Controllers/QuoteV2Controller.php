@@ -3379,7 +3379,16 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('localdestiny', $collectionDestiny);
                 $data->setAttribute('localorigin', $collectionOrigin);
                 // Valores totales por contenedor
-                $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                
+                if($chargesDestination == null  && $chargesOrigin == null){
+                    $rateTot = 1;
+                    $typeCurrency = $data->currency->alphacode;
+                    $idCurrency = $data->currency->id;
+                    
+                }else{
+                    $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                }
+                
                 foreach ($containers as $cont) {
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
