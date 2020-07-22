@@ -29,6 +29,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use App\Jobs\ProcessLogo;
 use EventCrisp;
+use App\Http\Requests\StoreSettings;
 
 class SettingController extends Controller
 {
@@ -79,7 +80,7 @@ class SettingController extends Controller
     return $iniciales;
   }
 
-  public function store(Request $request){
+  public function store(StoreSettings $request){
 
     $file = Input::file('image');
     $footer_image = Input::file('footer_image');
