@@ -197,7 +197,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
         $array_ocean_freight = array();
         $totalChargeOrig = 0;
         $totalChargeDest = 0;
-
+        
         if ($total_weight != null) {
 
             $subtotalT = $weight * $data->uom;
@@ -1858,7 +1858,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, $totalQuote, $currency, $data->transit_time, $data->contract->remarks);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments);
                 break;
             default:
                 $detalle = $routes;
