@@ -53,12 +53,12 @@ class InlandDistanceController extends Controller
             $data = InlandDistance::where('harbor_id', $harbors->first())->get();
             $array2 = array();
             foreach ($data as $dat) {
-                
+
                 $array = array($dat->distance => $dat->display_name);
-                $array2 =$array2 + $array;
-                
+                $array2 = $array2 + $array;
+
             }
-    
+
             $data = new Collection($array2);
 
         }
@@ -175,18 +175,19 @@ class InlandDistanceController extends Controller
     }
 
     /*public function updateInfo()
-{
+    {
 
-$inlandD = InlandDistance::all();
-foreach($inlandD as $ind){
+        $inlandD = InlandDistance::where('harbor_id', '962')->get();
 
-$province= Province::where('id',$ind->province_id)->first();
+        foreach ($inlandD as $ind) {
 
-$ind->display_name = $ind->zip  . "," . $ind->address . "," . $province->name ;
+            $province = Province::where('id', $ind->province_id)->first();
 
-$ind->save();
+            $ind->display_name = $ind->zip . "," . $ind->address . "," . $province->name;
 
-}
+            $ind->save();
 
-}*/
+        }
+
+    }*/
 }
