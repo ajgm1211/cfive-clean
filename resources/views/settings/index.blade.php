@@ -90,6 +90,15 @@
                 </div>
                 <!-- /.col-md-4 -->
                 <div class="col-md-10" >
+                @if ($errors->any())
+                 <div class="alert alert-danger">
+                     <ul>
+                         @foreach ($errors->all() as $error)
+                             <li>{{ $error }}</li>
+                         @endforeach
+                     </ul>
+                 </div>
+                @endif
                     @if(!isset($company->companyUser))
                     <form id="default-currency" enctype="multipart/form-data">
                         <div class="tab-content" id="myTabContent">
