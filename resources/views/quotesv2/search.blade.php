@@ -1319,6 +1319,7 @@ body {
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
     {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
+    <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
     <input type="hidden" name="form" value="{{ json_encode($form) }}"
         class="btn btn-sm btn-default btn-bold btn-upper formu">
@@ -1851,12 +1852,12 @@ body {
 
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     {{ $equipmentHides[$container->code] }}
-                                                    {{ @$inlandDestiny['inlandDetails'][$container->code]['sub_in']  }}
+                                                    {{ @isDecimal($inlandDestiny['inlandDetails'][$container->code]['sub_in'])  }}
                                                     &nbsp;+<b
-                                                        class="monto-down">{{ @$inlandDestiny['inlandDetails'][$container->code]['markup']  }}</b>
+                                                        class="monto-down">{{ @isDecimal($inlandDestiny['inlandDetails'][$container->code]['markup'])  }}</b>
                                                     <i class="la la-caret-right"></i> <span class="bg-rates"
                                                         id='valor-d{{$container->code}}{{$loop->parent->iteration}}-{{$arr->id}}'>
-                                                        {{ number_format(@$inlandDestiny['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
+                                                        {{ isDecimal(@$inlandDestiny['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
                                                     </span>
                                                 </div>
 
@@ -1910,12 +1911,12 @@ body {
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     {{ $equipmentHides[$container->code] }}
-                                                    {{ @$inlandOrigin['inlandDetails'][$container->code]['sub_in']  }}
+                                                    {{ @isDecimal($inlandOrigin['inlandDetails'][$container->code]['sub_in'])  }}
                                                     <i class="la la-caret-right"></i> <b class="monto-down">
-                                                        {{ @$inlandOrigin['inlandDetails'][$container->code]['markup']  }}
-                                                    </b> <span class="bg-rates"
+                                                        {{ @isDecimal($inlandOrigin['inlandDetails'][$container->code]['markup'])  }}
+                                                    </b> <i class="la la-caret-right"></i>  <span class="bg-rates"
                                                         id='valor-o{{$container->code}}{{$loop->parent->iteration}}-{{$arr->id}}'>
-                                                        {{ number_format(@$inlandOrigin['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
+                                                        {{ isDecimal(@$inlandOrigin['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
                                                     </span>
                                                 </div>
 
@@ -1962,7 +1963,7 @@ body {
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     <span class="portalphacode">
-                                                        <div id='sub_inland_{{$container->code}}{{ $arr->id }}'>0.00
+                                                        <div id='sub_inland_{{$container->code}}{{ $arr->id }}'>{{ isDecimal(0.00) }}
                                                         </div>
                                                     </span>
                                                 </div>
