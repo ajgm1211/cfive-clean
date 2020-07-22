@@ -2805,7 +2805,7 @@ $('.inlands').on('click', function () {
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
 
-
+    var isDecimal = $("#isDecimal").val();
 
     var theElement = $(this);
     $('.labelDest' + idRate).removeClass('style__select-add');
@@ -3071,11 +3071,11 @@ $('.inlands').on('click', function () {
         tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
         if (parseFloat(sub40noro.val()) > parseFloat(sub40nord.val()))
-            sub40nord = parseFloat(sub40noro.val()) - parseFloat(sub40nord.val());
+            sub40nor = parseFloat(sub40noro.val()) - parseFloat(sub40nord.val());
         else
-            sub40nord = parseFloat(sub40nord.val() - parseFloat(sub40noro.val()));
+            sub40nor = parseFloat(sub40nord.val() - parseFloat(sub40noro.val()));
 
-        tot_40nor = parseFloat(tot40nor_val) + parseFloat(sub40nord);
+        tot_40nor = parseFloat(tot40nor_val) + parseFloat(sub40nor);
 
 
         if (parseFloat(sub45ho.val()) > parseFloat(sub45hd.val()))
@@ -3151,47 +3151,95 @@ $('.inlands').on('click', function () {
     }
 
     //DRY
-    $("#sub_inland_20DV" + idRate).html(sub20);
-    $("#sub_inland_40DV" + idRate).html(sub40);
-    $("#sub_inland_40HC" + idRate).html(sub40h);
-    $("#sub_inland_40NOR" + idRate).html(sub40nor);
-    $("#sub_inland_45HC" + idRate).html(sub45h);
-
-    tot20dv_html.html(tot_20.toFixed(2));
-    tot40dv_html.html(tot_40.toFixed(2));
-    tot40hc_html.html(tot_40hc.toFixed(2));
-    tot40nor_html.html(tot_40nor.toFixed(2));
-    tot45hc_html.html(tot_45hc.toFixed(2));
 
 
+    if (isDecimal == 1) {
 
-    //Refeer
+        $("#sub_inland_20DV" + idRate).html(sub20.toFixed(2));
+        $("#sub_inland_40DV" + idRate).html(sub40.toFixed(2));
+        $("#sub_inland_40HC" + idRate).html(sub40h.toFixed(2));
+        $("#sub_inland_40NOR" + idRate).html(sub40nor.toFixed(2));
+        $("#sub_inland_45HC" + idRate).html(sub45h.toFixed(2));
+        
+        tot20dv_html.html(tot_20.toFixed(2));
+        tot40dv_html.html(tot_40.toFixed(2));
+        tot40hc_html.html(tot_40hc.toFixed(2));
+        tot40nor_html.html(tot_40nor.toFixed(2));
+        tot45hc_html.html(tot_45hc.toFixed(2));
 
-    $("#sub_inland_20RF" + idRate).html(sub20RF);
-    $("#sub_inland_40RF" + idRate).html(sub40RF);
-    $("#sub_inland_40HCRF" + idRate).html(sub40HCRF);
+        //refeer
+        $("#sub_inland_20RF" + idRate).html(sub20RF.toFixed(2));
+        $("#sub_inland_40RF" + idRate).html(sub40RF.toFixed(2));
+        $("#sub_inland_40HCRF" + idRate).html(sub40HCRF.toFixed(2));
 
-    tot20rf_html.html(tot_20rf.toFixed(2));
-    tot40rf_html.html(tot_40rf.toFixed(2));
-    tot40hcrf_html.html(tot_40hcrf.toFixed(2));
+        tot20rf_html.html(tot_20rf.toFixed(2));
+        tot40rf_html.html(tot_40rf.toFixed(2));
+        tot40hcrf_html.html(tot_40hcrf.toFixed(2));
 
-    //OT
-
-    $("#sub_inland_20OT" + idRate).html(sub20OT);
-    $("#sub_inland_40OT" + idRate).html(sub40OT);
+        //OT
 
 
-    tot20ot_html.html(tot_20ot.toFixed(2));
-    tot40ot_html.html(tot_40ot.toFixed(2));
+        $("#sub_inland_20OT" + idRate).html(sub20OT.toFixed(2));
+        $("#sub_inland_40OT" + idRate).html(sub40OT.toFixed(2));
 
 
-    //FR
+        tot20ot_html.html(tot_20ot.toFixed(2));
+        tot40ot_html.html(tot_40ot.toFixed(2));
 
-    $("#sub_inland_20FR" + idRate).html(sub20FR);
-    $("#sub_inland_40FR" + idRate).html(sub40FR);
 
-    tot20fr_html.html(tot_20fr.toFixed(2));
-    tot40fr_html.html(tot_40fr.toFixed(2));
+        //FR
+
+        $("#sub_inland_20FR" + idRate).html(sub20FR.toFixed(2));
+        $("#sub_inland_40FR" + idRate).html(sub40FR.toFixed(2));
+
+        tot20fr_html.html(tot_20fr.toFixed(2));
+        tot40fr_html.html(tot_40fr.toFixed(2));
+
+    } else {
+        //Dry
+        tot20dv_html.html(Math.round(tot_20));
+        tot40dv_html.html(Math.round(tot_40));
+        tot40hc_html.html(Math.round(tot_40hc));
+        tot40nor_html.html(Math.round(tot_40nor));
+        tot45hc_html.html(Math.round(tot_45hc));
+
+        $("#sub_inland_20DV" + idRate).html(Math.round(sub20));
+        $("#sub_inland_40DV" + idRate).html(Math.round(sub40));
+        $("#sub_inland_40HC" + idRate).html(Math.round(sub40h));
+        $("#sub_inland_40NOR" + idRate).html(Math.round(sub40nor));
+        $("#sub_inland_45HC" + idRate).html(Math.round(sub45h));
+
+
+        //refeer
+        $("#sub_inland_20RF" + idRate).html(Math.round(sub20RF));
+        $("#sub_inland_40RF" + idRate).html(Math.round(sub40RF));
+        $("#sub_inland_40HCRF" + idRate).html(Math.round(sub40HCRF));
+
+        tot20rf_html.html(Math.round(tot_20rf));
+        tot40rf_html.html(Math.round(tot_40rf));
+        tot40hcrf_html.html(Math.round(tot_40hcrf));
+
+        //OT
+
+
+        $("#sub_inland_20OT" + idRate).html(Math.round(sub20OT));
+        $("#sub_inland_40OT" + idRate).html(Math.round(sub40OT));
+
+
+        tot20ot_html.html(Math.round(tot_20ot));
+        tot40ot_html.html(Math.round(tot_40ot));
+
+
+        //FR
+
+        $("#sub_inland_20FR" + idRate).html(Math.round(sub20FR));
+        $("#sub_inland_40FR" + idRate).html(Math.round(sub40FR));
+
+        tot20fr_html.html(Math.round(tot_20fr));
+        tot40fr_html.html(Math.round(tot_40fr));
+
+    }
+
 
 
 
@@ -3203,7 +3251,7 @@ $('.inlandsO').on('click', function () {
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
 
-
+    var isDecimal = $("#isDecimal").val();
     var theElement = $(this);
 
     $('.labelOrig' + idRate).removeClass('style__select-add');
@@ -3467,11 +3515,11 @@ $('.inlandsO').on('click', function () {
         tot_40hc = parseFloat(tot40hc_val) + parseFloat(sub40h);
 
         if (parseFloat(sub40noro.val()) > parseFloat(sub40nord.val()))
-            sub40nord = parseFloat(sub40noro.val()) - parseFloat(sub40nord.val());
+            sub40nor = parseFloat(sub40noro.val()) - parseFloat(sub40nord.val());
         else
-            sub40nord = parseFloat(sub40nord.val() - parseFloat(sub40noro.val()));
+            sub40nor = parseFloat(sub40nord.val() - parseFloat(sub40noro.val()));
 
-        tot_40nor = parseFloat(tot40nor_val) + parseFloat(sub40nord);
+        tot_40nor = parseFloat(tot40nor_val) + parseFloat(sub40nor);
 
 
         if (parseFloat(sub45ho.val()) > parseFloat(sub45hd.val()))
@@ -3546,46 +3594,97 @@ $('.inlandsO').on('click', function () {
 
     }
     //DRY
-    $("#sub_inland_20DV" + idRate).html(sub20);
-    $("#sub_inland_40DV" + idRate).html(sub40);
-    $("#sub_inland_40HC" + idRate).html(sub40h);
-    $("#sub_inland_40NOR" + idRate).html(sub40nor);
-    $("#sub_inland_45HC" + idRate).html(sub45h);
 
-    tot20dv_html.html(tot_20.toFixed(2));
-    tot40dv_html.html(tot_40.toFixed(2));
-    tot40hc_html.html(tot_40hc.toFixed(2));
-    tot40nor_html.html(tot_40nor.toFixed(2));
-    tot45hc_html.html(tot_45hc.toFixed(2));
+    if (isDecimal == 1) {
 
+        $("#sub_inland_20DV" + idRate).html(sub20.toFixed(2));
+        $("#sub_inland_40DV" + idRate).html(sub40.toFixed(2));
+        $("#sub_inland_40HC" + idRate).html(sub40h.toFixed(2));
+        $("#sub_inland_40NOR" + idRate).html(sub40nor.toFixed(2));
+        $("#sub_inland_45HC" + idRate).html(sub45h.toFixed(2));
 
-    //refeer
-    $("#sub_inland_20RF" + idRate).html(sub20RF);
-    $("#sub_inland_40RF" + idRate).html(sub40RF);
-    $("#sub_inland_40HCRF" + idRate).html(sub40HCRF);
+        tot20dv_html.html(tot_20.toFixed(2));
+        tot40dv_html.html(tot_40.toFixed(2));
+        tot40hc_html.html(tot_40hc.toFixed(2));
+        tot40nor_html.html(tot_40nor.toFixed(2));
+        tot45hc_html.html(tot_45hc.toFixed(2));
 
-    tot20rf_html.html(tot_20rf.toFixed(2));
-    tot40rf_html.html(tot_40rf.toFixed(2));
-    tot40hcrf_html.html(tot_40hcrf.toFixed(2));
+        //refeer
+        $("#sub_inland_20RF" + idRate).html(sub20RF.toFixed(2));
+        $("#sub_inland_40RF" + idRate).html(sub40RF.toFixed(2));
+        $("#sub_inland_40HCRF" + idRate).html(sub40HCRF.toFixed(2));
 
-    //OT
+        tot20rf_html.html(tot_20rf.toFixed(2));
+        tot40rf_html.html(tot_40rf.toFixed(2));
+        tot40hcrf_html.html(tot_40hcrf.toFixed(2));
 
-
-    $("#sub_inland_20OT" + idRate).html(sub20OT);
-    $("#sub_inland_40OT" + idRate).html(sub40OT);
+        //OT
 
 
-    tot20ot_html.html(tot_20ot.toFixed(2));
-    tot40ot_html.html(tot_40ot.toFixed(2));
+        $("#sub_inland_20OT" + idRate).html(sub20OT.toFixed(2));
+        $("#sub_inland_40OT" + idRate).html(sub40OT.toFixed(2));
 
 
-    //FR
+        tot20ot_html.html(tot_20ot.toFixed(2));
+        tot40ot_html.html(tot_40ot.toFixed(2));
 
-    $("#sub_inland_20FR" + idRate).html(sub20FR);
-    $("#sub_inland_40FR" + idRate).html(sub40FR);
 
-    tot20fr_html.html(tot_20fr.toFixed(2));
-    tot40fr_html.html(tot_40fr.toFixed(2));
+        //FR
+
+        $("#sub_inland_20FR" + idRate).html(sub20FR.toFixed(2));
+        $("#sub_inland_40FR" + idRate).html(sub40FR.toFixed(2));
+
+        tot20fr_html.html(tot_20fr.toFixed(2));
+        tot40fr_html.html(tot_40fr.toFixed(2));
+
+    } else {
+        //Dry
+        tot20dv_html.html(Math.round(tot_20));
+        tot40dv_html.html(Math.round(tot_40));
+        tot40hc_html.html(Math.round(tot_40hc));
+        tot40nor_html.html(Math.round(tot_40nor));
+        tot45hc_html.html(Math.round(tot_45hc));
+
+        $("#sub_inland_20DV" + idRate).html(Math.round(sub20));
+        $("#sub_inland_40DV" + idRate).html(Math.round(sub40));
+        $("#sub_inland_40HC" + idRate).html(Math.round(sub40h));
+        $("#sub_inland_40NOR" + idRate).html(Math.round(sub40nor));
+        $("#sub_inland_45HC" + idRate).html(Math.round(sub45h));
+
+
+        //refeer
+        $("#sub_inland_20RF" + idRate).html(Math.round(sub20RF));
+        $("#sub_inland_40RF" + idRate).html(Math.round(sub40RF));
+        $("#sub_inland_40HCRF" + idRate).html(Math.round(sub40HCRF));
+
+        tot20rf_html.html(Math.round(tot_20rf));
+        tot40rf_html.html(Math.round(tot_40rf));
+        tot40hcrf_html.html(Math.round(tot_40hcrf));
+
+        //OT
+
+
+        $("#sub_inland_20OT" + idRate).html(Math.round(sub20OT));
+        $("#sub_inland_40OT" + idRate).html(Math.round(sub40OT));
+
+
+        tot20ot_html.html(Math.round(tot_20ot));
+        tot40ot_html.html(Math.round(tot_40ot));
+
+
+        //FR
+
+        $("#sub_inland_20FR" + idRate).html(Math.round(sub20FR));
+        $("#sub_inland_40FR" + idRate).html(Math.round(sub40FR));
+
+        tot20fr_html.html(Math.round(tot_20fr));
+        tot40fr_html.html(Math.round(tot_40fr));
+
+    }
+
+
+
+
 
 });
 
