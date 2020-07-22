@@ -6,7 +6,7 @@ use App\Company;
 use App\CompanyUser;
 use App\Currency;
 use App\User;
-use App\Quote;
+use App\QuoteV2;
 use App\Surcharge;
 use App\Contact;
 use App\SaleTerm;
@@ -57,7 +57,7 @@ class SettingController extends Controller
 
   public function idPersonalizado($name,$company_id){
     $iniciales =  strtoupper(substr($name,0, 2));
-    $quote = Quote::where('company_user_id',$company_id)->orderBy('created_at', 'desc')->first();
+    $quote = QuoteV2::where('company_user_id',$company_id)->orderBy('created_at', 'desc')->first();
 
     if($quote == null){
       $iniciales = $iniciales."-1";
@@ -211,7 +211,7 @@ class SettingController extends Controller
 
   public function update_pdf_language(Request $request)
   {
-    $quote=Quote::find($request->quote_id);
+    $quote=QuoteV2::find($request->quote_id);
     $quote->pdf_language = $request->pdf_language;
     $quote->update();
 
@@ -227,7 +227,7 @@ class SettingController extends Controller
 
   public function delete_company_user(Request $request,$id)
   {
-    Quote::where('company_user_id',$id)->delete();
+    QuoteV2::where('company_user_id',$id)->delete();
     Company::where('company_user_id',$id)->delete();
     User::where('company_user_id',$id)->delete();
     Surcharge::where('company_user_id',$id)->delete();
@@ -261,7 +261,7 @@ class SettingController extends Controller
     $company_user_duplicate->pdf_ammounts=$company_user->pdf_ammounts;
     $company_user_duplicate->save();
 
-    $quotes = Quote::where('company_user_id',$company_user->id)->get();
+    $quotes = QuoteV2::where('company_user_id',$company_user->id)->get();
 
     $companies = Company::where('company_user_id',$company_user->id)->get();
     $contracts = Contract::where('company_user_id',$company_user->id)->get();
@@ -353,7 +353,7 @@ class SettingController extends Controller
       $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
       $packaging_loads = PackageLoad::where('quote_id',$quote->id)->get();
 
-      $quote_duplicate = new Quote();
+      $quote_duplicate = new QuoteV2();
       $quote_duplicate->owner=$user->id;
       $quote_duplicate->company_user_id=$company_user_duplicate->id;
       $quote_duplicate->company_quote=$company_quote;
