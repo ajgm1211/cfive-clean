@@ -45,7 +45,7 @@ class InlandKmResource extends JsonResource
     public function addContainers($data) 
     {
         foreach ($this->available_containers as $available_container) {
-           $data['rates_'.$available_container] = isset($this->json_containers['C'.$available_container]) ? $this->json_containers['C'.$available_container] : '-';
+           $data['rates_'.$available_container] = isset($this->json_containers['C'.$available_container]) ? $this->json_containers['C'.$available_container] : '';
         }
 
         return $data;

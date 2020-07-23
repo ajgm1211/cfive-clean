@@ -35,6 +35,11 @@
             actions: Object,
             initialFields: Array,
             initialFormFields: Object,
+            groupContainer: {
+                type: Boolean,
+                default: false,
+                required: false
+            },
             onLast: {
                 type: Boolean,
                 default: false,
@@ -51,6 +56,7 @@
         },
         created() { 
             this.setColumns(this.equipment);
+            this.extra_field_state = this.groupContainer;
         },
         methods: {
             /* Single Actions */
