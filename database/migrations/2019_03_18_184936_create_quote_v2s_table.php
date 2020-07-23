@@ -22,9 +22,9 @@ class CreateQuoteV2sTable extends Migration
             $table->json('equipment')->nullable();
             //$table->integer('cargo_type')->nullable();
             $table->float('chargeable_weight')->nullable();
-            $table->integer('company_id')->unsigned();
+            $table->integer('company_id')->unsigned()->nullable();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->integer('contact_id')->unsigned();
+            $table->integer('contact_id')->unsigned()->nullable();
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -33,7 +33,7 @@ class CreateQuoteV2sTable extends Migration
             $table->date('validity_start');
             $table->date('validity_end');
             $table->date('date_issued');
-            $table->integer('incoterm_id')->unsigned();
+            $table->integer('incoterm_id')->unsigned()->nullable();
             $table->foreign('incoterm_id')->references('id')->on('incoterms')->onDelete('cascade');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');

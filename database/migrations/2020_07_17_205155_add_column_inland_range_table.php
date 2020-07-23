@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFieldContactApi extends Migration
+class AddColumnInlandRangeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,16 @@ class AddFieldContactApi extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('inland_ranges', function (Blueprint $table) {
+            $table->dropColumn(['upper', 'lower']);
+        });
+
+        Schema::table('inland_ranges', function (Blueprint $table) {
+            $table->integer('upper')->default(0);
+            $table->integer('lower')->default(0);
+        });
+
+
     }
 
     /**
