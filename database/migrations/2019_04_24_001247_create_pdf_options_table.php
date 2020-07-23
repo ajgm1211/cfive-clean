@@ -27,6 +27,7 @@ class CreatePdfOptionsTable extends Migration
             $table->enum('language',['English','Portuguese','Spanish']);
             $table->boolean('show_carrier')->nullable();
             $table->boolean('show_logo')->nullable();
+            $table->enum('freight_charges_currency', ['USD','EUR'])->nullable();
             $table->timestamps();
         });
     }

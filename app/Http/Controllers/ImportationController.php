@@ -55,6 +55,7 @@ use App\MyClass\Excell\MyReadFilter;
 use App\Jobs\ImportationRatesFclJob;
 use Spatie\MediaLibrary\MediaStream;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\Models\Media;
 use App\Jobs\ReprocessSurchargersJob;
 use App\MyClass\Excell\ChunkReadFilter;
@@ -818,13 +819,21 @@ class ImportationController extends Controller
             $json_account  = json_encode(['final_columns'=>$final_columns->toArray(),'valuesSelecteds'=>$valuesSelecteds->toArray()]);
             $account->data = $json_account;
             $account->update();
-            // colocar contract_id al despachar para evitar el borrado mientras se importa el contracto
-            if(env('APP_VIEW') == 'operaciones') {
-                ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id)->onQueue('operaciones'); //NO BORRAR!!
-            }else {
-                ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id); //NO BORRAR!!
+            $json_account = json_decode($account->data,true);
+            if(array_key_exists('final_columns',$json_account)){
+                // colocar contract_id al despachar para evitar el borrado mientras se importa el contracto
+                if(env('APP_VIEW') == 'operaciones') {
+                    ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id)->onQueue('operaciones'); //NO BORRAR!!
+                }else {
+                    ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id); //NO BORRAR!!
+                }
+                return redirect()->route('redirect.Processed.Information',$contract_id);
+            } else {
+                Log::error('Json-Account data load error. Reload the page and try again please. '.Auth::user()->email);
+                $request->session()->flash('message.nivel', 'error');
+                $request->session()->flash('message.content', 'Json-Account data load error. Reload the page and try again please');
+                return back();
             }
-            return redirect()->route('redirect.Processed.Information',$contract_id);
         } else {
 
             Log::error('Container calculation type relationship error. Check Relationship in the module "Containers Calculation Types"');
@@ -3037,20 +3046,9 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $resultadocountrytOri = Harbor::where('varation->type','like','%'.strtolower('durban-zadur-south africa').'%')->orderBy('name', 'desc')->get();
-        //        $var = $resultadocountrytOri->where('varation->type','=',strtolower('durban'));
-        if($resultadocountrytOri->count() > 1){
-            foreach($resultadocountrytOri as  $vale){
-                $var2 = json_decode($vale->varation,true);                
-                $colletion = collect([]);
-                if(in_array('durban-zadur-south africa',$var2['type'])){
-                    dd($vale);
-                }
-                
-            }
-        } else {
-            dd($resultadocountrytOri);
-        }
+        $account = AccountFcl::find(145);
+        $json_account = json_decode($account->data,true);
+        dd($json_account,isset($json_account['final_columns']),Auth::user()->email);
     }
 
 }
