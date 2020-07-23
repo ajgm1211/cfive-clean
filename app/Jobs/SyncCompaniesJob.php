@@ -113,13 +113,7 @@ class SyncCompaniesJob implements ShouldQueue
         
                     $i++;
                 }
-                $company_user = $this->user->company_user_id;
-                
-                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) use($company_user) {
-                    $query->where('company_user_id', $company_user);
-                })->first();
-                $setting->status = 0;
-                $setting->save();
+
             break;
         }
     }

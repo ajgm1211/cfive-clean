@@ -21,12 +21,15 @@ trait SearchTrait
         $address = $inlandParams['destination_address'];
         $typeCurrency = $inlandParams['typeCurrency'];
 
-        foreach ($contain as $cont) {
+        if ($type == 'destino') {
 
-            $km = 'km' . $cont->code;
-            $$km = true;
-
+            $textType = 'Destination';
+        } elseif ($type == 'origen') {
+        
+            $textType = 'Origin';
         }
+
+  
 
         if ($type == 'destino') {
             $port = $inlandParams['destiny_port'];
@@ -46,12 +49,19 @@ trait SearchTrait
         });
 
         $inlands = $inlands->get();
-
+    
         
 
         $dataDest = array();
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
+            
+            foreach ($contain as $cont) {
+
+                $km = 'km' . $cont->code;
+                $$km = true;
+    
+            }
 
             $inlandDetails = array();
             foreach ($inlandsValue->inlandports as $ports) {
@@ -63,9 +73,11 @@ trait SearchTrait
                         if ($type == 'destino') {
                             $origin = $ports->ports->coordinates;
                             $destination = $inlandParams['destination_address'];
+                       
                         } elseif ($type == 'origen') {
                             $origin = $inlandParams['origin_address'];
                             $destination = $ports->ports->coordinates;
+                         
                         }
                         $response = GoogleMaps::load('directions')
                             ->setParam([
@@ -75,6 +87,9 @@ trait SearchTrait
                                 'language' => 'es',
                             ])->get();
                         $var = json_decode($response);
+                        if(empty($var->routes)){
+                            $distancia = 1;
+                        }
                         //Google MAPS
                         foreach ($var->routes as $resp) {
                             foreach ($resp->legs as $dist) {
@@ -87,10 +102,11 @@ trait SearchTrait
                                 }
                             }
                         }
+                     
                         // Fin Google Maps
                     }
-
-                    foreach ($inlandsValue->inlandRange as $range) {
+         
+       foreach ($inlandsValue->inlandRange as $range) {
                         $rateI = $this->ratesCurrency($range->currency->id, $typeCurrency);
                         $jsonContainer = json_encode($range->json_containers, JSON_FORCE_OBJECT);
                         $json = json_decode($jsonContainer);
@@ -139,8 +155,7 @@ trait SearchTrait
                     // KILOMETROS ADICIONALES
 
                     if (isset($inlandsValue->inlandkms)) {
-
-                        
+              
 
                         foreach ($inlandsValue->inlandkms as $inlandk) {
 
@@ -148,7 +163,7 @@ trait SearchTrait
                             $rateGeneral = $this->ratesCurrency($inlandk->currency_id, $typeCurrency);
                             $jsonContainerkm = json_encode($inlandk->json_containers, JSON_FORCE_OBJECT);
                             $jsonkm = json_decode($jsonContainerkm);
-
+                   
                             foreach ($contain as $cont) {
 
                                 $km = 'km' . $cont->code;
@@ -157,12 +172,13 @@ trait SearchTrait
                                 //  if (isset($options->field_inland)) {
 
                                 if ($$km && in_array($cont->id, $equipment)) {
+                           
 
-                                    if (isset($json->{'C' . $cont->code})) {
+                                    if (isset($jsonkm->{'C' . $cont->code})) {
 
                                         $rateMount = $jsonkm->{'C' . $cont->code};
                                         $montoKm = ($distancia * $rateMount) / $rateGeneral;
-                                      //  dd($distancia,$rateGeneral,$rateMount,$montoKm);   
+                                      // dd($distancia,$rateGeneral,$rateMount,$montoKm);   
                                         $sub_20 = number_format($montoKm, 2, '.', '');
                                         $monto += $sub_20;
                                         $amount_inland = $distancia * $rateMount;
@@ -198,7 +214,7 @@ trait SearchTrait
 
                     if ($monto > 0) {
                         $inlandDetails = Collection::make($inlandDetails);
-                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => 'Destination', 'type_currency' => '', 'idCurrency' => $typeCurrency);
+                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => $textType, 'type_currency' => '', 'idCurrency' => $typeCurrency);
                         $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) {
                             $minimoD = $item->where('sub_in', '>', 0);
                             $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
