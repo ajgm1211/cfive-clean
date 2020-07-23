@@ -145,7 +145,7 @@ class ApiIntegrationController extends Controller
         $setting->status = 1;
         $setting->save();
 
-        $endpoint = $setting->url . "=" . $setting->api_key;
+        $endpoint = $setting->url . $setting->api_key;
 
         try {
 
@@ -175,7 +175,7 @@ class ApiIntegrationController extends Controller
         } catch (\Exception $e) {
             $setting->status = 0;
             $setting->save();
-            return response()->json(['error' => $e->getCode()]);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 

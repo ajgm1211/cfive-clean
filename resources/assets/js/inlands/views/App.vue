@@ -89,6 +89,16 @@
                         placeholder: 'Select option', 
                         options: 'types' 
                     },
+                    ports: { 
+                        label: 'Ports', 
+                        searchable: true, 
+                        type: 'multiselect', 
+                        rules: 'required', 
+                        trackby: 'display_name', 
+                        placeholder: 'Select options', 
+                        options: 'harbors',
+                        initial: []
+                    },
                     gp_container: { 
                         label: 'Equipment', 
                         searchable: true, 
