@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Traits\BrowserTrait;
-use EventCrisp;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\User;
+use Intercom\IntercomClient;
 
 
 class LoginController extends Controller
@@ -44,7 +44,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function userCrisp($user)
+  /*  public function userCrisp($user)
     {
 
         //Evento Crisp
@@ -64,6 +64,22 @@ class LoginController extends Controller
             }
         }
     }
+*/
+
+
+    public function intercom($client,$user){ 
+
+        $cliente =  $client->users->getUsers(["email" => $user->email]);
+        if($cliente->total_count > 1 ){
+          foreach($cliente->users as $u){
+            if($u->type == "user" ){
+              if($u->user_id != $user->id ){
+                $client->users->archiveUser($u->id);
+              }
+            }
+          }
+        }
+      }
 
     public function updateKey($user)
     {
@@ -83,8 +99,30 @@ class LoginController extends Controller
 
 
 
-        $this->updateKey($user);
-        $this->userCrisp($user);
+        //$this->updateKey($user);
+        //$this->userCrisp($user);
+        $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
+        $this->intercom($client,$user);
+        $client->users->create([
+          "email" => $user->email,
+          "user_id" =>$user->id,
+          "name" => $user->name,
+        ]);
+        // Crear hash id del usuario logueado 
+        if($user->company_user_id != ""){
+          setHashID();
+          $this->intercom($client,$user);
+          $client->users->create([
+            "email" => $user->email,
+            "companies" => [
+              [
+                "company_id" => $user->company_user_id,
+              ]
+            ]
+          ]);
+        }
+    
+
         $browser = $this->getBrowser();
         //Fin evento
 
