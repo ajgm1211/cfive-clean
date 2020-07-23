@@ -33,11 +33,21 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * register
+     *
+     * @return void
+     */
     public function register()
     {
         // Dusk, if env is appropiate
         /*if ($this->app->environment('local', 'testing')) {
             $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
         }*/
+
+        $this->app->bind(
+            'App\Repositories\CompanyRepositoryInterface',
+            'App\Repositories\CompanyRepository'
+        );
     }
 }

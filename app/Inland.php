@@ -48,7 +48,7 @@ class Inland extends Model implements Auditable
 
     public function inland_type()
     {
-        return $this->belongsTo('App\CompanyUser');
+        return $this->belongsTo('App\InlandType');
     }
 
     public function direction()
