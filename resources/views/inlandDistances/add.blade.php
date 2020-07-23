@@ -11,7 +11,7 @@
     </div>
     <div class="form-group m-form__group">
       {!! Form::label('Province', 'Province') !!}<br> 
-      {{ Form::select('province',$inlandL,null,['class'=>'m-select-2 form-control','id' => 'inland_location_id','placeholder'=>'Select an option']) }}
+      {{ Form::select('province_id',$inlandL,null,['class'=>'m-select-2 form-control','id' => 'inland_location_id','placeholder'=>'Select an option']) }}
 
     </div>
   </div>

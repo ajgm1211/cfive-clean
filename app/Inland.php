@@ -22,6 +22,7 @@ class Inland extends Model implements Auditable
     protected $fillable =   [
         'id',
         'provider',
+        'type',
         'status',
         'inland_type_id',
         'validity',
@@ -36,6 +37,10 @@ class Inland extends Model implements Auditable
         return $this->hasMany('App\InlandRange');
     }
 
+    public function inlandkms()
+    {
+        return $this->hasMany('App\InlandKm');
+    }
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
@@ -87,6 +92,17 @@ class Inland extends Model implements Auditable
             InlandCompanyRestriction::create([
                 'company_id'    => $company_id,
                 'inland_id'   => $this->id
+            ]);
+        }
+    }
+    public function InlandPortsSync($ports)
+    {
+        DB::table('inlandsports')->where('inland_id', '=', $this->id)->delete();
+
+        foreach ($ports as $port) {
+            InlandPort::create([
+                'port' => $port,
+                'inland_id' => $this->id,
             ]);
         }
     }
