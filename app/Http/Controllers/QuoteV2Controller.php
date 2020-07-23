@@ -71,6 +71,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
+use App\InlandDistance;
 
 class QuoteV2Controller extends Controller
 {
@@ -2619,9 +2620,34 @@ class QuoteV2Controller extends Controller
         $chargesFreight = 'true';
         $containerType = $request->input('container_type');
         $carriersSelected = $request->input('carriers');
+        // Address inland
+        
+        $origin_address = $request->input('origin_address');
+        $destination_address = $request->input('destination_address');
         //Combos del distanciero para inlands
+
         $destinationA = $request->input('destinationA');
         $originA = $request->input('originA');
+        if ($destinationA != null) {
+            
+            $destcomboA = InlandDistance::where('id', $destinationA)->first();
+            
+            $destinationA = $destcomboA->distance;
+            $request->request->add(['destination_address' =>  $destcomboA->display_name ]);
+        }
+            if ($originA != null) {
+
+                
+                $origcomboA = InlandDistance::where('id', $originA)->first();
+                $originA = $origcomboA->distance;
+                $request->request->add(['origin_address' => $origcomboA->display_name]);
+            }
+
+
+            $address = $request->input('origin_address') . " " . $request->input('destination_address');
+
+            //dd($request->all());
+
         //resquest completo del form
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2705,9 +2731,7 @@ class QuoteV2Controller extends Controller
         $modality_inland = $request->modality;
         $company_id = $request->input('company_id_quote');
         $mode = $request->mode;
-        $address = $request->input('origin_address') . " " . $request->input('destination_address');
-        $origin_address = $request->input('origin_address');
-        $destination_address = $request->input('destination_address');
+
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
         $groupContainer = $validateEquipment['gpId'];
