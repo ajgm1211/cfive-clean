@@ -19,7 +19,7 @@ class CreateChargesTable extends Migration
             $table->foreign('automatic_rate_id')->references('id')->on('automatic_rates')->onDelete('cascade');
             $table->integer('type_id')->unsigned();
             $table->foreign('type_id')->references('id')->on('typedestiny')->onDelete('cascade');
-            $table->integer('surcharge_id')->unsigned();
+            $table->integer('surcharge_id')->unsigned()->nullable();
             $table->foreign('surcharge_id')->references('id')->on('surcharges')->onDelete('cascade');
             $table->integer('calculation_type_id')->unsigned();
             $table->foreign('calculation_type_id')->references('id')->on('calculationtype')->onDelete('cascade');

@@ -95,7 +95,17 @@
 	                    sdName: 'validity', 
 	                    edName: 'expire',
 	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
-	                },
+                    },
+                    ports: { 
+                        label: 'Ports', 
+                        searchable: true, 
+                        type: 'multiselect', 
+                        rules: 'required', 
+                        trackby: 'display_name', 
+                        placeholder: 'Select options', 
+                        options: 'harbors',
+                        colClass: 'col-lg-2 col-pr-5 col-pl-5'
+                    },
 	                gp_container: { 
 	                    label: 'Equipment', 
 	                    searchable: true, 
@@ -140,6 +150,7 @@
 
 			actions.inlands.retrieve(id)
 			.then( ( response ) => {
+                console.log(response.data.data);
 				this.currentData = response.data.data;
 				this.onSuccess(this.currentData);
 				this.currentData['daterange'] = { startDate: this.currentData.validity, endDate: this.currentData.expire };

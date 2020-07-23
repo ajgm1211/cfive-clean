@@ -1413,7 +1413,11 @@ trait QuoteV2Trait
             foreach ($rate->charge as $charge) {
 
                 $typeCurrency =  @$company_user->currency->alphacode;
-
+                
+                if($charge->type_id == 3){
+                    $typeCurrency =  $rate->currency->alphacode;
+                }
+                
                 $currency_rate = $this->ratesCurrency($charge->currency_id, $typeCurrency);
 
                 $array_amounts = json_decode($charge->amount, true);
