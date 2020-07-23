@@ -46,11 +46,11 @@
                         <div id="origin_harbor_label">
                             <div class="origin_port hide">
                                 <label>Origin Port</label>
-                                {{ Form::select('port_id',$rate_origin_ports,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('port_id',$harbors,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option']) }}
                             </div>
                             <div class="destination_port hide">
                                 <label>Destination Port</label>
-                                {{ Form::select('port_id',$rate_destination_ports,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('port_id',$harbors,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option']) }}
                             </div>
                         </div>
                         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>

@@ -6,6 +6,7 @@
 <script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 @section('content')
 
@@ -120,75 +121,31 @@
                     </div>
                 </div>
             </div>
-            <table class="m-datatable text-center" id="html_table" >
-                <thead>
-                    <tr>
-                        <th title="Field #1">
-                            Business Name
+            <table class="table tableData" id="table-company" width="100%">
+                <thead >
+                    <tr class="title-quote">
+                        <th title="business_name">
+                            Business name
                         </th>
-                        <th title="Field #2">
+                        <th title="phone">
                             Phone
                         </th>
-                        <th title="Field #3">
+                        <th title="email">
                             Email
                         </th>
-                        <th title="Field #4">
+                        <th title="tax_number">
                             Tax number
-                        </th>                        
-                        <th title="Field #5">
+                        </th>
+                        <th title="address">
                             Address
                         </th>
-                        <th title="Field #6">
-                            Owners
-                        </th>
-                        <th title="Field #7">
-                            Contacts
-                        </th>
-                        <th title="Field #8">
-                            Price Levels
-                        </th>
-                        <th title="Field #9">
+                        <th title="action">
                             Options
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($companies as $company)
-                    <tr>
-                        <td>{{$company->business_name }}</td>
-                        <td>{{$company->phone }}</td>
-                        <td>{{$company->email }}</td>
-                        <td>{{$company->tax_number }}</td>
-                        <td>{{$company->address  }}</td>
-                        <td>
-                            @foreach($company->groupUserCompanies as $groupUser)
-                            <ul>
-                                <li>{{$groupUser->user->name}} </li>
-                            </ul>
-                            @endforeach
-                        </td>
-                        <td>{{$company->contact->count()}}</td>
-                        <td>
 
-                            @foreach($company->price_name as $price)
-                            <ul>
-                                <li>{{$price->name}}</li>
-                            </ul>
-                            @endforeach
-                        </td>
-                        <td>
-                            <a href="{{route('companies.show',setearRouteKey($company->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
-                                <i class="la la-eye"></i>
-                            </a>
-                            <button onclick="AbrirModal('edit',{{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
-                                <i class="la la-edit"></i>
-                            </button>
-                            <button id="delete-company" data-company-id="{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
-                                <i class="la la-eraser"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -240,10 +197,10 @@
 @section('js')
 @parent
 
-
+<script type="text/javascript" charset="utf8" src="{{ asset('/assets/datatable/jquery.dataTables.js')}}"></script>
+<script src="{{ asset('/assets/demo/default/custom/components/datatables/base/html-table-companies.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/companies.js')}}" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 <script>
     function AbrirModal(action,id){
         if(action == "edit"){
@@ -266,5 +223,73 @@
             });
         }
     }
+
+    $(function() {
+        $('#table-company').DataTable({
+            ordering: true,
+            searching: true,
+            processing: false,
+            serverSide: false,
+            order: [[ 3, "desc" ]],
+            ajax:  "{{ route('companies.index.datatable') }}",
+            "columnDefs": [
+                { "width": "20%", "targets": 0 },
+            ],
+            columns: [
+                {data: 'business_name', name: 'business_name'},
+                {data: 'phone', name: 'phone'},
+                {data: 'email', name: 'email'},
+                {data: 'tax_number', name: 'tax_number'},
+                {data: 'address', name: 'address'},
+                {data: 'action', name: 'action', orderable: false, searchable: false },
+            ] ,
+            "autoWidth": true,
+            'overflow':false,
+            "paging":true,
+            "sScrollY": "490px",
+            "bPaginate": false,
+            "bJQueryUI": true,
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
+            ]
+
+
+        });
+
+        // Add event listener for opening and closing details
+        $('#tablequote tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        } );
+    });
+
 </script>
 @stop
