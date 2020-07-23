@@ -48,7 +48,7 @@ class InlandController extends Controller
             return $currency->only(['id', 'alphacode']);
         });
 
-        $types = InlandType::get()->map(function ($type) {
+        $types = InlandType::where('id', 1)->get()->map(function ($type) {
             return $type->only(['id', 'name']);
         });
 
@@ -104,7 +104,7 @@ class InlandController extends Controller
             'gp_container_id' => $data['gp_container']
         ]);
 
-        $inland->InlandPortsSync($data['ports'] ?? []);
+        $inland->InlandPortsSync($data['ports']);
 
         return new InlandResource($inland);
     }
@@ -126,7 +126,8 @@ class InlandController extends Controller
             'expire' => 'required',
             'direction' => 'required',
             'gp_container' => 'required',
-            'restrictions' => 'sometimes'
+            'restrictions' => 'sometimes',
+            'ports' => 'required'
         ]);
         
         $inland->update([
@@ -138,7 +139,7 @@ class InlandController extends Controller
             'gp_container_id' => $data['gp_container']
         ]);
 
-        $inland->InlandPortsSync($data['ports'] ?? []);
+        $inland->InlandPortsSync($data['ports']);
         
         $inland->InlandRestrictionsSync($data['restrictions'] ?? []);
 

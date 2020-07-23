@@ -20,6 +20,7 @@
                 :datalists="datalists"
                 :equipment="equipment"
                 :actions="actions"
+                :groupContainer="True"
                 :massiveactions="['changecontainersview', 'delete']"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"

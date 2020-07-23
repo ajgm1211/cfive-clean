@@ -173,6 +173,7 @@
                                                                 <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                     <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
                                                                 </a>
+                                                                <span class="ocean_freight_rate hide">1</span>
                                                             </td>
                                                         </tr>
                                                         @php
@@ -232,7 +233,7 @@
                                                         <td></td>
                                                         <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
                                                         @php
-                                                            $exchange = ratesCurrencyFunction(Auth::user()->companyUser->currency_id, $rate->currency->alphacode);   
+                                                            $exchange = ratesCurrencyFunction($rate->currency->id, $rate->currency->alphacode);   
                                                         @endphp
                                                         @foreach ($equipmentHides as $key=>$hide)
                                                             @foreach ($containers as $c)
@@ -386,6 +387,7 @@
                                                                 <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                     <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
                                                                 </a>
+                                                                <span class="ocean_freight_rate hide">0</span>
                                                             </td>
                                                         </tr>
                                                         @php
@@ -599,6 +601,7 @@
                                                                 <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                     <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
                                                                 </a>
+                                                                <span class="ocean_freight_rate hide">0</span>
                                                             </td>
                                                         </tr>
                                                         @php
@@ -714,9 +717,10 @@
                                                         foreach ($equipmentHides as $key=>$hide){
                                                             foreach ($containers as $c){
                                                                 if($c->code == $key){
-                                                                    ${'amount_'.$key}=isDecimal(${'sum'.$c->code}+${'sum_origin'.$c->code}+${'sum_destination'.$c->code}, true);
-                                                                    ${'markup_'.$key}=isDecimal(${'sum_m'.$c->code}+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code}, true);
-                                                                    ${'amount_markup_'.$key}=isDecimal(${'sum_totalized_'.$c->code}+${'sum_totalized_origin_'.$c->code}+${'sum_totalized_destination_'.$c->code}, true);
+                                                                    $exchange = ratesCurrencyFunction($rate->currency->id, $company_user->currency->alphacode);
+                                                                    ${'amount_'.$key}=isDecimal((${'sum'.$c->code}/$exchange)+${'sum_origin'.$c->code}+${'sum_destination'.$c->code}, true);
+                                                                    ${'markup_'.$key}=isDecimal((${'sum_m'.$c->code}/$exchange)+${'sum_origin_m'.$c->code}+${'sum_destination_m'.$c->code}, true);
+                                                                    ${'amount_markup_'.$key}=isDecimal((${'sum_totalized_'.$c->code}/$exchange)+${'sum_totalized_origin_'.$c->code}+${'sum_totalized_destination_'.$c->code}, true);
                                                                 }
                                                             }
                                                         }
