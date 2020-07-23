@@ -3380,14 +3380,9 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('localorigin', $collectionOrigin);
                 // Valores totales por contenedor
                 
-                if($chargesDestination == null  && $chargesOrigin == null){
-                    $rateTot = 1;
-                    $typeCurrency = $data->currency->alphacode;
-                    $idCurrency = $data->currency->id;
-                    
-                }else{
+     
                     $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
-                }
+     
                 
                 foreach ($containers as $cont) {
 
