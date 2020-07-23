@@ -853,6 +853,7 @@ Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
     Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');
     Route::get('delete/{inlandd_id}', ['uses' => 'InlandDistanceController@destroy', 'as' => 'delete-inlandd']);
     Route::get('find/{id}', ['uses' => 'InlandDistanceController@index', 'as' => 'inlandD.find']);
+    Route::get('getDistance/{id}', ['uses' => 'InlandDistanceController@getDistance', 'as' => 'inlandD.getDistance']);
 
 });
 Route::resource('inlandD', 'InlandDistanceController')->middleware('auth');
@@ -1038,6 +1039,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     /** API Contracts endpoint (Pending to check) **/
     Route::get('', 'ContractController@list');
     Route::get('data', 'ContractController@data');
+    Route::get('{contract}/surcharge_data', 'ContractController@surcharge_data');
     Route::post('store', 'ContractController@store');
     Route::get('{contract}', 'ContractController@retrieve')->middleware('check_company:contract');
     Route::post('{contract}/update', 'ContractController@update')->middleware('check_company:contract');
@@ -1057,6 +1059,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
     Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
     Route::post('ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
+    Route::post('{contract}/ocean_freight/massiveContainerChange', 'OceanFreightController@massiveContainerChange');
     /** End API Contracts Ocean Freights EndPoints **/
 
 
@@ -1141,13 +1144,10 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
 **                                   END API ENDPOINTS                                   **
 *****************************************************************************************/
 
-//Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
-
-/*
+/*Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 Route::get('api/inlands', 'InlandController@index');
-
-Route::post('api/v2/inlands/store', 'InlandController@store');
-Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
+Route::post('api/v2/inlands/store', 'InlandController@store');*/
+Route::get('api/inlands/{contract}/edit', 'InlandController@edit');
 
 /** End Contracts V2 routes **/
 /** Transit time **/
@@ -1155,5 +1155,9 @@ Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
 Route::prefix('ImpTransitTime')->group(function () {
     Route::resource('ImpTransitTime','ImportationTransitTimeController')->middleware(['role:administrator|data_entry']);
     route::post('UploadTTimes','ImportationTransitTimeController@storeMedia')->name('ImpTransitTime.storeMedia')->middleware(['role:administrator|data_entry']);
+});
+
+Route::prefix('MasterSurcharge')->group(function(){
+     Route::resource('MasterSurcharge','MasterSurchargeController')->middleware(['role:administrator|data_entry']);
 });
 

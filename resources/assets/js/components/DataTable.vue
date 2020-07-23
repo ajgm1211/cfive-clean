@@ -39,6 +39,8 @@
                         <b-popover v-bind:target="'popover_all'" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                             <button v-if="massiveactions.includes('delete')" class="btn-action" v-on:click="onDeleteAll()">Delete</button>
                             <button v-if="massiveactions.includes('changecontainersview')" class="btn-action" v-on:click="onChangeContainersView()">Change View Container</button>
+                            <button v-if="massiveactions.includes('openmodalcontainer')" class="btn-action" v-on:click="onOpenModalContainer()">Edit Multiple Containers</button>
+
                         </b-popover>
                     </b-th>
                 </b-tr>
@@ -458,10 +460,9 @@
             },
 
             dispatch(val, item){
-                console.log(item);
-                console.log(this.inputFields);
                 this.refresh = false;
-                this.datalists[this.inputFields[item].target] = this.datalists[val.vselected];
+                this.datalists['ori_'+this.inputFields[item].target] = this.datalists['ori_'+val.vselected];
+                this.datalists['des_'+this.inputFields[item].target] = this.datalists['des_'+val.vselected];
                 this.resetDinamicalFields(this.inputFields[item].target);
                 this.refresh = true;
                 $(`#id_f_table_${item}`).css({'display':'none'});
@@ -485,7 +486,8 @@
                 for (const key in this.inputFields) {
                     if(this.inputFields[key]['type'] == 'pre_select'){
                         this.fdata[key] = this.inputFields[key]['initial'];
-                        this.datalists[this.inputFields[key]['target']] = this.datalists[this.inputFields[key]['initial'].vselected];
+                        this.datalists['ori_'+this.inputFields[key]['target']] = this.datalists['ori_'+this.inputFields[key]['initial'].vselected];
+                        this.datalists['des_'+this.inputFields[key]['target']] = this.datalists['des_'+this.inputFields[key]['initial'].vselected];
                     }      
                 }
             },
@@ -498,6 +500,10 @@
             },
             onChangeContainersView(){
                 this.$emit('onChangeContainersView', true);
+            },
+            onOpenModalContainer(){
+                let ids = this.selected.map(item => item.id);
+                this.$emit('onOpenModalContainerView', ids);
             }
         },
         watch: {
