@@ -55,13 +55,23 @@ class SettingController extends Controller
           $selectedDatesFalse="checked='true'";
     
         }
-    }
 
-    
-    
+        if($company->companyUser->origincharge == '1'){
+          $IncludeOrigin="checked='true'";
+        }else{
+          $IncludeOrigin='';
+        }
+        
+        if($company->companyUser->destinationcharge == '1'){
+          $IncludeDestiny="checked='true'";
+        }else{
+          $IncludeDestiny='';
+        }
+       }
+
     $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
 
-    return view('settings/index',compact('company','currencies','email_settings','selectedTrue','selectedFalse','selectedDatesTrue','selectedDatesFalse'));
+    return view('settings/index',compact('company','currencies','email_settings','selectedTrue','selectedFalse','selectedDatesTrue','selectedDatesFalse','IncludeOrigin','IncludeDestiny'));
   }
 
   public function idPersonalizado($name,$company_id){
@@ -123,6 +133,8 @@ class SettingController extends Controller
       $company->address = $request->address;
       $company->decimals = $decimals;
       $company->Future_dates = $request->future_dates;
+      $company->origincharge = $request->origincharge;
+      $company->destinationcharge = $request->destinationcharge;
       $company->phone = $request->phone;
       $company->currency_id = $request->currency_id;
       $company->hash = \Hash::make($request->name);
@@ -166,6 +178,8 @@ class SettingController extends Controller
       $company->address=$request->address;
       $company->decimals = $decimals;
       $company->Future_dates = $request->future_dates;
+      $company->origincharge = $request->origincharge;
+      $company->destinationcharge = $request->destinationcharge;
       $company->currency_id=$request->currency_id;
       $company->pdf_language = $request->pdf_language;
       $company->footer_type = $request->footer_type;
