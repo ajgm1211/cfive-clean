@@ -46,7 +46,9 @@ class InlandLocationController extends Controller
      */
   public function store(Request $request)
   {
+    
     $inlandL = new InlandLocation($request->all());
+
     $inlandL->company_user_id =Auth::user()->company_user_id ;
     $inlandL->save();
 
