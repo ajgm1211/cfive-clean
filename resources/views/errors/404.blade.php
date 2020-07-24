@@ -71,7 +71,7 @@
 				</div>
 				<div class="col-md-12 ">
 					<div class="title" style="">
-						<h1 class="size-60">Oh no!!!</h1>
+						<h1 class="size-60">Oh no!</h1>
 						<p>
 							<b>
 								The page you are looking for does not exist.

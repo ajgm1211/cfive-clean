@@ -18,9 +18,9 @@ class CreateSendQuotesTable extends Migration
             $table->string('to');
             $table->string('from');
             $table->string('subject')->nullable();
-            $table->string('body',3000);
+            $table->longText('body');
             $table->integer('quote_id')->unsigned();
-            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');
+            $table->foreign('quote_id')->references('id')->on('quote_v2s')->onDelete('cascade');
             $table->integer('status');
             $table->timestamps();
         });
