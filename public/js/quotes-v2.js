@@ -4026,7 +4026,7 @@ $(document).on('click', '#savecontact', function() {
                         $.each(dataC, function(key, value) {
                             $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                         });
-                        $('#contactModalSearch').modal('hide');
+                        $('#contactModal').modal('hide');
 
                         swal(
                             'Done!',
