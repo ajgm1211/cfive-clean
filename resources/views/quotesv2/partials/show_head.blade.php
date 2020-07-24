@@ -127,19 +127,19 @@
                             <span class="delivery_type_span">
                                 @switch($quote->delivery_type)
                                 @case(1)
-                                Airport to Airport
+                                    Airport to Airport
                                 @break
                                 @case(2)
-                                Airport to Door
+                                    Airport to Door
                                 @break
                                 @case(3)
-                                Door to Airport
+                                    Door to Airport
                                 @break
                                 @case(4)
-                                Door to Door
+                                    Door to Door
                                 @break
                                 @default
-                                Airport to Airport
+                                    Airport to Airport
                                 @break
                                 @endswitch
                             </span>
