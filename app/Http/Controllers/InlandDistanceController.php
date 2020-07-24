@@ -54,7 +54,7 @@ class InlandDistanceController extends Controller
             $array2 = array();
             foreach ($data as $dat) {
 
-                $array = array($dat->distance => $dat->display_name);
+                $array = array($dat->id => $dat->display_name);
                 $array2 = $array2 + $array;
 
             }
