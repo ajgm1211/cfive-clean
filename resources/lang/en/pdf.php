@@ -8,7 +8,7 @@ return [
     "charge" => "Charge",
     "detail" => "Detail",
     "destination_address" => "Destination address",
-    "origin_address" => "Destination address",
+    "origin_address" => "Origin address",
     "kind_of_cargo" => "Kind of cargo",
     "commodity" => "Commodity",
     "gdp" => "GDP",
