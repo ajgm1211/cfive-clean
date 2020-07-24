@@ -56,6 +56,20 @@ class GlobalCharge extends Model implements Auditable
     return $this->hasMany('App\GlobalCharPortCountry','globalcharge_id');
 
   }
+  // Exepciones por Pais 
+
+  public function globalexceptioncountry(){
+
+    return $this->hasMany('App\GlobalCharCountryException','globalcharge_id');
+
+  }
+  // Exepciones por puertos 
+
+  public function globalexceptionport(){
+
+    return $this->hasMany('App\GlobalCharPortException','globalcharge_id');
+
+  }
 
   public function globalcharcarrier(){
     return $this->hasMany('App\GlobalCharCarrier','globalcharge_id');

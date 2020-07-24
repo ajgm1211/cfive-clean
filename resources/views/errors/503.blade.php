@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Error 400</title>
+        <title>We’ll be back in a few minutes</title>
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="/bootstrap-4.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -40,6 +40,10 @@
                 font-size: 60px;
                 font-weight: bold !important;
             }
+            .size-40{
+                font-size: 40px;
+                font-weight: bold !important;
+            }
             .ichead{
                 font-size: 30px;
             }
@@ -71,10 +75,10 @@
                 </div>
                 <div class="col-md-12 ">
                     <div class="title" style="">
-                        <h1 class="size-60">Oh no!!!</h1>
+                        <h1 class="size-40">We’ll be back in a few minutes</h1>
                         <p>
                             <b>
-                                We’ll be back in a few minutes.
+                                We are making improvements to the platform.
                             </b>
                         </p>
                     </div>
