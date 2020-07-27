@@ -1862,7 +1862,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments);
                 break;
             default:
                 $detalle = $routes;
