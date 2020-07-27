@@ -1714,7 +1714,24 @@ $(document).on('click', '#edit-quote', function() {
     $(".quote-type").select2();
     $(".status").select2();
     $(".kind_of_cargo").select2();
-    $(".company_id").select2();
+    $(".company_id").select2({
+        placeholder: "Select an option",
+        minimumInputLength: 2,
+        ajax: {
+            url: '/companies/search',
+            dataType: 'json',
+            data: function(params) {
+                return {
+                    q: $.trim(params.term)
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data
+                };
+            },
+        }
+    });
     $(".delivery_type").select2();
     $(".incoterm_id").select2();
     $(".contact_id").select2();

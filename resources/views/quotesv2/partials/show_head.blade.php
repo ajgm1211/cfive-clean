@@ -82,7 +82,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
-                            {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden','placeholder'=>'Select an option']) }}
+                            <select name="company_id" class="form-control company_id select2" hidden></select>
                             <span class="company_span">{{@$quote->company->business_name}}</span>
                         </div>
                     </div>
