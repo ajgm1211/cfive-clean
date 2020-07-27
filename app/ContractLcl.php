@@ -102,11 +102,12 @@ class ContractLcl extends Model implements HasMedia, Auditable
      * @param  blob  $file
      * @return void
      */
-    public function StoreInMedia($file)
+    public function StoreInMedia($file, $name)
     {
-        $this->addMedia($file)->addCustomHeaders([
+        \Storage::disk('LclRequest')->put($name, \File::get($file));
+        /*$this->addMedia($file)->addCustomHeaders([
             'ACL' => 'public-read'
-        ])->toMediaCollection('document', 'LclRequest');
+        ])->toMediaCollection('document', 'LclRequest');*/
     }
 
     /**
