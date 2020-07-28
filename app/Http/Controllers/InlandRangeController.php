@@ -118,7 +118,7 @@ class InlandRangeController extends Controller
         }
 
         $validator = Validator::make($request->all(), $vdata);
-        
+
         $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('lower'))->where('upper', '>=', $request->input('lower'))->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
@@ -131,7 +131,7 @@ class InlandRangeController extends Controller
         $query_upper = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('upper'))->where('upper', '>=', $request->input('upper'))->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
-        
+
         if ($range) {
             $query_upper->where('id', '<>', $range->id);
         }
@@ -173,5 +173,18 @@ class InlandRangeController extends Controller
         InlandRange::find($id)->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\InlandRange  $inland
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(InlandRange $range)
+    {
+        $new_inland_range = $range->duplicate();
+
+        return new InlandRangeResource($new_inland_range);
     }
 }
