@@ -248,6 +248,7 @@ class UsersController extends Controller
         $client->users->archiveUser($cli->id);
       }
    }
+   
     return $user;
   }
 
