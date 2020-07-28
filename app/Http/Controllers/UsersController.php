@@ -239,9 +239,12 @@ class UsersController extends Controller
     $user = User::find($id);
     $user->delete();
 
-    $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
+    $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
     $cliente =  $client->users->getUsers(["email" => $user->email]);
-    $client->users->archiveUser($cliente->id);
+    if($cliente->total_count > 0 ){
+      $client->users->archiveUser($cliente->id);
+    }
+    
 
     return $user;
   }
