@@ -78,7 +78,7 @@ class Inland extends Model implements Auditable
         return (new InlandFilter($request, $builder))->filter();
     }
 
-    /* Duplicate Contract Model instance with relations */
+    /* Duplicate Inland Model instance with relations */
     public function duplicate()
     {
 
