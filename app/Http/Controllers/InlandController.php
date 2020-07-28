@@ -31,11 +31,11 @@ class InlandController extends Controller
     public function data(Request $request)
     {
         $company_user_id = \Auth::user()->company_user_id;
-        
+
         $equipments = GroupContainer::get()->map(function ($equipment) {
             return $equipment->only(['id', 'name']);
         });
-        
+
         $directions = Direction::get()->map(function ($direction) {
             return $direction->only(['id', 'name']);
         });
@@ -59,19 +59,19 @@ class InlandController extends Controller
         $containers = Container::get();
 
         $data = [
-          'equipments' => $equipments,
-          'directions' => $directions,
-          'types' => $types,
-          'containers' => $containers,
-          'currencies' => $currencies,
-          'companies' => $companies,
-          'harbors' => $harbors,
+            'equipments' => $equipments,
+            'directions' => $directions,
+            'types' => $types,
+            'containers' => $containers,
+            'currencies' => $currencies,
+            'companies' => $companies,
+            'harbors' => $harbors,
         ];
 
 
-        return response()->json(['data' => $data ]);
+        return response()->json(['data' => $data]);
     }
-  
+
     /**
      * Store a newly created resource in storage.
      *
@@ -129,7 +129,7 @@ class InlandController extends Controller
             'restrictions' => 'sometimes',
             'ports' => 'required'
         ]);
-        
+
         $inland->update([
             'provider' => $data['reference'],
             'direction_id' => $data['direction'],
@@ -140,10 +140,10 @@ class InlandController extends Controller
         ]);
 
         $inland->InlandPortsSync($data['ports']);
-        
+
         $inland->InlandRestrictionsSync($data['restrictions'] ?? []);
 
-        return new InlandResource($inland);   
+        return new InlandResource($inland);
     }
 
     /**
@@ -171,6 +171,19 @@ class InlandController extends Controller
     }
 
     /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\Inland  $inland
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(Inland $inland)
+    {
+        $new_inland = $inland->duplicate();
+
+        return new InlandResource($new_inland);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Inland  $inland
@@ -188,7 +201,7 @@ class InlandController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
