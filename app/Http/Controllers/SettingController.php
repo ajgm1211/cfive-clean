@@ -28,7 +28,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use App\Jobs\ProcessLogo;
-use EventCrisp;
+
 
 class SettingController extends Controller
 {
@@ -131,12 +131,6 @@ class SettingController extends Controller
 
       User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
       $usuario = User::find(\Auth::id());
-      //Crisp Update 
-
-      $CrispClient = new EventCrisp();
-      $params = array('company' => array('name'=>$company->name ));
-      $people = $CrispClient->updateProfile($params,$usuario->email);
-
 
 
 

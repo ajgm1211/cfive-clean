@@ -1852,10 +1852,16 @@ body {
 
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     {{ $equipmentHides[$container->code] }}
-                                                    {{ @isDecimal($inlandDestiny['inlandDetails'][$container->code]['sub_in'])  }}
+                                                    {{ @isDecimal($inlandDestiny['inlandDetails'][$container->code]['amount'])  }}
                                                     &nbsp;+<b
                                                         class="monto-down">{{ @isDecimal($inlandDestiny['inlandDetails'][$container->code]['markup'])  }}</b>
-                                                    <i class="la la-caret-right"></i> <span class="bg-rates"
+                                                    <i class="la la-caret-right"></i>
+
+                                                    <span class="bg-rates">
+                                                        {{ isDecimal(@$inlandDestiny['inlandDetails'][$container->code]['amount'], 2, '.', '') }}
+                                                    </span>
+                                                    
+                                                    <span class="bg-rates hide"
                                                         id='valor-d{{$container->code}}{{$loop->parent->iteration}}-{{$arr->id}}'>
                                                         {{ isDecimal(@$inlandDestiny['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
                                                     </span>
@@ -1867,7 +1873,7 @@ body {
 
                                             </div>
                                         </div>
-                                        <div class="col-lg-1"><span class="colorphacode">{{ $arr->typeCurrency }}</span>
+                                        <div class="col-lg-1"><span class="colorphacode">{{ @$inlandDestiny['type_currency'] }}</span>
                                         </div>
                                         <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
 
@@ -1911,10 +1917,15 @@ body {
                                                 @foreach($containers as $container)
                                                 <div class="wth" {{ $equipmentHides[$container->code] }}>
                                                     {{ $equipmentHides[$container->code] }}
-                                                    {{ @isDecimal($inlandOrigin['inlandDetails'][$container->code]['sub_in'])  }}
+                                                    {{ @isDecimal($inlandOrigin['inlandDetails'][$container->code]['amount'])  }}
                                                     <i class="la la-caret-right"></i> <b class="monto-down">
                                                         {{ @isDecimal($inlandOrigin['inlandDetails'][$container->code]['markup'])  }}
-                                                    </b> <i class="la la-caret-right"></i>  <span class="bg-rates"
+                                                    </b> <i class="la la-caret-right"></i>  
+                                                    <span class="bg-rates">
+                                                        {{ isDecimal(@$inlandOrigin['inlandDetails'][$container->code]['amount'], 2, '.', '') }}
+                                                    </span>
+
+                                                    <span class="bg-rates hide"
                                                         id='valor-o{{$container->code}}{{$loop->parent->iteration}}-{{$arr->id}}'>
                                                         {{ isDecimal(@$inlandOrigin['inlandDetails'][$container->code]['montoInlandT'], 2, '.', '') }}
                                                     </span>
@@ -1924,7 +1935,7 @@ body {
 
                                             </div>
                                         </div>
-                                        <div class="col-lg-1"><span class="colorphacode">{{ $arr->typeCurrency }}</span>
+                                        <div class="col-lg-1"><span class="colorphacode">{{ @$inlandOrigin['type_currency']  }}</span>
                                         </div>
                                         <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                                             <label tabindex="0" role="button" data-toggle="m-tooltip"
