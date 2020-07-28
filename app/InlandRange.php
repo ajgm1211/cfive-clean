@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 class InlandRange extends Model
 {
     protected $fillable = [
-                            'id',
-                            'lower',
-                            'upper',
-                            'currency_id',
-                            'inland_id',
-                            'json_containers',
-                            'status'
-                          ];
+        'id',
+        'lower',
+        'upper',
+        'currency_id',
+        'inland_id',
+        'json_containers',
+        'status'
+    ];
 
     public function inland()
     {
@@ -40,14 +40,14 @@ class InlandRange extends Model
     }
 
     /**
-    * Scope a query to only include rates by contract.
-    *
-    * @param  \Illuminate\Database\Eloquent\Builder $query
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function scopeFilterByInland( $query, $inland_id )
+     * Scope a query to only include rates by contract.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByInland($query, $inland_id)
     {
-        return $query->where( 'inland_id', '=', $inland_id );
+        return $query->where('inland_id', '=', $inland_id);
     }
 
     /**
@@ -60,20 +60,28 @@ class InlandRange extends Model
     ];
 
 
-    public function per_container(){
+    public function per_container()
+    {
         $first = true;
 
         foreach ($this->json_containers as $key => $value) {
-            
-            if($first)
-            {
+
+            if ($first) {
                 $first_value = $value;
                 $first = false;
-
             } else 
-                if($value != $first_value) return '-';
+                if ($value != $first_value) return '-';
         }
-        
+
         return $value;
+    }
+
+    /* Duplicate Inland Range Model instance */
+    public function duplicate()
+    {
+        $new_inland = $this->replicate();
+        $new_inland->save();
+
+        return $new_inland;
     }
 }
