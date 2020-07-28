@@ -131,7 +131,8 @@ class SettingController extends Controller
 
       User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
       $usuario = User::find(\Auth::id());
-      //Crisp Update 
+
+
 
       $email_settings = new EmailSetting();
       $email_settings->company_user_id = $company->id;

@@ -97,6 +97,7 @@ class UsersController extends Controller
           "name" => $user->name,
           "companies" => [
             [
+              "name" => $user->companyUser->name,
               "company_id" => $user->company_user_id,
             ]
           ]
