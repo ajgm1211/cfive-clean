@@ -2738,6 +2738,10 @@ class QuoteV2Controller extends Controller
         $inlandDestiny = new collection();
         $inlandOrigin = new collection();
 
+
+        $hideO = 'hide';
+        $hideD = 'hide';
+
         $markup = $this->markups($price_id, $typeCurrency, $request); // 'share this post'
 
         // Fin Markups
@@ -2919,8 +2923,7 @@ class QuoteV2Controller extends Controller
 
               // ************************* CONSULTA INLANDS ******************************
 
-              $hideO = 'hide';
-              $hideD = 'hide';
+          
               $typeCurrencyI = $this->getTypeCurrency($chargesOrigin, $chargesDestination,$data,$typeCurrency);
               $inlandParams = array(
                   'company_id_quote' => $company_id, 'destiny_port' => $dest_port,
