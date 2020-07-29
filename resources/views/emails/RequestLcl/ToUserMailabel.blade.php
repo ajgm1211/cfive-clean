@@ -224,10 +224,9 @@ font-family: sans-serif !important;
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         <p>Hi {{$user['name']}}.</p>
-                        <p>The importation process of the contract {{' '.$contract['namecontract'].' '}} was finished  </p>
                         <ul>
-                            <li>We have finished the importation process of the contract: {{' '.$contract['namecontract']}}</li>
-                            <li>Validity Contract: {{' '.$contract['validation']}}</li>
+                            <li>Contract <b>{{' '.$contract['namecontract']}}</b> has been successfully processed</li>
+                            <li>Validity: {{' '.$contract['validation']}}</li>
                         </ul>
                     </td>
                 </tr>
