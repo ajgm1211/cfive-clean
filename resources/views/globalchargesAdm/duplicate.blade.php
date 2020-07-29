@@ -1,5 +1,5 @@
 <script>
-	activarCountry('{{ $activacion['act'] }}');
+	activarCountryOld('{{ $activacion['act'] }}');
 </script>
 <div class="m-portlet">
 
