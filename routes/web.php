@@ -460,6 +460,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
     Route::get('datatable', 'CompanyController@LoadDatatableIndex')->name('companies.index.datatable');
     Route::get('search', 'CompanyController@searchCompanies')->name('companies.search');
+    Route::get('quotes/{company_id}', 'CompanyController@LoadDatatable')->name('companies.quotes');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
