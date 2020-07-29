@@ -173,14 +173,14 @@ class CompanyController extends Controller
     }
 
 
-    public function LoadDatatableShow()
+public function LoadDatatable($id)
     {
 
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('subuser')) {
-            $quotes = ViewQuoteV2::where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('user_id', \Auth::user()->id)->where('company_id', $id)->orderBy('created_at', 'desc')->get();
         } else {
-            $quotes = ViewQuoteV2::where('company_user_id', $company_user_id)->orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('company_user_id', $company_user_id)->where('company_id', $id)->orderBy('created_at', 'desc')->get();
         }
 
         $colletions = collect([]);
@@ -238,9 +238,6 @@ class CompanyController extends Controller
             $ValueOrig=count($explode_orig);
             $valueDest=count($explode_dest);
       
-
-         if ($quote->business_name != ''){
-
             if ($ValueOrig ==1 && $valueDest ==1 ) {
                
                 $data = [
@@ -322,7 +319,7 @@ class CompanyController extends Controller
                 $colletions->push($data);
             }   
         }
-    }   
+           
         return DataTables::of($colletions)
             ->editColumn('created', function ($colletion) {
                 return [
@@ -368,6 +365,9 @@ class CompanyController extends Controller
             })->editColumn('id', '{{$id}}')->make(true);
     }
 
+
+
+
     /**
      * show
      *
@@ -397,9 +397,9 @@ class CompanyController extends Controller
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('subuser')) {
-            $quotes = ViewQuoteV2::where('user_id', \Auth::user()->id)->where('company_id',$id)->orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('user_id', \Auth::user()->id)->orderBy('created_at', 'desc')->get();
         } else {
-            $quotes = ViewQuoteV2::where('company_user_id', $company_user_id)->where('company_id',$id)->orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('company_user_id', $company_user_id)->orderBy('created_at', 'desc')->get();
         }
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
         $prices = Price::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
