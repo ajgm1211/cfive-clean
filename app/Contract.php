@@ -281,12 +281,12 @@ class Contract extends Model implements HasMedia, Auditable
         $containers = Container::get();
         $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
 
-        $chargesOrigin = 'true';
+        /*$chargesOrigin = 'true';
         $chargesDestination = 'true';
-        $chargesFreight = 'true';
+        $chargesFreight = 'true';*/
         $markup = null;
         $remarks = "";
-        $remarksGeneral = "";
+        //$remarksGeneral = "";
 
         $equipment = array();
         $totalesCont = array();
@@ -295,7 +295,7 @@ class Contract extends Model implements HasMedia, Auditable
         $general = new collection();
         $collectionRate = new Collection();
 
-        $idCurrency = $company->currency_id;
+        //$idCurrency = $company->currency_id;
         $company_user_id = $company->id;
 
         $equipment = array('1', '2', '3', '4', '5');
@@ -333,7 +333,7 @@ class Contract extends Model implements HasMedia, Auditable
             }
 
 
-            $contractStatus = $data->contract->status;
+            //$contractStatus = $data->contract->status;
             $collectionRate = new Collection();
             $collectionOrigin = new collection();
             $collectionDestiny = new collection();
@@ -374,30 +374,19 @@ class Contract extends Model implements HasMedia, Auditable
             //$arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
             $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
 
-            $equipmentFilter = $arregloR['arregloEquipment'];
+            /*$equipmentFilter = $arregloR['arregloEquipment'];
 
-            $port_all = Harbor::where('name', 'ALL')->select('id')->first();
             $carrier_all = Carrier::where('name', 'ALL')->select('id')->first();
-            $country_all = Country::where('name', 'ALL')->select('id')->first();
 
             // ################### Calculos local  Charges #############################
-            if ($contractStatus != 'api') {
 
-                $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
-                    ->with(['currency' => function ($q) {
-                        $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
-                    }])->get();
-            } else {
+            $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
+                $q->whereIn('carrier_id', $carrier);
+            })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
+                ->with(['currency' => function ($q) {
+                    $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
+                }])->get();
 
-                $localChar = LocalChargeApi::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
-                    ->with(['currency' => function ($q) {
-                        $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
-                    }])->get();
-            }
 
             foreach ($localChar as $local) {
 
@@ -459,7 +448,7 @@ class Contract extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-            }
+            }*/
 
             $totalRates += $totalT;
             $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
@@ -530,7 +519,7 @@ class Contract extends Model implements HasMedia, Auditable
                 $remarks = $data->contract->remarks . "<br>";
             }
 
-            $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
+            //$remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
             $routes['type'] = 'FCL';
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
@@ -551,7 +540,7 @@ class Contract extends Model implements HasMedia, Auditable
                 $routes['origin_charges'] = $collectionOrigin;
             }
 
-            $routes['remarks'] = $remarksGeneral . "<br>" . $remarks;
+            $routes['remarks'] = $remarks;
 
             $detail = $this->compactResponse($containers, $equipment, $routes, $data, $typeCurrency, $response);
 
