@@ -180,6 +180,116 @@ function hola(hi) {
     alert(hi);
 }
 
+
+
+function activarCountryOld(act){
+    var divCountry = $( ".divcountry");
+    var divport = $( ".divport");
+    var divportcountry = $( ".divportcountry");
+    var divcountryport = $( ".divcountryport");
+
+
+
+    var idPortOrig = $( "#port_orig"); 
+    var idCountryOrig = $( "#country_orig");  
+
+
+    var idPortDest = $( "#port_dest"); 
+    var idCountryDest = $( "#country_dest"); 
+
+
+    var portcountry_orig =  $( "#portcountry_orig") ;
+    var portcountry_dest =   $( "#portcountry_dest") ;
+
+    var countryport_orig=   $( "#countryport_orig"); 
+    var countryport_dest=    $( "#countryport_dest"); 
+
+
+    if(act == 'divcountry'){
+        divport.attr('hidden','true');
+        divportcountry.attr('hidden','true');
+        divcountryport.attr('hidden','true');
+
+        divCountry.removeAttr('hidden');
+
+        idCountryOrig.attr('required','true');
+        idCountryDest.attr('required','true');
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+
+
+    }else if(act == 'divport'){
+        divCountry.attr('hidden','true');
+        divportcountry.attr('hidden','true');
+        divcountryport.attr('hidden','true');
+
+        divport.removeAttr('hidden');
+
+        idPortOrig.attr('required','true');
+        idPortDest.attr('required','true');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+
+    }else if(act == 'divportcountry'){
+        divCountry.attr('hidden','true');
+        divport.attr('hidden','true');
+        divcountryport.attr('hidden','true');
+        // Activo
+        divportcountry.removeAttr('hidden');
+        // Required
+        portcountry_orig.attr('required','true');
+        portcountry_dest.attr('required','true');
+        // No required 
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+    }else if(act == 'divcountryport'){
+        divCountry.attr('hidden','true');
+        divport.attr('hidden','true');
+        divportcountry.attr('hidden','true');
+        // Activo
+        divcountryport.removeAttr('hidden');
+        // Required
+        countryport_orig.attr('required','true');
+        countryport_dest.attr('required','true');
+        // No required 
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+
+    }
+}
+
 function activarCountry(act, notchange = true) {
     var divCountry = $(".divcountry");
     var divport = $(".divport");
