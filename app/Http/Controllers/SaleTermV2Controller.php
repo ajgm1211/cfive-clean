@@ -9,6 +9,7 @@ use App\Charge;
 use App\AutomaticRate;
 use App\Container;
 use App\User;
+use App\Http\Requests\StoreAddSaletermQuotes;
 
 class SaleTermV2Controller extends Controller
 {
@@ -38,7 +39,7 @@ class SaleTermV2Controller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAddSaletermQuotes $request)
     {
         $sale_term = SaleTermV2::create($request->all());
 

@@ -814,7 +814,7 @@ body {
                             <div class="col-lg-2">
                                 <label>Company</label>
                                 <div class="m-input-icon m-input-icon--right">
-                                    <select id="company_dropdown" name="company_id_quote" class="form-control"></select>
+                                    <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control"></select>
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
                                         <span>
                                             <a onclick="AbrirModal('add',0)" data-container="body"
@@ -2025,7 +2025,30 @@ body {
 @endif
 
 
-@include('contacts.partials.contactsModal')
+<div class="modal fade" id="contactModalSearch" role="dialog" aria-labelledby="contactModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLongTitle">
+                    Contacts
+
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @include('companies.partials.companiesModal')
 
 @endsection
@@ -2191,7 +2214,7 @@ function AbrirModal(action, id) {
     if (action == "addContact") {
         var url = '{{ route("contacts.addCM") }}';
         $('.modal-body').load(url, function() {
-            $('#contactModal').modal({
+            $('#contactModalSearch').modal({
                 show: true
             });
         });

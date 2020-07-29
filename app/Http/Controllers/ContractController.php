@@ -473,6 +473,7 @@ class ContractController extends Controller
                 'message' => 'Contract created successfully!',
             ]);
         } catch (Exception $e) {
+            \Log::error($e);
             return response()->json([
                 'message' => 'Something went wrong on our side',
             ], 500);

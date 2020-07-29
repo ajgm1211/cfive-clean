@@ -1070,6 +1070,7 @@ class ApiController extends Controller
                 return response()->json(['message' => 'The requested contract does not exist'], 200);
             }
         } catch (\Exception $e) {
+            \Log::error($e);
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }

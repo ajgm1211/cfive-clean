@@ -42,8 +42,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Dusk, if env is appropiate
         /*if ($this->app->environment('local', 'testing')) {
-        $this->app->register(DuskServiceProvider::class);
-      }*/
+            $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
+        }*/
+
         $this->app->bind(
             'App\Repositories\CompanyRepositoryInterface',
             'App\Repositories\CompanyRepository'
