@@ -429,7 +429,7 @@
         }
         
         $(function() { 
-            var id = $('#compani_id')
+            var id = $('#compani_id').val();
         $('#tablequote').DataTable({
             ordering: true,
             searching: true,
