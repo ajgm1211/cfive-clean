@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="/" class="m-brand__logo-wrapper">
+                <a href="{{route('quotes-v2.index')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
@@ -52,14 +52,51 @@
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <!-- <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
                             <b>Quotes</b>
                         </span>
+                    </a> -->
+                    
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                    data-redirect="true" aria-haspopup="true">
+                    <a href="#" class="m-menu__link m-menu__toggle">
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-wrap">
+                                <span class="m-menu__link-text">
+                                    <b>Quotes</b>
+                                </span>
+                            </span>
+                        </span>
+                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                        <i class="m-menu__ver-arrow la la-angle-right"></i>
                     </a>
-                </li>
+
+                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                        <ul class="m-menu__subnav">
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-list-1"></i>
+                                    <span class="m-menu__link-text">
+                                        Quotes
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search"></i>
+                                    <span class="m-menu__link-text">
+                                        Search Rates
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </di>
+                </li> 
+
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">

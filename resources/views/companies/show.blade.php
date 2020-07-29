@@ -86,6 +86,7 @@
                                         <div class="collapse show" id="about_company">
                                             <label><b>Name</b></label>
                                             <p class="color-black">
+                                            <input type="hidden" value="{{$company->id}}" id="company_id"/>
                                                 <span id="business_name_span">{{$company->business_name}}</span>
                                                 <input type="text" class="form-control" id="business_name_input" value="{{$company->business_name}}" hidden>
                                                 <a  id='edit_business_name' onclick="display_business_name()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
@@ -427,99 +428,111 @@
 
         }
         
-        $(function() {
-            $('#tablequote').DataTable({
-                ordering: true,
-                searching: true,
-                processing: false,
-                serverSide: false,
-                order: [[ 0, "desc" ]],
-                ajax:  "{{ route('quotes-v2.index.datatable') }}",
-                "columnDefs": [
-                    { "width": "5%", "targets": 0 },
-                    { "width": "25%", "targets": 1 },
-                    { "width": "12%", "targets": [2,3] },
-                    { "width": "15%", "targets": [4,5] },
-                    { "width": "10%", "targets": 6 },
-                    { "type": "date", "targets": 2 },
-                ],
-                columns: [
-                    {data: 'id', name: 'id'},
-                    {data: 'client', name: 'client'},
-                    //{data: 'contact', name: 'contact'},
-                    {data: 'user', name: 'user'},
-                    {data: 'created', name: 'created'},
-                    {data: 'origin', name: 'origin', className: 'details-control'},
-                    {data: 'destination', name: 'destination'},
-                    {data: 'type', name: 'type'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false },
-                ] ,
-                "autoWidth": true,
-                'overflow':false,
-                "paging":true,
-                "sScrollY": "490px",
-                "bPaginate": false,
-                "bJQueryUI": true,
-                buttons: [
-                    {
-                        extend: 'copyHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3]
-                        }
+        $(function() { 
+            var id = $('#compani_id')
+        $('#tablequote').DataTable({
+            ordering: true,
+            searching: true,
+            processing: false,
+            serverSide: false,
+            order: [[ 3, "desc" ]],
+            ajax:  "/companies/quotes/"+id,
+            "columnDefs": [
+                { "width": "5%", "targets": 0 },
+                { "width": "25%", "targets": 1 },
+                { "width": "12%", "targets": [2,3] },
+                { "width": "15%", "targets": [4,5] },
+                { "width": "10%", "targets": 6 },
+                { "type": "date", "targets": 2 },
+            ], 
+            columns: [
+                {data: 'id', name: 'id'},
+                
+                {data: 'client', name: 'client'},
+                //{data: 'contact', name: 'contact'},
+                {data: 'user', name: 'user'},
+                {
+                    data: 'created',
+                    type: 'num',
+                    name:'created',
+                    render: {
+                        _: 'display',
+                        sort: 'timestamp'
                     }
-                ]
-            });
-
-            // Add event listener for opening and closing details
-            $('#tablequote tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row( tr );
-
-                if ( row.child.isShown() ) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
+                },
+                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'destination', name: 'destination'},
+                {data: 'type', name: 'type'},
+                {data: 'action', name: 'action', orderable: false, searchable: false },
+            ] ,
+            "autoWidth": true,
+            'overflow':false,
+            "paging":true,
+            "sScrollY": "490px",
+            "bPaginate": false,
+            "bJQueryUI": true,
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
                 }
-                else {
-                    // Open this row
-                    row.child( format(row.data()) ).show();
-                    tr.addClass('shown');
-                }
-            } );
+            ]
+
+
         });
 
+        // Add event listener for opening and closing details
+        $('#tablequote tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
 
-        /* Formatting function for row details - modify as you need */
-        function format ( d ) {
-            // `d` is the original data object for the row
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-                '<tr>'+
-                '<td>Full name:</td>'+
-                '<td>'+d.name+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                '<td>Extension number:</td>'+
-                '<td>'+d.extn+'</td>'+
-                '</tr>'+
-                '<tr>'+
-                '<td>Extra info:</td>'+
-                '<td>And any further details here (images etc)...</td>'+
-                '</tr>'+
-                '</table>';
-        }        
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        } );
+    });
 
-    </script>
+
+    /* Formatting function for row details - modify as you need */
+    function format ( d ) {
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+            '<td>Full name:</td>'+
+            '<td>'+d.name+'</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td>Extension number:</td>'+
+            '<td>'+d.extn+'</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td>Extra info:</td>'+
+            '<td>And any further details here (images etc)...</td>'+
+            '</tr>'+
+            '</table>';
+    }
+
+</script>
 @stop
 
