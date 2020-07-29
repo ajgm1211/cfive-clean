@@ -23,11 +23,11 @@ class CreateChargesTable extends Migration
             $table->foreign('surcharge_id')->references('id')->on('surcharges')->onDelete('cascade');
             $table->integer('calculation_type_id')->unsigned();
             $table->foreign('calculation_type_id')->references('id')->on('calculationtype')->onDelete('cascade');
-            $table->json('amount');
-            $table->json('markups');
+            $table->json('amount')->nullable();
+            $table->json('markups')->nullable();
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
-            $table->json('total');
+            $table->json('total')->nullable();
             $table->timestamps();
         });
     }

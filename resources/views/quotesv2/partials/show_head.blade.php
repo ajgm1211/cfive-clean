@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left" role="tablist" style="border-bottom: none;">
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             <li class="nav-item m-tabs__item size-14px" >
-                <a  href="javascript:history.back()" class="btn-backto"><span class="fa fa-arrow-left"></span> Back</a>
+                <a  href="{{url()->route('quotes-v2.search')}}" class="btn-backto"><span class="fa fa-arrow-left"></span> Back</a>
             </li>                    
         </ul>                
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
@@ -46,6 +46,24 @@
             </li>
         </ul>
     </div>
+
+    @if ($errors->any())
+        <div class="col-md-12">
+            <div class="m-portlet custom-portlet no-border">
+                <div class="m-portlet__head">
+                    <br>
+                     <div class="alert alert-danger">                           
+                        <ul>
+                             @foreach ($errors->all() as $error)
+                                 <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div> 
+                </div>    
+            </div>
+        </div>    
+     @endif
+     
     <!-- Quote details -->
     <div class="col-md-12">
         <div class="m-portlet custom-portlet no-border">
@@ -82,7 +100,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
-                            {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden','placeholder'=>'Select an option']) }}
+                            <select name="company_id" class="form-control company_id select2" hidden></select>
                             <span class="company_span">{{@$quote->company->business_name}}</span>
                         </div>
                     </div>
@@ -127,19 +145,19 @@
                             <span class="delivery_type_span">
                                 @switch($quote->delivery_type)
                                 @case(1)
-                                Airport to Airport
+                                    Airport to Airport
                                 @break
                                 @case(2)
-                                Airport to Door
+                                    Airport to Door
                                 @break
                                 @case(3)
-                                Door to Airport
+                                    Door to Airport
                                 @break
                                 @case(4)
-                                Door to Door
+                                    Door to Door
                                 @break
                                 @default
-                                Airport to Airport
+                                    Airport to Airport
                                 @break
                                 @endswitch
                             </span>

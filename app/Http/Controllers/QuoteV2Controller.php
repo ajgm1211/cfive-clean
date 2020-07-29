@@ -71,6 +71,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
+use App\Http\Requests\StoreAddRatesQuotes;
 use App\InlandDistance;
 
 class QuoteV2Controller extends Controller
@@ -196,30 +197,92 @@ class QuoteV2Controller extends Controller
             } else {
                 $contact = '---';
             }
+            
+            $ValueOrig=count($explode_orig);
+            $valueDest=count($explode_dest);
+      
+            if ($ValueOrig ==1 && $valueDest ==1 ) {
+               
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
 
-            $data = [
-                'id' => $id,
-                'idSet' => setearRouteKey($quote->id),
-                'client' => $company,
-                'contact' => $contact,
-                'user' => $quote->owner,
-                'created' => $quote->created_at,
-                'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  See origins
-                                  </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                  <small>' . $origin_li . '</small>
-                                  </div>',
-                'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  See destinations
-                                  </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                  <small>' . $destination_li . '</small>
-                                  </div>',
-                'type' => $quote->type,
-            ];
-            $colletions->push($data);
+            } elseif($ValueOrig <>1 && $valueDest ==1) {
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+
+            } elseif($ValueOrig ==1 && $valueDest <>1) {
+                
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            
+            }else{
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            }   
         }
+           
         return DataTables::of($colletions)
             ->editColumn('created', function ($colletion) {
                 return [
@@ -2295,7 +2358,7 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return STRING Json
      */
-    public function storeRates(Request $request)
+    public function storeRates(StoreAddRatesQuotes $request)
     {
 
         $arregloNull = array();

@@ -10,5 +10,7 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'address' => $faker->address,
         'owner' => 1,
         'company_user_id' => 1,
+        'associated_quotes'=>1,
+
     ];
 });
