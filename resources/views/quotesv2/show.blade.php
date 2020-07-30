@@ -241,13 +241,15 @@
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",
-        plugins: ["template"],
+        oninit : "setPlainText",
+        plugins: ["template", "paste"],
         toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
         external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
         nanospell_server:"php",
-        browser_spellcheck: true,
+        browser_spellcheck: false,
         relative_urls: false,
         remove_script_host: false,
+        valid_elements: "p[style],br,b,i,strong,em"
         file_browser_callback : function(field_name, url, type, win) {
             var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
             var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
