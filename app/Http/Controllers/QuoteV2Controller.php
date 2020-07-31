@@ -1604,14 +1604,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
             //$remarkA .= $origin_port->name . " / " . $carrier->name;
             if ($mode == 1) {
-                "<ul>
-                    <li>".$remarkA =$remAll->remark->export."</li><br>
-                </ul>";
-
+                $remarkA =$remAll->remark->export."<br>";
             } else {
-                "<ul>
-                    <li>".$remarkA =$remAll->remark->import."</li><br>
-                </ul>";
+                $remarkA =$remAll->remark->import."<br>";
             }
         }
 
@@ -1624,13 +1619,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
 
             if ($mode == 1) {
-                "<ul>
-                    <li>".$remarkO =$remOrig->remark->export."</li><br>
-                </ul>";
+                $remarkO =$remOrig->remark->export."<br>";
             } else {
-                "<ul>
-                    <li>".$remarkO =$remOrig->remark->import."</li><br>
-                </ul>";
+                $remarkO =$remOrig->remark->import."<br>";
             }
         }
 
@@ -1642,13 +1633,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
 
             if ($mode == 1) {
-                "<ul>
-                    <li>".$remarkD =$remDest->remark->export."</li><br>
-                </ul>";
+                $remarkD =$remDest->remark->export."<br>";
             } else {
-                "<ul>
-                    <li>".$remarkD =$remDest->remark->import."</li><br>
-                </ul>";
+                $remarkD =$remDest->remark->import."<br>";
             }
         }
 
