@@ -1596,46 +1596,46 @@ class QuoteV2Controller extends Controller
         $remarkD = '';
         $rems = '';
 
-        if ($remarks_all->count() > 0) {
-            $remarkA .= $origin->name . " / " . $destiny->name . " / " . $carrier->name . "<br>";
-        }
+        // if ($remarks_all->count() > 0) {
+        //     $remarkA .= $origin->name . " / " . $destiny->name . " / " . $carrier->name . "<br>";
+        // }
 
         foreach ($remarks_all as $remAll) {
             $rems .= "<br>";
             //$remarkA .= $origin_port->name . " / " . $carrier->name;
             if ($mode == 1) {
-                $remarkA .= "<br>" . $remAll->remark->export;
+                $remarkA =$remAll->remark->export;
             } else {
-                $remarkA .= "<br>" . $remAll->remark->import;
+                $remarkA =$remAll->remark->import;
             }
         }
 
-        if ($remarks_origin->count() > 0) {
-            $remarkO .= $origin->name . " / " . $carrier->name;
-        }
+        // if ($remarks_origin->count() > 0) {
+        //     $remarkO .= $origin->name . " / " . $carrier->name;
+        // }
 
         foreach ($remarks_origin as $remOrig) {
 
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkO .= "<br>" . $remOrig->remark->export;
+                $remarkO =$remOrig->remark->export;
             } else {
-                $remarkO .= "<br>" . $remOrig->remark->import;
+                $remarkO =$remOrig->remark->import;
             }
         }
 
-        if ($remarks_destination->count() > 0) {
-            $remarkD .= $destiny->name . " / " . $carrier->name;
-        }
+        // if ($remarks_destination->count() > 0) {
+        //     $remarkD .= $destiny->name . " / " . $carrier->name;
+        // }
 
         foreach ($remarks_destination as $remDest) {
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkD .= "<br>" . $remDest->remark->export;
+                $remarkD =$remDest->remark->export;
             } else {
-                $remarkD .= "<br>" . $remDest->remark->import;
+                $remarkD =$remDest->remark->import;
             }
         }
 
