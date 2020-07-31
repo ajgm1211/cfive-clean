@@ -4215,6 +4215,27 @@ $('.company_dropdown').select2({
     }
 });
 
+$('.harbor_dropdown').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    multiple: true,
+    ajax: {
+        url: '/harbor/search',
+        dataType: 'json',
+        data: function(params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function(data) {
+            return {
+                results: data
+            };
+        },
+        cache: true
+    }
+});
+
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });

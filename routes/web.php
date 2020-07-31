@@ -1005,6 +1005,7 @@ Route::prefix('Container')->group(function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('harbor/search', 'HarborController@search')->name('harbor.search');
     /** Contracts V2 view routes **/
     Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
     Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit')->middleware('check_company:contract');
