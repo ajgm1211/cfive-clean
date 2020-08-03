@@ -13,7 +13,7 @@
     <div class="form-group m-form__group row">
         <div class="col-lg-4">
             {!! Form::label('surcharger', 'Surcharger') !!}
-            {{ Form::select('surcharger',$surchargers, $masterSurcharge->surcharger_id,['id' => 'surcharger_id','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
+            {{ Form::select('surcharger',$surchargers, $masterSurcharge->surcharge_id,['id' => 'surcharger_id','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
         </div>
         <div class="col-lg-4">
             {!! Form::label('carrier', 'Carrier') !!}
