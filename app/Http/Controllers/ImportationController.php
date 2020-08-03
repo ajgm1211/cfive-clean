@@ -1539,12 +1539,29 @@ class ImportationController extends Controller
         //dd($surcharge_detail,$locals,$contract,$carrier_contract);
 
         foreach($locals as $local){
-            $surchargersFineds = Surcharge::where('variation->type','like','%'.strtolower($local->surcharge->name).'%')
-                ->where('company_user_id',null)
-                ->get();
-            $surchargersFineds2 = PrvSurchargers::get_single_surcharger($local->surcharge->name);
-            dd($surchargersFineds,$surchargersFineds2);
+
+            $surchargersFined = PrvSurchargers::get_single_surcharger($local->surcharge->name);
             //dd($local->localcharcarriers->pluck('carrier_id'));
+            dd($surchargersFined);
+            if($local->typedestiny_id == 3){
+                $type_destiny_array = [1,2,3];                
+            } else {
+                $type_destiny_array = [$local->typedestiny_id,3];                                
+            }
+            if($surchargersFined['boolean'] == true && $surchargersFined['count'] == 1){
+                $master_surcharge_fined = MasterSurcharge::where('surcharge_id',$surchargersFined['data'])
+                    ->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'))
+                    ->whereIn('direction_id',$direction_array)
+                    ->whereIn('typedestiny_id',$type_destiny_array)
+                    ->get();
+                dd($local, $surchargersFined['data'],$master_surcharge_fined,$contract->direction_id ); 
+            } else {
+                if($surchargersFined['count'] == 0){
+                    // No encontro el recargo en variaciones de Surcharge list
+                } else if($surchargersFined['count'] >= 1){
+                    // Encontro mas de un Surcharge para una variacion. Listar Error de ID semejantes
+                }
+            }
         }
     }
 
