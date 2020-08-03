@@ -296,6 +296,9 @@ Route::prefix('Importation')->group(function () {
     Route::get('/ReprocesarSurchargers/{id}', 'ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers')
         ->middleware(['auth', 'role:administrator|data_entry']);
 
+    // Check Surcharges
+    Route::get('/CheckSurcharges/{id}', 'ImportationController@checkSurcharges')->name('check.surchargers')
+        ->middleware(['auth', 'role:administrator|data_entry']);
     // Datatable Rates Y Surchargers
     //    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
     //        ->middleware(['auth','role:administrator|data_entry']);

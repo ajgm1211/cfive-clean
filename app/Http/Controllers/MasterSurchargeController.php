@@ -16,7 +16,11 @@ class MasterSurchargeController extends Controller
 {
     public function index()
     {
-        return view('masterSurcharge.index');
+        $carriers           = Carrier::pluck('name','id');
+        $directions         = Direction::pluck('name','id');
+        $typedestiny        = TypeDestiny::pluck('description','id');
+        $calculationtype    = CalculationType::pluck('name','id');
+        return view('masterSurcharge.index',compact('carriers','directions','typedestiny','calculationtype'));
     }
 
     public function create()
@@ -64,10 +68,29 @@ class MasterSurchargeController extends Controller
 
     }
 
-    public function show($id)
+    public function show(Request $request,$id)
     {
         if($id == 0){
             $masterSurcharge = DB::select('call proc_master_surcharge()');
+            $masterSurcharge = collect($masterSurcharge);
+            //$masterSurcharge = $masterSurcharge->where('carrier_id', '=',2);
+            if($request->carrier_id != null){
+                $masterSurcharge = $masterSurcharge->where('carrier_id', '=',$request->carrier_id);
+            }
+            if($request->typedestiny_id != null ){
+                if($request->typedestiny_id != 3){
+                    $masterSurcharge = $masterSurcharge->where('typedestiny_id', '=',$request->typedestiny_id);
+                }
+            }
+            if($request->calculationtype_id != null){
+                $masterSurcharge = $masterSurcharge->where('calculationtype_id', '=',$request->calculationtype_id);
+            }
+            if($request->direction_id != null ){
+                if($request->direction_id != 3){
+                    $masterSurcharge = $masterSurcharge->where('direction_id', '=',$request->direction_id);
+                }
+            }
+
             return DataTables::of($masterSurcharge)
                 ->addColumn('action', function ($masterSurcharge) {
                     return '
@@ -81,12 +104,13 @@ class MasterSurchargeController extends Controller
 
     public function edit($id)
     {
-        $masterSurcharge = MasterSurcharge::find($id);
+        $masterSurcharge    = MasterSurcharge::find($id);
         $carriers           = Carrier::pluck('name','id');
         $directions         = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::pluck('description','id');
         $calculationtype    = CalculationType::pluck('name','id');
-        $surchargers        = Surcharge::pluck('name','id');
+        $surchargers        = Surcharge::where('company_user_id','=',null)->pluck('name','id');
+        //dd($masterSurcharge,$surchargers);
         return view('masterSurcharge.Body-Modals.edit',compact('masterSurcharge','carriers','directions','typedestiny','calculationtype','surchargers'));
     }
 
@@ -126,12 +150,12 @@ class MasterSurchargeController extends Controller
     public function destroy($id)
     {
         //$globals_id_array = $request->input('id');
-		$masterSurcharge = MasterSurcharge::find($id);
-		if($masterSurcharge->delete())
-		{
-			return response()->json(['success' => '1']);
-		} else {
-			return response()->json(['success' => '2']);
-		}
+        $masterSurcharge = MasterSurcharge::find($id);
+        if($masterSurcharge->delete())
+        {
+            return response()->json(['success' => '1']);
+        } else {
+            return response()->json(['success' => '2']);
+        }
     }
 }

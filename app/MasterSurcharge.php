@@ -14,4 +14,8 @@ class MasterSurcharge extends Model
                            'calculationtype_id',
                            'direction_id'
                           ];
+
+    public function surcharge(){
+        return $this->belongsTo('App\Surcharge');
+    }
 }

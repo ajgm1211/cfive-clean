@@ -35,6 +35,7 @@ use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
 use App\GroupContainer;
+use App\MasterSurcharge;
 use App\Jobs\GeneralJob;
 use App\ContractFclFile;
 use App\ContractCarrier;
@@ -1513,6 +1514,38 @@ class ImportationController extends Controller
         $contract       = Contract::find($id);
         return view('importation.SurchargersFailOF',compact('countfailsurcharge','contract','countgoodsurcharge','id','tab'));
 
+    }
+
+    public function checkSurcharges($id){
+        $contract           = Contract::with('carriers')->find($id);
+        $carrier_contract   = $contract->carriers->pluck('carrier_id');
+        $direction_array;
+        if($contract->direction_id == 3){
+            $direction_array = [1,2,3];
+        } else {
+            $direction_array = [$contract->direction_id,3];
+        }
+        $surcharge_detail   = MasterSurcharge::whereIn('carrier_id',$carrier_contract)
+            ->whereIn('direction_id',$direction_array)
+            ->with('surcharge')
+            ->get();
+
+        $locals             = LocalCharge::with('localcharcarriers','surcharge')->where('contract_id',$id)->get();
+
+        $surcharge_apply_yes_exists = collect();
+        $surcharge_apply_not_exists = collect();
+        $surcharge_not_exists       = collect();
+
+        //dd($surcharge_detail,$locals,$contract,$carrier_contract);
+
+        foreach($locals as $local){
+            $surchargersFineds = Surcharge::where('variation->type','like','%'.strtolower($local->surcharge->name).'%')
+                ->where('company_user_id',null)
+                ->get();
+            $surchargersFineds2 = PrvSurchargers::get_single_surcharger($local->surcharge->name);
+            dd($surchargersFineds,$surchargersFineds2);
+            //dd($local->localcharcarriers->pluck('carrier_id'));
+        }
     }
 
     public function EditSurchargersGood($id){
