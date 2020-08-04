@@ -1151,6 +1151,7 @@ Route::prefix('ImpTransitTime')->group(function () {
 
 Route::prefix('MasterSurcharge')->group(function () {
     Route::resource('MasterSurcharge', 'MasterSurchargeController')->middleware(['role:administrator|data_entry']);
+    Route::get('getCalculationEq', 'MasterSurchargeController@getCalculationsEquiment')->name('get.calculations.equiment');
 });
 
 

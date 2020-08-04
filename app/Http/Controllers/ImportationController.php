@@ -46,6 +46,7 @@ use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\ContainerCalculation;
 use App\Jobs\ReprocessRatesJob;
+use App\CalculationTypeContent;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
@@ -1527,34 +1528,89 @@ class ImportationController extends Controller
         }
         $surcharge_detail   = MasterSurcharge::whereIn('carrier_id',$carrier_contract)
             ->whereIn('direction_id',$direction_array)
+            ->where('group_container_id',$contract->gp_container_id)
+            ->orWhere('group_container_id',null)
             ->with('surcharge')
             ->get();
 
-        $locals             = LocalCharge::with('localcharcarriers','surcharge')->where('contract_id',$id)->get();
+        $locals             = LocalCharge::with('localcharcarriers.carrier','surcharge')->where('contract_id',$id)->get();
 
         $surcharge_apply_yes_exists = collect();
-        $surcharge_apply_not_exists = collect();
-        $surcharge_not_exists       = collect();
+
+        $local_found_in_sur_mast = collect();
 
         //dd($surcharge_detail,$locals,$contract,$carrier_contract);
-
         foreach($locals as $local){
-
             $surchargersFined = PrvSurchargers::get_single_surcharger($local->surcharge->name);
-            //dd($local->localcharcarriers->pluck('carrier_id'));
-            dd($surchargersFined);
+            //dd($surchargersFined);
             if($local->typedestiny_id == 3){
                 $type_destiny_array = [1,2,3];                
             } else {
                 $type_destiny_array = [$local->typedestiny_id,3];                                
             }
+            
             if($surchargersFined['boolean'] == true && $surchargersFined['count'] == 1){
-                $master_surcharge_fined = MasterSurcharge::where('surcharge_id',$surchargersFined['data'])
+                
+                $filtered_carrier = $local->localcharcarriers->whereNotIn('carrier_id', $carrier_contract);
+                //dd($local->localcharcarriers->toArray(),$filtered_carrier->toArray(),$carrier_contract->toArray());
+                
+                if(count($filtered_carrier) >= 1 ){
+                    // Agregar la excepcion de que hay un carrier en el local no registrado en el contracto 
+                    //dd($filtered_carrier->pluck('carrier')->pluck('name')->implode(' | '));
+                }
+                
+                $master_surcharge_fineds = MasterSurcharge::where('surcharge_id',$surchargersFined['data'])
                     ->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'))
                     ->whereIn('direction_id',$direction_array)
                     ->whereIn('typedestiny_id',$type_destiny_array)
+                    ->where('group_container_id',$contract->gp_container_id)
+                    ->orWhere('group_container_id',null)
                     ->get();
-                dd($local, $surchargersFined['data'],$master_surcharge_fined,$contract->direction_id ); 
+
+                //dd($local, $surchargersFined['data'],$master_surcharge_fineds,$contract->direction_id );     
+                $local_collated = false;
+                foreach($master_surcharge_fineds as $master_surcharge_fined){
+                    if($master_surcharge_fined->calculationtype_id == $local->calculationtype_id){
+                        //El calculation T. del Reacargo es igual al del Master Surcharge
+                        //Agregar a lista exitosa 1
+                        $local_collated = true;
+                        dd('//Agregar a lista exitosa 1',$surcharge_detail,$local_collated,$master_surcharge_fined,$local);
+                        break;
+                    } else {
+                        //No es igual el caculation type
+                        //dd($master_surcharge_fined,'//No es igual el caculation type');
+                        $calculationTypeContent = CalculationTypeContent::where('calculationtype_base_id',$master_surcharge_fined->calculationtype_id)
+                            ->where('calculationtype_content_id',$local->calculationtype_id)
+                            ->get();
+                        if(count($calculationTypeContent) >= 1){
+                            //Agregar a lista exitosa 2
+                            $local_collated = true;
+                            dd('//Agregar a lista exitosa 2',$local_collated,$master_surcharge_fined,$local);
+                            break;
+                        } else {
+                            $calculationTypeContent = null;
+                            $calculationTypeContent = CalculationTypeContent::where('calculationtype_content_id',$master_surcharge_fined->calculationtype_id)
+                                ->where('calculationtype_base_id',$local->calculationtype_id)
+                                ->get();
+                            if(count($calculationTypeContent) >= 1){
+                                //Agregar a lista exitosa 3 
+                                $local_collated = true;
+                                dd('//Agregar a lista exitosa 3',$local_collated,$master_surcharge_fined,$local);
+                                break;
+                            } else {
+                                //dd('//No coincide');
+                            }
+                        }
+                    }
+                }
+
+                if($local_collated){
+                    dd('recargo de este local fue encontrado');
+                } else {
+                    // informar que no encontro el recargo. agregar a master surchar
+                    dd('recargo de este local no fue encontrado');
+                }
+
             } else {
                 if($surchargersFined['count'] == 0){
                     // No encontro el recargo en variaciones de Surcharge list
