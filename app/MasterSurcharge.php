@@ -12,6 +12,7 @@ class MasterSurcharge extends Model
                            'carrier_id',
                            'typedestiny_id',
                            'calculationtype_id',
+                           'group_container_id',
                            'direction_id'
                           ];
 
