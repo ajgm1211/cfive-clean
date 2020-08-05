@@ -3434,6 +3434,16 @@ class QuoteV2Controller extends Controller
                     }
                 }
 
+                $colores='';
+                if($data->contract->is_manual== 1){
+                    $colores = 'bg-manual';
+                }else{
+                    $colores = 'bg-api';
+                }
+
+                 
+                
+
                 // Valores
                 $data->setAttribute('excelRequest', $excelRequestId);
                 $data->setAttribute('excelRequestFCL', $excelRequestIdFCL);
@@ -3476,6 +3486,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('idContract', $idContract);
                 //COlor
                 $data->setAttribute('color', $color);
+                $data->setAttribute('contract_color',$colores);
             }
 
             // Ordenar por Monto Total  de contenedor de menor a mayor
@@ -3517,6 +3528,8 @@ class QuoteV2Controller extends Controller
 
         return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA','isDecimal')); //aqui
     }
+
+ 
 
     public function perTeu($monto, $calculation_type, $code)
     {
@@ -6123,9 +6136,16 @@ class QuoteV2Controller extends Controller
             } else {
                 $excelRequestId = "";
             }
+            $colores='';
+            if($data->contract->is_manual== 1){
+                $colores = 'bg-manual';
+            }else{
+                $colores = 'bg-api';
+            }
+
 
             //COlor
-            $data->setAttribute('color', '');
+            $data->setAttribute('contract_color',$colores);
             $data->setAttribute('remarks', $remarks);
             $data->setAttribute('excelRequest', $excelRequestId);
             $data->setAttribute('excelRequestLCL', $excelRequestIdLCL);
