@@ -19,4 +19,16 @@ class MasterSurcharge extends Model
     public function surcharge(){
         return $this->belongsTo('App\Surcharge');
     }
+    
+    public function direction(){
+        return $this->belongsTo('App\Direction');
+    }
+    
+    public function calculationtype(){
+        return $this->belongsTo('App\CalculationType');
+    }
+    
+    public function typedestiny(){
+        return $this->belongsTo('App\TypeDestiny');
+    }
 }
