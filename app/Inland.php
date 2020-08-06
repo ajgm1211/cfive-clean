@@ -78,6 +78,28 @@ class Inland extends Model implements Auditable
         return (new InlandFilter($request, $builder))->filter();
     }
 
+    /* Duplicate Inland Model instance with relations */
+    public function duplicate()
+    {
+
+        $new_inland = $this->replicate();
+        $new_inland->provider .= ' copy';
+        $new_inland->save();
+
+        $this->load('inlandports', 'inland_company_restriction', 'inlandRange', 'inlandkms');
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->inland_id = $new_inland->id;
+                $newRelationship->save();
+            }
+        }
+
+        return $new_inland;
+    }
+
     /**
      * Sync Inland Company Restrictions
      *
