@@ -350,7 +350,7 @@
 											</label>
                                         </div>
                                     </div>   
-                                    <div class="col-md-2">
+                                    <!--<div class="col-md-2">
                                         <div class="form-group m-form__group">
                                             <label for="future_dates">Future Dates</label>
                                             <label class="m-radio m-radio--check-bold m-radio--state-success">
@@ -380,7 +380,7 @@
                                                 </label>       
 											</label>
                                         </div>
-                                    </div> 
+                                    </div>-->
                                 </div>
                                 <br>
                                 <div class="row">
