@@ -8,6 +8,14 @@
     body {
         background: #f6f6f6;
     }
+    .bg-manual {
+
+    background-color: #36A3F7;
+    }
+    .bg-api {
+
+    background-color: #20C997;
+    }
     .m-portlet {
         box-shadow: none;
         border-radius: 5px;
@@ -97,12 +105,9 @@
     transition: all 300ms ease;
   }
   .bg-maersk {
-
     background-color: #41B0D5;    
   }
-
   .bg-safmarine {
-
     background-color: #f99702;      
     }   
   .btn-detail__quotes:hover {
@@ -140,7 +145,6 @@
   .btn-input__select:hover, .btn-input__select-add:hover {
     border-color: #0072fc; 
   }
-
   .input-select[type="checkbox"] {
     display: none; 
   }
@@ -173,7 +177,6 @@
     left: 60px;
     visibility: hidden;
   }
-
   .hidden-general{
     display:none !important;
   }
@@ -308,7 +311,6 @@
     color: #575962;
     font-size: 14px;
     font-weight: 600;
-
   }
   .warning-p span {
     color: #e74c3c;
@@ -400,7 +402,6 @@
     color: #0000ff;
     line-height: 15px;
   }
-
    /* c5 select */
    .c5-select-multiple {
         display: none;
@@ -457,18 +458,15 @@
     .c5-select-list::-webkit-scrollbar {
         width: 8px;
     }
-
     /* Track */
     .c5-select-list::-webkit-scrollbar-track {
         border-radius: 18px;
     }
-
     /* Handle */
     .c5-select-list::-webkit-scrollbar-thumb {
         background: #ccc; 
         border-radius: 18px;
     }
-
     /* Handle on hover */
     .c5-select-list::-webkit-scrollbar-thumb:hover {
         background: #064acb; 
@@ -506,13 +504,11 @@
     height: 20px;
     float: right;
     }
-
     .switch input { 
     opacity: 0;
     width: 0;
     height: 0;
     }
-
     .slider {
     position: absolute;
     cursor: pointer;
@@ -524,7 +520,6 @@
     -webkit-transition: .4s;
     transition: .4s;
     }
-
     .slider:before {
     position: absolute;
     content: "";
@@ -536,26 +531,21 @@
     -webkit-transition: .4s;
     transition: .4s;
     }
-
     .switch input:checked + .slider {
     background-color: #2196F3;
     }
-
     .switch input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
     }
-
     .switch input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
     }
-
     /* Rounded sliders */
     .slider.round {
     border-radius: 34px;
     }
-
     .slider.round:before {
     border-radius: 50%;
     }
@@ -571,7 +561,6 @@
     -ms-user-select: none;
     user-select: none;
     }
-
     /* Hide the browser's default checkbox */
     .c5-label input {
     position: absolute;
@@ -580,7 +569,6 @@
     height: 0;
     width: 0;
     }
-
     /* Create a custom checkbox */
     .checkmark {
     position: absolute;
@@ -592,30 +580,25 @@
     border-radius: 3px;
     -webkit-border-radius: 3px;
     }
-
     /* On mouse-over, add a grey background color */
     .c5-label:hover input ~ .checkmark {
     background-color: #eee;
     }
-
     /* When the checkbox is checked, add a blue background */
     .c5-label input:checked ~ .checkmark {
     background-color: #2196F3;
     border: 1px solid #2196F3;
     }
-
     /* Create the checkmark/indicator (hidden when not checked) */
     .checkmark:after {
     content: "";
     position: absolute;
     display: none;
     }
-
     /* Show the checkmark when checked */
     .c5-label input:checked ~ .checkmark:after {
     display: block;
     }
-
     /* Style the checkmark/indicator */
     .c5-label .checkmark:after {
     left: 7px;
@@ -798,12 +781,10 @@
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
-
               <div class="col-lg-2 for-check" id="maerskdiv">
                 {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
                 <label for="mode5" class="label-check">Include MAERSK Spot</label>
               </div>
-
               <div class="col-lg-2 for-check" id="safmarinediv">
 								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
 								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
@@ -1273,7 +1254,7 @@
                                                             <div
                                                                 class="col-lg-4 d-flex flex-column justify-content-center">
                                                                 <div class="progress m-progress--sm">
-                                                                    <div class="progress-bar " role="progressbar"
+                                                                    <div class="progress-bar {{ $arr->contract_color }} "  role="progressbar"
                                                                         style="width: 100%;" aria-valuenow="100"
                                                                         aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
@@ -1779,23 +1760,17 @@
 	
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class');
-
     if($('.selected').hasClass('selected-class') ) {
       $('.create-manual').prop( "disabled", true );
     }else{
       $('.create-manual').prop( "disabled", false );
     }
   });
-
-
-
   $(document).ready(function() {   
-
 var divRow = document.getElementsByClassName('data-rates');
 var numDivRow = divRow.length;
 var count = 0;
 console.log(numDivRow);
-
 for(var i = 1; i < numDivRow; i++){
   if(i%2 == 1){
     var clase = divRow[i];
@@ -1806,7 +1781,6 @@ for(var i = 1; i < numDivRow; i++){
     //console.log(clase);
   }
 }
-
 $('#carrier_select').selectC5();
 $('#equipment').selectC5();
 var data = '{{$allCarrier}}';
@@ -1814,19 +1788,8 @@ if(data==true){
   $('.c5-switch').prop('checked', true);
   $('.c5-switch').trigger('change');
 }
-
-
-
-
 });
-
-
-
-
-
-
   /*** GOOGLE MAPS API ***/
-
   var autocomplete;
   function initAutocomplete() {
     var geocoder = new google.maps.Geocoder();
@@ -1834,7 +1797,6 @@ if(data==true){
     var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
     //autocomplete.addListener('place_changed', fillInAddress);
   }
-
   function codeAddress(address) {
     var geocoder;
     geocoder.geocode( { 'address': address}, function(results, status) {
@@ -1845,9 +1807,7 @@ if(data==true){
       }
     });
   }
-
   $valor =   $('#date_hidden').val();
-
   if($valor != 0){
     $('#m_datepicker_2').val($valor);
   }
@@ -1855,16 +1815,9 @@ if(data==true){
     var date = $('#m_datepicker_2').val();
     $('#date_hidden').val(date);
   }
-
-
   $('.m-select3-general').select2();
-
   $('.select2-selection__arrow').remove();
-
-
-
   function AbrirModal(action,id){
-
     if(action == "add"){
       var url = '{{ route("companies.addM") }}';
       $('#modal-body').load(url,function(){
@@ -1877,11 +1830,7 @@ if(data==true){
         $('#contactModal').modal({show:true});
       });
     }
-
   }
-
-
-
   $('#delivery_type').on('change', function(){
         var value = $(this).val();
         if(value == 1){
@@ -1895,7 +1844,6 @@ if(data==true){
             $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
         }
     });
-
     $('#delivery_type_air').on('change', function(){
         var value = $(this).val();
         console.log(value);
@@ -1910,14 +1858,12 @@ if(data==true){
             $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
         }
     });
-
     $('#quoteType').on('change', function(){
         var value = $(this).val();
         if(value == 3){
             $('#delivery_type_air_label').css({'display':'block'});
         }
     });
-
     //C5 Select
    (function($){
        $.fn.selectC5 = function(){
@@ -1925,7 +1871,6 @@ if(data==true){
             var optionSelect = '#'+$(this).attr('id')+' option';
             var selectType = ''+$(this).attr('select-type')+'';
             var selectContainer = $('select#'+clickOnID+' option').val();
-
             var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
                                 '<ul class="c5-select-dropdown-list select-list">'+
                                 '</ul>'+
@@ -1956,7 +1901,6 @@ if(data==true){
                                     '</span>'+
                                     '<ul class="c5-select-list select-normal"></ul>'+
                                 '</span>';
-
             var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
                                     '<ul class="c5-select-dropdown-list select-list">'+
                                     '</ul>'+
@@ -1977,9 +1921,7 @@ if(data==true){
                 var data = '{{$carrierMan}}';
                 var carriersList = JSON.parse(data.replace(/&quot;/g,'"')); 
                 var defaultValuesCarriers = $('#'+clickOnID+'').val();
-
                 $(this).after(multiSelect);
-
                 $(optionSelect).each(function(){
                     var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
                                 '<input type="checkbox" title="'+$(this).text()+
@@ -1987,9 +1929,7 @@ if(data==true){
                                 '"><span class="checkmark"></span></label></li>';
                     $('.c5-select-list.select-normal').append(list);    
                 });
-
                 
-
                 for ( var i in defaultValuesCarriers ) {
                     var ident = defaultValuesCarriers[i];
                     var name = $('.select-normal .c5-case input[value="'+ident+'"]').attr('title');
@@ -2001,12 +1941,8 @@ if(data==true){
                     $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true); 
                     $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true); 
                 }
-
                 $('.'+clickOnID+' .select-list li[title="1"]').remove();
-
-
                 $('#'+clickOnID+'').val(defaultValuesCarriers);
-
                 $('.'+clickOnID+' .c5-check').on("click", function() {
                     var checkSelected = [];
                     var valCheckSelected = $(this).val();
@@ -2016,16 +1952,13 @@ if(data==true){
                             checkSelected.push($(this).val());
                         }
                     });
-
                     $('#'+clickOnID+'.select-normal').val(checkSelected);
                     /*var valor1 = $('#'+clickOnID+'.select-normal').val();
                     console.log(valor1);*/
                     
                 });
-
                 $('.'+clickOnID+' .c5-select-multiple-switch .c5-switch').on('change', function(){   
                     var allSelected = [];    
-
                     $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
                     $('.'+clickOnID+' .c5-check').each(function() {
                         if (this.checked) {
@@ -2036,32 +1969,25 @@ if(data==true){
                     $('#'+clickOnID+'.select-normal').val(allSelected);
                     /*var valor = $('#'+clickOnID+'.select-normal').val();
                     console.log(valor);*/
-
                     if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
                         $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
                         $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
                     }else{
                         $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
                     }                    
-
                 });
-
                 $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
                     var allCarriers = [];
                     var allOptions = $('.'+clickOnID+' .c5-check').length;
-
                     $('.'+clickOnID+' .select-normal .c5-check').each(function() {
                         if (this.checked) {
                             allCarriers.push($(this).val());
                         }
                     });
-
                     $('.'+clickOnID+' .select-normal').val(allCarriers);
                     /*var valor = $('.'+clickOnID+' .select-normal').val();
                     console.log(valor);*/
-
                     var allCarriersLength = allCarriers.length;
-
                     if( allCarriers.length > 0 ){
                         $('.'+clickOnID+' .c5-select-dropdown-list').html('');
                         $('.'+clickOnID+' .c5-select-dropdown-list').html(''+allCarriers.length+' has been Selected');
@@ -2086,7 +2012,6 @@ if(data==true){
                 var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
                 var defaultValues = $('#'+clickOnID+'').val();
                 var containerType= '{{$containerType}}';
-
                 getContainerByGroup(''+containerType+'');
                 
                 for (var i in newData) {
@@ -2097,20 +2022,16 @@ if(data==true){
                                     '"><span class="checkmark"></span></label></li>';
                     $('.list-group1').append(list2);
                 }
-
                 $('.list-group1 .c5-case:nth-child('+containerType+') input').attr('checked', true);
             }
-
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
-
             $('.select2').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').css({'display':'none'});
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#eee'});
             });
-
             $('.'+clickOnID+' .c5-select-container-close').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
@@ -2118,7 +2039,6 @@ if(data==true){
             
        }
    })(jQuery);
-
    function getContainerByGroup(id_group){
         $.ajax({
         type: 'GET',
@@ -2205,8 +2125,6 @@ if(data==true){
         }
     });
 }
-
-
 </script>
 
 @stop

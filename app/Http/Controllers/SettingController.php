@@ -52,31 +52,25 @@ class SettingController extends Controller
                 $selectedDatesTrue = '';
                 $selectedDatesFalse = "checked='true'";
             }
+            if ($company->companyUser->origincharge == '1') {
+                $IncludeOrigin = "checked='true'";
+            } else {
+                $IncludeOrigin = '';
+            }
+
+            if ($company->companyUser->destinationcharge == '1') {
+                $IncludeDestiny = "checked='true'";
+            } else {
+                $IncludeDestiny = '';
+            }
         }
-
-
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
 
-        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse'));
+        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny'));
     }
 
-    public function idPersonalizado($name, $company_id)
-    {
-        $iniciales =  strtoupper(substr($name, 0, 2));
-        $quote = QuoteV2::where('company_user_id', $company_id)->orderBy('created_at', 'desc')->first();
-
-        if ($quote == null) {
-            $iniciales = $iniciales . "-1";
-        } else {
-            $numeroFinal = explode('-', $quote->company_quote);
-
-            $numeroFinal = $numeroFinal[1] + 1;
-
-            $iniciales = $iniciales . "-" . $numeroFinal;
-        }
-        return $iniciales;
-    }
+   
 
     public function store(StoreSettings $request)
     {
@@ -115,6 +109,7 @@ class SettingController extends Controller
             $decimals = 1;
         else
             $decimals = 0;
+
         if (!$request->company_id) {
             //$company=CompanyUser::create($request->all());
             $company = new CompanyUser();
@@ -122,6 +117,8 @@ class SettingController extends Controller
             $company->address = $request->address;
             $company->decimals = $decimals;
             $company->Future_dates = $request->future_dates;
+            $company->origincharge = $request->origincharge;
+            $company->destinationcharge = $request->destinationcharge;
             $company->phone = $request->phone;
             $company->currency_id = $request->currency_id;
             $company->hash = \Hash::make($request->name);
@@ -159,6 +156,8 @@ class SettingController extends Controller
             $company->address = $request->address;
             $company->decimals = $decimals;
             $company->Future_dates = $request->future_dates;
+            $company->origincharge = $request->origincharge;
+            $company->destinationcharge = $request->destinationcharge;
             $company->currency_id = $request->currency_id;
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;

@@ -465,6 +465,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
     Route::get('datatable', 'CompanyController@LoadDatatableIndex')->name('companies.index.datatable');
     Route::get('search', 'CompanyController@searchCompanies')->name('companies.search');
+    Route::get('quotes/{company_id}', 'CompanyController@LoadDatatable')->name('companies.quotes');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
@@ -1010,6 +1011,7 @@ Route::prefix('Container')->group(function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('harbor/search', 'HarborController@search')->name('harbor.search');
     /** Contracts V2 view routes **/
     Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
     Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit')->middleware('check_company:contract');

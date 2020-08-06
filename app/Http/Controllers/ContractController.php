@@ -202,7 +202,8 @@ class ContractController extends Controller
             'expire' => $data['expire'],
             'status' => 'publish',
             'gp_container_id' => $data['gp_container'],
-            'remarks' => ''
+            'remarks' => '',
+            'is_manual' =>1
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);

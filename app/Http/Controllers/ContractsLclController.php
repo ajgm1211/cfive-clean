@@ -200,6 +200,7 @@ class ContractsLclController extends Controller
         $contract->expire           = $validation[1];
         $contract->direction_id     = $request->direction;
         $contract->comments         = $request->input('comments');
+        $contract->is_manual        = 1;
         $contract->save();
 
         foreach($request->carrierAr as $carrierFA){
