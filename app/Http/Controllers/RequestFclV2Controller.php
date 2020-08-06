@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class RequestFclV2Controller extends Controller
 {
     // Load View All Request
-    public function index()
+    public function index(Request $request)
     {
         $now 		= Carbon::now();
         $now2 		= Carbon::now();
@@ -176,14 +176,21 @@ class RequestFclV2Controller extends Controller
                     }
                     $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
-                    $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;';
+                    $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;&nbsp;';
+                    $validator_color = 'color:#c000d0';
+                    $validator_toute = route('check.surchargers',$Ncontracts->contract);
+                    if($Ncontracts->validator_contract == 1){
+                        $validator_color = 'color:#04950f';
+                        $validator_toute = route('show.validator.surcharge',$Ncontracts->contract);
+                    }
+                    $butValidateR = '<a href="'.$validator_toute.'" '.$hiddenPrCt.' title="Validator" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-vine" style="font-size:20px;'.$validator_color.'"></samp></a>  &nbsp;&nbsp;';
 
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
                     </a>&nbsp;&nbsp;
                     ';
 
-                    $buttons = $butPrCt . $butFailsR .$buttonDp . $buttoEdit . $buttons;
+                    $buttons = $butPrCt . $butFailsR . $butValidateR . $buttonDp . $buttoEdit . $buttons;
                 } else{
 
                     if(strnatcasecmp($Ncontracts->status,'Pending')==0){
