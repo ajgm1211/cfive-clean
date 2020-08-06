@@ -15,6 +15,7 @@ class AddColumnContract extends Migration
     {
         Schema::table('contracts', function (Blueprint $table) {
             $table->json('result_validator',50000)->nullable()->after('code');
+            $table->boolean('validator')->default(false)->after('result_validator');
         });
     }
 

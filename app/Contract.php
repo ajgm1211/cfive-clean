@@ -28,7 +28,7 @@ class Contract extends Model implements HasMedia, Auditable
     protected $guard = 'web';
     protected $table    = "contracts";
 
-    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code','result_validator','validator'];
 
     public function rates()
     {
