@@ -1597,46 +1597,46 @@ class QuoteV2Controller extends Controller
         $remarkD = '';
         $rems = '';
 
-        if ($remarks_all->count() > 0) {
-            $remarkA .= $origin->name . " / " . $destiny->name . " / " . $carrier->name . "<br>";
-        }
+        // if ($remarks_all->count() > 0) {
+        //     $remarkA .= $origin->name . " / " . $destiny->name . " / " . $carrier->name . "<br>";
+        // }
 
         foreach ($remarks_all as $remAll) {
             $rems .= "<br>";
             //$remarkA .= $origin_port->name . " / " . $carrier->name;
             if ($mode == 1) {
-                $remarkA .= "<br>" . $remAll->remark->export;
+                $remarkA =$remAll->remark->export."<br>";
             } else {
-                $remarkA .= "<br>" . $remAll->remark->import;
+                $remarkA =$remAll->remark->import."<br>";
             }
         }
 
-        if ($remarks_origin->count() > 0) {
-            $remarkO .= $origin->name . " / " . $carrier->name;
-        }
+        // if ($remarks_origin->count() > 0) {
+        //     $remarkO .= $origin->name . " / " . $carrier->name;
+        // }
 
         foreach ($remarks_origin as $remOrig) {
 
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkO .= "<br>" . $remOrig->remark->export;
+                $remarkO =$remOrig->remark->export."<br>";
             } else {
-                $remarkO .= "<br>" . $remOrig->remark->import;
+                $remarkO =$remOrig->remark->import."<br>";
             }
         }
 
-        if ($remarks_destination->count() > 0) {
-            $remarkD .= $destiny->name . " / " . $carrier->name;
-        }
+        // if ($remarks_destination->count() > 0) {
+        //     $remarkD .= $destiny->name . " / " . $carrier->name;
+        // }
 
         foreach ($remarks_destination as $remDest) {
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkD .= "<br>" . $remDest->remark->export;
+                $remarkD =$remDest->remark->export."<br>";
             } else {
-                $remarkD .= "<br>" . $remDest->remark->import;
+                $remarkD =$remDest->remark->import."<br>";
             }
         }
 
@@ -2605,6 +2605,8 @@ class QuoteV2Controller extends Controller
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $containers = Container::get();
+        $harbor_origin = array();
+        $harbor_destination = array();
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2655,7 +2657,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'origD'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination','carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'origD'));
     }
 
     /**
@@ -2801,6 +2803,8 @@ class QuoteV2Controller extends Controller
         $inlandDestiny = new collection();
         $inlandOrigin = new collection();
 
+        $harbor_origin = Harbor::whereIn('id',$origin_port)->get();
+        $harbor_destination = Harbor::whereIn('id',$destiny_port)->get();
 
         $hideO = 'hide';
         $hideD = 'hide';
@@ -3454,6 +3458,16 @@ class QuoteV2Controller extends Controller
                     }
                 }
 
+                $colores='';
+                if($data->contract->is_manual== 1){
+                    $colores = 'bg-manual';
+                }else{
+                    $colores = 'bg-api';
+                }
+
+                 
+                
+
                 // Valores
                 $data->setAttribute('excelRequest', $excelRequestId);
                 $data->setAttribute('excelRequestFCL', $excelRequestIdFCL);
@@ -3503,6 +3517,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('idContract', $idContract);
                 //COlor
                 $data->setAttribute('color', $color);
+                $data->setAttribute('contract_color',$colores);
             }
 
             // Ordenar por Monto Total  de contenedor de menor a mayor
@@ -3542,8 +3557,10 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal','harbor_origin','harbor_destination')); //aqui
     }
+
+ 
 
     public function perTeu($monto, $calculation_type, $code)
     {
@@ -6157,9 +6174,16 @@ class QuoteV2Controller extends Controller
             } else {
                 $excelRequestId = "";
             }
+            $colores='';
+            if($data->contract->is_manual== 1){
+                $colores = 'bg-manual';
+            }else{
+                $colores = 'bg-api';
+            }
+
 
             //COlor
-            $data->setAttribute('color', '');
+            $data->setAttribute('contract_color',$colores);
             $data->setAttribute('remarks', $remarks);
             $data->setAttribute('excelRequest', $excelRequestId);
             $data->setAttribute('excelRequestLCL', $excelRequestIdLCL);
