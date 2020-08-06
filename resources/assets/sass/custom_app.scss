@@ -144,10 +144,12 @@ tr,
 }
 
 .btn-bg {
-    background-color: #006bf9 !important;
     color: #fff;
     font-weight: bold;
     border: none !important;
+    background-color: #006bf9 !important;
+    transition: all 100ms ease-in-out;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;
 }
 
 .btn-bg:hover {
