@@ -223,11 +223,11 @@ font-family: sans-serif !important;
                 </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>Hi {{$admin['name']}}.</p>
-                        <p>The User {{$user['name']}} created a new request LCL:</p>
+                        <p>Hi {{@$admin['name']}}.</p>
+                        <p>User {{@$user['name']}} has created a new LCL Request:</p>
                         <ul>
-                            <li>Name Contract: {{' '.$contract['namecontract']}}</li>
-                            <li>Validation: {{' '.$contract['validation']}}</li>
+                            <li>Contract: {{' '.$contract['namecontract']}}</li>
+                            <li>Validity: {{' '.$contract['validation']}}</li>
                         </ul>
                     </td>
                 </tr>
