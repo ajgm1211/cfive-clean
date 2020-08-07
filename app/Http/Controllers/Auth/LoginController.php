@@ -106,7 +106,7 @@ class LoginController extends Controller
       // Crear hash id del usuario logueado 
       if($user->company_user_id != ""){
        setHashID();
-        $this->intercom($client,$user);
+        //$this->intercom($client,$user);
         $client->users->create([
           "email" => $user->email,
           "companies" => [

@@ -5,19 +5,19 @@
         <div style="width:100%">
             @switch($quote->pdf_option->language)
                 @case("English")
-                    <span class="text-justify" style="word-wrap: break-word;">{!! @$quote->terms_english != "" ? trim(@$quote->terms_english):trim(@$quote->terms_and_conditions) !!}</span>
+                    <span style="word-wrap: break-word;">{!! @$quote->terms_english != "" ? trim(@$quote->terms_english):trim(@$quote->terms_and_conditions) !!}</span>
                     @break
 
                 @case("Portuguese")
-                    <span class="text-justify" style="word-wrap: break-word;">{!! @$quote->terms_portuguese != "" ? trim(@$quote->terms_portuguese):trim(@$quote->terms_and_conditions) !!}</span>
+                    <span style="word-wrap: break-word;">{!! @$quote->terms_portuguese != "" ? trim(@$quote->terms_portuguese):trim(@$quote->terms_and_conditions) !!}</span>
                     @break
 
                 @case("Spanish")
-                    <span class="text-justify" style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
+                    <span style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
                     @break
 
                 @default
-                    <span class="text-justify" style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
+                    <span style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
             @endswitch
         </div>    
     </div>
