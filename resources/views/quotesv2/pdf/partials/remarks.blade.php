@@ -16,22 +16,22 @@
 
         @foreach($rates as $rate)
             @if(trim(strip_tags($rate->remarks)) !== '')
-                <span class="text-justify">{!! $rate->remarks !!}</span><br/>
+                <span>{!! str_replace('&nbsp;', ' ',$rate->remarks) !!}</span><br/>
             @endif
             @switch($quote->pdf_option->language)
                 @case("English")
                     @if(trim(strip_tags($rate->remarks_english)) !== '')
-                        <span class="text-justify">{!! $rate->remarks_english !!}</span>
+                        <span>{!! str_replace('&nbsp;', ' ', $rate->remarks_english) !!}</span>
                     @endif
                     @break
                 @case("Portuguese")
                     @if(trim(strip_tags($rate->remarks_portuguese)) !== '')
-                        <span class="text-justify">{!! $rate->remarks_portuguese !!}</span>
+                        <span>{!! str_replace('&nbsp;', ' ', $rate->remarks_portuguese) !!}</span>
                     @endif
                     @break
                 @case("Spanish")
                     @if(trim(strip_tags($rate->remarks_spanish)) !== '')
-                        <span class="text-justify">{!! $rate->remarks_spanish !!}</span>
+                        <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_spanish) !!}</span>
                     @endif
                     @break
             @endswitch

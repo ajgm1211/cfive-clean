@@ -172,7 +172,7 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function scopeAuthUserCompany($q, $company_user_id)
     {
-        return $q->where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
+        return $q->whereHas('user', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         });
     }
