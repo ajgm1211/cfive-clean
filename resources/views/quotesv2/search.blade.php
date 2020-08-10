@@ -685,6 +685,7 @@ background-color: #20C997;
 
                             <div class="col-lg-2">
                                 <label>Company</label>
+                                {{  Form::hidden('company_id_num', @$form['company_id_quote'] , ['id' => 'company_id_num'  ])  }}
                                 <div class="m-input-icon m-input-icon--right">
                                     <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control"></select>
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -716,7 +717,7 @@ background-color: #20C997;
                             </div>
                             <div class="col-lg-2">
                                 <label>Price level</label>
-                                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
+                                {{ Form::select('price_id',@$pricesG,null,['id' => 'price_' ,'placeholder'=> 'Select at option','class'=>'form-control m-select2-general']) }}
                                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
                             </div>
                             <div class="col-lg-2" id="delivery_type_label">
@@ -734,7 +735,7 @@ background-color: #20C997;
                             <div class="{{ $origenClass }}" id="origin_port">
                                 <div id="origin_harbor_label">
                                     <label>Origin port</label>
-                                    {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                                    {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'form-control m-select2-general ','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
 
                                 </div>
 
