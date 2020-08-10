@@ -2735,6 +2735,7 @@ class QuoteV2Controller extends Controller
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
         $typeCurrency = 'USD';
         $idCurrency = 149;
         $currency_name = '';
@@ -2828,10 +2829,17 @@ class QuoteV2Controller extends Controller
                     $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$company_setting) {
+                    if($company_setting->future_dates == 1 ){
+                        $q->where(function ($query) use ($dateSince) {
+                            $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);    
+                    }else{
+                        $q->where(function ($query) use ($dateSince,$dateUntil) {
+                            $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);  
+                    }
+                    
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
                 });
             } else {
@@ -2839,10 +2847,16 @@ class QuoteV2Controller extends Controller
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$company_setting) {
+                    if($company_setting->future_dates == 1 ){
+                        $q->where(function ($query) use ($dateSince) {
+                            $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);    
+                    }else{
+                        $q->where(function ($query) use ($dateSince,$dateUntil) {
+                            $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);  
+                    }
                 });
             }
 
