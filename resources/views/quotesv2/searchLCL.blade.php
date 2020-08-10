@@ -10,11 +10,11 @@
     }
     .bg-manual {
 
-    background-color: #36A3F7;
+    background-color: #969cc0;
     }
     .bg-api {
 
-    background-color: #20C997;
+    background-color: #36A3F7;
     }
     .m-portlet {
         box-shadow: none;
@@ -1234,7 +1234,7 @@
                                                 <div class="m-widget5">
                                                     <div class="m-widget5__item no-padding no-margin">
                                                         <div class="m-widget5__pic">
-                                                            <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}"
+                                                            <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
                                                                 alt="" title="" />
                                                         </div>
                                                     </div>
@@ -1251,15 +1251,24 @@
                                                                 <span class="portalphacode">
                                                                     {{$arr->port_origin->code  }}</span>
                                                             </div>
-                                                            <div
-                                                                class="col-lg-4 d-flex flex-column justify-content-center">
+                                                            
+                                                            <div class="col-lg-4 d-flex flex-column justify-content-center">
+                                                                @if($arr->via != '')
+                                                                    <span style="color:#2e0084; text-align: center">Via :</span>
+                                                                    <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
+                                                                @endif
+                                                                <br>
+
                                                                 <div class="progress m-progress--sm">
                                                                     <div class="progress-bar {{ $arr->contract_color }} "  role="progressbar"
                                                                         style="width: 100%;" aria-valuenow="100"
                                                                         aria-valuemin="0" aria-valuemax="100"></div>
                                                                 </div>
-                                                                Contract: <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> /
-                                                                {{ $arr->contract->number }}
+                                                                <br>
+                                                                @if($arr->transit_time != '')
+                                                                     <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                                    <span style="color:#1d3b6e; text-align: center">{{$arr->transit_time}} Days</span>
+                                                                @endif
                                                             </div>
                                                             <div class="col-lg-4 d-flex align-items-center flex-column">
                                                                 <span class="portcss">
@@ -1303,12 +1312,17 @@
                                                             @endif
 
                                                             @if(isset($arr->sheduleType))
-                                                            <div class="col-lg-3 d-flex align-items-center">
+                                                            <div class="col-lg-4 d-flex align-items-center">
                                                                 <span class="portalphacode"
                                                                     style="margin-right:15px;">Validity: </span>
                                                                 {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
                                                                 -
                                                                 {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+
+                                                                <span class="portalphacode"
+                                                                    style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:</span> 
+                                                                <span title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                                {{ $arr->contract->number }}                     
                                                             </div>
                                                             @else
                                                             <div class="col-lg-6 d-flex align-items-center">
@@ -1321,7 +1335,7 @@
                                                             </div>
                                                             @endif
 
-                                                            @if(isset($arr->sheduleType))
+                                                            <!-- @if(isset($arr->sheduleType))
                                                             <div class="col-lg-2 d-flex align-items-center">
                                                                 <span class="portalphacode"
                                                                     style="margin-right:5px;">Schedule Type: </span>
@@ -1336,7 +1350,7 @@
                                                                 <span class="portalphacode" style="margin-right:15px;">
                                                                     Via: </span> {{  $arr->via }}
                                                             </div>
-                                                            @endif
+                                                            @endif -->
                                                             <div class="col-lg-3 no-padding d-flex justify-content-end">
                                                                 @if(($arr->excelRequest !="0") || ($arr->excelRequestLCL
                                                                 !="0") )
