@@ -4411,7 +4411,7 @@ function precargar() {
 
     var selected = '';
     var selected_price = '';
-    alert(company_id);
+ 
     if (company_id) {
         $('select[name="contact_id"]').empty();
         $('select[name="contact_id"]').prop("disabled", false);
