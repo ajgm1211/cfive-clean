@@ -703,3 +703,16 @@ input.multiselect__input:focus {
     display: flex;
     //justify-content: flex-end;
 }
+
+/* Quote */
+.p-light {
+    color: rgba(#000000, 0.5);
+}
+
+.quote-link {
+    font-size: 16px;
+    i {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+}

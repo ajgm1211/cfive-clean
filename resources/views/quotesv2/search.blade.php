@@ -862,7 +862,14 @@ body {
                             <div class="{{ $origenClass }}" id="origin_port">
                                 <div id="origin_harbor_label">
                                     <label>Origin port</label>
-                                    {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                                    <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true">
+                                    @if(@$form['originport'] != null)
+                                        @foreach(@$form['originport'] as $origin)
+                                            <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
+                                        @endforeach
+                                    @endif
+                                    </select>
+                                    <!-- {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }} -->
 
                                 </div>
 
@@ -886,7 +893,14 @@ body {
                             <div class="{{ $destinationClass }}" id="destination_port">
                                 <div id="destination_harbor_label">
                                     <label>Destination port</label>
-                                    {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                                    <select id="destination_harbor" name="destinyport[]" class="portharbors form-control" multiple="true">
+                                    @if(@$form['destinyport'] != null)
+                                        @foreach(@$form['destinyport'] as $origin)
+                                            <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
+                                        @endforeach
+                                    @endif
+                                    </select>
+                                    <!-- {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }} -->
                                 </div>
                                 <div id="destination_airport_label" style="display:none;">
                                     <label>Destination airport</label>
