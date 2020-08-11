@@ -44,7 +44,7 @@
                                     Variation:
                                 </label>
                                 <input type="text" name="variation[]" value="{{$nameVaration}}" class="form-control">
-                                <a href="#" class="borrarInput"><samp class="la la-remove"></samp></a>
+                                <a href="#" class="borrarInput borrado"><samp class="la la-remove"></samp></a>
                             </div>
                         @endif
                     @endforeach
