@@ -33,5 +33,11 @@
   <link href="{{ asset('css/jqueryui-editable.css') }}" rel="stylesheet" />
   <!--<link href="{{ asset('css/header.css') }}" rel="stylesheet" />-->
 
+  <style>
+    .active-link{
+      border-bottom: 5px solid #ffffff;
+    }
+  </style>
+
   @show
 </head>

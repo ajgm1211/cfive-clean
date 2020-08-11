@@ -4215,6 +4215,26 @@ $('.company_dropdown').select2({
     }
 });
 
+//portharbors
+$('.portharbors').select2({
+    placeholder: "Search a country",
+    minimumInputLength: 3,
+    ajax: {
+        url: '/harbor/search',
+        dataType: 'json',
+        data: function(params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function(data) {
+            return {
+                results: data
+            };
+        },
+    }
+});
+
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });

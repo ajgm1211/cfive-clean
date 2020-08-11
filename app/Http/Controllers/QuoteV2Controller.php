@@ -2655,7 +2655,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'origD'));
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA'));
     }
 
     /**
@@ -3542,7 +3542,7 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
