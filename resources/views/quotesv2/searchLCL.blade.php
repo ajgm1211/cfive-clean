@@ -23,9 +23,9 @@
     }
   .btn-search__quotes {
     top: 50px;
-    font-size: 18px; 
-    position: relative; 
-    padding: 13px 30px; 
+    font-size: 18px;
+    position: relative;
+    padding: 13px 30px;
     border-radius: 50px !important;
   }
   .q-one, .q-two, .q-three {
@@ -36,14 +36,14 @@
   .q-two {
     justify-content: flex-start;
   }
-  .q-one div:nth-child(1), 
-  .q-one div:nth-child(2), 
-  .q-one div:nth-child(3), 
+  .q-one div:nth-child(1),
+  .q-one div:nth-child(2),
+  .q-one div:nth-child(3),
   .q-one div:nth-child(4) {
     overflow: hidden;
   }
-  .q-one div:nth-child(1), 
-  .q-one div:nth-child(2), 
+  .q-one div:nth-child(1),
+  .q-one div:nth-child(2),
   .q-one div:nth-child(3) {
     width: 18% !important;
   }
@@ -105,14 +105,14 @@
     transition: all 300ms ease;
   }
   .bg-maersk {
-    background-color: #41B0D5;    
+    background-color: #41B0D5;
   }
   .bg-safmarine {
-    background-color: #f99702;      
-    }   
+    background-color: #f99702;
+    }
   .btn-detail__quotes:hover {
     border-color: #0072fc;
-    background-color: #0072fc;    
+    background-color: #0072fc;
   }
   .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
     color: #fff;
@@ -143,10 +143,10 @@
     transition: all 300ms ease;
   }
   .btn-input__select:hover, .btn-input__select-add:hover {
-    border-color: #0072fc; 
+    border-color: #0072fc;
   }
   .input-select[type="checkbox"] {
-    display: none; 
+    display: none;
   }
   .input-select[type="checkbox"]:checked + .btn-input__select {
     color: #fff;
@@ -202,12 +202,12 @@
   }
   .freight__quotes {
     border-top: none !important;
-    border: 3px solid #0072fc; 
+    border: 3px solid #0072fc;
     border-radius: 0px 0px 3px 3px;
   }
   .add-class__card-p {
     box-shadow: none;
-    border: 3px solid #0072fc; 
+    border: 3px solid #0072fc;
     border-bottom: 1px solid #ececec !important;
     border-radius: 3px 3px 0px 0px !important;
   }
@@ -361,7 +361,7 @@
   }
   .downexcel:hover {
     background-color: transparent !important;
-  } 
+  }
   .downexcel i {
     margin-top: 8px !important;
     font-size: 24px;
@@ -409,7 +409,7 @@
     .c5-select-multiple-dropdown {
         width: 100%;
         height: 37px;
-        
+
     }
     .c5-select-multiple-container {
         width: 100%;
@@ -464,19 +464,19 @@
     }
     /* Handle */
     .c5-select-list::-webkit-scrollbar-thumb {
-        background: #ccc; 
+        background: #ccc;
         border-radius: 18px;
     }
     /* Handle on hover */
     .c5-select-list::-webkit-scrollbar-thumb:hover {
-        background: #064acb; 
+        background: #064acb;
     }
     .c5-select-list li {
         margin-bottom: 10px;
         cursor: pointer;
         list-style: none;
     }
-    .c5-select-dropdown-list {        
+    .c5-select-dropdown-list {
         padding: 8px 10px 8px 10px;
         border: 1px solid #eee;
         -webkit-border: 1px solid #eee;
@@ -489,10 +489,10 @@
         overflow: hidden;
         white-space: nowrap;
         height: 35px;
-        background-color: #f6f6f6;   
+        background-color: #f6f6f6;
     }
     .m-input.date{
-        background-color: #f6f6f6;   
+        background-color: #f6f6f6;
     }
     .c5-select-dropdown-list li {
         list-style: none;
@@ -504,7 +504,7 @@
     height: 20px;
     float: right;
     }
-    .switch input { 
+    .switch input {
     opacity: 0;
     width: 0;
     height: 0;
@@ -665,11 +665,11 @@
                 <!-- {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }} -->
               </div>
 
-            
+
               <div class="col-lg-2">
                 <label>Company</label>
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }} 
+                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
                       <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
@@ -699,7 +699,7 @@
                 {{ Form::select('delivery_type',['1' => 'PORT To PORT','2' => 'PORT To DOOR','3'=>'DOOR To PORT','4'=>'DOOR To DOOR'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
               </div>
               <div class="col-lg-4 hidden-air" id="delivery_type_air_label">
-                <label>Delivery type</label>          
+                <label>Delivery type</label>
                 {{ Form::select('delivery_type_air',['5' => 'AIRPORT To AIRPORT','6' => 'AIRPORT To DOOR','7'=>'DOOR To AIRPORT','8'=>'DOOR To DOOR'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
 
@@ -737,7 +737,7 @@
                 <label>Destination address</label>
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
-             
+
               <div class="col-lg-2">
                 <label>Date</label>
                 <div class="input-group date">
@@ -750,7 +750,7 @@
                     </span>
                   </div>
                 </div>
-                
+
                 <br>
 
 
@@ -760,8 +760,8 @@
                 <label>Carriers</label>
                 {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),$carriersSelected,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
               </div>
-            
-              <div class="col-lg-4 for-check">   
+
+              <div class="col-lg-4 for-check">
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
               </div>
@@ -790,7 +790,7 @@
 								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
 							</div>-->
 
-            </div><br>    
+            </div><br>
 
                     </div>
                 </div><br>
@@ -1251,16 +1251,31 @@
                                                                 <span class="portalphacode">
                                                                     {{$arr->port_origin->code  }}</span>
                                                             </div>
-                                                            <div
-                                                                class="col-lg-4 d-flex flex-column justify-content-center">
-                                                                <div class="progress m-progress--sm">
-                                                                    <div class="progress-bar {{ $arr->contract_color }} "  role="progressbar"
-                                                                        style="width: 100%;" aria-valuenow="100"
-                                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                                </div>
-                                                                Contract: <span class="truncate" title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span> /
-                                                                {{ $arr->contract->number }}
-                                                            </div>
+                                                            <div class="col-lg-4 d-flex flex-column justify-content-center">
+                                                    @if($arr->service != '')
+                                                    {{$arr->service}}
+
+                                                    @endif
+                                                    @if($arr->via != '')
+                                                    <span style="color:#2e0084; text-align: center">Via :</span>
+                                                    <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
+
+                                                    @endif
+                                                    <div class="progress m-progress--sm">
+                                                        <div class="progress-bar {{ $arr->contract_color }} "  role="progressbar"
+                                                            style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                    @if($arr->transit_time != '')
+                                                    <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                    <span
+                                                        style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
+                                                        Days</span>
+
+                                                    @endif
+
+
+                                                </div>
                                                             <div class="col-lg-4 d-flex align-items-center flex-column">
                                                                 <span class="portcss">
                                                                     {{$arr->port_destiny->name  }}</span>
@@ -1291,7 +1306,7 @@
                                                         <div class="row justify-content-between">
 
                                                             @if(!empty($arr->remarks) )
-                                                            <div class="col-lg-2">
+                                                            <div class="col-lg-1">
                                                                 <div class="btn-detail__quotes btn-remarks">
                                                                     <a id='display_r{{$loop->iteration}}'
                                                                         onclick="display_r({{$loop->iteration}})"
@@ -1303,26 +1318,38 @@
                                                             @endif
 
                                                             @if(isset($arr->sheduleType))
-                                                            <div class="col-lg-3 d-flex align-items-center">
-                                                                <span class="portalphacode"
-                                                                    style="margin-right:15px;">Validity: </span>
-                                                                {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
-                                                                -
-                                                                {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-                                                            </div>
-                                                            @else
-                                                            <div class="col-lg-6 d-flex align-items-center">
-                                                                <span class="portalphacode"
-                                                                    style="margin-right:15px;">Validity: </span>
-                                                                {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
-                                                                -
-                                                                {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                                                <div class="col-lg-9 d-flex align-items-center justify-content-start"
+                                                    style="padding-left: 60px;">
+                                                    <span class="portalphacode" style="margin-right:15px;">Validity:
+                                                    </span>
+                                                    {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
+                                                    -
+                                                    {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                                                </div>
+                                                @else
+                                                <div class="col-lg-9 d-flex align-items-center">
+                                                    <span class="portalphacode" style="margin-right:15px;">Validity:
+                                                    </span>
+                                                    {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
+                                                    -
+                                                    {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
 
-                                                            </div>
-                                                            @endif
+                                                    @if($arr->contratoFuturo)
+                                                    &nbsp;<img src="{{ url('images/error.svg')}}" width="20" height="20"
+                                                        title="Attention! This rate is valid for a date range later than the one selected">
+                                                    @endif
+
+                                                    <span class="portalphacode"
+                                                        style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
+                                                    </span> <span
+                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                    / {{ $arr->contract->number }}
+
+                                                </div>
+                                                @endif
 
                                                             @if(isset($arr->sheduleType))
-                                                            <div class="col-lg-2 d-flex align-items-center">
+                                                          <!--  <div class="col-lg-2 d-flex align-items-center">
                                                                 <span class="portalphacode"
                                                                     style="margin-right:5px;">Schedule Type: </span>
                                                                 {{ $arr->sheduleType  }}
@@ -1335,7 +1362,7 @@
                                                             <div class="col-lg-1 d-flex align-items-center">
                                                                 <span class="portalphacode" style="margin-right:15px;">
                                                                     Via: </span> {{  $arr->via }}
-                                                            </div>
+                                                            </div>-->
                                                             @endif
                                                             <div class="col-lg-3 no-padding d-flex justify-content-end">
                                                                 @if(($arr->excelRequest !="0") || ($arr->excelRequestLCL
@@ -1757,7 +1784,7 @@
 			}
 		});
 	}
-	
+
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class');
     if($('.selected').hasClass('selected-class') ) {
@@ -1766,7 +1793,7 @@
       $('.create-manual').prop( "disabled", false );
     }
   });
-  $(document).ready(function() {   
+  $(document).ready(function() {
 var divRow = document.getElementsByClassName('data-rates');
 var numDivRow = divRow.length;
 var count = 0;
@@ -1777,7 +1804,7 @@ for(var i = 1; i < numDivRow; i++){
     console.log(clase);
     $(clase).css({
       'background-color' : '#fafafa'
-    });      
+    });
     //console.log(clase);
   }
 }
@@ -1913,13 +1940,13 @@ if(data==true){
                                     '<ul class="c5-select-list list-group1"></ul>'+
                                     '<span class="c5-select-header h-hidden">Equipment List</span>'+
                                     '<ul class="c5-select-list list-group2"></ul>'+
-                                    '</span>';            
-           
-            
+                                    '</span>';
+
+
             // Select Multiple con swicth
             if(selectType == 'multiple'){
                 var data = '{{$carrierMan}}';
-                var carriersList = JSON.parse(data.replace(/&quot;/g,'"')); 
+                var carriersList = JSON.parse(data.replace(/&quot;/g,'"'));
                 var defaultValuesCarriers = $('#'+clickOnID+'').val();
                 $(this).after(multiSelect);
                 $(optionSelect).each(function(){
@@ -1927,26 +1954,26 @@ if(data==true){
                                 '<input type="checkbox" title="'+$(this).text()+
                                 '" class="c5-check" value="'+$(this).val()+
                                 '"><span class="checkmark"></span></label></li>';
-                    $('.c5-select-list.select-normal').append(list);    
+                    $('.c5-select-list.select-normal').append(list);
                 });
-                
+
                 for ( var i in defaultValuesCarriers ) {
                     var ident = defaultValuesCarriers[i];
                     var name = $('.select-normal .c5-case input[value="'+ident+'"]').attr('title');
-                    
+
                     //console.log(name);
-                    
+
                     $('.'+clickOnID+' .select-list').append('<li title="'+name+'">'+name+', </li>');
                     //$('.'+clickOnID+' .select-list').append('<li title="'+nameAPI+'">'+nameAPI+', </li>');
-                    $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true); 
-                    $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true); 
+                    $('.select-normal .c5-case input[value="'+ident+'"]').attr('checked', true);
+                    $('.list-types-carriers .c5-case input[value="'+ident+'"]').attr('checked', true);
                 }
                 $('.'+clickOnID+' .select-list li[title="1"]').remove();
                 $('#'+clickOnID+'').val(defaultValuesCarriers);
                 $('.'+clickOnID+' .c5-check').on("click", function() {
                     var checkSelected = [];
                     var valCheckSelected = $(this).val();
-                    
+
                     $('.'+clickOnID+' .c5-check').each(function() {
                         if (this.checked) {
                             checkSelected.push($(this).val());
@@ -1955,26 +1982,26 @@ if(data==true){
                     $('#'+clickOnID+'.select-normal').val(checkSelected);
                     /*var valor1 = $('#'+clickOnID+'.select-normal').val();
                     console.log(valor1);*/
-                    
+
                 });
-                $('.'+clickOnID+' .c5-select-multiple-switch .c5-switch').on('change', function(){   
-                    var allSelected = [];    
+                $('.'+clickOnID+' .c5-select-multiple-switch .c5-switch').on('change', function(){
+                    var allSelected = [];
                     $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
                     $('.'+clickOnID+' .c5-check').each(function() {
                         if (this.checked) {
                             allSelected.push($(this).val());
                         }
-                    }); 
-                    
+                    });
+
                     $('#'+clickOnID+'.select-normal').val(allSelected);
                     /*var valor = $('#'+clickOnID+'.select-normal').val();
                     console.log(valor);*/
-                    if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
+                    if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
                         $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
                     }else{
                         $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
-                    }                    
+                    }
                 });
                 $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
                     var allCarriers = [];
@@ -1996,24 +2023,24 @@ if(data==true){
                         $('.'+clickOnID+' .c5-select-dropdown-list').html('Select an option');
                     }
                     $('.'+clickOnID+' .c5-switch').prop('checked', false);
-                    
-                    
+
+
                 });
                 $('.select-normal .c5-case:nth-child(1)').remove();
                 $('.select-normal .c5-case:nth-child(2)').remove();
                 $('.select-normal .c5-case:nth-child(1)').remove();
             }
-            
+
             // Select Multiple con Lables
             if(selectType == 'groupLabel') {
                 $(this).after(multiSelectGroup);
                 var showEquip = $('.select-list li.hida');
                 var data = '{{$group_contain}}';
-                var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
+                var newData = JSON.parse(data.replace(/&quot;/g,'"'));
                 var defaultValues = $('#'+clickOnID+'').val();
                 var containerType= '{{$containerType}}';
                 getContainerByGroup(''+containerType+'');
-                
+
                 for (var i in newData) {
                     var code = `${newData[i]}`;
                     //console.log(i, code);
@@ -2036,7 +2063,7 @@ if(data==true){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
-            
+
        }
    })(jQuery);
    function getContainerByGroup(id_group){
@@ -2051,7 +2078,7 @@ if(data==true){
             //console.log(data);
             var selectValues = $('select#equipment').val();
             var containerType= '{{$containerType}}';
-            const defaultValuesController = <?php echo json_encode( $form['equipment']);?>;
+            const defaultValuesController = <?php echo json_encode($form['equipment']); ?>;
             ;
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
@@ -2092,7 +2119,7 @@ if(data==true){
                 }
                 $('#equipment.select-group').val(valueArray);
                 //console.log($('#equipment.select-group').val());
-                
+
             }
             //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
@@ -2118,7 +2145,7 @@ if(data==true){
                     }
                 }
             });
-            
+
         },
         error: function (request, status, error) {
             console.log(request.responseText);
