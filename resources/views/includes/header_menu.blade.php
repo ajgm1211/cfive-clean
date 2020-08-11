@@ -52,15 +52,15 @@
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
-                    data-redirect="true" aria-haspopup="true">
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('quotes-v2.index', 'quotes-v2.search', 'quotes-v2.searchLCL', 'quotes-v2.processSearch') ?: 'active-link' }}"  data-menu-submenu-toggle="click"
+                    data-redirect="true" aria-haspopup="true" >
                     <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
                             <b>Quotes</b>
                         </span>
                     </a>
                 </li>
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -102,7 +102,7 @@
 
                 @role('administrator|company')
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -147,7 +147,7 @@
                 </li>
 
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('globalcharges.index', 'globalchargeslcl.index', 'globalchargesapi.index', 'RequestsGlobalchargersFcl.create', 'RequestsGlobalchargersLcl.create', 'globalchargesapi') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -196,7 +196,7 @@
 
                 @endrole
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('inlands.index', 'inland.edit', 'inlandD.find', 'UploadFile.index', 'provinces.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -260,7 +260,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('settings.index', 'termsv2.list', 'remarks.list', 'oauth.tokens', 'api.settings', 'users.home', 'prices.index', 'prices.add', 'UserConfiguration.index', 'templates.index', 'dashboard.index', 'ContainerCalculation.index', 'transit_time.index', 'settings.companies',  'search.list', 'impersonate.revert') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -603,7 +603,7 @@ Group Surchargers
                         </ul>
                     </div>
                 </li>
-                @endif
+                @endif  
                 <!-- 
 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
 <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">

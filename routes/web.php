@@ -1005,6 +1005,7 @@ Route::prefix('Container')->group(function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('harbor/search', 'HarborController@search')->name('harbor.search');
     /** Contracts V2 view routes **/
     Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
     Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit')->middleware('check_company:contract');
@@ -1136,7 +1137,7 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
 /*Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 Route::get('api/inlands', 'InlandController@index');
 Route::post('api/v2/inlands/store', 'InlandController@store');*/
-Route::get('api/inlands/{contract}/edit', 'InlandController@edit');
+Route::get('api/inlands/{contract}/edit', 'InlandController@edit')->name('inland.edit');
 
 /** End Contracts V2 routes **/
 /** Transit time **/
