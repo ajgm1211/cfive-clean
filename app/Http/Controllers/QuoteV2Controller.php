@@ -2607,6 +2607,7 @@ class QuoteV2Controller extends Controller
         $containers = Container::get();
         $harbor_origin = array();
         $harbor_destination = array();
+        $pricesG = Price::doesntHave('company_price')->where('company_user_id',$company_user_id)->pluck('name', 'id');
 
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2657,7 +2658,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination','carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination','carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA','pricesG'));
     }
 
     /**
@@ -2677,6 +2678,7 @@ class QuoteV2Controller extends Controller
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
         $group_contain = GroupContainer::pluck('name', 'id');
+        $pricesG = Price::doesntHave('company_price')->where('company_user_id',$company_user_id)->pluck('name', 'id');
         //$group_contain->prepend('Select an option', '');
 
         //Variables para cargar el  Formulario
@@ -2733,6 +2735,7 @@ class QuoteV2Controller extends Controller
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
         $typeCurrency = 'USD';
         $idCurrency = 149;
         $currency_name = '';
@@ -2826,10 +2829,17 @@ class QuoteV2Controller extends Controller
                     $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                         $b->where('company_id', '=', $company_id);
                     })->orDoesntHave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$company_setting) {
+                    if($company_setting->future_dates == 1 ){
+                        $q->where(function ($query) use ($dateSince) {
+                            $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);    
+                    }else{
+                        $q->where(function ($query) use ($dateSince,$dateUntil) {
+                            $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);  
+                    }
+                    
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
                 });
             } else {
@@ -2837,10 +2847,16 @@ class QuoteV2Controller extends Controller
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
-                    $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$company_setting) {
+                    if($company_setting->future_dates == 1 ){
+                        $q->where(function ($query) use ($dateSince) {
+                            $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);    
+                    }else{
+                        $q->where(function ($query) use ($dateSince,$dateUntil) {
+                            $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);  
+                    }
                 });
             }
 
@@ -2976,7 +2992,6 @@ class QuoteV2Controller extends Controller
                     $arregloRateSum = array_merge($arregloRateSum, $arregloRate);
                 }
 
-
                 $carrier[] = $data->carrier_id;
                 $orig_port = array($data->origin_port);
                 $dest_port = array($data->destiny_port);
@@ -3062,8 +3077,9 @@ class QuoteV2Controller extends Controller
                 $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
                 // Rates
                 $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers);
-                $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSaveR']);
-
+            
+                $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSum']);
+                //dd($arregloRateSum);
                 $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
                 $arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
                 $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
@@ -3488,6 +3504,8 @@ class QuoteV2Controller extends Controller
 
                 foreach ($containers as $cont) {
 
+
+
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
                     $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
 
@@ -3500,6 +3518,7 @@ class QuoteV2Controller extends Controller
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
+         
                 //Contrato Futuro
                 $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
 
@@ -3557,7 +3576,7 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal','harbor_origin','harbor_destination')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal','harbor_origin','harbor_destination','pricesG')); //aqui
     }
 
  
@@ -4208,10 +4227,17 @@ class QuoteV2Controller extends Controller
             $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
-        })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil) {
-            $q->where(function ($query) use ($dateSince) {
-                $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-            })->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+        })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil,$company_setting) {
+            if($company_setting->future_dates == 1 ){
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->where('company_user_id', '=', $company_user_id);    
+            }else{
+                $q->where(function ($query) use ($dateSince,$dateUntil) {
+                    $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                })->where('company_user_id', '=', $company_user_id);  
+            }
+            
         })->get();
 
         foreach ($arreglo as $data) {
@@ -6142,12 +6168,21 @@ class QuoteV2Controller extends Controller
             }
 
             // SCHEDULE TYPE
-            if ($data->schedule_type_id != null) {
+
+            $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
+
+            $data->setAttribute('via', $transit_time['via']);
+            $data->setAttribute('transit_time', $transit_time['transit_time']);
+            $data->setAttribute('service', $transit_time['service']);
+            $data->setAttribute('sheduleType', null);
+      
+       
+            /*    if ($data->schedule_type_id != null) {
                 $sheduleType = ScheduleType::find($data->schedule_type_id);
                 $data->setAttribute('sheduleType', $sheduleType->name);
             } else {
                 $data->setAttribute('sheduleType', null);
-            }
+            }*/
             //remarks
             $mode = "";
             $remarks = "";
@@ -6180,7 +6215,11 @@ class QuoteV2Controller extends Controller
             }else{
                 $colores = 'bg-api';
             }
+                //Contrato Futuro
 
+                $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
+
+                $data->setAttribute('contratoFuturo', $contratoFuturo);
 
             //COlor
             $data->setAttribute('contract_color',$colores);
@@ -6214,7 +6253,7 @@ class QuoteV2Controller extends Controller
             // Ordenar las colecciones
 
         }
-
+       
         $arreglo = $arreglo->sortBy('totalQuote');
 
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
