@@ -4227,10 +4227,17 @@ class QuoteV2Controller extends Controller
             $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
-        })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil) {
-            $q->where(function ($query) use ($dateSince) {
-                $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-            })->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id);
+        })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil,$company_setting) {
+            if($company_setting->future_dates == 1 ){
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->where('company_user_id', '=', $company_user_id);    
+            }else{
+                $q->where(function ($query) use ($dateSince,$dateUntil) {
+                    $query->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+                })->where('company_user_id', '=', $company_user_id);  
+            }
+            
         })->get();
 
         foreach ($arreglo as $data) {
@@ -6161,12 +6168,21 @@ class QuoteV2Controller extends Controller
             }
 
             // SCHEDULE TYPE
-            if ($data->schedule_type_id != null) {
+
+            $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
+
+            $data->setAttribute('via', $transit_time['via']);
+            $data->setAttribute('transit_time', $transit_time['transit_time']);
+            $data->setAttribute('service', $transit_time['service']);
+            $data->setAttribute('sheduleType', null);
+      
+       
+            /*    if ($data->schedule_type_id != null) {
                 $sheduleType = ScheduleType::find($data->schedule_type_id);
                 $data->setAttribute('sheduleType', $sheduleType->name);
             } else {
                 $data->setAttribute('sheduleType', null);
-            }
+            }*/
             //remarks
             $mode = "";
             $remarks = "";
@@ -6199,7 +6215,11 @@ class QuoteV2Controller extends Controller
             }else{
                 $colores = 'bg-api';
             }
+                //Contrato Futuro
 
+                $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
+
+                $data->setAttribute('contratoFuturo', $contratoFuturo);
 
             //COlor
             $data->setAttribute('contract_color',$colores);
@@ -6233,7 +6253,7 @@ class QuoteV2Controller extends Controller
             // Ordenar las colecciones
 
         }
-
+       
         $arreglo = $arreglo->sortBy('totalQuote');
 
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
