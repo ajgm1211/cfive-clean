@@ -73,6 +73,27 @@
                                         </div>
                                     </div>
                                     <br />
+                                    <div class="col-xl-12 order-1 order-xl-2 m--align-right row">
+                                        <div class="col-md-2 order-1 order-xl-2 m--align-left">
+                                            {!! Form::select('carrier',@$carriers,null,['class'=>'m-select2-general form-control','id'=>'carrier_id','placeholder'=>'Select carrier'])!!}
+                                        </div>
+                                        <div class="col-md-2 order-2 order-xl-2 m--align-left">
+                                            {!! Form::select('equiment_id',@$equiments,null,['class'=>'m-select2-general form-control','id'=>'equiment_id','onchange' => 'loadContainers()','placeholder'=>'Select type Equiment'])!!}
+                                        </div>
+                                        <div class="col-md-2 order-1 order-xl-2 m--align-left" id="calculationType_div_id">
+                                            {!! Form::select('calculationtype',@$calculationtype,null,['class'=>'m-select2-general form-control','id'=>'calculationtype_id','placeholder'=>'Select type calculation type'])!!}
+                                        </div>
+                                        <div class="col-md-2 order-1 order-xl-2 m--align-left">
+                                            {!! Form::select('typedestiny',@$typedestiny,null,['class'=>'m-select2-general form-control','id'=>'typedestiny_id','placeholder'=>'Select type destiny'])!!}
+                                        </div>
+                                        <div class="col-md-2 order-1 order-xl-2 m--align-left">
+                                            {!! Form::select('direction',@$directions,null,['class'=>'m-select2-general form-control','id'=>'direction_id','placeholder'=>'Select direction'])!!}
+                                        </div>
+                                        <div class="col-md-2 order-1 order-xl-2 m--align-left">
+                                            <button id="search" class="btn btn-primary">Search</button>
+                                            <button id="reset" class="btn btn-primary">Reset</button>
+                                        </div>
+                                    </div>
                                     <table class="table tableData "  id="masterSurcharge" width="100%" style="width:100%">
                                         <thead >
                                             <tr>
@@ -81,6 +102,7 @@
                                                 <th >Carrier</th>
                                                 <th >Type Destiny</th>
                                                 <th >Calculation Type</th>
+                                                <th >Equiment</th>
                                                 <th >Destination</th>
                                                 <th >Options</th>
                                             </tr>
@@ -120,7 +142,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    
+
     function AbrirModal(action,id){
 
         if(action == "addsurcharge"){
@@ -139,12 +161,37 @@
         //$('#frmSurcharges').text('<input type="hidden" name="company_user_id" value="">');
     }
 
-    $(function() {    
+    $(document).on('click', '#search', function(){
+        $('#masterSurcharge').DataTable().draw(true);
+    });
+
+    $(document).on('click', '#reset', function(){
+        $('#carrier_id').val(null).trigger('change');
+        $('#calculationtype_id').val(null).trigger('change');
+        $('#typedestiny_id').val(null).trigger('change');
+        $('#direction_id').val(null).trigger('change');
+        $('#equiment_id').val(null).trigger('change');
+        $('#masterSurcharge').DataTable().draw(true);
+    });
+
+    $(function() {  
         $('#masterSurcharge').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
                 url:'{!! route("MasterSurcharge.show","0") !!}',
+                data: function(d){
+                    var carrier_id          = $('#carrier_id').val();
+                    var calculationtype_id  = $('#calculationtype_id').val();
+                    var typedestiny_id      = $('#typedestiny_id').val();
+                    var direction_id        = $('#direction_id').val();
+                    var equiment_id         = $('#equiment_id').val();
+                    d.carrier_id = carrier_id;
+                    d.calculationtype_id = calculationtype_id;
+                    d.typedestiny_id = typedestiny_id;
+                    d.direction_id = direction_id;
+                    d.equiment_id = equiment_id;
+                }
             },
             columns: [
                 { data: 'id', name: 'id' },
@@ -152,6 +199,7 @@
                 { data: 'carrier', name: 'carrier' },
                 { data: 'typedestiny', name: 'typedestiny' },
                 { data: 'calculationtype', name: 'calculationtype' },
+                { data: 'equiment', name: 'equiment' },
                 { data: 'direction', name: "direction" },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -168,13 +216,24 @@
             "serverSide": true,
             "paging": true
         });
-
     });
+
+    function loadContainers(){
+        var equiment = $("#equiment_id").select2('val');
+        $('#calculationtype_id').val(null).trigger('change');
+        $('#calculationtype_id').select2({
+            ajax: {
+                url: '{!! route("get.calculations.equiment") !!}',
+                data:{equiment},
+                dataType: 'json'
+            }
+        });
+    }
 
     $(document).on('click','.eliminarMS',function(e){
         var id = $(this).attr('data-id-MS');
         var info = $(this).attr('data-info');
-       
+
         swal({
             title: 'Are you sure?',
             text: "You won't be able to revert this! "+info,
