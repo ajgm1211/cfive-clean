@@ -735,7 +735,6 @@ background-color: #20C997;
                             <div class="{{ $origenClass }}" id="origin_port">
                                 <div id="origin_harbor_label">
                                     <label>Origin port</label>
-<<<<<<< HEAD
                                     <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true">
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
@@ -744,9 +743,6 @@ background-color: #20C997;
                                     @endif
                                     </select>
                                     <!-- {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }} -->
-=======
-                                    {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'form-control m-select2-general ','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
->>>>>>> 4fca386ee0a35a341605a8147c4a7807b6c887e8
 
                                 </div>
 
