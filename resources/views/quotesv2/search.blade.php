@@ -8,13 +8,19 @@
 body {
     background: #f6f6f6;
 }
+.bg-manual {
 
+background-color: #36A3F7;
+}
+.bg-api {
+
+background-color: #20C997;
+}
 .m-portlet {
     box-shadow: none;
     border-radius: 5px;
     -webkit-border-radius: 5px;
 }
-
 .btn-search__quotes {
     top: 50px;
     font-size: 18px;
@@ -22,7 +28,6 @@ body {
     padding: 13px 30px;
     border-radius: 50px !important;
 }
-
 .q-one,
 .q-two,
 .q-three {
@@ -30,58 +35,46 @@ body {
     flex-flow: wrap;
     justify-content: space-between;
 }
-
 .q-two {
     justify-content: flex-start;
 }
-
 .q-one div:nth-child(1),
 .q-one div:nth-child(2),
 .q-one div:nth-child(3),
 .q-one div:nth-child(4) {
     overflow: hidden;
 }
-
 .q-one div:nth-child(1),
 .q-one div:nth-child(2),
 .q-one div:nth-child(3) {
     width: 18% !important;
 }
-
 .q-one div:nth-child(4) {
     width: 38% !important;
 }
-
 .q-one div:nth-child(5),
 .q-two div:nth-child(3) {
     width: 100%;
 }
-
 .q-one div:nth-child(1) label {
     white-space: nowrap;
 }
-
 .q-two div:nth-child(1) {
     width: 66%;
     margin-right: 10px;
 }
-
 .q-three div:nth-child(3) {
     width: 100%;
 }
-
 .q-three div:nth-child(1) {
     width: 50%;
 }
-
 .dfw {
     width: 100%;
 }
-
 .no-shadow {
     box-shadow: none;
 }
-
 .filter-table__quotes,
 .card-p__quotes,
 .card__quote-manual {
@@ -89,16 +82,13 @@ body {
     box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
     background: #FFFFFF;
 }
-
 .card__quote-manual {
     margin: 0 15px;
     border: 2px;
 }
-
 .no-padding {
     padding: 0px !important;
 }
-
 .card-p__quotes {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
@@ -107,11 +97,9 @@ body {
     border: 2px solid transparent;
     transition: all 300ms linear;
 }
-
 .card-p__quotes:hover {
     border-color: #0072fc;
 }
-
 .btn-detail__quotes {
     width: 140px;
     height: 30px;
@@ -121,40 +109,30 @@ body {
     border: 1px solid #ececec;
     transition: all 300ms ease;
 }
-
 .bg-maersk {
-
     background-color: #41B0D5;
 }
-
 .bg-safmarine {
-
     background-color: #f99702;
 }
-
 .btn-detail__quotes:hover {
     border-color: #0072fc;
     background-color: #0072fc;
 }
-
 .btn-detail__quotes:hover span,
 .btn-detail__quotes:hover a i {
     color: #fff;
 }
-
 .btn-detail__quotes span {
     font-size: 12px;
     color: #0072fc;
 }
-
 .btn-detail__quotes a {
     height: 0px !important;
 }
-
 .btn-detail__quotes a i {
     color: #a4a2bb;
 }
-
 .btn-input__select,
 .btn-input__select-add {
     position: relative;
@@ -171,16 +149,13 @@ body {
     border: 2px solid #cecece;
     transition: all 300ms ease;
 }
-
 .btn-input__select:hover,
 .btn-input__select-add:hover {
     border-color: #0072fc;
 }
-
 .input-select[type="checkbox"] {
     display: none;
 }
-
 .input-select[type="checkbox"]:checked+.btn-input__select {
     color: #fff;
     display: flex;
@@ -189,184 +164,146 @@ body {
     justify-content: center;
     background-color: #0072fc;
 }
-
 .style__select-add {
     color: #fff;
     border-color: #0072fc;
     background-color: #0072fc;
 }
-
 .add-click {
     color: #cecece !important;
 }
-
 .input-select[type="checkbox"]:checked+.btn-input__select span {
     display: none;
 }
-
 .btn-input__select-add {
     width: 60px !important;
     left: 60px;
     visibility: hidden;
 }
-
 .btn-input__select-gen {
     width: 60px !important;
     left: 60px;
     visibility: hidden;
 }
-
 .hidden-general {
     display: none !important;
 }
-
 .visible__select-add {
     visibility: visible;
 }
-
 .col-txt {
     font-weight: 600;
     color: #0072fc;
     font-size: 18px;
 }
-
 .btn-d {
     width: 130px;
 }
-
 .padding {
     padding: 0 25px;
 }
-
 .padding-v2 {
     padding: 25px;
 }
-
 .no-margin {
     margin: 0 !important;
 }
-
 .freight__quotes {
     border-top: none !important;
     border: 3px solid #0072fc;
     border-radius: 0px 0px 3px 3px;
 }
-
 .add-class__card-p {
     box-shadow: none;
     border: 3px solid #0072fc;
     border-bottom: 1px solid #ececec !important;
     border-radius: 3px 3px 0px 0px !important;
 }
-
 .bg-light {
     padding: 5px 25px;
     border-radius: 3px;
     background-color: #f4f3f8 !important;
 }
-
 .portalphacode {
     color: #1d3b6e !important;
 }
-
 .colorphacode {
     color: #7c83b3;
 }
-
 .bg-rates {
     padding: 2px 5px;
     border-radius: 3px;
     text-align: center;
     background-color: #ececec;
 }
-
 .wth {
     width: 25%;
 }
-
 .table-r__quotes {
     height: 100%;
     display: flex;
     justify-content: space-between;
 }
-
 .table-r__quotes div {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .b-top {
     border-top: 1px solid #ececec;
 }
-
 .padding-min {
     padding: 10px !important;
 }
-
 .b-left {
     border-left: 1px solid #ececec;
 }
-
 .padding-min-col {
     padding: 45px 10px !important;
 }
-
 .pos-btn {
     position: relative;
     right: 40px;
 }
-
 .padding-right-table {
     padding-right: 50px !important;
 }
-
 .btn-date {
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
 }
-
 .data-rates {
     padding: 5px 25px;
 }
-
 .arrow-down {
     top: 4px;
     position: relative;
 }
-
 .monto-down {
     top: 2px;
     position: relative;
 }
-
 .min-width-filter span {
     min-width: 50px !important;
 }
-
 .min-width-filter .select2-search--dropdown {
     padding: 0px !important;
 }
-
 .margin-card {
     margin-top: 50px !important;
     margin-bottom: 50px !important;
 }
-
 .no-check {
     display: none !important;
 }
-
 .border-bottom {
     border-bottom: 1px solid #ececec;
 }
-
 .border-card {
     border-color: #0072fc !important;
 }
-
 .btn-manual__quotes {
     background-color: transparent;
     color: #0072fc !important;
@@ -374,23 +311,18 @@ body {
     font-weight: 600;
     padding: 0.35rem 1rem;
 }
-
 .btn-manual__quotes span {
     top: 2px;
     position: relative;
 }
-
 .warning-p {
     color: #575962;
     font-size: 14px;
     font-weight: 600;
-
 }
-
 .warning-p span {
     color: #e74c3c;
 }
-
 .warning-p i {
     font-size: 33px;
     top: 7px;
@@ -398,84 +330,67 @@ body {
     position: relative;
     transform: rotate(180deg);
 }
-
 .btn-remarks {
     width: 95px;
 }
-
 .btn-nowrap {
     white-space: nowrap;
 }
-
 .select-class::before {
     content: 'Select ->';
     font-size: 13px;
 }
-
 .selected-class:before {
     content: 'Selected';
     font-size: 13px;
 }
-
 .full-width {
     width: 100% !important;
 }
-
 .create-manual {
     background-color: #fff !important;
     color: #36a3f7 !important;
     border-width: 2px;
     border-color: #36a3f7 !important;
 }
-
 .create-manual:hover {
     background-color: #36a3f7 !important;
     border-color: #36a3f7 !important;
 }
-
 .workgreen {
     color: #6ee99e !important;
     font-weight: bold !important;
 }
-
 .downexcel {
     border-color: #6ee99e !important;
 }
-
 .downexcel a {
     text-decoration: none;
 }
-
 .downexcel:hover {
     background-color: transparent !important;
 }
-
 .downexcel i {
     margin-top: 8px !important;
     font-size: 24px;
     color: #6ee99e !important;
 }
-
 .btn-plus__form {
     position: relative;
     top: 8px;
 }
-
 .include-checkbox[type="checkbox"] {
     display: none;
 }
-
 .for-check {
     display: flex;
     align-items: flex-end;
     padding-left: 40px;
     padding-right: 0px;
 }
-
 .label-check {
     position: relative;
 }
-
 .label-check::before {
     content: '';
     position: absolute;
@@ -490,24 +405,19 @@ body {
     /*align-items: center*/
     justify-content: center;
 }
-
 .include-checkbox[type="checkbox"]:checked+.label-check::before {
     content: '✔';
     color: #0000ff;
     line-height: 15px;
 }
-
 /* c5 select */
 .c5-select-multiple {
     display: none;
 }
-
 .c5-select-multiple-dropdown {
     width: 100%;
     height: 37px;
-
 }
-
 .c5-select-multiple-container {
     width: 100%;
     height: auto;
@@ -524,7 +434,6 @@ body {
     box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.1);
 }
-
 .c5-select-container-close {
     position: absolute;
     top: 12px;
@@ -534,11 +443,9 @@ body {
     border-radius: 100px;
     -webkit-border-radius: 100px;
 }
-
 .c5-select-container-close:hover {
     background: #f9f9f9;
 }
-
 .c5-select-header,
 .c5-select-multiple-switch {
     font-size: 14px;
@@ -546,45 +453,37 @@ body {
     padding: 0px 0px 15px 0px;
     display: block;
 }
-
 .c5-select-list {
     height: 165px;
     padding-left: 0px;
     margin-bottom: 0px;
     overflow-y: scroll;
 }
-
 .list-types-carriers {
     height: auto !important;
 }
-
 /* width */
 .c5-select-list::-webkit-scrollbar {
     width: 8px;
 }
-
 /* Track */
 .c5-select-list::-webkit-scrollbar-track {
     border-radius: 18px;
 }
-
 /* Handle */
 .c5-select-list::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 18px;
 }
-
 /* Handle on hover */
 .c5-select-list::-webkit-scrollbar-thumb:hover {
     background: #064acb;
 }
-
 .c5-select-list li {
     margin-bottom: 10px;
     cursor: pointer;
     list-style: none;
 }
-
 .c5-select-dropdown-list {
     padding: 8px 10px 8px 10px;
     border: 1px solid #eee;
@@ -600,15 +499,12 @@ body {
     height: 35px;
     background-color: #f6f6f6;
 }
-
 .m-input.date {
     background-color: #f6f6f6;
 }
-
 .c5-select-dropdown-list li {
     list-style: none;
 }
-
 .switch {
     position: relative;
     display: inline-block;
@@ -616,13 +512,11 @@ body {
     height: 20px;
     float: right;
 }
-
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
 .slider {
     position: absolute;
     cursor: pointer;
@@ -634,7 +528,6 @@ body {
     -webkit-transition: .4s;
     transition: .4s;
 }
-
 .slider:before {
     position: absolute;
     content: "";
@@ -646,30 +539,24 @@ body {
     -webkit-transition: .4s;
     transition: .4s;
 }
-
 .switch input:checked+.slider {
     background-color: #2196F3;
 }
-
 .switch input:focus+.slider {
     box-shadow: 0 0 1px #2196F3;
 }
-
 .switch input:checked+.slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
 }
-
 /* Rounded sliders */
 .slider.round {
     border-radius: 34px;
 }
-
 .slider.round:before {
     border-radius: 50%;
 }
-
 .c5-label {
     display: block;
     position: relative;
@@ -682,7 +569,6 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-
 /* Hide the browser's default checkbox */
 .c5-label input {
     position: absolute;
@@ -691,7 +577,6 @@ body {
     height: 0;
     width: 0;
 }
-
 /* Create a custom checkbox */
 .checkmark {
     position: absolute;
@@ -703,30 +588,25 @@ body {
     border-radius: 3px;
     -webkit-border-radius: 3px;
 }
-
 /* On mouse-over, add a grey background color */
 .c5-label:hover input~.checkmark {
     background-color: #eee;
 }
-
 /* When the checkbox is checked, add a blue background */
 .c5-label input:checked~.checkmark {
     background-color: #2196F3;
     border: 1px solid #2196F3;
 }
-
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
-
 /* Show the checkmark when checked */
 .c5-label input:checked~.checkmark:after {
     display: block;
 }
-
 /* Style the checkmark/indicator */
 .c5-label .checkmark:after {
     left: 7px;
@@ -739,36 +619,28 @@ body {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
-
 .c5-case:hover {
     background: #fbfbfb;
 }
-
 .hidden-air {
     display: none;
 }
-
 .list-group2 {
     height: auto !important;
 }
-
 .h-hidden {
     display: none;
 }
-
 .border-select {
     border-color: #716aca;
 }
-
 .select2-selection,
 .pac-target-input {
     background-color: #f6f6f6 !important;
 }
-
 .hida {
     display: none;
 }
-
 /* estilos */
 </style>
 @endsection
@@ -965,12 +837,10 @@ body {
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
-
               <div class="col-lg-2 for-check" id="maerskdiv">
                 {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
                 <label for="mode5" class="label-check">Include MAERSK Spot</label>
               </div>
-
               <div class="col-lg-2 for-check" id="safmarinediv">
 								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
 								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
@@ -1438,7 +1308,7 @@ body {
 
                                                     @endif
                                                     <div class="progress m-progress--sm">
-                                                        <div class="progress-bar {{ $arr->color }} " role="progressbar"
+                                                        <div class="progress-bar {{ $arr->contract_color }} "  role="progressbar"
                                                             style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
                                                             aria-valuemax="100"></div>
                                                     </div>
@@ -2127,27 +1997,19 @@ function downlodRequest(id, id2, id3) {
         }
     });
 }
-
 $('.selected').on('click', function() {
     $(this).toggleClass('selected-class');
-
     if ($('.selected').hasClass('selected-class')) {
         $('.create-manual').prop("disabled", true);
     } else {
         $('.create-manual').prop("disabled", false);
     }
 });
-
-
-
-
 $(document).ready(function() {
-
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
     var count = 0;
     console.log(numDivRow);
-
     for (var i = 1; i < numDivRow; i++) {
         if (i % 2 == 1) {
             var clase = divRow[i];
@@ -2158,7 +2020,6 @@ $(document).ready(function() {
             //console.log(clase);
         }
     }
-
     $('#carrier_select').selectC5();
     $('#equipment').selectC5();
     var data = '{{$allCarrier}}';
@@ -2166,16 +2027,9 @@ $(document).ready(function() {
         $('.c5-switch').prop('checked', true);
         $('.c5-switch').trigger('change');
     }
-
-
-
-
 });
-
 /*** GOOGLE MAPS API ***/
-
 var autocomplete;
-
 function initAutocomplete() {
     var geocoder = new google.maps.Geocoder();
     var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
@@ -2183,7 +2037,6 @@ function initAutocomplete() {
         'destination_address')));
     //autocomplete.addListener('place_changed', fillInAddress);
 }
-
 function codeAddress(address) {
     var geocoder;
     geocoder.geocode({
@@ -2196,27 +2049,17 @@ function codeAddress(address) {
         }
     });
 }
-
 $valor = $('#date_hidden').val();
-
 if ($valor != 0) {
     $('#m_datepicker_2').val($valor);
 }
-
 function setdateinput() {
     var date = $('#m_datepicker_2').val();
     $('#date_hidden').val(date);
 }
-
-
 $('.m-select3-general').select2();
-
 $('.select2-selection__arrow').remove();
-
-
-
 function AbrirModal(action, id) {
-
     if (action == "add") {
         var url = '{{ route("companies.addM") }}';
         $('#modal-body').load(url, function() {
@@ -2233,9 +2076,7 @@ function AbrirModal(action, id) {
             });
         });
     }
-
 }
-
 $('#delivery_type').on('change', function() {
     var value = $(this).val();
     if (value == 1) {
@@ -2249,7 +2090,6 @@ $('#delivery_type').on('change', function() {
         $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
     }
 });
-
 $('#delivery_type_air').on('change', function() {
     var value = $(this).val();
     console.log(value);
@@ -2264,7 +2104,6 @@ $('#delivery_type_air').on('change', function() {
         $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
     }
 });
-
 $('#quoteType').on('change', function() {
     var value = $(this).val();
     if (value == 3) {
@@ -2273,7 +2112,6 @@ $('#quoteType').on('change', function() {
         });
     }
 });
-
 //C5 Select
 (function($) {
     $.fn.selectC5 = function() {
@@ -2281,7 +2119,6 @@ $('#quoteType').on('change', function() {
         var optionSelect = '#' + $(this).attr('id') + ' option';
         var selectType = '' + $(this).attr('select-type') + '';
         var selectContainer = $('select#' + clickOnID + ' option').val();
-
         var multiSelect = '<span class="c5-select-multiple-dropdown ' + clickOnID + '">' +
             '<ul class="c5-select-dropdown-list select-list">' +
             '</ul>' +
@@ -2312,7 +2149,6 @@ $('#quoteType').on('change', function() {
             '</span>' +
             '<ul class="c5-select-list select-normal"></ul>' +
             '</span>';
-
         var multiSelectGroup = '<span class="c5-select-multiple-dropdown ' + clickOnID + '">' +
             '<ul class="c5-select-dropdown-list select-list">' +
             '</ul>' +
@@ -2326,16 +2162,12 @@ $('#quoteType').on('change', function() {
             '<span class="c5-select-header h-hidden">Equipment List</span>' +
             '<ul class="c5-select-list list-group2"></ul>' +
             '</span>';
-
-
         // Select Multiple con swicth
         if (selectType == 'multiple') {
             var data = '{{$carrierMan}}';
             var carriersList = JSON.parse(data.replace(/&quot;/g, '"'));
             var defaultValuesCarriers = $('#' + clickOnID + '').val();
-
             $(this).after(multiSelect);
-
             $(optionSelect).each(function() {
                 var list = '<li class="c5-case"><label class="c5-label">' + $(this).text() +
                     '<input type="checkbox" title="' + $(this).text() +
@@ -2343,56 +2175,40 @@ $('#quoteType').on('change', function() {
                     '"><span class="checkmark"></span></label></li>';
                 $('.c5-select-list.select-normal').append(list);
             });
-
-
-
             for (var i in defaultValuesCarriers) {
                 var ident = defaultValuesCarriers[i];
                 var name = $('.select-normal .c5-case input[value="' + ident + '"]').attr('title');
-
                 //console.log(name);
-
                 $('.' + clickOnID + ' .select-list').append('<li title="' + name + '">' + name + ', </li>');
                 //$('.'+clickOnID+' .select-list').append('<li title="'+nameAPI+'">'+nameAPI+', </li>');
                 $('.select-normal .c5-case input[value="' + ident + '"]').attr('checked', true);
                 $('.list-types-carriers .c5-case input[value="' + ident + '"]').attr('checked', true);
             }
-
             $('.' + clickOnID + ' .select-list li[title="1"]').remove();
-
-
             $('#' + clickOnID + '').val(defaultValuesCarriers);
-
             $('.' + clickOnID + ' .c5-check').on("click", function() {
                 var checkSelected = [];
                 var valCheckSelected = $(this).val();
-
                 $('.' + clickOnID + ' .c5-check').each(function() {
                     if (this.checked) {
                         checkSelected.push($(this).val());
                     }
                 });
-
                 $('#' + clickOnID + '.select-normal').val(checkSelected);
                 /*var valor1 = $('#'+clickOnID+'.select-normal').val();
                 console.log(valor1);*/
-
             });
-
             $('.' + clickOnID + ' .c5-select-multiple-switch .c5-switch').on('change', function() {
                 var allSelected = [];
-
                 $('.' + clickOnID + ' .c5-check').prop('checked', $(this).is(':checked'));
                 $('.' + clickOnID + ' .c5-check').each(function() {
                     if (this.checked) {
                         allSelected.push($(this).val());
                     }
                 });
-
                 $('#' + clickOnID + '.select-normal').val(allSelected);
                 /*var valor = $('#'+clickOnID+'.select-normal').val();
                 console.log(valor);*/
-
                 if ($('.' + clickOnID + ' .c5-select-dropdown-list').html() == 'All Selected') {
                     $('.' + clickOnID + ' .c5-select-dropdown-list').html('');
                     $('.' + clickOnID + ' .c5-select-dropdown-list').append(
@@ -2400,25 +2216,19 @@ $('#quoteType').on('change', function() {
                 } else {
                     $('.' + clickOnID + ' .c5-select-dropdown-list').html('All Selected');
                 }
-
             });
-
             $('.' + clickOnID + ' .select-normal .c5-check').on('change', function() {
                 var allCarriers = [];
                 var allOptions = $('.' + clickOnID + ' .c5-check').length;
-
                 $('.' + clickOnID + ' .select-normal .c5-check').each(function() {
                     if (this.checked) {
                         allCarriers.push($(this).val());
                     }
                 });
-
                 $('.' + clickOnID + ' .select-normal').val(allCarriers);
                 /*var valor = $('.'+clickOnID+' .select-normal').val();
                 console.log(valor);*/
-
                 var allCarriersLength = allCarriers.length;
-
                 if (allCarriers.length > 0) {
                     $('.' + clickOnID + ' .c5-select-dropdown-list').html('');
                     $('.' + clickOnID + ' .c5-select-dropdown-list').html('' + allCarriers.length +
@@ -2428,14 +2238,11 @@ $('#quoteType').on('change', function() {
                     $('.' + clickOnID + ' .c5-select-dropdown-list').html('Select an option');
                 }
                 $('.' + clickOnID + ' .c5-switch').prop('checked', false);
-
-
             });
             $('.select-normal .c5-case:nth-child(1)').remove();
             $('.select-normal .c5-case:nth-child(2)').remove();
             $('.select-normal .c5-case:nth-child(1)').remove();
         }
-
         // Select Multiple con Lables
         if (selectType == 'groupLabel') {
             $(this).after(multiSelectGroup);
@@ -2444,9 +2251,7 @@ $('#quoteType').on('change', function() {
             var newData = JSON.parse(data.replace(/&quot;/g, '"'));
             var defaultValues = $('#' + clickOnID + '').val();
             var containerType = '{{$containerType}}';
-
             getContainerByGroup('' + containerType + '');
-
             for (var i in newData) {
                 var code = `${newData[i]}`;
                 //console.log(i, code);
@@ -2456,17 +2261,14 @@ $('#quoteType').on('change', function() {
                     '"><span class="checkmark"></span></label></li>';
                 $('.list-group1').append(list2);
             }
-
             $('.list-group1 .c5-case:nth-child(' + containerType + ') input').attr('checked', true);
         }
-
         $('.c5-select-multiple-dropdown.' + clickOnID + '').on('click', function() {
             $('.c5-select-multiple-container.' + clickOnID + '').toggle();
             $('.' + clickOnID + ' .c5-select-dropdown-list').css({
                 'border-color': '#716aca'
             });
         });
-
         $('.select2').on('click', function() {
             $('.c5-select-multiple-container.' + clickOnID + '').css({
                 'display': 'none'
@@ -2475,17 +2277,14 @@ $('#quoteType').on('change', function() {
                 'border-color': '#eee'
             });
         });
-
         $('.' + clickOnID + ' .c5-select-container-close').on('click', function() {
             $('.c5-select-multiple-container.' + clickOnID + '').toggle();
             $('.' + clickOnID + ' .c5-select-dropdown-list').css({
                 'border-color': '#716aca'
             });
         });
-
     }
 })(jQuery);
-
 function getContainerByGroup(id_group) {
     $.ajax({
         type: 'GET',
@@ -2540,7 +2339,6 @@ function getContainerByGroup(id_group) {
                 }
                 $('#equipment.select-group').val(valueArray);
                 //console.log($('#equipment.select-group').val());
-
             }
             //Cargamos valores al click de equipment list
             $('.equipment .list-group2 .c5-check').on("click", function() {
@@ -2566,7 +2364,6 @@ function getContainerByGroup(id_group) {
                     }
                 }
             });
-
         },
         error: function(request, status, error) {
             console.log(request.responseText);
