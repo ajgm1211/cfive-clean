@@ -57,23 +57,33 @@
                                 {!! Form::label('Type Route', 'Type Route') !!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\'); activarRegions(\'divport\')' ]) }} Port
+                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\'); activarRegions(\'divport\'); offsetSwitch(\'divport\')' ]) }} Port
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\'); activarRegions(\'divcountry\')' ]) }} Country
+                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\'); activarRegions(\'divcountry\'); offsetSwitch(\'divcountry\')' ]) }} Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\'); activarRegions(\'divportcountry\')' ]) }} Port to Country
+                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\'); activarRegions(\'divportcountry\'); offsetSwitch(\'divportcountry\')' ]) }} Port to Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\'); activarRegions(\'divcountryport\')' ]) }}  Country to Port
+                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\'); activarRegions(\'divcountryport\'); offsetSwitch(\'divcountryport\')' ]) }}  Country to Port
                                 <span></span>
                             </label>
                             <i onclick="inverter()" style="font-size:22px" class="la la-arrows-h" title="Exchange Origin / Destination"></i>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        old
+                        <input type="hidden" id="typeRouteActiveOld" name="typeRouteActiveOld" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        new
+                        <input type="hidden" id="typeRouteActiveNew" name="typeRouteActiveNew" value="{{ $activacion['act'] }}">
                     </div>
                 </div>
             </div>
@@ -310,6 +320,76 @@
                 toastr.error('Export error: '+ajaxContext.responseText);
             }
         });
+    }
+
+    function offsetSwitch(div){
+        $('#typeRouteActiveOld').val($('#typeRouteActiveNew').val());
+        $('#typeRouteActiveNew').val(div);
+
+        var typeRouteActiveOld = $('#typeRouteActiveOld').val();
+        var typeRouteActiveNew = $('#typeRouteActiveNew').val();
+
+        // Port -------------------------------------------------------------------------------
+        if(typeRouteActiveOld == 'divport'){
+            if(typeRouteActiveNew == 'divportcountry'){
+                // Port  to  PortCountry ------------------------------------------------------
+                var origen_port = "";
+                origen_port = $("#port_orig").select2('val'); 
+                $('#portcountry_orig').val(origen_port).trigger('change');
+            } else if(typeRouteActiveNew == 'divcountryport'){
+                // Port  to  CountryPort ------------------------------------------------------
+                var destino_port = "";
+                destino_port = $("#port_dest").select2('val');
+                $('#countryport_dest').val(destino_port).trigger('change');
+            }
+        }
+
+        // Country ----------------------------------------------------------------------------
+        if(typeRouteActiveOld == 'divcountry' ){
+            if(typeRouteActiveNew == 'divcountryport'){
+                // Country  to  CountryPort ---------------------------------------------------
+                var country_orig = "";
+                country_orig = $("#country_orig").select2('val');
+                $('#countryport_orig').val(country_orig).trigger('change');
+            } else if(typeRouteActiveNew == 'divportcountry'){
+                // Country  to  PortCountry ---------------------------------------------------
+                var country_dest = "";
+                country_dest = $("#country_dest").select2('val');
+                $('#portcountry_dest').val(country_dest).trigger('change');
+            }
+        }
+
+        // PortCountry ------------------------------------------------------------------------
+        if(typeRouteActiveOld == 'divportcountry' ){
+            if(typeRouteActiveNew == 'divport'){
+                // PortCountry to Port --------------------------------------------------------
+                var portcountry_orig = "";
+                portcountry_orig = $("#portcountry_orig").select2('val'); 
+                $('#port_orig').val(portcountry_orig).trigger('change');
+            } else if(typeRouteActiveNew == 'divcountry'){
+                // PortCountry  to Country  ----------------------------------------------------
+                var portcountry_dest = "";
+                portcountry_dest = $("#portcountry_dest").select2('val');
+                $('#country_dest').val(portcountry_dest).trigger('change');
+
+            }
+
+        }
+        
+        // CountryPort ------------------------------------------------------------------------
+        if(typeRouteActiveOld == 'divcountryport' ){
+            if(typeRouteActiveNew == 'divport'){
+                // CountryPort to Port --------------------------------------------------------
+                var countryport_dest = "";
+                countryport_dest = $("#countryport_dest").select2('val'); 
+                $('#port_dest').val(countryport_dest).trigger('change');
+            } else if(typeRouteActiveNew == 'divcountry'){
+                // CountryPort  to Country ----------------------------------------------------
+                var countryport_orig = "";
+                countryport_orig = $("#countryport_orig").select2('val');
+                $('#country_orig').val(countryport_orig).trigger('change');
+            }
+        }
     }
 
     function inverter(){
