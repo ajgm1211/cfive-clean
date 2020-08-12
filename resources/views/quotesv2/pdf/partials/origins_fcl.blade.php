@@ -301,8 +301,8 @@
                                             
                                             @if(!$r->inland->isEmpty())
                                                 @foreach($r->inland as $v)
-                                                    @if($v->type=='Origin' && $r->inland->where('type', 'Origin')->count()==1)
-                                                        @if($r->inland->where('type', 'Origin')->count()==1)
+                                                    @if($v->type=='Origin')
+                                                        
                                                             <tr class="text-left color-table">
                                                                 <td>{{$v->provider}}</td>
                                                                 <td>-</td>
@@ -319,11 +319,6 @@
                                                                 @endforeach
                                                                 <td>{{$currency_cfg->alphacode}}</td>
                                                             </tr>
-                                                        @else
-                                                            <?php
-                                                                $show_inland='';
-                                                            ?>
-                                                        @endif
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -346,38 +341,6 @@
                                             <td><b>{{$currency_cfg->alphacode}}</b></td>
                                         @endif     
                                     </tr>
-                                    <tr class="{{$show_inland}}" style="background-color: white !important;">
-                                        <td  style="background-color: white !important;" colspan="2">
-                                            <br>
-                                            <p class="title">{{__('pdf.origin_inland')}} - {{$origin}}</p>
-                                        </td>
-                                    </tr>
-                                    @if(!$r->inland->isEmpty())
-                                        @foreach($r->inland as $v)
-                                            @if($v->type=='Origin')
-                                                @if($r->inland->where('type', 'Origin')->count()>1)
-                                                    <?php
-                                                        foreach($containers as $container){
-                                                            ${'inland_'.$c->code}+=$v->${'total_inland'.$c->code};
-                                                        }
-                                                    ?>
-                                                    <tr class="text-left color-table">
-                                                        <td>{{$v->provider}}</td>
-                                                        <td>-</td>
-                                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        @foreach ($equipmentHides as $key=>$hide)
-                                                            @foreach ($containers as $c)
-                                                                @if($c->code == $key)
-                                                                    <td {{ $hide }}>{{ $v->${'total_inland'.$c->code} }}</td>
-                                                                @endif
-                                                            @endforeach
-                                                        @endforeach
-                                                        <td>{{$currency_cfg->alphacode}}</td>
-                                                    </tr>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    @endif
                                 </tbody>
                             </table>
                             <br>
