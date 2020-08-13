@@ -67,4 +67,11 @@ class AutomaticInland extends Model
 
         return $value;
     }
+
+    public function getProfitAttribute($array)
+    {
+        $array = json_decode(json_decode($array));
+
+        return $array;
+    }
 }
