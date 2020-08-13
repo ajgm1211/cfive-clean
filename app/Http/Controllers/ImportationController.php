@@ -1541,13 +1541,13 @@ class ImportationController extends Controller
             } else {
                 $direction_array = [$contract->direction_id,3];
             }
-            $surcharge_detail   = MasterSurcharge::whereIn('carrier_id',$carrier_contract)
-                ->whereIn('direction_id',$direction_array)
-                ->where('group_container_id',$contract->gp_container_id)
+            $surcharge_detail   = MasterSurcharge::where('group_container_id',$contract->gp_container_id)
                 ->orWhere('group_container_id',null)
                 ->with('surcharge')
                 ->get();
-
+            $surcharge_detail = $surcharge_detail->whereIn('carrier_id',$carrier_contract);
+            $surcharge_detail = $surcharge_detail->whereIn('direction_id',$direction_array);
+            //dd($direction_array,$surcharge_detail);
             $local_found_in_sur_mast        = collect([]);
             $local_not_found_in_sur_mast    = collect([]);
             $carrier_not_content_contract   = collect([]);
@@ -1572,14 +1572,18 @@ class ImportationController extends Controller
                     }
 
                     $master_surcharge_fineds = MasterSurcharge::where('surcharge_id',$surchargersFined['data'])
-                        ->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'))
-                        ->whereIn('direction_id',$direction_array)
-                        ->whereIn('typedestiny_id',$type_destiny_array)
+                        //->whereIn('direction_id',$direction_array)
+                        //->whereIn('typedestiny_id',$type_destiny_array)
                         ->where('group_container_id',$contract->gp_container_id)
                         ->orWhere('group_container_id',null)
                         ->get();
 
-                    //dd($local, $surchargersFined['data'],$master_surcharge_fineds,$contract->direction_id );     
+                    $master_surcharge_fineds = $master_surcharge_fineds->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'));
+                    $master_surcharge_fineds = $master_surcharge_fineds->whereIn('direction_id',$direction_array);
+                    $master_surcharge_fineds = $master_surcharge_fineds->whereIn('typedestiny_id',$type_destiny_array);
+                    
+                    
+                    //dd($local,$local->localcharcarriers->pluck('carrier_id'), $surchargersFined['data'],$master_surcharge_fineds,$contract->direction_id );     
                     $local_collated = false;
                     foreach($master_surcharge_fineds as $master_surcharge_fined){
                         if($master_surcharge_fined->calculationtype_id == $local->calculationtype_id){
