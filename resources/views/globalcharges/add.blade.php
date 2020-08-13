@@ -48,7 +48,7 @@
 
                 <i class="la la-sitemap icon__modal"></i>{!! Form::label('type', 'Surcharges') !!}
 
-                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ']) }}
+                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ','required' ]) }}
             </div>
             <div class="col-lg-4">
                 <div class="divport">
