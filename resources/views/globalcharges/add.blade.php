@@ -53,7 +53,7 @@
             <div class="col-lg-4">
                 <div class="divport">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
-                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand" style="margin-bottom: 0px">
                         <input name='allOriginPort' value='1485' id='allOriginPort' type="checkbox">
                         {!! Form::label('all', 'All') !!}
                         <span></span>
@@ -62,6 +62,16 @@
           null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ,'required' => 'true' ]) }}
 
                 </div>
+
+                <!-- Excepcion Origin Port-->
+                <div class="excepcionPortOrig" hidden="true">
+                    <div>
+                        <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
+                        {{ Form::select('exceptionPortOrig[]', $harbor,null,['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                    </div>
+                </div>
+                <!-- Fin Excepcion Origin Port-->
+
                 <div class="divcountry" hidden="true">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('origC', 'Origin Country') !!}
@@ -104,7 +114,7 @@
                 <div class="divport">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
                     &nbsp;
-                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand" style="margin-bottom: 0px">
                         <input name='allDestinationPort' value='1485' id='allDestinationPort' type="checkbox">
                         {!! Form::label('all', 'All') !!}
                         <span></span>
@@ -118,6 +128,17 @@
                         </span>
                     </div>
                 </div>
+
+                <!-- Excepcion Destination Port -->
+                <div class="excepcionPortDest" hidden="true">
+                        <div>
+                            <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
+                            {{ Form::select('exceptionPortDest[]', $harbor,
+                null,['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                        </div>
+                    </div>
+                    <!-- Fin Excepcion Destination Port -->
+
                 <div class="divcountry" hidden="true">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
@@ -239,21 +260,6 @@
 
 
         <div class="form-group m-form__group row">
-
-            <div class="excepcionPortOrig" hidden="true">
-                <div class="col-lg-9">
-                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
-                    {{ Form::select('exceptionPortOrig[]', $harbor,
-          null,['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
-                </div>
-            </div>
-            <div class="excepcionPortDest" hidden="true">
-                <div class="col-lg-9">
-                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
-                    {{ Form::select('exceptionPortDest[]', $harbor,
-          null,['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
-                </div>
-            </div>
             <div class="excepcionCountryOrig" hidden="true">
                 <div class="col-lg-9">
 
