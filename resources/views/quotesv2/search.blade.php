@@ -10,11 +10,11 @@ body {
 }
 .bg-manual {
 
-background-color: #36A3F7;
+background-color: #969cc0;
 }
 .bg-api {
 
-background-color: #20C997;
+background-color: #36A3F7;
 }
 .m-portlet {
     box-shadow: none;
@@ -1284,7 +1284,7 @@ background-color: #20C997;
                                     <div class="m-widget5">
                                         <div class="m-widget5__item no-padding no-margin">
                                             <div class="m-widget5__pic">
-                                                <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt=""
+                                                <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
                                                     title="" />
                                             </div>
                                         </div>
@@ -1399,7 +1399,7 @@ background-color: #20C997;
                                                         style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
                                                     </span> <span
                                                         title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
-                                                    / {{ $arr->contract->number }}
+                                                     {{ $arr->contract->number }}
 
                                                 </div>
                                                 @endif
