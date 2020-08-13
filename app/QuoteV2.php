@@ -310,7 +310,7 @@ class QuoteV2 extends Model  implements HasMedia
                 }]);
             }]);
             $query->with(['inland' => function ($q) {
-                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'rate as price', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+                $q->select('id', 'quote_id', 'automatic_rate_id', 'provider', 'contract', 'port_id', 'type', 'distance', 'rate as price', 'markup', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
                 $q->with(['currency' => function ($q) {
                     $q->select('id', 'name', 'alphacode');
                 }]);
