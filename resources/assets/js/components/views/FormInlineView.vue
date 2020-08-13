@@ -112,7 +112,7 @@
 
                 <!-- DateRange Field -->
                 <div v-if="item.type == 'daterange'">
-                    <b-form-group
+                    <b-form-group 
                             :id="'id_'+key"
                             :label="item.label"
                             class="d-block"

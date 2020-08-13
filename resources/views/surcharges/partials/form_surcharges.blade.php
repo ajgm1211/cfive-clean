@@ -1,5 +1,7 @@
 <div class="form-group row m-form__group">
-    @if($is_admin)
+
+
+    @hasanyrole('administrator|data_entry')
         <div class="col-lg-5">
     @else
         <div class="col-lg-6">
@@ -9,7 +11,7 @@
             m-input','required' => 'required']) !!}
         </div>
 
-        @if($is_admin)
+        @hasanyrole('administrator|data_entry')
             <div class="col-lg-5">
         @else
             <div class="col-lg-6">
@@ -18,14 +20,14 @@
                 {!! Form::text('description', null, ['placeholder' => 'Please enter description of surcharfe','class' =>
                 'form-control m-input','required' => 'required']) !!}
             </div>
-            @if($is_admin)
+            @hasanyrole('administrator|data_entry')
             <div class="col-lg-2">
                 <a href="#" class="btn btn-primary " onclick="agregarcampo()"> Add <span class="la la-plus"></span></a>
             </div>
             @endif
         </div>
         <input type="hidden" name="is_admin" value="{{$is_admin}}">
-        @if($is_admin)
+        @hasanyrole('administrator|data_entry')
             <div class="form-group row" id="variatiogroup">
                 @if(count($decodejosn) == 0)
                     <div class="col-lg-4">
@@ -42,7 +44,7 @@
                                     Variation:
                                 </label>
                                 <input type="text" name="variation[]" value="{{$nameVaration}}" class="form-control">
-                                <a href="#" class="borrarInput"><samp class="la la-remove"></samp></a>
+                                <a href="#" class="borrarInput borrado"><samp class="la la-remove"></samp></a>
                             </div>
                         @endif
                     @endforeach
