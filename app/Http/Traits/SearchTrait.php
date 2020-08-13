@@ -236,6 +236,7 @@ trait SearchTrait
         $arregloRate = array();
         $arregloSaveR = array();
         $arregloSaveM = array();
+        $arregloSum  = array();
         $equipmentFilter = array();
         foreach ($contain as $cont) {
             foreach ($equipment as $containers) {
@@ -257,6 +258,7 @@ trait SearchTrait
                     $arregloRate = array_merge($arreglo['arregloRate'], $arregloRate);
                     $arregloSaveR = array_merge($arreglo['arregloRateSaveR'], $arregloSaveR);
                     $arregloSaveM = array_merge($arreglo['arregloRateSaveM'], $arregloSaveM);
+                    $arregloSum = array_merge($arreglo['arregloRateSum'], $arregloSum);
                     if ($rateMount != 0) {
                         array_push($equipmentFilter, $containers);
                     }
@@ -265,7 +267,7 @@ trait SearchTrait
             }
         }
 
-        $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR, 'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
+        $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum ,'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
         return $arregloG;
 
     }
@@ -274,6 +276,7 @@ trait SearchTrait
     {
 
         $arregloRateSave['rate'] = array();
+        $arregloRateSave['rateSum'] = array();
         $arregloRateSave['markups'] = array();
         $arregloRate = array();
 
@@ -288,8 +291,13 @@ trait SearchTrait
 
         // Arreglos para guardar los rates
         $array_save = array('c' . $containers => $amount);
+        $array_sum = array('c' . $containers => $tot_F);
 
         $arregloRateSave['rate'] = array_merge($array_save, $arregloRateSave['rate']);
+        $arregloRateSave['rateSum'] = array_merge($array_sum, $arregloRateSave['rateSum']);
+
+        
+        
         // Markups
         $array_markup = array('m' . $containers => $markup['markup' . $containers]);
         $arregloRateSave['markups'] = array_merge($array_markup, $arregloRateSave['markups']);
@@ -297,7 +305,9 @@ trait SearchTrait
         $array = array_merge($arrayDetail, $markup);
         $arregloRate = array_merge($array, $arregloRate);
 
-        $arreglo = array('arregloRate' => $arregloRate, 'arregloRateSaveR' => $arregloRateSave['rate'], 'arregloRateSaveM' => $arregloRateSave['markups']);
+        $arreglo = array('arregloRate' => $arregloRate, 'arregloRateSaveR' => $arregloRateSave['rate'], 'arregloRateSum' => $arregloRateSave['rateSum'], 'arregloRateSaveM' => $arregloRateSave['markups']);
+        
+    
 
         return $arreglo;
     }
@@ -382,6 +392,12 @@ trait SearchTrait
         $fclMarkup = Price::whereHas('company_price', function ($q) use ($price_id) {
             $q->where('price_id', '=', $price_id);
         })->with('freight_markup', 'local_markup', 'inland_markup')->get();
+
+        if($fclMarkup->isEmpty()){
+            $fclMarkup = Price::where('id',$price_id)->with('freight_markup', 'local_markup', 'inland_markup')->get();
+        }
+        
+   
 
         foreach ($fclMarkup as $freight) {
             // Freight

@@ -153,14 +153,14 @@ class ContractController extends Controller
         $des_harbors = $destiny_harbors->unique('id')->values();
 
         $ori_countries = $origin_harbors->map(function ($harbor) {
-                $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name  ];
-                return $country;
-            })->unique('id')->values();
+            $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name];
+            return $country;
+        })->unique('id')->values();
 
         $des_countries = $destiny_harbors->map(function ($harbor) {
-                $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name  ];
-                return $country;
-            })->unique('id')->values();
+            $country = ['id' => $harbor->country->id, 'display_name' => $harbor->country->name];
+            return $country;
+        })->unique('id')->values();
 
         $data = compact(
             'ori_harbors',
@@ -423,17 +423,17 @@ class ContractController extends Controller
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
 
-            if($request->code){
+            if ($request->code) {
                 $query =  Contract::where('code', $request->code);
                 $query_lcl =  ContractLcl::where('code', $request->code);
-            }else{
+            } else {
                 $query = Contract::where('code', $request->reference);
                 $query_lcl = ContractLcl::where('code', $request->reference);
             }
 
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
-    
+
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
             }
@@ -454,10 +454,18 @@ class ContractController extends Controller
             $Ncontract = $this->uploadContract($request, $carriers, $api, $direction, $type);
 
             //Dispatching jobs
-            if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+            if ($type == 'FCL') {
+                if (env('APP_VIEW') == 'operaciones') {
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+                } else {
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+                }
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+                if (env('APP_VIEW') == 'operaciones') {
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('operaciones');
+                } else {
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request');
+                }
             }
 
             //Notifications
@@ -524,9 +532,9 @@ class ContractController extends Controller
     public function storeContractApi($request, $direction, $type)
     {
 
-        if($request->code){
+        if ($request->code) {
             $code = $request->code;
-        }else{
+        } else {
             $code = $request->reference;
         }
 

@@ -298,7 +298,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $arrayPerPallet = array('15'); //  per pallet
 
             // Local charges
-            $localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
+            /*$localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
                 $q->whereIn('carrier_id', $carrier);
             })->with('localcharportslcl.portOrig', 'localcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
 
@@ -1008,7 +1008,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-            } // Fin del calculo de los local charges
+            } */// Fin del calculo de los local charges
 
             //############ Global Charges   ####################
 
