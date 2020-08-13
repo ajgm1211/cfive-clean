@@ -297,7 +297,6 @@
                                                 @if(!$r->inland->isEmpty())
                                                     @foreach($r->inland as $v)
                                                         @if($v->type=='Destination')
-                                                            @if($r->inland->where('type', 'Destination')->count()==1)
                                                                 <tr class="text-left color-table">
                                                                     <td>{{$v->provider}}</td>
                                                                     <td>-</td>
@@ -314,11 +313,6 @@
                                                                     @endforeach
                                                                     <td>{{$v->currency->alphacode}}</td>
                                                                 </tr>
-                                                            @else
-                                                                <?php
-                                                                    $show_inland='';
-                                                                ?>
-                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 @endif
@@ -342,36 +336,7 @@
                                             <td><b>{{$currency_cfg->alphacode}}</b></td>
                                         @endif     
                                     </tr>
-                                    <tr class="{{$show_inland}}">
-                                        <td colspan="2">
-                                            <br>
-                                            <p class="title">{{__('pdf.destination_inland')}} - {{$destination}}</p>
-                                        </td>
-                                    </tr>
-                                    @if(!$r->inland->isEmpty())
-                                        @foreach($r->inland as $v)
-                                            @if($v->type=='Destination')
-                                                @if($r->inland->where('type', 'Destination')->count()>1)
-                                                    <tr class="text-left color-table">
-                                                        <td>{{$v->provider}}</td>
-                                                        <td>-</td>
-                                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        @foreach ($equipmentHides as $key=>$hide)
-                                                            @foreach ($containers as $c)
-                                                                @if($c->code == $key)
-                                                                    @php 
-                                                                        ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code};
-                                                                    @endphp
-                                                                    <td {{ $hide }}>{{ $v->${'total_inland'.$c->code} }}</td>
-                                                                @endif
-                                                            @endforeach
-                                                        @endforeach
-                                                        <td>{{$currency_cfg->alphacode}}</td>
-                                                    </tr>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    @endif                                        
+                                      
                                 </tbody>
                             </table>
                             <br>
