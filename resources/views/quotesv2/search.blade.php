@@ -687,7 +687,13 @@ background-color: #36A3F7;
                                 <label>Company</label>
                                 {{  Form::hidden('company_id_num', @$form['company_id_quote'] , ['id' => 'company_id_num'  ])  }}
                                 <div class="m-input-icon m-input-icon--right">
-                                    <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control"></select>
+                                    <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control">
+                                        @if($company_dropdown)
+                                            @foreach($company_dropdown as $key=>$value)
+                                                <option value="{{$key}}" selected>{{$value}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
                                         <span>
                                             <a onclick="AbrirModal('add',0)" data-container="body"
