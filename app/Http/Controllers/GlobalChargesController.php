@@ -93,7 +93,7 @@ class GlobalChargesController extends Controller
         }
 
 
-        $request->validated();
+        //$request->validated();
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
