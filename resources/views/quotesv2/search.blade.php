@@ -1403,10 +1403,8 @@ background-color: #36A3F7;
 
                                                     <span class="portalphacode"
                                                         style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
-                                                    </span> <span
-                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                    </span> <span title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
                                                      {{ $arr->contract->number }}
-
                                                 </div>
                                                 @endif
 
