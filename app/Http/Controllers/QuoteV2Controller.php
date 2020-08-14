@@ -2607,6 +2607,7 @@ class QuoteV2Controller extends Controller
         $containers = Container::get();
         $harbor_origin = array();
         $harbor_destination = array();
+        $company_dropdown = null;
         $pricesG = Price::doesntHave('company_price')->where('company_user_id',$company_user_id)->pluck('name', 'id');
 
         if (\Auth::user()->hasRole('subuser')) {
@@ -2658,7 +2659,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination','carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA','pricesG'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination','carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA','pricesG','company_dropdown'));
     }
 
     /**
@@ -2786,7 +2787,11 @@ class QuoteV2Controller extends Controller
         $modality_inland = $request->modality;
         $company_id = $request->input('company_id_quote');
         $mode = $request->mode;
+        $company_dropdown = null;
 
+        if($company_id){
+            $company_dropdown = Company::where('id', $company_id)->pluck('business_name','id');
+        }
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
         $groupContainer = $validateEquipment['gpId'];
@@ -3576,7 +3581,7 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal','harbor_origin','harbor_destination','pricesG')); //aqui
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destA', 'origA', 'destinationA', 'originA', 'isDecimal','harbor_origin','harbor_destination','pricesG','company_dropdown')); //aqui
     }
 
  
