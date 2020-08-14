@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="/" class="m-brand__logo-wrapper">
+                <a href="{{route('quotes-v2.search')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
@@ -52,15 +52,52 @@
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <!-- <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
                             <b>Quotes</b>
                         </span>
+                    </a> -->
+                    
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('quotes-v2.index', 'quotes-v2.show', 'quotes-v2.search') ?: 'active-link' }}" data-menu-submenu-toggle="click"
+                    data-redirect="true" aria-haspopup="true">
+                    <a href="#" class="m-menu__link m-menu__toggle">
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-wrap">
+                                <span class="m-menu__link-text">
+                                    <b>Quotes</b>
+                                </span>
+                            </span>
+                        </span>
+                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                        <i class="m-menu__ver-arrow la la-angle-right"></i>
                     </a>
-                </li>
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+
+                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                        <ul class="m-menu__subnav">
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-list-1"></i>
+                                    <span class="m-menu__link-text">
+                                        Quotes
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search"></i>
+                                    <span class="m-menu__link-text">
+                                        Search Rates
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> 
+
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -102,7 +139,7 @@
 
                 @role('administrator|company')
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -147,7 +184,7 @@
                 </li>
 
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('globalcharges.index', 'globalchargeslcl.index', 'globalchargesapi.index', 'RequestsGlobalchargersFcl.create', 'RequestsGlobalchargersLcl.create', 'globalchargesapi') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -196,7 +233,7 @@
 
                 @endrole
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('inlands.index', 'inland.edit', 'inlandD.find', 'UploadFile.index', 'provinces.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -260,7 +297,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('settings.index', 'termsv2.list', 'remarks.list', 'oauth.tokens', 'api.settings', 'users.home', 'prices.index', 'prices.add', 'UserConfiguration.index', 'templates.index', 'dashboard.index', 'ContainerCalculation.index', 'transit_time.index', 'settings.companies',  'search.list', 'impersonate.revert') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -302,6 +339,16 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('users.home') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-users"></i>
+                                    <span class="m-menu__link-text">
+                                        Users
+                                    </span>
+                                </a>
+                            </li>
+                            @endrole
+                            @role('administrator')
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
@@ -334,14 +381,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{ route('users.home') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-users"></i>
-                                    <span class="m-menu__link-text">
-                                        Users
-                                    </span>
-                                </a>
                             </li>
                             @endrole
                             @role('administrator|company|subuser')
@@ -603,7 +642,7 @@ Group Surchargers
                         </ul>
                     </div>
                 </li>
-                @endif
+                @endif  
                 <!-- 
 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
 <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
