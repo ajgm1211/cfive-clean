@@ -1426,7 +1426,7 @@
                                                                 </div>
                                                                 <br>
                                                                 @if($arr->transit_time != '')
-                                                                    <span style="color:#2e0084; text-align: center">Transit:</span>
+                                                                    <span style="color:#2e0084; text-align: center">Transit Time:</span>
                                                                     <span style="color:#1d3b6e; text-align: center">{{$arr->transit_time}} Days</span>
                                                                 @endif
                                                             </div>
