@@ -1305,10 +1305,6 @@ background-color: #36A3F7;
                                                     <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                                                 </div>
                                                 <div class="col-lg-4 d-flex flex-column justify-content-center">
-                                                    @if($arr->service != '')
-                                                    {{$arr->service}}
-
-                                                    @endif
                                                     @if($arr->via != '')
                                                     <span style="color:#2e0084; text-align: center">Via :</span>
                                                     <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
@@ -1320,7 +1316,7 @@ background-color: #36A3F7;
                                                             aria-valuemax="100"></div>
                                                     </div>
                                                     @if($arr->transit_time != '')
-                                                    <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                    <span style="color:#2e0084; text-align: center">Transit Time:</span>
                                                     <span
                                                         style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
                                                         Days</span>
