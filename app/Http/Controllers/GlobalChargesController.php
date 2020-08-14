@@ -44,7 +44,7 @@ class GlobalChargesController extends Controller
         //
     }
 
-    public function store(StoreGlobalCharges $request)
+    public function store(Request $request)
     { // cambio de request
 
         // PORT TO PORT
