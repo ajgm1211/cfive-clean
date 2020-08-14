@@ -296,6 +296,11 @@ Route::prefix('Importation')->group(function () {
     Route::get('/ReprocesarSurchargers/{id}', 'ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers')
         ->middleware(['auth', 'role:administrator|data_entry']);
 
+    // Check Surcharges
+    Route::get('/CheckSurcharges/{id}', 'ImportationController@checkSurcharges')->name('check.surchargers')
+        ->middleware(['auth', 'role:administrator|data_entry']);
+    Route::get('/ShowValidatorSur/{id}', 'ImportationController@showValidatorSurcharge')->name('show.validator.surcharge')
+        ->middleware(['auth', 'role:administrator|data_entry']);
     // Datatable Rates Y Surchargers
     //    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
     //        ->middleware(['auth','role:administrator|data_entry']);
@@ -460,6 +465,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
     Route::get('datatable', 'CompanyController@LoadDatatableIndex')->name('companies.index.datatable');
     Route::get('search', 'CompanyController@searchCompanies')->name('companies.search');
+    Route::get('quotes/{company_id}', 'CompanyController@LoadDatatable')->name('companies.quotes');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
@@ -1005,6 +1011,7 @@ Route::prefix('Container')->group(function () {
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('harbor/search', 'HarborController@search')->name('harbor.search');
     /** Contracts V2 view routes **/
     Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
     Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit')->middleware('check_company:contract');
@@ -1136,7 +1143,7 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
 /*Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 Route::get('api/inlands', 'InlandController@index');
 Route::post('api/v2/inlands/store', 'InlandController@store');*/
-Route::get('api/inlands/{contract}/edit', 'InlandController@edit');
+Route::get('api/inlands/{contract}/edit', 'InlandController@edit')->name('inland.edit');
 
 /** End Contracts V2 routes **/
 /** Transit time **/
@@ -1148,6 +1155,7 @@ Route::prefix('ImpTransitTime')->group(function () {
 
 Route::prefix('MasterSurcharge')->group(function () {
     Route::resource('MasterSurcharge', 'MasterSurchargeController')->middleware(['role:administrator|data_entry']);
+    Route::get('getCalculationEq', 'MasterSurchargeController@getCalculationsEquiment')->name('get.calculations.equiment');
 });
 
 

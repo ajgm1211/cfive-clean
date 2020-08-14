@@ -109,11 +109,11 @@
                         <br>
 
                     </div>
-<!--
-                    <a href="#" class="toggle-vis" data-column="1" >Origin</a>
-                    <a href="#" class="toggle-vis" data-column="2">Destiny</a>
-                    <a href="#" class="toggle-vis" data-column="3">Carrier</a>
-                    <a href="#" class="toggle-vis" data-column="4">20DV</a>
+                    <!--
+<a href="#" class="toggle-vis" data-column="1" >Origin</a>
+<a href="#" class="toggle-vis" data-column="2">Destiny</a>
+<a href="#" class="toggle-vis" data-column="3">Carrier</a>
+<a href="#" class="toggle-vis" data-column="4">20DV</a>
 -->
                     <div class="m-portlet__body">
                         <!--begin: tab body -->
@@ -218,16 +218,23 @@
                 <div class="tab-pane" id="GoodSurcharge" role="tabpanel">
                     <br>
                     <div class="m-portlet__head">
-                        <label>
-                            <i class="fa fa-dot-circle-o" style="color:green;"> </i>
-                            <strong id="">
-                                Good Surcharges: 
-                            </strong>
-                            <strong id="strgoodSg">
-                                {{$countgoodsurcharge}}
-                            </strong>
-                            <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinputSg" />
-                        </label>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label>
+                                    <i class="fa fa-dot-circle-o" style="color:green;"> </i>
+                                    <strong id="">
+                                        Good Surcharges: 
+                                    </strong>
+                                    <strong id="strgoodSg">
+                                        {{$countgoodsurcharge}}
+                                    </strong>
+                                    <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinputSg" />
+                                </label>
+                                &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('check.surchargers',$id)}}" class="btn btn-primary">Check Surcharges &nbsp;<span class="la la-check"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                <br>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="m-portlet__body">
@@ -454,10 +461,10 @@
             //"scrollX": true,
         });
     });
-    
-    
+
+
     function showModalsavetorate(id,operation){
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
         if(operation == 1){
             var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
