@@ -52,7 +52,7 @@
 
                 @role('administrator|company')
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit') ?: 'active-link' }}"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
@@ -135,7 +135,7 @@ Sea Freight LCL
 
                 @endrole
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('RequestFcl.index', 'RequestImportationLcl.index', 'RequestsGlobalchargersFcl.index', 'RequestsGlobalchargersLcl.index') ?: 'active-link' }}"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
@@ -188,7 +188,7 @@ Sea Freight LCL
                     </div>
                 </li>
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('gcadm.index', 'gclcladm.index', 'globalsduplicated.index') ?: 'active-link' }}"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-text">
                             <b>Manage G.C.</b>
@@ -227,7 +227,7 @@ Sea Freight LCL
                     </div>
                 </li>
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('oauth.tokens', 'api.settings', 'users.home', 'RequestImportation.index', 'users.home', 'ContainerCalculation.index', 'inlandD.index', 'UploadFile.index', 'Countries.index', 'Region.index', 'RegionP.index', 'managercarriers.index', 'CarrierImportation.index', 'gruopSurcharger.index', 'settings.companies', 'search.list', 'impersonate.revert', 'MasterSurcharge.index') ?: 'active-link' }}"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
@@ -367,7 +367,7 @@ API Integrations
                                                 <i class="m-menu__link-icon la la-globe"></i>
                                                 <span class="m-menu__link-text">
                                                     Countries
-                                                </span>
+                                                </span> 
                                             </a>
                                         </li>
                                         <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
@@ -403,7 +403,7 @@ API Integrations
                                     <span class="m-menu__link-text">
                                         Carrier Auto Importation
                                     </span>
-                                </a>
+                                </a> 
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('gruopSurcharger.index')}}" class="m-menu__link ">

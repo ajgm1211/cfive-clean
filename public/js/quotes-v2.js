@@ -4215,6 +4215,26 @@ $('.company_dropdown').select2({
     }
 });
 
+//portharbors
+$('.portharbors').select2({
+    placeholder: "Search a country",
+    minimumInputLength: 3,
+    ajax: {
+        url: '/harbor/search',
+        dataType: 'json',
+        data: function(params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function(data) {
+            return {
+                results: data
+            };
+        },
+    }
+});
+
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
@@ -4376,13 +4396,21 @@ function precargar() {
 
 
     //Companiasss 
-    var company_id = $("#m_select2_2_modal").val();
+    var company_id = $("#company_id_num").val();
     var contact_id = $("#contact_id_num").val();
-    var price_id = $("#price_id_num").val();
+
+    if ($("#price_id_num").val() != '') {
+        var price_id = $("#price_id_num").val();
+        $("#price_").select2().val(price_id).trigger("change");
+
+
+    }
+
 
 
     var selected = '';
     var selected_price = '';
+
     if (company_id) {
         $('select[name="contact_id"]').empty();
         $('select[name="contact_id"]').prop("disabled", false);

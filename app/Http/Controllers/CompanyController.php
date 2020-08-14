@@ -172,6 +172,202 @@ class CompanyController extends Controller
         return view('companies.addwithmodal', compact('prices', 'users'));
     }
 
+
+public function LoadDatatable($id)
+    {
+
+        $company_user_id = \Auth::user()->company_user_id;
+        if (\Auth::user()->hasRole('subuser')) {
+            $quotes = ViewQuoteV2::where('user_id', \Auth::user()->id)->where('company_id', $id)->orderBy('created_at', 'desc')->get();
+        } else {
+            $quotes = ViewQuoteV2::where('company_user_id', $company_user_id)->where('company_id', $id)->orderBy('created_at', 'desc')->get();
+        }
+
+        $colletions = collect([]);
+        foreach ($quotes as $quote) {
+            $custom_id = '---';
+            $company = '---';
+            $origin = '';
+            $destination = '';
+            $origin_li = '';
+            $destination_li = '';
+
+            if (isset($quote->company)) {
+                $company = $quote->company->business_name;
+            }
+
+            if ($quote->custom_quote_id != '') {
+                $id = $quote->custom_quote_id;
+            } else {
+                $id = $quote->quote_id;
+            }
+
+            if ($quote->type == 'AIR') {
+                $origin = $quote->origin_airport;
+                $destination = $quote->destination_airport;
+                $img = '<img src="/images/plane-blue.svg" class="img img-responsive" width="25">';
+            } else {
+                $origin = $quote->origin_port;
+                $destination = $quote->destination_port;
+                $img = '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+            }
+
+            $explode_orig = explode("| ", $origin);
+            $explode_dest = explode("| ", $destination);
+
+            foreach ($explode_orig as $item) {
+                $origin_li .= '<li>' . $item . '</li>';
+            }
+
+            foreach ($explode_dest as $item) {
+                $destination_li .= '<li>' . $item . '</li>';
+            }
+
+            if ($quote->business_name != '') {
+                $company = $quote->business_name;
+            } else {
+                $company = '---';
+            }
+
+            if ($quote->contact != '') {
+                $contact = $quote->contact;
+            } else {
+                $contact = '---';
+            }
+            
+            $ValueOrig=count($explode_orig);
+            $valueDest=count($explode_dest);
+      
+            if ($ValueOrig ==1 && $valueDest ==1 ) {
+               
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+
+            } elseif($ValueOrig <>1 && $valueDest ==1) {
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' =>  $destination_li,
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+
+            } elseif($ValueOrig ==1 && $valueDest <>1) {
+                
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => $origin_li,
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            
+            }else{
+
+                $data = [
+                    'id' => $id,
+                    'idSet' => setearRouteKey($quote->id),
+                    'client' => $company,
+                    'contact' => $contact,
+                    'user' => $quote->owner,
+                    'created' => $quote->created_at,
+                    'origin' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See origins
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $origin_li . '</small>
+                                      </div>',
+                    'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      See destinations
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                      <small>' . $destination_li . '</small>
+                                      </div>',
+                    'type' => $quote->type,
+                ];
+                $colletions->push($data);
+            }   
+        }
+           
+        return DataTables::of($colletions)
+            ->editColumn('created', function ($colletion) {
+                return [
+                    'display' => e($colletion['created']->format('M d, Y H:i')),
+                    'timestamp' => $colletion['created']->timestamp,
+                ];
+            })
+            ->addColumn('action', function ($colletion) {
+                return
+                    '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Options
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
+          <span>
+          <i class="la la-edit"></i>
+          &nbsp;
+          Edit
+          </span>
+          </a>
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
+          <span>
+          <i class="la la-file"></i>
+          &nbsp;
+          PDF
+          </span>
+          </a>
+          <a href="/v2/quotes/duplicate/' . $colletion['idSet'] . '" class="dropdown-item" >
+          <span>
+          <i class="la la-plus"></i>
+          &nbsp;
+          Duplicate
+          </span>
+          </a>
+          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . $colletion['idSet'] . '" >
+          <span>
+          <i class="la la-eraser"></i>
+          &nbsp;
+          Delete
+          </span>
+          </a>
+          </div>';
+            })->editColumn('id', '{{$id}}')->make(true);
+    }
+
+
+
+
     /**
      * show
      *
@@ -510,7 +706,7 @@ class CompanyController extends Controller
     public function updatePaymentConditions(Request $request)
     {
 
-        $company = Company::find($request->company_id);
+        $company = Company::findOrfail($request->company_id);
         $company->payment_conditions = $request->payment_conditions;
         $company->update();
 

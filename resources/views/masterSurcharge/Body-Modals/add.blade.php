@@ -26,9 +26,15 @@
     </div>
     <div class="form-group m-form__group row">
         <div class="col-lg-4">
+            {!! Form::label('equiment', 'Equiment') !!}
+            <div class="m-input-icon m-input-icon--right">
+                {!! Form::select('equiment_id',@$equiments,null,['class'=>'m-select2-general form-control equiment_id','id'=>'equiment_id','onchange' => 'loadContainersAdd()','placeholder'=>'Select type Equiment'])!!}
+            </div>
+        </div>
+        <div class="col-lg-4">
             {!! Form::label('calculationt', 'Calculation Type') !!}
             <div class="m-input-icon m-input-icon--right">
-                {{ Form::select('calculationtype', $calculationtype,null,['id' => 'calculationtype_id','class'=>'m-select2-general form-control ' ,'required' => 'true']) }}
+                {{ Form::select('calculationtype', $calculationtype,null,['id' => 'calculationtype_ids','class'=>'m-select2-general form-control calculationtype_id' ,'required' => 'true']) }}
             </div>
 
         </div>
@@ -51,6 +57,18 @@
 
 <script>
 
-    $('.m-select2-general').select2({
-    });
+    $('.m-select2-general').select2({});
+
+    function loadContainersAdd(){
+        var equiment = $(".equiment_id").select2('val');
+        $('.calculationtype_id').val(null).trigger('change');
+        $('.calculationtype_id').select2({
+            placeholder: "Select a Calculation Type",
+            ajax: {
+                url: '{!! route("get.calculations.equiment") !!}',
+                data:{equiment},
+                dataType: 'json'
+            }
+        });
+    }
 </script>
