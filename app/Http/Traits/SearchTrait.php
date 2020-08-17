@@ -229,7 +229,7 @@ trait SearchTrait
     }
 
     // Metodos para los rates
-    public function rates($equipment, $markup, $data, $rateC, $typeCurrency, $contain)
+    public function rates($equipment, $markup, $data, $rateC, $typeCurrency, $contain,$rateFreight  = 1)
     {
 
         $arreglo = array();
@@ -254,7 +254,7 @@ trait SearchTrait
                     } else {
                         $rateMount = $data->{$options->field_rate};
                     }
-                    $arreglo = $this->detailRate($markup, $rateMount, $data, $rateC, $typeCurrency, $cont->code);
+                    $arreglo = $this->detailRate($markup, $rateMount, $data, $rateC, $typeCurrency, $cont->code,$rateFreight);
                     $arregloRate = array_merge($arreglo['arregloRate'], $arregloRate);
                     $arregloSaveR = array_merge($arreglo['arregloRateSaveR'], $arregloSaveR);
                     $arregloSaveM = array_merge($arreglo['arregloRateSaveM'], $arregloSaveM);
@@ -272,7 +272,7 @@ trait SearchTrait
 
     }
 
-    public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers)
+    public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers,$rateFreight  = 1)
     {
 
         $arregloRateSave['rate'] = array();
@@ -283,15 +283,19 @@ trait SearchTrait
         $markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
 
         $tot_F = $markup['monto' . $containers] / $rateC;
+        $tot_R = $markup['monto' . $containers] / $rateFreight;
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
+
+
 
         $arrayDetail = array('price' . $containers => $amount, 'currency' . $containers => $data->currency->alphacode, 'idCurrency' . $containers => $data->currency_id, 'total' . $containers => $tot_F);
 
         // Arreglos para guardar los rates
         $array_save = array('c' . $containers => $amount);
-        $array_sum = array('c' . $containers => $tot_F);
+        $array_sum = array('c' . $containers => $tot_R);
+
 
         $arregloRateSave['rate'] = array_merge($array_save, $arregloRateSave['rate']);
         $arregloRateSave['rateSum'] = array_merge($array_sum, $arregloRateSave['rateSum']);

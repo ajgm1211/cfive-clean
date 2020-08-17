@@ -48,7 +48,7 @@
 
                 <i class="la la-sitemap icon__modal"></i>{!! Form::label('type', 'Surcharges') !!}
 
-                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ']) }}
+                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ','required' ]) }}
             </div>
             <div class="col-lg-4">
                 <div class="divport">
@@ -165,7 +165,7 @@
                 {{ Form::select('changetype',$typedestiny, null,['id' => 'changetype','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
             </div>
             <div class="col-lg-4">
-                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validation') !!}
+                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validity') !!}
                 {!! Form::text('validation_expire', null, ['placeholder' => 'Contract Validity','class' => 'form-control
                 m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
             </div>

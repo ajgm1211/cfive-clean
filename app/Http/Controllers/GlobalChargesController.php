@@ -44,7 +44,7 @@ class GlobalChargesController extends Controller
         //
     }
 
-    public function store(StoreGlobalCharges $request)
+    public function store(Request $request)
     { // cambio de request
 
         // PORT TO PORT
@@ -93,7 +93,7 @@ class GlobalChargesController extends Controller
         }
 
 
-        $request->validated();
+        //$request->validated();
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
@@ -234,7 +234,7 @@ class GlobalChargesController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully add this contract.');
+        $request->session()->flash('message.content', 'Register created successfully!');
         return redirect()->action('GlobalChargesController@index');
     }
 
