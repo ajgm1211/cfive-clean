@@ -706,7 +706,7 @@ public function LoadDatatable($id)
     public function updatePaymentConditions(Request $request)
     {
 
-        $company = Company::find($request->company_id);
+        $company = Company::findOrfail($request->company_id);
         $company->payment_conditions = $request->payment_conditions;
         $company->update();
 

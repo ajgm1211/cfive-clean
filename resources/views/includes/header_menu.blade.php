@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="{{route('quotes-v2.index')}}" class="m-brand__logo-wrapper">
+                <a href="{{route('quotes-v2.search')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
@@ -60,7 +60,7 @@
                         </span>
                     </a> -->
                     
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('quotes-v2.index', 'quotes-v2.show', 'quotes-v2.search') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -94,10 +94,10 @@
                                 </a>
                             </li>
                         </ul>
-                    </di>
+                    </div>
                 </li> 
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
