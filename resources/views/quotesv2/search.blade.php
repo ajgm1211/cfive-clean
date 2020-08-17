@@ -10,11 +10,11 @@ body {
 }
 .bg-manual {
 
-background-color: #36A3F7;
+background-color: #969cc0;
 }
 .bg-api {
 
-background-color: #20C997;
+background-color: #36A3F7;
 }
 .m-portlet {
     box-shadow: none;
@@ -687,7 +687,13 @@ background-color: #20C997;
                                 <label>Company</label>
                                 {{  Form::hidden('company_id_num', @$form['company_id_quote'] , ['id' => 'company_id_num'  ])  }}
                                 <div class="m-input-icon m-input-icon--right">
-                                    <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control"></select>
+                                    <select id="company_dropdown" name="company_id_quote" class="company_dropdown form-control">
+                                        @if($company_dropdown)
+                                            @foreach($company_dropdown as $key=>$value)
+                                                <option value="{{$key}}" selected>{{$value}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                     <span class="m-input-icon__icon m-input-icon__icon--right">
                                         <span>
                                             <a onclick="AbrirModal('add',0)" data-container="body"
@@ -1284,7 +1290,7 @@ background-color: #20C997;
                                     <div class="m-widget5">
                                         <div class="m-widget5__item no-padding no-margin">
                                             <div class="m-widget5__pic">
-                                                <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt=""
+                                                <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
                                                     title="" />
                                             </div>
                                         </div>
@@ -1299,10 +1305,6 @@ background-color: #20C997;
                                                     <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                                                 </div>
                                                 <div class="col-lg-4 d-flex flex-column justify-content-center">
-                                                    @if($arr->service != '')
-                                                    {{$arr->service}}
-
-                                                    @endif
                                                     @if($arr->via != '')
                                                     <span style="color:#2e0084; text-align: center">Via :</span>
                                                     <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
@@ -1314,7 +1316,7 @@ background-color: #20C997;
                                                             aria-valuemax="100"></div>
                                                     </div>
                                                     @if($arr->transit_time != '')
-                                                    <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                    <span style="color:#2e0084; text-align: center">Transit Time:</span>
                                                     <span
                                                         style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
                                                         Days</span>
@@ -1397,10 +1399,8 @@ background-color: #20C997;
 
                                                     <span class="portalphacode"
                                                         style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
-                                                    </span> <span
-                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
-                                                    / {{ $arr->contract->number }}
-
+                                                    </span> <span title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                     {{ $arr->contract->number }}
                                                 </div>
                                                 @endif
 

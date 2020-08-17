@@ -4,16 +4,17 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 <style>
-  .btn-save__modal {
-    padding: 15px 35px !important;
-    border-radius: 50px;
-    background-color: #36a3f7 !important;
-    border-color: #36a3f7 !important;
-    font-size: 18px;
-  }
-  .icon__modal {
-    margin-right: 10px;
-  }
+    .btn-save__modal {
+        padding: 15px 35px !important;
+        border-radius: 50px;
+        background-color: #36a3f7 !important;
+        border-color: #36a3f7 !important;
+        font-size: 18px;
+    }
+
+    .icon__modal {
+        margin-right: 10px;
+    }
 </style>
 @endsection
 @section('title', 'Global Charges')
@@ -32,6 +33,27 @@
                 </div>
             </div>
         </div>
+        @if(Session::has('message.nivel'))
+        <div class="col-md-12">
+            <br>
+            <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show"
+                role="alert">
+                <div class="m-alert__icon">
+                    <i class="la la-warning"></i>
+                </div>
+                <div class="m-alert__text">
+                    <strong>
+                        {{ session('message.title') }}
+                    </strong>
+                    {{ session('message.content') }}
+                </div>
+                <div class="m-alert__close">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        @endif
+        <br>
         <div class="m-portlet m-portlet--tabs">
             <div class="m-portlet__head">
                 <div class="m-portlet__head-tools">
@@ -50,16 +72,16 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
 
-             @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <br>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        <br>
 
 
                         <!--begin: Search Form -->
@@ -73,15 +95,17 @@
                             </div>
                             <div class="row">
                                 <div class="col-xl-12 order-1 order-xl-2 m--align-right">
-                                    <a  id="newmodal" class="">
-                                        <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                    <a id="newmodal" class="">
+                                        <button id="new" type="button" onclick="AbrirModal('addGlobalCharge',0)"
+                                            class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                             Add New &nbsp;
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
                                     <a href="{{route('RequestsGlobalchargersFcl.create')}}">
 
-                                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <button type="button"
+                                            class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                             <span>
                                                 <span>
                                                     Import New Contract &nbsp;
@@ -91,7 +115,8 @@
                                         </button>
                                     </a>
 
-                                    <button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                    <button type="button" name="bulk_delete" id="bulk_delete"
+                                        class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                         <span>
                                             <span>
                                                 Delete Selected &nbsp;
@@ -114,7 +139,8 @@ New \ Status Import  &nbsp;
 
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                        <table class="table m-table m-table--head-separator-primary" id="requesttable" width="100%"
+                            style="width:100%">
                             <thead>
                                 <tr>
                                     <th>
@@ -124,10 +150,10 @@ New \ Status Import  &nbsp;
                                         Type
                                     </th>
                                     <th>
-                                        Origin 
+                                        Origin
                                     </th>
                                     <th>
-                                        Destination 
+                                        Destination
                                     </th>
                                     <th>
                                         Charge Type
@@ -160,7 +186,8 @@ New \ Status Import  &nbsp;
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="global-modal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="global-modal" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -190,7 +217,8 @@ New \ Status Import  &nbsp;
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script src="/assets/demo/default/custom/components/datatables/base/record-selection.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/record-selection.js" type="text/javascript">
+</script>
 
 <script>
     function AbrirModal(action,id){
