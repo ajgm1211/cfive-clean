@@ -50,12 +50,13 @@ class ValidatorSurchargeJob implements ShouldQueue
         } else {
             $direction_array = [$contract->direction_id,3];
         }
-        $surcharge_detail   = MasterSurcharge::whereIn('carrier_id',$carrier_contract)
-            ->whereIn('direction_id',$direction_array)
-            ->where('group_container_id',$contract->gp_container_id)
+        $surcharge_detail   = MasterSurcharge::where('group_container_id',$contract->gp_container_id)
             ->orWhere('group_container_id',null)
             ->with('surcharge')
             ->get();
+
+        $surcharge_detail = $surcharge_detail->whereIn('carrier_id',$carrier_contract);
+        $surcharge_detail = $surcharge_detail->whereIn('direction_id',$direction_array);
 
         $local_found_in_sur_mast        = collect([]);
         $local_not_found_in_sur_mast    = collect([]);
@@ -81,12 +82,13 @@ class ValidatorSurchargeJob implements ShouldQueue
                 }
 
                 $master_surcharge_fineds = MasterSurcharge::where('surcharge_id',$surchargersFined['data'])
-                    ->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'))
-                    ->whereIn('direction_id',$direction_array)
-                    ->whereIn('typedestiny_id',$type_destiny_array)
                     ->where('group_container_id',$contract->gp_container_id)
                     ->orWhere('group_container_id',null)
                     ->get();
+
+                $master_surcharge_fineds = $master_surcharge_fineds->whereIn('carrier_id',$local->localcharcarriers->pluck('carrier_id'));
+                $master_surcharge_fineds = $master_surcharge_fineds->whereIn('direction_id',$direction_array);
+                $master_surcharge_fineds = $master_surcharge_fineds->whereIn('typedestiny_id',$type_destiny_array);
 
                 //dd($local, $surchargersFined['data'],$master_surcharge_fineds,$contract->direction_id );     
                 $local_collated = false;
