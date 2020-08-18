@@ -297,6 +297,7 @@
                                     <div class="collapse show" id="about_company">
                                         {!! Form::open(['route' => 'companies.update.payments','class' => 'form-group
                                         m-form__group','type'=>'POST']) !!}
+                                        {!! Form::hidden('company_id', $company->id) !!}
                                         {!! Form::textarea('payment_conditions', $company->payment_conditions,
                                         ['placeholder' => 'Please enter payment conditions','class' => 'form-control
                                         m-input address_input editor','id'=>'payment_conditions','rows'=>4]) !!}

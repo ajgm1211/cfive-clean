@@ -24,10 +24,27 @@ class StoreGlobalCharges extends FormRequest
     public function rules()
     {
         return [
-            //'port_dest' => 'required',
-            //'port_orig' => 'required',       
+            
+            //PORT TO PORT
+            'port_dest' => 'required_if:typeroute,==,port',
+            'port_orig' => 'required_if:typeroute,==,port',
+
+            //COUNTRY TO COUNTRY
+            'country_orig' => 'required_if:typeroute,==,country',
+            'country_dest' => 'required_if:typeroute,==,country',
+
+            //PORT TO COUNTRY
+            'portcountry_orig' => 'required_if:typeroute,==,portcountry',
+            'portcountry_dest' => 'required_if:typeroute,==,portcountry',
+
+            //COUNTRY  TO PORT
+            'countryport_orig' => 'required_if:typeroute,==,countryport',
+            'countryport_dest' => 'required_if:typeroute,==,countryport',
+
+            'surcharge_id'=>'required',
             'calculationtype' => 'required',
-            'localcarrier' => 'required',   
+            'localcarrier' => 'required', 
+              
         ];
     }
 }
