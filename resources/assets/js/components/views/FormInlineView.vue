@@ -3,7 +3,7 @@
 
     <!-- Inline Contract Form -->
     <form ref="form" @submit.stop.prevent="handleSubmit">
-        <div class="row">
+        <div class="row" style="padding: 0px 25px;">
 
             <!-- Reference -->
             <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
@@ -53,7 +53,7 @@
                 <!-- End Textarea Field -->
 
                 <!-- Select Field -->
-                <div v-if="item.type == 'select'">
+                <div v-if="item.type == 'select'" >
                     <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
@@ -138,7 +138,6 @@
 
                 <!-- Status Field-->
                 <div v-if="item.type == 'status'">
-                    <div class="col-12 col-sm-3 col-lg-2">
                     <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
@@ -148,7 +147,6 @@
                             >
                             <span class="status-st" :class="vdata[key]" ></span>
                         </b-form-group>
-                    </div>
                 </div>
                 <!-- End Status Field -->
 
@@ -206,8 +204,17 @@
 
             getClass(item){
 
-                if('colClass' in item)
+                if(item.label == "Carriers") {
+                    return "col-lg-3";
+                }
+
+                if((item.label == "Direction") || (item.label == "Equipment")) {
+                    return "col-lg-1";
+                }
+
+                if('colClass' in item) {
                     return item.colClass;
+                }
 
                 return "col-12 col-sm-3 col-lg-2";
 
