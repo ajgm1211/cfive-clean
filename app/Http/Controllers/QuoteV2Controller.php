@@ -567,7 +567,7 @@ class QuoteV2Controller extends Controller
     {
         $charge = Charge::find($request->pk);
         $name = explode("->", $request->name);
-        //$value = str_replace(",", ".", $request->value);
+        //$value = str_replace(",", ".", $request->value); 
         $value = $this->tofloat($request->value);
 
         if (strpos($request->name, '->') == true) {
