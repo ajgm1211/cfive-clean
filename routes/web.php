@@ -1023,8 +1023,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
 
-/* NUEVO QUOTE PRUEBAS */
-Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
+    /** Sale terms V3 view routes **/
+    Route::get('api/sale_terms', 'SaleTermV3Controller@index')->name('sale_term_v3.index');
+    Route::get('api/sale_terms/{saleterm}/edit', 'SaleTermV3Controller@edit')->name('sale_term_v3.edit')->middleware('check_company:saleterm');
+    /** End Sale terms routes view **/
+
+    /* NUEVO QUOTE PRUEBAS */
+    Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
 
     /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
@@ -1137,6 +1142,40 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
     Route::delete('/{transit_time}/destroy', 'TransitTimeController@destroy');
     Route::post('/destroyAll', 'TransitTimeController@destroyAll');
     /** End API Transit Time EndPoints **/
+});
+
+Route::group(['prefix' => 'api/v2/sale_terms'], function () {
+
+    /** API Sale Terms EndPoints **/
+    Route::get('', 'SaleTermV3Controller@list');
+    Route::get('data', 'SaleTermV3Controller@data');
+    Route::post('store', 'SaleTermV3Controller@store');
+    Route::post('{saleterm}/update', 'SaleTermV3Controller@update')->middleware('check_company:saleterm');
+    Route::post('{saleterm}/duplicate', 'SaleTermV3Controller@duplicate')->middleware('check_company:saleterm');
+    Route::delete('{saleterm}/destroy', 'SaleTermV3Controller@destroy')->middleware('check_company:saleterm');
+    Route::get('{saleterm}', 'SaleTermV3Controller@retrieve')->middleware('check_company:saleterm');
+    /** End API Sale Terms EndPoints **/
+
+    /** API Sale Terms Charges EndPoints **/
+    Route::get('{saleterm}/charge', 'SaleTermChargeController@list')->middleware('check_company:saleterm');
+    Route::post('{saleterm}/charge/store', 'SaleTermChargeController@store');
+    Route::post('charge/{charge}/update', 'SaleTermChargeController@update');
+    Route::get('{saleterm}/range/{charge}', 'SaleTermChargeController@retrieve')->middleware('check_company:saleterm');
+    Route::post('charge/{charge}/duplicate', 'SaleTermChargeController@duplicate');
+    Route::delete('charge/{charge}/destroy', 'SaleTermChargeController@destroy');
+    Route::post('charge/destroyAll', 'SaleTermChargeController@destroyAll');
+    /** End API Sale Terms Charges EndPoints **/
+});
+
+Route::group(['prefix' => 'api/v2/sale_codes'], function () {
+    /** API Sale Terms EndPoints **/
+    Route::get('', 'SaleTermCodeController@list');
+    Route::post('store', 'SaleTermCodeController@store');
+    Route::post('{code}/update', 'SaleTermCodeController@update')->middleware('check_company:code');
+    Route::post('{code}/duplicate', 'SaleTermCodeController@duplicate')->middleware('check_company:code');
+    Route::delete('{id}/destroy', 'SaleTermCodeController@destroy');
+    Route::get('{code}', 'SaleTermCodeController@retrieve')->middleware('check_company:code');
+    /** End API Sale Terms EndPoints **/
 });
 
 /*****************************************************************************************
