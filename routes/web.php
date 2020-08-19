@@ -1022,6 +1022,18 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
+    
+    /** Quotes V2 view routes **/
+    Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
+    Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
+    Route::get('api/quote/data', 'QuotationController@data')->name('quote.data');
+    Route::get('api/quote/list', 'QuotationController@list')->name('quote.list');
+    Route::post('api/quote/store', 'QuotationController@store');
+    Route::get('api/quote/{quote}/edit', 'QuotationController@edit')->middleware('check_company:quote');
+    Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
+    //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
+    //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
+    /** End Inlands routes view **/
 
     /** Sale terms V3 view routes **/
     Route::get('api/sale_terms', 'SaleTermV3Controller@index')->name('sale_term_v3.index');
