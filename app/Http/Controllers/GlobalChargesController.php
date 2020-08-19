@@ -16,7 +16,6 @@ use App\GlobalCharPort;
 use App\GlobalCharPortCountry;
 use App\GlobalCharPortException;
 use App\Harbor;
-use App\Http\Requests\StoreGlobalCharges;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
 use App\Region;
 use App\RegionPt;
@@ -28,7 +27,7 @@ use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
-
+use Validator;
 //inclui
 
 class GlobalChargesController extends Controller
@@ -44,7 +43,7 @@ class GlobalChargesController extends Controller
         //
     }
 
-    public function store(StoreGlobalCharges $request)
+    public function store(request $request)
     { // cambio de request
 
         // PORT TO PORT
@@ -92,8 +91,8 @@ class GlobalChargesController extends Controller
             $request->request->add(['countryport_dest' => $all_countryD]);
         }
 
-
-        $request->validated();
+        $data = $this->validateData($request);
+        // $request->validated();
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
@@ -237,7 +236,158 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.content', 'You successfully add this contract.');
         return redirect()->action('GlobalChargesController@index');
     }
+    public function validatedata($request){
 
+        //PORT TO PORT
+            if ($request->input('allOriginPort') != null && $request->input('typeroute') == 'port' ) {
+    
+                $vdata = [
+                    'port_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+                
+            }else if($request->input('allDestinationPort') != null && $request->input('typeroute') == 'port' ){
+    
+                $vdata = [
+                    'port_orig' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+    
+            }elseif($request->input('allOriginPort') != null && $request->input('allDestinationPort') != null && $request->input('typeroute') == 'port'){
+    
+                $vdata = [
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+    
+            }elseif($request->input('allOriginPort') == null && $request->input('allDestinationPort') == null && $request->input('typeroute') == 'port'){
+    
+                $vdata = [
+                    'port_dest' => 'required',
+                    'port_orig' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+    
+            }
+        //COUNTRY TO COUNTRY
+            elseif($request->input('allOriginCountry') != null && $request->input('typeroute') == 'country'){
+    
+                $vdata = [
+                    'country_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required', 
+                ];
+    
+            }elseif($request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country'){
+    
+                $vdata = [
+                    'country_orig' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }elseif($request->input('allOriginCountry') != null && $request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country'){
+    
+                $vdata = [
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }elseif($request->input('allOriginCountry') == null && $request->input('allDestinationCountry') == null && $request->input('typeroute') == 'country'){
+                
+                $vdata = [
+                    'country_orig' => 'required',
+                    'country_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }
+        //PORT TO COUNTRY    
+            elseif($request->input('allOriginPortCountry') != null && $request->input('typeroute') == 'portcountry'){
+    
+                $vdata = [
+                    'portcountry_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required', 
+                ];
+    
+            }elseif($request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry'){
+    
+                $vdata = [
+                    'portcountry_orig' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }elseif($request->input('allOriginPortCountry') != null && $request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry'){
+    
+                $vdata = [
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }elseif($request->input('allOriginPortCountry') == null && $request->input('allDestinationPortCountry') == null && $request->input('typeroute') == 'portcountry'){
+                
+                $vdata = [
+                    'portcountry_orig' => 'required',
+                    'portcountry_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }
+        //COUNTRY TO PORT    
+            elseif($request->input('allOriginCountryPort') != null && $request->input('typeroute') == 'countryport'){
+    
+                $vdata = [
+                    'countryport_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required', 
+                ];
+    
+            }elseif($request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport'){
+    
+                $vdata = [
+                    'countryport_orig' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }elseif($request->input('allOriginCountryPort') != null && $request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport'){
+    
+                $vdata = [
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+            }else{
+                
+                $vdata = [
+                    'countryport_orig' => 'required',
+                    'countryport_dest' => 'required',
+                    'type'=>'required',
+                    'calculationtype' => 'required',
+                    'localcarrier' => 'required',
+                ];
+    
+            }
+    
+            $validator = Validator::make($request->all(), $vdata);
+            
+            return $validator->validate();
+            
+        }
     public function updateGlobalChar(request $request, $id)
     {
 
