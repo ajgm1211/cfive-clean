@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use App\Http\Filters\QuotationFilter;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class QuoteV2 extends Model  implements HasMedia
 {
@@ -404,5 +408,16 @@ class QuoteV2 extends Model  implements HasMedia
             $query->with('inland');
             $query->with('automaticInlandLclAir');
         }]);
+    }
+
+    public function scopeFilterByCurrentCompany($query)
+    {
+        $company_id = Auth::user()->company_user_id;
+        return $query->where('company_user_id', '=', $company_id);
+    }
+
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new QuotationFilter($request, $builder))->filter();
     }
 }
