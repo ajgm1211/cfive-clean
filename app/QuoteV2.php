@@ -59,6 +59,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasOne('App\Harbor', 'id', 'destination_port_id');
     }
 
+    public function delivery_type()
+    {
+        return $this->hasOne('App\DeliveryType', 'id', 'delivery_type');
+    }
+
     public function incoterm()
     {
         return $this->hasOne('App\Incoterm', 'id', 'incoterm_id');
@@ -119,7 +124,7 @@ class QuoteV2 extends Model  implements HasMedia
         return $query->select(array_diff($this->columns, (array) $value));
     }
 
-    /*public function getEquipmentAttribute($value) 
+    /*public function getEquipmentAttribute($value)
     {
         $a = json_decode($value);
         return json_decode($a);
@@ -410,6 +415,60 @@ class QuoteV2 extends Model  implements HasMedia
         }]);
     }
 
+    public function automatic_inland_lcl_airs()
+    {
+        $this->hasMany('App\AutomaticInlandLclAir');
+    }
+
+    public function automatic_inlands()
+    {
+        $this->hasMany('App\AutomaticInland');
+    }  
+    
+    public function integration_quote_statuses()
+    {
+        $this->hasMany('App\IntegrationQuoteStatus');
+    }
+    
+    public function package_load_v2s()
+    {
+        $this->hasMany('App\PackageLoadV2');
+    }  
+
+    public function payment_conditions()
+    {
+        $this->hasMany('App\PaymentCondition');
+    }
+    
+    public function sale_term_v2s()
+    {
+        $this->hasMany('App\SaleTermV2');
+    }
+
+    public function duplicate()
+    {
+
+        $new_quote = $this->replicate();
+        $new_quote->quote_id .= ' copy';
+        $new_quote->save();
+
+        $this->with('automatic_inland_lcl_airs','automatic_inlands','integration_quote_statuses',
+                    'package_load_v2s','rate_v2','pdf_option','payment_conditions');
+       
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->quote_id = $new_quote->id;
+                $newRelationship->save();
+                }
+            }
+        
+        return $new_quote;
+    }
+
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;
@@ -420,4 +479,5 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return (new QuotationFilter($request, $builder))->filter();
     }
+
 }
