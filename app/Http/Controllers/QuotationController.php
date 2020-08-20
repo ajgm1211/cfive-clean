@@ -14,6 +14,11 @@ use App\Incoterm;
 use App\Harbor;
 use App\PaymentCondition;
 use App\TermAndConditionV2;
+use App\DeliveryType;
+use App\StatusQuote;
+use App\CargoKind;
+use App\Language;
+use App\Container;
 use App\Http\Resources\QuotationResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -45,9 +50,14 @@ class QuotationController extends Controller
             return $company->only(['id','business_name']);
         });
 
-        $contacts = Contact::where('company_id','=',$company_user_id)->get()->map(function ($contact){
-            return $contact->only(['id','first_name','last_name']);
-        });
+        $comps = Company::where('company_user_id','=',$company_user_id)->get();
+        $contacts = [];
+        foreach ($comps as $comp) {
+            $cts = $comp->contact()->get();
+            foreach ($cts as $ct) {
+                array_push($contacts,['id'=>$ct->id,'name'=>$ct->getFullName()]);
+            } 
+        };
 
         $incoterms = Incoterm::get()->map(function ($incoterm){
             return $incoterm->only(['id','name']);
@@ -71,6 +81,22 @@ class QuotationController extends Controller
             return $term_and_condition->only(['id','name','user_id','type','company_user_id']);
         });
 
+        $delivery_types = DeliveryType::get()->map(function ($delivery_type){
+            return $delivery_type->only(['id','name']);
+        });
+
+        //OJO WITH THIS STATUS IN QUOTEV2 IS ACTUALLY AN ENUM
+        $status_options = StatusQuote::get()->map(function ($status){
+            return $status->only(['id','name']);
+        });
+
+        $kinds_of_cargo = CargoKind::get()->map(function ($kind_of_cargo){
+            return $kind_of_cargo->only(['id','name']);
+        });
+
+        $languages = Language::get()->map(function ($language){
+            return $language->only(['id','name']);
+        });
 
         $data = compact(
             'companies',
@@ -80,7 +106,11 @@ class QuotationController extends Controller
             'users',
             'harbors',
             'payment_conditions',
-            'terms_and_conditions'
+            'terms_and_conditions',
+            'delivery_types',
+            'status_options',
+            'kinds_of_cargo',
+            'languages'
         );
 
         return response()->json(['data'=>$data]);
@@ -98,8 +128,8 @@ class QuotationController extends Controller
             'mode' => 'required',
             'delivery_type' => 'required',
             'equipment' => 'required',
-            'company' => 'nullable',
-            'contact_id_num' => 'nullable',
+            'company_id_quote' => 'nullable',
+            'contact_id' => 'nullable',
             'price_id_num' => 'sometimes|nullable',
             'originport' => 'required',
             'destinyport' => 'required',
@@ -111,23 +141,10 @@ class QuotationController extends Controller
             'total_volume' => 'nullable',
             'total_weight' => 'nullable',
             'chargeable_weight' => 'nullable',
-            //NOT LINKED TO ANYTHING
-            'chargeOrigin' => 'nullable',
-            'chargeDestination' => 'nullable',
-            'type_load_cargo' => 'required',
-            'total_pallets' => 'nullable',
-            'total_packages' => 'nullable',
-            'quantity' => 'nullable',
-            'height' => 'nullable',
-            'width' => 'nullable',
-            'large' => 'nullable',
-            'weight' => 'nullable',
-            'volume' => 'nullable',
-            'total_quantity_pkg' => 'nullable',
-            'total_weight_pkg' => 'nullable',
-            'total_volume_pkg' => 'nullable',
             'carriers' => 'required'
         ]);
+        
+        //dd($request);
 
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
@@ -135,21 +152,22 @@ class QuotationController extends Controller
             'delivery_type' => $data['delivery_type'],
             'user_id' => \Auth::user()->id,
             'company_user_id' => $company_user->id,
+            'company_id' => $data['company_id_quote'],
+            'contact_id' => $data['contact_id'],
             'mode' => $data['mode'],
             'cargo_type' => $data['cargo_type'],
             'total_quantity' => $data['total_quantity'],
             'total_weight' => $data['total_weight'],
             'total_volume' => $data['total_volume'],
             'chargeable_weight' => $data['chargeable_weight'],
-            //'price_id' => $data['price_id'],
-            'equipment' => $data['equipment'], //TRANSFORM THIS DATA
+            'price_id' => $data['price_id_num'],
+            'equipment' => $data['equipment'],
             'origin_address' => $data['origin_address'],
             'destination_address' => $data['destination_address'],
-            'date_issued' => explode("/",$data['date'])[0], //is it the same as validity?
+            'date_issued' => explode("/",$data['date'])[0],
             'validity_start' => explode("/",$data['date'])[0],
             'validity_end' => explode("/",$data['date'])[1],
-            'status' => 'Draft' //confirm
-            //add inland options if present
+            'status' => 'Draft' //cannot change as it is enum
         ]);
 
     }
@@ -161,38 +179,39 @@ class QuotationController extends Controller
 
     public function update (Request $request, QuoteV2 $quote)
     {
-        // SAME FORM AS IN STORE
         $data = $request->validate([
-            'type' => 'required',
-            'direction' => 'required',
             'delivery_type' => 'required',
             'equipment' => 'required',
-            'company' => 'nullable',
+            'company_id' => 'nullable',
             'contact' => 'nullable',
-            'price_id' => 'nullable',
-            'origin_port' => 'required',
-            'destination_port' => 'required',
-            'origin_address' => 'nullable',
-            'destination_address' => 'nullable',
+            'commodity' => 'nullable',
+            'status' => 'required',
+            'type' => 'required',
+            'kind_of_cargo' => 'nullable',
+            'issued' => 'required',
+            'owner'=>'required',
+            'payment_conditions' => 'nullable',
+            'incoterm' => 'nullable',
+            'language_id' => 'nullable',
             'validity' => 'required',
-            'expired' => 'required',
-            'carrier' => 'required'
+            //'terms_and_conditions' => 'nullable'
         ]);
-
+        
         $quote->update([
-            'type' => $data['type'],
             'delivery_type' => $data['delivery_type'],
-            'mode' => $data['direction'],
-            'price_id' => $data['price_id'],
             'equipment' => $data['equipment'], //TRANSFORM THIS DATA
-            'origin_address' => $data['origin_port'],
-            'destination_address' => $data['destination_port'],
-            'date_issued' => $data['validity'], //is it the same as validity?
-            'validity_start' => $data['validity'],
-            'validity_end' => $data['expired'],
-            'status' => 'Draft' //confirm
-            //add inland options if present
-            // Where are carriers?
+            'company_id' => $data['company_id'],
+            'contact' => $data['contact'],
+            'commodity' => $data['commodity'],
+            'status' => $data['status'],
+            'type' => $data['type'], 
+            'kind_of_cargo' => $data['kind_of_cargo'],
+            'validity_start' => $data['issued'],
+            'user_id' => $data['owner'],
+            'payment_conditions' => $data['payment_conditions'],
+            'incoterm_id' => $data['incoterm'],
+            'validity_end' => $data['validity'], //is it the same as validity?
+            //'terms_and_conditions' => $data['terms_and_conditions']
         ]);
     }
 
@@ -210,7 +229,6 @@ class QuotationController extends Controller
         return new QuotationResource($quote);
     }
 
-    //FUNCTION NOT READY!! see model
     public function duplicate(QuoteV2 $quote)
     {
         $new_quote = $quote->duplicate();
@@ -219,7 +237,7 @@ class QuotationController extends Controller
     }
 
     public function destroyAll(Request $request)
-    {
+    {   
         DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
