@@ -31,6 +31,7 @@
                                                 :data="currentData"
                                                 :fields="form_fields"
                                                 :datalists="datalists"
+                                                :selectLock="selectLock"
                                                 :actions="actions.quotes"
                                                 :update="true"
                                             ></FormInlineView>
@@ -42,8 +43,15 @@
                                 <!-- Terms and Condition -->
                                 <b-card class="mt-5">
                                     <h5 class="q-title">Terms and Conditions</h5>
-
-                                    <textarea name id cols="30" rows="10" class="q-textarea">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda quibusdam, at eveniet cupiditate omnis accusamus tempora error, laboriosam cumque soluta modi quas sapiente recusandae, labore non nemo! Sequi, molestias quidem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi nobis numquam quas ullam asperiores repellendus, assumenda officiis? Ratione doloremque sequi explicabo deleniti dolorem, ad, alias ipsa temporibus id, voluptatem sed?</textarea>
+                                    <FormInlineView
+                                                v-if="loaded"
+                                                :data="currentData"
+                                                :fields="term_fields"
+                                                :datalists="datalists"
+                                                :actions="actions.quotes"
+                                                :update="true"
+                                            ></FormInlineView>
+                                    <!--textarea name id cols="30" rows="10" class="q-textarea">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda quibusdam, at eveniet cupiditate omnis accusamus tempora error, laboriosam cumque soluta modi quas sapiente recusandae, labore non nemo! Sequi, molestias quidem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi nobis numquam quas ullam asperiores repellendus, assumenda officiis? Ratione doloremque sequi explicabo deleniti dolorem, ad, alias ipsa temporibus id, voluptatem sed?</textarea-->
                                 </b-card>
                                 <!-- End Terms and Condition -->
                             </div>
@@ -101,6 +109,7 @@ export default {
                     label: "QUOTE ID",
                     type: "text",
                     rules: "required",
+                    disabled: true,
                     placeholder: "Quote ID",
                     colClass: "col-lg-3",
                 },
@@ -109,9 +118,9 @@ export default {
                     searchable: true,
                     type: "select",
                     rules: "required",
-                    trackby: "display_name",
+                    trackby: "name",
                     placeholder: "Select options",
-                    options: "harbors",
+                    options: "delivery_types",
                     colClass: "col-lg-3",
                 },
                 company_id: {
@@ -123,6 +132,7 @@ export default {
                     placeholder: "Select options",
                     options: "companies",
                     colClass: "col-lg-3",
+                    locker: true
                 },
                 commodity: {
                     label: "COMMODITY",
@@ -131,52 +141,55 @@ export default {
                     placeholder: "Commodity",
                     colClass: "col-lg-3",
                 },
-                status_id: {
+                status: {
                     label: "STATUS",
                     searchable: true,
                     type: "select",
                     rules: "required",
                     trackby: "name",
                     placeholder: "Select options",
-                    options: "companies",
-                    colClass: "col-lg-3",
+                    options: "status_options",
+                    colClass: "col-lg-3"
                 },
-                type_id: {
+                type: {
                     label: "TYPE",
-                    searchable: true,
-                    type: "select",
+                    type: "text",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select options",
-                    options: "companies",
+                    placeholder: "Quote Type",
+                    disabled:true,
                     colClass: "col-lg-3",
                 },
-                contact_id: {
+                contact: {
                     label: "CONTACT",
                     searchable: true,
                     type: "select",
                     rules: "required",
-                    trackby: "first_name",
+                    trackby: "name",
                     placeholder: "Select options",
                     options: "contacts",
                     colClass: "col-lg-3",
                 },
                 kind_of_cargo: {
                     label: "KIND OF CARGO",
-                    type: "text",
+                    searchable: true,
+                    type: "select",
                     rules: "required",
+                    trackby: 'name',
                     placeholder: "Kind of cargo",
+                    options: 'kinds_of_cargo',
                     colClass: "col-lg-3",
                 },
                 issued: {
                     label: "DATE ISSUED",
                     type: "datepicker",
                     rules: "required",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-3"
                 },
                 equipment: {
                     label: "EQUIPMENT",
                     type: "text",
+                    disabled: true,
                     rules: "required",
                     placeholder: "Equipment",
                     colClass: "col-lg-3",
@@ -202,9 +215,9 @@ export default {
                     label: "VALIDITY",
                     type: "datepicker",
                     rules: "required",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-3"
                 },
-                incoterm_id: {
+                incoterm: {
                     label: "INCOTERM",
                     searchable: true,
                     type: "select",
@@ -221,54 +234,24 @@ export default {
                     rules: "required",
                     trackby: "name",
                     placeholder: "Select options",
-                    options: "incoterms",
+                    options: "languages",
                     colClass: "col-lg-3",
+                },
+            },
+            term_fields: {
+                terms_and_conditions: {
+                    type: "textarea",
+                    rules: "required",
+                    placeholder: "Insert terms",
+                    colClass: "col-sm-12"
                 },
             },
             currentData: {},
             vdata: {},
             datalists: {},
-            companyLocked: true,
-            service_options: [
-                "Port to Port",
-                "Port to Door",
-                "Door to Port",
-                "Door to Door",
-            ],
-            cargo_options: [
-                "General",
-                "Perishable",
-                "Dangerous",
-                "Valuable Cargo",
-                "All Live Animals",
-                "Human Remains",
-                "Pharma",
-            ],
-            status_options: ["Lost", "Draft", "Won"],
-            company_options: [],
-            owners: [],
-            incoterms: [],
-            all_payments: [],
-            sel_payments: [],
+            selectLock: true,
             all_contacts: [],
             sel_contacts: [],
-            all_langs: [],
-            sel_langs: [],
-            options: [
-                "Select option",
-                "options",
-                "selected",
-                "mulitple",
-                "label",
-                "searchable",
-                "clearOnSelect",
-                "hideSelected",
-                "maxHeight",
-                "allowEmpty",
-                "showLabels",
-                "onChange",
-                "touched",
-            ],
         };
     },
     created() {
@@ -297,23 +280,11 @@ export default {
             } else {
                 this.sel_contacts = this.all_contacts[value];
             }
-            this.payment = "";
-            if (typeof this.all_payments[value] == "string") {
-                this.sel_payments = [this.all_payments[value]];
-            } else {
-                this.sel_payments = this.all_payments[value];
-            }
-            this.language = "";
-            if (typeof this.all_langs[value] == "string") {
-                this.sel_langs = [this.all_langs[value]];
-            } else {
-                this.sel_langs = this.all_langs[value];
-            }
         },
         //Set dropdowns
         setDropdownLists(err, data) {
             this.datalists = data;
-            console.log(this.datalists);
+            //console.log(this.datalists);
         },
     },
 };

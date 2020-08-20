@@ -19,6 +19,7 @@
                                 :placeholder="item.placeholder"
                                 v-on:blur="onSubmit()"
                                 @change="cleanInput(key)"
+                                :disabled="item.disabled"
                             ></b-form-input>
                             <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
                         </b-form-group>
@@ -57,6 +58,7 @@
                             class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
+                            :disabled="item.disabled"
                         >
                             <multiselect
                                 v-model="vdata[key]"
