@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12" style="padding: 0px 50px">
-                    <a href="#" class="p-light quote-link">
+                    <a href="/api/quotes/" class="p-light quote-link">
                         <i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
                     </a>
 
@@ -31,7 +31,6 @@
                                                 :data="currentData"
                                                 :fields="form_fields"
                                                 :datalists="datalists"
-                                                :selectLock="selectLock"
                                                 :actions="actions.quotes"
                                                 :update="true"
                                             ></FormInlineView>
@@ -132,7 +131,8 @@ export default {
                     placeholder: "Select options",
                     options: "companies",
                     colClass: "col-lg-3",
-                    locker: true
+                    isLocker: true,
+                    locking: "contact_id"
                 },
                 commodity: {
                     label: "COMMODITY",
@@ -160,15 +160,19 @@ export default {
                     disabled:true,
                     colClass: "col-lg-3",
                 },
-                contact: {
+                contact_id: {
                     label: "CONTACT",
                     searchable: true,
                     type: "select",
                     rules: "required",
                     trackby: "name",
                     placeholder: "Select options",
-                    options: "contacts",
+                    disabled: false,
+                    options: [],
+                    all_options:"contacts",
                     colClass: "col-lg-3",
+                    selectLock: true,
+                    lock_tracker:"company_id"
                 },
                 kind_of_cargo: {
                     label: "KIND OF CARGO",
@@ -177,10 +181,10 @@ export default {
                     rules: "required",
                     trackby: 'name',
                     placeholder: "Kind of cargo",
-                    options: 'kinds_of_cargo',
+                    options: 'kind_of_cargo',
                     colClass: "col-lg-3",
                 },
-                issued: {
+                validity_start: {
                     label: "DATE ISSUED",
                     type: "datepicker",
                     rules: "required",
@@ -194,7 +198,7 @@ export default {
                     placeholder: "Equipment",
                     colClass: "col-lg-3",
                 },
-                owner: {
+                user_id: {
                     label: "OWNER",
                     searchable: true,
                     type: "select",
@@ -211,13 +215,13 @@ export default {
                     placeholder: "Payment conditions",
                     colClass: "col-lg-3",
                 },
-                validity: {
+                validity_end: {
                     label: "VALIDITY",
                     type: "datepicker",
                     rules: "required",
                     colClass: "col-lg-3"
                 },
-                incoterm: {
+                incoterm_id: {
                     label: "INCOTERM",
                     searchable: true,
                     type: "select",
@@ -227,7 +231,7 @@ export default {
                     options: "incoterms",
                     colClass: "col-lg-3",
                 },
-                language_id: {
+                language: {
                     label: "LANGUAGE",
                     searchable: true,
                     type: "select",
@@ -249,9 +253,6 @@ export default {
             currentData: {},
             vdata: {},
             datalists: {},
-            selectLock: true,
-            all_contacts: [],
-            sel_contacts: [],
         };
     },
     created() {
