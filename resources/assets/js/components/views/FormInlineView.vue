@@ -59,11 +59,16 @@
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                             :disabled="item.disabled"
+                            :isLocker="item.isLocker"
+                            :selectLock="item.selectLock"
+                            :lockerTrack="item.lockerTrack"
                         >
                             <multiselect
                                 v-model="vdata[key]"
                                 :multiple="false"
-                                :options="datalists[item.options]"
+                                :options="getOptions(item.options)"
+                                :disabled="item.disabled"
+                                :all_options="item.all_options"
                                 :searchable="item.searchable"
                                 :close-on-select="true"
                                 :clear-on-select="true"
@@ -71,7 +76,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit()"
+                                @input="onSubmit();unlock(item,key)"
                                 @select="cleanInput(key)"
                             ></multiselect>
                             <span
@@ -201,7 +206,8 @@ export default {
             type: Boolean,
             required: false,
             default: false,
-        },
+        }
+        
     },
     data() {
         return {
@@ -209,8 +215,19 @@ export default {
         };
     },
     created() {
-        console.log(this.data);
+        //console.log(this.data);
         this.vdata = this.data;
+
+    },
+    beforeUpdate(){
+        let fields_keys = Object.keys(this.fields);
+        let component = this;
+
+            fields_keys.forEach(function (key) {
+                if(component.fields[key].isLocker){
+                    component.unlock(component.fields[key],key)
+                }
+            });
     },
     methods: {
         closeModal() {
@@ -302,6 +319,10 @@ export default {
                             ).format("YYYY/MM/DD");
                         }
                         break;
+                    case "datepicker":
+                        if (component.vdata[key])
+                            data[key] = component.vdata[key];
+                        break;
                 }
             });
 
@@ -364,6 +385,48 @@ export default {
                 }
             }
         },
+        
+        unlock(item,key) {
+            let component = this;
+            let fields_keys = Object.keys(this.fields);
+            let caller = item;
+            let callerKey = key;
+            let dlist = this.datalists;
+
+            if(caller.isLocker){
+                fields_keys.forEach(function (key) {
+                    const lockedItem = component.fields[key];
+                    if (lockedItem.selectLock && component.fields[caller.locking]==lockedItem){
+                        const opts = dlist[lockedItem.all_options];
+                        const lockTracker = lockedItem.lock_tracker;
+                        const tracker = lockedItem.trackby;
+                        const validator = component.vdata[callerKey];
+                        
+                        if(validator != null){
+                            component.vdata[key] = "";
+                            lockedItem.options = [];
+                            lockedItem.disabled = false;
+                            opts.forEach(function(opt) {
+                            if(opt[lockTracker] != validator.id){
+                                lockedItem.options.push({id:opt.id,name:opt[tracker]});
+                                }
+                            });
+                        } else {
+                            component.vdata[key] = "";
+                            lockedItem.disabled = true;
+                        }
+                    }   
+                });
+            } 
+        },
+
+        getOptions(options){
+            if(typeof options=="string"){
+                return this.datalists[options]
+            } else {
+                return options
+            }
+        }
     },
     watch: {
         data: {

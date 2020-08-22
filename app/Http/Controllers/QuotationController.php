@@ -55,7 +55,7 @@ class QuotationController extends Controller
         foreach ($comps as $comp) {
             $cts = $comp->contact()->get();
             foreach ($cts as $ct) {
-                array_push($contacts,['id'=>$ct->id,'name'=>$ct->getFullName()]);
+                array_push($contacts,['id'=>$ct->id,'company_id'=>$ct->company_id,'name'=>$ct->getFullName()]);
             } 
         };
 
@@ -90,8 +90,8 @@ class QuotationController extends Controller
             return $status->only(['id','name']);
         });
 
-        $kinds_of_cargo = CargoKind::get()->map(function ($kind_of_cargo){
-            return $kind_of_cargo->only(['id','name']);
+        $kind_of_cargo = CargoKind::get()->map(function ($kcargo){
+            return $kcargo->only(['id','name']);
         });
 
         $languages = Language::get()->map(function ($language){
@@ -109,7 +109,7 @@ class QuotationController extends Controller
             'terms_and_conditions',
             'delivery_types',
             'status_options',
-            'kinds_of_cargo',
+            'kind_of_cargo',
             'languages'
         );
 
@@ -120,8 +120,8 @@ class QuotationController extends Controller
     {
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
-        $lastq = $company_user->companyQuotes()->OrderByDesc('id')->limit(1)->first();
-        $newq_id = $company_code . '-' . strval((intval(str_replace($company_code. '-','',$lastq->quote_id))) +1 );
+        $higherq_id = $company_user->getHigherId($company_code);
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
         $data = $request->validate([
             'type' => 'required',
@@ -143,8 +143,6 @@ class QuotationController extends Controller
             'chargeable_weight' => 'nullable',
             'carriers' => 'required'
         ]);
-        
-        //dd($request);
 
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
@@ -152,8 +150,8 @@ class QuotationController extends Controller
             'delivery_type' => $data['delivery_type'],
             'user_id' => \Auth::user()->id,
             'company_user_id' => $company_user->id,
-            'company_id' => $data['company_id_quote'],
-            'contact_id' => $data['contact_id'],
+            'company_id' => isset($data['company_id_quote']) ? $data['company_id_quote'] : null,
+            'contact_id' => isset($data['contact_id']) ? $data['contact_id'] : null,
             'mode' => $data['mode'],
             'cargo_type' => $data['cargo_type'],
             'total_quantity' => $data['total_quantity'],
@@ -161,7 +159,7 @@ class QuotationController extends Controller
             'total_volume' => $data['total_volume'],
             'chargeable_weight' => $data['chargeable_weight'],
             'price_id' => $data['price_id_num'],
-            'equipment' => $data['equipment'],
+            'equipment' => "[\"".implode("\",\"",$data['equipment'])."\"]",
             'origin_address' => $data['origin_address'],
             'destination_address' => $data['destination_address'],
             'date_issued' => explode("/",$data['date'])[0],
@@ -183,36 +181,44 @@ class QuotationController extends Controller
             'delivery_type' => 'required',
             'equipment' => 'required',
             'company_id' => 'nullable',
-            'contact' => 'nullable',
+            'contact_id' => 'nullable',
             'commodity' => 'nullable',
             'status' => 'required',
             'type' => 'required',
             'kind_of_cargo' => 'nullable',
-            'issued' => 'required',
-            'owner'=>'required',
+            'validity_start' => 'required',
+            'user_id'=>'required',
             'payment_conditions' => 'nullable',
-            'incoterm' => 'nullable',
+            'incoterm_id' => 'nullable',
             'language_id' => 'nullable',
-            'validity' => 'required',
+            'validity_end' => 'required',
             //'terms_and_conditions' => 'nullable'
         ]);
-        
-        $quote->update([
+
+        foreach(array_keys($data) as $key){
+            if (isset($data[$key])){
+                if ($key=='equipment'){
+                    $data[$key] = $quote->getContainerArray($data[$key]);
+                }
+                $quote->update([$key=>$data[$key]]);
+            }
+        }
+        /**$quote->update([
             'delivery_type' => $data['delivery_type'],
-            'equipment' => $data['equipment'], //TRANSFORM THIS DATA
+            'equipment' => $data['equipment'],
             'company_id' => $data['company_id'],
-            'contact' => $data['contact'],
+            'contact_id' => $data['contact_id'],
             'commodity' => $data['commodity'],
             'status' => $data['status'],
             'type' => $data['type'], 
             'kind_of_cargo' => $data['kind_of_cargo'],
-            'validity_start' => $data['issued'],
-            'user_id' => $data['owner'],
+            'validity_start' => $data['validity_start'],
+            'user_id' => $data['user_id'],
             'payment_conditions' => $data['payment_conditions'],
-            'incoterm_id' => $data['incoterm'],
-            'validity_end' => $data['validity'], //is it the same as validity?
+            'incoterm_id' => $data['incoterm_id'],
+            'validity_end' => $data['validity'], 
             //'terms_and_conditions' => $data['terms_and_conditions']
-        ]);
+        ]);**/
     }
 
     //Need funcs to update remarks and update terms?

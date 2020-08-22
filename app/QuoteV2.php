@@ -480,4 +480,30 @@ class QuoteV2 extends Model  implements HasMedia
         return (new QuotationFilter($request, $builder))->filter();
     }
 
+    public function getContainerCodes($equip)
+    {
+        $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
+        $full_equip = "";
+        
+        foreach ($equip_array as $eq){
+            $full_equip.=Container::where('id','=',$eq)->first()->code.",";
+        }
+
+        return $full_equip;
+    }
+
+    public function getContainerArray($equip)
+    {
+        $cont_ids=[];
+        $cont_array = explode(",",$equip);
+        foreach ($cont_array as $cont){
+            if ($cont != ""){
+                $wh = Container::where('code','=',$cont)->first()->id;
+                array_push($cont_ids,$wh);
+            }
+        }
+        $conts = "[\"".implode("\",\"",$cont_ids)."\"]";
+
+        return $conts;
+    }
 }

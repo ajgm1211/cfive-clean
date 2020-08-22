@@ -20,4 +20,21 @@ class CompanyUser extends Model implements Auditable
     {
         return $this->belongsTo('App\Currency');
     }
+
+    public function companyQuotes()
+    {
+        return $this->hasMany('App\QuoteV2');
+    }
+
+    public function getHigherId($companyCode)
+    {
+        $ids = [];
+        $quotes = $this->companyQuotes()->get();
+        foreach($quotes as $q){
+            $qid = intval(str_replace($companyCode."-","",$q->quote_id));
+            array_push($ids,$qid);
+        }
+
+        return max($ids);
+    }
 }

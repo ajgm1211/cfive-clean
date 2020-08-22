@@ -1031,6 +1031,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quote/store', 'QuotationController@store');
     Route::get('api/quote/{quote}/edit', 'QuotationController@edit')->middleware('check_company:quote');
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
+    Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
+    Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
+    Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
+
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/

@@ -51,9 +51,9 @@ export default {
       actions:actions,
       fields: [
       { key: 'quote_id', label: 'Id' },
-      { key: 'company_user_id', label: 'Client Company' },
-      { key: 'user_id', label: 'User' },
-      { key: 'issued', label: 'created at' },
+      { key: 'company_id', label: 'Client Company',formatter: (value)=> { return this.setClient(value) } },
+      { key: 'user_id', label: 'User',formatter: (value)=> { return value.name } },
+      { key: 'validity_start', label: 'created at' },
       { key: 'origin_address', label: 'Origin' },
       { key: 'destination_address', label: 'Destination' },
       { key: 'type', label: 'type' },
@@ -77,6 +77,13 @@ export default {
       },
       onEdit(data){
           window.location = `/api/quote/${data.id}/edit`;
+      },
+      setClient(value){
+        if(value == null){
+          return '-';
+        } else {
+          return value.business_name;
+        }
       }
     }
 };
