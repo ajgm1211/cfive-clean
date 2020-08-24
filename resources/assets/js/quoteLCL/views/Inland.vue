@@ -51,20 +51,14 @@
                                     <span class="label-text">charge</span>
                                 </b-th>
 
+                                <b-td colspan="3"></b-td>
+
                                 <b-th>
-                                    <span class="label-text">provider</span>
+                                    <span class="label-text">Provider</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">20 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 hc</span>
+                                    <span class="label-text">RATE</span>
                                 </b-th>
 
                                 <b-th>
@@ -86,20 +80,14 @@
                                     <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
                                 </b-td>
 
+                                <b-td colspan="3"></b-td>
+
                                 <b-td>
                                     <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -129,20 +117,14 @@
                                     <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
                                 </b-td>
 
+                                <b-td colspan="3"></b-td>
+
                                 <b-td>
                                     <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -168,7 +150,7 @@
                             <!-- Profit -->
                             <b-tr>
 
-                                <b-td></b-td>
+                                <b-td colspan="3"></b-td>
 
                                 <b-td>
                                     <span><b>Profit</b></span>
@@ -176,14 +158,6 @@
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -205,13 +179,9 @@
                             <!-- Total -->
                             <b-tr class="q-total">
 
-                                <b-td></b-td>
+                                <b-td colspan="3"></b-td>
 
                                 <b-td><span><b>Total</b></span></b-td>
-
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
                                 
                                 <b-td><span><b>150</b></span></b-td>
 

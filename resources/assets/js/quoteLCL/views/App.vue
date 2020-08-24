@@ -76,3 +76,9 @@ export default {
   }
 };
 </script>
+
+<style>
+    .modal-body {
+        background: #ffffff !important;
+    }
+</style>

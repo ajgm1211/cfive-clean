@@ -62,15 +62,15 @@
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">20 dv</span>
+                                    <span class="label-text">UNITS</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 dv</span>
+                                    <span class="label-text">RATE</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 hc</span>
+                                    <span class="label-text">TOTAL</span>
                                 </b-th>
 
                                 <b-th>
@@ -85,21 +85,26 @@
 
                             <b-tr class="q-tr">
 
-                                <b-td>
+                                <b-td >
                                     <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="TON/M3" class="q-input"></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="50" class="q-input q-width"></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="1500" class="q-input q-width "></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="1000" class="q-input q-width"></b-form-input>
                                 </b-td>
+
                                 <b-td>
                                     <multiselect
                                         v-model="value"
@@ -123,18 +128,23 @@
                                 <b-td>
                                     <b-form-input placeholder="Freight" class="q-input"></b-form-input>
                                 </b-td>
+                                
                                 <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="TON/M3" class="q-input"></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="50" class="q-input q-width"></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="1500" class="q-input q-width "></b-form-input>
                                 </b-td>
+
                                 <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="1000" class="q-input q-width"></b-form-input>
                                 </b-td>
+
                                 <b-td>
                                     <multiselect
                                         v-model="value"
@@ -155,13 +165,9 @@
 
                             <b-tr class="q-total">
 
-                                <b-td></b-td>
+                                <b-td colspan="3"></b-td>
 
                                 <b-td><span><b>Total</b></span></b-td>
-
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
 
                                 <b-td><span><b>150</b></span></b-td>
 
@@ -236,15 +242,19 @@
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">20 DV + Profit</span>
+                                    <span class="label-text">Units </span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 DV + Profit</span>
+                                    <span class="label-text">RATE</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 HC + Profit</span>
+                                    <span class="label-text">Profit</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">TOTAL</span>
                                 </b-th>
 
                                 <b-th>
@@ -290,17 +300,18 @@
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
+                                </b-td>
+
+                                 <b-td>
+                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -322,7 +333,7 @@
 
                             </b-tr>
 
-                            <b-tr class="q-tr">
+                             <b-tr class="q-tr">
                                 
                                 <b-td>
                                     <b-form-checkbox value="carrier"></b-form-checkbox>
@@ -353,17 +364,18 @@
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
+                                </b-td>
+
+                                 <b-td>
+                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -382,24 +394,14 @@
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                     </button>
                                 </b-td>
-                                
+
                             </b-tr>
 
                             <b-tr class="q-total">
 
-                                <b-td></b-td>
-
-                                <b-td></b-td>
-
-                                <b-td></b-td>
-
-                                <b-td></b-td>
+                                <b-td colspan="7"></b-td>
 
                                 <b-td><span><b>Total</b></span></b-td>
-                                
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
 
                                 <b-td><span><b>150</b></span></b-td>
 
