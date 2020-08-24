@@ -7,7 +7,7 @@
             <div class="row">
 
                 <!-- Quote ID -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">quote id</span>
@@ -18,7 +18,7 @@
                 <!-- End Quote ID -->
 
                 <!-- Services -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">service</span>
@@ -36,7 +36,7 @@
                 <!-- End Services -->
 
                 <!-- Customer -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">customer</span>
@@ -54,7 +54,7 @@
                 <!-- End Customer -->
 
                 <!-- Commodity -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">commodity</span>
@@ -65,7 +65,7 @@
                 <!-- End Commodity -->
 
                 <!-- Status -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">status</span>
@@ -83,7 +83,7 @@
                 <!-- End Status -->
 
                 <!-- Type -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">type</span>
@@ -94,7 +94,7 @@
                 <!-- End Type -->
 
                 <!-- Contact -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">contact</span>
@@ -112,7 +112,7 @@
                 <!-- End Contact -->
 
                 <!-- Kind of cargo -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">kind of cargo</span>
@@ -130,7 +130,7 @@
                 <!-- End Kind of cargo -->
 
                 <!-- Date Issued -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">date issued</span>
@@ -146,19 +146,8 @@
                 </div>
                 <!-- End Date Issued -->
 
-                <!-- Equipment -->
-                <div class="col-12 col-lg-3">
-
-                    <label class="q-label">
-                        <span class="label-text">equipment</span>
-                        <b-form-input placeholder="20DV, 40DV,40HC" class="q-input" disabled></b-form-input>
-                    </label>
-
-                </div>
-                <!-- End Equipment -->
-
                 <!-- Owner -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">owner</span>
@@ -176,7 +165,7 @@
                 <!-- End Owner -->
 
                 <!-- Payment -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">payment conditions</span>
@@ -186,8 +175,10 @@
                 </div>
                 <!-- End Payment -->
 
+                <div class="col-12 col-sm-3 col-lg-3"></div>
+
                 <!-- Vality -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">vality</span>
@@ -204,7 +195,7 @@
                 <!-- End Vality -->
 
                 <!-- Incoterm -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">incoterm</span>
@@ -222,7 +213,7 @@
                 <!-- End Incoterm -->
 
                 <!-- Language -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-3 col-lg-3">
 
                     <label class="q-label">
                         <span class="label-text">language</span>
@@ -244,11 +235,14 @@
         </b-card>
         <!-- End Quote inputs -->
 
+        <!-- Cargo Type -->
         <b-card class="q-card mt-5">
-            <div class="row justify-content-between">
+
+            <!-- Cargo Type -->
+            <div class="row justify-content-start">
 
                 <!-- CARGO TYPE ID -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-sm-2 col-lg-2">
 
                     <label class="q-label">
                         <span class="label-text">CARGO TYPE</span>
@@ -258,61 +252,174 @@
                 </div>
                 <!-- End CARGO TYPE ID -->
 
+                <div class="col-12 col-sm-1"></div>
+
                 <!-- CARGO TYPE ID -->
-                <div class="col-12 col-lg-2">
+                <div class="col-12 col-sm-2 col-lg-2">
 
                     <label class="q-label">
-                        <span class="label-text">total quantity</span>
+                        <span class="label-text" style="white-space:nowrap">total quantity</span>
+                        <b-form-input class="q-input q-width" placeholder="5"></b-form-input>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-2">
+
+                    <label class="q-label">
+                        <span class="label-text">total weight</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>Kg
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-2">
+
+                    <label class="q-label">
+                        <span class="label-text">total VOLUME</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>Kg
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-2">
+
+                    <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">CHARGEABLE WEIGHT</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>m³
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+            </div>
+            <!-- End Cargo Type -->
+
+            <!-- Cargo Type -->
+            <div class="row justify-content-between">
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-2">
+
+                    <label class="q-label">
+                        <span class="label-text">CARGO TYPE</span>
                         <b-form-input class="q-input" placeholder="CA-1545"></b-form-input>
                     </label>
 
                 </div>
                 <!-- End CARGO TYPE ID -->
 
+                <div class="col-12 col-sm-1 d-none d-lg-block"></div>
+
+                <div class="col-12 col-sm-2 col-lg-1">
+
+                     <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">quantity</span>
+                        <b-form-input class="q-input q-width" placeholder="4"></b-form-input>
+                    </label>
+                    
+                </div>
+
                 <!-- CARGO TYPE ID -->
-                <div class="col-12 col-lg-2">
+                <div class="col-12 col-sm-2 col-lg-1">
+
+                    <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">height</span>
+                        <b-form-input class="q-input q-width" placeholder="5"></b-form-input>cm
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-1">
+
+                    <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">width</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="9"></b-form-input>cm
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID --> 
+                <div class="col-12 col-sm-2 col-lg-1">
+
+                    <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">weight</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>Kg
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2 col-lg-1">
+
+                    <label class="q-label">
+                        <span class="label-text" style="white-space:nowrap">volumen</span>
+                        <div class="d-flex align-items-end">
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>m³
+                        </div>
+                    </label>
+
+                </div>
+                <!-- End CARGO TYPE ID -->
+
+                <div class="col-1 d-none d-lg-block"></div>
+
+                <!-- CARGO TYPE ID -->
+                <div class="col-12 col-sm-2">
 
                     <label class="q-label">
                         <span class="label-text">total weight</span>
                         <div class="d-flex align-items-end">
-                            <b-form-input class="q-input" placeholder="CA-1545"></b-form-input>Kg
+                            <b-form-input class="q-input q-width" placeholder="5"></b-form-input>m³
                         </div>
                     </label>
 
                 </div>
                 <!-- End CARGO TYPE ID -->
-
-                <!-- CARGO TYPE ID -->
-                <div class="col-12 col-lg-2">
-
-                    <label class="q-label">
-                        <span class="label-text">total VOLUME</span>
-                        <div class="d-flex align-items-end">
-                            <b-form-input class="q-input" placeholder="CA-1545"></b-form-input>Kg
-                        </div>
-                    </label>
-
-                </div>
-                <!-- End CARGO TYPE ID -->
-
-                <!-- CARGO TYPE ID -->
-                <div class="col-12 col-lg-2">
-
-                    <label class="q-label">
-                        <span class="label-text">CHARGEABLE WEIGHT</span>
-                        <div class="d-flex align-items-end">
-                            <b-form-input class="q-input" placeholder="CA-1545"></b-form-input>m³
-                        </div>
-                    </label>
-
-                </div>
-                <!-- End CARGO TYPE ID -->
-
-                 <div class="col-12 col-lg-1"></div>
 
             </div>
-        </b-card>
+            <!-- End Cargo Type -->
 
+            <!-- Cargo Type Total -->
+            <div class="row justify-content-between">
+
+                <div class="col-12 col-sm-3">
+                    <label class="q-label">
+                       CHARGEABLE WEIGHT <span class="label-text">0.034 m³</span>
+                    </label>
+                </div>
+
+                <div class="col-12 col-sm-2">
+                    <label class="q-label">
+                       <span class="label-text">Total: 34 un 0.06 m3 338 kg</span>
+                    </label>
+                </div>
+
+            </div>
+            <!-- End Cargo Type Total -->
+
+        </b-card>
+        <!-- End Cargo Type -->
         <!-- Terms and Condition -->
         <b-card class="mt-5">
 
