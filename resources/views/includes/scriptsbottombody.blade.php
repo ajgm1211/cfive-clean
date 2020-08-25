@@ -38,6 +38,9 @@
    
 
 <script>
+  $(document).ready(function() {
+    $(".dropdown-toggle").dropdown();
+  });
   var userId = {{ Auth::user()->id }}
 
 
