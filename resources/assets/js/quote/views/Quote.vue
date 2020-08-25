@@ -46,7 +46,6 @@
                                                 v-if="loaded"
                                                 :data="currentData"
                                                 :fields="term_fields"
-                                                :datalists="datalists"
                                                 :actions="actions.quotes"
                                                 :update="true"
                                             ></FormInlineView>
@@ -271,22 +270,14 @@ export default {
             .catch((data) => {
                 this.$refs.observer.setErrors(data.data.errors);
             });
-    },
-    methods: {
-        setCompanyDrops(value, id) {
-            this.companyLocked = "true";
-            this.contact = "";
-            if (typeof this.all_contacts[value] == "string") {
-                this.sel_contacts = [this.all_contacts[value]];
-            } else {
-                this.sel_contacts = this.all_contacts[value];
-            }
         },
+    
+    methods: {
         //Set dropdowns
         setDropdownLists(err, data) {
             this.datalists = data;
             //console.log(this.datalists);
         },
-    },
+    }
 };
 </script>
