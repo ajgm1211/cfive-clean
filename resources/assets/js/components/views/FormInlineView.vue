@@ -76,7 +76,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit();unlock(item,key)"
+                                @input="onSubmit(),unlock(item,key)"
                                 @select="cleanInput(key)"
                             ></multiselect>
                             <span
@@ -289,6 +289,7 @@ export default {
             let component = this;
             let fields_keys = Object.keys(this.fields);
 
+            data["keys"] = fields_keys;
             fields_keys.forEach(function (key) {
                 const item = component.fields[key];
 
@@ -403,7 +404,6 @@ export default {
                         const validator = component.vdata[callerKey];
                         
                         if(validator != null){
-                            component.vdata[key] = "";
                             lockedItem.options = [];
                             lockedItem.disabled = false;
                             opts.forEach(function(opt) {
