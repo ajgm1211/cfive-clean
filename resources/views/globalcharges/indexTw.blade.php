@@ -79,7 +79,7 @@
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
-                                    <a href="{{route('RequestsGlobalchargersFcl.create')}}">
+                                    <!-- <a href="{{route('RequestsGlobalchargersFcl.create')}}">
 
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
@@ -89,7 +89,7 @@
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
-                                    </a>
+                                    </a> -->
 
                                     <button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                         <span>
