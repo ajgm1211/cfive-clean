@@ -83,11 +83,11 @@
                                 <b-td colspan="3"></b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="Per Container" class="q-input q-width"></b-form-input>
                                 </b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="50" class="q-input q-width"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -120,11 +120,11 @@
                                 <b-td colspan="3"></b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="Per Container" class="q-input q-width"></b-form-input>
                                 </b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
+                                    <b-form-input placeholder="50" class="q-input q-width"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -150,14 +150,14 @@
                             <!-- Profit -->
                             <b-tr>
 
-                                <b-td colspan="3"></b-td>
+                                <b-td colspan="4"></b-td>
 
                                 <b-td>
                                     <span><b>Profit</b></span>
                                 </b-td>
 
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
+                                <b-td> 
+                                    <b-form-input placeholder="1500" class="q-input q-width"></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -179,7 +179,7 @@
                             <!-- Total -->
                             <b-tr class="q-total">
 
-                                <b-td colspan="3"></b-td>
+                                <b-td colspan="4"></b-td>
 
                                 <b-td><span><b>Total</b></span></b-td>
                                 
