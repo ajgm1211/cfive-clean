@@ -1,5 +1,6 @@
 <template>
   <div class="quote-header">
+
     <div class="container-fluid">
 
       <div class="row">
@@ -15,9 +16,11 @@
             <h4 class="card-title mt-3">
               <b>LCL Quote</b>
             </h4>
+
             <div>
               <a href="#" class="btn btn-primary btn-bg">+ PDF</a>
             </div>
+
           </div>
 
         </div>
@@ -53,6 +56,7 @@
       </div>
 
     </div>
+
   </div>
 </template>
 
