@@ -506,4 +506,15 @@ class QuoteV2 extends Model  implements HasMedia
 
         return $conts;
     }
+
+    public function originDest($reqPorts)
+    {
+        foreach($reqPorts as $port){
+            $info = explode("-",$port);
+            $ports[] = $info[0];
+        }
+
+        return $ports;
+
+    }
 }
