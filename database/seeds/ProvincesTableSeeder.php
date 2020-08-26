@@ -507,6 +507,55 @@ class ProvincesTableSeeder extends Seeder
                 'region' => NULL,
                 'country_id' => 66,
             ),
+            70 => 
+            array (
+                'id' => 71,
+                'name' => 'PARRA',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            71 => 
+            array (
+                'id' => 72,
+                'name' => 'PERPIGNAN',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            72 => 
+            array (
+                'id' => 73,
+                'name' => 'CARTAGENA',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            73 => 
+            array (
+                'id' => 74,
+                'name' => 'HOLANDA',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            74 => 
+            array (
+                'id' => 75,
+                'name' => 'DONOSTI',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            75 => 
+            array (
+                'id' => 76,
+                'name' => 'GIJON',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
+            76 => 
+            array (
+                'id' => 77,
+                'name' => 'CARTAGENA',
+                'region' => NULL,
+                'country_id' => 66,
+            ),
         ));
         
         
