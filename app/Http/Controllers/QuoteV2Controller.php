@@ -2838,7 +2838,12 @@ class QuoteV2Controller extends Controller
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
-                            $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                            $query->where(function ($q) use ($dateSince, $dateUntil) {
+                                $q->where('validity', '>=', $dateSince)->where('validity', '<=', $dateUntil);
+                            })->orwhere(function ($qo) use ($dateSince, $dateUntil) {
+                                $qo->where('expire', '>=', $dateUntil)->where('expire', '<=', $dateUntil);
+                            });
+                            
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
 
@@ -2856,7 +2861,11 @@ class QuoteV2Controller extends Controller
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
-                            $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                            $query->where(function ($q) use ($dateSince, $dateUntil) {
+                                $q->where('validity', '>=', $dateSince)->where('validity', '<=', $dateUntil);
+                            })->orwhere(function ($qo) use ($dateSince, $dateUntil) {
+                                $qo->where('expire', '>=', $dateUntil)->where('expire', '<=', $dateUntil);
+                            });
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
                 });
