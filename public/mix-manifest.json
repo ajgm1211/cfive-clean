@@ -4,6 +4,7 @@
     "/js/inlands/edit.js": "/js/inlands/edit.js",
     "/js/saleterms/list.js": "/js/saleterms/list.js",
     "/js/saleterms/edit.js": "/js/saleterms/edit.js",
+    "/js/quoteLCL/index.js": "/js/quoteLCL/index.js",
     "/js/transit_time/index.js": "/js/transit_time/index.js",
     "/js/saleterms/index.js": "/js/saleterms/index.js",
     "/js/saleterms/codes.js": "/js/saleterms/codes.js",

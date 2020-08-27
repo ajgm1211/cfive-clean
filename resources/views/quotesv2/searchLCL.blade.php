@@ -1689,7 +1689,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span class="colorphacode">
-                                                            {{ $rates['total'] }}</span></div>
+                                                    {{ $rates['price'] }}  {{ $rates['currency'] }} </span></div>
 
                                                 </div>
                                                 @endforeach
@@ -1732,7 +1732,7 @@
                                                     </div>
                                                     <div class="col-lg-1"><span
                                                             class="colorphacode">{{ $localfreight['montoMarkup']}}
-                                                            {{ $arr->quoteCurrency }}</span></div>
+                                                            {{ $localfreight['currency'] }}</span></div>
                                                 </div>
                                                 @endforeach
                                                 @endforeach
@@ -1741,7 +1741,7 @@
                                                 <div class="row bg-light">
                                                     <div class="col-lg-4 col-lg-offset-"><span
                                                             class="portalphacode">Subtotal Freight Charges :
-                                                        </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
+                                                        </span>{{ $arr->totalFreight  }} {{ $arr->rateCurrency }}</div>
                                                     <div class="col-lg-7">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="wth"><span class="portalphacode"></span></div>

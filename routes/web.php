@@ -1035,17 +1035,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
 
-    //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-    //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
-    /** End Inlands routes view **/
-
-    /** Sale terms V3 view routes **/
-    Route::get('api/sale_terms', 'SaleTermV3Controller@index')->name('sale_term_v3.index');
-    Route::get('api/sale_terms/{saleterm}/edit', 'SaleTermV3Controller@edit')->name('sale_term_v3.edit')->middleware('check_company:saleterm');
-    /** End Sale terms routes view **/
-
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
+
+    /** Quotes LCL **/
+    Route::get('api/quoteLCL', 'QuoteLCLTestController@index')->name('quoteLCL.index');
 
     /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
