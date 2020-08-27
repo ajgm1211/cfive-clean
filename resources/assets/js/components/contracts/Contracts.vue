@@ -41,7 +41,7 @@
 							</surcharges>
 						</b-tab>
 
-						<b-tab title="Restrictions">
+						<b-tab title="Only Apply To">
 							<restrictions v-if="loaded"
 								:datalists="datalists"
 								:actions="actions.restrictions"
