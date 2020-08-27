@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form-group m-form__group">
-                                            <label for="colors_PDF">PDF Colors</label><br>
+                                            <label for="colors_PDF">Color</label><br>
                                             <input  type="color" name="colors_pdf" value="{{ @$color_pdf}}"> 
                                         </div>
                                     </div>
@@ -415,7 +415,7 @@
                                     </div>                                    
                                     <div class="col-md-5">
                                         <div class="form-group m-form__group">
-                                            <label for="colors_PDF">PDF Colors</label><br>
+                                            <label for="colors_PDF">Color</label><br>
                                             <input  type="color" name="colors_pdf" value="{{ @$color_pdf}}"> 
                                         </div>
                                     </div>
