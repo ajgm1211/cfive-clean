@@ -615,7 +615,7 @@ trait QuoteV2Trait
                                         ${$amount . $c->code} = $array_amounts['c' . $c->code];
                                         ${$total . $c->code} += ${$amount . $c->code} / $currency_rate;
                                     } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
-                                        ${$markup . $c->code} = $array_markups['c' . $c->code];
+                                        ${$markup . $c->code} = $array_markups['m' . $c->code];
                                         ${$total . $c->code} += ${$markup . $c->code} / $currency_rate;
                                     }
                                     if ($value->type_id == 1) {

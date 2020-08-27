@@ -1400,8 +1400,7 @@
                                             </div>
                                             <div class="col-lg-10 b-left info-bottom-border">
                                                 <div class="row">
-                                                    <div
-                                                        class="col-lg-8 no-padding padding-min-col d-flex justify-content-start">
+                                                    <div class="col-lg-8 no-padding padding-min-col d-flex justify-content-start">
                                                         <div class="row col-lg-12">
                                                             <div class="col-lg-4">
                                                                 <span class="portcss">
@@ -1410,8 +1409,7 @@
                                                                     {{$arr->port_origin->code  }}</span>
                                                             </div>
 
-                                                            <div
-                                                                class="col-lg-4 d-flex flex-column justify-content-center">
+                                                            <div class="col-lg-4 d-flex flex-column justify-content-center">
                                                                 @if($arr->via != '')
                                                                 <span style="color:#2e0084; text-align: center">Via
                                                                     :</span>
@@ -1428,11 +1426,8 @@
                                                                 </div>
                                                                 <br>
                                                                 @if($arr->transit_time != '')
-                                                                <span style="color:#2e0084; text-align: center">Transit
-                                                                    :</span>
-                                                                <span
-                                                                    style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
-                                                                    Days</span>
+                                                                    <span style="color:#2e0084; text-align: center">Transit Time:</span>
+                                                                    <span style="color:#1d3b6e; text-align: center">{{$arr->transit_time}} Days</span>
                                                                 @endif
                                                             </div>
                                                             <div class="col-lg-4 d-flex align-items-center flex-column">
@@ -1497,7 +1492,11 @@
                                                                 {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }}
                                                                 -
                                                                 {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-
+                                                                <span class="portalphacode"
+                                                                    style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:</span>
+                                                                <span
+                                                                    title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                                {{ $arr->contract->number }}
                                                             </div>
                                                             @endif
 
@@ -1690,7 +1689,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span class="colorphacode">
-                                                            {{ $rates['total'] }}</span></div>
+                                                    {{ $rates['price'] }}  {{ $rates['currency'] }} </span></div>
 
                                                 </div>
                                                 @endforeach
@@ -1733,7 +1732,7 @@
                                                     </div>
                                                     <div class="col-lg-1"><span
                                                             class="colorphacode">{{ $localfreight['montoMarkup']}}
-                                                            {{ $arr->quoteCurrency }}</span></div>
+                                                            {{ $localfreight['currency'] }}</span></div>
                                                 </div>
                                                 @endforeach
                                                 @endforeach
@@ -1742,7 +1741,7 @@
                                                 <div class="row bg-light">
                                                     <div class="col-lg-4 col-lg-offset-"><span
                                                             class="portalphacode">Subtotal Freight Charges :
-                                                        </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
+                                                        </span>{{ $arr->totalFreight  }} {{ $arr->rateCurrency }}</div>
                                                     <div class="col-lg-7">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="wth"><span class="portalphacode"></span></div>
