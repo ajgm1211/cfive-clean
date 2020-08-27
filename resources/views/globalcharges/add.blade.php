@@ -15,23 +15,23 @@
                         </label>
                         <div class="m-radio-inline">
                             <label class="m-radio">
-                                <input type="radio" id="rdrouteP" onclick="activarCountry('divport')" checked='true'
+                                <input type="radio" id="rdrouteP" onclick="activarCountry('divport','false')" checked='true'
                                     name="typeroute" value="port"> Ports
                                 <span></span>
                             </label>
                             @if ($route == 'globalcharges.store')
                             <label class="m-radio">
-                                <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry')"
+                                <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry','false')"
                                     name="typeroute" value="country"> Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry')"
+                                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry','false')"
                                     name="typeroute" value="portcountry"> Port to Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport')"
+                                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport','false')"
                                     name="typeroute" value="countryport"> Country to Port
                                 <span></span>
                             </label>
@@ -53,7 +53,7 @@
             <div class="col-lg-4">
                 <div class="divport">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
-                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand" style="margin-bottom: 0px">
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
                         <input name='allOriginPort' value='1485' id='allOriginPort' type="checkbox">
                         {!! Form::label('all', 'All') !!}
                         <span></span>
@@ -62,16 +62,6 @@
           null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ,'required' => 'true' ]) }}
 
                 </div>
-
-                <!-- Excepcion Origin Port-->
-                <div class="excepcionPortOrig" hidden="true">
-                    <div>
-                        <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
-                        {{ Form::select('exceptionPortOrig[]', $harbor,null,['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
-                    </div>
-                </div>
-                <!-- Fin Excepcion Origin Port-->
-
                 <div class="divcountry" hidden="true">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('origC', 'Origin Country') !!}
@@ -114,7 +104,7 @@
                 <div class="divport">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
                     &nbsp;
-                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand" style="margin-bottom: 0px">
+                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
                         <input name='allDestinationPort' value='1485' id='allDestinationPort' type="checkbox">
                         {!! Form::label('all', 'All') !!}
                         <span></span>
@@ -128,17 +118,6 @@
                         </span>
                     </div>
                 </div>
-
-                <!-- Excepcion Destination Port -->
-                <div class="excepcionPortDest" hidden="true">
-                        <div>
-                            <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
-                            {{ Form::select('exceptionPortDest[]', $harbor,
-                null,['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
-                        </div>
-                    </div>
-                    <!-- Fin Excepcion Destination Port -->
-
                 <div class="divcountry" hidden="true">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
@@ -186,7 +165,7 @@
                 {{ Form::select('changetype',$typedestiny, null,['id' => 'changetype','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
             </div>
             <div class="col-lg-4">
-                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validation') !!}
+                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validity') !!}
                 {!! Form::text('validation_expire', null, ['placeholder' => 'Contract Validity','class' => 'form-control
                 m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
             </div>
@@ -260,6 +239,21 @@
 
 
         <div class="form-group m-form__group row">
+
+            <div class="excepcionPortOrig" hidden="true">
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
+                    {{ Form::select('exceptionPortOrig[]', $harbor,
+          null,['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionPortDest" hidden="true">
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
+                    {{ Form::select('exceptionPortDest[]', $harbor,
+          null,['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
             <div class="excepcionCountryOrig" hidden="true">
                 <div class="col-lg-9">
 
