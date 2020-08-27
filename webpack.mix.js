@@ -18,5 +18,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/inlands/index.js', 'public/js/inlands')
     //.js('resources/assets/js/quote/edit.js', 'public/js/quote')
     .js('resources/assets/js/quote/index.js', 'public/js/quote')
+    //.js('resources/assets/js/quoteLCL/edit.js', 'public/js/quoteLCL')
+    .js('resources/assets/js/quoteLCL/index.js', 'public/js/quoteLCL')
     .js('resources/assets/js/transit_time/index.js', 'public/js/transit_time')
     .sass('resources/assets/sass/app.scss', 'public/css');

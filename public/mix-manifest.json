@@ -1,6 +1,7 @@
 {
     "/js/contracts/edit.js": "/js/contracts/edit.js",
     "/js/inlands/edit.js": "/js/inlands/edit.js",
+    "/js/quoteLCL/index.js": "/js/quoteLCL/index.js",
     "/js/transit_time/index.js": "/js/transit_time/index.js",
     "/js/inlands/index.js": "/js/inlands/index.js",
     "/js/contracts/index.js": "/js/contracts/index.js",
