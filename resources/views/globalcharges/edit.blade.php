@@ -159,7 +159,7 @@ activarCountry('{{ $activacion['act'] }}');
                 {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control']) }}
             </div>
             <div class="col-lg-4">
-                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validation') !!}
+                <i class="la la-calendar icon__modal"></i>{!! Form::label('validation_expire', 'Validity') !!}
                 {!! Form::text('validation_expire', $globalcharges->validation_expire, ['placeholder' => 'Contract
                 Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' =>
                 'required']) !!}
