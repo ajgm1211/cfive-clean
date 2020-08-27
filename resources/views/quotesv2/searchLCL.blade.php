@@ -1689,7 +1689,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span class="colorphacode">
-                                                    {{ $rates['price'] }}  {{ $rates['currency'] }} </span></div>
+                                                    {{ $rates['subtotal'] }}  {{ $rates['currency'] }} </span></div>
 
                                                 </div>
                                                 @endforeach
@@ -1741,7 +1741,7 @@
                                                 <div class="row bg-light">
                                                     <div class="col-lg-4 col-lg-offset-"><span
                                                             class="portalphacode">Subtotal Freight Charges :
-                                                        </span>{{ $arr->totalFreight  }} {{ $arr->rateCurrency }}</div>
+                                                        </span>{{ $arr->totalFreightOrig  }} {{ $arr->rateCurrency }}</div>
                                                     <div class="col-lg-7">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="wth"><span class="portalphacode"></span></div>
