@@ -234,7 +234,7 @@ export default {
 		    update(id, data, route){
 		    	return api.call('post', `/api/quote/${id}/update`, data);
 		    },
-				retrieve(id){
+			retrieve(id){
 					return api.call('get', `/api/quotes/${id}`, {});
 		    },
 		    duplicate(id, data){

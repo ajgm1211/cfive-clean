@@ -143,4 +143,36 @@ class Charge extends Model
 
         return $value;
     }
+
+    public function setContractInfo($info_decoded,$rate_decoded,$autoRate)
+    {   
+
+        $rates = json_encode($rate_decoded->rate);
+        $markups = json_encode($rate_decoded->markups);
+        $remarks = $info_decoded->remarks;
+        $transit_time = $info_decoded->transit_time;
+        $via = $info_decoded->via;
+
+        $this->amount = $rates;
+        $this->markups = $markups;
+        $this->currency_id = $info_decoded->currency->id;
+        $this->total = $rates;
+        $this->save();
+
+        $autoRate->contract = $info_decoded->contract->name;
+        $autoRate->origin_port_id = $info_decoded->port_origin->id;
+        $autoRate->destination_port_id = $info_decoded->port_destiny->id;
+        $autoRate->carrier_id = $info_decoded->carrier->id;
+        $autoRate->currency_id = $info_decoded->currency->id;
+        $autoRate->remarks = $remarks;
+        if($transit_time!=''){
+            $autoRate->transit_time = $transit_time;
+        }
+        if($via != ''){
+            $autoRate->via = $via;
+        }        
+        $autoRate->save();
+
+    }
+
 }
