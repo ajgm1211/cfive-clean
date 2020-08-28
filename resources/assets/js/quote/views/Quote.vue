@@ -56,7 +56,15 @@
                         </b-tab>
 
                         <b-tab title="Ocean Freight">
-                            <Ocean></Ocean>
+                            <ocean v-if="loaded"
+                            :equipment="equip"
+                            :quoteEquip="quoteEquip"
+                            :datalists="datalists"
+                            :currentData="currentData"
+                            :freights="freights"
+                            :actions="actions.quotes"
+                            :data="currentData"
+                            ></ocean>
                         </b-tab>
 
                         <b-tab title="Local Charges">
@@ -130,8 +138,7 @@ export default {
                     placeholder: "Select options",
                     options: "companies",
                     colClass: "col-lg-3",
-                    isLocker: true,
-                    locking: "contact_id"
+                    isLocker: true
                 },
                 commodity: {
                     label: "COMMODITY",
@@ -171,7 +178,8 @@ export default {
                     all_options:"contacts",
                     colClass: "col-lg-3",
                     selectLock: true,
-                    lock_tracker:"company_id"
+                    lock_tracker:"company_id",
+                    locking: "company_id"
                 },
                 kind_of_cargo: {
                     label: "KIND OF CARGO",
@@ -237,8 +245,13 @@ export default {
                     rules: "required",
                     trackby: "name",
                     placeholder: "Select options",
-                    options: "languages",
                     colClass: "col-lg-3",
+                    options: [],
+                    all_options:"languages",
+                    selectLock: true,
+                    lock_tracker:"company_id",
+                    locking: "company_id"
+
                 },
             },
             term_fields: {
@@ -252,6 +265,9 @@ export default {
             currentData: {},
             vdata: {},
             datalists: {},
+            equip: {},
+            freights: {},
+            quoteEquip: []
         };
     },
     created() {
@@ -266,6 +282,7 @@ export default {
             .retrieve(id)
             .then((response) => {
                 this.currentData = response.data.data;
+                this.onSuccess(this.currentData);
             })
             .catch((data) => {
                 this.$refs.observer.setErrors(data.data.errors);
@@ -278,6 +295,12 @@ export default {
             this.datalists = data;
             //console.log(this.datalists);
         },
+        onSuccess(data){
+            this.equip = data.gp_container;
+            this.freights = data.rates;
+            this.quoteEquip = data.equipment.split(',');
+            this.quoteEquip.splice(-1,1)
+		},
     }
 };
 </script>

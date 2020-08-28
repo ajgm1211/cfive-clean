@@ -30,11 +30,15 @@ class CompanyUser extends Model implements Auditable
     {
         $ids = [];
         $quotes = $this->companyQuotes()->get();
-        foreach($quotes as $q){
-            $qid = intval(str_replace($companyCode."-","",$q->quote_id));
-            array_push($ids,$qid);
+        if(count($quotes)==0){
+            return count($quotes);
+        } else {
+            foreach($quotes as $q){
+                $qid = intval(str_replace($companyCode."-","",$q->quote_id));
+                array_push($ids,$qid);
+            }
         }
-
+        
         return max($ids);
     }
 }

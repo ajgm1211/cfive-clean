@@ -393,11 +393,11 @@ export default {
             let caller = item;
             let callerKey = key;
             let dlist = this.datalists;
-
+            
             if(caller.isLocker){
                 fields_keys.forEach(function (key) {
                     const lockedItem = component.fields[key];
-                    if (lockedItem.selectLock && component.fields[caller.locking]==lockedItem){
+                    if (lockedItem.selectLock && callerKey==lockedItem.locking){
                         const opts = dlist[lockedItem.all_options];
                         const lockTracker = lockedItem.lock_tracker;
                         const tracker = lockedItem.trackby;
@@ -407,7 +407,7 @@ export default {
                             lockedItem.options = [];
                             lockedItem.disabled = false;
                             opts.forEach(function(opt) {
-                            if(opt[lockTracker] != validator.id){
+                            if(opt[lockTracker] == validator.id){
                                 lockedItem.options.push({id:opt.id,name:opt[tracker]});
                                 }
                             });

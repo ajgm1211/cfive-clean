@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\QuoteV2;
 use App\Carrier;
+use App\AutomaticRate;
 use App\CompanyUser;
 use App\Company;
 use App\Contact;
@@ -20,6 +21,7 @@ use App\CargoKind;
 use App\Language;
 use App\Currency;
 use App\Container;
+use App\Charge;
 use App\Http\Resources\QuotationResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +55,9 @@ class QuotationController extends Controller
 
         $comps = Company::where('company_user_id','=',$company_user_id)->get();
         $contacts = [];
+        $languages = [];
         foreach ($comps as $comp) {
+            array_push($languages,['company_id'=>$comp->id,'name'=>$comp->pdf_language]);
             $cts = $comp->contact()->get();
             foreach ($cts as $ct) {
                 array_push($contacts,['id'=>$ct->id,'company_id'=>$ct->company_id,'name'=>$ct->getFullName()]);
@@ -95,18 +99,21 @@ class QuotationController extends Controller
             return $kcargo->only(['id','name']);
         });
 
-        $languages = Language::get()->map(function ($language){
+        /*$languages = Language::get()->map(function ($language){
             return $language->only(['id','name']);
+        });*/
+
+        $currency = Currency::get()->map(function ($curr){
+            return $curr->only(['id','alphacode']);
         });
 
-        $currencies = Currency::get()->map(function ($currency){
-            return $currency->only(['id','alphacode']);
-        });
+        $containers = Container::all();
 
         $data = compact(
             'companies',
             'contacts',
             'carriers',
+            'containers',
             'incoterms',
             'users',
             'harbors',
@@ -115,41 +122,54 @@ class QuotationController extends Controller
             'delivery_types',
             'status_options',
             'kind_of_cargo',
-            'languages',
-            'currencies'
+            'currency'
         );
 
         return response()->json(['data'=>$data]);
     }
 
     public function store(Request $request)
-    {
+    {   
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
-        $data = $request->validate([
-            'type' => 'required',
-            'mode' => 'required',
-            'delivery_type' => 'required',
-            'equipment' => 'required',
-            'company_id_quote' => 'nullable',
-            'contact_id' => 'nullable',
-            'price_id_num' => 'sometimes|nullable',
-            'originport' => 'required',
-            'destinyport' => 'required',
-            'origin_address' => 'nullable',
-            'destination_address' => 'nullable',
-            'date' => 'required',
-            'cargo_type' => 'required',
-            'total_quantity' => 'nullable',
-            'total_volume' => 'nullable',
-            'total_weight' => 'nullable',
-            'chargeable_weight' => 'nullable',
-            'carriers' => 'required'
-        ]);
-
+        if(!empty($request->input('form'))){
+            $form = json_decode($request->input('form'));
+            $quote_fields = ['type','mode','delivery_type','equipment','company_id_quote',
+                            'contact_id','price_id_num','originport','destinyport','origin_address',
+                            'destination_address','date','cargo_type','total_quantity','total_volume',
+                            'total_weight','chargeable_weight','carriers']; 
+            $data = [];
+            foreach($form as $key=>$val){
+                if(in_array($key,$quote_fields)){
+                    $data[$key] = $val;
+                }
+            }
+        } else {
+            $data = $request->validate([
+                'type' => 'required',
+                'mode' => 'required',
+                'delivery_type' => 'required',
+                'equipment' => 'required',
+                'company_id_quote' => 'nullable',
+                'contact_id' => 'nullable',
+                'price_id_num' => 'sometimes|nullable',
+                'originport' => 'required',
+                'destinyport' => 'required',
+                'origin_address' => 'nullable',
+                'destination_address' => 'nullable',
+                'date' => 'required',
+                'cargo_type' => 'required',
+                'total_quantity' => 'nullable',
+                'total_volume' => 'nullable',
+                'total_weight' => 'nullable',
+                'chargeable_weight' => 'nullable',
+                'carriers' => 'required'
+            ]);
+        }
+        
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $data['type'] + 1,
@@ -171,27 +191,65 @@ class QuotationController extends Controller
             'date_issued' => explode("/",$data['date'])[0],
             'validity_start' => explode("/",$data['date'])[0],
             'validity_end' => explode("/",$data['date'])[1],
-            'status' => 'Draft' //cannot change as it is enum
+            'status' => 'Draft' 
         ]);
 
-        $origins = $quote->originDest($data['originport']);
-        $destinations = $quote->originDest($data['destinyport']);
+        if($quote->company_id != null){
+            $pay = $quote->company()->first()->payment_conditions;
+            $quote->update(['payment_conditions'=>$pay]);
+        }
+
+        if(!empty($request->input('info'))){
+            $info = $request->input('info');
+            foreach($info as $currInfo){
+                $info_decoded = json_decode($currInfo);
+    
+                foreach($info_decoded->rates as $rate_decoded){
+                    $rate = AutomaticRate::create([
+                        'quote_id' => $quote->id,
+                        'contract' => '',
+                        'validity_start' => explode("/",$data['date'])[0],
+                        'validity_end' => explode("/",$data['date'])[1],
+                        'currency_id' => $company_user->currency_id       
+                    ]);
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $rate->id,
+                        'type_id' => '3',
+                        'calculation_type_id' => '5',
+                        'currency_id' => $rate->currency_id,
+                    ]);
+                    
+                    $freight->setContractInfo($info_decoded,$rate_decoded,$rate);
+                }
+            }
+        } else {
+            $origins = $quote->originDest($data['originport']);
+            $destinations = $quote->originDest($data['destinyport']);
         
-        foreach($origins as $orig){
-            foreach($destinations as $dest){
-                $rate = AutomaticRate::create([
-                    'quote_id' => $quote->id,
-                    'contract' => '',
-                    'validity_start' => explode("/",$data['date'])[0],
-                    'validity_end' => explode("/",$data['date'])[1],
-                    'origin_port_id' => $orig,
-                    'destination_port_id' => $dest,
-                    'currency_id' => $company_user->currency_id       
-                ]);
-        
+            foreach($origins as $orig){
+                foreach($destinations as $dest){
+                    $rate = AutomaticRate::create([
+                        'quote_id' => $quote->id,
+                        'contract' => '',
+                        'validity_start' => explode("/",$data['date'])[0],
+                        'validity_end' => explode("/",$data['date'])[1],
+                        'origin_port_id' => $orig,
+                        'destination_port_id' => $dest,
+                        'currency_id' => $company_user->currency_id       
+                    ]);
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $rate->id,
+                        'type_id' => '3',
+                        'calculation_type_id' => '5',
+                        'currency_id' => $rate->currency_id,
+                    ]);
+                }
             }
         }
-        
+
+        return redirect()->action('QuotationController@edit', $quote) ;
     }
 
     public function edit (Request $request, QuoteV2 $quote)
@@ -218,7 +276,7 @@ class QuotationController extends Controller
         }
         
         foreach($form_keys as $fkey){
-            if(!in_array($fkey,$data)){
+            if(!in_array($fkey,$data) && $fkey != 'keys'){
                 $data[$fkey] = $request->input($fkey);
             }
         };
@@ -229,22 +287,6 @@ class QuotationController extends Controller
             }
             $quote->update([$key=>$data[$key]]);
         }
-        /**$quote->update([
-            'delivery_type' => $data['delivery_type'],
-            'equipment' => $data['equipment'],
-            'company_id' => $data['company_id'],
-            'contact_id' => $data['contact_id'],
-            'commodity' => $data['commodity'],
-            'status' => $data['status'],
-            'type' => $data['type'], 
-            'kind_of_cargo' => $data['kind_of_cargo'],
-            'validity_start' => $data['validity_start'],
-            'user_id' => $data['user_id'],
-            'payment_conditions' => $data['payment_conditions'],
-            'incoterm_id' => $data['incoterm_id'],
-            'validity_end' => $data['validity'], 
-            //'terms_and_conditions' => $data['terms_and_conditions']
-        ]);**/
     }
 
     //Need funcs to update remarks and update terms?

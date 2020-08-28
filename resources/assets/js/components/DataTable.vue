@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Search Input -->
-        <div class="row my-3">
+        <div v-if="searchBar" class="row my-3">
             <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
@@ -249,6 +249,11 @@
                 type: Boolean,
                 required: false,
                 default: true
+            },
+            searchBar: {
+                type: Boolean,
+                required: false,
+                default:true
             }
         },
         components: { 
