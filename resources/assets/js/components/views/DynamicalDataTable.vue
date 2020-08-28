@@ -5,6 +5,8 @@
         :fields="fields"
         :inputFields="form_fields"
         :vdatalists="datalists"
+        :searchBar="searchBar"
+        :quoteEquip="quoteEquip"
         :actions="actions"
         :massiveactions="massiveactions"
         @onEdit="onEdit"
@@ -27,6 +29,7 @@
         props: {
             equipment: Object,
             datalists: Object,
+            quoteEquip: Array,
             massiveactions: {
                 type: Array,
                 required: false,
@@ -43,6 +46,16 @@
             onLast: {
                 type: Boolean,
                 default: false,
+                required: false
+            },
+            limitEquipment: {
+                type: Boolean,
+                default: false,
+                required: false
+            },
+            searchBar: {
+                type: Boolean,
+                default: true,
                 required: false
             }
         },
@@ -87,8 +100,19 @@
                 
                 let rate = '';
                 let containers = {};
-                
-                this.datalists.containers.forEach(function(item){
+                let all_containers = _.cloneDeep(this.datalists.containers);
+                let new_containers = [];
+
+                if(this.limitEquipment){
+                    all_containers.forEach(function(cont){
+                        if(component.quoteEquip.includes(cont.code)){
+                            new_containers.push(cont)
+                        }
+                    });
+                    all_containers = new_containers
+                }
+       
+                all_containers.forEach(function(item){
                     
                     if(item.gp_container_id === equipment.id)
                     {

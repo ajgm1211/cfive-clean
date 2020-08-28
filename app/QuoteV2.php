@@ -27,7 +27,7 @@ class QuoteV2 extends Model  implements HasMedia
         'equipment' => 'array',
     ];
 
-    protected $fillable = ['company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions'];
+    protected $fillable = ['company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions','terms_and_conditions'];
 
     public function company()
     {
@@ -480,13 +480,19 @@ class QuoteV2 extends Model  implements HasMedia
         return (new QuotationFilter($request, $builder))->filter();
     }
 
-    public function getContainerCodes($equip)
+    public function getContainerCodes($equip,$getGroup=false)
     {
         $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
         $full_equip = "";
         
         foreach ($equip_array as $eq){
             $full_equip.=Container::where('id','=',$eq)->first()->code.",";
+            if($getGroup){
+                $group_id = Container::where('id','=',$eq)->first()->gp_container_id;
+                $group = GroupContainer::where('id','=',$group_id)->first();
+
+                return $group;
+            }
         }
 
         return $full_equip;
@@ -517,4 +523,5 @@ class QuoteV2 extends Model  implements HasMedia
         return $ports;
 
     }
+
 }

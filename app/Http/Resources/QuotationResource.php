@@ -17,7 +17,6 @@ class QuotationResource extends JsonResource
      * @return array
      */
 
-    // ADD RATES CALL
     public function toArray($request)
     {
       return [
@@ -40,9 +39,10 @@ class QuotationResource extends JsonResource
         'user_id' => $this->user,
         'payment_conditions' => $this->payment_conditions,
         'terms_and_conditions' => $this->terms_and_conditions,
-        'language' => $this->language,
-        'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : ['id'=>$this->incoterm_id,'name'=>$this->incoterm()->first()->name]
-        //'gp_container' => $this->gpContainer ?? [ 'id' => 1, 'name' => 'DRY' ],
+        'language' => $this->company_id != null ? ['name'=>$this->company()->first()->pdf_language] : '',
+        'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : ['id'=>$this->incoterm_id,'name'=>$this->incoterm()->first()->name],
+        'rates' => $this->rates_v2()->get(),
+        'gp_container' => $this->getContainerCodes($this->equipment,true),
         //'ports' => $this->inlandports->pluck('ports'),
       ];
     }

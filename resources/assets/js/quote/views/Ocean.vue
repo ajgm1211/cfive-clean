@@ -6,7 +6,7 @@
         </div>
 
         <!-- Freight Card -->
-        <b-card class="q-card q-freight-card">
+        <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card" id="key">
 
             <div class="row">
 
@@ -20,14 +20,14 @@
                     
                         <span class="mr-4 ml-4">
                             <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera">
-                            Barcelona, ESBCN
+                            {{setPortName(freight.origin_port_id)}}
                         </span>
 
                         <i class="fa fa-long-arrow-right" aria-hidden="true" style="font-size: 18px"></i>
 
                         <span class="mr-4 ml-4">
                             <img src="https://i.ibb.co/7WffMF5/china-1-1.png" alt="bandera">
-                            Shanghai, CNSHA
+                            {{setPortName(freight.destination_port_id)}}
                         </span>
 
                     </div>
@@ -45,244 +45,36 @@
 
             <b-collapse id="collapse-1" class="row">
 
-                <!-- Inputs Freight -->
-                <div class="col-12 d-flex mt-3">
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">transi time</span>
-                        <b-form-input placeholder="33" class="q-input"></b-form-input>
-
-                    </label>
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">services</span>
-                        <b-form-input placeholder="Directo" class="q-input"></b-form-input>
-
-                    </label>
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">valid until</span>
-                        <b-form-datepicker 
-                            id="valid-datepicker" 
-                            v-model="value" 
-                            class="mb-2"
-                            :locale="locale"
-                            :date-format-options="dateFormat">
-                        </b-form-datepicker>
+                <div class="mt-3 mb-3 mr-3 ml-3">
+                    <FormInlineView
+                        v-if="loaded"
+                        :data="currentData"
+                        :fields="header_fields"
+                        :datalists="datalists"
+                        :actions="actions"
+                        :update="true"
+                    ></FormInlineView>
                     
-                    
-                    </label>
+                    <!-- Inputs Freight -->
+                    <!-- End Inputs Freight -->
 
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">reference</span>
-                        <b-form-input placeholder="QT123456798" class="q-input"></b-form-input>
-                    
-                    </label>
-
+                    <DynamicalDataTable 
+                        v-if="loaded"
+                        :initialFields="fields"
+                        :initialFormFields="vform_fields"
+                        :searchBar="false"
+                        :datalists="datalists"
+                        :equipment="equipment"
+                        :quoteEquip="quoteEquip"
+                        :limitEquipment="true"
+                        :massiveactions="['openmodalcontainer', 'delete']"
+                        @onFormFieldUpdated="formFieldUpdated"
+                        @onOpenModalContainer="openModalContainer"
+                    ></DynamicalDataTable>
                 </div>
-                <!-- End Inputs Freight -->
-
-                <!-- Tabla Freight -->
-                <div class="col-12">
-
-                    <!-- DataTable -->
-                    <b-table-simple small responsive borderless>
-
-                        <!-- Header table -->
-                        <b-thead class="q-thead">
-
-                            <b-tr>
-
-                                <b-th>
-                                    <span class="label-text">charge</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">provider</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">20 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 hc</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
-                                </b-th>
-
-                            </b-tr>
-
-                        </b-thead>
-                        <!-- End Header table -->
-
-                        <!-- Body table -->
-                        <b-tbody >
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Profit -->
-                            <b-tr>
-
-                                <b-td></b-td>
-
-                                <b-td>
-                                    <span><b>Profit</b></span>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-                                
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Profit -->
-
-                            <!-- Total -->
-                            <b-tr class="q-total">
-
-                                <b-td></b-td>
-
-                                <b-td><span><b>Total</b></span></b-td>
-
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
-                                
-                                <b-td><span><b>150</b></span></b-td>
-
-                                <b-td><span><b>EUR</b></span></b-td>
-
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Total -->
-
-                        </b-tbody>
-                        <!-- Body table -->
-
-                    </b-table-simple>
-                    <!-- End DataTable -->
-
-                </div>
-                <!-- End Tabla Freight -->
 
                 <!-- Checkbox Freight-->
-                <div class="col-12 d-flex mt-3 mb-3">
+                <div class="col-12 d-flex mt-5 mb-3">
 
                     <b-form-checkbox value="carrier" class="mr-4">
                         <span>Show Carrier</span>
@@ -345,7 +137,7 @@
 
                     <label class="q-label mr-5" style="width:15%">
 
-                        <span class="label-text">transi time</span>
+                        <span class="label-text">transit time</span>
                         <b-form-input placeholder="33" class="q-input"></b-form-input>
 
                     </label>
@@ -367,301 +159,6 @@
                             :locale="locale"
                             :date-format-options="dateFormat">
                         </b-form-datepicker>
-                    
-                    </label>
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">reference</span>
-                        <b-form-input placeholder="QT123456798" class="q-input"></b-form-input>
-                    
-                    </label>
-
-                </div>
-                <!-- End Inputs Freight -->
-
-                <!-- Tabla Freight -->
-                <div class="col-12">
-
-                    <!-- DataTable -->
-                    <b-table-simple small responsive borderless>
-
-                        <!-- Header table -->
-                        <b-thead class="q-thead">
-
-                            <b-tr>
-
-                                <b-th>
-                                    <span class="label-text">charge</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">provider</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">20 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 hc</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
-                                </b-th>
-
-                            </b-tr>
-
-                        </b-thead>
-                        <!-- End Header table -->
-
-                        <!-- Body table -->
-                        <b-tbody >
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Profit -->
-                            <b-tr>
-
-                                <b-td></b-td>
-
-                                <b-td>
-                                    <span><b>Profit</b></span>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-                                
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Profit -->
-
-                            <!-- Total -->
-                            <b-tr class="q-total">
-
-                                <b-td></b-td>
-
-                                <b-td><span><b>Total</b></span></b-td>
-
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
-                                
-                                <b-td><span><b>150</b></span></b-td>
-
-                                <b-td><span><b>EUR</b></span></b-td>
-
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Total -->
-
-                        </b-tbody>
-                        <!-- Body table -->
-
-                    </b-table-simple>
-                    <!-- End DataTable -->
-
-                </div>
-                <!-- End Tabla Freight -->
-
-                <!-- Checkbox Freight-->
-                <div class="col-12 d-flex mt-3 mb-3">
-
-                    <b-form-checkbox value="carrier" class="mr-4">
-                        <span>Show Carrier</span>
-                    </b-form-checkbox>
-
-                    <b-form-checkbox value="freight">
-                        <span>Freight All-In</span>
-                    </b-form-checkbox>
-
-                </div>
-                <!-- End Checkbox Freight-->
-
-            </b-collapse>
-
-        </b-card>
-        <!-- End Freight Card -->
-
-        <!-- Freight Card -->
-        <b-card class="q-card q-freight-card">
-
-            <div class="row">
-
-                <!-- Logo(compañia), origen, destino y add freight -->
-                <div class="col-12 d-flex justify-content-between">
-                    
-                    <!-- Logo, origen, destino -->
-                    <div>
-
-                        <img src="https://i.ibb.co/BNf0WNM/download-logo-HLAG-1.png" alt="logo" class="mr-4">
-                    
-                        <span class="mr-4 ml-4">
-                            <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera">
-                            Barcelona, ESBCN
-                        </span>
-
-                        <i class="fa fa-long-arrow-right" aria-hidden="true" style="font-size: 18px"></i>
-
-                        <span class="mr-4 ml-4">
-                            <img src="https://i.ibb.co/7WffMF5/china-1-1.png" alt="bandera">
-                            Shanghai, CNSHA
-                        </span>
-
-                    </div>
-                    <!-- End Logo, origen, destino -->
-
-                    <!-- Add Freight -->      
-                    <button type="button" class="btn" v-b-toggle="'collapse-3'">
-                        <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
-                    </button>
-
-                </div>
-                <!-- End Logo(compañia), origen, destino y add freight -->
-
-            </div>
-
-            <b-collapse id="collapse-3" class="row">
-
-                <!-- Inputs Freight -->
-                <div class="col-12 d-flex mt-3">
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">transi time</span>
-                        <b-form-input placeholder="33" class="q-input"></b-form-input>
-
-                    </label>
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">services</span>
-                        <b-form-input placeholder="Directo" class="q-input"></b-form-input>
-
-                    </label>
-
-                    <label class="q-label mr-5" style="width:15%">
-
-                        <span class="label-text">valid until</span>
-                        <b-form-datepicker 
-                            id="valid-datepicker" 
-                            v-model="value" 
-                            class="mb-2"
-                            :locale="locale"
-                            :date-format-options="dateFormat">
-                        </b-form-datepicker>
-                    
                     
                     </label>
 
@@ -939,6 +436,22 @@
         </b-modal>
         <!--  End Modal  -->
 
+        <b-modal id="editContainers" size="lg" cancel-title="Cancel" hide-header-close title="Edit Containers" hide-footer>
+            <FormView 
+                :data="{}"
+                :massivedata="ids_selected" 
+                :fields="containers_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Containers"
+                @exit="closeModal('editContainers')"
+                @success="closeModal('editContainers')"
+                :actions="actions"
+                :update="true"
+                :massivechange="true"
+                >
+            </FormView>
+        </b-modal>
+
     </div>
 </template>
 
@@ -947,11 +460,25 @@ import Multiselect from "vue-multiselect";
 import DateRangePicker from "vue2-daterange-picker";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import DynamicalDataTable from '../../components/views/DynamicalDataTable';
+import FormView from '../../components/views/FormView';
+import FormInlineView from '../../components/views/FormInlineView';
+
 export default {
   components: {
     Multiselect,
-    DateRangePicker
+    DateRangePicker,
+    DynamicalDataTable,
+    FormView,
+    FormInlineView
   },
+  props: {
+        equipment: Object,
+        datalists: Object,
+        actions: Object,
+        freights: Object,
+        quoteEquip: Array
+    },
   data() {
     return {
       openFreight: false,
@@ -973,6 +500,71 @@ export default {
         "onChange",
         "touched"
       ],
+      header_fields: {
+        transit_time: {
+            label: "TRANSIT TIME",
+            type: "text",
+            placeholder: "Days",
+            colClass: "col-lg-2",
+        },
+        via: {
+            label: "VIA",
+            searchable: true,
+            type: "multiselect",
+            trackby: "display_name",
+            placeholder: "Port",
+            options: "harbors",
+            colClass: "col-lg-2",
+        },
+        validity_end: {
+            label: "VALID UNTIL",
+            type: "datepicker",
+            colClass: "col-lg-2"
+        },
+        reference: {
+            label: "REFERENCE",
+            type: "text",
+            placeholder: "Contract name",
+            colClass: "col-lg-2",
+        },
+      },
+      loaded: true,
+      currentData: {},
+      form_fields: {},
+      containers_fields: {},
+      ids_selected: [],
+
+        /* Table headers */
+        fields: [ 
+            { key: 'charge', label: 'CHARGE'}, 
+            { key: 'provider', label: 'PROVIDER'},
+            { key: 'currency', label: 'CURRENCY'}
+        ],
+
+        /* Table input inline fields */
+        vform_fields: {
+            charge: { 
+                label: 'CHARGE',  
+                type: 'text', 
+                rules: 'required', 
+                placeholder: 'Select charge type', 
+            },
+            provider: { 
+                label: 'PROVIDER', 
+                type: 'text', 
+                rules: 'required', 
+                placeholder: 'Select Provider', 
+            },
+            currency: { 
+                label: 'CURRENCY',
+                searchable: true, 
+                type: 'select', 
+                rules: 'required', 
+                trackby: 'alphacode', 
+                placeholder: 'Select Currency', 
+                options: 'currency' 
+            }
+        },
        //Datepicker Options
       locale: 'en-US',
       dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'}
@@ -981,7 +573,26 @@ export default {
   methods: {
     showModal() {
         this.$refs['my-modal'].show();
-      },
+        },
+
+    /* Single Actions */
+    formFieldUpdated(containers_fields){
+        this.containers_fields = containers_fields;
+        this.form_fields = {...this.vform_fields, ...containers_fields};
+        },
+    openModalContainer(ids){
+        console.log('test modal');
+        this.ids_selected = ids;
+                this.$bvModal.show('editContainers');
+        },
+    setPortName(port_id){
+      this.datalists.harbors.forEach(function(harbor){
+          if(harbor.id == port_id){
+              return harbor.display_name
+                }
+            });
+        }
   }
+       
 };
 </script>
