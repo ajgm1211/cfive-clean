@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\SaleTerm;
 use App\Surcharge;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SaleTermController extends Controller
 {
@@ -48,7 +49,11 @@ class SaleTermController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Record has been success');
-        return redirect()->action('SaleTermController@index');
+        if(Auth::user()->hasRole(['administrator','data_entry'])){
+            return redirect()->action('SurchargesController@index');
+        } else {
+            return redirect()->action('SaleTermController@index');            
+        }
     }
 
     public function destroy(Request $request,$id)
