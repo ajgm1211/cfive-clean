@@ -11,10 +11,10 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-  .js('resources/assets/js/contracts/index.js', 'public/js/contracts')
-  .js('resources/assets/js/contracts/edit.js', 'public/js/contracts')
-  .js('resources/assets/js/inlands/edit.js', 'public/js/inlands')
-  .js('resources/assets/js/inlands/index.js', 'public/js/inlands')
-  .js('resources/assets/js/transit_time/index.js', 'public/js/transit_time')
-  .sass('resources/assets/sass/app.scss', 'public/css');
+mix.js('resources/js/app.js', 'public/js')
+  .js('resources/js/contracts/index.js', 'public/js/contracts')
+  .js('resources/js/contracts/edit.js', 'public/js/contracts')
+  .js('resources/js/inlands/edit.js', 'public/js/inlands')
+  .js('resources/js/inlands/index.js', 'public/js/inlands')
+  .js('resources/js/transit_time/index.js', 'public/js/transit_time')
+  .sass('resources/sass/app.scss', 'public/css');
