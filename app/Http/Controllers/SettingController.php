@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Airport;
 use App\Company;
 use App\CompanyUser;
-use App\Currency;
-use App\User;
-use App\QuoteV2;
-use App\Surcharge;
 use App\Contact;
-use App\SaleTerm;
-use App\Harbor;
-use App\Airport;
-use App\Country;
-use App\Price;
 use App\Contract;
-use App\GlobalCharge;
-use App\Inland;
-use App\OriginAmmount;
-use App\FreightAmmount;
-use App\EmailSetting;
+use App\Country;
+use App\Currency;
 use App\DestinationAmmount;
-use App\PackageLoad;
-use App\NewContractRequest;
-use App\TermAndCondition;
-use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Input;
-use App\Jobs\ProcessLogo;
+use App\EmailSetting;
+use App\FreightAmmount;
+use App\GlobalCharge;
+use App\Harbor;
 use App\Http\Requests\StoreSettings;
+use App\Inland;
+use App\Jobs\ProcessLogo;
+use App\NewContractRequest;
+use App\OriginAmmount;
+use App\PackageLoad;
+use App\Price;
+use App\QuoteV2;
+use App\SaleTerm;
+use App\Surcharge;
+use App\TermAndCondition;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Intervention\Image\Facades\Image;
 
 class SettingController extends Controller
 {
@@ -67,50 +67,48 @@ class SettingController extends Controller
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
 
-        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny'));
+        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny'));
     }
-
-   
 
     public function store(StoreSettings $request)
     {
-
         $file = Input::file('image');
         $footer_image = Input::file('footer_image');
         $signature_image = Input::file('email_signature_image');
         $filepath = '';
         $filepath_footer_image = '';
         $filepath_signature_image = '';
-        if ($file != "") {
-            $filepath = 'Logos/Companies/' . $file->getClientOriginalName();
-            $name     = $file->getClientOriginalName();
+        if ($file != '') {
+            $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
+            $name = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name, file_get_contents($file));
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath, file_get_contents($file), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($footer_image != "") {
-            $filepath_footer_image = 'Footer/' . $footer_image->getClientOriginalName();
+        if ($footer_image != '') {
+            $filepath_footer_image = 'Footer/'.$footer_image->getClientOriginalName();
             $name_footer_image = $footer_image->getClientOriginalName();
             \Storage::disk('logos')->put($name_footer_image, file_get_contents($footer_image));
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath_footer_image, file_get_contents($footer_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($signature_image != "") {
-            $filepath_signature_image = 'Email/' . $signature_image->getClientOriginalName();
+        if ($signature_image != '') {
+            $filepath_signature_image = 'Email/'.$signature_image->getClientOriginalName();
             $name_sign_image = $signature_image->getClientOriginalName();
             \Storage::disk('logos')->put($name_sign_image, file_get_contents($signature_image));
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath_signature_image, file_get_contents($signature_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($request->decimals)
+        if ($request->decimals) {
             $decimals = 1;
-        else
+        } else {
             $decimals = 0;
+        }
 
-        if (!$request->company_id) {
+        if (! $request->company_id) {
             //$company=CompanyUser::create($request->all());
             $company = new CompanyUser();
             $company->name = $request->name;
@@ -125,12 +123,12 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
-            if ($footer_image != "") {
+            if ($footer_image != '') {
                 $company->footer_image = $filepath_footer_image;
             }
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
-            if ($file != "") {
+            if ($file != '') {
                 $company->logo = $filepath;
             }
             $company->save();
@@ -138,14 +136,12 @@ class SettingController extends Controller
             User::where('id', \Auth::id())->update(['company_user_id' => $company->id]);
             $usuario = User::find(\Auth::id());
 
-
-
             $email_settings = new EmailSetting();
             $email_settings->company_user_id = $company->id;
             $email_settings->email_from = $request->email_from_format;
             $email_settings->email_signature_type = $request->email_signature_type;
             $email_settings->email_signature_text = $request->signature_text_content;
-            if ($signature_image != "") {
+            if ($signature_image != '') {
                 $email_settings->email_signature_image = $filepath_signature_image;
             }
             $email_settings->save();
@@ -162,10 +158,10 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
-            if ($footer_image != "") {
+            if ($footer_image != '') {
                 $company->footer_image = $filepath_footer_image;
             }
-            if ($file != "") {
+            if ($file != '') {
                 $company->logo = $filepath;
             }
             $company->update();
@@ -175,7 +171,7 @@ class SettingController extends Controller
                 $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
-                if ($signature_image != "") {
+                if ($signature_image != '') {
                     $email_settings->email_signature_image = $filepath_signature_image;
                 }
                 $email_settings->update();
@@ -185,12 +181,13 @@ class SettingController extends Controller
                 $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
-                if ($signature_image != "") {
+                if ($signature_image != '') {
                     $email_settings->email_signature_image = $filepath_signature_image;
                 }
                 $email_settings->save();
             }
         }
+
         return response()->json(['message' => 'Ok']);
     }
 
@@ -256,7 +253,7 @@ class SettingController extends Controller
         $company_user_duplicate->address = $request->address;
         $company_user_duplicate->phone = $request->phone;
         $company_user_duplicate->logo = $company_user->logo;
-        $company_user_duplicate->hash = \Hash::make($request->name . '_duplicate');
+        $company_user_duplicate->hash = \Hash::make($request->name.'_duplicate');
         $company_user_duplicate->currency_id = $request->currency_id;
         $company_user_duplicate->pdf_language = $request->pdf_language;
         $company_user_duplicate->type_pdf = $company_user->type_pdf;
@@ -274,9 +271,9 @@ class SettingController extends Controller
         $countries = Country::all()->pluck('name', 'id');
 
         $user = new User();
-        $user->name = 'Admin_' . $company_user_duplicate->name;
-        $user->lastname = 'Admin_' . $company_user_duplicate->name;
-        $user->email = $company_user_duplicate->name . '@example.com';
+        $user->name = 'Admin_'.$company_user_duplicate->name;
+        $user->lastname = 'Admin_'.$company_user_duplicate->name;
+        $user->email = $company_user_duplicate->name.'@example.com';
         $user->phone = '1234567890';
         $user->password = bcrypt('secret');
         $user->type = 'company';
@@ -348,7 +345,7 @@ class SettingController extends Controller
             $custom_id_quote = $this->idPersonalizado($request->name, $request->company_user_id);
             $explode = explode('-', $custom_id_quote);
             $custom_id += 1;
-            $company_quote = $explode[0] . "-" . $custom_id;
+            $company_quote = $explode[0].'-'.$custom_id;
 
             $origin_ammounts = OriginAmmount::where('quote_id', $quote->id)->get();
             $freight_ammounts = FreightAmmount::where('quote_id', $quote->id)->get();
@@ -518,6 +515,7 @@ class SettingController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Company duplicated successfully!');
+
         return redirect()->back();
     }
 }

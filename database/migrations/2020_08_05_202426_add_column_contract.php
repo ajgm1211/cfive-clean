@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnContract extends Migration
 {
@@ -14,7 +14,7 @@ class AddColumnContract extends Migration
     public function up()
     {
         Schema::table('contracts', function (Blueprint $table) {
-            $table->json('result_validator',50000)->nullable()->after('code');
+            $table->json('result_validator', 50000)->nullable()->after('code');
             $table->boolean('validator')->default(false)->after('result_validator');
         });
     }

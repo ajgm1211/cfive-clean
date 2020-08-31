@@ -23,7 +23,6 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-
         $client = new \GuzzleHttp\Client();
         $url = 'https://www.maersk.com/webuser-rest-war/loginwithusernamepassword';
         $array = [
@@ -53,6 +52,7 @@ class TestController extends Controller
     {
         SendEmailRequestFclJob::dispatch($user_id, $id);
     }
+
     public function create(Request $request)
     {
         $client = new Client(['cookies' => true]);
@@ -100,21 +100,21 @@ class TestController extends Controller
             $autoImp = AutoImportation::whereHas('carriersAutoImportation', function ($query) use ($request_cont) {
                 $query->whereIn('carrier_id', $request_cont->Requestcarriers->pluck('carrier_id'));
             })->where('status', 1)->first();
-            if (!empty($autoImp)) {
+            if (! empty($autoImp)) {
                 try {
                     if (env('APP_ENV') == 'local') {
                         $client = new Client(['base_uri' => 'http://contractsai/']);
-                    } else if (env('APP_ENV') == 'developer') {
+                    } elseif (env('APP_ENV') == 'developer') {
                         $client = new Client(['base_uri' => 'http://dev.contractsai.cargofive.com/']);
                     } else {
                         $client = new Client(['base_uri' => 'http://prod.contractsai.cargofive.com/']);
                     }
                     //$response = $client->get('login?email=admin@example.com&password=secret');
                     //$response = $client->request('GET','ConverterFile/CFIndex', [
-                    $response = $client->request('GET', 'ConverterFile/CFDispatchJob/' . $req_id, [
+                    $response = $client->request('GET', 'ConverterFile/CFDispatchJob/'.$req_id, [
                         'headers' => [
                             //'Authorization' => $auth->api_key,
-                            'Authorization' => 'Bearer ' . $user_adm_rq->api_token,
+                            'Authorization' => 'Bearer '.$user_adm_rq->api_token,
                             'Accept' => 'application/json',
                         ],
                     ]);
@@ -123,7 +123,7 @@ class TestController extends Controller
                     //return $dataGen;
                 } catch (RequestException $e) {
                     //Enviar correo falla de conexion
-                    $message = 'connection failure, Request Id: ' . $req_id . ' I qualify for Auto-Import ENV: ' . env('APP_ENV');
+                    $message = 'connection failure, Request Id: '.$req_id.' I qualify for Auto-Import ENV: '.env('APP_ENV');
                     dd($message);
                     foreach ($admins as $userNotifique) {
                         SendEmailAutoImporJob::dispatch($userNotifique->email, $message);
@@ -134,9 +134,9 @@ class TestController extends Controller
             $autoImp = AutoImportation::whereHas('carriersAutoImportation', function ($query) use ($request_cont) {
                 $query->whereIn('carrier_id', $request_cont->Requestcarriers->pluck('carrier_id'));
             })->where('status', 1)->first();
-            if (!empty($autoImp)) {
+            if (! empty($autoImp)) {
                 //Enviar correo
-                $message = 'There is more than one carrier and one of them are listed in the Auto Import. Request Id: ' . $req_id;
+                $message = 'There is more than one carrier and one of them are listed in the Auto Import. Request Id: '.$req_id;
                 dd($message);
                 foreach ($admins as $userNotifique) {
                     SendEmailAutoImporJob::dispatch($userNotifique->email, $message);
@@ -158,6 +158,7 @@ class TestController extends Controller
         TestJob::dispatch();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'OK');
+
         return back();
     }
 
@@ -190,29 +191,26 @@ class TestController extends Controller
         /*$user = User::find(1);
         dd($user);*/
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
-        \DB::table('users')->chunkById(100, function ($users) use($client) {
-                foreach ($users as $user) {
-                    
-                    $this->intercom($client, $user);
-                }
-            });
+        \DB::table('users')->chunkById(100, function ($users) use ($client) {
+            foreach ($users as $user) {
+                $this->intercom($client, $user);
+            }
+        });
 
-        echo "Finalizado";
-
+        echo 'Finalizado';
     }
 
     public function intercom($client, $user)
     {
-
-        try{
-            $cliente = $client->users->getUsers(["email" => $user->email]);
-        }catch(Exception $e){
-                echo  $user->email;
+        try {
+            $cliente = $client->users->getUsers(['email' => $user->email]);
+        } catch (Exception $e) {
+            echo  $user->email;
         }
-        
+
         if ($cliente->total_count > 1) {
             foreach ($cliente->users as $u) {
-                if ($u->type == "user") {
+                if ($u->type == 'user') {
                     if ($u->user_id != $user->id) {
                         $client->users->archiveUser($u->id);
                     }
@@ -221,28 +219,25 @@ class TestController extends Controller
         }
 
         if ($cliente->total_count == 0) {
-
-            if ($user->company_user_id != "") {
+            if ($user->company_user_id != '') {
                 //setHashID();
 
                 $client->users->create([
-                    "email" => $user->email,
-                    "companies" => [
+                    'email' => $user->email,
+                    'companies' => [
                         [
-                            "name" => $user->companyUser->name,
-                            "company_id" => $user->company_user_id,
+                            'name' => $user->companyUser->name,
+                            'company_id' => $user->company_user_id,
                         ],
                     ],
                 ]);
             } else {
-
                 $client->users->create([
-                    "email" => $user->email,
-                    "user_id" => $user->id,
-                    "name" => $user->name,
+                    'email' => $user->email,
+                    'user_id' => $user->id,
+                    'name' => $user->name,
                 ]);
             }
-
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Company;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class CompanyTest extends TestCase
 {
@@ -26,7 +26,6 @@ class CompanyTest extends TestCase
 
     public function test_if_client_company_is_updated()
     {
-
         $model = factory(Company::class)->create();
 
         $company = Company::find($model->id);
@@ -38,7 +37,7 @@ class CompanyTest extends TestCase
         // $model
 
         $this->seeInDatabase('companies', [
-            'business_name' => 'tecnicarbonCA'
+            'business_name' => 'tecnicarbonCA',
         ]);
     }
 }

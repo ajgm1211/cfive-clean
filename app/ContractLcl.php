@@ -2,23 +2,23 @@
 
 namespace App;
 
-use Illuminate\Http\Request;
+use App\CompanyUser;
+use App\Currency;
+use App\GlobalChargeLcl;
+use App\Http\Traits\SearchTraitApi;
+use App\Http\Traits\UtilTrait;
+use App\LocalChargeLcl;
+use App\RateLcl;
+use App\ScheduleType;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use App\CompanyUser;
-use App\ScheduleType;
-use App\Currency;
-use App\RateLcl;
-use App\LocalChargeLcl;
-use App\GlobalChargeLcl;
-use App\User;
-use Illuminate\Support\Collection as Collection;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Traits\SearchTraitApi;
-use App\Http\Traits\UtilTrait;
 
 class ContractLcl extends Model implements HasMedia, Auditable
 {
@@ -26,7 +26,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     use SearchTraitApi;
     use UtilTrait;
     use \OwenIt\Auditing\Auditable;
-    protected $table    = "contracts_lcl";
+    protected $table = 'contracts_lcl';
     protected $fillable = ['id', 'name', 'number', 'company_user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual'];
 
     public function companyUser()
@@ -52,13 +52,11 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
     public function contract_company_restriction()
     {
-
         return $this->HasMany('App\ContractLclCompanyRestriction', 'contractlcl_id');
     }
 
     public function contract_user_restriction()
     {
-
         return $this->HasMany('App\ContractLclUserRestriction', 'contractlcl_id');
     }
 
@@ -73,7 +71,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     }
 
     /**
-     * ContractCarrierSync
+     * ContractCarrierSync.
      *
      * @param  mixed $carriers
      * @param  mixed $api
@@ -81,23 +79,22 @@ class ContractLcl extends Model implements HasMedia, Auditable
      */
     public function ContractCarrierSync($carriers, $api = false)
     {
-
         DB::table('contracts_carriers_lcl')->where('contract_id', '=', $this->id)->delete();
 
         if ($api) {
-            $carriers = explode(",", $carriers);
+            $carriers = explode(',', $carriers);
         }
 
         foreach ($carriers as $carrier) {
             ContractCarrierLcl::create([
                 'carrier_id'    => $carrier,
-                'contract_id'   => $this->id
+                'contract_id'   => $this->id,
             ]);
         }
     }
 
     /**
-     * Store file in storage
+     * Store file in storage.
      *
      * @param  blob  $file
      * @return void
@@ -111,7 +108,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     }
 
     /**
-     * processSearchByIdLcl
+     * processSearchByIdLcl.
      *
      * @return json
      */
@@ -141,7 +138,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         $weight = $chargeable_weight;
         $weight = number_format($weight, 2, '.', '');
-        $arregloNull = array();
+        $arregloNull = [];
         $arregloNull = json_encode($arregloNull);
         $freighPercentage = 0;
         $freighAmmount = 0;
@@ -176,11 +173,10 @@ class ContractLcl extends Model implements HasMedia, Auditable
         }
 
         foreach ($rates as $data) {
-
             if ($convert) {
                 $typeCurrency = $company_setting->currency->alphacode;
             } else {
-                $typeCurrency =  $data->currency->alphacode;
+                $typeCurrency = $data->currency->alphacode;
             }
 
             $markupFreightCurre = $typeCurrency;
@@ -197,12 +193,11 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $collectionFreight = new Collection();
             $collectionRate = new Collection();
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
-            $array_ocean_freight = array();
+            $array_ocean_freight = [];
             $totalChargeOrig = 0;
             $totalChargeDest = 0;
 
             if ($total_weight != null) {
-
                 $subtotalT = $weight * $data->uom;
                 $totalT = ($weight * $data->uom) / $rateC;
                 $priceRate = $data->uom;
@@ -220,21 +215,20 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     $markup = ($totalT * $freighPercentage) / 100;
                     $markup = number_format($markup, 2, '.', '');
                     $totalT += $markup;
-                    $arraymarkupT = array("markup" => $markup, "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($freighPercentage%)");
+                    $arraymarkupT = ['markup' => $markup, 'markupConvert' => $markup, 'typemarkup' => "$typeCurrency ($freighPercentage%)"];
                 } else {
-
                     $markup = trim($freighAmmount);
                     $markup = number_format($markup, 2, '.', '');
                     $totalT += $freighMarkup;
-                    $arraymarkupT = array("markup" => $markup, "markupConvert" => $freighMarkup, "typemarkup" => $markupFreightCurre);
+                    $arraymarkupT = ['markup' => $markup, 'markupConvert' => $freighMarkup, 'typemarkup' => $markupFreightCurre];
                 }
 
                 $totalT = number_format($totalT, 2, '.', '');
                 $totalFreight += $totalT;
                 $totalRates += $totalT;
 
-                $array_ocean_freight = array('type' => 'Ocean Freight', 'quantity' => $weight, 'detail' => 'W/M', 'price' => $priceRate, 'total' => $subtotalT, 'currency' => $data->currency->alphacode);
-                $array = array('type' => 'Ocean Freight', 'quantity' => $weight, 'detail' => 'W/M', 'price' => $priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => $subtotalT, 'total' => $totalT . " " . $typeCurrency, 'currency_id' => $data->currency_id);
+                $array_ocean_freight = ['type' => 'Ocean Freight', 'quantity' => $weight, 'detail' => 'W/M', 'price' => $priceRate, 'total' => $subtotalT, 'currency' => $data->currency->alphacode];
+                $array = ['type' => 'Ocean Freight', 'quantity' => $weight, 'detail' => 'W/M', 'price' => $priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => $subtotalT, 'total' => $totalT.' '.$typeCurrency, 'currency_id' => $data->currency_id];
                 $array = array_merge($array, $arraymarkupT);
                 $collectionRate->push($array);
                 $data->setAttribute('montF', $array);
@@ -279,8 +273,8 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
             $data->setAttribute('rates', $collectionRate);
 
-            $orig_port = array($data->origin_port);
-            $dest_port = array($data->destiny_port);
+            $orig_port = [$data->origin_port];
+            $dest_port = [$data->destiny_port];
 
             $carrier[] = $data->carrier_id;
 
@@ -289,13 +283,13 @@ class ContractLcl extends Model implements HasMedia, Auditable
             array_push($carrier, $carrier_all);
 
             //Calculation type
-            $arrayBlHblShip = array('1', '2', '3', '16'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
-            $arraytonM3 = array('4', '11', '17'); //  calculation type 4 = Per ton/m3
-            $arraytonCompli = array('6', '7', '12', '13'); //  calculation type 4 = Per ton/m3
-            $arrayPerTon = array('5', '10'); //  calculation type 5 = Per  TON
-            $arrayPerKG = array('9'); //  calculation type 5 = Per  TON
-            $arrayPerPack = array('14'); //  per package
-            $arrayPerPallet = array('15'); //  per pallet
+            $arrayBlHblShip = ['1', '2', '3', '16']; // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
+            $arraytonM3 = ['4', '11', '17']; //  calculation type 4 = Per ton/m3
+            $arraytonCompli = ['6', '7', '12', '13']; //  calculation type 4 = Per ton/m3
+            $arrayPerTon = ['5', '10']; //  calculation type 5 = Per  TON
+            $arrayPerKG = ['9']; //  calculation type 5 = Per  TON
+            $arrayPerPack = ['14']; //  per package
+            $arrayPerPallet = ['15']; //  per pallet
 
             // Local charges
             /*$localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
@@ -1717,14 +1711,14 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
             // Locales
 
-            if (!empty($dataOrig)) {
+            if (! empty($dataOrig)) {
                 $collectOrig = Collection::make($dataOrig);
 
                 $m3tonOrig = $collectOrig->groupBy('surcharge_name')->map(function ($item) use ($collectionOrig, &$totalOrigin, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
 
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalOrigin += $totalA[0];
                         $collectionOrig->push($test);
@@ -1734,81 +1728,84 @@ class ContractLcl extends Model implements HasMedia, Auditable
                 });
             }
 
-            if (!empty($dataDest)) {
+            if (! empty($dataDest)) {
                 $collectDest = Collection::make($dataDest);
                 $m3tonDest = $collectDest->groupBy('surcharge_name')->map(function ($item) use ($collectionDest, &$totalDestiny, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalDestiny += $totalA[0];
                         //            $arre['destiny'] = $test;
                         $collectionDest->push($test);
+
                         return $test;
                     }
                 });
             }
 
-            if (!empty($dataFreight)) {
-
+            if (! empty($dataFreight)) {
                 $collectFreight = Collection::make($dataFreight);
                 $m3tonFreight = $collectFreight->groupBy('surcharge_name')->map(function ($item) use ($collectionFreight, &$totalFreight, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalFreight += $totalA[0];
                         //$arre['freight'] = $test;
                         $collectionFreight->push($test);
+
                         return $test;
                     }
                 });
             }
 
             // Globales
-            if (!empty($dataGOrig)) {
+            if (! empty($dataGOrig)) {
                 $collectGOrig = Collection::make($dataGOrig);
 
                 $m3tonGOrig = $collectGOrig->groupBy('surcharge_name')->map(function ($item) use ($collectionOrig, &$totalOrigin, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalOrigin += $totalA[0];
 
                         //$arre['origin'] = $test;
                         $collectionOrig->push($test);
+
                         return $test;
                     }
                 });
             }
 
-            if (!empty($dataGDest)) {
+            if (! empty($dataGDest)) {
                 $collectGDest = Collection::make($dataGDest);
                 $m3tonDestG = $collectGDest->groupBy('surcharge_name')->map(function ($item) use ($collectionDest, &$totalDestiny, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalDestiny += $totalA[0];
                         // $arre['destiny'] = $test;
                         $collectionDest->push($test);
+
                         return $test;
                     }
                 });
             }
 
-            if (!empty($dataGFreight)) {
-
+            if (! empty($dataGFreight)) {
                 $collectGFreight = Collection::make($dataGFreight);
                 $m3tonFreightG = $collectGFreight->groupBy('surcharge_name')->map(function ($item) use ($collectionFreight, &$totalFreight, $data, $carrier_all) {
-                    $carrArreglo = array($data->carrier_id, $carrier_all);
+                    $carrArreglo = [$data->carrier_id, $carrier_all];
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id', $carrArreglo)->first();
-                    if (!empty($test)) {
+                    if (! empty($test)) {
                         $totalA = explode(' ', $test['totalAmmount']);
                         $totalFreight += $totalA[0];
                         //$arre['freight'] = $test;
                         $collectionFreight->push($test);
+
                         return $test;
                     }
                 });
@@ -1825,24 +1822,24 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
 
-            $routes = array();
+            $routes = [];
             $routes['Rates']['type'] = 'LCL';
-            $routes['Rates']['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
-            $routes['Rates']['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
+            $routes['Rates']['origin_port'] = ['name' => $data->port_origin->name, 'code' => $data->port_origin->code];
+            $routes['Rates']['destination_port'] = ['name' => $data->port_destiny->name, 'code' => $data->port_destiny->code];
 
             //Ocean Freight
             $routes['Rates']['ocean_freight'] = $array_ocean_freight;
 
             //Local Charges
-            if (!empty($collectionOrig)) {
+            if (! empty($collectionOrig)) {
                 $routes['Rates']['origin_charges'] = $collectionOrig;
             }
 
-            if (!empty($collectionDest)) {
+            if (! empty($collectionDest)) {
                 $routes['Rates']['destination_charges'] = $collectionDest;
             }
 
-            if (!empty($collectionFreight)) {
+            if (! empty($collectionFreight)) {
                 $routes['Rates']['freight_charges'] = $collectionFreight;
             }
 
@@ -1859,10 +1856,9 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
     public function compactResponse($routes, $data, $currency, $totalQuote, $response)
     {
-
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments);
+                $detalle = [$data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments];
                 break;
             default:
                 $detalle = $routes;
@@ -1874,10 +1870,10 @@ class ContractLcl extends Model implements HasMedia, Auditable
                 //set carrier logo url
                 $detalle['Rates']['carrier'] = $data->carrier;
                 $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-                $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-                $detalle['Rates']['contract']['number'] =   $data->contract->number;
-                $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-                $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+                $detalle['Rates']['contract']['valid_until'] = $data->contract->expire;
+                $detalle['Rates']['contract']['number'] = $data->contract->number;
+                $detalle['Rates']['contract']['ref'] = $data->contract->name;
+                $detalle['Rates']['contract']['status'] = $data->contract->status == 'publish' ? 'published' : $data->contract->status;
                 $detalle['Rates']['remarks'] = $data->contract->remarks;
                 break;
         }

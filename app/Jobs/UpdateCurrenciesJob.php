@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Currency;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Currency;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
 class UpdateCurrenciesJob implements ShouldQueue
@@ -21,7 +21,6 @@ class UpdateCurrenciesJob implements ShouldQueue
      */
     public function __construct()
     {
-        
     }
 
     /**
@@ -31,7 +30,7 @@ class UpdateCurrenciesJob implements ShouldQueue
      */
     public function handle()
     {
-        try{
+        try {
             // set API Endpoint and access key (and any options of your choice)
             $endpoint = 'live';
             $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
@@ -47,17 +46,16 @@ class UpdateCurrenciesJob implements ShouldQueue
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
 
-            foreach($exchangeRates['quotes'] as $key=>$value){
-                $currency=Currency::where('api_code',$key)->first();
-                if(isset($currency)){
-                    if($currency->rates!=$value){
-                        Currency::where('id',$currency->id)
+            foreach ($exchangeRates['quotes'] as $key=>$value) {
+                $currency = Currency::where('api_code', $key)->first();
+                if (isset($currency)) {
+                    if ($currency->rates != $value) {
+                        Currency::where('id', $currency->id)
                             ->update(['api_code' => $key, 'rates' => $value]);
                     }
                 }
             }
-
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $e->getMessage();
         }
     }

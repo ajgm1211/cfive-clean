@@ -2,22 +2,22 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Filters\ContractFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use App\ContractCarrier;
-use App\ContractUserRestriction;
 use App\ContractCompanyRestriction;
-use Illuminate\Support\Facades\DB;
+use App\ContractUserRestriction;
+use App\Http\Filters\ContractFilter;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 class Contract extends Model implements HasMedia, Auditable
 {
@@ -26,7 +26,7 @@ class Contract extends Model implements HasMedia, Auditable
     use UtilTrait;
     use \OwenIt\Auditing\Auditable;
     protected $guard = 'web';
-    protected $table    = "contracts";
+    protected $table = 'contracts';
 
     protected $fillable = ['id', 'name', 'number', 'company_user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code', 'is_manual', 'result_validator', 'validator'];
 
@@ -34,10 +34,12 @@ class Contract extends Model implements HasMedia, Auditable
     {
         return $this->hasMany('App\Rate');
     }
+
     public function addons()
     {
         return $this->hasMany('App\ContractAddons');
     }
+
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
@@ -50,19 +52,16 @@ class Contract extends Model implements HasMedia, Auditable
 
     public function contract_company_restriction()
     {
-
         return $this->HasMany('App\ContractCompanyRestriction');
     }
 
     public function contract_user_restriction()
     {
-
         return $this->HasMany('App\ContractUserRestriction');
     }
 
     public function user()
     {
-
         return $this->belongsTo('App\User');
     }
 
@@ -86,6 +85,7 @@ class Contract extends Model implements HasMedia, Auditable
         if ($carrier) {
             return $query->where('carrier', $carrier);
         }
+
         return $query;
     }
 
@@ -94,6 +94,7 @@ class Contract extends Model implements HasMedia, Auditable
         if ($status) {
             return $query->where('status', $status);
         }
+
         return $query;
     }
 
@@ -102,6 +103,7 @@ class Contract extends Model implements HasMedia, Auditable
         if ($port_dest) {
             return $query->where('port_dest', $port_dest);
         }
+
         return $query;
     }
 
@@ -110,11 +112,12 @@ class Contract extends Model implements HasMedia, Auditable
         if ($port_orig) {
             return $query->where('port_orig', $port_orig);
         }
+
         return $query;
     }
 
     /**
-     * Return a Group of containers associated to the model
+     * Return a Group of containers associated to the model.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -132,11 +135,12 @@ class Contract extends Model implements HasMedia, Auditable
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;
+
         return $query->where('company_user_id', '=', $company_id);
     }
 
     /**
-     * Scope a query filter
+     * Scope a query filter.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  \Illuminate\Http\Request $request;
@@ -148,30 +152,29 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
-     * Sync Contract Carriers
+     * Sync Contract Carriers.
      *
-     * @param  Array  $carrier
+     * @param  array  $carrier
      * @return void
      */
     public function ContractCarrierSync($carriers, $api = false)
     {
-
         DB::table('contracts_carriers')->where('contract_id', '=', $this->id)->delete();
 
         if ($api) {
-            $carriers = explode(",", $carriers);
+            $carriers = explode(',', $carriers);
         }
 
         foreach ($carriers as $carrier_id) {
             ContractCarrier::create([
                 'carrier_id'    => $carrier_id,
-                'contract_id'   => $this->id
+                'contract_id'   => $this->id,
             ]);
         }
     }
 
     /**
-     * Store file in storage
+     * Store file in storage.
      *
      * @param  blob  $file
      * @return void
@@ -185,9 +188,9 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
-     * Sync Contract User Restrictions
+     * Sync Contract User Restrictions.
      *
-     * @param  Array $users
+     * @param  array $users
      * @return void
      */
     public function ContractUsersRestrictionsSync($users)
@@ -197,15 +200,15 @@ class Contract extends Model implements HasMedia, Auditable
         foreach ($users as $user_id) {
             ContractUserRestriction::create([
                 'user_id'    => $user_id,
-                'contract_id'   => $this->id
+                'contract_id'   => $this->id,
             ]);
         }
     }
 
     /**
-     * Sync Contract Company Restrictions
+     * Sync Contract Company Restrictions.
      *
-     * @param  Array $companies
+     * @param  array $companies
      * @return void
      */
     public function ContractCompaniesRestrictionsSync($companies)
@@ -215,7 +218,7 @@ class Contract extends Model implements HasMedia, Auditable
         foreach ($companies as $company_id) {
             ContractCompanyRestriction::create([
                 'company_id'    => $company_id,
-                'contract_id'   => $this->id
+                'contract_id'   => $this->id,
             ]);
         }
     }
@@ -243,7 +246,6 @@ class Contract extends Model implements HasMedia, Auditable
     /* Duplicate Contract Model instance with relations */
     public function duplicate()
     {
-
         $new_contract = $this->replicate();
         $new_contract->name .= ' copy';
         $new_contract->save();
@@ -253,10 +255,9 @@ class Contract extends Model implements HasMedia, Auditable
 
         foreach ($relations as $relation) {
             foreach ($relation as $relationRecord) {
-
-                if ($relationRecord instanceof \App\LocalCharge)
+                if ($relationRecord instanceof \App\LocalCharge) {
                     $relationRecord->duplicate($new_contract->id);
-                else {
+                } else {
                     $newRelationship = $relationRecord->replicate();
                     $newRelationship->contract_id = $new_contract->id;
                     $newRelationship->save();
@@ -268,7 +269,7 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
-     * processSearchByIdFcl
+     * processSearchByIdFcl.
      *
      * @param  mixed $api_company_id
      * @return void
@@ -285,11 +286,11 @@ class Contract extends Model implements HasMedia, Auditable
         $chargesDestination = 'true';
         $chargesFreight = 'true';*/
         $markup = null;
-        $remarks = "";
+        $remarks = '';
         //$remarksGeneral = "";
 
-        $equipment = array();
-        $totalesCont = array();
+        $equipment = [];
+        $totalesCont = [];
 
         //Colecciones
         $general = new collection();
@@ -298,7 +299,7 @@ class Contract extends Model implements HasMedia, Auditable
         //$idCurrency = $company->currency_id;
         $company_user_id = $company->id;
 
-        $equipment = array('1', '2', '3', '4', '5');
+        $equipment = ['1', '2', '3', '4', '5'];
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
 
@@ -318,20 +319,18 @@ class Contract extends Model implements HasMedia, Auditable
         }
 
         foreach ($rates as $data) {
-
             if ($convert) {
-                $typeCurrency =  $company->currency->alphacode;
+                $typeCurrency = $company->currency->alphacode;
             } else {
-                $typeCurrency =  $data->currency->alphacode;
+                $typeCurrency = $data->currency->alphacode;
             }
 
             foreach ($containers as $cont) {
-                $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+                $totalesContainer = [$cont->code => ['tot_'.$cont->code.'_F' => 0, 'tot_'.$cont->code.'_O' => 0, 'tot_'.$cont->code.'_D' => 0]];
                 $totalesCont = array_merge($totalesContainer, $totalesCont);
-                $var = 'array' . $cont->code;
+                $var = 'array'.$cont->code;
                 $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
             }
-
 
             //$contractStatus = $data->contract->status;
             $collectionRate = new Collection();
@@ -342,27 +341,27 @@ class Contract extends Model implements HasMedia, Auditable
             $totalT = 0;
 
             //Arreglo totalizador de freight , destination , origin por contenedor
-            $totalesCont = array();
-            $arregloRateSum = array();
+            $totalesCont = [];
+            $arregloRateSum = [];
 
             foreach ($containers as $cont) {
-                $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+                $totalesContainer = [$cont->code => ['tot_'.$cont->code.'_F' => 0, 'tot_'.$cont->code.'_O' => 0, 'tot_'.$cont->code.'_D' => 0]];
                 $totalesCont = array_merge($totalesContainer, $totalesCont);
                 // Inicializar arreglo rate
-                $arregloRate = array('c' . $cont->code => '0');
+                $arregloRate = ['c'.$cont->code => '0'];
                 $arregloRateSum = array_merge($arregloRateSum, $arregloRate);
             }
 
             $carrier[] = $data->carrier_id;
 
-            $arregloRate = array();
+            $arregloRate = [];
             //Arreglos para guardar el rate
-            $array_ocean_freight = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'currency' => $data->currency->alphacode);
+            $array_ocean_freight = ['type' => 'Ocean Freight', 'detail' => 'Per Container', 'currency' => $data->currency->alphacode];
 
-            $arregloRateSave['markups'] = array();
-            $arregloRateSave['rate'] = array();
+            $arregloRateSave['markups'] = [];
+            $arregloRateSave['rate'] = [];
             //Arreglo para guardar charges
-            $arregloCharges['origin'] = array();
+            $arregloCharges['origin'] = [];
 
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
             // Rates
@@ -451,12 +450,12 @@ class Contract extends Model implements HasMedia, Auditable
             }*/
 
             $totalRates += $totalT;
-            $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
+            $array = ['type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates.' '.$typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id];
             $array = array_merge($array, $arregloRate);
             $array = array_merge($array, $arregloRateSave);
             $collectionRate->push($array);
 
-            // SCHEDULE 
+            // SCHEDULE
 
             $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
 
@@ -472,71 +471,70 @@ class Contract extends Model implements HasMedia, Auditable
             $sum_destination = 'sum_destination_';
 
             foreach ($containers as $cont) {
-                ${$sum_origin . $cont->code} = 0;
-                ${$sum_freight . $cont->code} = 0;
-                ${$sum_destination . $cont->code} = 0;
+                ${$sum_origin.$cont->code} = 0;
+                ${$sum_freight.$cont->code} = 0;
+                ${$sum_destination.$cont->code} = 0;
             }
 
             foreach ($containers as $cont) {
                 foreach ($collectionOrigin as $origin) {
                     if ($cont->code == $origin['type']) {
                         $rateCurrency = $this->ratesCurrency($origin['currency_id'], $typeCurrency);
-                        ${$sum_origin . $cont->code} +=  $origin['price'] / $rateCurrency;
+                        ${$sum_origin.$cont->code} += $origin['price'] / $rateCurrency;
                     }
                 }
                 foreach ($collectionFreight as $freight) {
                     if ($cont->code == $freight['type']) {
                         $rateCurrency = $this->ratesCurrency($freight['currency_id'], $typeCurrency);
-                        ${$sum_freight . $cont->code} +=  $freight['price'] / $rateCurrency;
+                        ${$sum_freight.$cont->code} += $freight['price'] / $rateCurrency;
                     }
                 }
                 foreach ($collectionDestiny as $destination) {
                     if ($cont->code == $destination['type']) {
                         $rateCurrency = $this->ratesCurrency($destination['currency_id'], $typeCurrency);
-                        ${$sum_destination . $cont->code} +=  $destination['price'] / $rateCurrency;
+                        ${$sum_destination.$cont->code} += $destination['price'] / $rateCurrency;
                     }
                 }
             }
 
             foreach ($containers as $cont) {
-                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
-                $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
+                $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] = $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] + $arregloRateSum['c'.$cont->code];
+                $data->setAttribute('tot'.$cont->code.'F', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_F'], 2, '.', ''));
 
-                $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
-                $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
+                $data->setAttribute('tot'.$cont->code.'O', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_O'], 2, '.', ''));
+                $data->setAttribute('tot'.$cont->code.'D', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_D'], 2, '.', ''));
 
-                $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
+                $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] = $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] / $rateTot;
                 // TOTALES
-                $name_tot = 'total' . $cont->code;
-                $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
-                $$name_tot += ${$sum_origin . $cont->code} + ${$sum_freight . $cont->code} + ${$sum_destination . $cont->code};
+                $name_tot = 'total'.$cont->code;
+                $$name_tot = $totalesCont[$cont->code]['tot_'.$cont->code.'_D'] + $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] + $totalesCont[$cont->code]['tot_'.$cont->code.'_O'];
+                $$name_tot += ${$sum_origin.$cont->code} + ${$sum_freight.$cont->code} + ${$sum_destination.$cont->code};
                 $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
             }
 
             //remarks
 
-            if ($data->contract->remarks != "") {
-                $remarks = $data->contract->remarks . "<br>";
+            if ($data->contract->remarks != '') {
+                $remarks = $data->contract->remarks.'<br>';
             }
 
             //$remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
             $routes['type'] = 'FCL';
-            $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
-            $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
+            $routes['origin_port'] = ['name' => $data->port_origin->name, 'code' => $data->port_origin->code];
+            $routes['destination_port'] = ['name' => $data->port_destiny->name, 'code' => $data->port_destiny->code];
             $routes['ocean_freight'] = $array_ocean_freight;
             $routes['ocean_freight']['rates'] = $arregloRate;
 
-
-            if (!empty($collectionFreight)) {
+            if (! empty($collectionFreight)) {
                 $routes['freight_charges'] = $collectionFreight;
             }
 
-            if (!empty($collectionDestiny)) {
+            if (! empty($collectionDestiny)) {
                 $routes['destination_charges'] = $collectionDestiny;
             }
 
-            if (!empty($collectionOrigin)) {
+            if (! empty($collectionOrigin)) {
                 $routes['origin_charges'] = $collectionOrigin;
             }
 
@@ -552,14 +550,13 @@ class Contract extends Model implements HasMedia, Auditable
 
     public function compactResponse($containers, $equipment, $routes, $data, $currency, $response)
     {
-
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via);
+                $detalle = [$data->port_origin->code, $data->port_destiny->code, $data->via];
                 foreach ($containers as $cont) {
                     foreach ($equipment as $eq) {
                         if ($eq == $cont->id) {
-                            array_push($detalle, (float) $data['total' . $cont->code]);
+                            array_push($detalle, (float) $data['total'.$cont->code]);
                         }
                     }
                 }
@@ -572,7 +569,7 @@ class Contract extends Model implements HasMedia, Auditable
                 foreach ($containers as $cont) {
                     foreach ($equipment as $eq) {
                         if ($eq == $cont->id) {
-                            $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
+                            $detalle['Rates']['total'.$cont->code] = $data['total'.$cont->code];
                         }
                     }
                 }
@@ -586,10 +583,10 @@ class Contract extends Model implements HasMedia, Auditable
                 $detalle['Rates']['carrier'] = $data->carrier;
                 //Set contract details
                 $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-                $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-                $detalle['Rates']['contract']['number'] =   $data->contract->number;
-                $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-                $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+                $detalle['Rates']['contract']['valid_until'] = $data->contract->expire;
+                $detalle['Rates']['contract']['number'] = $data->contract->number;
+                $detalle['Rates']['contract']['ref'] = $data->contract->name;
+                $detalle['Rates']['contract']['status'] = $data->contract->status == 'publish' ? 'published' : $data->contract->status;
                 break;
         }
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateGlobalCharPortExceptionsTable extends Migration
 {
@@ -21,8 +21,6 @@ class CreateGlobalCharPortExceptionsTable extends Migration
             $table->foreign('port_orig')->references('id')->on('harbors');
             $table->foreign('port_dest')->references('id')->on('harbors');
             $table->foreign('globalcharge_id')->references('id')->on('globalcharges')->onDelete('cascade');
-      
-            
         });
     }
 

@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Harbor;
+use App\ApiProvider;
+use App\CalculationType;
 use App\Carrier;
+use App\CompanyUser;
 use App\Country;
 use App\Currency;
-use App\Surcharge;
-use App\CompanyUser;
-use App\TypeDestiny;
-use App\CalculationType;
 use App\GlobalChargeApi;
-use App\ApiProvider;
-use App\GlobalChargeProvider;
 use App\GlobalChargePortApi;
+use App\GlobalChargeProvider;
+use App\Harbor;
+use App\Surcharge;
+use App\TypeDestiny;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class GlobalChargesApiController extends Controller
 {
-	public function index()
+    public function index()
     {
         $globalcharges = GlobalChargeApi::with(['surcharge', 'currency', 'calculationtype', 'globalcharport.portOrig', 'globalcharport.portDest', 'typedestiny', 'globalchargeprovider.provider'])->get();
 
@@ -31,44 +31,42 @@ class GlobalChargesApiController extends Controller
 
     public function create()
     {
-    	$company_user = Auth::user()->companyUser;
+        $company_user = Auth::user()->companyUser;
 
-        $harbor = Harbor::pluck('display_name','id');
-        $currency = Currency::pluck('alphacode','id');
-        $calculationT = CalculationType::pluck('name','id');
-        $typedestiny = TypeDestiny::pluck('description','id');
-        $surcharge = Surcharge::where('company_user_id','=', $company_user->id)->pluck('name','id');
-        $countries = Country::pluck('name','id');
+        $harbor = Harbor::pluck('display_name', 'id');
+        $currency = Currency::pluck('alphacode', 'id');
+        $calculationT = CalculationType::pluck('name', 'id');
+        $typedestiny = TypeDestiny::pluck('description', 'id');
+        $surcharge = Surcharge::where('company_user_id', '=', $company_user->id)->pluck('name', 'id');
+        $countries = Country::pluck('name', 'id');
         $currency_cfg = $company_user->currency;
-        $providers = ApiProvider::pluck('name','id');
+        $providers = ApiProvider::pluck('name', 'id');
 
         $route = 'globalchargesapi.store';
 
         $data = [
-        	'harbor',
-        	'currency',
-        	'calculationT',
-        	'typedestiny',
-        	'surcharge',
-        	'countries',
-        	'currency_cfg', 
-        	'providers',
-        	'route' 
+            'harbor',
+            'currency',
+            'calculationT',
+            'typedestiny',
+            'surcharge',
+            'countries',
+            'currency_cfg',
+            'providers',
+            'route',
         ];
 
         return view('globalcharges.add', compact($data));
     }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
-        foreach($calculation_type as $ct => $ctype)
-        {
-
+        foreach ($calculation_type as $ct => $ctype) {
             $global = new GlobalChargeApi();
-            $validation = explode('/',$request->validation_expire);
+            $validation = explode('/', $request->validation_expire);
             $global->validity = $validation[0];
             $global->expire = $validation[1];
             $global->surcharge_id = $request->input('type');
@@ -80,8 +78,7 @@ class GlobalChargesApiController extends Controller
 
             $providers = $request->input('providers');
 
-            foreach($providers as $p => $value)
-            {
+            foreach ($providers as $p => $value) {
                 $provider = new GlobalChargeProvider();
                 $provider->provider_id = $value;
                 $provider->globalcharge()->associate($global);
@@ -91,10 +88,8 @@ class GlobalChargesApiController extends Controller
             $detailport = $request->input('port_orig');
             $detailportDest = $request->input('port_dest');
 
-            foreach($detailport as $p => $value)
-            {
-                foreach($detailportDest as $dest => $valuedest)
-                {
+            foreach ($detailport as $p => $value) {
+                foreach ($detailportDest as $dest => $valuedest) {
                     $ports = new GlobalChargePortApi();
                     $ports->port_orig = $value;
                     $ports->port_dest = $valuedest;
@@ -104,49 +99,49 @@ class GlobalChargesApiController extends Controller
                 }
             }
         }
-		
-		Session::flash('globalcharge.msg', 'Global Charge Api Created'); 
+
+        Session::flash('globalcharge.msg', 'Global Charge Api Created');
+
         return redirect()->action('GlobalChargesApiController@index');
     }
 
     public function edit(GlobalChargeApi $globalchargesapi)
     {
-
-    	$globalcharges = $globalchargesapi;
+        $globalcharges = $globalchargesapi;
         $company_user = Auth::user()->companyUser;
 
-        $countries = Country::pluck('name','id');
-        $calculationT = CalculationType::pluck('name','id');
-        $typedestiny = TypeDestiny::pluck('description','id');
-        $surcharge = Surcharge::where('company_user_id','=', $company_user->id)->pluck('name','id');
-		$harbor = Harbor::pluck('display_name','id');
-        $currency = Currency::pluck('alphacode','id');
-        $providers = ApiProvider::pluck('name','id');
+        $countries = Country::pluck('name', 'id');
+        $calculationT = CalculationType::pluck('name', 'id');
+        $typedestiny = TypeDestiny::pluck('description', 'id');
+        $surcharge = Surcharge::where('company_user_id', '=', $company_user->id)->pluck('name', 'id');
+        $harbor = Harbor::pluck('display_name', 'id');
+        $currency = Currency::pluck('alphacode', 'id');
+        $providers = ApiProvider::pluck('name', 'id');
         $route = 'globalchargesapi.update';
-        $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
         $amount = $globalcharges->amount;
 
         $activacion = [
-        	"rdrouteP" => true, 
-        	"rdrouteC" => false,
-        	"rdroutePC" => false,
-        	"rdrouteCP" => false, 
-        	'act' => 'divport'
+            'rdrouteP' => true,
+            'rdrouteC' => false,
+            'rdroutePC' => false,
+            'rdrouteCP' => false,
+            'act' => 'divport',
         ];
 
         $data = [
-        	'globalcharges',
-        	'harbor',
-        	'currency',
-        	'calculationT',
-        	'typedestiny',
-        	'surcharge',
-        	'countries', 
-        	'providers',
-        	'route',
-        	'activacion',
-        	'amount'
+            'globalcharges',
+            'harbor',
+            'currency',
+            'calculationT',
+            'typedestiny',
+            'surcharge',
+            'countries',
+            'providers',
+            'route',
+            'activacion',
+            'amount',
         ];
 
         return view('globalcharges.edit', compact($data));
@@ -154,14 +149,14 @@ class GlobalChargesApiController extends Controller
 
     public function update(Request $request, GlobalChargeApi $globalchargesapi)
     {
-        $harbor = Harbor::pluck('display_name','id');
-        $currency = Currency::pluck('alphacode','id');
-        $calculationT = CalculationType::pluck('name','id');
-        $typedestiny = TypeDestiny::pluck('description','id');
+        $harbor = Harbor::pluck('display_name', 'id');
+        $currency = Currency::pluck('alphacode', 'id');
+        $calculationT = CalculationType::pluck('name', 'id');
+        $typedestiny = TypeDestiny::pluck('description', 'id');
 
         $globalchargesapi = $globalchargesapi;
 
-        $validation = explode('/',$request->validation_expire);
+        $validation = explode('/', $request->validation_expire);
         $globalchargesapi->validity = $validation[0];
         $globalchargesapi->expire = $validation[1];
         $globalchargesapi->surcharge_id = $request->input('surcharge_id');
@@ -171,16 +166,14 @@ class GlobalChargesApiController extends Controller
         $globalchargesapi->currency_id = $request->input('currency_id');
 
         $providers = $request->input('providers');
-        GlobalChargeProvider::where("globalcharge_id", $globalchargesapi->id)->delete();
-        GlobalChargePortApi::where("globalcharge_id", $globalchargesapi->id)->delete();
+        GlobalChargeProvider::where('globalcharge_id', $globalchargesapi->id)->delete();
+        GlobalChargePortApi::where('globalcharge_id', $globalchargesapi->id)->delete();
 
         $port_orig = $request->input('port_orig');
         $port_dest = $request->input('port_dest');
 
-        foreach($port_orig as  $orig => $valueorig)
-        {
-            foreach($port_dest as $dest => $valuedest)
-            {
+        foreach ($port_orig as  $orig => $valueorig) {
+            foreach ($port_dest as $dest => $valuedest) {
                 $detailport = new GlobalChargePortApi();
                 $detailport->port_orig = $valueorig;
                 $detailport->port_dest = $valuedest;
@@ -190,8 +183,7 @@ class GlobalChargesApiController extends Controller
             }
         }
 
-        foreach($providers as $key)
-        {
+        foreach ($providers as $key) {
             $detailcarrier = new GlobalChargeProvider();
             $detailcarrier->provider_id = $key;
             $detailcarrier->globalcharge_id = $globalchargesapi->id;
@@ -200,7 +192,8 @@ class GlobalChargesApiController extends Controller
 
         $globalchargesapi->update();
 
-        Session::flash('globalcharge.msg', 'Global Charge Api Updated'); 
+        Session::flash('globalcharge.msg', 'Global Charge Api Updated');
+
         return redirect()->back();
     }
 
@@ -208,12 +201,12 @@ class GlobalChargesApiController extends Controller
     {
         $globals_id_array = $request->input('id');
         $global = GlobalChargeApi::whereIn('id', $globals_id_array);
-        
-        if($global->delete()){
-        	Session::flash('globalcharge.msg', 'Global Charges Api Deleted'); 
+
+        if ($global->delete()) {
+            Session::flash('globalcharge.msg', 'Global Charges Api Deleted');
+
             return response()->json(['success' => 'Deleted successfully']);
         }
-        	
 
         return response()->json(['error' => 'An internal error occurred!'], 404);
     }

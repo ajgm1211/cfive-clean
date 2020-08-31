@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class QuoteV2 extends Model  implements HasMedia
+class QuoteV2 extends Model implements HasMedia
 {
     use SoftDeletes;
     use HasMediaTrait;
@@ -110,12 +110,12 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasOne('App\IntegrationQuoteStatus', 'quote_id', 'id');
     }
 
-    public function scopeExclude($query, $value = array())
+    public function scopeExclude($query, $value = [])
     {
         return $query->select(array_diff($this->columns, (array) $value));
     }
 
-    /*public function getEquipmentAttribute($value) 
+    /*public function getEquipmentAttribute($value)
     {
         $a = json_decode($value);
         return json_decode($a);

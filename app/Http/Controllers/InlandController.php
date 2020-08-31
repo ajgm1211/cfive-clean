@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Inland;
-use App\GroupContainer;
-use App\Direction;
 use App\Company;
-use App\Currency;
-use App\Http\Resources\InlandResource;
 use App\Container;
-use App\InlandType;
+use App\Currency;
+use App\Direction;
+use App\GroupContainer;
 use App\Harbor;
+use App\Http\Resources\InlandResource;
+use App\Inland;
 use App\InlandPort;
+use App\InlandType;
+use Illuminate\Http\Request;
 
 class InlandController extends Controller
 {
@@ -68,7 +68,6 @@ class InlandController extends Controller
             'harbors' => $harbors,
         ];
 
-
         return response()->json(['data' => $data]);
     }
 
@@ -89,7 +88,7 @@ class InlandController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'ports' => 'required'
+            'ports' => 'required',
         ]);
 
         $inland = Inland::create([
@@ -101,14 +100,13 @@ class InlandController extends Controller
             'expire' => $data['expire'],
             'status' => 'publish',
             'inland_type_id' => '1',
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
         ]);
 
         $inland->InlandPortsSync($data['ports']);
 
         return new InlandResource($inland);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -127,7 +125,7 @@ class InlandController extends Controller
             'direction' => 'required',
             'gp_container' => 'required',
             'restrictions' => 'sometimes',
-            'ports' => 'required'
+            'ports' => 'required',
         ]);
 
         $inland->update([
@@ -136,7 +134,7 @@ class InlandController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'inland_type_id' => $data['type'],
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
         ]);
 
         $inland->InlandPortsSync($data['ports']);
@@ -147,7 +145,7 @@ class InlandController extends Controller
     }
 
     /**
-     * Render edit view 
+     * Render edit view.
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

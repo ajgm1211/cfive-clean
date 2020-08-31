@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use HelperAll;
 use App\CalculationType;
+use HelperAll;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
 class CalculationTypeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('calculationTypes.Body-Modals.add');
     }
 
-    public function create(){
+    public function create()
+    {
         $calculations = CalculationType::all();
         //dd($containerscal);
         return DataTables::of($calculations)
@@ -28,73 +30,79 @@ class CalculationTypeController extends Controller
                     ';
                 //$button = $update_button.$eliminiar_buton;
                 $button = $update_button;
+
                 return $button;
             })
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
-    public function store(Request $request){
-        $calculation        = new CalculationType();
-        $calculation->name  = $request->name;
-        $calculation->code	= $request->code;
+    public function store(Request $request)
+    {
+        $calculation = new CalculationType();
+        $calculation->name = $request->name;
+        $calculation->code = $request->code;
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        if(!$request->name_prin_ch){
+        if (! $request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
         }
-        $options = array('group'=>$group,'isteu'=>$isteu,'name'=>$name_prin_inp);
-        $calculation->options	= json_encode($options);
+        $options = ['group'=>$group, 'isteu'=>$isteu, 'name'=>$name_prin_inp];
+        $calculation->options = json_encode($options);
 
         $calculation->save();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Success. Calculation type created.');
+
         return redirect()->route('ContainerCalculation.index');
     }
 
-    public function show($id){
+    public function show($id)
+    {
         //
     }
 
-    public function edit($id){
-        $calculation = CalculationType::find($id);   
+    public function edit($id)
+    {
+        $calculation = CalculationType::find($id);
 
         $options = json_decode($calculation->options);
-        if(empty($options)){
-            $options = json_encode(array('group'=>false,'isteu'=>false,'name'=>'N\A'));
+        if (empty($options)) {
+            $options = json_encode(['group'=>false, 'isteu'=>false, 'name'=>'N\A']);
             $options = json_decode($options);
         }
 
-
-        return view('calculationTypes.Body-Modals.edit',compact('calculation','options'));
+        return view('calculationTypes.Body-Modals.edit', compact('calculation', 'options'));
     }
 
-    public function update(Request $request, $id){
-        $calculation        = CalculationType::find($id);
+    public function update(Request $request, $id)
+    {
+        $calculation = CalculationType::find($id);
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
-        $calculation->name  = $request->name;
-        $calculation->code	= $request->code;
-        if(!$request->name_prin_ch){
+        $calculation->name = $request->name;
+        $calculation->code = $request->code;
+        if (! $request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
         }
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        $options = array('group'=>$group,'isteu'=>$isteu,'name'=>$name_prin_inp);
-        $calculation->options	= json_encode($options);
+        $options = ['group'=>$group, 'isteu'=>$isteu, 'name'=>$name_prin_inp];
+        $calculation->options = json_encode($options);
         $calculation->update();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Success. Calculation type updated.');
+
         return redirect()->route('ContainerCalculation.index');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         //
     }
-
 }

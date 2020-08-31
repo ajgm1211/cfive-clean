@@ -14,12 +14,13 @@ class HarborController extends Controller
             return \Response::json([]);
         }
 
-        $harbors = Harbor::where('display_name', 'like', '%' . $term . '%')->get();
+        $harbors = Harbor::where('display_name', 'like', '%'.$term.'%')->get();
 
         $formatted_harbors = [];
         foreach ($harbors as $harbor) {
             $formatted_harbors[] = ['id' => $harbor->id_complete, 'text' => $harbor->display_name];
         }
+
         return \Response::json($formatted_harbors);
     }
 }
