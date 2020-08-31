@@ -9,7 +9,6 @@ if (!defined('RDS_HOSTNAME')) {
 
 }*/
 
-
 return [
 
    /*

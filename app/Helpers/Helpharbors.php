@@ -1,42 +1,41 @@
 <?php
+
 //app/Helpers/Envato/User.php
+
 namespace App\Helpers;
 
-use App\Harbor;
 use App\Country;
+use App\Harbor;
 
-class Helpharbors {
+class Helpharbors
+{
     /**
      * @param int $user_id User-id
      *
      * @return string
      */
-    public static function get_harbor($puerto) {
-
+    public static function get_harbor($puerto)
+    {
         $portExiBol = false;
-        $sin_via = explode(' via ',$puerto);
+        $sin_via = explode(' via ', $puerto);
 
-        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+        $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
+        $portResul = str_replace($caracteres, '', trim(strtolower($sin_via[0])));
 
-        $portResul = str_replace($caracteres,'',trim(strtolower($sin_via[0])));
-
-        if(empty($portResul) != true){
-
-            $portExits = Harbor::where('varation->type','like','%'.$portResul.'%')
+        if (empty($portResul) != true) {
+            $portExits = Harbor::where('varation->type', 'like', '%'.$portResul.'%')
                 ->get();
 
-            if(count($portExits) > 1){
+            if (count($portExits) > 1) {
                 $puerto = strtolower(trim($puerto));
 
-                foreach($portExits as $multiples){
-
+                foreach ($portExits as $multiples) {
                     $jsonorigen = json_decode($multiples['varation']);
 
-                    foreach($jsonorigen->type as $parameter){
-
-                        if (strlen($puerto) == strlen($parameter)){
-                            if(strcmp($puerto,$parameter) == 0){
+                    foreach ($jsonorigen->type as $parameter) {
+                        if (strlen($puerto) == strlen($parameter)) {
+                            if (strcmp($puerto, $parameter) == 0) {
                                 $portVal = $multiples->id;
                                 $portExiBol = true;
                                 break;
@@ -45,59 +44,51 @@ class Helpharbors {
                     }
                 }
 
-                if($portExiBol == false){
+                if ($portExiBol == false) {
                     $portVal = $puerto.'_E_E';
                 }
-
-            } else{
-
-                if(count($portExits) == 1){
+            } else {
+                if (count($portExits) == 1) {
                     $portExiBol = true;
-                    foreach($portExits as $portRc){
+                    foreach ($portExits as $portRc) {
                         $portVal = $portRc['id'];
                     }
-                } else{
+                } else {
                     $portVal = $puerto.'_E_E';
                 }
-
             }
-
-        } else{
-            $portVal    = '_E_E';
+        } else {
+            $portVal = '_E_E';
             $portExiBol = false;
         }
 
         $data = ['puerto' => $portVal, 'boolean' => $portExiBol];
 
-        return ($data);
+        return $data;
     }
 
-    public static function get_country($country) {
-
+    public static function get_country($country)
+    {
         $countryExiBol = false;
-        $sin_via = explode(' via ',$country);
+        $sin_via = explode(' via ', $country);
 
-        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+        $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
+        $countryResul = str_replace($caracteres, '', trim(strtolower($sin_via[0])));
 
-        $countryResul = str_replace($caracteres,'',trim(strtolower($sin_via[0])));
-
-        if(empty($countryResul) != true){
-
-            $countryExits = Country::where('variation->type','like','%'.$countryResul.'%')
+        if (empty($countryResul) != true) {
+            $countryExits = Country::where('variation->type', 'like', '%'.$countryResul.'%')
                 ->get();
 
-            if(count($countryExits) > 1){
+            if (count($countryExits) > 1) {
                 $country = strtolower(trim($country));
 
-                foreach($countryExits as $multiples){
-
+                foreach ($countryExits as $multiples) {
                     $jsonorigen = json_decode($multiples['variation']);
 
-                    foreach($jsonorigen->type as $parameter){
-
-                        if (strlen($country) == strlen($parameter)){
-                            if(strcmp($country,$parameter) == 0){
+                    foreach ($jsonorigen->type as $parameter) {
+                        if (strlen($country) == strlen($parameter)) {
+                            if (strcmp($country, $parameter) == 0) {
                                 $countryVal = $multiples->id;
                                 $countryExiBol = true;
                                 break;
@@ -106,57 +97,55 @@ class Helpharbors {
                     }
                 }
 
-                if($countryExiBol == false){
+                if ($countryExiBol == false) {
                     $countryVal = $country.'_E_E';
                 }
-
-            } else{
-
-                if(count($countryExits) == 1){
+            } else {
+                if (count($countryExits) == 1) {
                     $countryExiBol = true;
-                    foreach($countryExits as $portRc){
+                    foreach ($countryExits as $portRc) {
                         $countryVal = $portRc['id'];
                     }
-                } else{
+                } else {
                     $countryVal = $country.'_E_E';
                 }
-
             }
-
-        } else{
-            $countryVal    = '_E_E';
+        } else {
+            $countryVal = '_E_E';
             $countryExiBol = false;
         }
 
         $data = ['country' => $countryVal, 'boolean' => $countryExiBol];
 
-        return ($data);
+        return $data;
     }
 
-    public static function get_harbor_simple($puerto){
+    public static function get_harbor_simple($puerto)
+    {
         $data = null;
-        $resp =  false;
-        $find =  false;
-        $place_val     = Harbor::where('varation->type','like','%'.strtolower($puerto).'%')->get();
-        if(count($place_val) == 1 ){
+        $resp = false;
+        $find = false;
+        $place_val = Harbor::where('varation->type', 'like', '%'.strtolower($puerto).'%')->get();
+        if (count($place_val) == 1) {
             $resp = true;
             $data = $place_val[0]->id;
-        } elseif(count($place_val) == 0){
+        } elseif (count($place_val) == 0) {
             $data = $puerto.'(Error)';
-        } elseif(count($place_val) > 1){
-            foreach($place_val as  $place_one){
-                $array_varation = json_decode($place_one->varation,true);                
-                if(in_array(strtolower($puerto),$array_varation['type'])){
+        } elseif (count($place_val) > 1) {
+            foreach ($place_val as  $place_one) {
+                $array_varation = json_decode($place_one->varation, true);
+                if (in_array(strtolower($puerto), $array_varation['type'])) {
                     $find = true;
                     $resp = true;
-                    $data = $place_one->id; 
+                    $data = $place_one->id;
                     break;
-                }                
+                }
             }
-            if(!$find){
+            if (! $find) {
                 $data = $puerto.' (Error) ['.$place_val->implode('id', ', ').']';
             }
         }
-        return ['puerto' => $data,'boolean' => $resp];
+
+        return ['puerto' => $data, 'boolean' => $resp];
     }
 }

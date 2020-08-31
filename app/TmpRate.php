@@ -13,6 +13,6 @@ class TmpRate extends Model
                            'Rate20',
                            'Rate40',
                            'Rate40HC',
-                           'Currency'
+                           'Currency',
                           ];
 }

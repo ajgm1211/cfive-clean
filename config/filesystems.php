@@ -47,7 +47,7 @@ return [
             'driver' => 'local',
             'root' => public_path().'/storage',
         ],
-        
+
         'local2' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -76,8 +76,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
-        ],  
-
+        ],
 
         'FclImport' => [
             'driver' => 'local',
@@ -219,7 +218,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
-        ],   
+        ],
         'contracts3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -227,7 +226,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
-        ],  
+        ],
         'pdfApiS3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -235,7 +234,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
-        ],  
+        ],
         'media' => [
             'driver' => 'local',
             'root' => storage_path('app/public/manual'),

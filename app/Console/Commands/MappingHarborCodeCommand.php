@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\MappingLocation;
 use App\Harbor;
+use App\MappingLocation;
+use Illuminate\Console\Command;
 
 class MappingHarborCodeCommand extends Command
 {
@@ -39,15 +39,14 @@ class MappingHarborCodeCommand extends Command
      */
     public function handle()
     {
-        try{
-
+        try {
             MappingLocation::truncate();
 
-            $array_a = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-            $array_b = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+            $array_a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+            $array_b = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
-            foreach($array_a as $a){
-                foreach($array_b as $b){
+            foreach ($array_a as $a) {
+                foreach ($array_b as $b) {
                     // Initialize CURL:
                     $ch = curl_init('https://api.maersk.com/locations/?brand=maeu&cityName='.$a.$b.'&type=city&pageSize=100&sort=cityName');
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -59,25 +58,25 @@ class MappingHarborCodeCommand extends Command
                     // Decode JSON response:
                     $locations = json_decode($json, true);
 
-                    foreach($locations as $key=>$value){
-                        if(!empty($value['maerskRkstCode']) && !empty($value['cityName'])){
-                            $array = array();
-                            $array=["maersk"=>[$value['maerskRkstCode'],$value['maerskGeoLocationId']],"CMA-CMG"=>[""]];
+                    foreach ($locations as $key=>$value) {
+                        if (! empty($value['maerskRkstCode']) && ! empty($value['cityName'])) {
+                            $array = [];
+                            $array = ['maersk'=>[$value['maerskRkstCode'], $value['maerskGeoLocationId']], 'CMA-CMG'=>['']];
                             $mapping = new MappingLocation();
                             $mapping->city_name = $value['cityName'];
                             $mapping->variation = json_encode($array);
                             $mapping->save();
 
-                            $harbor = Harbor::where('name',$value['cityName'])->first();
-                            if(!empty($harbor)){
+                            $harbor = Harbor::where('name', $value['cityName'])->first();
+                            if (! empty($harbor)) {
                                 $harbor->api_varation = json_encode($array);
-                                $harbor->update();   
+                                $harbor->update();
                             }
                         }
                     }
                 }
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             return $this->info($e->getMessage());
         }
 

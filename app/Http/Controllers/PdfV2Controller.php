@@ -2,83 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Exports\QuotesExport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\AutomaticRate;
+use App\Airline;
 use App\AutomaticInland;
 use App\AutomaticInlandLclAir;
+use App\AutomaticRate;
 use App\CalculationType;
 use App\CalculationTypeLcl;
+use App\Carrier;
 use App\Charge;
+use App\ChargeLclAir;
 use App\Company;
 use App\CompanyUser;
 use App\Contact;
+use App\Container;
+use App\Contract;
 use App\Country;
 use App\Currency;
+use App\EmailSetting;
 use App\EmailTemplate;
-use App\Harbor;
-use App\Incoterm;
-use App\Price;
-use App\Inland;
-use App\Quote;
-use App\Carrier;
-use App\QuoteV2;
-use App\Surcharge;
-use App\User;
-use App\PdfOption;
-use EventIntercom;
-use App\Jobs\SendQuotes;
-use App\SendQuote;
-use App\Contract;
-use App\Rate;
-use App\LocalCharge;
-use App\LocalCharCarrier;
-use App\LocalCharPort;
+use App\Exports\QuotesExport;
+use App\GlobalCharCarrier;
 use App\GlobalCharge;
 use App\GlobalCharPort;
-use App\GlobalCharCarrier;
+use App\Harbor;
+use App\Http\Traits\QuoteV2Trait;
+use App\Incoterm;
+use App\Inland;
+use App\Jobs\SendQuotes;
+use App\LocalCharCarrier;
+use App\LocalCharge;
+use App\LocalCharPort;
 use App\PackageLoad;
-use App\ChargeLclAir;
-use Illuminate\Support\Facades\Input;
-use GuzzleHttp\Exception\GuzzleException;
+use App\PackageLoadV2;
+use App\PdfOption;
+use App\Price;
+use App\Quote;
+use App\QuoteV2;
+use App\Rate;
+use App\Repositories\Schedules;
+use App\SaleTermV2;
+use App\SaleTermV2Charge;
+use App\ScheduleType;
+use App\SendQuote;
+use App\Surcharge;
+use App\TermAndConditionV2;
+use App\TermsAndCondition;
+use App\TermsPort;
+use App\User;
+use App\ViewQuoteV2;
+use EventIntercom;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
-use App\Repositories\Schedules;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
-use App\PackageLoadV2;
-use App\Airline;
-use App\Container;
-use App\TermsPort;
-use App\TermsAndCondition;
-use App\TermAndConditionV2;
-use App\ScheduleType;
-use App\EmailSetting;
-use App\SaleTermV2;
-use App\ViewQuoteV2;
-use App\SaleTermV2Charge;
-use App\Http\Traits\QuoteV2Trait;
-
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PdfV2Controller extends Controller
 {
-
     use QuoteV2Trait;
 
     /**
-     * Generate PDF FCL
-     * @param Request $request 
-     * @param integer $id      
+     * Generate PDF FCL.
+     * @param Request $request
+     * @param int $id
      * @return type
      */
     public function pdf(Request $request, $id)
     {
         $id = obtenerRouteKey($id);
-        $company_user = "";
-        $currency_cfg = "";
+        $company_user = '';
+        $currency_cfg = '';
 
         if (Auth::user()->company_user_id) {
             $company_user = CompanyUser::find(Auth::user()->company_user_id);
@@ -91,15 +89,15 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$idQ.'.pdf');
 
-        return $pdf->stream('quote-' . $idQuote . '-' . date('Ymd') . '.pdf');
+        return $pdf->stream('quote-'.$idQuote.'-'.date('Ymd').'.pdf');
     }
 
     /**
-     * Generate PDF to LCL/AIR
-     * @param Request $request 
-     * @param integer $id 
+     * Generate PDF to LCL/AIR.
+     * @param Request $request
+     * @param int $id
      * @return type
      */
     public function pdfLclAir(Request $request, $id)
@@ -129,9 +127,9 @@ class PdfV2Controller extends Controller
             foreach ($sale_origin->charge as $sale_origin_charge) {
                 if ($sale_origin_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
 
                     $currency_rate = $this->ratesCurrency($sale_origin_charge->currency_id, $typeCurrency);
@@ -142,12 +140,11 @@ class PdfV2Controller extends Controller
 
         foreach ($sale_terms_destination_grouped as $sale_destination) {
             foreach ($sale_destination->charge as $sale_destination_charge) {
-
                 if ($sale_destination_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($sale_destination_charge->currency_id, $typeCurrency);
 
@@ -160,19 +157,18 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
+                return $item['port']['name'].', '.$item['port']['code'];
             },
         ], $preserveKeys = true);
 
         foreach ($sale_terms_origin as $value) {
             foreach ($value as $origin_sale) {
                 foreach ($origin_sale->charge as $origin_charge) {
-
                     if ($origin_charge->currency_id != '') {
                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
 
@@ -186,7 +182,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
+                return $item['port']['name'].', '.$item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -195,9 +191,9 @@ class PdfV2Controller extends Controller
                 foreach ($value->charge as $item) {
                     if ($item->currency_id != '') {
                         if ($quote->pdf_option->grouped_destination_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                            $typeCurrency = $quote->pdf_option->destination_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         $item->total_sale_destination = number_format($item->total / $currency_rate, 2, '.', '');
@@ -234,13 +230,11 @@ class PdfV2Controller extends Controller
         }
 
         foreach ($rates_lcl_air as $item) {
-
             foreach ($item->charge_lcl_air as $value) {
-
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency = $currency_cfg->alphacode;
                 }
 
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
@@ -259,12 +253,12 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (!$item->automaticInlandLclAir->isEmpty()) {
+            if (! $item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                     if ($inland->units > 0) {
@@ -281,7 +275,7 @@ class PdfV2Controller extends Controller
 
         $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use ($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped) {
             if (in_array($item->origin_port_id, $origin_ports)) {
-                if (!$item->charge->whereIn('type_id', 1)->isEmpty()) {
+                if (! $item->charge->whereIn('type_id', 1)->isEmpty()) {
                     $item->charge_lcl_air->map(function ($value, $key) use ($sale_terms_origin_grouped, $item) {
                         if ($value->type_id == 1) {
                             $value->total_origin = 0;
@@ -348,7 +342,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -363,12 +357,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_origin) {
-
                             if ($v_origin->type_id == 1) {
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
 
                                 $currency_rate = $this->ratesCurrency($v_origin->currency_id, $typeCurrency);
@@ -381,13 +374,13 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                                     if ($inland->units > 0) {
@@ -411,7 +404,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -426,13 +419,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_destination) {
-
                             if ($v_destination->type_id == 2) {
-
                                 if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->destination_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_destination->currency_id, $typeCurrency);
                                 if ($v_destination->units > 0) {
@@ -443,13 +434,13 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($v_destination_inland->currency_id, $typeCurrency);
                                     if ($v_destination_inland->units > 0) {
@@ -467,15 +458,14 @@ class PdfV2Controller extends Controller
         }
 
         /** FREIGHT CHARGES **/
-
         $freight_charges_detailed = collect($freight_charges);
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -500,9 +490,9 @@ class PdfV2Controller extends Controller
                                 $total_freight_45 = 0;
                                 //dd($quote->pdf_option->destination_charges_currency);
                                 if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                 $array_amounts = json_decode($amounts->amount, true);
@@ -545,10 +535,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -591,15 +581,15 @@ class PdfV2Controller extends Controller
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'freight_currency' => $freight_currency]);
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        return $pdf->stream('quote-' . $quote->quote_id . '-' . date('Ymd') . '.pdf');
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
     }
 
     /**
-     * Generate PDF to LCL/AIR
-     * @param Request $request 
-     * @param integer $id 
+     * Generate PDF to LCL/AIR.
+     * @param Request $request
+     * @param int $id
      * @return type
      */
     public function pdfAir(Request $request, $id)
@@ -626,9 +616,9 @@ class PdfV2Controller extends Controller
                 foreach ($sale_origin->charge as $sale_origin_charge) {
                     if ($sale_origin_charge->currency_id != '') {
                         if ($quote->pdf_option->grouped_total_currency == 1) {
-                            $typeCurrency =  $quote->pdf_option->total_in_currency;
+                            $typeCurrency = $quote->pdf_option->total_in_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
 
                         $currency_rate = $this->ratesCurrency($sale_origin_charge->currency_id, $typeCurrency);
@@ -639,12 +629,11 @@ class PdfV2Controller extends Controller
 
             foreach ($sale_terms_destination_grouped as $sale_destination) {
                 foreach ($sale_destination->charge as $sale_destination_charge) {
-
                     if ($sale_destination_charge->currency_id != '') {
                         if ($quote->pdf_option->grouped_total_currency == 1) {
-                            $typeCurrency =  $quote->pdf_option->total_in_currency;
+                            $typeCurrency = $quote->pdf_option->total_in_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($sale_destination_charge->currency_id, $typeCurrency);
 
@@ -657,19 +646,18 @@ class PdfV2Controller extends Controller
 
             $sale_terms_origin = $sale_terms_origin->groupBy([
                 function ($item) {
-                    return $item['airport']['name'] . ', ' . $item['airport']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },
             ], $preserveKeys = true);
 
             foreach ($sale_terms_origin as $value) {
                 foreach ($value as $origin_sale) {
                     foreach ($origin_sale->charge as $origin_charge) {
-
                         if ($origin_charge->currency_id != '') {
                             if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                $typeCurrency = $quote->pdf_option->origin_charges_currency;
                             } else {
-                                $typeCurrency =  $currency_cfg->alphacode;
+                                $typeCurrency = $currency_cfg->alphacode;
                             }
                             $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
 
@@ -683,7 +671,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_destination = $sale_terms_destination->groupBy([
                 function ($item) {
-                    return $item['airport']['name'] . ', ' . $item['airport']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },
             ], $preserveKeys = true);
 
@@ -692,9 +680,9 @@ class PdfV2Controller extends Controller
                     foreach ($value->charge as $item) {
                         if ($item->currency_id != '') {
                             if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                $typeCurrency = $quote->pdf_option->destination_charges_currency;
                             } else {
-                                $typeCurrency =  $currency_cfg->alphacode;
+                                $typeCurrency = $currency_cfg->alphacode;
                             }
                             $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                             $item->total_sale_destination = number_format($item->total / $currency_rate, 2, '.', '');
@@ -731,17 +719,15 @@ class PdfV2Controller extends Controller
             }
 
             foreach ($rates_lcl_air as $item) {
-
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency = $currency_cfg->alphacode;
                 }
 
                 $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
 
                 foreach ($item->charge_lcl_air as $value) {
-
                     $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                     if ($value->type_id == 3) {
@@ -752,12 +738,12 @@ class PdfV2Controller extends Controller
                         $value->total_destination = number_format((($value->units * $value->price_per_unit) + $value->markup) / $currency_rate, 2, '.', '');
                     }
                 }
-                if (!$item->automaticInlandLclAir->isEmpty()) {
+                if (! $item->automaticInlandLclAir->isEmpty()) {
                     foreach ($item->automaticInlandLclAir as $inland) {
                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
                         if ($inland->units > 0) {
@@ -774,7 +760,7 @@ class PdfV2Controller extends Controller
 
             $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use ($origin_airports, $destination_airports, $sale_terms_origin_grouped, $sale_terms_destination_grouped) {
                 if (in_array($item->origin_airport_id, $origin_airports)) {
-                    if (!$item->charge->whereIn('type_id', 1)->isEmpty()) {
+                    if (! $item->charge->whereIn('type_id', 1)->isEmpty()) {
                         $item->charge_lcl_air->map(function ($value, $key) use ($sale_terms_origin_grouped, $item) {
                             if ($value->type_id == 1) {
                                 $value->total_origin = 0;
@@ -841,7 +827,7 @@ class PdfV2Controller extends Controller
             $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -855,12 +841,11 @@ class PdfV2Controller extends Controller
                     foreach ($item as $v) {
                         foreach ($v as $rate) {
                             foreach ($rate->charge_lcl_air as $v_origin_g) {
-
                                 if ($v_origin_g->type_id == 1) {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
 
                                     $currency_rate = $this->ratesCurrency($v_origin_g->currency_id, $typeCurrency);
@@ -872,13 +857,13 @@ class PdfV2Controller extends Controller
                                     $v_origin_g->total_origin = number_format((($v_origin_g->units * $v_origin_g->price_per_unit) + $v_origin_g->markup) / $currency_rate, 2, '.', '');
                                 }
                             }
-                            if (!$rate->automaticInlandLclAir->isEmpty()) {
+                            if (! $rate->automaticInlandLclAir->isEmpty()) {
                                 foreach ($rate->automaticInlandLclAir as $inland) {
                                     if ($inland->type == 'Origin') {
                                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                         } else {
-                                            $typeCurrency =  $currency_cfg->alphacode;
+                                            $typeCurrency = $currency_cfg->alphacode;
                                         }
                                         $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                                         if ($inland->units > 0) {
@@ -902,7 +887,7 @@ class PdfV2Controller extends Controller
             $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -917,13 +902,11 @@ class PdfV2Controller extends Controller
                     foreach ($item as $v) {
                         foreach ($v as $rate) {
                             foreach ($rate->charge_lcl_air as $v_destination_g) {
-
                                 if ($v_destination_g->type_id == 2) {
-
                                     if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->destination_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($v_destination_g->currency_id, $typeCurrency);
                                     if ($v_destination_g->units > 0) {
@@ -934,13 +917,13 @@ class PdfV2Controller extends Controller
                                     $v_destination_g->total_destination = number_format((($v_destination_g->units * $v_destination_g->price_per_unit) + $v_destination_g->markup) / $currency_rate, 2, '.', '');
                                 }
                             }
-                            if (!$rate->automaticInlandLclAir->isEmpty()) {
+                            if (! $rate->automaticInlandLclAir->isEmpty()) {
                                 foreach ($rate->automaticInlandLclAir as $inland) {
                                     if ($inland->type == 'Destination') {
                                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                         } else {
-                                            $typeCurrency =  $currency_cfg->alphacode;
+                                            $typeCurrency = $currency_cfg->alphacode;
                                         }
                                         $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                                         if ($inland->units > 0) {
@@ -957,17 +940,15 @@ class PdfV2Controller extends Controller
                 }
             }
 
-
             /** FREIGHT CHARGES **/
-
             $freight_charges_detailed = collect($freight_charges);
 
             $freight_charges_detailed = $freight_charges_detailed->groupBy([
                 function ($item) {
-                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
                 },
                 function ($item) {
-                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -992,9 +973,9 @@ class PdfV2Controller extends Controller
                                     $total_freight_45 = 0;
                                     //dd($quote->pdf_option->destination_charges_currency);
                                     if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                     $array_amounts = json_decode($amounts->amount, true);
@@ -1037,10 +1018,10 @@ class PdfV2Controller extends Controller
             $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
                 },
                 function ($item) {
-                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -1080,9 +1061,9 @@ class PdfV2Controller extends Controller
             $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination]);
 
             $pdf = \App::make('dompdf.wrapper');
-            $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+            $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-            return $pdf->stream('quote-' . $quote->quote_id . '-' . date('Ymd') . '.pdf');
+            return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
         } catch (Exception $e) {
             //dd($e->getMessage());
 
@@ -1097,24 +1078,23 @@ class PdfV2Controller extends Controller
         $pdf = PdfOption::where('quote_id', $request->id)->first();
         $pdf->$name = $request->value;
         $pdf->update();
+
         return response()->json(['message' => 'Ok']);
     }
 
     /**
-     * Enviar cotizaciones vía email
-     * @param Request $request 
+     * Enviar cotizaciones vía email.
+     * @param Request $request
      * @return Json
      */
     public function send_pdf_quote(Request $request)
     {
-
         $sign = null;
         $sign_type = null;
 
         $quote = QuoteV2::findOrFail($request->id);
         $contact_email = Contact::find($quote->contact_id);
         $email_from = \Auth::user()->email;
-
 
         if (\Auth::user()->company_user_id) {
             $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -1131,7 +1111,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
+                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
                 }
             }
         }
@@ -1142,12 +1122,12 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$idQ.'.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
         $to = $request->to;
-        
+
         $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
 
         //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
@@ -1159,8 +1139,8 @@ class PdfV2Controller extends Controller
     }
 
     /**
-     * Enviar cotizaciones vía email
-     * @param Request $request 
+     * Enviar cotizaciones vía email.
+     * @param Request $request
      * @return Json
      */
     public function send_pdf_quote_lcl(Request $request)
@@ -1208,7 +1188,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
+                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;
@@ -1220,9 +1200,9 @@ class PdfV2Controller extends Controller
             foreach ($sale_origin->charge as $sale_origin_charge) {
                 if ($sale_origin_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
 
                     $currency_rate = $this->ratesCurrency($sale_origin_charge->currency_id, $typeCurrency);
@@ -1233,12 +1213,11 @@ class PdfV2Controller extends Controller
 
         foreach ($sale_terms_destination_grouped as $sale_destination) {
             foreach ($sale_destination->charge as $sale_destination_charge) {
-
                 if ($sale_destination_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($sale_destination_charge->currency_id, $typeCurrency);
 
@@ -1251,19 +1230,18 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
+                return $item['port']['name'].', '.$item['port']['code'];
             },
         ], $preserveKeys = true);
 
         foreach ($sale_terms_origin as $value) {
             foreach ($value as $origin_sale) {
                 foreach ($origin_sale->charge as $origin_charge) {
-
                     if ($origin_charge->currency_id != '') {
                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
 
@@ -1277,7 +1255,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
+                return $item['port']['name'].', '.$item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1286,9 +1264,9 @@ class PdfV2Controller extends Controller
                 foreach ($value->charge as $item) {
                     if ($item->currency_id != '') {
                         if ($quote->pdf_option->grouped_destination_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                            $typeCurrency = $quote->pdf_option->destination_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         $item->total_sale_destination = number_format($item->total / $currency_rate, 2, '.', '');
@@ -1316,13 +1294,11 @@ class PdfV2Controller extends Controller
             ->ChargeLclAir(2, 'Destination')->get();
 
         foreach ($rates_lcl_air as $item) {
-
             foreach ($item->charge_lcl_air as $value) {
-
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency = $currency_cfg->alphacode;
                 }
 
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
@@ -1341,12 +1317,12 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (!$item->automaticInlandLclAir->isEmpty()) {
+            if (! $item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                     if ($inland->units > 0) {
@@ -1368,7 +1344,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1383,12 +1359,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_origin) {
-
                             if ($v_origin->type_id == 1) {
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
 
                                 $currency_rate = $this->ratesCurrency($v_origin->currency_id, $typeCurrency);
@@ -1401,13 +1376,13 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                                     if ($inland->units > 0) {
@@ -1431,7 +1406,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1446,13 +1421,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_destination) {
-
                             if ($v_destination->type_id == 2) {
-
                                 if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->destination_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_destination->currency_id, $typeCurrency);
                                 if ($v_destination->units > 0) {
@@ -1463,13 +1436,13 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($v_destination_inland->currency_id, $typeCurrency);
                                     if ($v_destination_inland->units > 0) {
@@ -1487,15 +1460,14 @@ class PdfV2Controller extends Controller
         }
 
         /** FREIGHT CHARGES **/
-
         $freight_charges_detailed = collect($freight_charges);
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1520,9 +1492,9 @@ class PdfV2Controller extends Controller
                                 $total_freight_45 = 0;
                                 //dd($quote->pdf_option->destination_charges_currency);
                                 if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                 $array_amounts = json_decode($amounts->amount, true);
@@ -1565,10 +1537,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1610,12 +1582,12 @@ class PdfV2Controller extends Controller
 
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped]);
 
-        // EVENTO INTERCOM 
+        // EVENTO INTERCOM
         //$event = new  EventIntercom();
         //$event->event_quoteEmail();
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
@@ -1626,12 +1598,12 @@ class PdfV2Controller extends Controller
 
         $quote->status = 'Sent';
         $quote->update();
+
         return response()->json(['message' => 'Ok']);
     }
 
     public function send_pdf_quote_air(Request $request)
     {
-
         $sign = null;
         $sign_type = null;
         $equipmentHides = null;
@@ -1675,7 +1647,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
+                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;
@@ -1687,9 +1659,9 @@ class PdfV2Controller extends Controller
             foreach ($sale_origin->charge as $sale_origin_charge) {
                 if ($sale_origin_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
 
                     $currency_rate = $this->ratesCurrency($sale_origin_charge->currency_id, $typeCurrency);
@@ -1700,12 +1672,11 @@ class PdfV2Controller extends Controller
 
         foreach ($sale_terms_destination_grouped as $sale_destination) {
             foreach ($sale_destination->charge as $sale_destination_charge) {
-
                 if ($sale_destination_charge->currency_id != '') {
                     if ($quote->pdf_option->grouped_total_currency == 1) {
-                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                        $typeCurrency = $quote->pdf_option->total_in_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($sale_destination_charge->currency_id, $typeCurrency);
 
@@ -1718,19 +1689,18 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['airport']['name'] . ', ' . $item['airport']['code'];
+                return $item['airport']['name'].', '.$item['airport']['code'];
             },
         ], $preserveKeys = true);
 
         foreach ($sale_terms_origin as $value) {
             foreach ($value as $origin_sale) {
                 foreach ($origin_sale->charge as $origin_charge) {
-
                     if ($origin_charge->currency_id != '') {
                         if ($quote->pdf_option->grouped_origin_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                            $typeCurrency = $quote->pdf_option->origin_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
 
@@ -1744,7 +1714,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['airport']['name'] . ', ' . $item['airport']['code'];
+                return $item['airport']['name'].', '.$item['airport']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1753,9 +1723,9 @@ class PdfV2Controller extends Controller
                 foreach ($value->charge as $item) {
                     if ($item->currency_id != '') {
                         if ($quote->pdf_option->grouped_destination_charges == 1) {
-                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                            $typeCurrency = $quote->pdf_option->destination_charges_currency;
                         } else {
-                            $typeCurrency =  $currency_cfg->alphacode;
+                            $typeCurrency = $currency_cfg->alphacode;
                         }
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         $item->total_sale_destination = number_format($item->total / $currency_rate, 2, '.', '');
@@ -1783,13 +1753,11 @@ class PdfV2Controller extends Controller
             ->ChargeLclAir(2, 'Destination')->get();
 
         foreach ($rates_lcl_air as $item) {
-
             foreach ($item->charge_lcl_air as $value) {
-
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency = $currency_cfg->alphacode;
                 }
 
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
@@ -1808,12 +1776,12 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (!$item->automaticInlandLclAir->isEmpty()) {
+            if (! $item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                     } else {
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency = $currency_cfg->alphacode;
                     }
                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                     if ($inland->units > 0) {
@@ -1835,7 +1803,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1850,12 +1818,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_origin) {
-
                             if ($v_origin->type_id == 1) {
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
 
                                 $currency_rate = $this->ratesCurrency($v_origin->currency_id, $typeCurrency);
@@ -1868,13 +1835,13 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                                     if ($inland->units > 0) {
@@ -1898,7 +1865,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1913,13 +1880,11 @@ class PdfV2Controller extends Controller
                 foreach ($item as $v) {
                     foreach ($v as $rate) {
                         foreach ($rate->charge_lcl_air as $v_destination) {
-
                             if ($v_destination->type_id == 2) {
-
                                 if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->destination_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_destination->currency_id, $typeCurrency);
                                 if ($v_destination->units > 0) {
@@ -1930,13 +1895,13 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (!$rate->automaticInlandLclAir->isEmpty()) {
+                        if (! $rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                        $typeCurrency = $quote->pdf_option->origin_charges_currency;
                                     } else {
-                                        $typeCurrency =  $currency_cfg->alphacode;
+                                        $typeCurrency = $currency_cfg->alphacode;
                                     }
                                     $currency_rate = $this->ratesCurrency($v_destination_inland->currency_id, $typeCurrency);
                                     if ($v_destination_inland->units > 0) {
@@ -1954,15 +1919,14 @@ class PdfV2Controller extends Controller
         }
 
         /** FREIGHT CHARGES **/
-
         $freight_charges_detailed = collect($freight_charges);
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
             },
             function ($item) {
-                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1987,9 +1951,9 @@ class PdfV2Controller extends Controller
                                 $total_freight_45 = 0;
                                 //dd($quote->pdf_option->destination_charges_currency);
                                 if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = $currency_cfg->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                 $array_amounts = json_decode($amounts->amount, true);
@@ -2032,10 +1996,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
             },
             function ($item) {
-                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -2077,12 +2041,12 @@ class PdfV2Controller extends Controller
 
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped]);
 
-        // EVENTO INTERCOM 
+        // EVENTO INTERCOM
         //$event = new  EventIntercom();
         //$event->event_quoteEmail();
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
@@ -2093,6 +2057,7 @@ class PdfV2Controller extends Controller
 
         $quote->status = 'Sent';
         $quote->update();
+
         return response()->json(['message' => 'Ok']);
     }
 }

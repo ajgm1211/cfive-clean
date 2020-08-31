@@ -2,9 +2,9 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class SurchargeTest extends DuskTestCase
 {
@@ -16,12 +16,11 @@ class SurchargeTest extends DuskTestCase
     public function testAddSurcharges()
     {
         $this->browse(function (Browser $browser) {
-
             $browser->visit('/login')
                 ->type('email', 'admin@example.com')
                 ->type('password', 'secret')
                 ->press('Login')
-                ->visit("/surcharges/add")
+                ->visit('/surcharges/add')
 
                 ->type('name', 'OSS')
                 ->type('description', 'OSS al consumidor')
@@ -30,13 +29,11 @@ class SurchargeTest extends DuskTestCase
         });
     }
 
-
-
     public function testEditSurcharge()
     {
         $this->browse(function (Browser $browser) {
             $this->assertTrue(true);
-            $browser->visit("/surcharges/1/edit")
+            $browser->visit('/surcharges/1/edit')
                 ->type('name', 'LUIS')
                 ->type('description', 'IvA al consumidor y vendedor')
                 ->press('Update');

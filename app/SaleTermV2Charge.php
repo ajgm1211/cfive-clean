@@ -8,6 +8,6 @@ class SaleTermV2Charge extends Model
 {
     public function currency()
     {
-        return $this->hasOne('App\Currency','id','currency_id');
+        return $this->hasOne('App\Currency', 'id', 'currency_id');
     }
 }

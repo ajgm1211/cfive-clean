@@ -8,12 +8,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Company extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['business_name','phone','address','email','associated_contacts','associated_quotes','currency_id','company_user_id','owner','tax_number','logo','pdf_language','payment_conditions','options'];
+    protected $fillable = ['business_name', 'phone', 'address', 'email', 'associated_contacts', 'associated_quotes', 'currency_id', 'company_user_id', 'owner', 'tax_number', 'logo', 'pdf_language', 'payment_conditions', 'options'];
 
     public function contact()
     {
         return $this->hasMany('App\Contact');
     }
+
     public function groupUserCompanies()
     {
         return $this->hasMany('App\GroupUserCompany');
@@ -28,14 +29,15 @@ class Company extends Model implements Auditable
     {
         return $this->belongsTo('App\Currency');
     }
+
     public function user()
     {
-        return $this->belongsTo('App\user','owner');
+        return $this->belongsTo('App\user', 'owner');
     }
 
     public function owner()
     {
-        return $this->belongsTo('App\user','owner');
+        return $this->belongsTo('App\user', 'owner');
     }
 
     public function company_price()
@@ -45,21 +47,23 @@ class Company extends Model implements Auditable
 
     public function price_name()
     {
-        return $this->hasManyThrough('App\Price','App\CompanyPrice','company_id','id','id','price_id');
+        return $this->hasManyThrough('App\Price', 'App\CompanyPrice', 'company_id', 'id', 'id', 'price_id');
     }
 
-    public function company_user(){
-
+    public function company_user()
+    {
         return $this->belongsTo('App\CompanyUser');
     }
 
-    public function scopeUser($query){
+    public function scopeUser($query)
+    {
         $query->with(['user' => function ($q) {
-            $q->select('id', 'name', 'lastname', 'email','phone');
+            $q->select('id', 'name', 'lastname', 'email', 'phone');
         }]);
     }
 
-    public function scopeCompanyUser($query){
+    public function scopeCompanyUser($query)
+    {
         $query->with(['company_user' => function ($q) {
             $q->select('id', 'name', 'address', 'phone');
         }]);

@@ -1,32 +1,31 @@
 <?php
 
 return [
-        
 
     /*
     |--------------------------------------------------------------------------
     | API Key
     |--------------------------------------------------------------------------
     |
-    | Will be used for all web services, 
+    | Will be used for all web services,
     | unless overwritten bellow using 'key' parameter
     |
     |
     */
-    
+
     'key'       => 'AIzaSyDuKIM6x98AL52b2o8V-FSB1m9r8p_1zW4',
       //  'key'       => 'AIzaSyA8lm9MnKUz1eJWwZgCGAcA6YeLquHcdck',
-        
+
     /*
     |--------------------------------------------------------------------------
     | Verify SSL Peer
     |--------------------------------------------------------------------------
     |
-    | Will be used for all web services to verify 
+    | Will be used for all web services to verify
     | SSL peer (SSL certificate validation)
     |
      */
-    'ssl_verify_peer' => FALSE,    
+    'ssl_verify_peer' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +41,7 @@ return [
     */
 
     'service' => [
-        
+
         'geocoding' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/geocode/',
                         'type'                  => 'GET',
@@ -65,12 +64,10 @@ return [
                                                         'administrative_area'   => null,
                                                         'postal_code'           => null,
                                                         'country'               => null,
-                                                        ] 
-                                                    ]
+                                                        ],
+                                                    ],
         ],
-        
-        
-        
+
         'directions' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/directions/',
                         'type'                  => 'GET',
@@ -92,16 +89,15 @@ return [
                                                     'departure_time'  => null,
                                                     'arrival_time'    => null,
                                                     'transit_mode'    => null,
-                                                    'transit_routing_preference' => null,            
-                                                    ]
+                                                    'transit_routing_preference' => null,
+                                                    ],
         ],
-        
-        
+
         'distancematrix' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/distancematrix/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'origin_addresses',
                         'param'                 => [
                                                     'origins'        => null,
@@ -116,30 +112,28 @@ return [
                                                     'transit_mode'   => null,
                                                     'transit_routing_preference' => null,
 
-                                                    ]
+                                                    ],
         ],
-        
-        
+
         'elevation' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/elevation/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'elevation',
                         'param'                 => [
                                                     'locations'     => null,
                                                     'path'          => null,
                                                     'samples'       => null,
                                                     'key'           => null,
-                                                    ]
+                                                    ],
         ],
-        
-        
+
         'geolocate' => [
                         'url'                   => 'https://www.googleapis.com/geolocation/v1/geolocate?',
                         'type'                  => 'POST',
                         'key'                   =>  null,
-                        'endpoint'              =>  false,                                
+                        'endpoint'              =>  false,
                         'responseDefaultKey'    => 'location',
                         'param'                 => [
                                                     'homeMobileCountryCode' => null,
@@ -163,46 +157,42 @@ return [
                                                         'channel'           => null,
                                                         'signalToNoiseRatio'=> null,
                                                         ],
-                                                    ]
+                                                    ],
         ],
-        
-        
-        
+
         'snapToRoads' => [
                         'url'                   => 'https://roads.googleapis.com/v1/snapToRoads?',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  false,                                
+                        'endpoint'              =>  false,
                         'responseDefaultKey'    => 'snappedPoints',
                         'param'                 => [
                                                     'locations'     => null,
                                                     'path'          => null,
                                                     'samples'       => null,
                                                     'key'           => null,
-                                                    ]
+                                                    ],
         ],
-        
-        
+
         'speedLimits' => [
                         'url'                   => 'https://roads.googleapis.com/v1/speedLimits?',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  false,                                
+                        'endpoint'              =>  false,
                         'responseDefaultKey'    => 'speedLimits',
                         'param'                 => [
                                                     'path'          => null,
                                                     'placeId'       => null,
                                                     'units'         => null,
                                                     'key'           => null,
-                                                    ]
+                                                    ],
         ],
-        
-        
+
         'timezone' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/timezone/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'dstOffset',
                         'param'                 => [
                                                     'location'  => null,
@@ -210,19 +200,17 @@ return [
                                                     'key'       => null,
                                                     'language'  => null,
 
-                                                    ]
+                                                    ],
         ],
-        
-        
-        
+
         'nearbysearch' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/nearbysearch/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'results',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'location'      => null,
                                                     'radius'        => null,
                                                     'keyword'       => null,
@@ -235,19 +223,17 @@ return [
                                                     'type'          => null, // types depricated, one type may be specified
                                                     'pagetoken'     => null,
                                                     'zagatselected' => null,
-                                                    ]           
+                                                    ],
         ],
-        
-        
-        
+
         'textsearch' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/textsearch/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'results',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'query'         => null,
                                                     'location'      => null,
                                                     'radius'        => null,
@@ -258,19 +244,17 @@ return [
                                                     'type'          => null, // types depricated, one type may be specified
                                                     'pagetoken'     => null,
                                                     'zagatselected' => null,
-                                                   ]           
+                                                   ],
         ],
-        
-        
-        
+
         'radarsearch' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/radarsearch/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'geometry',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'radius'        => null,
                                                     'location'      => null,
                                                     'keyword'       => null,
@@ -280,90 +264,79 @@ return [
                                                     'name'          => null,
                                                     'type'          => null, // types depricated, one type may be specified
                                                     'zagatselected' => null,
-                                                    ]           
+                                                    ],
         ],
-        
-        
-        
+
         'placedetails' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/details/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'result',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'placeid'       => null,
                                                     'extensions'    => null,
                                                     'language'      => null,
-                                                    ]           
+                                                    ],
         ],
-        
-        
+
         'placeadd' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/add/',
                         'type'                  => 'POST',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'place_id',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'accuracy'      => null,
                                                     'address'       => null,
                                                     'language'      => null,
                                                     'location'      => null,
                                                     'name'          => null,
                                                     'phone_number'  => null,
-                                                    'types'         => null,// according to docs types still required asstring param
+                                                    'types'         => null, // according to docs types still required asstring param
                                                     'type'          => null, // types depricated, one type may be specified
                                                     'website'       => null,
                                                     'name'          => null,
-                                                    ]           
+                                                    ],
         ],
-        
-        
+
         'placedelete' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/delete/',
                         'type'                  => 'POST',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'status',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'place_id'      => null,
 
-                                                    ]           
-        ],        
+                                                    ],
+        ],
 
-        
-        
-        
         'placephoto' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/photo?',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  false,                                
+                        'endpoint'              =>  false,
                         'responseDefaultKey'    => 'image',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'photoreference'=> null,
                                                     'maxheight'     => null,
                                                     'maxwidth'      => null,
-                                                    ]           
-        ],  
-        
-        
-        
-        
-        
+                                                    ],
+        ],
+
         'placeautocomplete' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/autocomplete/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'predictions',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'input'         => null,
                                                     'offset'        => null,
                                                     'location'      => null,
@@ -372,31 +345,26 @@ return [
                                                     'types'         => null, // use string as parameter
                                                     'type'          => null, // types depricated, one type may be specified
                                                     'components'    => null,
-                                                    ]           
-        ],  
-        
-        
-        
+                                                    ],
+        ],
+
         'placequeryautocomplete' => [
                         'url'                   => 'https://maps.googleapis.com/maps/api/place/queryautocomplete/',
                         'type'                  => 'GET',
                         'key'                   =>  null,
-                        'endpoint'              =>  true,                                
+                        'endpoint'              =>  true,
                         'responseDefaultKey'    => 'predictions',
                         'param'                 => [
-                                                    'key'           => null,  
+                                                    'key'           => null,
                                                     'input'         => null,
                                                     'offset'        => null,
                                                     'location'      => null,
                                                     'radius'        => null,
                                                     'language'      => null,
-                                                    ]           
-        ],          
-        
-    ],    
+                                                    ],
+        ],
 
-
-
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -410,7 +378,5 @@ return [
         'xml'           => 'xml?',
         'json'          => 'json?',
     ],
-    
-    	
 
 ];

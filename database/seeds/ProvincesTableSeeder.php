@@ -4,511 +4,436 @@ use Illuminate\Database\Seeder;
 
 class ProvincesTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('provinces')->delete();
-        
-        \DB::table('provinces')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('provinces')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'ALAVA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'ALBACETE',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            2 => 
-            array (
+            ],
+            2 => [
                 'id' => 3,
                 'name' => 'ALEMANIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            3 => 
-            array (
+            ],
+            3 => [
                 'id' => 4,
                 'name' => 'ALICANTE',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            4 => 
-            array (
+            ],
+            4 => [
                 'id' => 5,
                 'name' => 'ALMERIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            5 => 
-            array (
+            ],
+            5 => [
                 'id' => 6,
                 'name' => 'ANDORRA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            6 => 
-            array (
+            ],
+            6 => [
                 'id' => 7,
                 'name' => 'ASTURIAS',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            7 => 
-            array (
+            ],
+            7 => [
                 'id' => 8,
                 'name' => 'AVILA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            8 => 
-            array (
+            ],
+            8 => [
                 'id' => 9,
                 'name' => 'BADAJOZ',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            9 => 
-            array (
+            ],
+            9 => [
                 'id' => 10,
                 'name' => 'BADALONA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            10 => 
-            array (
+            ],
+            10 => [
                 'id' => 11,
                 'name' => 'BALEARES',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            11 => 
-            array (
+            ],
+            11 => [
                 'id' => 12,
                 'name' => 'BARCELONA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            12 => 
-            array (
+            ],
+            12 => [
                 'id' => 13,
                 'name' => 'BELGICA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            13 => 
-            array (
+            ],
+            13 => [
                 'id' => 14,
                 'name' => 'BILBAO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            14 => 
-            array (
+            ],
+            14 => [
                 'id' => 15,
                 'name' => 'BURGOS',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            15 => 
-            array (
+            ],
+            15 => [
                 'id' => 16,
                 'name' => 'CACERES',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            16 => 
-            array (
+            ],
+            16 => [
                 'id' => 17,
                 'name' => 'CADIZ',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            17 => 
-            array (
+            ],
+            17 => [
                 'id' => 18,
                 'name' => 'CANTABRIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            18 => 
-            array (
+            ],
+            18 => [
                 'id' => 19,
                 'name' => 'CASTELLON',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            19 => 
-            array (
+            ],
+            19 => [
                 'id' => 20,
                 'name' => 'CIUDAD REAL',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            20 => 
-            array (
+            ],
+            20 => [
                 'id' => 21,
                 'name' => 'CORDOBA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            21 => 
-            array (
+            ],
+            21 => [
                 'id' => 22,
                 'name' => 'CORUÑA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            22 => 
-            array (
+            ],
+            22 => [
                 'id' => 23,
                 'name' => 'CUENCA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            23 => 
-            array (
+            ],
+            23 => [
                 'id' => 24,
                 'name' => 'ELCHE',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            24 => 
-            array (
+            ],
+            24 => [
                 'id' => 25,
                 'name' => 'FRANCIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            25 => 
-            array (
+            ],
+            25 => [
                 'id' => 26,
                 'name' => 'GERONA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            26 => 
-            array (
+            ],
+            26 => [
                 'id' => 27,
                 'name' => 'GRANADA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            27 => 
-            array (
+            ],
+            27 => [
                 'id' => 28,
                 'name' => 'GUADALAJARA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            28 => 
-            array (
+            ],
+            28 => [
                 'id' => 29,
                 'name' => 'GUIPUZCOA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            29 => 
-            array (
+            ],
+            29 => [
                 'id' => 30,
                 'name' => 'HUELVA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            30 => 
-            array (
+            ],
+            30 => [
                 'id' => 31,
                 'name' => 'HUESCA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            31 => 
-            array (
+            ],
+            31 => [
                 'id' => 32,
                 'name' => 'INGLATERRA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            32 => 
-            array (
+            ],
+            32 => [
                 'id' => 33,
                 'name' => 'ITALIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            33 => 
-            array (
+            ],
+            33 => [
                 'id' => 34,
                 'name' => 'JAEN',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            34 => 
-            array (
+            ],
+            34 => [
                 'id' => 35,
                 'name' => 'LA RIOJA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            35 => 
-            array (
+            ],
+            35 => [
                 'id' => 36,
                 'name' => 'LEON',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            36 => 
-            array (
+            ],
+            36 => [
                 'id' => 37,
                 'name' => 'LERIDA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            37 => 
-            array (
+            ],
+            37 => [
                 'id' => 38,
                 'name' => 'LOGROÑO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            38 => 
-            array (
+            ],
+            38 => [
                 'id' => 39,
                 'name' => 'LUGO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            39 => 
-            array (
+            ],
+            39 => [
                 'id' => 40,
                 'name' => 'MADRID',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            40 => 
-            array (
+            ],
+            40 => [
                 'id' => 41,
                 'name' => 'MALAGA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            41 => 
-            array (
+            ],
+            41 => [
                 'id' => 42,
                 'name' => 'MALLORCA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            42 => 
-            array (
+            ],
+            42 => [
                 'id' => 43,
                 'name' => 'MURCIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            43 => 
-            array (
+            ],
+            43 => [
                 'id' => 44,
                 'name' => 'NAVARRA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            44 => 
-            array (
+            ],
+            44 => [
                 'id' => 45,
                 'name' => 'ORENSE',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            45 => 
-            array (
+            ],
+            45 => [
                 'id' => 46,
                 'name' => 'OVIEDO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            46 => 
-            array (
+            ],
+            46 => [
                 'id' => 47,
                 'name' => 'PALENCIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            47 => 
-            array (
+            ],
+            47 => [
                 'id' => 48,
                 'name' => 'PAMPLONA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            48 => 
-            array (
+            ],
+            48 => [
                 'id' => 49,
                 'name' => 'PONTEVEDRA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            49 => 
-            array (
+            ],
+            49 => [
                 'id' => 50,
                 'name' => 'PORTUGAL',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            50 => 
-            array (
+            ],
+            50 => [
                 'id' => 51,
                 'name' => 'RIOJA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            51 => 
-            array (
+            ],
+            51 => [
                 'id' => 52,
                 'name' => 'SALAMANCA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            52 => 
-            array (
+            ],
+            52 => [
                 'id' => 53,
                 'name' => 'SAN SEBASTIAN',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            53 => 
-            array (
+            ],
+            53 => [
                 'id' => 54,
                 'name' => 'SEGOVIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            54 => 
-            array (
+            ],
+            54 => [
                 'id' => 55,
                 'name' => 'SEVILLA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            55 => 
-            array (
+            ],
+            55 => [
                 'id' => 56,
                 'name' => 'SORIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            56 => 
-            array (
+            ],
+            56 => [
                 'id' => 57,
                 'name' => 'SUIZA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            57 => 
-            array (
+            ],
+            57 => [
                 'id' => 58,
                 'name' => 'TARRAGONA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            58 => 
-            array (
+            ],
+            58 => [
                 'id' => 59,
                 'name' => 'TERUEL',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            59 => 
-            array (
+            ],
+            59 => [
                 'id' => 60,
                 'name' => 'TOLEDO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            60 => 
-            array (
+            ],
+            60 => [
                 'id' => 61,
                 'name' => 'VALENCIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            61 => 
-            array (
+            ],
+            61 => [
                 'id' => 62,
                 'name' => 'VALLADOLID',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            62 => 
-            array (
+            ],
+            62 => [
                 'id' => 63,
                 'name' => 'VIGO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            63 => 
-            array (
+            ],
+            63 => [
                 'id' => 64,
                 'name' => 'VITORIA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            64 => 
-            array (
+            ],
+            64 => [
                 'id' => 65,
                 'name' => 'VIZCAYA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            65 => 
-            array (
+            ],
+            65 => [
                 'id' => 66,
                 'name' => 'ZAMORA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            66 => 
-            array (
+            ],
+            66 => [
                 'id' => 67,
                 'name' => 'ZARAGOZA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            67 => 
-            array (
+            ],
+            67 => [
                 'id' => 68,
                 'name' => 'SANTANDER',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            68 => 
-            array (
+            ],
+            68 => [
                 'id' => 69,
                 'name' => 'SAGRA',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-            69 => 
-            array (
+            ],
+            69 => [
                 'id' => 70,
                 'name' => 'SAGUNTO',
-                'region' => NULL,
+                'region' => null,
                 'country_id' => 66,
-            ),
-        ));
-        
-        
+            ],
+        ]);
     }
 }

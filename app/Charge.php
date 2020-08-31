@@ -7,7 +7,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Charge extends Model
 {
-
     protected $casts = [
         'amount' => 'array',
         'markups' => 'array',
@@ -52,7 +51,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -69,8 +68,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'c' . $container->code) {
-                            $value['c' . $container->code] = $amount_value;
+                        if ($k == 'c'.$container->code) {
+                            $value['c'.$container->code] = $amount_value;
                         }
                     }
                 }
@@ -84,7 +83,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -101,8 +100,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'm' . $container->code) {
-                            $value['m' . $container->code] = $amount_value;
+                        if ($k == 'm'.$container->code) {
+                            $value['m'.$container->code] = $amount_value;
                         }
                     }
                 }
@@ -116,7 +115,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -133,8 +132,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'c' . $container->code) {
-                            $value['c' . $container->code] = $amount_value;
+                        if ($k == 'c'.$container->code) {
+                            $value['c'.$container->code] = $amount_value;
                         }
                     }
                 }

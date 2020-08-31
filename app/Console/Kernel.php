@@ -2,12 +2,12 @@
 
 namespace App\Console;
 
+use App\Jobs\ProcessExpiredContractsJob;
+use App\Jobs\SendQuotesJob;
+use App\Jobs\UpdateCurrenciesEurJob;
+use App\Jobs\UpdateCurrenciesJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\SendQuotesJob;
-use App\Jobs\ProcessExpiredContractsJob;
-use App\Jobs\UpdateCurrenciesJob;
-use App\Jobs\UpdateCurrenciesEurJob;
 
 class Kernel extends ConsoleKernel
 {
