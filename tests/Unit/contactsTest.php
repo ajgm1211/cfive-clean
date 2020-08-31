@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Contact;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
-class ContacsTest extends TestCase
+class contactsTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -23,7 +23,6 @@ class ContacsTest extends TestCase
         $this->seeInDatabase('contacts', $contacts->toArray());
     }
 
-
     public function testcontactsupdated()
     {
         $model = factory(Contact::class)->create();
@@ -37,7 +36,7 @@ class ContacsTest extends TestCase
         // $model
 
         $this->seeInDatabase('contacts', [
-            'first_name' => 'luisito'
+            'first_name' => 'luisito',
         ]);
     }
 }

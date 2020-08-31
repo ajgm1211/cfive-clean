@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSaleTermV2sTable extends Migration
 {
@@ -21,7 +21,7 @@ class CreateSaleTermV2sTable extends Migration
             $table->foreign('port_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->integer('airport_id')->unsigned()->nullable();
             $table->foreign('airport_id')->references('id')->on('airports')->onDelete('cascade');
-            $table->enum('type',['Origin','Destination']);
+            $table->enum('type', ['Origin', 'Destination']);
             $table->timestamps();
         });
     }

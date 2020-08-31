@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Contract;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
-class ContractsTest extends TestCase
+class contractsTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -19,7 +19,6 @@ class ContractsTest extends TestCase
      */
     public function testcontracts()
     {
-
         $this->withoutExceptionHandling();
 
         $contracts = factory(Contract::class)->create();
@@ -40,7 +39,7 @@ class ContractsTest extends TestCase
         // $model
 
         $this->seeInDatabase('contracts', [
-            'name' => 'TDD CARGOFIVE'
+            'name' => 'TDD CARGOFIVE',
         ]);
     }
 }

@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use App\Mail\SendQuotePdf;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SendQuotes implements ShouldQueue
 {
@@ -23,9 +23,9 @@ class SendQuotes implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($subject,$body,$to,$quote,$email)
+    public function __construct($subject, $body, $to, $quote, $email)
     {
-        $this->subject  = $subject;
+        $this->subject = $subject;
         $this->body = $body;
         $this->to = $to;
         $this->quote = $quote;
@@ -39,16 +39,16 @@ class SendQuotes implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            if($this->to!=''){
-                $explode=explode(';',$this->to);
-                foreach($explode as $item) {
-                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
+        try {
+            if ($this->to != '') {
+                $explode = explode(';', $this->to);
+                foreach ($explode as $item) {
+                    \Mail::to(trim($item))->bcc(\Auth::user()->email, \Auth::user()->name)->send(new SendQuotePdf($this->subject, $this->body, $this->quote));
                 }
-            }else{
-                \Mail::to($this->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
+            } else {
+                \Mail::to($this->email)->bcc(\Auth::user()->email, \Auth::user()->name)->send(new SendQuotePdf($this->subject, $this->body, $this->quote));
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $e->getMessage();
         }
     }

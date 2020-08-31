@@ -2,16 +2,16 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use App\CompanyUser;
 use App\Currency;
+use App\Http\Traits\QuoteV2Trait;
 use App\QuoteV2;
 use App\User;
-use App\Http\Traits\QuoteV2Trait;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class UpdatePdf implements ShouldQueue
 {
@@ -19,6 +19,7 @@ class UpdatePdf implements ShouldQueue
     protected $id;
     protected $company_user_id;
     protected $user_id;
+
     /**
      * Create a new job instance.
      *
@@ -38,18 +39,18 @@ class UpdatePdf implements ShouldQueue
      */
     public function handle()
     {
-        $company_user=null;
-        $currency_cfg =null;
+        $company_user = null;
+        $currency_cfg = null;
         $quote = QuoteV2::find($this->id);
-        $quote->clearMediaCollection('document'); 
-        if($this->company_user_id){
-            $company_user=CompanyUser::find($this->company_user_id);
+        $quote->clearMediaCollection('document');
+        if ($this->company_user_id) {
+            $company_user = CompanyUser::find($this->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
         }
-        $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,$this->user_id);
+        $pdfarray = $this->generatepdf($quote->id, $company_user, $currency_cfg, $this->user_id);
         $pdf = $pdfarray['pdf'];
         $view = $pdfarray['view'];
-        $idQuote= $pdfarray['idQuote'];
+        $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
         $pdf->loadHTML($view)->save(public_path().'/pdf/quote-'.$idQuote.'.pdf');
 

@@ -40,7 +40,7 @@ return [
             'queue' => 'default',
             'retry_after' => 3700,
         ],
-        
+
         'importation' => [
             'driver' => 'database',
             'table' => 'importation_jobs',

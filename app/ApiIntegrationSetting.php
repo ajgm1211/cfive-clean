@@ -10,10 +10,11 @@ class ApiIntegrationSetting extends Model
         'company_user_id',
         'api_key',
         'api_integration_id',
-        'enable'
+        'enable',
     ];
 
-    public function api_integration(){
+    public function api_integration()
+    {
         return $this->HasMany('App\ApiIntegration');
     }
 }

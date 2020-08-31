@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\EmailTemplate;
-use App\User;
 use App\CompanyUser;
+use App\EmailTemplate;
 use App\MergeTag;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class MailSendController extends Controller
 {
@@ -23,18 +23,18 @@ class MailSendController extends Controller
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = EmailTemplate::All();
         $data = $template->where('company', $company);
-        
-        foreach($data as $i){
-            $user = User::find($i->user_id);    
+
+        foreach ($data as $i) {
+            $user = User::find($i->user_id);
             $i->user_id = $user->name;
         }
 
         return view('mail.list', compact('data'));
     }
 
-    public function createHtmlTag($data){
-
-        $tag ='<!DOCTYPE html>
+    public function createHtmlTag($data)
+    {
+        $tag = '<!DOCTYPE html>
             <html>
                 <head>
                 </head>
@@ -53,26 +53,25 @@ class MailSendController extends Controller
         return $tag;
     }
 
-    public function send($id){
-
+    public function send($id)
+    {
         $mail = EmailTemplate::find($id);
         $mergeTag = MergeTag::All();
         $array = $mergeTag->where('user_name', Auth::user()->name);
 
         $templates = [];
-        foreach ($array as $arr)
-        {
+        foreach ($array as $arr) {
             $templates[] = [
                 'title' => $arr->tag_name,
-                'content' => self::createHtmlTag($arr)
+                'content' => self::createHtmlTag($arr),
             ];
         }
 
         return view('mail.toSend', compact('mail', 'templates'));
     }
 
-    public function ready(Request $request, $id){
-        
+    public function ready(Request $request, $id)
+    {
     }
 
     /**
@@ -135,13 +134,13 @@ class MailSendController extends Controller
             $message->to($to)
               ->subject($subj)
               ->setBody($body, 'text/html');
-          });
-        
-        
-          $request->session()->flash('message.nivel', 'success');
-          $request->session()->flash('message.title', 'Well done!');
-          $request->session()->flash('message.content', 'Your mail has been send');
-          return redirect()->route('mail.list');
+        });
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Your mail has been send');
+
+        return redirect()->route('mail.list');
     }
 
     /**
