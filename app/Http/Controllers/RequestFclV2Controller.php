@@ -370,7 +370,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
-            if($Ncontract->username_load == 'Not assigned'){
+            if($Ncontract->username_load == 'Not assigned' || empty($Ncontract->username_load) == true){
                 $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
             }
 
@@ -449,7 +449,7 @@ class RequestFclV2Controller extends Controller
             $mediaItem  = $Ncontract->getFirstMedia('document');
             $extObj     = new \SplFileInfo($mediaItem->file_name);
             $ext        = $extObj->getExtension();
-            $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
+            $name       = $Ncontract->id.'-'.preg_replace('([^A-Za-z0-9])','_',$Ncontract->companyuser->name).'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
             return Storage::disk('FclRequest-New')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
 
         } elseif(strnatcasecmp($selector,'storage')==0){
@@ -460,7 +460,7 @@ class RequestFclV2Controller extends Controller
             $company    = CompanyUser::find($Ncontract->company_user_id);
             $extObj     = new \SplFileInfo($Ncontract->namefile);
             $ext        = $extObj->getExtension();
-            $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+            $name       = $Ncontract->id.'-'.preg_replace('([^A-Za-z0-9])','_',$company->name).'_'.$now.'-FLC.'.$ext;
             $success 	= false;
             $descarga 	= null;
 
