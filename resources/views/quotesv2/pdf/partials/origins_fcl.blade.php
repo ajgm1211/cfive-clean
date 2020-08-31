@@ -1,3 +1,4 @@
+estoyen origins
                 <!-- SALE TERMS ORIGIN -->
                 @if($quote->pdf_option->grouped_origin_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @if($sale_terms_origin->count()>0)
@@ -5,6 +6,7 @@
                             @foreach($v as $value)
                                 <div>
                                     <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    {{ $user->companyUser->colors_pdf }} estoyen origins
                                     <br>
                                 </div>
 

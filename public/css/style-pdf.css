@@ -107,6 +107,10 @@ a {
     color: #031B4E !important;
 }
 
+.uppercase {
+    text-transform: uppercase;
+}
+
 body {
     position: relative;
     width: 100%;
@@ -123,10 +127,12 @@ header {
     margin-bottom: 20px;
 }
 
+
+
 .title {
-    color: #031B4E !important;
-    font-weight: bolder !important;
-    font-size: 12px !important;
+    /*color: #031B4E !important;*/
+    /*font-weight: bolder !important;*/
+    font-size: 14px !important;
 }
 
 .subtotal {
@@ -148,7 +154,7 @@ header {
 }
 
 #logo {
-    float: left;
+    float: right;
 }
 
 #logo img {
@@ -156,7 +162,7 @@ header {
 }
 
 #company {
-    text-align: right;
+    text-align: left;
 }
 
 .details {
@@ -170,8 +176,14 @@ h1 {
 }
 
 .client {
-    float: left;
+    float: right;
     width: 100%;
+    text-align: right;
+}
+
+.company {
+    float: left;
+    text-align: left;
 }
 
 .client .to {
@@ -205,6 +217,11 @@ table th,
 table td {
     padding: 8px;
     text-align: left;
+}
+
+thead {
+    background-color: #fff !important;
+    border-bottom: 1px solid #031B4E !important;
 }
 
 table th {

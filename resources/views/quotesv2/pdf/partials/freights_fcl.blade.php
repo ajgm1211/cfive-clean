@@ -1,10 +1,10 @@
+                
                 <!-- Freights table all in-->
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
                     <div>
-                        <p class="title">{{__('pdf.freight_charges')}}</p>
+                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}} estoy en freight  all in</p>
                         <br>
                     </div>
-
                     <table border="0" cellspacing="1" cellpadding="1" >
                         <thead class="title-quote text-left header-table">
                             <tr >
@@ -84,12 +84,12 @@
                         @foreach($freight_charges_grouped as $origin => $value)
                             @foreach($value as $destination => $item)
                                 <div>
-                                    <p class="title">{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</p>
-                                    <br>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</b></p>
+                                    <br> estoy en freight detailed
                                 </div>
                                 <table border="0" cellspacing="1" cellpadding="1">
-                                    <thead class="title-quote text-left header-table">
-                                        <tr >
+                                    <thead class="title-quote text-left header-table" >
+                                        <tr>
                                             <th class="unit"><b>{{__('pdf.charge')}}</b></th>
                                             <th class="unit"><b>{{__('pdf.detail')}}</b></th>
                                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>

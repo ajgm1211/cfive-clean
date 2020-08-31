@@ -1,25 +1,34 @@
 @switch($quote->pdf_option->show_type)
-@case('total in')
-    <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
-        <p class="title"><b>{{__('pdf.total_estimated')}}</b></p>
-        <br>
-    </div>
-    @break
 
-@case('detailed')
-    <div {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
-        <p class="title">{{__('pdf.total_estimated')}}</p>
-        <br>
-    </div>
-    @break
-@endswitch
+    @case('total in')
+        <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.total_estimated')}} estoy en all in</b></p>
+            <br>
+        </div>
+        @break
+
+    @case('detailed')
+        <div {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
+            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.total_estimated')}} estoy en all in</b></p>
+            <br>
+        </div>
+        @break
+    @endswitch
+
 @if($quote->pdf_option->show_type=='total in')
+
     <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+
 @else
+
     <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
+
 @endif
+
     <thead class="title-quote text-left header-table">
+
         <tr >
+        
             <th class="unit"><b>{{__('pdf.pol')}}</b></th>
             <th class="unit"><b>{{__('pdf.pod')}}</b></th>
             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
@@ -36,7 +45,9 @@
             @endif
             <th class="unit"><b>{{__('pdf.currency')}}</b></th>
         </tr>
+
     </thead>
+
     <tbody>
         <?php
             foreach ($containers as $c){ 
