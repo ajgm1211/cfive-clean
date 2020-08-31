@@ -3,7 +3,7 @@
                     @forelse($destination_charges_grouped as $origin=>$detail)
                         @if($detail->charge_destination>=1 || $detail->inland_destination>=1)
                             <div>
-                                <p class="title">{{__('pdf.destination_charges')}} - {{$origin}}</p>
+                                <p class="title">{{__('pdf.destination_charges')}} - {{$origin}} estoy en destination</p>
                                 <br>
                             </div>
                             <table border="0" cellspacing="1" cellpadding="1" >

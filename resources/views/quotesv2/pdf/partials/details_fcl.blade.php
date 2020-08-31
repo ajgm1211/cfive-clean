@@ -1,39 +1,56 @@
             <div id="details" class="clearfix details">
-                <div class="client" style="line-height: 10px; width:300px;">
-                    <p class="title">{{__('pdf.from')}}</p>
-                    <span id="destination_input" style="line-height: 0.5">
-                        <p style="line-height:10px;">{{@$quote->user->name}} {{@$quote->user->lastname}}</p>
-                        <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-                        <p style="line-height:10px;">{{@$user->phone}}</p>
-                        <p style="line-height:10px;">{{@$quote->user->email}}</p>
-                    </span>
-                </div>
-                <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
-                    @if($quote->company_id!='')
-                    <p class="title">{{__('pdf.to')}}</p>
+
+                <div class="company" style="float: left; width: 350px; line-height: 10px;">
+
+                    <!-- Logo -->   
+                    @if($quote->pdf_option->show_logo==1)
+                        @if(isset($quote->company) && $quote->company->logo!='')
+                            <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
+                        @endif
                     @endif
-                    <span id="destination_input" style="line-height: 0.5">
-                        @if($quote->pdf_option->show_logo==1)
-                            @if(isset($quote->company) && $quote->company->logo!='')
-                                <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
-                            @endif
-                        @endif
-                        <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                        @if(strlen(@$quote->company->business_name)>49)
-                            <p style="line-height:12px; text-align:justify;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
-                        @else
-                            <p style="line-height:10px;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
-                        @endif
-                        @if(strlen(@$quote->company->address)>49)
-                            <p style="line-height:12px; text-align:justify;">{{@$quote->company->address}}</p>
-                        @else
-                            <p style="line-height:10px;">{{@$quote->company->address}}</p>
-                        @endif
-                        <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
-                        <p style="line-height:10px;">{{@$quote->contact->email}}</p>
-                    </span>
+                    <!-- End Logo -->   
+
+                    <!-- Client Name -->
+                    @if($quote->company_id!='')
+                    <p class="title"><b>{{__('pdf.to')}}:</b> {{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
+                    @endif
+                    <!-- End Client Name -->
+
+                    <!-- Client Email -->
+                    <p style="line-height:10px;">{{@$quote->contact->email}}</p>
+                    <!-- End Client Email -->
+                    <!-- Company Name -->
+                    @if(strlen(@$quote->company->business_name)>49)
+                        <p style="line-height:12px; text-align:justify;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
+                    @else
+                        <p style="line-height:10px;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
+                    @endif
+                    <!-- End Company Name -->
+
+                    <!-- Company Address -->
+                    @if(strlen(@$quote->company->address)>49)
+                        <p style="line-height:12px; text-align:justify;">{{@$quote->company->address}}</p>
+                    @else
+                        <p style="line-height:10px;">{{@$quote->company->address}}</p>
+                    @endif
+                    <!-- End Company Address -->
+
+                    <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
+                   
+
                 </div>
+
+                <div class="client" style="line-height: 10px; width:300px; float:right">
+                    <p class="title"><b>{{__('pdf.from')}}: </b>{{@$quote->user->name}} {{@$quote->user->lastname}}</p>
+                    <p style="line-height:10px;">{{@$quote->user->email}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+                    <p style="line-height:10px;">{{@$user->phone}}</p>
+                    <p class="color-title"><b>{{__('pdf.validity')}}:</b> {{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}</p>
+                </div>
+
+                
+
             </div>
             @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='')
                 <div style="margin-top: 25px;">
