@@ -371,7 +371,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
-            if($Ncontract->username_load == 'Not assigned'){
+            if($Ncontract->username_load == 'Not assigned' || empty($Ncontract->username_load) == true){
                 $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
             }
 
