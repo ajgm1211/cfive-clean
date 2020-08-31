@@ -40,7 +40,7 @@
                     $total_destination= 0;
                     $total_inland= 0;
                     $total_chargeable= 0;
-                    $array = array();
+                    $array = [];
                 ?>
                 @foreach($rates as $rate)
                     <?php 
