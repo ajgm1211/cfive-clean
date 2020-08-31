@@ -4217,7 +4217,7 @@ $('.company_dropdown').select2({
 
 //portharbors
 $('.portharbors').select2({
-    placeholder: "Search a country",
+    placeholder: "Search a port",
     minimumInputLength: 3,
     ajax: {
         url: '/harbor/search',
