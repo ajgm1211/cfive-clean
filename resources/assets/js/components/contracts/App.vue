@@ -71,10 +71,10 @@
                 /* Table headers */
                 fields: [
                     { key: 'name', label: 'Reference', formatter: value => { return `<p class="truncate-contract" title="${value}">${value}</p>` } }, 
+                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
                     { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` } },
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
-                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
                     { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }, 
                 ],
