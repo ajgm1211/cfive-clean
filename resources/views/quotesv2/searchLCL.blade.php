@@ -1725,14 +1725,14 @@
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
-                                                                <span class="bg-rates"> {{ $localfreight['currency']}}
+                                                                <span class="bg-rates"> {{ $arr->rateCurrency }}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span
                                                             class="colorphacode">{{ $localfreight['montoMarkup']}}
-                                                            {{ $localfreight['currency'] }}</span></div>
+                                                            {{ $arr->rateCurrency }}</span></div>
                                                 </div>
                                                 @endforeach
                                                 @endforeach
