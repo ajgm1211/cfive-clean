@@ -5311,7 +5311,7 @@ class QuoteV2Controller extends Controller
 
                                     $subtotal_local = $totalVol * $local->ammount;
                                     $totalAmmount = ($totalVol * $local->ammount) / $rateC;
-                                    $mont = $local->ammount;
+                                    $mont = $local->ammount / $rateC;
                                     $unidades = $totalVol;
 
                                     if ($subtotal_local < $local->minimum) {
@@ -5335,6 +5335,7 @@ class QuoteV2Controller extends Controller
                                     // ARREGLO GENERAL 99
 
                                     $arregloFreight = array('surcharge_terms' => $terminos, 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrencyFreight, 'currency_id' => $local->currency->id, 'currency_orig_id' => $idCurrencyFreight, 'cantidad' => $unidades);
+                                    $collectionFreight->push($arregloFreight);
 
                                 }
                             }
@@ -6174,7 +6175,7 @@ class QuoteV2Controller extends Controller
 
                 if (in_array($global->calculationtypelcl_id, $arrayPerM3)) {
 
-                    foreach ($global->localcharcarrierslcl as $carrierGlobal) {
+                    foreach ($global->globalcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
 
                             if ($request->input('total_volume') != null) {
@@ -6412,6 +6413,7 @@ class QuoteV2Controller extends Controller
             if (!empty($collectionDest)) {
                 $collectionDest = $this->OrdenarCollectionLCL($collectionDest);
             }
+
 
             if (!empty($collectionFreight)) {
                 $collectionFreight = $this->OrdenarCollectionLCL($collectionFreight);
