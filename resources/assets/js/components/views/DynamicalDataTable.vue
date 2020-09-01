@@ -6,6 +6,8 @@
         :inputFields="form_fields"
         :vdatalists="datalists"
         :searchBar="searchBar"
+        :multiList="multiList"
+        :multiId="multiId"
         :quoteEquip="quoteEquip"
         :actions="actions"
         :massiveactions="massiveactions"
@@ -57,6 +59,16 @@
                 type: Boolean,
                 default: true,
                 required: false
+            },
+            multiList: {
+                type: Boolean,
+                required: false,
+                default:false
+            },
+            multiId: {
+                type: Number,
+                required: false,
+                default:1
             }
         },
         data() {

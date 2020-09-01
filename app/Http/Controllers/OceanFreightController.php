@@ -139,6 +139,7 @@ class OceanFreightController extends Controller
      */
     public function retrieve(Contract $contract, Rate $rate)
     {
+        dd($rate);
         return new OceanFreightResource($rate);
     }
 

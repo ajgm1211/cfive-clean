@@ -60,10 +60,8 @@
                             :equipment="equip"
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
-                            :currentData="currentData"
                             :freights="freights"
-                            :actions="actions.quotes"
-                            :data="currentData"
+                            :actions="actions"
                             ></ocean>
                         </b-tab>
 

@@ -70,7 +70,7 @@
                     <b-td v-for="(item, key) in inputFields" :key="key" :style="'max-width:'+item.width">
                        
                        <!-- Text Input -->
-                       <div v-if="item.type == 'text'">
+                        <div v-if="item.type == 'text'">
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -254,6 +254,16 @@
                 type: Boolean,
                 required: false,
                 default:true
+            },
+            multiList: {
+                type: Boolean,
+                required: false,
+                default:false
+            },
+            multiId: {
+                type: Number,
+                required: false,
+                default:1
             }
         },
         components: { 
@@ -289,7 +299,7 @@
             /* Response the lists data*/
             initialData(){
                 let params = this.$route.query;
-
+                
                 if(params.page) this.initialPage = Number(params.page);
 
                 this.getData(params);
@@ -303,10 +313,16 @@
 
             /* Request the data with axios */
             getData(params = {}){
-
-                this.actions.list(params, (err, data) => {
+                if(!this.multiList){
+                    this.actions.list(params, (err, data) => {
                     this.setData(err, data);
-                }, this.$route);
+                    }, this.$route);
+                } else {
+                    this.actions.list(this.multiId,params, (err, data) => {
+                    this.setData(err, data);
+                    }, this.$route);
+                }
+                
 
             },
 
@@ -389,8 +405,8 @@
                 let data = this.prepareData();
 
                 //this.isBusy = true;
-
-                this.actions.create(data, this.$route)
+                if(!this.multiList){
+                    this.actions.create(data, this.$route)
                     .then( ( response ) => {
                         this.clearForm();
                         this.refreshData();
@@ -405,7 +421,24 @@
                         $(`#id_f_table_${key}`).html(error.data.errors[key]);
                     });
                 });
+                }else{
+                    this.actions.create(this.multiId,data, this.$route)
+                    .then( ( response ) => {
+                        this.clearForm();
+                        this.refreshData();
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
 
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }
+  
             },
 
             /* Single Actions */

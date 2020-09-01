@@ -219,32 +219,71 @@ export default {
 	    }
 	},
 	quotes:{
-			list(params, callback, route) {
+		list(params, callback, route) {
 
-	        	api.call('get', '/api/quote/list', { params })
-	        		.then(response => {
-		            	callback(null, response.data);
-		        	}).catch(error => {
-		            	callback(error, error.response.data);
-		        	});
-	    	},
-	    	create(data, route) {
-		      return api.call('post', `/api/quote/store`, data);
-		    },
-		    update(id, data, route){
-		    	return api.call('post', `/api/quote/${id}/update`, data);
-		    },
-			retrieve(id){
-					return api.call('get', `/api/quotes/${id}`, {});
-		    },
-		    duplicate(id, data){
-					return api.call('post', `/api/quotes/${id}/duplicate`, data);
-		    },
-		    delete(id){
-		    	return api.call('delete', `/api/quote/${id}/destroy`, {});
-		    },
-		    deleteAll(ids){
-		    	return api.call('post', `/api/quotes/destroyAll`, { ids:ids });
-		    }
+			api.call('get', '/api/quote/list', { params })
+				.then(response => {
+					callback(null, response.data);
+				}).catch(error => {
+					callback(error, error.response.data);
+				});
+		},
+		create(data, route) {
+			return api.call('post', `/api/quote/store`, data);
+		},
+		update(id, data, route){
+			return api.call('post', `/api/quote/${id}/update`, data);
+		},
+		retrieve(id){
+			return api.call('get', `/api/quotes/${id}`, {});
+		},
+		duplicate(id, data){
+			return api.call('post', `/api/quotes/${id}/duplicate`, data);
+		},
+		delete(id){
+			return api.call('delete', `/api/quote/${id}/destroy`, {});
+		},
+		deleteAll(ids){
+			return api.call('post', `/api/quotes/destroyAll`, { ids:ids });
 		}
+	},
+	automaticrates:{
+		list(params, callback, route) {
+
+			let quote_id = route.params.id;
+
+        	api.call('get', `/api/quotes/${quote_id}/automatic_rate`, { params })
+        		.then(response => {
+	            	callback(null, response.data);
+	        	}).catch(error => {
+	            	callback(error, error.response.data);
+	        	});
+		},
+		create(data, route) {
+	    	let autorate_id = route.params.id;
+	        return api.call('post', `/api/quotes/${autorate_id}/automatic_rate/store`, data);
+		},
+		update(data,route) {
+			let autorate_id = route.params.id;
+			return api.call('post',`/api/quotes/${autorate_id}/automatic_rate/update`, data)
+		}
+	
+	},
+	charges:{
+		list(id,params, callback, route) {
+
+			let quote_id = route.params.id;
+
+        	api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, { params })
+        		.then(response => {
+	            	callback(null, response.data);
+	        	}).catch(error => {
+	            	callback(error, error.response.data);
+	        	});
+		},
+		create(id,data, route) {
+	    	let autorate_id = route.params.id;
+	        return api.call('post', `/api/quotes/${autorate_id}/automatic_rate/${id}/store`, data);
+		},
+	}
 };
