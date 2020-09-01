@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Filters\AutomaticRateFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class AutomaticRate extends Model
 {   
@@ -21,8 +24,8 @@ class AutomaticRate extends Model
         'markups' => 'array',
         'total' => 'array',
     ];
-
-    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id','remarks','schedule_type','transit_time','via'];
+    
+    protected $fillable = ['id','quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id','remarks','schedule_type','transit_time','via'];
 
     public function quote()
     {
@@ -126,4 +129,12 @@ class AutomaticRate extends Model
         });
     }
 
+    public function scopeFilterByQuote($query,$quote_id){
+        return $query->where( 'quote_id', '=', $quote_id );
+    }
+
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new AutomaticRateFilter($request, $builder))->filter();
+    }
 }

@@ -1023,7 +1023,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
     
-    /** Quotes V2 view routes **/
+    /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
     Route::get('api/quote/data', 'QuotationController@data')->name('quote.data');
@@ -1034,6 +1034,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
+   
+    /** AutomaticRate routes**/
+    Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_rate/update', 'AutomaticRateController@update')->middleware('check_company:quote');
+   
+    /**Charge Routes**/
+    Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'ChargeController@list')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
 
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
@@ -1047,6 +1056,9 @@ Route::group(['middleware' => ['auth']], function () {
      /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
+
+    /** Routes for AutoRates **/
+    
 });
 
 
