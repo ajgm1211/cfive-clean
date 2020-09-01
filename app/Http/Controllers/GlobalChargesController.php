@@ -16,7 +16,6 @@ use App\GlobalCharPort;
 use App\GlobalCharPortCountry;
 use App\GlobalCharPortException;
 use App\Harbor;
-use App\Http\Requests\StoreGlobalCharges;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
 use App\Region;
 use App\RegionPt;
@@ -28,7 +27,7 @@ use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
-
+use Validator;
 //inclui
 
 class GlobalChargesController extends Controller
@@ -44,7 +43,7 @@ class GlobalChargesController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(request $request)
     { // cambio de request
 
         // PORT TO PORT
@@ -80,8 +79,8 @@ class GlobalChargesController extends Controller
         }
 
         //COUNTRY  TO PORT 
-      
-        
+
+
         if ($request->input('allOriginCountryPort') != null) {
             $all_country = array($request->input('allOriginCountryPort'));
             $request->request->add(['countryport_orig' => $all_country]);
@@ -92,8 +91,8 @@ class GlobalChargesController extends Controller
             $request->request->add(['countryport_dest' => $all_countryD]);
         }
 
-
-        //$request->validated();
+        $data = $this->validateData($request);
+        // $request->validated();
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
@@ -151,7 +150,6 @@ class GlobalChargesController extends Controller
                             $detailcountry->save();
                         }
                     }
-
                 } elseif ($typerate == 'portcountry') {
                     $detailPortCountrytOrig = $request->input('portcountry_orig');
                     $detailPortCountryDest = $request->input('portcountry_dest');
@@ -164,7 +162,6 @@ class GlobalChargesController extends Controller
                             $detail->save();
                         }
                     }
-
                 } elseif ($typerate == 'countryport') {
                     $detailCountryPortOrig = $request->input('countryport_orig');
                     $detailCountryPortDest = $request->input('countryport_dest');
@@ -177,7 +174,6 @@ class GlobalChargesController extends Controller
                             $detail->save();
                         }
                     }
-
                 }
                 //Excepciones Ports
                 if ($request->input('exceptionPortOrig') != null) {
@@ -189,7 +185,6 @@ class GlobalChargesController extends Controller
                         $ports->globalcharge()->associate($global);
                         $ports->save();
                     }
-
                 }
 
                 if ($request->input('exceptionPortDest') != null) {
@@ -224,11 +219,8 @@ class GlobalChargesController extends Controller
                         $countries->globalcharge()->associate($global);
                         $countries->save();
                     }
-
                 }
-
             }
-
         }
         // EVENTO INTERCOM
 
@@ -236,6 +228,151 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register created successfully!');
         return redirect()->action('GlobalChargesController@index');
+    }
+    
+    public function validateData($request)
+    {
+
+        //PORT TO PORT
+        if ($request->input('allOriginPort') != null && $request->input('typeroute') == 'port') {
+
+            $vdata = [
+                'port_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } else if ($request->input('allDestinationPort') != null && $request->input('typeroute') == 'port') {
+
+            $vdata = [
+                'port_orig' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginPort') != null && $request->input('allDestinationPort') != null && $request->input('typeroute') == 'port') {
+
+            $vdata = [
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginPort') == null && $request->input('allDestinationPort') == null && $request->input('typeroute') == 'port') {
+
+            $vdata = [
+                'port_dest' => 'required',
+                'port_orig' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        }
+        //COUNTRY TO COUNTRY
+        elseif ($request->input('allOriginCountry') != null && $request->input('typeroute') == 'country') {
+
+            $vdata = [
+                'country_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country') {
+
+            $vdata = [
+                'country_orig' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginCountry') != null && $request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country') {
+
+            $vdata = [
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginCountry') == null && $request->input('allDestinationCountry') == null && $request->input('typeroute') == 'country') {
+
+            $vdata = [
+                'country_orig' => 'required',
+                'country_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        }
+        //PORT TO COUNTRY    
+        elseif ($request->input('allOriginPortCountry') != null && $request->input('typeroute') == 'portcountry') {
+
+            $vdata = [
+                'portcountry_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry') {
+
+            $vdata = [
+                'portcountry_orig' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginPortCountry') != null && $request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry') {
+
+            $vdata = [
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginPortCountry') == null && $request->input('allDestinationPortCountry') == null && $request->input('typeroute') == 'portcountry') {
+
+            $vdata = [
+                'portcountry_orig' => 'required',
+                'portcountry_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        }
+        //COUNTRY TO PORT    
+        elseif ($request->input('allOriginCountryPort') != null && $request->input('typeroute') == 'countryport') {
+
+            $vdata = [
+                'countryport_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport') {
+
+            $vdata = [
+                'countryport_orig' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } elseif ($request->input('allOriginCountryPort') != null && $request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport') {
+
+            $vdata = [
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        } else {
+
+            $vdata = [
+                'countryport_orig' => 'required',
+                'countryport_dest' => 'required',
+                'type' => 'required',
+                'calculationtype' => 'required',
+                'localcarrier' => 'required',
+            ];
+        }
+
+        $validator = \Validator::make($request->all(), $vdata);
+
+        return $validator->validate();
     }
 
     public function updateGlobalChar(request $request, $id)
@@ -253,52 +390,52 @@ class GlobalChargesController extends Controller
         /* $type =  TypeDestiny::all();
         $changetype = $type->find($request->input('changetype'))->toArray();*/
 
-             // PORT TO PORT
-             if ($request->input('allOriginPort') != null) {
-                $all_port = array($request->input('allOriginPort'));
-                $request->request->add(['port_orig' => $all_port]);
-            }
-            if ($request->input('allDestinationPort') != null) {
-                $all_portD = array($request->input('allDestinationPort'));
-                $request->request->add(['port_dest' => $all_portD]);
-            }
-            //COUNTRY TO COUNTRY
-            if ($request->input('allOriginCountry') != null) {
-                $all_country = array($request->input('allOriginCountry'));
-                $request->request->add(['country_orig' => $all_country]);
-            }
-    
-            if ($request->input('allDestinationCountry') != null) {
-                $all_countryD = array($request->input('allDestinationCountry'));
-                $request->request->add(['country_dest' => $all_countryD]);
-            }
-    
-            //PORT TO COUNTRY
-    
-            if ($request->input('allOriginPortCountry') != null) {
-                $all_country = array($request->input('allOriginPortCountry'));
-                $request->request->add(['portcountry_orig' => $all_country]);
-            }
-    
-            if ($request->input('allDestinationPortCountry') != null) {
-                $all_countryD = array($request->input('allDestinationPortCountry'));
-                $request->request->add(['portcountry_dest' => $all_countryD]);
-            }
-    
-            //COUNTRY  TO PORT 
-          
-            
-            if ($request->input('allOriginCountryPort') != null) {
-                $all_country = array($request->input('allOriginCountryPort'));
-                $request->request->add(['countryport_orig' => $all_country]);
-            }
-    
-            if ($request->input('allDestinationCountryPort') != null) {
-                $all_countryD = array($request->input('allDestinationCountryPort'));
-                $request->request->add(['countryport_dest' => $all_countryD]);
-            }
-    
-    
+        // PORT TO PORT
+        if ($request->input('allOriginPort') != null) {
+            $all_port = array($request->input('allOriginPort'));
+            $request->request->add(['port_orig' => $all_port]);
+        }
+        if ($request->input('allDestinationPort') != null) {
+            $all_portD = array($request->input('allDestinationPort'));
+            $request->request->add(['port_dest' => $all_portD]);
+        }
+        //COUNTRY TO COUNTRY
+        if ($request->input('allOriginCountry') != null) {
+            $all_country = array($request->input('allOriginCountry'));
+            $request->request->add(['country_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationCountry') != null) {
+            $all_countryD = array($request->input('allDestinationCountry'));
+            $request->request->add(['country_dest' => $all_countryD]);
+        }
+
+        //PORT TO COUNTRY
+
+        if ($request->input('allOriginPortCountry') != null) {
+            $all_country = array($request->input('allOriginPortCountry'));
+            $request->request->add(['portcountry_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationPortCountry') != null) {
+            $all_countryD = array($request->input('allDestinationPortCountry'));
+            $request->request->add(['portcountry_dest' => $all_countryD]);
+        }
+
+        //COUNTRY  TO PORT 
+
+
+        if ($request->input('allOriginCountryPort') != null) {
+            $all_country = array($request->input('allOriginCountryPort'));
+            $request->request->add(['countryport_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationCountryPort') != null) {
+            $all_countryD = array($request->input('allDestinationCountryPort'));
+            $request->request->add(['countryport_dest' => $all_countryD]);
+        }
+
+
 
 
 
@@ -393,7 +530,6 @@ class GlobalChargesController extends Controller
                         $detail->save();
                     }
                 }
-
             } elseif ($typerate == 'countryport') {
                 $detailCountryPortOrig = $request->input('countryport_orig');
                 $detailCountryPortDest = $request->input('countryport_dest');
@@ -406,63 +542,59 @@ class GlobalChargesController extends Controller
                         $detail->save();
                     }
                 }
-
             }
 
-                        //Excepciones Ports
-                        if ($request->input('exceptionPortOrig') != null) {
-                            $exceptionPortOrig = $request->input('exceptionPortOrig');
-                            foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
-                                $ports = new GlobalCharPortException();
-                                $ports->port_orig = $exPortOrig;
-        
-                                $ports->globalcharge()->associate($global);
-                                $ports->save();
-                            }
-        
-                        }
-        
-                        if ($request->input('exceptionPortDest') != null) {
-                            $exceptionPortDest = $request->input('exceptionPortDest');
-                            foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
-                                $ports = new GlobalCharPortException();
-        
-                                $ports->port_dest = $exPortDest;
-                                $ports->globalcharge()->associate($global);
-                                $ports->save();
-                            }
-                        }
-        
-                        // Excepciones Country
-                        if ($request->input('exceptionCountryOrig') != null) {
-                            $exceptionCountryOrig = $request->input('exceptionCountryOrig');
-                            foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
-                                $countries = new GlobalCharCountryException();
-                                $countries->country_orig = $exCountOrig;
-        
-                                $countries->globalcharge()->associate($global);
-                                $countries->save();
-                            }
-                        }
-        
-                        if ($request->input('exceptionCountryDest') != null) {
-                            $exceptionCountryDest = $request->input('exceptionCountryDest');
-                            foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
-                                $countries = new GlobalCharCountryException();
-        
-                                $countries->country_dest = $exCountDest;
-                                $countries->globalcharge()->associate($global);
-                                $countries->save();
-                            }
-        
-                        }
+            //Excepciones Ports
+            if ($request->input('exceptionPortOrig') != null) {
+                $exceptionPortOrig = $request->input('exceptionPortOrig');
+                foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
+                    $ports = new GlobalCharPortException();
+                    $ports->port_orig = $exPortOrig;
+
+                    $ports->globalcharge()->associate($global);
+                    $ports->save();
+                }
+            }
+
+            if ($request->input('exceptionPortDest') != null) {
+                $exceptionPortDest = $request->input('exceptionPortDest');
+                foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
+                    $ports = new GlobalCharPortException();
+
+                    $ports->port_dest = $exPortDest;
+                    $ports->globalcharge()->associate($global);
+                    $ports->save();
+                }
+            }
+
+            // Excepciones Country
+            if ($request->input('exceptionCountryOrig') != null) {
+                $exceptionCountryOrig = $request->input('exceptionCountryOrig');
+                foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
+                    $countries = new GlobalCharCountryException();
+                    $countries->country_orig = $exCountOrig;
+
+                    $countries->globalcharge()->associate($global);
+                    $countries->save();
+                }
+            }
+
+            if ($request->input('exceptionCountryDest') != null) {
+                $exceptionCountryDest = $request->input('exceptionCountryDest');
+                foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
+                    $countries = new GlobalCharCountryException();
+
+                    $countries->country_dest = $exCountDest;
+                    $countries->globalcharge()->associate($global);
+                    $countries->save();
+                }
+            }
 
             $detailcarrier = new GlobalCharCarrier();
             $detailcarrier->carrier_id = $key;
             $detailcarrier->globalcharge_id = $id;
             $detailcarrier->save();
             $contador = $contador + 1;
-
         }
 
         /*
@@ -479,7 +611,6 @@ class GlobalChargesController extends Controller
 
         $global = GlobalCharge::find($id);
         $global->delete();
-
     }
     public function editGlobalChar($id)
     {
@@ -524,7 +655,7 @@ class GlobalChargesController extends Controller
 
         //Exepciones 
 
-    //dd($globalcharges->globalexceptioncountry->pluck('country_orig')->unique()->pluck('country_orig'));
+        //dd($globalcharges->globalexceptioncountry->pluck('country_orig')->unique()->pluck('country_orig'));
 
         //dd($activacion);
 
@@ -558,7 +689,7 @@ class GlobalChargesController extends Controller
     public function duplicateGlobalCharges($id)
     {
 
-        
+
 
         $countries = Country::pluck('name', 'id');
         $calculationT = CalculationType::all()->pluck('name', 'id');
@@ -668,7 +799,6 @@ class GlobalChargesController extends Controller
 
     public function destroy($id)
     {
-
     }
 
     public function destroyArr(Request $request)
@@ -830,8 +960,8 @@ class GlobalChargesController extends Controller
 											<i class="la la-plus"></i>
 				   </a>';
             })
-        //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-        //->rawColumns(['checkbox','action'])
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
@@ -933,8 +1063,8 @@ class GlobalChargesController extends Controller
 											<i class="la la-plus"></i>
 				   </a>';
             })
-        //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-        //->rawColumns(['checkbox','action'])
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
@@ -1027,7 +1157,6 @@ class GlobalChargesController extends Controller
                             $detailcountry->save();
                         }
                     }
-
                 } elseif ($typerate == 'portcountry') {
                     $detailPortCountrytOrig = $request->input('portcountry_orig');
                     $detailPortCountryDest = $request->input('portcountry_dest');
@@ -1040,7 +1169,6 @@ class GlobalChargesController extends Controller
                             $detail->save();
                         }
                     }
-
                 } elseif ($typerate == 'countryport') {
                     $detailCountryPortOrig = $request->input('countryport_orig');
                     $detailCountryPortDest = $request->input('countryport_dest');
@@ -1053,7 +1181,6 @@ class GlobalChargesController extends Controller
                             $detail->save();
                         }
                     }
-
                 }
             }
         }
@@ -1203,7 +1330,6 @@ class GlobalChargesController extends Controller
                         $detail->save();
                     }
                 }
-
             } elseif ($typerate == 'countryport') {
                 $detailCountryPortOrig = $request->input('countryport_orig');
                 $detailCountryPortDest = $request->input('countryport_dest');
@@ -1216,7 +1342,6 @@ class GlobalChargesController extends Controller
                         $detail->save();
                     }
                 }
-
             }
 
             $detailcarrier = new GlobalCharCarrier();
@@ -1341,5 +1466,4 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.content', 'You successfully updated.');
         return redirect()->route('gcadm.index', compact('company_user_id_selec', 'carrier_id_selec', 'reload_DT'));
     }
-
 }

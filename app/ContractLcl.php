@@ -27,7 +27,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     use UtilTrait;
     use \OwenIt\Auditing\Auditable;
     protected $table    = "contracts_lcl";
-    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code','is_manual'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual'];
 
     public function companyUser()
     {
@@ -1008,7 +1008,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-            } */// Fin del calculo de los local charges
+            } */ // Fin del calculo de los local charges
 
             //############ Global Charges   ####################
 

@@ -107,6 +107,7 @@ Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
+    Route::get('DTTB/{identificador}', 'SurchargesController@loadDatatables')->name('surcharges.load.datatables')->middleware(['auth', 'role:administrator|data_entry']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
