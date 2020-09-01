@@ -1,24 +1,27 @@
 @if($quote->terms_and_conditions!='' || $quote->terms_english!='' || $quote->terms_portuguese!='')
     <div class="clearfix">
 
-        <span class="text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.terms')}}</b><br><br/></span>
+        <span class="title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.terms')}}</b><br><br/></span>
 
         <div style="width:100%">
             @switch($quote->pdf_option->language)
+            
                 @case("English")
                     <span style="word-wrap: break-word;">{!! @$quote->terms_english != "" ? trim(@$quote->terms_english):trim(@$quote->terms_and_conditions) !!}</span>
-                    @break
+                @break
 
                 @case("Portuguese")
                     <span style="word-wrap: break-word;">{!! @$quote->terms_portuguese != "" ? trim(@$quote->terms_portuguese):trim(@$quote->terms_and_conditions) !!}</span>
-                    @break
+                @break
 
                 @case("Spanish")
                     <span style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
-                    @break
+                @break
 
                 @default
+
                     <span style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
+
             @endswitch
         </div>  
           
