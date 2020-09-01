@@ -27,12 +27,12 @@ class Visualtrans
 
             $result = json_decode($api_response, true);
 
-            $pagination = $result['count'] / 100;
-            $pagination = round($pagination);
-            $pagination = (int) $pagination;
+            $page = 1;
 
-            for ($i = 1; $i <= $pagination; $i++) {
-                $uri_paginate =  $setting->url . $setting->api_key . '&p=' . $i;
+            $max_page = ceil($result['count'] / 1000);
+
+            do {
+                $uri_paginate =  $setting->url . $setting->api_key . '&p=' . $page;
 
                 $get = $client->get($uri_paginate);
 
@@ -49,9 +49,14 @@ class Visualtrans
                 $data = json_decode($get_response, true);
 
                 SyncCompaniesJob::dispatch($data, \Auth::user(), $setting->partner);
-                \Log::info('Running ' . $i);
-            }
+                \Log::info('Running page: ' . $page);
+                
+                $page += 1;
+
+            } while ($page <= $max_page);
+            
             return true;
+
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return false;
