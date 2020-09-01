@@ -58,23 +58,14 @@ export default {
       { key: 'destination_address', label: 'Destination' },
       { key: 'type', label: 'type' },
       ],
-      datalists: {
-      }
     };
   },
   created() {
 
-      /* Return the lists data for dropdowns */
-      api.getData({}, '/api/quote/data', (err, data) => {
-          this.setDropdownLists(err, data.data);
-      });
 
   },
   methods: {
       /* Set the Dropdown lists to use in form */
-      setDropdownLists(err, data){
-          this.datalists = data;
-      },
       onEdit(data){
           window.location = `/api/quote/${data.id}/edit`;
       },

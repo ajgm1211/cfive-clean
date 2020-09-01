@@ -6,7 +6,7 @@
         </div>
 
         <!-- Freight Card -->
-        <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card" id="key">
+        <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card" :id="freight.id">
 
             <div class="row">
 
@@ -20,14 +20,14 @@
                     
                         <span class="mr-4 ml-4">
                             <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera">
-                            {{setPortName(freight.origin_port_id)}}
+                            {{freight.originPortName}}
                         </span>
 
                         <i class="fa fa-long-arrow-right" aria-hidden="true" style="font-size: 18px"></i>
 
                         <span class="mr-4 ml-4">
                             <img src="https://i.ibb.co/7WffMF5/china-1-1.png" alt="bandera">
-                            {{setPortName(freight.destination_port_id)}}
+                            {{freight.destPortName}}
                         </span>
 
                     </div>
@@ -48,10 +48,10 @@
                 <div class="mt-3 mb-3 mr-3 ml-3">
                     <FormInlineView
                         v-if="loaded"
-                        :data="currentData"
+                        :data="freight"
                         :fields="header_fields"
                         :datalists="datalists"
-                        :actions="actions"
+                        :actions="actions.automaticrates"
                         :update="true"
                     ></FormInlineView>
                     
@@ -65,8 +65,11 @@
                         :searchBar="false"
                         :datalists="datalists"
                         :equipment="equipment"
+                        :actions="actions.charges"
                         :quoteEquip="quoteEquip"
                         :limitEquipment="true"
+                        :multiList="true"
+                        :multiId="freight.id"
                         :massiveactions="['openmodalcontainer', 'delete']"
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
@@ -476,7 +479,7 @@ export default {
         equipment: Object,
         datalists: Object,
         actions: Object,
-        freights: Object,
+        freights: Array,
         quoteEquip: Array
     },
   data() {
@@ -519,11 +522,12 @@ export default {
         validity_end: {
             label: "VALID UNTIL",
             type: "datepicker",
-            colClass: "col-lg-2"
+            colClass: "col-lg-3"
         },
-        reference: {
+        contract: {
             label: "REFERENCE",
             type: "text",
+            disabled: true,
             placeholder: "Contract name",
             colClass: "col-lg-2",
         },
@@ -536,26 +540,29 @@ export default {
 
         /* Table headers */
         fields: [ 
-            { key: 'charge', label: 'CHARGE'}, 
-            { key: 'provider', label: 'PROVIDER'},
-            { key: 'currency', label: 'CURRENCY'}
+            { key: 'surcharge_id', label: 'CHARGE'}, 
+            { key: 'calculation_type_id', label: 'PROVIDER',formatter: (value)=> { return value.name }},
+            { key: 'currency_id', label: 'CURRENCY', formatter: (value)=> { return value.alphacode }}
         ],
 
         /* Table input inline fields */
         vform_fields: {
-            charge: { 
+            surcharge_id: { 
                 label: 'CHARGE',  
                 type: 'text', 
                 rules: 'required', 
                 placeholder: 'Select charge type', 
             },
-            provider: { 
+            calculation_type_id: { 
                 label: 'PROVIDER', 
-                type: 'text', 
-                rules: 'required', 
+                searchable: true,
+                type: 'select', 
+                rules: 'required',
+                trackby: 'name',
                 placeholder: 'Select Provider', 
+                options: 'calculationtypes'
             },
-            currency: { 
+            currency_id: { 
                 label: 'CURRENCY',
                 searchable: true, 
                 type: 'select', 
@@ -577,22 +584,28 @@ export default {
 
     /* Single Actions */
     formFieldUpdated(containers_fields){
-        this.containers_fields = containers_fields;
-        this.form_fields = {...this.vform_fields, ...containers_fields};
-        },
+        let component = this;
+
+        component.containers_fields = containers_fields;
+        component.form_fields = {...this.vform_fields, ...containers_fields};
+
+        component.freights.forEach(function(freight){
+            component.datalists.harbors.forEach(function(harbor){
+                if(harbor.id == freight.origin_port_id){
+                    freight.originPortName = harbor.display_name
+                } else if(harbor.id == freight.destination_port_id) {
+                    freight.destPortName = harbor.display_name
+                    }
+            });
+        });
+    },
+
     openModalContainer(ids){
         console.log('test modal');
         this.ids_selected = ids;
-                this.$bvModal.show('editContainers');
-        },
-    setPortName(port_id){
-      this.datalists.harbors.forEach(function(harbor){
-          if(harbor.id == port_id){
-              return harbor.display_name
-                }
-            });
+            this.$bvModal.show('editContainers');
         }
-  }
-       
+    
+    },      
 };
 </script>

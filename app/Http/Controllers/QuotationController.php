@@ -22,6 +22,7 @@ use App\Language;
 use App\Currency;
 use App\Container;
 use App\Charge;
+use App\CalculationType;
 use App\Http\Resources\QuotationResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -90,7 +91,6 @@ class QuotationController extends Controller
             return $delivery_type->only(['id','name']);
         });
 
-        //OJO WITH THIS STATUS IN QUOTEV2 IS ACTUALLY AN ENUM
         $status_options = StatusQuote::get()->map(function ($status){
             return $status->only(['id','name']);
         });
@@ -109,6 +109,10 @@ class QuotationController extends Controller
 
         $containers = Container::all();
 
+        $calculationtypes = CalculationType::get()->map(function ($ctype){
+            return $ctype->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -122,7 +126,8 @@ class QuotationController extends Controller
             'delivery_types',
             'status_options',
             'kind_of_cargo',
-            'currency'
+            'currency',
+            'calculationtypes'
         );
 
         return response()->json(['data'=>$data]);
