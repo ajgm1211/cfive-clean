@@ -70,6 +70,10 @@
     src: url("/fonts/sailec.otf") format("opentype");
 }
 
+* {
+    margin: 0px;
+    padding: 0px;
+}
 .clearfix:after {
     content: "";
     display: table;
@@ -228,7 +232,7 @@ table th {
     white-space: nowrap;
     font-weight: normal;
     color: #031B4E !important;
-    background-color: #F4F3F8 !important;
+    background-color: #ffffff !important;
 }
 
 table td {
@@ -262,7 +266,6 @@ table .unit {
     background: #f1f1f1;
 }
 
-table .qty {}
 
 table .total {
     background: #031B4E;
@@ -323,6 +326,14 @@ footer {
     text-align: center;
 }
 
+.footer-page {
+    position: absolute !important;
+    height: 30px;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+}
+/* 
 border-top: 1px solid #AAAAAA;
 padding: 8px 0;
 text-align: center;
@@ -332,4 +343,4 @@ border-top: 1px solid #AAAAAA;
 padding: 8px 0;
 text-align: center;
 
-}
+} */

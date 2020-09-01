@@ -15,24 +15,29 @@
             
             <!-- Info Date -->
             <div id="company">
+
                 <div>
                     <span class="color-title uppercase"><b>{{__('pdf.quote_id')}}:</b></span> 
                     <span style="color: {{ $user->companyUser->colors_pdf }}"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
                 </div>
+
                 <div>
                     <span class="color-title uppercase"><b>{{__('pdf.date_issue')}}:</b></span> {{date_format($quote->created_at, 'd/M/Y')}}
                 </div>
+
             </div>
             <!-- End Info Date -->
 
             <!-- Logo -->
             <div id="logo">
+
                 @if($user->companyUser->logo!='')
                     <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
                 @endif
+                
             </div>
             <!-- End Logo -->
 
-            <hr style="height: 2px; background: {{ $user->companyUser->colors_pdf }};">
+            <hr style="border-width: 2px; border-color: {{ $user->companyUser->colors_pdf }};">
 
         </header>
