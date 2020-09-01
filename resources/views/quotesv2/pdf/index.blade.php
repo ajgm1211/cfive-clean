@@ -10,35 +10,41 @@
         </style>
     </head>
     <body style="background-color: white; font-size: 11px;">
-        <!-- HEADER -->
-        @include('quotesv2.pdf.partials.header')
+        
 
-        <main>
-            <!-- DETAILS -->
+        <main style="padding: 50px 50px 30px 50px">
+            <!-- HEADER -->
+            @include('quotesv2.pdf.partials.header')
+
+            <!-- DETAILS listo -->
             @include('quotesv2.pdf.partials.details_fcl') 
 
-            <!-- ALL IN  -->
+            <!-- ALL IN  listo -->
             @include('quotesv2.pdf.partials.all_in_fcl')
 
-            <!-- FREIGHTS -->
+            <!-- FREIGHTS listo -->
             @include('quotesv2.pdf.partials.freights_fcl')
 
-            <!-- ORIGINS -->
+            <!-- ORIGINS listo-->
             @include('quotesv2.pdf.partials.origins_fcl')
 
-            <!-- DESTINATIONS -->
+            <!-- DESTINATIONS listo-->
             @include('quotesv2.pdf.partials.destinations_fcl')
 
-            <!-- REMARKS -->
+            <!-- REMARKS listo-->
             @include('quotesv2.pdf.partials.remarks')
             
-            <!-- TERMS AND CONDITIONS -->
+            <!-- TERMS AND CONDITIONS listo -->
             @include('quotesv2.pdf.partials.terms_and_conditions')
             
-            <!-- PAYMENTS CONDITIONS -->
+            <!-- PAYMENTS CONDITIONS listo -->
             @include('quotesv2.pdf.partials.payments_conditions')
+
+            <!-- FOOTER -->
+            @include('quotesv2.pdf.partials.footer')
         </main>
-        <!-- FOOTER -->
-        @include('quotesv2.pdf.partials.footer')
+        
+
+        <div class="footer-page" style="background: {{ $user->companyUser->colors_pdf }}"></div>
     </body>
 </html>
