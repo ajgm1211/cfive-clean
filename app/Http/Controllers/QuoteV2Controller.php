@@ -214,7 +214,6 @@ class QuoteV2Controller extends Controller
                     'type' => $quote->type,
                 ];
                 $colletions->push($data);
-
             } elseif ($ValueOrig != 1 && $valueDest == 1) {
 
                 $data = [
@@ -234,7 +233,6 @@ class QuoteV2Controller extends Controller
                     'type' => $quote->type,
                 ];
                 $colletions->push($data);
-
             } elseif ($ValueOrig == 1 && $valueDest != 1) {
 
                 $data = [
@@ -254,7 +252,6 @@ class QuoteV2Controller extends Controller
                     'type' => $quote->type,
                 ];
                 $colletions->push($data);
-
             } else {
 
                 $data = [
@@ -1553,19 +1550,21 @@ class QuoteV2Controller extends Controller
         if ($type == 'port') {
 
             $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
+            \Log::info($remarks_all);
+
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
@@ -1604,9 +1603,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
             //$remarkA .= $origin_port->name . " / " . $carrier->name;
             if ($mode == 1) {
-                $remarkA = $remAll->remark->export . "<br>";
+                $remarkA .= $remAll->remark->export . "<br>";
             } else {
-                $remarkA = $remAll->remark->import . "<br>";
+                $remarkA .= $remAll->remark->import . "<br>";
             }
         }
 
@@ -1619,9 +1618,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkO = $remOrig->remark->export . "<br>";
+                $remarkO .= $remOrig->remark->export . "<br>";
             } else {
-                $remarkO = $remOrig->remark->import . "<br>";
+                $remarkO .= $remOrig->remark->import . "<br>";
             }
         }
 
@@ -1633,9 +1632,9 @@ class QuoteV2Controller extends Controller
             $rems .= "<br>";
 
             if ($mode == 1) {
-                $remarkD = $remDest->remark->export . "<br>";
+                $remarkD .= $remDest->remark->export . "<br>";
             } else {
-                $remarkD = $remDest->remark->import . "<br>";
+                $remarkD .= $remDest->remark->import . "<br>";
             }
         }
 
@@ -2794,7 +2793,7 @@ class QuoteV2Controller extends Controller
         $groupContainer = $validateEquipment['gpId'];
 
         // Historial de busqueda
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $equipment, $delivery_type, $mode, $company_user_id, 'FCL');
+        // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -2838,12 +2837,7 @@ class QuoteV2Controller extends Controller
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
-                            $query->where(function ($q) use ($dateSince, $dateUntil) {
-                                $q->where('validity', '>=', $dateSince)->where('validity', '<=', $dateUntil);
-                            })->orwhere(function ($qo) use ($dateSince, $dateUntil) {
-                                $qo->where('expire', '>=', $dateUntil)->where('expire', '<=', $dateUntil);
-                            });
-
+                            $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
 
@@ -2861,11 +2855,7 @@ class QuoteV2Controller extends Controller
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
-                            $query->where(function ($q) use ($dateSince, $dateUntil) {
-                                $q->where('validity', '>=', $dateSince)->where('validity', '<=', $dateUntil);
-                            })->orwhere(function ($qo) use ($dateSince, $dateUntil) {
-                                $qo->where('expire', '>=', $dateUntil)->where('expire', '<=', $dateUntil);
-                            });
+                            $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
                 });
@@ -3503,7 +3493,6 @@ class QuoteV2Controller extends Controller
                     $idCurrency = $data->currency->id;
 
                     $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
-
                 } else {
                     $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
                 }
@@ -3988,7 +3977,7 @@ class QuoteV2Controller extends Controller
     }
 
     /*  **************************  LCL  ******************************************** */
-    public function processSearchLCL(Request $request)
+    public function processSearchLprocessSearchLCL(Request $request)
     {
 
         //Variables del usuario conectado
@@ -5238,8 +5227,6 @@ class QuoteV2Controller extends Controller
                                 $totalVol = $request->input('total_volume_pkg');
                             }
 
-               
-
                             if ($chargesOrigin != null && $totalVol != 0) {
                                 if ($local->typedestiny_id == '1') {
 
@@ -6414,7 +6401,6 @@ class QuoteV2Controller extends Controller
                 $collectionDest = $this->OrdenarCollectionLCL($collectionDest);
             }
 
-
             if (!empty($collectionFreight)) {
                 $collectionFreight = $this->OrdenarCollectionLCL($collectionFreight);
             }
@@ -6937,20 +6923,9 @@ class QuoteV2Controller extends Controller
     public function storeSearchV2($origPort, $destPort, $pickUpDate, $equipment, $delivery, $direction, $company, $type)
     {
 
-        $containerName = array();
-        //dd($equipment);
-        if ($equipment == "") {
-            foreach ($equipment as $equip) {
-
-                $valor = Container::where('id', $equip)->first();
-                array_push($containerName, $valor->name);
-
-            }
-        }
-
         $searchRate = new SearchRate();
         $searchRate->pick_up_date = $pickUpDate;
-        $searchRate->equipment = json_encode($containerName);
+        $searchRate->equipment = json_encode($equipment);
         $searchRate->delivery = $delivery;
         $searchRate->direction = $direction;
         $searchRate->company_user_id = $company;
