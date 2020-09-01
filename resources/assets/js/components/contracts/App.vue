@@ -76,7 +76,9 @@
                     { key: 'expire', label: 'Valid Until' }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
-                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }, 
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
+                    { key: 'created_at', label: 'Created At'},
+
                 ],
 
                 /* Form Modal Fields */
