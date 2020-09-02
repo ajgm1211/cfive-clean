@@ -33,49 +33,21 @@ class AutomaticRateController extends Controller
         return new AutomaticRateResource($rate);**/
     }
  
-    public function update(Request $request, AutomaticRate $autorate)
-    {
-        dd($request);
+    public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
+    {   
+        $form_keys = $request->input('keys');
 
-        /**$data = $this->validateData($request, $contract);//direct validation
-
-        $prepared_data = $this->prepareData($data, $contract);
-
-        $rate->update($prepared_data);
-
-        return new OceanFreightResource($rate);
-
-        $charge = $autorate->charge()->get();
+        $data = [];
         
-        $data = $this->validate([
-            'currency' => 'required'
-        ]);
-        
-        $freight = Charge::create([
-            'automatic_rate_id' => $quote->id   
-            ]);
-
-        if($charges != null && $charges != []){
-            foreach($charges as $charge){
-                $freight = Charge::create([
-                    'automatic_rate_id' => $autorate->id,
-                    'type_id' => '3',///WHY
-                    'calculation_type_id' => '5',//ALSO WHY
-                    'currency_id' => $autorate->currency_id,
-                ]);
-                    
-
-                $transit_time = $info_decoded->transit_time;
-                $via = $info_decoded->via;
-        
-                $this->amount = $rates;
-                $this->markups = $markups;
-                $this->currency_id = $info_decoded->currency->id;
-                $this->total = $rates;
-                $this->save();
+        foreach($form_keys as $fkey){
+            if(!in_array($fkey,$data) && $fkey != 'keys'){
+                $data[$fkey] = $request->input($fkey);
             }
+        };
 
-        }**/
+        foreach(array_keys($data) as $key){
+            $autorate->update([$key=>$data[$key]]);
+        }
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)

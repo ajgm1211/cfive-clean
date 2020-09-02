@@ -24,20 +24,41 @@ class ChargeController extends Controller
     }
 
     public function store(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
-    {
-        $data = $request->validate([
+    {   
+        $vdata = [
             'surcharge_id' => 'nullable',
             'calculation_type_id' => 'required',
             'currency_id' => 'required',
-        ]);
+        ];
+        
+        $equip = $quote->getContainerCodes($quote->equipment);
+        $equip_array = explode(',',$equip);
+        array_splice($equip_array,-1,1);
 
-        //ADD AND PREPARE DATA FROM CONTAINERS
+        foreach($equip_array as $eq){
+            $vdata['rates_'.$eq] = 'sometimes|nullable';
+        }
+
+        $validate = $request->validate($vdata);
+
+        $charge_rates = [];
+
+        foreach($equip_array as $eq){
+            if(isset($validate['rates_'.$eq])){
+                $charge_rates['c'.$eq] = $validate['rates_'.$eq]; 
+            }else{
+                $charge_rates['c'.$eq] = 0.00;
+            }
+        }
+
+        $rates_json = json_encode($charge_rates);
 
         $charge = Charge::create([
             'automatic_rate_id' => $autorate->id,
-            'calculation_type_id' => $data['calculation_type_id'],
-            'currency_id' => $data['currency_id'],
-            'type_id' => 3
+            'calculation_type_id' => $validate['calculation_type_id'],
+            'currency_id' => $validate['currency_id'],
+            'type_id' => 3,
+            'amount'=>$rates_json
         ]);
 
     }
