@@ -61,7 +61,6 @@
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
-                            :actions="actions"
                             ></ocean>
                         </b-tab>
 
@@ -108,6 +107,7 @@ export default {
         return {
             actions: actions,
             loaded: false,
+            tabs_loaded:false,
             form_fields: {
                 quote_id: {
                     label: "QUOTE ID",
@@ -294,11 +294,13 @@ export default {
             //console.log(this.datalists);
         },
         onSuccess(data){
-            this.equip = data.gp_container;
-            this.freights = data.rates;
-            this.quoteEquip = data.equipment.split(',');
-            this.quoteEquip.splice(-1,1)
-		},
+            let component = this;
+
+            component.equip = data.gp_container;
+            component.freights = data.rates;
+            component.quoteEquip = data.equipment.split(',');
+            component.quoteEquip.splice(-1,1)
+        },
     }
 };
 </script>

@@ -263,9 +263,13 @@ export default {
 	    	let autorate_id = route.params.id;
 	        return api.call('post', `/api/quotes/${autorate_id}/automatic_rate/store`, data);
 		},
-		update(data,route) {
-			let autorate_id = route.params.id;
-			return api.call('post',`/api/quotes/${autorate_id}/automatic_rate/update`, data)
+		update(id,data,route) {
+			let quote_id = route.params.id;
+			return api.call('post',`/api/quotes/${quote_id}/automatic_rate/${id}/update`, data)
+		},
+		retrieve(id,route) {
+			let quote_id = route.params.id;
+			return api.call('get',`/api/quotes/${quote_id}/automatic_rate/${id}`,{})
 		}
 	
 	},
@@ -274,7 +278,7 @@ export default {
 
 			let quote_id = route.params.id;
 
-        	api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, { params })
+        	api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}/charges`, { params })
         		.then(response => {
 	            	callback(null, response.data);
 	        	}).catch(error => {

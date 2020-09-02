@@ -48,7 +48,7 @@
                 <div class="mt-3 mb-3 mr-3 ml-3">
                     <FormInlineView
                         v-if="loaded"
-                        :data="freight"
+                        :data="currentData[freight.id]"
                         :fields="header_fields"
                         :datalists="datalists"
                         :actions="actions.automaticrates"
@@ -461,6 +461,7 @@
 <script>
 import Multiselect from "vue-multiselect";
 import DateRangePicker from "vue2-daterange-picker";
+import actions from "../../actions";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import DynamicalDataTable from '../../components/views/DynamicalDataTable';
@@ -478,7 +479,6 @@ export default {
   props: {
         equipment: Object,
         datalists: Object,
-        actions: Object,
         freights: Array,
         quoteEquip: Array
     },
@@ -488,6 +488,7 @@ export default {
       openModal: false,
       vdata: {},
       value: "",
+      actions: actions,
       options: [
         "Select option",
         "options",
@@ -510,13 +511,23 @@ export default {
             placeholder: "Days",
             colClass: "col-lg-2",
         },
+        schedule_type: {
+            label: "SERVICE",
+            type: "select",
+            trackby: "name",
+            placeholder: "Select service",
+            colClass: "col-lg-2",
+            options: "schedule_types",
+            hiding: "via",
+            showCondition:"Transfer",
+            isHiding:true
+        },
         via: {
             label: "VIA",
             searchable: true,
-            type: "multiselect",
-            trackby: "display_name",
-            placeholder: "Port",
-            options: "harbors",
+            hidden: true,
+            type: "text",
+            placeholder: "Transfer",
             colClass: "col-lg-2",
         },
         validity_end: {
@@ -527,7 +538,6 @@ export default {
         contract: {
             label: "REFERENCE",
             type: "text",
-            disabled: true,
             placeholder: "Contract name",
             colClass: "col-lg-2",
         },
@@ -597,6 +607,14 @@ export default {
                     freight.destPortName = harbor.display_name
                     }
             });
+            actions.automaticrates
+            .retrieve(freight.id,component.$route)
+            .then((response) => {
+                Vue.set(component.currentData,freight.id,response.data.data);
+                })
+            .catch((data) => {
+                component.$refs.observer.setErrors(data.data.errors);
+            });
         });
     },
 
@@ -604,8 +622,8 @@ export default {
         console.log('test modal');
         this.ids_selected = ids;
             this.$bvModal.show('editContainers');
-        }
-    
-    },      
+    },
+  }
+     
 };
 </script>

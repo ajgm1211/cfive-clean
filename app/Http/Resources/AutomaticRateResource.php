@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\ScheduleType;
 
 class AutomaticRateResource extends JsonResource
 {
@@ -24,7 +25,8 @@ class AutomaticRateResource extends JsonResource
             'destination_airport_id' => $this->destination_airport_id,
             'carrier_id' => $this->carrier_id,
             'airline_id' => $this->airline_id,
-            'rates' => $this->rates,            
+            'rates' => $this->rates,
+            'validity_end'=>$this->validity_end,            
             'markups' => $this->markups,
             'currency_id' => $this->currency_id,
             'total' => $this->total,
@@ -32,7 +34,7 @@ class AutomaticRateResource extends JsonResource
             'remarks_spanish' => $this->remarks_spanish,
             'remarks_english' => $this->remarks_english,
             'remarks_portuguese' => $this->remarks_portuguese,
-            'schedule_type' => $this->schedule_type,
+            'schedule_type' => is_null($this->schedule_type) ? $this->schedule_type : ['id'=>$this->schedule_type,'name'=>ScheduleType::where('id',$this->schedule_type)->first()->name],
             'transit_time' => $this->transit_time,
             'via' => $this->via
         ];

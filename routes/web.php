@@ -1037,11 +1037,12 @@ Route::group(['middleware' => ['auth']], function () {
    
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
+    Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'AutomaticRateController@retrieve')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
-    Route::post('api/quotes/{quote}/automatic_rate/update', 'AutomaticRateController@update')->middleware('check_company:quote');
-   
+    Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
+    
     /**Charge Routes**/
-    Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'ChargeController@list')->middleware('check_company:quote');
+    Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
 
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');

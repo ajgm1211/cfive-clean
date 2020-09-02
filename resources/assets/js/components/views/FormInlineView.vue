@@ -6,10 +6,11 @@
                 <!-- Reference -->
                 <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
                     <!-- Text Field -->
-                    <div v-if="item.type == 'text'">
+                    <div v-if="item.type == 'text' && !item.hidden">
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
+                            :hidden="item.hidden"
                             class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
@@ -62,6 +63,9 @@
                             :isLocker="item.isLocker"
                             :selectLock="item.selectLock"
                             :lockerTrack="item.lockerTrack"
+                            :hiding="item.hiding"
+                            :isHiding="item.isHiding"
+                            :showCondition="item.showCondition"
                         >
                             <multiselect
                                 v-model="vdata[key]"
@@ -76,7 +80,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit(),unlock(item,key)"
+                                @input="onSubmit(),unlock(item,key),showHidden(item,key)"
                                 @select="cleanInput(key)"
                             ></multiselect>
                             <span
@@ -223,11 +227,13 @@ export default {
         let fields_keys = Object.keys(this.fields);
         let component = this;
 
-            fields_keys.forEach(function (key) {
-                if(component.fields[key].isLocker){
-                    component.unlock(component.fields[key],key)
-                }
-            });
+        fields_keys.forEach(function (key) {
+            if(component.fields[key].isLocker){
+                component.unlock(component.fields[key],key)
+            }else if(component.fields[key].isHiding){
+                component.showHidden(component.fields[key],key)
+            }
+        });
     },
     methods: {
         closeModal() {
@@ -278,6 +284,12 @@ export default {
 
                             validate = false;
                         }
+                    }else if (item.rules.includes("int")) {
+                        if(typeof component != 'number'){
+
+                            validate = false;
+                        }
+
                     }
                 }
             });
@@ -418,6 +430,24 @@ export default {
                     }   
                 });
             } 
+        },
+
+        showHidden(item,key) {
+            let component = this;
+            let fields_keys = Object.keys(this.fields);
+            let caller = item;
+            let callerKey = key;
+
+            fields_keys.forEach(function(key) {
+                if(caller.hiding === key){
+                    if(caller.showCondition==component.vdata[callerKey].name){
+                        component.fields[key].hidden = false;
+                    } else{
+                        component.fields[key].hidden = true;
+                        component.vdata[key] = null;
+                    }
+                }
+            });
         },
 
         getOptions(options){
