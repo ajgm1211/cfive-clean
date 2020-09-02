@@ -111,6 +111,10 @@ a {
     color: #031B4E !important;
 }
 
+.incoterm p {
+    color: #031B4E !important;
+}
+
 .uppercase {
     text-transform: uppercase;
 }
@@ -171,6 +175,10 @@ header {
 
 .details {
     margin-bottom: 10px;
+}
+
+.details p {
+    color: #031B4E !important;
 }
 
 h1 {
