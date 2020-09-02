@@ -7,7 +7,7 @@
                 @if($quote->pdf_option->show_logo==1)
                     @if($quote->company->logo!='')
 
-                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
+                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
 
                     @endif
                 @endif
@@ -53,6 +53,16 @@
 
             <!-- Client --> 
             <div class="client" style="line-height: 10px; width:300px; float:right">
+
+                <div style="visibility: hidden">
+                    @if($quote->pdf_option->show_logo==1)
+                        @if($quote->company->logo!='')
+
+                            <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
+
+                        @endif
+                    @endif
+                </div>
 
                 <p class="title"><b>{{__('pdf.from')}}:</b> {{$quote->user->name}} {{$quote->user->lastname}}</p>
 
