@@ -16,28 +16,28 @@
             <!-- HEADER -->
             @include('quotesv2.pdf.partials.header')
 
-            <!-- DETAILS listo -->
+            <!-- DETAILS -->
             @include('quotesv2.pdf.partials.details_fcl') 
 
-            <!-- ALL IN  listo -->
+            <!-- ALL IN  -->
             @include('quotesv2.pdf.partials.all_in_fcl')
 
-            <!-- FREIGHTS listo -->
+            <!-- FREIGHTS -->
             @include('quotesv2.pdf.partials.freights_fcl')
 
-            <!-- ORIGINS listo-->
+            <!-- ORIGINS -->
             @include('quotesv2.pdf.partials.origins_fcl')
 
-            <!-- DESTINATIONS listo-->
+            <!-- DESTINATIONS -->
             @include('quotesv2.pdf.partials.destinations_fcl')
 
-            <!-- REMARKS listo-->
+            <!-- REMARKS -->
             @include('quotesv2.pdf.partials.remarks')
             
-            <!-- TERMS AND CONDITIONS listo -->
+            <!-- TERMS AND CONDITIONS -->
             @include('quotesv2.pdf.partials.terms_and_conditions')
             
-            <!-- PAYMENTS CONDITIONS listo -->
+            <!-- PAYMENTS CONDITIONS -->
             @include('quotesv2.pdf.partials.payments_conditions')
 
             <!-- FOOTER -->
@@ -46,5 +46,6 @@
         
 
         <div class="footer-page" style="background: {{ $user->companyUser->colors_pdf }}"></div>
+        
     </body>
 </html>
