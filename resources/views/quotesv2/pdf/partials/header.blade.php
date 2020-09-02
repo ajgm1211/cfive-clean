@@ -14,7 +14,7 @@
         <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
             
             <!-- Info Date -->
-            <div id="company">
+            <div id="company" style="float: left;">
 
                 <div>
                     <span class="color-title uppercase"><b>{{__('pdf.quote_id')}}:</b></span> 
@@ -32,12 +32,16 @@
             <div id="logo">
 
                 @if($user->companyUser->logo!='')
+
                     <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
+               
                 @endif
                 
             </div>
             <!-- End Logo -->
 
-            <hr style="border-width: 2px; border-color: {{ $user->companyUser->colors_pdf }};">
+            
 
         </header>
+
+        <hr style="border-width: 2px; border-color: {{ $user->companyUser->colors_pdf }};">
