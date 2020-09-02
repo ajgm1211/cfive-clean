@@ -81,7 +81,7 @@
 
         @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
 
-            <div style="margin-top: 25px;">
+            <div style="margin-top: 25px;"  class="incoterm"> 
 
                 @if($quote->incoterm_id!='')
 
@@ -124,7 +124,7 @@
 
         @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
 
-            <div>
+            <div  class="incoterm">
 
                 @if($quote->origin_address!='')
                 
