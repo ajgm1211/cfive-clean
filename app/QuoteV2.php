@@ -481,9 +481,11 @@ class QuoteV2 extends Model  implements HasMedia
     }
 
     public function getContainerCodes($equip,$getGroup=false)
-    {
-        $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
-        $full_equip = "";
+    {   
+        $size = count($equip);
+        if($size != 0){
+            $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
+            $full_equip = "";
         
         foreach ($equip_array as $eq){
             $full_equip.=Container::where('id','=',$eq)->first()->code.",";
@@ -496,6 +498,10 @@ class QuoteV2 extends Model  implements HasMedia
         }
 
         return $full_equip;
+        } else {
+            return $equip;
+        }
+        
     }
 
     public function getContainerArray($equip)

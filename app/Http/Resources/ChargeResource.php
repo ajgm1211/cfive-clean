@@ -31,12 +31,13 @@ class ChargeResource extends JsonResource
 
     public function addContainers($data)
     {   
-        $charges = json_decode($data['amount']);
-        foreach($charges as $key=>$value){
-            $cont_key = 'rates_'.str_replace('c','',$key);
-            $data[$cont_key] = $value;
-        }
-
+        if($this->amount!= null){
+            $charges = json_decode($data['amount']);
+            foreach($charges as $key=>$value){
+                $cont_key = 'rates_'.str_replace('c','',$key);
+                $data[$cont_key] = $value;
+                }
+            }
         return $data;
     }
 }

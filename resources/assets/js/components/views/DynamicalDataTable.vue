@@ -123,7 +123,7 @@
                     });
                     all_containers = new_containers
                 }
-       
+                
                 all_containers.forEach(function(item){
                     
                     if(item.gp_container_id === equipment.id)

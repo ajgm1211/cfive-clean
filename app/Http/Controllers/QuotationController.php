@@ -23,6 +23,8 @@ use App\Currency;
 use App\Container;
 use App\Charge;
 use App\CalculationType;
+use App\Surcharge;
+use App\ScheduleType;
 use App\Http\Resources\QuotationResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -104,13 +106,21 @@ class QuotationController extends Controller
         });*/
 
         $currency = Currency::get()->map(function ($curr){
-            return $curr->only(['id','alphacode']);
+            return $curr->only(['id','alphacode','rates','rates_eur']);
         });
 
         $containers = Container::all();
 
         $calculationtypes = CalculationType::get()->map(function ($ctype){
             return $ctype->only(['id','name']);
+        });
+
+        $surcharges = Surcharge::where('company_user_id','=',$company_user_id)->get()->map(function ($surcharge){
+            return $surcharge->only(['id','name']);
+        });
+
+        $schedule_types = ScheduleType::get()->map(function ($schedule_type){
+            return $schedule_type->only(['id','name']);
         });
 
         $data = compact(
@@ -127,7 +137,9 @@ class QuotationController extends Controller
             'status_options',
             'kind_of_cargo',
             'currency',
-            'calculationtypes'
+            'calculationtypes',
+            'surcharges',
+            'schedule_types'
         );
 
         return response()->json(['data'=>$data]);
@@ -157,7 +169,7 @@ class QuotationController extends Controller
                 'type' => 'required',
                 'mode' => 'required',
                 'delivery_type' => 'required',
-                'equipment' => 'required',
+                'equipment' => 'sometimes|required',
                 'company_id_quote' => 'nullable',
                 'contact_id' => 'nullable',
                 'price_id_num' => 'sometimes|nullable',
@@ -190,7 +202,7 @@ class QuotationController extends Controller
             'total_volume' => $data['total_volume'],
             'chargeable_weight' => $data['chargeable_weight'],
             'price_id' => $data['price_id_num'],
-            'equipment' => "[\"".implode("\",\"",$data['equipment'])."\"]",
+            'equipment' => isset($data['equipment']) ? "[\"".implode("\",\"",$data['equipment'])."\"]" : null,
             'origin_address' => $data['origin_address'],
             'destination_address' => $data['destination_address'],
             'date_issued' => explode("/",$data['date'])[0],
