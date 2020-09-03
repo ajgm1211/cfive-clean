@@ -8,7 +8,13 @@
         :searchBar="searchBar"
         :multiList="multiList"
         :multiId="multiId"
+        :paginated="paginated"
         :quoteEquip="quoteEquip"
+        :extraRow="extraRow"
+        :extraData="extraData"
+        :extraFields="extraFields"
+        :extraDatalists="extraDatalists"
+        :extraActions="extraActions"
         :actions="actions"
         :massiveactions="massiveactions"
         @onEdit="onEdit"
@@ -22,11 +28,13 @@
 <script>
     import DataTable from '../DataTable';
     import FormView from '../views/FormView';
+    import FormInlineView from '../views/FormInlineView';
 
     export default {
         components: { 
             DataTable,
-            FormView
+            FormView,
+            FormInlineView
         },
         props: {
             equipment: Object,
@@ -69,7 +77,21 @@
                 type: Number,
                 required: false,
                 default:1
-            }
+            },
+            paginated: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            extraRow: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            extraData: Object,
+            extraFields: Object,
+            extraDatalists: Object,
+            extraActions: Object
         },
         data() {
             return {

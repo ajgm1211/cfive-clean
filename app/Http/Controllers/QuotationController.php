@@ -25,6 +25,7 @@ use App\Charge;
 use App\CalculationType;
 use App\Surcharge;
 use App\ScheduleType;
+use App\Country;
 use App\Http\Resources\QuotationResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +79,7 @@ class QuotationController extends Controller
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
-          return $harbor->only(['id', 'display_name']);
+          return $harbor->only(['id', 'display_name','country_id']);
         });
 
         $payment_conditions = PaymentCondition::get()->map(function ($payment_condition){
@@ -122,6 +123,10 @@ class QuotationController extends Controller
         $schedule_types = ScheduleType::get()->map(function ($schedule_type){
             return $schedule_type->only(['id','name']);
         });
+        
+        $countries = Country::get()->map(function ($country){
+            return $country->only(['id','code','name']);
+        });
 
         $data = compact(
             'companies',
@@ -139,7 +144,8 @@ class QuotationController extends Controller
             'currency',
             'calculationtypes',
             'surcharges',
-            'schedule_types'
+            'schedule_types',
+            'countries'
         );
 
         return response()->json(['data'=>$data]);
