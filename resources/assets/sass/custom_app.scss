@@ -704,7 +704,9 @@ input.multiselect__input:focus {
     //justify-content: flex-end;
 }
 
+
 /* Quote */
+
 .p-light {
     color: rgba(#000000, 0.5);
 }
@@ -715,4 +717,8 @@ input.multiselect__input:focus {
         margin-right: 10px;
         font-size: 18px;
     }
+}
+
+.badge {
+    font-size: 12px !important;
 }
