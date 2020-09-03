@@ -62,11 +62,24 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy">
 
+                <!-- Extra Row -->
+                <b-tr>
+                    <FormInlineView
+                        v-if="extraRow"
+                        :data="extraData"
+                        :fields="extraFields"
+                        :datalists="extraDatalists"
+                        :actions="extraActions"
+                        :update="true"
+                    ></FormInlineView>
+                </b-tr> 
+                <!-- End Extra Row -->
+
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields)">
 
                     <b-td v-if="firstEmpty"></b-td>
-
+                    
                     <b-td v-for="(item, key) in inputFields" :key="key" :style="'max-width:'+item.width">
                        
                        <!-- Text Input -->
@@ -198,7 +211,7 @@
         <!-- End DataTable -->
         
         <!-- Pagination -->
-        <paginate
+        <paginate v-if="paginated"
                   :page-count="pageCount"
                   :click-handler="clickCallback"
                   :prev-text="'Prev'"
@@ -220,6 +233,7 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import paginate from './paginate';
+    import FormInlineView from './views/FormInlineView';
 
     export default {
         props: {
@@ -264,11 +278,26 @@
                 type: Number,
                 required: false,
                 default:1
-            }
+            },
+            paginated: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            extraRow: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            extraData: Object,
+            extraFields: Object,
+            extraDatalists: Object,
+            extraActions: Object
         },
         components: { 
             Multiselect,
             paginate,
+            FormInlineView
         },
         data() {
             return {

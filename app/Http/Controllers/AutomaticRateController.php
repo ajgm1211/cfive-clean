@@ -37,7 +37,10 @@ class AutomaticRateController extends Controller
     {   
         $form_keys = $request->input('keys');
 
-        $data = [];
+        $data = $request->validate([
+            'contract' => 'required',
+            'transit_time' => 'numeric'
+        ]);
         
         foreach($form_keys as $fkey){
             if(!in_array($fkey,$data) && $fkey != 'keys'){

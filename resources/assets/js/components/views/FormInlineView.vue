@@ -284,12 +284,6 @@ export default {
 
                             validate = false;
                         }
-                    }else if (item.rules.includes("int")) {
-                        if(typeof component != 'number'){
-
-                            validate = false;
-                        }
-
                     }
                 }
             });
