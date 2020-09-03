@@ -8,24 +8,33 @@ import VueRouter from 'vue-router';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 /* Config files */
-import Contracts from '../components/contracts/Contracts';  // Main Component
+import Contracts from '../components/contracts/Contracts'; // Main Component
 import Api from '../api.js'; // Api calls controller
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import VueCkeditor from 'vue-ckeditor5';
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
-// Optionally install the BootstrapVue icon components plugin
+    // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
 Vue.use(VueRouter)
 
+const options = {
+    editors: {
+        classic: ClassicEditor,
+    },
+    name: 'ckeditor'
+}
+
+Vue.use(VueCkeditor.plugin, options);
+
 const router = new VueRouter({
     mode: 'history',
-    routes: [
-    	{
-    		path: '/api/contracts/:id/edit',
-    		name: 'contracts'
-    	}
-    ],
+    routes: [{
+        path: '/api/contracts/:id/edit',
+        name: 'contracts'
+    }],
 });
 
 window.api = new Api();
