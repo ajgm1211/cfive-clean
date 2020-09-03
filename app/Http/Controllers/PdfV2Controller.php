@@ -91,6 +91,7 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
+        //$pdf->loadHTML($view);
         $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
 
         return $pdf->stream('quote-' . $idQuote . '-' . date('Ymd') . '.pdf');
