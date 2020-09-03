@@ -1044,7 +1044,10 @@ Route::group(['middleware' => ['auth']], function () {
     /**Charge Routes**/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
-
+    Route::delete('api/quotes/ocean_freight/charge/{charge}/destroy', 'ChargeController@destroy');
+    Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
+    Route::post('api/quotes/ocean_freight/{charge}/charge/update', 'ChargeController@update');
+    
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/

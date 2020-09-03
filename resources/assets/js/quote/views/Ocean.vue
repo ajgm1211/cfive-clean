@@ -44,17 +44,18 @@
             </div>
 
             <b-collapse id="collapse-1" class="row">
-
+                
                 <div class="mt-3 mb-3 mr-3 ml-3">
+                    <!-- Header TT,via,date,contract-->
                     <FormInlineView
                         v-if="loaded"
-                        :data="currentData[freight.id]"
+                        :data="currentRateData[freight.id]"
                         :fields="header_fields"
                         :datalists="datalists"
                         :actions="actions.automaticrates"
                         :update="true"
                     ></FormInlineView>
-                    
+                
                     <!-- Inputs Freight -->
                     <!-- End Inputs Freight -->
 
@@ -62,6 +63,11 @@
                         v-if="loaded"
                         :initialFields="fields"
                         :initialFormFields="vform_fields"
+                        :extraRow="true"
+                        :extraData="currentChargeData[freight.id]"
+                        :extraFields="form_fields"
+                        :extraDatalists="datalists"
+                        :extraActions="actions.automaticrates"
                         :searchBar="false"
                         :datalists="datalists"
                         :equipment="equipment"
@@ -70,10 +76,34 @@
                         :limitEquipment="true"
                         :multiList="true"
                         :multiId="freight.id"
+                        :paginated="false"
                         :massiveactions="['openmodalcontainer', 'delete']"
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
                     ></DynamicalDataTable>
+
+                    <hr>
+
+                    <div class="row">    
+                        <div class="col-lg-2"></div>
+
+                        <div class="col-lg-2" style ="text-align:right;">
+                            <span><b>Profit</b></span>
+                        </div>
+
+                        <!-- Profits field -->
+                        <div class="col-lg-8">
+                            <FormInlineView
+                                v-if="loaded"
+                                :data="currentChargeData[freight.id]"
+                                :fields="profit_fields"
+                                :datalists="datalists"
+                                :actions="actions.charges"
+                                :update="true"
+                            ></FormInlineView>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Checkbox Freight-->
@@ -481,7 +511,7 @@ export default {
         datalists: Object,
         freights: Array,
         quoteEquip: Array
-    },
+  },
   data() {
     return {
       openFreight: false,
@@ -542,15 +572,19 @@ export default {
             colClass: "col-lg-2",
         },
       },
+      profit_fields: {
+      },
+      extra_fields: {},
       loaded: true,
-      currentData: {},
+      currentRateData: {},
+      currentChargeData: {},
       form_fields: {},
       containers_fields: {},
       ids_selected: [],
 
         /* Table headers */
         fields: [ 
-            { key: 'surcharge_id', label: 'CHARGE'}, 
+            { key: 'surcharge_id', label: 'CHARGE',formatter: (value)=> { return value.name }}, 
             { key: 'calculation_type_id', label: 'PROVIDER',formatter: (value)=> { return value.name }},
             { key: 'currency_id', label: 'CURRENCY', formatter: (value)=> { return value.alphacode }}
         ],
@@ -559,9 +593,12 @@ export default {
         vform_fields: {
             surcharge_id: { 
                 label: 'CHARGE',  
-                type: 'text', 
+                type: 'select',
+                searchable: true, 
                 rules: 'required', 
-                placeholder: 'Select charge type', 
+                placeholder: 'Select charge type',
+                trackby: 'name', 
+                options: 'surcharges'
             },
             calculation_type_id: { 
                 label: 'PROVIDER', 
@@ -587,6 +624,9 @@ export default {
       dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'}
     };
   },
+  created(){
+    this.setProfitFields();
+  },
   methods: {
     showModal() {
         this.$refs['my-modal'].show();
@@ -610,12 +650,21 @@ export default {
             actions.automaticrates
             .retrieve(freight.id,component.$route)
             .then((response) => {
-                Vue.set(component.currentData,freight.id,response.data.data);
+                Vue.set(component.currentRateData,freight.id,response.data.data);
+                })
+            .catch((data) => {
+                component.$refs.observer.setErrors(data.data.errors);
+            });
+            actions.charges
+            .retrieve(freight.id,component.$route)
+            .then((response) => {
+                Vue.set(component.currentChargeData,freight.id,response.data.data);
                 })
             .catch((data) => {
                 component.$refs.observer.setErrors(data.data.errors);
             });
         });
+
     },
 
     openModalContainer(ids){
@@ -623,6 +672,30 @@ export default {
         this.ids_selected = ids;
             this.$bvModal.show('editContainers');
     },
+
+    setProfitFields(){
+        let component = this;
+
+        component.quoteEquip.forEach(function(eq){
+            component.profit_fields[eq] = { type: 'text', placeholder: eq, colClass:'col-lg-3'}           
+        });
+
+        component.profit_fields['profit_currency'] = {searchable: true, 
+                                                    type: 'select', 
+                                                    rules: 'required', 
+                                                    trackby: 'alphacode', 
+                                                    placeholder: 'Select Currency', 
+                                                    options: 'currency',
+                                                    colClass: 'col-lg-3'
+                                                    }
+    },
+
+    setExtraFields(original_fields){
+        let component = this;
+
+        console.log(original_fields)
+
+    }
   }
      
 };
