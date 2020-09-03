@@ -83,7 +83,7 @@ class SyncCompaniesJob implements ShouldQueue
                             'tax_number' => $item['cif-nif'],
                             'company_user_id' => $this->user->company_user_id,
                             'owner' => $this->user->id,
-                            'api_id' => $item['id'],
+                            'api_id' => $item['codigo'],
                             'api_status' => 'created',
                         ]);
         
