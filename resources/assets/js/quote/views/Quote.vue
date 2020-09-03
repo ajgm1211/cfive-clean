@@ -243,7 +243,7 @@ export default {
             },
             term_fields: {
                 terms_and_conditions: {
-                    type: "textarea",
+                    type: "ckeditor",
                     rules: "required",
                     placeholder: "Insert terms",
                     colClass: "col-sm-12"
