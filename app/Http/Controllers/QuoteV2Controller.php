@@ -3977,7 +3977,7 @@ class QuoteV2Controller extends Controller
     }
 
     /*  **************************  LCL  ******************************************** */
-    public function processSearchLprocessSearchLCL(Request $request)
+    public function processSearchLCL(Request $request)
     {
 
         //Variables del usuario conectado
