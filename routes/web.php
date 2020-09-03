@@ -107,6 +107,7 @@ Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
+    Route::get('DTTB/{identificador}', 'SurchargesController@loadDatatables')->name('surcharges.load.datatables')->middleware(['auth', 'role:administrator|data_entry']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
@@ -803,6 +804,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('ManagerCar
 Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
 
     Route::get('list', 'SearchController@listar')->name('search.list');
+    Route::get('listLCL', 'SearchController@getListLCL')->name('search.lcl'); 
+    Route::get('listFCL', 'SearchController@getListFCL')->name('search.fcl');
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
