@@ -804,6 +804,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('ManagerCar
 Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
 
     Route::get('list', 'SearchController@listar')->name('search.list');
+    Route::get('listLCL', 'SearchController@getListLCL')->name('search.lcl'); 
+    Route::get('listFCL', 'SearchController@getListFCL')->name('search.fcl');
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
