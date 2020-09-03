@@ -433,6 +433,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('search.list')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search"></i>
+                                    <span class="m-menu__link-text">
+                                        Search History
+                                    </span>
+                                </a>
+                            </li>
                             @endrole
 
                             @role('administrator')
@@ -620,14 +628,7 @@ Group Surchargers
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('search.list')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search"></i>
-                                    <span class="m-menu__link-text">
-                                        Search History
-                                    </span>
-                                </a>
-                            </li>
+                
                             @endrole
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
