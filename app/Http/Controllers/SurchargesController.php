@@ -8,9 +8,9 @@ use App\Surcharge;
 use App\SaleTermSurcharge;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreSurcharge;
-
 class SurchargesController extends Controller
 {
     /**
@@ -37,35 +37,13 @@ class SurchargesController extends Controller
 
     public function loadDatatables(Request $request,$identofocador){
         if($identofocador == 1){
-            $surchargers = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->orWhere('company_user_id',null)->with('companyUser')->get();
-            $data_collection = collect();
-            foreach($surchargers as $surcharger){
-                if(empty($surcharger->company_user_id)){
-                    $company = 'General';
-                } else{
-                    $company = $surcharger->companyUser->name;
-                }
-                if(empty($surcharger->saleterm['name'])){
-                    $saleterm = '-------';
-                } else {
-                    $saleterm = $surcharger->saleterm['name'];
-                }
-                
-                $data_collection->push([
-                    'id'            => $surcharger->id,
-                    'name'          => $surcharger->name,
-                    'description'   => $surcharger->description,
-                    'company_user'  => $company,
-                    'sale_term'     => $saleterm
-                                       ]);
-            }
-            //dd($data_collection);
+            //$surchargers = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->orWhere('company_user_id',null)->with('companyUser')->get();
+            $data_collection = DB::select('call surcharge_list_proc('.Auth::user()->company_user_id.')');
+            $data_collection = collect($data_collection);
             return Datatables::of($data_collection)
                 ->addColumn('action', function ($data_collection) {
-
-                    $buttons = '<a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal(\'edit\','.$data_collection['id'].')" title="Edit "><i class="la la-edit"></i></a>
-                    
-                    <a href="#" id="delete-surcharge" data-surcharge-id="'.$data_collection['id'].'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" ><i class="la la-eraser"></i></a>';
+                    $buttons = '<a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal(\'edit\','.$data_collection->id.')" title="Edit "><i class="la la-edit"></i></a>
+                    <a href="#" id="delete-surcharge" data-surcharge-id="'.$data_collection->id.'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" ><i class="la la-eraser"></i></a>';
                     return $buttons;
                 })->make();
         } elseif($identofocador == 2) {
