@@ -1,7 +1,7 @@
 <?php
 
 return [
-    "freight_charges" => "Gastos de flete",
+    "freight_charges" => "Flete Marítimo",
     "origin_charges" => "Gastos en origen",
     "destination_charges" => "Gastos en destino",
     "currency" => "Moneda",
@@ -21,8 +21,8 @@ return [
     "terms" => "Términos y Condiciones",
     "from" => "De",
     "to" => "Para",
-    "quote_id" => "ID Cotización",
-    "date_issue" => "Fecha de creación",
+    "quote_id" => "Referencia",
+    "date_issue" => "Fecha",
     "validity" => "Validez",
     "total_local" => "Total gastos locales",
     "total" => "Total",
