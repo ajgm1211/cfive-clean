@@ -76,7 +76,9 @@
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
-                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }, 
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
+                    { key: 'created_at', label: 'Created At'},
+
                 ],
 
                 /* Form Modal Fields */
