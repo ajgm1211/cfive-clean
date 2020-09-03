@@ -60,7 +60,11 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
+<<<<<<< HEAD
 /******/ 	return __webpack_require__(__webpack_require__.s = 377);
+=======
+/******/ 	return __webpack_require__(__webpack_require__.s = 360);
+>>>>>>> develop
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -89443,6 +89447,7 @@ var Api = function () {
 /* 357 */,
 /* 358 */,
 /* 359 */,
+<<<<<<< HEAD
 /* 360 */,
 /* 361 */,
 /* 362 */,
@@ -89469,6 +89474,17 @@ module.exports = __webpack_require__(385);
 
 /***/ }),
 /* 378 */
+=======
+/* 360 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(361);
+module.exports = __webpack_require__(368);
+
+
+/***/ }),
+/* 361 */
+>>>>>>> develop
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89495,7 +89511,11 @@ window.Vue = __webpack_require__(67);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+<<<<<<< HEAD
 Vue.component('example-component', __webpack_require__(379));
+=======
+Vue.component('example-component', __webpack_require__(362));
+>>>>>>> develop
 //Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
 //Vue.component('restrictions', require('./components/Restrictions.vue'));
 //Vue.component('remarkes', require('./components/Remarkes.vue'));
@@ -89503,22 +89523,36 @@ Vue.component('example-component', __webpack_require__(379));
 
 window.api = new __WEBPACK_IMPORTED_MODULE_1__api_js__["a" /* default */]();
 
+<<<<<<< HEAD
 Vue.component('show-component', __webpack_require__(382));
+=======
+Vue.component('show-component', __webpack_require__(365));
+>>>>>>> develop
 
 var app = new Vue({
   el: '#app'
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 379 */
+=======
+/* 362 */
+>>>>>>> develop
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(39)
 /* script */
+<<<<<<< HEAD
 var __vue_script__ = __webpack_require__(380)
 /* template */
 var __vue_template__ = __webpack_require__(381)
+=======
+var __vue_script__ = __webpack_require__(363)
+/* template */
+var __vue_template__ = __webpack_require__(364)
+>>>>>>> develop
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89557,7 +89591,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 380 */
+=======
+/* 363 */
+>>>>>>> develop
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89586,7 +89624,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 381 */
+=======
+/* 364 */
+>>>>>>> develop
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89629,15 +89671,25 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 382 */
+=======
+/* 365 */
+>>>>>>> develop
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(39)
 /* script */
+<<<<<<< HEAD
 var __vue_script__ = __webpack_require__(383)
 /* template */
 var __vue_template__ = __webpack_require__(384)
+=======
+var __vue_script__ = __webpack_require__(366)
+/* template */
+var __vue_template__ = __webpack_require__(367)
+>>>>>>> develop
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89676,7 +89728,11 @@ module.exports = Component.exports
 
 
 /***/ }),
+<<<<<<< HEAD
 /* 383 */
+=======
+/* 366 */
+>>>>>>> develop
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89757,7 +89813,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
+<<<<<<< HEAD
 /* 384 */
+=======
+/* 367 */
+>>>>>>> develop
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89803,7 +89863,11 @@ if (false) {
 }
 
 /***/ }),
+<<<<<<< HEAD
 /* 385 */
+=======
+/* 368 */
+>>>>>>> develop
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
