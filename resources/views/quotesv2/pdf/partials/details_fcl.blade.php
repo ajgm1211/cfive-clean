@@ -85,7 +85,7 @@
             </div>
 
 
-            @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='')
+            @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='' || $quote->validity_end != '')
 
                 <div style="margin-top: 25px; height: 50px" class="incoterm" >
 
