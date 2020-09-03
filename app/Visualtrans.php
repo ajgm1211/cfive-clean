@@ -29,7 +29,7 @@ class Visualtrans
 
             $page = 1;
 
-            $max_page = ceil($result['count'] / 1000);
+            $max_page = ceil($result['count'] / 100);
 
             do {
                 $uri_paginate =  $setting->url . $setting->api_key . '&p=' . $page;
