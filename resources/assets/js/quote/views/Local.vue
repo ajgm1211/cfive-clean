@@ -17,6 +17,7 @@
                         :preserve-search="true"
                         placeholder="Choose a Port"
                         label="display_name"
+                        @input="getSaleTerms()"
                         track-by="display_name"
                         class="q-select ml-3"
                     ></multiselect>
@@ -27,11 +28,14 @@
                 <div class="col-12 col-lg-6 d-flex justify-content-end align-items-center">
                     <multiselect
                         v-model="value0"
-                        :options="options"
-                        :searchable="true"
-                        :close-on-select="false"
+                        :options="saleterms"
+                        :multiple="false"
                         :show-labels="false"
+                        :close-on-select="true"
+                        :preserve-search="true"
                         placeholder="Select Template"
+                        label="name"
+                        track-by="name"
                         class="q-select mr-3"
                         style="position: relative; top: 4px"
                     ></multiselect>
@@ -443,12 +447,12 @@ import FormInlineView from "../../components/views/FormInlineView.vue";
 export default {
     components: {
         Multiselect,
-        FormInlineView
+        FormInlineView,
     },
     created() {
         let id = this.$route.params.id;
         /* Return the lists data for dropdowns */
-        api.getData({}, "/api/quote/local/data/"+id, (err, data) => {
+        api.getData({}, "/api/quote/local/data/" + id, (err, data) => {
             this.harbors = data;
         });
 
@@ -471,6 +475,7 @@ export default {
             value1: "",
             value2: "",
             options: [],
+            saleterms: [],
             harbors: [],
             remark_field: {
                 remarks: {
@@ -487,6 +492,12 @@ export default {
     methods: {
         showModal() {
             this.$refs["my-modal"].show();
+        },
+        getSaleTerms() {
+            this.saleterms = [];
+            api.getData({}, "/api/quote/local/saleterm/" + this.value.id, (err, data) => {
+                this.saleterms = data;
+            });
         },
     },
 };
