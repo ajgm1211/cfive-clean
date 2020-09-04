@@ -45,39 +45,20 @@ class SyncCompaniesJob implements ShouldQueue
                 
                 foreach ($this->response['ent_m'] as $item) {
                     if ($item['es_emp']) {
-        
-                        $exist_com = Company::where('api_id', $item['id'])->get();
-        
-                        if ($exist_com->count() == 0) {
-                            $company = new Company();
-                            $company->business_name = $item['nom_com'];
-                            $company->phone = $item['tlf'];
-                            $company->address = $item['address'];
-                            $company->email = $item['eml'];
-                            $company->tax_number = $item['cif'];
-                            $company->company_user_id = $this->user->company_user_id;
-                            $company->owner = $this->user->id;
-                            $company->api_id = $item['id'];
-                            $company->api_status = 'created';
-                            $company->save();
-        
-                            /*$contacts = $this->getContacts($item->id);
-                        
-                        foreach($contacts->ent_rel_m as $v){
-                            $exist_cont = Contact::where('api_id',$item->ent_rel)->count();
-        
-                            if($exist_cont==0){
-                                $contact = new Contact();
-                                $contact->first_name = $v->name;
-                                $contact->phone = $item->tlf;
-                                $contact->email = $item->eml;
-                                $contact->position = $v->dsc;
-                                $contact->company_id = $v->ent_rel;
-                                $contact->api_id = $v->ent_rel;
-                                $contact->save();
-                            }
-                        }*/
-                        }
+
+                        Company::updateOrCreate([
+                            'api_id' => $item['id']
+                        ], [
+                            'business_name' => $item['nom_com'],
+                            'phone' => $item['tlf'],
+                            'address' => $item['address'],
+                            'email' => $item['eml'],
+                            'tax_number' => $item['cif'],
+                            'company_user_id' => $this->user->company_user_id,
+                            'owner' => $this->user->id,
+                            'api_id' => $item['id'],
+                            'api_status' => 'created',
+                        ]);
                     }
         
                     $i++;
@@ -94,22 +75,17 @@ class SyncCompaniesJob implements ShouldQueue
                 $i = 0;
 
                 foreach ($this->response['entidades'] as $item) {
-                    //if ($item->es_emp) {
-        
-                        $exist_com = Company::where('api_id', $item['codigo'])->get();
-        
-                        if ($exist_com->count() == 0) {
-                            $company = new Company();
-                            $company->business_name = $item['nombre-fiscal'];
-                            $company->tax_number = $item['cif-nif'];
-                            $company->company_user_id = $this->user->company_user_id;
-                            $company->owner = $this->user->id;
-                            $company->api_id = $item['codigo'];
-                            $company->api_status = 'created';
-                            $company->save();
 
-                        }
-                    //}
+                        Company::updateOrCreate([
+                            'api_id' => $item['codigo']
+                        ], [
+                            'business_name' => $item['nombre-fiscal'],
+                            'tax_number' => $item['cif-nif'],
+                            'company_user_id' => $this->user->company_user_id,
+                            'owner' => $this->user->id,
+                            'api_id' => $item['codigo'],
+                            'api_status' => 'created',
+                        ]);
         
                     $i++;
                 }
