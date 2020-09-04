@@ -104,6 +104,16 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasManyThrough('App\Charge', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
     }
 
+    public function origin_harbor()
+    {
+        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id','id','origin_port_id');
+    }
+
+    public function destination_harbor()
+    {
+        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id','id','destination_port_id');
+    }
+
     public function pdf_option()
     {
         return $this->hasOne('App\PdfOption', 'quote_id', 'id');
@@ -244,6 +254,20 @@ class QuoteV2 extends Model  implements HasMedia
                     $q->select('id', 'alphacode');
                 }]);
             }]);
+        }]);
+    }
+
+    public function scopeOriginHarborRelation($q)
+    {
+        return $q->with(['origin_harbor' => function ($q) {
+            $q->select('id', 'display_name');
+        }]);
+    }
+
+    public function scopeDestinationHarborRelation($q)
+    {
+        return $q->with(['destination_harbor' => function ($q) {
+            $q->select('id', 'display_name');
         }]);
     }
 

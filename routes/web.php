@@ -1037,6 +1037,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
+    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
@@ -1220,5 +1221,3 @@ Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
     Route::get('delete/{prov_id}', ['uses' => 'ProvinceController@destroy', 'as' => 'delete-prov']);
 });
 Route::resource('provinces', 'ProvinceController')->middleware('auth');
-
-//Route::get('upd', 'InlandDistanceController@updateInfo')->name('upd.upd');
