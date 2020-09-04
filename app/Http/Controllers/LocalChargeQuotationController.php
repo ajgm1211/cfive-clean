@@ -8,12 +8,14 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
+use App\SaleTermV3;
 
 class LocalChargeQuotationController extends Controller
 {
-    public function harbors(Request $request){
+    public function harbors(Request $request)
+    {
 
-        $quote = QuoteV2::with('origin_harbor','destination_harbor')->where('id',$request->quote_id)->first();
+        $quote = QuoteV2::with('origin_harbor', 'destination_harbor')->where('id', $request->quote_id)->first();
 
         $origin_ports = $quote->origin_harbor->map(function ($value) {
             return $value->only(['id', 'display_name']);
@@ -23,11 +25,18 @@ class LocalChargeQuotationController extends Controller
             return $value->only(['id', 'display_name']);
         });
 
-        $harbors = $origin_ports->merge($destination_ports);
+        $harbors = $origin_ports->merge($destination_ports)->unique();
 
-        $data = compact('harbors');
+        $collection = $harbors->values()->all();
 
-        return response()->json($harbors);
+        return $collection;
+    }
 
+    public function saleterms(Request $request)
+    {
+
+        $saleterms = SaleTermV3::select('id', 'name')->where('port_id', $request->port_id)->get();
+
+        return $saleterms;
     }
 }
