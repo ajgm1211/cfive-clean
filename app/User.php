@@ -68,6 +68,11 @@ class User extends Authenticatable implements Auditable
         return $query->where('type', 'admin');
     }
 
+    public function worksAt()
+    {
+        return $this->hasOne('App\CompanyUser','id','company_user_id')->first();
+    }
+
     /**
      * Send the password reset notification.
      *

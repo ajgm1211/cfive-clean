@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use App\Http\Filters\QuotationFilter;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class QuoteV2 extends Model  implements HasMedia
 {
@@ -23,7 +27,7 @@ class QuoteV2 extends Model  implements HasMedia
         'equipment' => 'array',
     ];
 
-    protected $fillable = ['company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions'];
+    protected $fillable = ['company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions'];
 
     public function company()
     {
@@ -53,6 +57,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function destination_port()
     {
         return $this->hasOne('App\Harbor', 'id', 'destination_port_id');
+    }
+
+    public function delivery_type()
+    {
+        return $this->hasOne('App\DeliveryType', 'id', 'delivery_type');
     }
 
     public function incoterm()
@@ -115,7 +124,7 @@ class QuoteV2 extends Model  implements HasMedia
         return $query->select(array_diff($this->columns, (array) $value));
     }
 
-    /*public function getEquipmentAttribute($value) 
+    /*public function getEquipmentAttribute($value)
     {
         $a = json_decode($value);
         return json_decode($a);
@@ -405,4 +414,120 @@ class QuoteV2 extends Model  implements HasMedia
             $query->with('automaticInlandLclAir');
         }]);
     }
+
+    public function automatic_inland_lcl_airs()
+    {
+        $this->hasMany('App\AutomaticInlandLclAir');
+    }
+
+    public function automatic_inlands()
+    {
+        $this->hasMany('App\AutomaticInland');
+    }  
+    
+    public function integration_quote_statuses()
+    {
+        $this->hasMany('App\IntegrationQuoteStatus');
+    }
+    
+    public function package_load_v2s()
+    {
+        $this->hasMany('App\PackageLoadV2');
+    }  
+
+    public function payment_conditions()
+    {
+        $this->hasMany('App\PaymentCondition');
+    }
+    
+    public function sale_term_v2s()
+    {
+        $this->hasMany('App\SaleTermV2');
+    }
+
+    public function duplicate()
+    {
+
+        $new_quote = $this->replicate();
+        $new_quote->quote_id .= ' copy';
+        $new_quote->save();
+
+        $this->with('automatic_inland_lcl_airs','automatic_inlands','integration_quote_statuses',
+                    'package_load_v2s','rate_v2','pdf_option','payment_conditions');
+       
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->quote_id = $new_quote->id;
+                $newRelationship->save();
+                }
+            }
+        
+        return $new_quote;
+    }
+
+    public function scopeFilterByCurrentCompany($query)
+    {
+        $company_id = Auth::user()->company_user_id;
+        return $query->where('company_user_id', '=', $company_id);
+    }
+
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new QuotationFilter($request, $builder))->filter();
+    }
+
+    public function getContainerCodes($equip,$getGroup=false)
+    {   
+        $size = count($equip);
+        if($size != 0){
+            $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
+            $full_equip = "";
+        
+        foreach ($equip_array as $eq){
+            $full_equip.=Container::where('id','=',$eq)->first()->code.",";
+            if($getGroup){
+                $group_id = Container::where('id','=',$eq)->first()->gp_container_id;
+                $group = GroupContainer::where('id','=',$group_id)->first();
+
+                return $group;
+            }
+        }
+
+        return $full_equip;
+        } else {
+            return $equip;
+        }
+        
+    }
+
+    public function getContainerArray($equip)
+    {
+        $cont_ids=[];
+        $cont_array = explode(",",$equip);
+        foreach ($cont_array as $cont){
+            if ($cont != ""){
+                $wh = Container::where('code','=',$cont)->first()->id;
+                array_push($cont_ids,$wh);
+            }
+        }
+        $conts = "[\"".implode("\",\"",$cont_ids)."\"]";
+
+        return $conts;
+    }
+
+    public function originDest($reqPorts)
+    {
+        foreach($reqPorts as $port){
+            $info = explode("-",$port);
+            $ports[] = $info[0];
+        }
+
+        return $ports;
+
+    }
+
 }
