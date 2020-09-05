@@ -24,24 +24,24 @@ abstract class AbstractFilter
         $this->parent_model = $parent_model;
     }
 
-	public function filter() 
+	public function filter()
     {
         /*if($this->parent_id && $this->parent_model)
             $this->filterByParent();
 
         else if($this->request->query('filteredby', null) && $this->request->query('filteredval', null))
         	$this->defaulFilter();*/
-            
+
         if( $this->request->query('q', null) && $this->request->query('q') != ''){
             $this->query->where(function($query) {
                 $this->search($query);
-                $this->searchByRelation($query);   
+                $this->searchByRelation($query);
             });
         }
-        
+
         $this->sort();
 
-        return $this->getResult(); 
+        return $this->getResult();
     }
 
     protected function filterByParent() {
@@ -54,7 +54,7 @@ abstract class AbstractFilter
     protected function defaulFilter() {
 
 	    $values = $this->request->query('filteredval');
-        
+
         $this->query->whereHas(
             $this->request->query('filteredby'), function($q) use ($values) {
                 $q->whereIn($this->default_filter_by[$this->request->query('filteredby')], $values);
@@ -99,7 +99,7 @@ abstract class AbstractFilter
 
     protected function searchByRelationOr($filter_by_relations, $qry, $query)
     {
-        $query->orWhere(function ($qr) use ($filter_by_relations, $qry){ 
+        $query->orWhere(function ($qr) use ($filter_by_relations, $qry){
 
             foreach($filter_by_relations as $column){
 
@@ -118,7 +118,7 @@ abstract class AbstractFilter
 
     protected function searchByRelationAnd($filter_by_relations, $qry, $query)
     {
-        $query->where(function ($qr) use ($filter_by_relations, $qry){ 
+        $query->where(function ($qr) use ($filter_by_relations, $qry){
 
             foreach($filter_by_relations as $column){
 
@@ -139,7 +139,7 @@ abstract class AbstractFilter
 
         if($this->request->query('sort', null)){
             $sort = explode(':', $this->request->query('sort'));
-            $this->query->orderBy($sort[0], $sort[1]); 
+            $this->query->orderBy($sort[0], $sort[1]);
         } else {
             $this->query->orderBy('id', 'desc');
         }

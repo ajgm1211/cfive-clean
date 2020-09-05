@@ -1,13 +1,12 @@
 <template>
 	<div class="container-fluid">
-		<div class="row mt-5">
-			<div class="col-12 mb-5">
+		<div class="row mt-5" >
+			<div class="col-12 mb-2" style="padding: 0px 50px">
 				<a href="/api/inlands/" class="p-light quote-link">
 					<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
 				</a>
 			</div>
 			<div class="col-12">
-
 				<!-- Form Contract Inline -->
 				<FormInlineView
 				v-if="loaded"

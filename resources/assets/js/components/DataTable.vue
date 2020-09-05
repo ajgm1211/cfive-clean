@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Search Input -->
-        <div class="row my-3">
+        <div v-if="searchBar" class="row my-3">
             <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
@@ -62,15 +62,28 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy">
 
+                <!-- Extra Row -->
+                <b-tr>
+                    <FormInlineView
+                        v-if="extraRow"
+                        :data="extraData"
+                        :fields="extraFields"
+                        :datalists="extraDatalists"
+                        :actions="extraActions"
+                        :update="true"
+                    ></FormInlineView>
+                </b-tr> 
+                <!-- End Extra Row -->
+
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields)">
 
                     <b-td v-if="firstEmpty"></b-td>
-
+                    
                     <b-td v-for="(item, key) in inputFields" :key="key" :style="'max-width:'+item.width">
                        
                        <!-- Text Input -->
-                       <div v-if="item.type == 'text'">
+                        <div v-if="item.type == 'text'">
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -198,7 +211,7 @@
         <!-- End DataTable -->
         
         <!-- Pagination -->
-        <paginate
+        <paginate v-if="paginated"
                   :page-count="pageCount"
                   :click-handler="clickCallback"
                   :prev-text="'Prev'"
@@ -220,6 +233,7 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import paginate from './paginate';
+    import FormInlineView from './views/FormInlineView';
 
     export default {
         props: {
@@ -249,11 +263,41 @@
                 type: Boolean,
                 required: false,
                 default: true
-            }
+            },
+            searchBar: {
+                type: Boolean,
+                required: false,
+                default:true
+            },
+            multiList: {
+                type: Boolean,
+                required: false,
+                default:false
+            },
+            multiId: {
+                type: Number,
+                required: false,
+                default:1
+            },
+            paginated: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            extraRow: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            extraData: Object,
+            extraFields: Object,
+            extraDatalists: Object,
+            extraActions: Object
         },
         components: { 
             Multiselect,
             paginate,
+            FormInlineView
         },
         data() {
             return {
@@ -284,7 +328,7 @@
             /* Response the lists data*/
             initialData(){
                 let params = this.$route.query;
-
+                
                 if(params.page) this.initialPage = Number(params.page);
 
                 this.getData(params);
@@ -298,10 +342,16 @@
 
             /* Request the data with axios */
             getData(params = {}){
-
-                this.actions.list(params, (err, data) => {
+                if(!this.multiList){
+                    this.actions.list(params, (err, data) => {
                     this.setData(err, data);
-                }, this.$route);
+                    }, this.$route);
+                } else {
+                    this.actions.list(this.multiId,params, (err, data) => {
+                    this.setData(err, data);
+                    }, this.$route);
+                }
+                
 
             },
 
@@ -384,8 +434,8 @@
                 let data = this.prepareData();
 
                 //this.isBusy = true;
-
-                this.actions.create(data, this.$route)
+                if(!this.multiList){
+                    this.actions.create(data, this.$route)
                     .then( ( response ) => {
                         this.clearForm();
                         this.refreshData();
@@ -400,7 +450,24 @@
                         $(`#id_f_table_${key}`).html(error.data.errors[key]);
                     });
                 });
+                }else{
+                    this.actions.create(this.multiId,data, this.$route)
+                    .then( ( response ) => {
+                        this.clearForm();
+                        this.refreshData();
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
 
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }
+  
             },
 
             /* Single Actions */
