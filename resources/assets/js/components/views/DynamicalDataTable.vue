@@ -5,6 +5,16 @@
         :fields="fields"
         :inputFields="form_fields"
         :vdatalists="datalists"
+        :searchBar="searchBar"
+        :multiList="multiList"
+        :multiId="multiId"
+        :paginated="paginated"
+        :quoteEquip="quoteEquip"
+        :extraRow="extraRow"
+        :extraData="extraData"
+        :extraFields="extraFields"
+        :extraDatalists="extraDatalists"
+        :extraActions="extraActions"
         :actions="actions"
         :massiveactions="massiveactions"
         @onEdit="onEdit"
@@ -18,15 +28,18 @@
 <script>
     import DataTable from '../DataTable';
     import FormView from '../views/FormView';
+    import FormInlineView from '../views/FormInlineView';
 
     export default {
         components: { 
             DataTable,
-            FormView
+            FormView,
+            FormInlineView
         },
         props: {
             equipment: Object,
             datalists: Object,
+            quoteEquip: Array,
             massiveactions: {
                 type: Array,
                 required: false,
@@ -44,7 +57,41 @@
                 type: Boolean,
                 default: false,
                 required: false
-            }
+            },
+            limitEquipment: {
+                type: Boolean,
+                default: false,
+                required: false
+            },
+            searchBar: {
+                type: Boolean,
+                default: true,
+                required: false
+            },
+            multiList: {
+                type: Boolean,
+                required: false,
+                default:false
+            },
+            multiId: {
+                type: Number,
+                required: false,
+                default:1
+            },
+            paginated: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            extraRow: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            extraData: Object,
+            extraFields: Object,
+            extraDatalists: Object,
+            extraActions: Object
         },
         data() {
             return {
@@ -87,8 +134,19 @@
                 
                 let rate = '';
                 let containers = {};
+                let all_containers = _.cloneDeep(this.datalists.containers);
+                let new_containers = [];
+
+                if(this.limitEquipment){
+                    all_containers.forEach(function(cont){
+                        if(component.quoteEquip.includes(cont.code)){
+                            new_containers.push(cont)
+                        }
+                    });
+                    all_containers = new_containers
+                }
                 
-                this.datalists.containers.forEach(function(item){
+                all_containers.forEach(function(item){
                     
                     if(item.gp_container_id === equipment.id)
                     {

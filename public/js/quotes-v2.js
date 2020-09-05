@@ -2760,8 +2760,8 @@ $(".quote_search").on("click", function() {
 $(".quote_man").on("click", function() {
 
 
-
-    $('#FormQuote').attr('action', '/v2/quotes/store');
+    $('#FormQuote').attr('action', '/api/quote/store');
+    //$('#FormQuote').attr('action', '/v2/quotes/store');
 
     if ($('#quoteType').val() == 2) {
 

@@ -33,6 +33,7 @@ class OceanFreightController extends Controller
      */
     public function store(Request $request, Contract $contract)
     {
+        dd($request);
         $data = $this->validateData($request, $contract);
 
         $prepared_data = $this->prepareData($data, $contract);
@@ -139,6 +140,7 @@ class OceanFreightController extends Controller
      */
     public function retrieve(Contract $contract, Rate $rate)
     {
+        dd($rate);
         return new OceanFreightResource($rate);
     }
 
