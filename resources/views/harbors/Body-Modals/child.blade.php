@@ -7,6 +7,8 @@
 				<h5>Parent:</h5> <br>
 			</label>
 			{{ $parent->name }}
+
+            {{ Form::hidden('harbor_parent', $parent->id , ['id' => 'harbor_parent'  ])  }}
 		</div>
 		
 	</div>
@@ -15,7 +17,7 @@
 			<label for="NameMD" class="form-control-label">
 				Children:
 			</label>
-			{!! Form::select('harbor',$harbor,$select,['id' => 'countryMD', 'class' => 'm-select2-general form-control', 'multiple'=>'true'])!!}
+			{!! Form::select('harbor_child',$harbor,$select,['id' => 'harbor_child', 'class' => 'm-select2-general form-control', 'multiple'=>'true'])!!}
 		</div>
 		
 	</div>
@@ -40,51 +42,31 @@
 
 	});
     
-       function agregarcampo(){
-		var newtr = '<div class="col-lg-4 ">';
-		newtr = newtr + '<label class="form-control-label">Variation:</label>';
-		newtr = newtr + '<input type="text" name="variation[]" class="form-control" required="required">';
-		newtr = newtr + '<a href="#" class="borrado"><span class="la la-remove"></span></a>';
-		newtr = newtr + '</div>';
-		$('#variatiogroup').append(newtr);
-	}
-
-	$(document).on('click','.borrado', function(e){
-		var elemento = $(this);
-		$(elemento).closest('div').remove();
-	});
-
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	$tableHar 	= $('#myatest').DataTable();
 
 	$("#form").on('submit', function(e){
 		e.preventDefault();
-		var variation = [];
-		var name		= $('#NameMD').val();
-		var code		= $('#CodeMD').val();
-		var display_name	= $('#DispNamMD').val();
-		var coordinate	= $('#coordinateMD').val();
-		var country		= $('#countryMD').val();
-		variation = $("input[name='variation[]']").map(function(){return $(this).val();}).get();
-
-		var data	= { name:name,code,display_name,coordinate,country,variation};
+		
+        var harbor_parent		= $('#harbor_parent').val();
+        var harbor_child		= $('#harbor_child').val();
+		var data	= { parent:harbor_parent,child:harbor_child};
 		//console.log(data);
 		$.ajax({
-			url: '{{route("UploadFile.store")}}',
+			url: '{{route("store.hierarchy")}}',
 			method: 'POST',
 			data:data,
 			dataType:'JSON',
-			error:function(){
-				alert('error');
-			},
+            error: function(request, status, error) {
+            alert(request.responseText);
+             },
 			success: function(resp){
 				console.log(resp);
 				if(resp.success == true){
-					$tableHar.ajax.reload();
+					
 					$('#addHarborModal').modal('hide');
 					toastr.success("Aggregate port", "Success");
 				}else if(resp.success == false){
