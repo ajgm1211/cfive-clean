@@ -436,6 +436,7 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('Harbors')-
     Route::get('/loadViewAdd', 'FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
     Route::get('/destroyharbor/{id}', 'FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
     Route::get('/loadViewChild/{id}', 'HarborController@loadviewChild')->name('load.View.Child');
+    Route::post('storeHierarchy', 'HarborController@storeHierarchy')->name('store.hierarchy');
 });
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {
