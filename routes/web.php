@@ -435,6 +435,7 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('Harbors')-
     Route::resource('UploadFile', 'FileHarborsPortsController');
     Route::get('/loadViewAdd', 'FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
     Route::get('/destroyharbor/{id}', 'FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+    Route::get('/loadViewChild/{id}', 'HarborController@loadviewChild')->name('load.View.Child');
 });
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {
