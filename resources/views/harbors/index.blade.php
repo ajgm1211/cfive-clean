@@ -132,7 +132,8 @@
 
 	});
 
-	function showModal(selector,id){
+	function showModal(selector,id,deshabilitar = 'false'){
+		
 		if(selector == 1){
 			var url = '{{ route("load.View.Add") }}';
 			$('#modal-body').load(url,function(){
@@ -146,11 +147,21 @@
 			});
 		}
 		else if(selector == 3){
-			var url = '{{ route("load.View.Child",":id") }}';
+			if(deshabilitar == false){
+				var url = '{{ route("load.View.Child",":id") }}';
 			url = url.replace(':id',id);
 			$('#modal-body').load(url,function(){
 				$('#addHarborModal').modal();
 			});
+			}else{
+
+				swal(
+                'Im sorry !',
+                'This harbor is a child ',
+                'warning'
+            	)
+			}
+	
 		}
 	}
 

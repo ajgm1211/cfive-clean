@@ -119,18 +119,26 @@ class HelperAll {
         }
         return $color;
     }
-    public static function statusColorHarbor($hierarchy){
+    public static function statusColorHarbor($hierarchy,$name = ''){
 
  
 
 
-        $color = null;
+        $color = array();
         if($hierarchy=='parent'){
-            $color = '#f81538';
+            $color[0] = '#f81538';
+            $color[1] = 'false';
+            $color[2] = '';
+            
         } else  if($hierarchy=='child'){
-            $color = '#5527f0';
+            $color[0] = '#5527f0;';
+            $color[1] = 'true';
+            $color[2] = 'data-toggle="tooltip" data-placement="top" title="'.$name.'"';
+          
         } else {
-            $color = '#04950f';
+            $color[0]= '#04950f';
+            $color[1]= 'false';
+            $color[2] = '';
         }
         return $color;
     }
