@@ -119,4 +119,19 @@ class HelperAll {
         }
         return $color;
     }
+    public static function statusColorHarbor($hierarchy){
+
+ 
+
+
+        $color = null;
+        if($hierarchy=='parent'){
+            $color = '#f81538';
+        } else  if($hierarchy=='child'){
+            $color = '#5527f0';
+        } else {
+            $color = '#04950f';
+        }
+        return $color;
+    }
 }
