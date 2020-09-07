@@ -48,7 +48,8 @@ class FileHarborsPortsController extends Controller
       ->addColumn('action', function ($harbor) {
 
         $color = HelperAll::statusColorHarbor($harbor->hierarchy);
-        $color = 'color:'.$color;
+        $colorear = 'color:'.$color[0];
+        $deshabilitar = $color[1];
         return '<a href="#" data-id-edit="'.$harbor->id.'" onclick="showModal(2,'.$harbor->id.')" class=""><i class="la  la-edit"></i></a>
                         &nbsp 
                         &nbsp  <a href="#" data-id-remove="'.$harbor->id.'" class="BorrarHarbor"><i class="la  la-remove"></i></a>
@@ -56,7 +57,7 @@ class FileHarborsPortsController extends Controller
                         &nbsp  <a href="/inlandD/find/'.setearRouteKey($harbor->id).'" data-id-distance="'.setearRouteKey($harbor->id).'" class=""><i class="la  la-pencil"></i></a>
                         &nbsp&nbsp
                         
-                        <a href="#" "style="'.$color.' "data-id-edit="'.$harbor->id.'" onclick="showModal(3,'.$harbor->id.')" class=""><i style="'.$color.'" class="la  la-edit"></i></a>
+                        <a readonly="true" href="#" "style="'.$colorear.' '. $deshabilitar.' "data-id-edit="'.$harbor->id.'" onclick="showModal(3,'.$harbor->id.','.$deshabilitar.')" class=""><i style="'.$colorear.'" class="la  la-edit" ></i></a>
                         
                         ';
       })
