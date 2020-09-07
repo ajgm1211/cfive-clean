@@ -51,7 +51,9 @@ class FileHarborsPortsController extends Controller
                         &nbsp  <a href="#" data-id-remove="'.$harbor->id.'" class="BorrarHarbor"><i class="la  la-remove"></i></a>
                         &nbsp 
                         &nbsp  <a href="/inlandD/find/'.setearRouteKey($harbor->id).'" data-id-distance="'.setearRouteKey($harbor->id).'" class=""><i class="la  la-pencil"></i></a>
-
+                        &nbsp&nbsp
+                        <a href="#" data-id-edit="'.$harbor->id.'" onclick="showModal(3,'.$harbor->id.')" class=""><i class="la  la-edit"></i></a>
+                        
                         ';
       })
 

@@ -22,4 +22,14 @@ class HarborController extends Controller
         }
         return \Response::json($formatted_harbors);
     }
+
+    public function loadviewChild($id)
+    {
+        $parent = Harbor::where('id', $id)->first();
+        $select = Harbor::where('id','!=' , $id)->where('harbor_parent',  $id)->pluck('id');
+        $harbor = Harbor::all()->pluck('name', 'id');
+        return view('harbors.Body-Modals.child', compact('harbor','select','parent'));
+
+    }
+
 }
