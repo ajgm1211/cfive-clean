@@ -39,7 +39,8 @@ class Harbor extends Model
 
   public function getIdCompleteAttribute()
   {
-    return "{$this->id}-{$this->country_id}";
+    return "{$this->id}-{$this->country_id}-{$this->harbor_parent}";
 
   }
+ 
 }
