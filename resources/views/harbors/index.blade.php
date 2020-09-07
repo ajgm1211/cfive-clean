@@ -145,6 +145,13 @@
 				$('#addHarborModal').modal();
 			});
 		}
+		else if(selector == 3){
+			var url = '{{ route("load.View.Child",":id") }}';
+			url = url.replace(':id',id);
+			$('#modal-body').load(url,function(){
+				$('#addHarborModal').modal();
+			});
+		}
 	}
 
 	$(document).on('click','.BorrarHarbor', function(e){
