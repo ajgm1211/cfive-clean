@@ -38,7 +38,6 @@ class AutomaticRateController extends Controller
         $form_keys = $request->input('keys');
 
         $data = $request->validate([
-            'contract' => 'required',
             'transit_time' => 'numeric'
         ]);
         
@@ -47,6 +46,15 @@ class AutomaticRateController extends Controller
                 $data[$fkey] = $request->input($fkey);
             }
         };
+
+        if(!isset($data['contract'])){
+            $data['contract'] = '';
+        }
+
+        if(!isset($data['exp_date'])){
+            $data['validity_end'] = $data['exp_date'];
+            unset($data['exp_date']);
+        }
 
         foreach(array_keys($data) as $key){
             $autorate->update([$key=>$data[$key]]);

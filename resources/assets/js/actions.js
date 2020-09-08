@@ -285,15 +285,15 @@ export default {
 	            	callback(error, error.response.data);
 	        	});
 		},
-		create(id,data, route) {
-	    	let autorate_id = route.params.id;
-	        return api.call('post', `/api/quotes/${autorate_id}/automatic_rate/${id}/store`, data);
+		create(autorate_id,data, route) {
+	    	let quote_id = route.params.id;
+	        return api.call('post', `/api/quotes/${quote_id}/automatic_rate/${autorate_id}/store`, data);
 		},
 		retrieve(autorate_id) {
 			return api.call('get',`/api/quotes/ocean_freight/${autorate_id}/charge`,{})
 		},
 		update(id,data,route) {
-			return api.call('post',`/api/quotes/ocean_freight/${id}/charge/update`, data)
+			return api.call('post',`/api/quotes/ocean_freight/charge/${id}/update`, data)
 		},
 		delete(id) {
 	        return api.call('delete', `/api/quotes/ocean_freight/charge/${id}/destroy/`, {});

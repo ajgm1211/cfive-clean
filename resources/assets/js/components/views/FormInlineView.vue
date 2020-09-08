@@ -219,20 +219,27 @@ export default {
         };
     },
     created() {
+        let fields_keys = Object.keys(this.fields);
+        let component = this;
+
         //console.log(this.data);
         this.vdata = this.data;
 
-    },
-    beforeUpdate(){
-        let fields_keys = Object.keys(this.fields);
-        let component = this;
 
         fields_keys.forEach(function (key) {
             if(component.fields[key].isLocker){
                 component.unlock(component.fields[key],key)
-            }else if(component.fields[key].isHiding){
-                component.showHidden(component.fields[key],key)
             }
+        });        
+    },
+    beforeUpdate() {
+        let fields_keys = Object.keys(this.fields);
+        let component = this;
+
+        fields_keys.forEach(function (key) {
+            if(component.fields[key].isHiding){
+                component.showHidden(component.fields[key],key)
+        }
         });
     },
     methods: {
@@ -408,7 +415,6 @@ export default {
                         const lockTracker = lockedItem.lock_tracker;
                         const tracker = lockedItem.trackby;
                         const validator = component.vdata[callerKey];
-                        
                         if(validator != null){
                             lockedItem.options = [];
                             lockedItem.disabled = false;
