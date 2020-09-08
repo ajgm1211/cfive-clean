@@ -62,13 +62,11 @@
                     <DynamicalDataTable 
                         v-if="loaded"
                         :initialFields="fields"
+                        :extraInitialFormFields="eform_fields"
                         :initialFormFields="vform_fields"
-                        :extraRow="true"
-                        :extraData="currentChargeData[freight.id]"
-                        :extraFields="form_fields"
-                        :extraDatalists="datalists"
-                        :extraActions="actions.automaticrates"
                         :searchBar="false"
+                        :fixedData="currentChargeData[freight.id]"
+                        :extraRow="true"
                         :datalists="datalists"
                         :equipment="equipment"
                         :actions="actions.charges"
@@ -560,7 +558,7 @@ export default {
             placeholder: "Transfer",
             colClass: "col-lg-2",
         },
-        validity_end: {
+        exp_date: {
             label: "VALID UNTIL",
             type: "datepicker",
             colClass: "col-lg-3"
@@ -574,11 +572,11 @@ export default {
       },
       profit_fields: {
       },
-      extra_fields: {},
       loaded: true,
       currentRateData: {},
       currentChargeData: {},
       form_fields: {},
+      extra_fields: {},
       containers_fields: {},
       ids_selected: [],
 
@@ -617,6 +615,25 @@ export default {
                 trackby: 'alphacode', 
                 placeholder: 'Select Currency', 
                 options: 'currency' 
+            },
+        },
+        eform_fields: {
+            fixed_surcharge: { 
+                type: 'extraText',
+                disabled: true,
+                placeholder: 'Ocean Freight'
+            },
+            fixed_calculation_type: { 
+                type: 'extraText', 
+                disabled: true
+            },
+            fixed_currency: { 
+                searchable: true, 
+                type: 'extraSelect', 
+                rules: 'required', 
+                trackby: 'alphacode', 
+                placeholder: 'Select Currency', 
+                options: 'currency'
             }
         },
        //Datepicker Options
@@ -625,7 +642,28 @@ export default {
     };
   },
   created(){
-    this.setProfitFields();
+    let component = this;
+
+    component.setProfitFields();
+
+    component.freights.forEach(function(freight){
+        actions.automaticrates
+            .retrieve(freight.id,component.$route)
+            .then((response) => {
+                Vue.set(component.currentRateData,freight.id,response.data.data);
+                })
+            .catch((data) => {
+                component.$refs.observer.setErrors(data.data.errors);
+            });
+        actions.charges
+            .retrieve(freight.id)
+            .then((response) => {
+                Vue.set(component.currentChargeData,freight.id,response.data.data);
+                })
+            .catch((data) => {
+                component.$refs.observer.setErrors(data.data.errors);
+            });
+    });
   },
   methods: {
     showModal() {
@@ -638,6 +676,7 @@ export default {
 
         component.containers_fields = containers_fields;
         component.form_fields = {...this.vform_fields, ...containers_fields};
+        component.extra_fields = {...this.eform_fields, ...containers_fields};
 
         component.freights.forEach(function(freight){
             component.datalists.harbors.forEach(function(harbor){
@@ -647,24 +686,7 @@ export default {
                     freight.destPortName = harbor.display_name
                     }
             });
-            actions.automaticrates
-            .retrieve(freight.id,component.$route)
-            .then((response) => {
-                Vue.set(component.currentRateData,freight.id,response.data.data);
-                })
-            .catch((data) => {
-                component.$refs.observer.setErrors(data.data.errors);
-            });
-            actions.charges
-            .retrieve(freight.id,component.$route)
-            .then((response) => {
-                Vue.set(component.currentChargeData,freight.id,response.data.data);
-                })
-            .catch((data) => {
-                component.$refs.observer.setErrors(data.data.errors);
-            });
         });
-
     },
 
     openModalContainer(ids){
@@ -677,7 +699,7 @@ export default {
         let component = this;
 
         component.quoteEquip.forEach(function(eq){
-            component.profit_fields[eq] = { type: 'text', placeholder: eq, colClass:'col-lg-3'}           
+            component.profit_fields['markups_'.concat(eq)] = { type: 'text', placeholder: eq, colClass:'col-lg-3'}           
         });
 
         component.profit_fields['profit_currency'] = {searchable: true, 
@@ -688,14 +710,8 @@ export default {
                                                     options: 'currency',
                                                     colClass: 'col-lg-3'
                                                     }
+
     },
-
-    setExtraFields(original_fields){
-        let component = this;
-
-        console.log(original_fields)
-
-    }
   }
      
 };

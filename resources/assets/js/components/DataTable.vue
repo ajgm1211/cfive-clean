@@ -62,19 +62,6 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy">
 
-                <!-- Extra Row -->
-                <b-tr>
-                    <FormInlineView
-                        v-if="extraRow"
-                        :data="extraData"
-                        :fields="extraFields"
-                        :datalists="extraDatalists"
-                        :actions="extraActions"
-                        :update="true"
-                    ></FormInlineView>
-                </b-tr> 
-                <!-- End Extra Row -->
-
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields)">
 
@@ -89,7 +76,7 @@
                                 :placeholder="item.placeholder"
                                 :id="key"
                                 @change="cleanInput(key)"  
-                                    >
+                                >
                             </b-form-input>
                             <span :id="'id_f_table_'+key" class="invalid-feedback"></span>
                         </div>
@@ -166,6 +153,51 @@
                 </b-tr>
                 <!-- End of form -->
 
+                <!-- Extra fixed autoupdate form -->
+                <b-tr v-if="!isEmpty(extraFields) && extraRow==true">
+                   
+                    <b-td v-if="firstEmpty"></b-td>
+
+                    <b-td v-for="(item, key) in extraFields" :key="key" :style="'max-width:'+item.width">
+                        <!-- Text field -->
+                        <div v-if="item.type == 'extraText'">
+                            <b-form-input
+                                v-model="fixedData[key]"
+                                :placeholder="item.placeholder"
+                                :disabled="item.disabled"
+                                :id="key"
+                                v-on:blur="onSubmitFixed()"
+                                >
+                            </b-form-input>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback"></span>
+                        </div>
+                        <!-- Text field end -->
+
+                        <!-- Select field -->
+                        <div v-if="item.type == 'extraSelect'">
+                            <multiselect 
+                                 v-model="fixedData[key]"
+                                 :id="key"
+                                 :multiple="false" 
+                                 :disabled="item.disabled"
+                                 :options="datalists[item.options]" 
+                                 :searchable="item.searchable"
+                                 :close-on-select="true"
+                                 :clear-on-select="false"
+                                 track-by="id" 
+                                 :label="item.trackby" 
+                                 :show-labels="false"
+                                 :placeholder="item.placeholder"
+                                 @input="onSubmitFixed()"
+                                 >
+                            </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
+                        </div>
+                        <!-- Select field end -->
+                    </b-td>
+                </b-tr>
+                <!-- Extra form end -->
+
                 <!-- Data List -->
                 <b-tr v-for="(item, key) in data" :key="key">      
 
@@ -233,11 +265,11 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import paginate from './paginate';
-    import FormInlineView from './views/FormInlineView';
 
     export default {
         props: {
             fields: Array,
+            fixedData:Object,
             inputFields: {
                 type: Object,
                 required: false,
@@ -286,18 +318,18 @@
             },
             extraRow: {
                 type: Boolean,
-                required:false,
+                required: false,
                 default: false
             },
-            extraData: Object,
-            extraFields: Object,
-            extraDatalists: Object,
-            extraActions: Object
+            extraFields: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
+            }
         },
         components: { 
             Multiselect,
             paginate,
-            FormInlineView
         },
         data() {
             return {
@@ -308,7 +340,6 @@
                 refresh: true,
                 datalists: {},
                 search: null,
-
                 /* Pagination */
                 initialPage: 1,
                 pageCount: 0,
@@ -322,7 +353,6 @@
         created() {
             this.initialData();
             this.updateDinamicalFieldOptions();
-
         },
         methods: {
             /* Response the lists data*/
@@ -338,6 +368,7 @@
                     if('initial' in this.inputFields[key])
                         this.fdata[key] = this.inputFields[key]['initial'];
                 }
+
             },
 
             /* Request the data with axios */
@@ -396,24 +427,40 @@
             },
 
             /* Prepare data to submit */
-            prepareData(){
+            prepareData(type){
 
                 let data = {};
+                let keys = [];
                 
-                for (const key in this.inputFields) {
+                if(type=='table'){
+                    for (const key in this.inputFields) {
 
-                    if(this.inputFields[key].type == "text")
-                        data[key] = this.fdata[key];
-                    else if(["select", "pre_select"].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
-                        data[key] = this.fdata[key].id;
-                    else if(this.inputFields[key].type == "multiselect"){
-                        data[key] = [];
+                        keys.push(key);
+                        if(this.inputFields[key].type == "text")
+                            data[key] = this.fdata[key];
+                        else if(["select", "pre_select"].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
+                            data[key] = this.fdata[key].id;
+                        else if(this.inputFields[key].type == "multiselect"){
+                            data[key] = [];
 
-                        this.fdata[key].forEach(function(item){
-                            data[key].push(item.id)
-                        });
+                            this.fdata[key].forEach(function(item){
+                                data[key].push(item.id)
+                            });
+                        }
                     }
+                }else if(type=='extra'){
+
+                for (const ekey in this.extraFields) {
+    
+                    keys.push(ekey);
+                    if(this.extraFields[ekey].type == "extraText")
+                        data[ekey] = this.fixedData[ekey];
+                    else if(this.extraFields[ekey].type == "extraSelect" && typeof this.fixedData[ekey] !== 'undefined')
+                        data[ekey] = this.fixedData[ekey].id;
                 }
+            }
+
+                data['keys'] = keys;
 
                 return data;
             },
@@ -431,7 +478,7 @@
             /* Submit form new data */
             onSubmit() {
                 
-                let data = this.prepareData();
+                let data = this.prepareData('table');
 
                 //this.isBusy = true;
                 if(!this.multiList){
@@ -455,6 +502,43 @@
                     .then( ( response ) => {
                         this.clearForm();
                         this.refreshData();
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }
+  
+            },
+
+            onSubmitFixed() {
+                
+                let data = this.prepareData('extra');
+
+                //this.isBusy = true;
+                if(!this.multiList){
+                    this.actions.update(data,this.$route)
+                    .then( ( response ) => {
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }else{
+                    this.actions.update(this.multiId,data,this.$route)
+                    .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
                 })
                     .catch(( error, errors ) => {

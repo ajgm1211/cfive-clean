@@ -17,8 +17,8 @@ class ChargeController extends Controller
         $autorates = AutomaticRate::where('quote_id',$quote->id)->get();
 
         foreach($autorates as $auto){
-            //$results[$auto->id] = Charge::where('surcharge_id','!=',1)->orWhereNull('surcharge_id')->filterByAutorate($auto->id)->filter($request);
-            $results[$auto->id] = Charge::filterByAutorate($auto->id)->filter($request);
+            $results[$auto->id] = Charge::where('surcharge_id','!=',null)->filterByAutorate($auto->id)->filter($request);
+            //$results[$auto->id] = Charge::filterByAutorate($auto->id)->filter($request);
         }
 
         return ChargeResource::collection($results[$autorate->id]);
@@ -27,7 +27,7 @@ class ChargeController extends Controller
     public function store(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
         $vdata = [
-            'surcharge_id' => 'nullable',
+            'surcharge_id' => 'required',
             'calculation_type_id' => 'required',
             'currency_id' => 'required',
         ];
@@ -58,6 +58,7 @@ class ChargeController extends Controller
             'automatic_rate_id' => $autorate->id,
             'calculation_type_id' => $validate['calculation_type_id'],
             'currency_id' => $validate['currency_id'],
+            'surcharge_id' => $validate['surcharge_id'],
             'type_id' => 3,
             'amount'=>$rates_json
         ]);
@@ -69,30 +70,42 @@ class ChargeController extends Controller
         $form_keys = $request->input('keys');
 
         $data = [];
+        $type = '';
 
-        if(in_array('profit_currency',$form_keys)){}
-            foreach($form_keys as $fkey){
-                if(!in_array($fkey,$data) && $fkey != 'keys'){
-                    if($fkey != 'profit_currency'){
-                        $data += $request->validate([$fkey=>'numeric']);
-                    }
-                }
-            };
-
+        foreach($form_keys as $fkey){
+            if(strpos($fkey,'markups') !== false){
+                $data += $request->validate([$fkey=>'numeric']);
+                $type = 'm';
+            } else if(strpos($fkey,'freights') !== false){
+                $data += $request->validate([$fkey=>'numeric']);
+                $type = 'c';
+            }
+        }
+            
         $markups = [];
+        $rates = [];
 
         foreach($data as $key=>$value){
-            $markups['m'.$key] = $value;
+            if($type == 'm'){
+                $markups[$type.str_replace('markups_','',$key)] = $value;
+            } else if($type == 'c'){
+                $rates[$type.str_replace('freights_','',$key)] = $value;
+            }
         }
-
-        $markups_json = json_encode($markups);
-
-        $charge->update(['markups'=>$markups_json]);
+        
+        if(count($markups) != 0){
+            $markups_json = json_encode($markups);
+            $charge->update(['markups'=>$markups_json]);
+        }else if (count($rates) != 0){
+            $rates_json = json_encode($rates);
+            $charge->update(['amount'=>$rates_json]);
+        }
+        
     }
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',1]])->first();
+        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
         return new ChargeResource($charge);
     }
 

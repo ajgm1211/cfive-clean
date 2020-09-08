@@ -176,6 +176,7 @@ class QuotationController extends Controller
                 'mode' => 'required',
                 'delivery_type' => 'required',
                 'equipment' => 'sometimes|required',
+                'container_type' => 'required',
                 'company_id_quote' => 'nullable',
                 'contact_id' => 'nullable',
                 'price_id_num' => 'sometimes|nullable',
@@ -235,7 +236,7 @@ class QuotationController extends Controller
                         'validity_end' => explode("/",$data['date'])[1],
                         'currency_id' => $company_user->currency_id       
                     ]);
-
+                    
                     $freight = Charge::create([
                         'automatic_rate_id' => $rate->id,
                         'type_id' => '3',
@@ -244,6 +245,8 @@ class QuotationController extends Controller
                     ]);
                     
                     $freight->setContractInfo($info_decoded,$rate_decoded,$rate);
+                    
+                    $freight->setCalculationType($data['container_type']);
                 }
             }
         } else {
@@ -268,6 +271,8 @@ class QuotationController extends Controller
                         'calculation_type_id' => '5',
                         'currency_id' => $rate->currency_id,
                     ]);
+
+                    $freight->setCalculationType($data['container_type']);
                 }
             }
         }
@@ -307,6 +312,10 @@ class QuotationController extends Controller
         foreach(array_keys($data) as $key){
             if ($key=='equipment'){
                 $data[$key] = $quote->getContainerArray($data[$key]);
+            } else if($key=='contact_id'){
+                if ($quote->company_id == null){
+                    $data[$key] = null;
+                }
             }
             $quote->update([$key=>$data[$key]]);
         }
