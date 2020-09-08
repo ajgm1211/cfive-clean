@@ -6240,13 +6240,13 @@ class QuoteV2Controller extends Controller
                                 if ($global->typedestiny_id == '1') {
 
                                     $subtotal_local = $totalVol * $global->ammount;
-                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMount;
+                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMountG;
                                     $mont = $global->ammount;
                                     $unidades = $totalVol;
 
                                     if ($subtotal_local < $global->minimum) {
                                         $subtotal_local = $global->minimum;
-                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMount;
+                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMountG;
                                     }
 
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -6273,13 +6273,13 @@ class QuoteV2Controller extends Controller
                             if ($chargesDestination != null && $totalVol != 0) {
                                 if ($global->typedestiny_id == '2') {
                                     $subtotal_local = $totalVol * $global->ammount;
-                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMount;
+                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMountG;
                                     $mont = $global->ammount;
                                     $unidades = $totalVol;
 
                                     if ($subtotal_local < $global->minimum) {
                                         $subtotal_local = $global->minimum;
-                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMount;
+                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMountG;
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
