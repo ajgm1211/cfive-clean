@@ -2853,9 +2853,10 @@ class QuoteV2Controller extends Controller
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
         $groupContainer = $validateEquipment['gpId'];
-
+        $containerCode = $containers->whereIn('id',$equipment)->pluck('code')->toArray();
+        
         // Historial de busqueda
-        // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
+        $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$containerCode,$delivery_type,$mode,$company_user_id,'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
