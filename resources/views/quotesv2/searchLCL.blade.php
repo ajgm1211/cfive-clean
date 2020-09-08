@@ -1568,7 +1568,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1654,7 +1654,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1772,7 +1772,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
