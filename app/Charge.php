@@ -147,6 +147,16 @@ class Charge extends Model
         return $value;
     }
 
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new ChargeFilter($request, $builder))->filter();
+    }
+
+    public function scopeFilterByAutorate( $query, $automatic_rate_id )
+    {
+        return $query->where( 'automatic_rate_id', '=', $automatic_rate_id );
+    }
+
     public function setContractInfo($info_decoded,$rate_decoded,$autoRate)
     {   
 
@@ -178,13 +188,20 @@ class Charge extends Model
 
     }
 
-    public function scopeFilter(Builder $builder, Request $request)
+    public function setCalculationType($containerType)
     {
-        return (new ChargeFilter($request, $builder))->filter();
-    }
+        $calctype = '';
+        if($containerType=='1'){
+            $calctype = '3';
+        }else if($containerType=='2'){
+            $calctype = '19';
+        }else if($containerType=='3'){
+            $calctype = '20';
+        }else if($containerType=='4'){
+            $calctype = '21';
+        }
 
-    public function scopeFilterByAutorate( $query, $automatic_rate_id )
-    {
-        return $query->where( 'automatic_rate_id', '=', $automatic_rate_id );
+        $this->calculation_type_id=$calctype;
+        $this->save();
     }
 }

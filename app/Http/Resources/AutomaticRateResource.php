@@ -26,7 +26,7 @@ class AutomaticRateResource extends JsonResource
             'carrier_id' => $this->carrier_id,
             'airline_id' => $this->airline_id,
             'rates' => $this->rates,
-            'validity_end'=>$this->validity_end,            
+            'exp_date'=>$this->validity_end,            
             'markups' => $this->markups,
             'currency_id' => $this->currency_id,
             'total' => $this->total,

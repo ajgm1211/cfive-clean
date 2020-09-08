@@ -4,19 +4,16 @@
         v-if="isLoaded"
         :fields="fields"
         :inputFields="form_fields"
+        :extraFields="extra_fields"
         :vdatalists="datalists"
         :searchBar="searchBar"
         :multiList="multiList"
         :multiId="multiId"
+        :fixedData="fixedData"
         :paginated="paginated"
-        :quoteEquip="quoteEquip"
-        :extraRow="extraRow"
-        :extraData="extraData"
-        :extraFields="extraFields"
-        :extraDatalists="extraDatalists"
-        :extraActions="extraActions"
         :actions="actions"
         :massiveactions="massiveactions"
+        :extraRow="extraRow"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -28,18 +25,17 @@
 <script>
     import DataTable from '../DataTable';
     import FormView from '../views/FormView';
-    import FormInlineView from '../views/FormInlineView';
 
     export default {
         components: { 
             DataTable,
             FormView,
-            FormInlineView
         },
         props: {
             equipment: Object,
             datalists: Object,
             quoteEquip: Array,
+            fixedData: Object,
             massiveactions: {
                 type: Array,
                 required: false,
@@ -48,6 +44,7 @@
             actions: Object,
             initialFields: Array,
             initialFormFields: Object,
+            extraInitialFormFields: Object,
             groupContainer: {
                 type: Boolean,
                 default: false,
@@ -85,18 +82,15 @@
             },
             extraRow: {
                 type: Boolean,
-                required:false,
+                required: false,
                 default: false
             },
-            extraData: Object,
-            extraFields: Object,
-            extraDatalists: Object,
-            extraActions: Object
         },
         data() {
             return {
                 fields: [],
                 form_fields: {},
+                extra_fields: {},
                 isLoaded: true,
                 extra_field_state: false
             }
@@ -116,13 +110,19 @@
                 this.isLoaded = false;
                 this.fields = [];
                 this.form_fields = {};
+                this.extra_fields = {};
             },
 
             /* Set firsts fields */
             setFirstColumns(component){
                 let fields = this.initialFields.slice(0, 2);
+                let fixedKey = '';
 
                 fields.forEach(function (item){
+                    if(item.key.includes('_id')){
+                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                        component.extra_fields[fixedKey] = component.extraInitialFormFields[fixedKey];
+                    }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
                 });
@@ -133,9 +133,11 @@
             setMiddleColumns(equipment, component){
                 
                 let rate = '';
+                let freight = '';
                 let containers = {};
                 let all_containers = _.cloneDeep(this.datalists.containers);
                 let new_containers = [];
+                let table = this;
 
                 if(this.limitEquipment){
                     all_containers.forEach(function(cont){
@@ -150,10 +152,15 @@
                     
                     if(item.gp_container_id === equipment.id)
                     {
+                        freight = 'freights_'+item.code;
                         rate = 'rates_'+item.code;
                         component.fields.push({ key: rate, label: item.name });
                         component.form_fields[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         containers[rate] = { type: 'text', label: item.name, placeholder: item.name };
+                        if(table.extraRow){
+                           component.extra_fields[freight] = { type: 'extraText', placeholder: item.name };
+                           containers[freight] = { type: 'extraText', placeholder: item.name }
+                        }
                     }
 
                 });
@@ -178,6 +185,7 @@
             /* Set lasts fields */
             setLastColumns(component){
                 let fields = [];
+                let fixedKey = '';
 
                 if(this.initialFields.length > 1)
                     fields = this.initialFields.slice(2);
@@ -185,6 +193,10 @@
                     fields = this.initialFields;
 
                 fields.forEach(function (item){
+                    if(item.key.includes('_id')){
+                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                        component.extra_fields[fixedKey] = component.extraInitialFormFields[fixedKey];
+                    }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
                 });
