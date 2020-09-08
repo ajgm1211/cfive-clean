@@ -2795,10 +2795,12 @@ class QuoteV2Controller extends Controller
                 $destiny_port[] = $infoDest[0];
                 $destiny_country[] = $infoDest[1];
                 $destination_harbor_all[] = $infoDest[0]."-".$infoDest[1]."-".$infoDest[2];
+
                 $dest = Harbor::where('harbor_parent',  $infoDest[0])->get();
                 foreach ($dest as $dt) {
                     $destiny_port[] = "$dt->id";
                     $destiny_country[] = "$dt->country_id";
+                    $destination_harbor_all[] = "$dt->id-$dt->country_id-$dt->harbor_parent";
                 }
             }else{
 
