@@ -59,8 +59,8 @@
                 datalists: {},
                 /* Table headers */
                 fields: [
-                    { key: 'name', label: 'Name'  },
-                    { key: 'description', label: 'Description' },
+                    { key: "name", label: "Name"  },
+                    { key: 'description', label: 'description' }, 
                 ],
                 /* Form Modal Fields */
                 form_fields: {
@@ -72,12 +72,13 @@
                         colClass: 'col-sm-12' 
                     },
                     description: { 
-                        label: 'Description',  
+                        label: 'description', 
                         type: 'text', 
-                        rules: 'required',
-                        placeholder: 'Description',
+                        rules: 'required', 
+                        placeholder: 'description', 
                         colClass: 'col-sm-12' 
                     },
+                
                 }
             }
         },
@@ -97,12 +98,12 @@
             },
             success(id){
                 // After Create the item redirect to:
-                //window.location = `/api/providers/${id}/edit`;
+                window.location = `/api/providers`;
             },
             /* Single Actions */
             onEdit(data){
                 // Single actions to redirect to:
-                //window.location = `/api/providers/${data.id}/edit`;
+                window.location = `/api/providers`;
             },
             
         }

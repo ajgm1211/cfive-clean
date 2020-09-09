@@ -219,34 +219,34 @@ export default {
         }
     },
 
-    providers: {
-        list(params, callback, route) {
+	providers: {
+		list(params, callback, route) {
 
-            api.call('get', '/api/v2/providers', { params })
-                .then(response => {
-                    callback(null, response.data);
-                }).catch(error => {
-                    callback(error, error.response.data);
-                });
-        },
-        create(data, route) {
-            return api.call('post', `/api/v2/providers/store`, data);
-        },
-        update(id, data, route) {
-            return api.call('post', `/api/v2/providers/${id}/update`, data);
-        },
-        retrieve(id) {
-            return api.call('get', `/api/v2/providers/${id}`, {});
-        },
-        duplicate(id, data) {
-            return api.call('post', `/api/v2/providers/${id}/duplicate`, data);
-        },
-        delete(id) {
-            return api.call('delete', `/api/v2/providers/${id}/destroy`, {});
-        },
-        deleteAll(ids) {
-            return api.call('post', `/api/v2/providers/destroyAll`, { ids: ids });
-        },
-    },
+        	api.call('get', '/api/v2/providers', { params })
+        		.then(response => {
+	            	callback(null, response.data);
+	        	}).catch(error => {
+	            	callback(error, error.response.data);
+	        	});
+    	},
+    	create(data, route) {
+	        return api.call('post', `/api/v2/providers/store`, data);
+	    },
+		update(id, data, route){
+	    	return api.call('post', `/api/v2/providers/${id}/update`, data);
+	    },
+	    retrieve(id){
+			return api.call('get', `/api/v2/providers/${id}`, {});
+	    },
+	    duplicate(id, data){
+			return api.call('post', `/api/v2/providers/${id}/duplicate`, data);
+	    },
+	    delete(id){
+	    	return api.call('delete', `/api/v2/providers/${id}/destroy`, {});	
+	    },
+	    deleteAll(ids){
+	    	return api.call('post', `/api/v2/providers/destroyAll`, { ids:ids });	
+	    },
+	},
 
 };
