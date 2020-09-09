@@ -791,6 +791,10 @@ input.multiselect__input:focus {
     border: 2px solid #eee !important;
 }
 
+.q-width {
+    width: 50%;
+}
+
 .q-input:focus,
 .q-input:hover {
     border-color: #006BFA !important;
@@ -934,4 +938,8 @@ input.multiselect__input:focus {
 .turnButton {
     transition: all 300ms ease-in-out;
     transform: rotate(180deg) !important;
+}
+
+.badge {
+    font-size: 12px !important;
 }
