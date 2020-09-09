@@ -60,8 +60,7 @@
                 /* Table headers */
                 fields: [
                     { key: 'name', label: 'Name'  },
-                    { key: 'description', label: 'description' },
-                 , 
+                    { key: 'description', label: 'Description' },
                 ],
                 /* Form Modal Fields */
                 form_fields: {
@@ -73,14 +72,11 @@
                         colClass: 'col-sm-12' 
                     },
                     description: { 
-                        label: 'description',  
+                        label: 'Description',  
                         type: 'text', 
-                        rules: 'required', 
-                        trackby: 'description', 
-                        placeholder: 'Description', 
-                        options: 'types' 
+                        rules: 'required',
+                        placeholder: 'Description',
                     },
-                
                 }
             }
         },
