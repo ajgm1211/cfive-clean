@@ -3,25 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Filters\ProvidersFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use App\ContractCarrier;
-use App\ContractUserRestriction;
-use App\ContractCompanyRestriction;
-use Illuminate\Support\Facades\DB;
-use App\Http\Traits\SearchTraitApi;
-use App\Http\Traits\UtilTrait;
-use Carbon\Carbon;
-use Illuminate\Support\Collection as Collection;
+
 
 class Providers extends Model
 {
-    protected $fillable = ['id','name', 'description'];
+    protected $fillable = ['id','name', 'description','company_user_id'];
 
 
 /**
