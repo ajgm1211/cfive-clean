@@ -219,4 +219,34 @@ export default {
 	    }
 	},
 
+	providers: {
+		list(params, callback, route) {
+
+        	api.call('get', '/api/v2/providers', { params })
+        		.then(response => {
+	            	callback(null, response.data);
+	        	}).catch(error => {
+	            	callback(error, error.response.data);
+	        	});
+    	},
+    	create(data, route) {
+	        return api.call('post', `/api/v2/inland/store`, data);
+	    },
+		update(id, data, route){
+	    	return api.call('post', `/api/v2/inland/${id}/update`, data);
+	    },
+	    retrieve(id){
+			return api.call('get', `/api/v2/inland/${id}`, {});
+	    },
+	    duplicate(id, data){
+			return api.call('post', `/api/v2/inland/${id}/duplicate`, data);
+	    },
+	    delete(id){
+	    	return api.call('delete', `/api/v2/inland/${id}/destroy`, {});	
+	    },
+	    deleteAll(ids){
+	    	return api.call('post', `/api/v2/inland/destroyAll`, { ids:ids });	
+	    },
+	},
+
 };
