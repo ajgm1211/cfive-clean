@@ -1055,7 +1055,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
-    Route::get('/api/quote/local/saleterm/{port_id}', 'LocalChargeQuotationController@saleterms')->name('get.local.saleterms');
+    Route::get('/api/quote/local/saleterm/{port_id}/{type}', 'LocalChargeQuotationController@saleterms')->name('get.local.saleterms');
+    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@charges')->name('get.local.charges');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
