@@ -8,6 +8,7 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
+use App\SaleTermCharge;
 use App\SaleTermV3;
 
 class LocalChargeQuotationController extends Controller
@@ -35,8 +36,16 @@ class LocalChargeQuotationController extends Controller
     public function saleterms(Request $request)
     {
 
-        $saleterms = SaleTermV3::select('id', 'name')->where('port_id', $request->port_id)->get();
+        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->type])->get();
 
         return $saleterms;
+    }
+
+    public function charges(Request $request)
+    {
+
+        $charges = SaleTermCharge::where('sale_term_id', $request->id)->with('calculation_type', 'currency', 'sale_term_code')->get();
+
+        return $charges;
     }
 }
