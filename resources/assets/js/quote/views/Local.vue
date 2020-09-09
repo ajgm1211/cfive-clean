@@ -27,7 +27,7 @@
                 <!-- Agregar Charges -->
                 <div class="col-12 col-lg-6 d-flex justify-content-end align-items-center">
                     <multiselect
-                        v-model="value0"
+                        v-model="template"
                         :options="saleterms"
                         :multiple="false"
                         :show-labels="false"
@@ -36,6 +36,7 @@
                         placeholder="Select Template"
                         label="name"
                         track-by="name"
+                        @input="getCharges()"
                         class="q-select mr-3"
                         style="position: relative; top: 4px"
                     ></multiselect>
@@ -55,90 +56,64 @@
                         <b-thead class="q-thead">
                             <b-tr>
                                 <b-th>
-                                    <span class="label-text">charge</span>
+                                    <span class="label-text">Charge</span>
                                 </b-th>
 
                                 <b-th>
                                     <span class="label-text">Detail</span>
                                 </b-th>
 
-                                <b-th>
-                                    <span class="label-text">20 dv</span>
+                                <b-th v-for="(item, key) in quoteEquip" :key="key">
+                                    <span class="label-text">{{item}}</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 hc</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
+                                    <span class="label-text">Currency</span>
                                 </b-th>
                             </b-tr>
                         </b-thead>
 
                         <!-- Body table -->
                         <b-tbody>
-                            <b-tr class="q-tr">
+                            <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
                                 <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
+                                    <b-form-input
+                                        placeholder
+                                        v-model="charge.sale_term_code.name"
+                                        class="q-input"
+                                    ></b-form-input>
                                 </b-td>
                                 <b-td>
                                     <multiselect
-                                        v-model="value1"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-model="charge.calculation_type"
+                                        :options="datalists['calculationtypes']"
+                                        :multiple="false"
                                         :show-labels="false"
-                                        placeholder="Pick a value"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
                                     ></multiselect>
                                 </b-td>
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-                            </b-tr>
-
-                            <b-tr>
-                                <b-td>
-                                    <b-form-input placeholder="Freight" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
+                                <b-td v-for="(item, key) in quoteEquip" :key="key">
+                                    <b-form-input
+                                        placeholder
+                                        v-model="charge.amount"
+                                        class="q-input"
+                                    ></b-form-input>
                                 </b-td>
                                 <b-td>
                                     <multiselect
-                                        v-model="value2"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-model="charge.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
                                         :show-labels="false"
-                                        placeholder="Pick a value"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
                                     ></multiselect>
                                 </b-td>
                                 <b-td>
@@ -465,18 +440,24 @@ export default {
                 this.$refs.observer.setErrors(data.data.errors);
             });
     },
+    props: {
+        equipment: Object,
+        datalists: Object,
+        quoteEquip: Array,
+    },
     data() {
         return {
             actions: actions,
             openModal: false,
+            fdata: {},
             vdata: {},
             value: "",
-            value0: "",
-            value1: "",
-            value2: "",
+            template: "",
             options: [],
             saleterms: [],
+            charges: [],
             harbors: [],
+            currencies: this.datalists.currency,
             remark_field: {
                 remarks: {
                     type: "ckeditor",
@@ -495,9 +476,28 @@ export default {
         },
         getSaleTerms() {
             this.saleterms = [];
-            api.getData({}, "/api/quote/local/saleterm/" + this.value.id, (err, data) => {
-                this.saleterms = data;
-            });
+            this.charges = [];
+            api.getData(
+                {},
+                "/api/quote/local/saleterm/" +
+                    this.value.id +
+                    "/" +
+                    this.equipment.id,
+                (err, data) => {
+                    this.saleterms = data;
+                }
+            );
+        },
+        getCharges() {
+            this.charges = [];
+            api.getData(
+                {},
+                "/api/quote/local/sale/charge/" + this.template.id,
+                (err, data) => {
+                    this.charges = data;
+                    console.log(this.charges);
+                }
+            );
         },
     },
 };
