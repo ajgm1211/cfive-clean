@@ -232,12 +232,74 @@
                     </b-td>
                     <!-- End Actions column -->
 
-
                 </b-tr>
                 <!-- End Data list -->
 
             </b-tbody>
             <!-- Body table -->
+
+            <hr>
+            
+            <!-- Profits and Totals -->
+            <b-tbody v-if="withTotals==true">
+                <b-tr v-for="(field,id) in totalsFields" :key="id">
+
+                    <b-td></b-td>
+                   
+                    <b-td></b-td>
+
+                    <b-td><span style="float:right;font-weight:bold">{{id}}</span></b-td>
+                    
+                    <!-- Cols generator -->
+                    <b-td v-for="(item, key) in field" :key="key" :style="'max-width:'+item.width">
+
+                        <!-- Text Input -->
+                        <div v-if="item.type == 'text'">
+                            <b-form-input
+                                v-model="totalsData[key]"
+                                :placeholder="item.placeholder"
+                                :id="key"
+                                v-on:blur="onSubmitTotals()"
+                                >
+                            </b-form-input>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback"></span>
+                        </div>
+                        <!-- End Text Input -->
+
+                        <!-- Select Input -->
+                        <div v-if="item.type == 'select'">
+                            <multiselect 
+                                v-model="totalsData[key]"
+                                :id="key"
+                                :multiple="false" 
+                                :options="datalists[item.options]" 
+                                :searchable="item.searchable"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :disabled="item.disabled"
+                                track-by="id" 
+                                :label="item.trackby" 
+                                :show-labels="false"
+                                :placeholder="item.placeholder"
+                                @input="onSubmitTotals()"
+                                >
+                            </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
+                        </div>
+                        <!-- End Select -->
+
+                        <!-- Span field -->
+                        <div v-if="item.type == 'span'" :key="totalsKey">
+                            <span style="font-weight:bold">{{totalsData[key]}}</span>
+                        </div>
+                        <!-- Span field end -->
+
+                    </b-td>
+                    <!-- Cols generator end -->
+
+                </b-tr>
+            </b-tbody>
+            <!-- Profits and Totals end -->
 
         </b-table-simple>
         <!-- End DataTable -->
@@ -270,6 +332,7 @@
         props: {
             fields: Array,
             fixedData:Object,
+            totalsData: Object,
             inputFields: {
                 type: Object,
                 required: false,
@@ -291,6 +354,7 @@
                 default: () => { return ['edit', 'duplicate', 'delete'] }                
             },
             actions: Object,
+            totalActions:Object,
             firstEmpty: {
                 type: Boolean,
                 required: false,
@@ -325,6 +389,16 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
+            },
+            withTotals: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            totalsFields: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
             }
         },
         components: { 
@@ -339,6 +413,7 @@
                 currentData: [],
                 refresh: true,
                 datalists: {},
+                totalsKey: 0,
                 search: null,
                 /* Pagination */
                 initialPage: 1,
@@ -348,6 +423,7 @@
                 selected: [],
                 allSelected: false,
                 indeterminate: false,
+                
             }
         },
         created() {
@@ -448,17 +524,32 @@
                             });
                         }
                     }
+                
                 }else if(type=='extra'){
 
-                for (const ekey in this.extraFields) {
-    
-                    keys.push(ekey);
-                    if(this.extraFields[ekey].type == "extraText")
-                        data[ekey] = this.fixedData[ekey];
-                    else if(this.extraFields[ekey].type == "extraSelect" && typeof this.fixedData[ekey] !== 'undefined')
-                        data[ekey] = this.fixedData[ekey].id;
+                    for (const ekey in this.extraFields) {
+        
+                        keys.push(ekey);
+                        if(this.extraFields[ekey].type == "extraText")
+                            data[ekey] = this.fixedData[ekey];
+                        else if(this.extraFields[ekey].type == "extraSelect" && typeof this.fixedData[ekey] !== 'undefined')
+                            data[ekey] = this.fixedData[ekey].id;
+                        }
+                
+                }else if(type=='totals'){
+
+                    for (const tkey in this.totalsFields) {
+                        for(const innerkey in this.totalsFields[tkey]){
+
+                            keys.push(innerkey);
+                            if(this.totalsFields[tkey][innerkey].type == "text")
+                                data[innerkey] = this.totalsData[innerkey];
+                            else if(this.totalsFields[tkey][innerkey].type == "select" && typeof this.totalsData[innerkey] !== 'undefined')
+                                data[innerkey] = this.totalsData[innerkey].id;
+                        }
+        
+                    }
                 }
-            }
 
                 data['keys'] = keys;
 
@@ -514,7 +605,7 @@
                     });
                 });
                 }
-  
+                this.rerenderTotals();
             },
 
             onSubmitFixed() {
@@ -551,6 +642,46 @@
                     });
                 });
                 }
+                this.rerenderTotals();
+  
+            },
+
+            onSubmitTotals() {
+                
+                let data = this.prepareData('totals');
+
+                //this.isBusy = true;
+                if(!this.multiList){
+                    this.totalActions.update(data,this.$route)
+                    .then( ( response ) => {
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }else{
+                    this.totalActions.update(this.multiId,data,this.$route)
+                    .then( ( response ) => {
+                        this.updateDinamicalFieldOptions();
+                })
+                    .catch(( error, errors ) => {
+
+                    let errors_key = Object.keys(error.data.errors);
+
+                    errors_key.forEach(function(key){ 
+                        $(`#id_f_table_${key}`).css({'display':'block'});
+                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                    });
+                });
+                }
+
+                this.rerenderTotals();
   
             },
 
@@ -655,6 +786,10 @@
             onOpenModalContainer(){
                 let ids = this.selected.map(item => item.id);
                 this.$emit('onOpenModalContainerView', ids);
+            },
+            rerenderTotals() {
+                this.totalsKey += 1;
+                console.log(this.totalsKey)
             }
         },
         watch: {

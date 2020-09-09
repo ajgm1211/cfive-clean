@@ -35,29 +35,60 @@ class AutomaticRateController extends Controller
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
+
         $form_keys = $request->input('keys');
-
-        $data = $request->validate([
-            'transit_time' => 'numeric'
-        ]);
         
-        foreach($form_keys as $fkey){
-            if(!in_array($fkey,$data) && $fkey != 'keys'){
-                $data[$fkey] = $request->input($fkey);
+        if(!in_array('profits_currency',$form_keys)){
+            $data = $request->validate([
+                'transit_time' => 'numeric'
+            ]);
+            
+            foreach($form_keys as $fkey){
+                if(!in_array($fkey,$data) && $fkey != 'keys'){
+                    $data[$fkey] = $request->input($fkey);
+                }
+            };
+
+            if(!isset($data['contract'])){
+                $data['contract'] = '';
             }
-        };
 
-        if(!isset($data['contract'])){
-            $data['contract'] = '';
-        }
+            if(!isset($data['exp_date'])){
+                $data['validity_end'] = $data['exp_date'];
+                unset($data['exp_date']);
+            }
 
-        if(!isset($data['exp_date'])){
-            $data['validity_end'] = $data['exp_date'];
-            unset($data['exp_date']);
-        }
+            foreach(array_keys($data) as $key){
+                $autorate->update([$key=>$data[$key]]);
+            }
+        
+        }else{
 
-        foreach(array_keys($data) as $key){
-            $autorate->update([$key=>$data[$key]]);
+            $data=[];
+           
+            foreach($form_keys as $fkey){
+                if(strpos($fkey,'profits') !== false){
+                    $data += $request->validate([$fkey=>'numeric|nullable']);
+                }
+            }
+    
+            $markups = [];
+            
+            foreach($data as $key=>$value){
+                if($value==null){$value=0;}
+                if($key!='profits_currency'){
+                    $markups['m'.str_replace('profits_','',$key)] = $value;
+                }
+            }
+
+            if(count($markups) != 0){
+                $markups_json = json_encode($markups);
+    
+                $autorate->update(['markups'=>$markups_json]);
+
+                $autorate->totalize($request->input('profits_currency'));
+            }
+
         }
     }
 

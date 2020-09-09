@@ -10,6 +10,10 @@
         :multiList="multiList"
         :multiId="multiId"
         :fixedData="fixedData"
+        :totalsData="totalsData"
+        :withTotals="withTotals"
+        :totalsFields="totalsFields"
+        :totalActions="totalActions"
         :paginated="paginated"
         :actions="actions"
         :massiveactions="massiveactions"
@@ -36,15 +40,17 @@
             datalists: Object,
             quoteEquip: Array,
             fixedData: Object,
+            totalsData: Object,
             massiveactions: {
                 type: Array,
                 required: false,
                 default: () => { return ['delete'] }
             },
             actions: Object,
+            totalActions: Object,
             initialFields: Array,
             initialFormFields: Object,
-            extraInitialFormFields: Object,
+            fixedFormFields: Object,
             groupContainer: {
                 type: Boolean,
                 default: false,
@@ -85,6 +91,16 @@
                 required: false,
                 default: false
             },
+            withTotals: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            totalsFields: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
+            }
         },
         data() {
             return {
@@ -121,7 +137,7 @@
                 fields.forEach(function (item){
                     if(item.key.includes('_id')){
                         fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.extraInitialFormFields[fixedKey];
+                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
@@ -195,7 +211,7 @@
                 fields.forEach(function (item){
                     if(item.key.includes('_id')){
                         fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.extraInitialFormFields[fixedKey];
+                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
