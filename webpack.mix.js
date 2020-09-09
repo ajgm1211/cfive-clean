@@ -23,4 +23,5 @@ mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/saleterms/codes.js', 'public/js/saleterms')
     .js('resources/assets/js/quote/edit.js', 'public/js/quote')
     .js('resources/assets/js/quote/index.js', 'public/js/quote')
+    .js('resources/assets/js/quoteLCL/index.js', 'public/js/quoteLCL')
     .sass('resources/assets/sass/app.scss', 'public/css');

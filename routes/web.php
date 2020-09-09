@@ -107,6 +107,7 @@ Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
+    Route::get('DTTB/{identificador}', 'SurchargesController@loadDatatables')->name('surcharges.load.datatables')->middleware(['auth', 'role:administrator|data_entry']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
@@ -803,6 +804,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('ManagerCar
 Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
 
     Route::get('list', 'SearchController@listar')->name('search.list');
+    Route::get('listLCL', 'SearchController@getListLCL')->name('search.lcl');
+    Route::get('listFCL', 'SearchController@getListFCL')->name('search.fcl');
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
@@ -1051,6 +1054,14 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
+    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
+    Route::get('/api/quote/local/saleterm/{port_id}', 'LocalChargeQuotationController@saleterms')->name('get.local.saleterms');
+
+    /* NUEVO QUOTE PRUEBAS */
+    Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
+
+    /** Quotes LCL **/
+    Route::get('api/quoteLCL', 'QuoteLCLTestController@index')->name('quoteLCL.index');
 
     /** Sale terms V3 view routes **/
     Route::get('api/sale_terms', 'SaleTermV3Controller@index')->name('sale_term_v3.index');
@@ -1060,8 +1071,6 @@ Route::group(['middleware' => ['auth']], function () {
      /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
-
-    /** Routes for AutoRates **/
     
 });
 
@@ -1236,5 +1245,3 @@ Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
     Route::get('delete/{prov_id}', ['uses' => 'ProvinceController@destroy', 'as' => 'delete-prov']);
 });
 Route::resource('provinces', 'ProvinceController')->middleware('auth');
-
-//Route::get('upd', 'InlandDistanceController@updateInfo')->name('upd.upd');
