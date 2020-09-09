@@ -76,6 +76,7 @@
                         type: 'text', 
                         rules: 'required',
                         placeholder: 'Description',
+                        colClass: 'col-sm-12' 
                     },
                 }
             }
@@ -96,12 +97,12 @@
             },
             success(id){
                 // After Create the item redirect to:
-                window.location = `/api/providers/${id}/edit`;
+                //window.location = `/api/providers/${id}/edit`;
             },
             /* Single Actions */
             onEdit(data){
                 // Single actions to redirect to:
-                window.location = `/api/providers/${data.id}/edit`;
+                //window.location = `/api/providers/${data.id}/edit`;
             },
             
         }
