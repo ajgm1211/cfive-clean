@@ -63,11 +63,18 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
+            if($company->companyUser->colors_pdf != null){
+                $color_pdf=$company->companyUser->colors_pdf;
+            }else{
+                $color_pdf='#006bfa';
+            }
+        
+
         }
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
 
-        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny'));
+        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny','color_pdf'));
     }
 
    
@@ -125,6 +132,8 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->colors_pdf = $request->colors_pdf;
+
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
             }
@@ -162,6 +171,7 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->colors_pdf = $request->colors_pdf;
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
             }

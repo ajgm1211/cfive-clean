@@ -744,7 +744,7 @@ background-color: #36A3F7;
                                     <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
-                                            <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
+                                            <option value="{{ $origin }}"  selected="selected">{{ $harbors[$origin] }}</option>
                                         @endforeach
                                     @endif
                                     </select>
@@ -2372,6 +2372,15 @@ function getContainerByGroup(id_group) {
         }
     });
 }
+
+$('#mySelect2').select2({
+  // ...
+  templateSelection: function (data, container) {
+    // Add custom attributes to the <option> tag for the selected option
+    $(data.element).attr('data-custom-attribute', data.customValue);
+    return data.text;
+  }
+});
 </script>
 
 @stop

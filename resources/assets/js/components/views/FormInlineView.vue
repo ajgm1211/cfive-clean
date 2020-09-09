@@ -51,6 +51,22 @@
                     </div>
                     <!-- End Textarea Field -->
 
+                    <!-- CKEditor -->
+                    <div v-if="item.type == 'ckeditor'">
+                        <ckeditor
+                            id="inline-form-input-name"
+                            type="classic"
+                            v-model="vdata[key]"
+                            v-on:blur="onSubmit()"
+                            @change="cleanInput(key)"
+                        ></ckeditor>
+                        <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
+                        <span class="update-remark">
+                            <i class="fa fa-repeat" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <!-- End CKEditor -->
+
                     <!-- Select Field -->
                     <div v-if="item.type == 'select'">
                         <b-form-group
@@ -309,6 +325,7 @@ export default {
                 switch (item.type) {
                     case "text":
                     case "textarea":
+                    case "ckeditor":
                         if (component.vdata[key])
                             data[key] = component.vdata[key];
                         break;

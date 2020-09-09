@@ -43,12 +43,12 @@
                                 <b-card class="mt-5">
                                     <h5 class="q-title">Terms and Conditions</h5>
                                     <FormInlineView
-                                                v-if="loaded"
-                                                :data="currentData"
-                                                :fields="term_fields"
-                                                :actions="actions.quotes"
-                                                :update="true"
-                                            ></FormInlineView>
+                                        v-if="loaded"
+                                        :data="currentData"
+                                        :fields="term_fields"
+                                        :actions="actions.quotes"
+                                        :update="true"
+                                    ></FormInlineView>
                                     <!--textarea name id cols="30" rows="10" class="q-textarea">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda quibusdam, at eveniet cupiditate omnis accusamus tempora error, laboriosam cumque soluta modi quas sapiente recusandae, labore non nemo! Sequi, molestias quidem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi nobis numquam quas ullam asperiores repellendus, assumenda officiis? Ratione doloremque sequi explicabo deleniti dolorem, ad, alias ipsa temporibus id, voluptatem sed?</textarea-->
                                 </b-card>
                                 <!-- End Terms and Condition -->
@@ -153,7 +153,7 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     options: "status_options",
-                    colClass: "col-lg-3"
+                    colClass: "col-lg-3",
                 },
                 type: {
                     label: "TYPE",
@@ -161,7 +161,7 @@ export default {
                     rules: "required",
                     trackby: "name",
                     placeholder: "Quote Type",
-                    disabled:true,
+                    disabled: true,
                     colClass: "col-lg-3",
                 },
                 contact_id: {
@@ -173,7 +173,7 @@ export default {
                     placeholder: "Select options",
                     disabled: false,
                     options: [],
-                    all_options:"contacts",
+                    all_options: "contacts",
                     colClass: "col-lg-3",
                     selectLock: true,
                     lock_tracker:"company_id",
@@ -184,16 +184,16 @@ export default {
                     searchable: true,
                     type: "select",
                     rules: "required",
-                    trackby: 'name',
+                    trackby: "name",
                     placeholder: "Kind of cargo",
-                    options: 'kind_of_cargo',
+                    options: "kind_of_cargo",
                     colClass: "col-lg-3",
                 },
                 validity_start: {
                     label: "DATE ISSUED",
                     type: "datepicker",
                     rules: "required",
-                    colClass: "col-lg-3"
+                    colClass: "col-lg-3",
                 },
                 equipment: {
                     label: "EQUIPMENT",
@@ -224,7 +224,7 @@ export default {
                     label: "VALIDITY",
                     type: "datepicker",
                     rules: "required",
-                    colClass: "col-lg-3"
+                    colClass: "col-lg-3",
                 },
                 incoterm_id: {
                     label: "INCOTERM",
@@ -254,10 +254,10 @@ export default {
             },
             term_fields: {
                 terms_and_conditions: {
-                    type: "textarea",
+                    type: "ckeditor",
                     rules: "required",
                     placeholder: "Insert terms",
-                    colClass: "col-sm-12"
+                    colClass: "col-sm-12",
                 },
             },
             currentData: {},
@@ -285,8 +285,8 @@ export default {
             .catch((data) => {
                 this.$refs.observer.setErrors(data.data.errors);
             });
-        },
-    
+    },
+
     methods: {
         //Set dropdowns
         setDropdownLists(err, data) {
