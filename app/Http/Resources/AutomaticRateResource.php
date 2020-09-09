@@ -15,7 +15,7 @@ class AutomaticRateResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             'id' => $this->id,
             'quote_id' => $this->quote_id,
             'contract' => $this->contract,
@@ -36,7 +36,32 @@ class AutomaticRateResource extends JsonResource
             'remarks_portuguese' => $this->remarks_portuguese,
             'schedule_type' => is_null($this->schedule_type) ? $this->schedule_type : ['id'=>$this->schedule_type,'name'=>ScheduleType::where('id',$this->schedule_type)->first()->name],
             'transit_time' => $this->transit_time,
-            'via' => $this->via
+            'via' => $this->via,
+            'totals_currency' => $this->currency()->first()->alphacode,
+            'profits_currency' => $this->currency()->first()
         ];
+
+        return $this->addContainers($data);
+    }
+
+    public function addContainers($data)
+    {
+        if($this->markups!=null){
+            $profits = json_decode($data['markups']);
+            foreach($profits as $code=>$profit){
+                $prof_key = str_replace('m','',$code);
+                $data['profits_'.$prof_key] = $profit;
+                }
+            }
+        
+        if($this->total!=null){
+            $totals = json_decode($data['total']);
+            foreach($totals as $code=>$total){
+                $total_key = str_replace('c','',$code);
+                $data['totals_'.$total_key] = $total;
+                }
+            }
+
+        return $data;
     }
 }

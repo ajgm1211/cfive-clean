@@ -47,13 +47,6 @@ class ChargeResource extends JsonResource
             }
         }
 
-        if($this->markups!=null){
-            $profits = json_decode($data['markups']);
-            foreach($profits as $code=>$profit){
-                $prof_key = str_replace('m','',$code);
-                $data['markups_'.$prof_key] = $profit;
-                }
-            }
         return $data;
     }
 }
