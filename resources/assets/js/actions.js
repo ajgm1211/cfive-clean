@@ -292,8 +292,8 @@ export default {
 		retrieve(autorate_id) {
 			return api.call('get',`/api/quotes/ocean_freight/${autorate_id}/charge`,{})
 		},
-		update(id,data,route) {
-			return api.call('post',`/api/quotes/ocean_freight/charge/${id}/update`, data)
+		update(autorate_id,data) {
+			return api.call('post',`/api/quotes/ocean_freight/${autorate_id}/charge/update`, data)
 		},
 		delete(id) {
 	        return api.call('delete', `/api/quotes/ocean_freight/charge/${id}/destroy/`, {});

@@ -137,4 +137,64 @@ class AutomaticRate extends Model
     {
         return (new AutomaticRateFilter($request, $builder))->filter();
     }
+
+    public function totalize($new_currency_id)
+    {
+        //getting all data needed to calculate totals
+        $quote = $this->quotev2()->first();
+
+        $equip = $quote->getContainerCodes($quote->equipment);
+
+        $equip_array = explode(',',$equip);
+
+        array_splice($equip_array,-1,1);
+
+        $charges = $this->charge()->get();
+
+        $this->update(['currency_id'=>$new_currency_id]);
+
+        $currency = $this->currency()->first();
+
+        $totals_usd = [];
+
+        foreach($equip_array as $eq){
+            $totals_usd['c'.$eq] = 0;
+        }
+
+        // adding all charges together
+        foreach($charges as $charge){
+            $amount_array = json_decode($charge->amount);
+            $charge_currency = $charge->currency()->first();
+            foreach($amount_array as $key=>$value){
+                if($charge_currency->alphacode != 'USD'){
+                    $charge_conversion = $charge_currency->rates;
+                    $value /= $charge_conversion;
+                    $value = round($value,2);
+                }
+                $totals_usd[$key] += $value;
+            }
+        }
+
+        //adding autorate markups
+        if($this->markups != null){
+            $markups = json_decode($this->markups);
+            foreach($markups as $mark=>$profit){
+                $clear_key = str_replace('m','c',$mark);
+                $totals_usd[$clear_key] += $profit;
+            }
+        }
+
+        //converting to autorate currency
+        if($currency->alphacode != 'USD'){
+            $conversion = $currency->rates;
+            foreach($totals_usd as $cont=>$price){
+                $price *= $conversion;
+                $price = round($price,2);
+            }
+        }
+           
+        $totals = json_encode($totals_usd);
+        
+        $this->update(['total'=>$totals]);
+    }
 }

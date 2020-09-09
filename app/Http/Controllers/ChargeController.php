@@ -63,42 +63,39 @@ class ChargeController extends Controller
             'amount'=>$rates_json
         ]);
 
+        $autorate->totalize($autorate->currency_id);
+
     }
 
-    public function update(Request $request, Charge $charge)
+    public function update(Request $request, AutomaticRate $autorate)
     {
+        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
         $form_keys = $request->input('keys');
 
         $data = [];
-        $type = '';
 
         foreach($form_keys as $fkey){
-            if(strpos($fkey,'markups') !== false){
-                $data += $request->validate([$fkey=>'numeric']);
-                $type = 'm';
-            } else if(strpos($fkey,'freights') !== false){
-                $data += $request->validate([$fkey=>'numeric']);
-                $type = 'c';
+            if(strpos($fkey,'freights') !== false){
+                $data += $request->validate([$fkey=>'numeric|nullable']);
             }
         }
-            
-        $markups = [];
-        $rates = [];
 
+        $rates = [];
+        
         foreach($data as $key=>$value){
-            if($type == 'm'){
-                $markups[$type.str_replace('markups_','',$key)] = $value;
-            } else if($type == 'c'){
-                $rates[$type.str_replace('freights_','',$key)] = $value;
-            }
+            if($value==null){$value=0;}
+            $rates['c'.str_replace('freights_','',$key)] = $value;
         }
         
-        if(count($markups) != 0){
-            $markups_json = json_encode($markups);
-            $charge->update(['markups'=>$markups_json]);
-        }else if (count($rates) != 0){
+        $data += $request->validate(['fixed_currency'=>'required']);
+
+        $charge->update(['currency_id'=>$data['fixed_currency']]);
+
+        if(count($rates) != 0){
             $rates_json = json_encode($rates);
             $charge->update(['amount'=>$rates_json]);
+
+            $autorate->totalize($request->input('fixed_currency'));
         }
         
     }
