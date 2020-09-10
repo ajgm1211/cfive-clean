@@ -1149,7 +1149,8 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
     Route::get('', 'ProvidersController@list');
     Route::get('data', 'ProvidersController@data');
     Route::post('store', 'ProvidersController@store');
-   
+    Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+    Route::post('{providers}/update', 'ProvidersController@update');
 /** providers **/
 
 });
