@@ -19,7 +19,7 @@ class SyncCompaniesJob implements ShouldQueue
 
     protected $response;
     protected $company_user_id;
-    protected  $partner;
+    protected $partner;
 
     /**
      * Create a new job instance.
