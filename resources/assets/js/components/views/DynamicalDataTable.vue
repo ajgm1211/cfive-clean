@@ -9,8 +9,6 @@
         :searchBar="searchBar"
         :multiList="multiList"
         :multiId="multiId"
-        :fixedData="fixedData"
-        :totalsData="totalsData"
         :withTotals="withTotals"
         :totalsFields="totalsFields"
         :totalActions="totalActions"
@@ -39,8 +37,6 @@
             equipment: Object,
             datalists: Object,
             quoteEquip: Array,
-            fixedData: Object,
-            totalsData: Object,
             massiveactions: {
                 type: Array,
                 required: false,
