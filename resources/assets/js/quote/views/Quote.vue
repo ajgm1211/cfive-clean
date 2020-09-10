@@ -58,6 +58,7 @@
                         <b-tab title="Ocean Freight">
                             <ocean v-if="loaded"
                             :equipment="equip"
+                            :currentQuoteData="currentData"
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
@@ -244,12 +245,7 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     colClass: "col-lg-3",
-                    options: [],
-                    all_options:"languages",
-                    selectLock: true,
-                    lock_tracker:"company_id",
-                    locking: "company_id"
-
+                    options:"languages",
                 },
             },
             term_fields: {
