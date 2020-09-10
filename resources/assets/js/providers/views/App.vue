@@ -22,6 +22,19 @@
                 </b-card>
             </div>
         </div>
+        <b-modal id="editProviders" size="lg" cancel-title="Cancel" hide-header-close title="Edit Providers " hide-footer>
+            <FormView 
+                :data="currentData" 
+                :fields="form_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Providers"
+                @exit="closeModal('editProviders')"
+                @success="success"
+                :actions="actions.providers"
+                :update="true"
+                >
+            </FormView>
+        </b-modal>
         
         <!-- Create Form -->
         <b-modal id="addproviders" size="md" hide-header-close title="Add Providers" hide-footer>
@@ -54,6 +67,9 @@
         },
         data() {
             return {
+                loaded: true,
+                currentData: {},
+                form_fields: {},
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 datalists: {},
@@ -104,6 +120,11 @@
             onEdit(data){
                 // Single actions to redirect to:
                 window.location = `/api/providers`;
+            },
+            onEdit(data){
+                // Single actions to redirect to:
+                this.currentData = data;
+                this.$bvModal.show('editProviders'); 
             },
             
         }
