@@ -167,7 +167,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
         }])->with(['port_destiny' => function ($query) {
             $query->select('id', 'display_name', 'country_id', 'name', 'code');
         }])->whereHas('contract', function ($q) use ($company_user_id) {
-            $q->where('company_user_id', '=', $company_user_id)->where('status', 'publish')->where('code', $this->code);
+            $q->where('company_user_id', '=', $company_user_id)->where('status', 'publish')->where('name', $this->name);
         })->get();
 
         //Guard if
