@@ -2714,6 +2714,7 @@ class QuoteV2Controller extends Controller
 
         //resquest completo del form
         $form = $request->all();
+        
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2748,18 +2749,81 @@ class QuoteV2Controller extends Controller
         //Settings de la compañia
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
         // Request Formulario
+        $origin_harbor_all = array();
+        $destination_harbor_all = array();
+        
         foreach ($request->input('originport') as $origP) {
 
             $infoOrig = explode("-", $origP);
-            $origin_port[] = $infoOrig[0];
-            $origin_country[] = $infoOrig[1];
+            if ($infoOrig[2] == null) {
+                $origin_port[] = $infoOrig[0];
+                $origin_country[] = $infoOrig[1];
+                $origin_harbor_all[] = $infoOrig[0]."-".$infoOrig[1]."-".$infoOrig[2];
+                $orig = Harbor::where('harbor_parent',  $infoOrig[0])->get();
+                foreach ($orig as $or) {
+                    $origin_port[] = "$or->id";
+                    $origin_country[] = "$or->country_id";
+                    $origin_harbor_all[]= "$or->id-$or->country_id-$or->harbor_parent";
+                }
+            }else{
+
+                $orig = Harbor::where('id',$infoOrig[2])->orwhere('harbor_parent',  $infoOrig[2])->get();
+                foreach ($orig as $or) {
+                    $origin_port[] = "$or->id";
+                    $origin_country[] = "$or->country_id";
+                    $origin_harbor_all[]= "$or->id-$or->country_id-$or->harbor_parent";
+                }
+            }
+          
+
         }
+
+        $origin_port = array_unique($origin_port);
+        $origin_country = array_unique($origin_country);
+        $origin_harbor_all = array_unique($origin_harbor_all);
+
+      
+
+        
         foreach ($request->input('destinyport') as $destP) {
 
             $infoDest = explode("-", $destP);
             $destiny_port[] = $infoDest[0];
             $destiny_country[] = $infoDest[1];
+
+            if ($infoDest[2] == null) {
+                $destiny_port[] = $infoDest[0];
+                $destiny_country[] = $infoDest[1];
+                $destination_harbor_all[] = $infoDest[0]."-".$infoDest[1]."-".$infoDest[2];
+
+                $dest = Harbor::where('harbor_parent',  $infoDest[0])->get();
+                foreach ($dest as $dt) {
+                    $destiny_port[] = "$dt->id";
+                    $destiny_country[] = "$dt->country_id";
+                    $destination_harbor_all[] = "$dt->id-$dt->country_id-$dt->harbor_parent";
+                }
+            }else{
+
+                $dest = Harbor::where('id',$infoDest[2])->orwhere('harbor_parent',  $infoDest[2])->get();
+                foreach ($dest as $dt) {
+                    $destiny_port[] = "$dt->id";
+                    $destiny_country[] = "$dt->country_id";
+                    $destination_harbor_all[] = "$dt->id-$dt->country_id-$dt->harbor_parent";
+                }
+            }
+
+
         }
+
+        $destiny_port = array_unique($destiny_port);
+        $destiny_country = array_unique($destiny_country);
+        $destination_harbor_all = array_unique($destination_harbor_all);
+        
+        $form['originport'] = $origin_harbor_all;
+        $form['destinyport'] = $destination_harbor_all;
+        
+
+      
 
         $equipment = $request->input('equipment');
 
@@ -2791,9 +2855,10 @@ class QuoteV2Controller extends Controller
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
         $groupContainer = $validateEquipment['gpId'];
-
+        $containerCode = $containers->whereIn('id',$equipment)->pluck('code')->toArray();
+        
         // Historial de busqueda
-        // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
+        $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$containerCode,$delivery_type,$mode,$company_user_id,'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -6386,12 +6451,28 @@ class QuoteV2Controller extends Controller
 
             $totalFreightOrig = $totalFreight;
 
+  
+
+
+
             $rateTotal = $this->ratesCurrency($data->currency->id, $typeCurrency);
             $totalFreight = $totalFreight / $rateTotal;
             $totalFreight = number_format($totalFreight, 2, '.', '');
 
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
+
+
+            if ($chargesDestination == null && $chargesOrigin == null) {
+
+                $totalQuote = $totalFreightOrig;
+                $data->setAttribute('quoteCurrency', $data->currency->alphacode);
+                
+            } else{
+                $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
+                $data->setAttribute('quoteCurrency', $typeCurrency);
+
+            }
 
             if (!empty($collectionOrig)) {
                 $collectionOrig = $this->OrdenarCollectionLCL($collectionOrig);
@@ -6483,7 +6564,7 @@ class QuoteV2Controller extends Controller
             $data->setAttribute('totalChargeDest', $totalChargeDest);
             $data->setAttribute('totalInland', $totalInland);
             //Total quote atributes
-            $data->setAttribute('quoteCurrency', $typeCurrency);
+
             $data->setAttribute('rateCurrency', $data->currency->alphacode);
             $data->setAttribute('totalQuoteSin', $totalQuoteSin);
             $data->setAttribute('idCurrency', $idCurrency);
