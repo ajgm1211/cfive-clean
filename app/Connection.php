@@ -3,12 +3,11 @@
 namespace App;
 
 use App\Jobs\SyncCompaniesJob;
-use App\Partner;
-use App\Http\Requests\StoreApiIntegration;
 use GuzzleHttp\Client;
 
-class Vforwarding
+class Connection
 {
+
     public function getData($setting)
     {
         try {
@@ -21,19 +20,36 @@ class Vforwarding
 
                 $response = $this->callApi($uri_paginate);
 
-                $max_page = ceil($response['count'] / 1000);
+                $max_page = ceil($response['count'] / 100);
 
-                SyncCompaniesJob::dispatch($response, \Auth::user(), $setting->partner);
+                SyncCompaniesJob::dispatch($response, $setting);
                 \Log::info('Running page: ' . $page);
 
+                sleep(20);
                 $page += 1;
             } while ($page <= $max_page);
 
             return true;
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            \Log::info($e->getMessage());
             return false;
         }
+    }
+
+    public function getInvoices($client_id)
+    {
+
+        $year = date('Y');
+
+        $response = $this->callApi('https://pr-altius.visualtrans.net/rest/api1-facturas-venta.pro?v=ejercicio%3A' . $year . '%2C%20cliente%3A' . $client_id . '&k=ENTICARGOFIVE75682100');
+
+        $count = count($response);
+
+        if ($count > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public function callApi($uri)
