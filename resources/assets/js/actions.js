@@ -260,8 +260,8 @@ export default {
 	        	});
 		},
 		create(data, route) {
-	    	let autorate_id = route.params.id;
-	        return api.call('post', `/api/quotes/${autorate_id}/automatic_rate/store`, data);
+	    	let quote_id = route.params.id;
+	        return api.call('post', `/api/quotes/${quote_id}/automatic_rate/store`, data);
 		},
 		update(id,data,route) {
 			let quote_id = route.params.id;

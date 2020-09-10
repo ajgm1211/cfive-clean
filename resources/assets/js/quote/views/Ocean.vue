@@ -6,7 +6,7 @@
         </div>
 
         <!-- Freight Card -->
-        <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card" :id="freight.id">
+        <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card">
 
             <div class="row">
 
@@ -34,7 +34,7 @@
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->       
-                    <button type="button" class="btn" v-b-toggle="'collapse-1'">
+                    <button type="button" class="btn" v-b-toggle="String(freight.id)">
                         <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
                     </button>
 
@@ -43,7 +43,7 @@
 
             </div>
 
-            <b-collapse id="collapse-1" class="row">
+            <b-collapse :id="String(freight.id)" class="row">
                 
                 <div class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
@@ -65,11 +65,9 @@
                         :fixedFormFields="eform_fields"
                         :initialFormFields="vform_fields"
                         :searchBar="false"
-                        :fixedData="currentChargeData[freight.id]"
                         :extraRow="true"
                         :withTotals="true"
                         :totalsFields="totalsFields"
-                        :totalsData="currentRateData[freight.id]"
                         :datalists="datalists"
                         :equipment="equipment"
                         :actions="actions.charges"
@@ -107,50 +105,35 @@
 
         <!-- Remarks -->
         <b-card class="mt-5">
-
+            
             <h5 class="q-title">Remarks</h5>
-            <textarea name id cols="30" rows="10" class="q-textarea">Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda quibusdam, at eveniet cupiditate omnis accusamus tempora error, laboriosam cumque soluta modi quas sapiente recusandae, labore non nemo! Sequi, molestias quidem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi nobis numquam quas ullam asperiores repellendus, assumenda officiis? Ratione doloremque sequi explicabo deleniti dolorem, ad, alias ipsa temporibus id, voluptatem sed?</textarea>
+            <FormInlineView
+                v-if="loaded"
+                :data="currentQuoteData"
+                :fields="remarks_fields"
+                :actions="actions.quotes"
+                :datalists="datalists"
+                :update="true"
+            ></FormInlineView>
 
         </b-card>
         <!-- End Remarks -->
 
         <!--  Modal  -->
-        <b-modal ref="my-modal" hide-footer title="Add Freight">
+        <b-modal id="addCharge" hide-footer title="Add Freight">
             <div class="d-flex flex-column align-items-center justify-content-center mb-5" >
-                <label style="width:50%">
-                    POL
-                    <multiselect
-                        v-model="value"
-                        :options="options"
-                        :searchable="true"
-                        :close-on-select="false"
-                        :show-labels="false"
-                        placeholder="Select Currency">
-                    </multiselect>
-                </label>
-                <label style="width:50%">
-                    POD
-                    <multiselect
-                        v-model="value"
-                        :options="options"
-                        :searchable="true"
-                        :close-on-select="false"
-                        :show-labels="false"
-                        placeholder="Select Currency">
-                    </multiselect>
-                </label>
-                <label style="width:50%">
-                    Carrier
-                    <multiselect
-                        v-model="value"
-                        :options="options"
-                        :searchable="true"
-                        :close-on-select="false"
-                        :show-labels="false"
-                        placeholder="Select Currency">
-                    </multiselect>
-                </label>
-                <a href="#" class="btn btn-primary btn-bg mt-2">Add Freight</a>
+                
+                <FormView 
+                    :data="{}" 
+                    :fields="modal_fields"
+                    :vdatalists="datalists"
+                    btnTxt="Add Freight"
+                    @exit="closeModal('addCharge')"
+                    @success="closeModal('addCharge')"
+                    :actions="actions.automaticrates"
+                    >
+                </FormView>
+
             </div>
         </b-modal>
         <!--  End Modal  -->
@@ -196,7 +179,8 @@ export default {
         equipment: Object,
         datalists: Object,
         freights: Array,
-        quoteEquip: Array
+        quoteEquip: Array,
+        currentQuoteData: Array
   },
   data() {
     return {
@@ -205,21 +189,6 @@ export default {
       vdata: {},
       value: "",
       actions: actions,
-      options: [
-        "Select option",
-        "options",
-        "selected",
-        "mulitple",
-        "label",
-        "searchable",
-        "clearOnSelect",
-        "hideSelected",
-        "maxHeight",
-        "allowEmpty",
-        "showLabels",
-        "onChange",
-        "touched"
-      ],
       header_fields: {
         transit_time: {
             label: "TRANSIT TIME",
@@ -258,9 +227,41 @@ export default {
             colClass: "col-lg-2",
         },
       },
+      remarks_fields: {
+        remarks: {
+            type: "textarea",
+            placeholder: "Insert terms",
+            colClass: "col-sm-12"
+            }
+      },   
+      modal_fields: {
+        POL: {
+            label: "POL",
+            type: "select",
+            trackby: "display_name",
+            placeholder: "Select POL",
+            colClass: "col-lg-8",
+            options: "harbors",
+          },
+        POD: {
+            label: "POD",
+            type: "select",
+            trackby: "display_name",
+            placeholder: "Select POD",
+            colClass: "col-lg-8",
+            options: "harbors",
+          },
+        carrier: {
+            label: "Carrier",
+            type: "select",
+            trackby: "name",
+            placeholder: "Select carrier",
+            colClass: "col-lg-8",
+            options: "carriers",
+          },
+      },
       loaded: true,
       currentRateData: {},
-      currentChargeData: {},
       form_fields: {},
       extra_fields: {},
       containers_fields: {},
@@ -336,28 +337,11 @@ export default {
 
     component.setTotalsFields();
 
-    component.freights.forEach(function(freight){
-        actions.automaticrates
-            .retrieve(freight.id,component.$route)
-            .then((response) => {
-                Vue.set(component.currentRateData,freight.id,response.data.data);
-                })
-            .catch((data) => {
-                component.$refs.observer.setErrors(data.data.errors);
-            });
-        actions.charges
-            .retrieve(freight.id)
-            .then((response) => {
-                Vue.set(component.currentChargeData,freight.id,response.data.data);
-                })
-            .catch((data) => {
-                component.$refs.observer.setErrors(data.data.errors);
-            });
-    });
+    this.getAutorates();
   },
   methods: {
     showModal() {
-        this.$refs['my-modal'].show();
+        this.$bvModal.show('addCharge');
         },
 
     /* Single Actions */
@@ -379,11 +363,39 @@ export default {
         });
     },
 
+    getAutorates(){
+        let component = this;
+        
+        component.freights.forEach(function(freight){
+            actions.automaticrates
+                .retrieve(freight.id,component.$route)
+                .then((response) => {
+                    Vue.set(component.currentRateData,freight.id,response.data.data);
+                    })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
+                });
+            });
+    },
+
     openModalContainer(ids){
         console.log('test modal');
         this.ids_selected = ids;
             this.$bvModal.show('editContainers');
     },
+
+    closeModal(modal){
+        this.$bvModal.hide(modal);
+        this.ids_selected = [];
+
+        let component = this;
+
+        component.loaded = false;
+        setTimeout(function(){ component.loaded = true; }, 100);
+        
+        this.getAutorates();
+        },
+            
 
     setTotalsFields(){
         let component = this;
@@ -403,7 +415,6 @@ export default {
                                                                 };
         component.totalsFields['Totals']['totals_currency'] = { type: 'span' };  
 
-        console.log(component.totalsFields)
     },
   }
      
