@@ -19,11 +19,13 @@ class LocalChargeQuotationController extends Controller
         $quote = QuoteV2::with('origin_harbor', 'destination_harbor')->where('id', $request->quote_id)->first();
 
         $origin_ports = $quote->origin_harbor->map(function ($value) {
-            return $value->only(['id', 'display_name']);
+            $value['type'] = 1;
+            return $value->only(['id', 'display_name', 'type']);
         });
 
-        $destination_ports = $quote->destination_harbor->map(function ($value) {
-            return $value->only(['id', 'display_name']);
+        $destination_ports = $quote->destination_harbor->map(function ($value, $index) {
+            $value['type'] = 2;
+            return $value->only(['id', 'display_name', 'type']);
         });
 
         $harbors = $origin_ports->merge($destination_ports)->unique();
@@ -36,7 +38,7 @@ class LocalChargeQuotationController extends Controller
     public function saleterms(Request $request)
     {
 
-        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->type])->get();
+        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->type, 'type_id' => $request->type_route])->get();
 
         return $saleterms;
     }
