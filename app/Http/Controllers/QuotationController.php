@@ -102,9 +102,9 @@ class QuotationController extends Controller
             return $kcargo->only(['id','name']);
         });
 
-        /*$languages = Language::get()->map(function ($language){
+        $languages = Language::get()->map(function ($language){
             return $language->only(['id','name']);
-        });*/
+        });
 
         $currency = Currency::get()->map(function ($curr){
             return $curr->only(['id','alphacode','rates','rates_eur']);
@@ -145,14 +145,15 @@ class QuotationController extends Controller
             'calculationtypes',
             'surcharges',
             'schedule_types',
-            'countries'
+            'countries',
+            'languages'
         );
 
         return response()->json(['data'=>$data]);
     }
 
     public function store(Request $request)
-    {   
+    {       
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
@@ -289,7 +290,7 @@ class QuotationController extends Controller
     {   
         $form_keys = $request->input('keys');
 
-        if(!in_array('terms_and_conditions',$form_keys)){
+        if(!in_array('terms_and_conditions',$form_keys) && !in_array('remarks',$form_keys)){
             $data = $request->validate([
                 'delivery_type' => 'required',
                 'equipment' => 'required',

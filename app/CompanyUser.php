@@ -21,6 +21,11 @@ class CompanyUser extends Model implements Auditable
         return $this->belongsTo('App\Currency');
     }
 
+    public function language()
+    {
+        return $this->hasOne('App\Language','id','pdf_language');
+    }
+
     public function companyQuotes()
     {
         return $this->hasMany('App\QuoteV2');

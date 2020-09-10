@@ -456,7 +456,7 @@ export default {
             let callerKey = key;
 
             fields_keys.forEach(function(key) {
-                if(caller.hiding === key){
+                if(caller.hiding === key && component.vdata[callerKey]!=null){
                     if(caller.showCondition==component.vdata[callerKey].name){
                         component.fields[key].hidden = false;
                     } else{
