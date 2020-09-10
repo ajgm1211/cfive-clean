@@ -20,17 +20,31 @@ class AutomaticRateController extends Controller
         return AutomaticRateResource::collection($results);
     }
 
-    public function store(Request $request, AutomaticRate $autorate, QuoteV2 $quote)
+    public function store(Request $request, QuoteV2 $quote)
     {
-        dd($request);
+        $data = $request->validate(['POL' => 'required',
+                                    'POD' => 'required',
+                                    'carrier'=> 'required'
+                                    ]);
 
-        /**$data = $this->validateData($request, $autorate);//change to direct validation?
+        $rate = AutomaticRate::create([
+                'quote_id' => $quote->id,
+                'contract' => '',
+                'validity_start' => $quote->validity_start,
+                'validity_end' => $quote->validity_end,
+                'origin_port_id' => $data['POL'],
+                'destination_port_id' => $data['POD'],
+                'currency_id' => '149'     
+                ]);
 
-        $prepared_data = $this->prepareData($data, $autorate);//change to direct preparation?
-
-        $rate = AutomaticRate::create($prepared_data);//direct creation
-
-        return new AutomaticRateResource($rate);**/
+        $freight = Charge::create([
+                'automatic_rate_id' => $rate->id,
+                'type_id' => '3',
+                'calculation_type_id' => '5',
+                'currency_id' => $rate->currency_id,
+                ]);
+                
+        return new AutomaticRateResource($rate);
     }
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
