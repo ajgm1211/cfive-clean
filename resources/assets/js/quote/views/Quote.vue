@@ -66,7 +66,12 @@
                         </b-tab>
 
                         <b-tab title="Local Charges">
-                            <Local></Local>
+                            <Local
+                                v-if="loaded"
+                                :equipment="equip"
+                                :quoteEquip="quoteEquip"
+                                :datalists="datalists"
+                            ></Local>
                         </b-tab>
 
                         <b-tab title="Inland">
@@ -108,7 +113,7 @@ export default {
         return {
             actions: actions,
             loaded: false,
-            tabs_loaded:false,
+            tabs_loaded: false,
             form_fields: {
                 quote_id: {
                     label: "QUOTE ID",
@@ -137,7 +142,7 @@ export default {
                     placeholder: "Select options",
                     options: "companies",
                     colClass: "col-lg-3",
-                    isLocker: true
+                    isLocker: true,
                 },
                 commodity: {
                     label: "COMMODITY",
@@ -177,8 +182,8 @@ export default {
                     all_options: "contacts",
                     colClass: "col-lg-3",
                     selectLock: true,
-                    lock_tracker:"company_id",
-                    locking: "company_id"
+                    lock_tracker: "company_id",
+                    locking: "company_id",
                 },
                 kind_of_cargo: {
                     label: "KIND OF CARGO",
@@ -261,7 +266,7 @@ export default {
             datalists: {},
             equip: {},
             freights: {},
-            quoteEquip: []
+            quoteEquip: [],
         };
     },
     created() {
@@ -289,14 +294,14 @@ export default {
             this.datalists = data;
             //console.log(this.datalists);
         },
-        onSuccess(data){
+        onSuccess(data) {
             let component = this;
 
             component.equip = data.gp_container;
             component.freights = data.rates;
-            component.quoteEquip = data.equipment.split(',');
-            component.quoteEquip.splice(-1,1)
+            component.quoteEquip = data.equipment.split(",");
+            component.quoteEquip.splice(-1, 1);
         },
-    }
+    },
 };
 </script>
