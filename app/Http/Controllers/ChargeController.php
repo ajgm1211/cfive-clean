@@ -109,6 +109,9 @@ class ChargeController extends Controller
     public function destroy(Charge $charge)
     {
         $charge->delete();
+        
+        $autorate = $charge->automatic_rate()->first();
+        $autorate->totalize($autorate->currency_id);
 
         return response()->json(null, 204);
     }

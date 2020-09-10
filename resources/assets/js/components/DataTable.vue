@@ -241,7 +241,7 @@
             <hr>
             
             <!-- Profits and Totals -->
-            <b-tbody v-if="withTotals==true">
+            <b-tbody v-if="withTotals==true" >
                 <b-tr v-for="(field,id) in totalsFields" :key="id">
 
                     <b-td></b-td>
@@ -289,7 +289,7 @@
                         <!-- End Select -->
 
                         <!-- Span field -->
-                        <div v-if="item.type == 'span'" :key="totalsKey">
+                        <div v-if="item.type == 'span'">
                             <span style="font-weight:bold">{{totalsData[key]}}</span>
                         </div>
                         <!-- Span field end -->
@@ -331,8 +331,6 @@
     export default {
         props: {
             fields: Array,
-            fixedData:Object,
-            totalsData: Object,
             inputFields: {
                 type: Object,
                 required: false,
@@ -411,9 +409,10 @@
                 data: {},
                 fdata: {},
                 currentData: [],
+                totalsData: [],
+                fixedData: [],
                 refresh: true,
                 datalists: {},
-                totalsKey: 0,
                 search: null,
                 /* Pagination */
                 initialPage: 1,
@@ -444,7 +443,15 @@
                     if('initial' in this.inputFields[key])
                         this.fdata[key] = this.inputFields[key]['initial'];
                 }
-
+                
+                this.actions
+                    .retrieve(this.multiId)
+                    .then((response) => {
+                        this.fixedData=response.data.data;
+                        })
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
             },
 
             /* Request the data with axios */
@@ -458,8 +465,15 @@
                     this.setData(err, data);
                     }, this.$route);
                 }
-                
 
+                this.totalActions
+                    .retrieve(this.multiId,this.$route)
+                    .then((response) => {
+                        this.totalsData=response.data.data;
+                        })  
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                        });
             },
 
             /* Set the data into datatable */
@@ -605,7 +619,6 @@
                     });
                 });
                 }
-                this.rerenderTotals();
             },
 
             onSubmitFixed() {
@@ -617,6 +630,8 @@
                     this.actions.update(data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
+                        this.refreshData();
+
                 })
                     .catch(( error, errors ) => {
 
@@ -631,6 +646,8 @@
                     this.actions.update(this.multiId,data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
+                        this.refreshData();
+
                 })
                     .catch(( error, errors ) => {
 
@@ -642,7 +659,6 @@
                     });
                 });
                 }
-                this.rerenderTotals();
   
             },
 
@@ -655,6 +671,8 @@
                     this.totalActions.update(data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
+                        this.refreshData();
+
                 })
                     .catch(( error, errors ) => {
 
@@ -669,6 +687,8 @@
                     this.totalActions.update(this.multiId,data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
+                        this.refreshData();
+
                 })
                     .catch(( error, errors ) => {
 
@@ -681,8 +701,6 @@
                 });
                 }
 
-                this.rerenderTotals();
-  
             },
 
             /* Single Actions */
@@ -786,10 +804,6 @@
             onOpenModalContainer(){
                 let ids = this.selected.map(item => item.id);
                 this.$emit('onOpenModalContainerView', ids);
-            },
-            rerenderTotals() {
-                this.totalsKey += 1;
-                console.log(this.totalsKey)
             }
         },
         watch: {

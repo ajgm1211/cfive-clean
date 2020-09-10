@@ -1060,8 +1060,6 @@ Route::group(['middleware' => ['auth']], function () {
      /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
-
-    /** Routes for AutoRates **/
     
 });
 
