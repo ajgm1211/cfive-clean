@@ -236,7 +236,7 @@
                         </b-thead>
 
                         <b-tbody>
-                            <b-tr class="q-tr">
+                            <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
                                 <b-td>
                                     <b-form-checkbox value="carrier"></b-form-checkbox>
                                 </b-td>
@@ -251,12 +251,15 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-model="charge.surcharge"
+                                        :options="datalists['surcharges']"
+                                        :multiple="false"
                                         :show-labels="false"
-                                        placeholder="-"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a surcharge"
+                                        label="name"
+                                        track-by="name"
                                     ></multiselect>
                                 </b-td>
 
@@ -281,73 +284,15 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-model="charge.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
                                         :show-labels="false"
-                                        placeholder="Currency"
-                                    ></multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-                            </b-tr>
-
-                            <b-tr class="q-tr">
-                                <b-td>
-                                    <b-form-checkbox value="carrier"></b-form-checkbox>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="-"
-                                    ></multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="MSC" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Currency"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
                                     ></multiselect>
                                 </b-td>
 
@@ -482,7 +427,9 @@ export default {
                 "/api/quote/local/saleterm/" +
                     this.value.id +
                     "/" +
-                    this.equipment.id,
+                    this.equipment.id +
+                     "/" +
+                    this.value.type,
                 (err, data) => {
                     this.saleterms = data;
                 }
