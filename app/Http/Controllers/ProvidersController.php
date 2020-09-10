@@ -5,37 +5,45 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Providers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StorePriceLevels;
 use App\Http\Resources\ProvidersResource;
-
-
 
 class ProvidersController extends Controller
 {
+
     /**
      * Render index view 
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function index(Request $request)
     {
         return view('providers.index');
     }
-    
+
+
+       /**
+     * Display the specified resource collection.
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function list(Request $request)
     {
         $results = Providers::filterByCurrentCompany()->filter($request);
         return ProvidersResource::collection($results);
     }
+
+
      /**
      * Display the specified resource collection.
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function data(Request $request)
     {
         $company_user_id = \Auth::user()->company_user_id;
@@ -57,21 +65,21 @@ class ProvidersController extends Controller
 
         return response()->json(['data' => $data]);
     }
+
+
       /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    public function store(Request $request)
+    public function store(StorePriceLevels $request)
     {
         $company_user_id = Auth::user('web')->company_user_id;
 
         $data = $request->validate([
             'name' => 'required',
-            'description' => 'required',
-            
+            'description' => 'required',    
         ]);
 
         $providers = providers::create([
@@ -79,22 +87,58 @@ class ProvidersController extends Controller
             'description' => $data['description'],
             'company_user_id' => $company_user_id,       
         ]);
-
-        
+        $request->session()->flash('message.content', 'Register created successfully!');
         return new ProvidersResource($providers);
     }
 
-    public function update(){
 
-    }
-    public function retrive(){
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Providers $providers)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+        ]);
 
-    }
-    public function destroy(){
+        $providers->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+        ]);
 
+        return new ProvidersResource($providers);
     }
-    public function destroyAll(){
 
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Providers  $providers
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Providers $providers)
+    {
+        $providers->delete();
+
+        return response()->json(null, 204);
     }
-    
+
+
+    /**
+     * Remove all the resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('providers')->whereIn('id', $request->input('ids'))->delete();
+
+        return response()->json(null, 204);
+    }
+
 }
