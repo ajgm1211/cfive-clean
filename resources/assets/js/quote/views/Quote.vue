@@ -55,8 +55,8 @@
                             </div>
                         </b-tab>
 
-                        <b-tab title="Ocean Freight">
-                            <ocean v-if="loaded"
+                        <b-tab title="Ocean Freight" @click="changeView('freight')">
+                            <ocean v-if="ocean"
                             :equipment="equip"
                             :currentQuoteData="currentData"
                             :quoteEquip="quoteEquip"
@@ -113,6 +113,7 @@ export default {
         return {
             actions: actions,
             loaded: false,
+            ocean: false,
             tabs_loaded: false,
             form_fields: {
                 quote_id: {
@@ -302,6 +303,15 @@ export default {
             component.quoteEquip = data.equipment.split(",");
             component.quoteEquip.splice(-1, 1);
         },
+
+        changeView(val){
+
+            if(val == 'freight'){
+                this.ocean = true;
+            }
+        }
     },
+
+    
 };
 </script>
