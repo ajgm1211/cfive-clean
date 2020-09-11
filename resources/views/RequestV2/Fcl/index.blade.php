@@ -418,6 +418,7 @@
     }
 
   
+    $('.dropdown-toggle').dropdown();
 </script>
 
 @stop
