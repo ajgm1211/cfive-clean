@@ -443,15 +443,16 @@
                     if('initial' in this.inputFields[key])
                         this.fdata[key] = this.inputFields[key]['initial'];
                 }
-                
-                this.actions
-                    .retrieve(this.multiId)
-                    .then((response) => {
-                        this.fixedData=response.data.data;
-                        })
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                    });
+                if(this.extraRow){
+                    this.actions
+                        .retrieve(this.multiId)
+                        .then((response) => {
+                            this.fixedData=response.data.data;
+                            })
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                        });
+                }
             },
 
             /* Request the data with axios */
@@ -465,16 +466,18 @@
                     this.setData(err, data);
                     }, this.$route);
                 }
-
-                this.totalActions
-                    .retrieve(this.multiId,this.$route)
-                    .then((response) => {
-                        this.totalsData=response.data.data;
-                        })  
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                        });
-            },
+               
+                if(this.totalActions){
+                    this.totalActions
+                        .retrieve(this.multiId,this.$route)
+                        .then((response) => {
+                            this.totalsData=response.data.data;
+                            })  
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                            });
+                    }
+                },
 
             /* Set the data into datatable */
             setData(err, { data: records, links, meta }) {

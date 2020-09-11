@@ -17,8 +17,7 @@ class ChargeController extends Controller
         $autorates = AutomaticRate::where('quote_id',$quote->id)->get();
 
         foreach($autorates as $auto){
-            $results[$auto->id] = Charge::where('surcharge_id','!=',null)->filterByAutorate($auto->id)->filter($request);
-            //$results[$auto->id] = Charge::filterByAutorate($auto->id)->filter($request);
+            $results[$auto->id] = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($auto->id)->filter($request);
         }
 
         return ChargeResource::collection($results[$autorate->id]);
