@@ -173,7 +173,7 @@
                                 @if($quote->pdf_option->show_total_freight_in==1)
                                     <td >{{$quote->pdf_option->show_total_freight_in_currency}}</td>
                                 @else
-                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                    <td><b>{{@$r->currency->alphacode}}</b></td>
                                 @endif
                             </tr>
                         </tbody>
