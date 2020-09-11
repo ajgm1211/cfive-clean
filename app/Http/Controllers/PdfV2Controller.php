@@ -240,9 +240,15 @@ class PdfV2Controller extends Controller
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
-                }
 
+                    $typeCurrency =  $currency_cfg->alphacode;
+
+                    if($value->type_id == 3){
+                        $typeCurrency =  $value->currency->alphacode; //OJO CON ESTO
+                    }
+                    
+                }
+                
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                 if ($value->type_id == 3) {
@@ -259,6 +265,7 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
+            
             if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
