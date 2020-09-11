@@ -240,11 +240,14 @@ class ContractController extends Controller
             'carriers' => 'required'
         ]);
 
+        $status= $this->updateStatus($data['expire']);
+        
         $contract->update([
             'name' => $data['name'],
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
+            'status' => $status,
             'remarks' => '',
             'gp_container_id' => $data['gp_container'],
         ]);
@@ -252,6 +255,20 @@ class ContractController extends Controller
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractResource($contract);
+    }
+    
+    public function updateStatus($data){
+   
+            $date= date('Y-m-d');
+            $expire=date('Y-m-d', strtotime($data));
+                       
+            if($expire<=$date){
+                $status='expired';
+            }else{
+                $status='publish';
+            } 
+                    
+            return $status;
     }
 
     /**
