@@ -546,6 +546,7 @@ class ContractController extends Controller
                     'direction_id' => $direction,
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
+                    'status' => 'incomplete',
                     'type' => $type,
                     'gp_container_id' => 1,
                     'code' => $request->reference,
@@ -558,6 +559,7 @@ class ContractController extends Controller
                     'direction_id' => $direction,
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
+                    'status' => 'incomplete',
                     'type' => $type,
                     'code' => $request->reference,
                 ]);
