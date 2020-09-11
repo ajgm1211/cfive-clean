@@ -37,7 +37,7 @@
                 fields: {
                     remarks: { 
                         label:'Remarks', 
-                        type: 'textarea',
+                        type: 'ckeditor',
                         colClass: 'col-sm-12'
                     },
                 }
