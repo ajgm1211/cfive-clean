@@ -176,7 +176,9 @@ trait SearchTrait
                                         $sub_20 = number_format($montoKm, 2, '.', '');
                                         $monto += $sub_20;
                                         $amount_inland = $distancia * $rateMount;
-                                        $amount_inland = number_format($rateMount, 2, '.', '');
+                                        
+                                        
+                                        $amount_inland = number_format($amount_inland, 2, '.', '');
                                         $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
 
                                     } else {
@@ -188,6 +190,7 @@ trait SearchTrait
                                         $montoKm = 0;
                                         
                                     }
+     
                                     // CALCULO MARKUPS
                                     $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
@@ -195,6 +198,7 @@ trait SearchTrait
                                     $sub_20 = number_format($sub_20, 2, '.', '');
                                     $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, "des_in" => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
+                                   
                                     $inlandDetails[] = $arrayInland20;
                                 }
                                 // }

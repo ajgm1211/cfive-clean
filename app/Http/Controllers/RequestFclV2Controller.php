@@ -282,6 +282,7 @@ class RequestFclV2Controller extends Controller
                 ]);
             }
 
+            $contract->addMedia(storage_path('tmp/request/' . $file))->preservingOriginal()->toMediaCollection('document','contracts3');           
             $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','FclRequest-New');
             $ext_at_sl  = strtolower(pathinfo($file,PATHINFO_EXTENSION));
 
