@@ -240,9 +240,15 @@ class PdfV2Controller extends Controller
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
-                }
 
+                    $typeCurrency =  $currency_cfg->alphacode;
+
+                    if($value->type_id == 3){
+                        $typeCurrency =  $value->currency->alphacode; //OJO CON ESTO
+                    }
+                    
+                }
+                
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                 if ($value->type_id == 3) {
@@ -259,6 +265,7 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
+            
             if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -568,7 +575,7 @@ class PdfV2Controller extends Controller
                                     if ($quote->pdf_option->grouped_freight_charges == 1) {
                                         $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                     } else {
-                                        $typeCurrency = $currency_cfg->alphacode;
+                                        $typeCurrency = @$rate->currency->alphacode;
                                     }
                                 }
                                 $currency_rate = $this->ratesCurrency($v_freight->currency_id, $typeCurrency);
@@ -587,7 +594,7 @@ class PdfV2Controller extends Controller
                 }
             }
         }
-
+        
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'freight_currency' => $freight_currency]);
 
         $pdf = \App::make('dompdf.wrapper');
