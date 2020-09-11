@@ -14,7 +14,7 @@ class HarborController extends Controller
             return \Response::json([]);
         }
 
-        $harbors = Harbor::where('varation->type', 'like', '%' . $term . '%')->get();
+        $harbors = Harbor::where('varation->type', 'like', '%' . strtolower($term) . '%')->get();
 
         $formatted_harbors = [];
         foreach ($harbors as $harbor) {
