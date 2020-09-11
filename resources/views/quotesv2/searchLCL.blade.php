@@ -1712,12 +1712,12 @@
 
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localfreight['montoMarkup'] /   $localfreight['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localfreight['monto']}} </span>
+                                                                    {{ $localfreight['montoMarkup']}} </span>
                                                             </div>
 
                                                             <div class="wth">
