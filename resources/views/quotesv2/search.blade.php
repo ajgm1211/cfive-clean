@@ -744,6 +744,7 @@ background-color: #36A3F7;
                                     <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
+                                        
                                             <option value="{{ $origin }}"  selected="selected">{{ $harbors[$origin] }}</option>
                                         @endforeach
                                     @endif
