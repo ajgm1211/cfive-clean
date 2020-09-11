@@ -226,7 +226,17 @@ export default {
             type: Boolean,
             required: false,
             default: false,
-        }
+        },
+        multi: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        multiId: {
+            type: Number,
+            required: false,
+            default:1
+        },
         
     },
     data() {
@@ -239,8 +249,18 @@ export default {
         let component = this;
 
         //console.log(this.data);
-        this.vdata = this.data;
-
+        if(!this.multi){
+            this.vdata = this.data;
+        } else {        
+            this.actions
+                .retrieve(this.multiId,this.$route)
+                .then((response) => {
+                    this.vdata=response.data.data;
+                    })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                    });
+            }
 
         fields_keys.forEach(function (key) {
             if(component.fields[key].isLocker){
