@@ -203,7 +203,7 @@ class ContractController extends Controller
             'status' => 'publish',
             'gp_container_id' => $data['gp_container'],
             'remarks' => '',
-            'is_manual' =>1
+            'is_manual' => 1
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);
@@ -240,15 +240,14 @@ class ContractController extends Controller
             'carriers' => 'required'
         ]);
 
-        $status= $this->updateStatus($data['expire']);
-        
+        $status = $this->updateStatus($data['expire']);
+
         $contract->update([
             'name' => $data['name'],
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => $status,
-            'remarks' => '',
             'gp_container_id' => $data['gp_container'],
         ]);
 
@@ -256,19 +255,20 @@ class ContractController extends Controller
 
         return new ContractResource($contract);
     }
-    
-    public function updateStatus($data){
-   
-            $date= date('Y-m-d');
-            $expire=date('Y-m-d', strtotime($data));
-                       
-            if($expire<=$date){
-                $status='expired';
-            }else{
-                $status='publish';
-            } 
-                    
-            return $status;
+
+    public function updateStatus($data)
+    {
+
+        $date = date('Y-m-d');
+        $expire = date('Y-m-d', strtotime($data));
+
+        if ($expire <= $date) {
+            $status = 'expired';
+        } else {
+            $status = 'publish';
+        }
+
+        return $status;
     }
 
     /**
@@ -600,7 +600,7 @@ class ContractController extends Controller
             case 'FCL':
                 $request = NewContractRequest::create([
                     'namecontract' => $contract->name,
-                    'validation' => $contract->validity.' / '.$contract->expire,
+                    'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction_id' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
                     'namefile' => $filename,
@@ -614,7 +614,7 @@ class ContractController extends Controller
             case 'LCL':
                 $request = NewContractRequestLcl::create([
                     'namecontract' => $contract->name,
-                    'validation' => $contract->validity.' / '.$contract->expire,
+                    'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
                     'namefile' => $filename,
