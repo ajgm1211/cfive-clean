@@ -50,4 +50,48 @@ class LocalChargeQuotationController extends Controller
 
         return $charges;
     }
+
+    public function localcharges(Request $request)
+    {
+        switch ($request->type) {
+            case 1:
+                return $this->localChargesOrigin($request->port_id);
+                break;
+            case 2:
+                return $this->localChargesDestination($request->port_id);
+                break;
+        }
+    }
+
+    public function localChargesOrigin($port_id)
+    {
+        $charges = Charge::where('type_id', 1)->whereHas('automatic_rate', function ($q) use ($port_id) {
+            $q->where('origin_port_id', $port_id);
+        })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
+
+        $port = Harbor::with('country')->find($port_id);
+
+        $data = compact(
+            'charges',
+            'port'
+        );
+
+        return $data;
+    }
+
+    public function localChargesDestination($port_id)
+    {
+        $charges = Charge::where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id) {
+            $q->where('destination_port_id', $port_id);
+        })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
+
+        $port = Harbor::with('country')->find($port_id);
+
+        $data = compact(
+            'charges',
+            'port'
+        );
+
+        return $data;
+    }
 }
