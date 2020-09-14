@@ -273,7 +273,6 @@ export default {
             return api.call('post', `/api/v2/sale_terms/charge/destroyAll`, { ids: ids });
         }
     },
-
     sale_codes: {
         list(params, callback, route) {
 
@@ -374,11 +373,14 @@ export default {
         retrieve(autorate_id) {
             return api.call('get', `/api/quotes/ocean_freight/${autorate_id}/charge`, {})
         },
-        update(autorate_id, data) {
-            return api.call('post', `/api/quotes/ocean_freight/${autorate_id}/charge/update`, data)
+        update(charge_id, data,route) {
+            return api.call('post', `/api/quotes/ocean_freight/charge/${charge_id}/update`, data)
         },
         delete(id) {
             return api.call('delete', `/api/quotes/ocean_freight/charge/${id}/destroy/`, {});
         },
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
+        }
     }
 };

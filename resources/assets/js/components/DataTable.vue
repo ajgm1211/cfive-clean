@@ -646,7 +646,7 @@
                     });
                 });
                 }else{
-                    this.actions.update(this.multiId,data,this.$route)
+                    this.actions.update(this.fixedData.id,data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
                         this.refreshData();

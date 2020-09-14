@@ -16,6 +16,7 @@
         :actions="actions"
         :massiveactions="massiveactions"
         :extraRow="extraRow"
+        :singleActions="singleActions"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -96,7 +97,12 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
-            }
+            },
+            singleActions: {
+                type: Array,
+                required: false,
+                default: () => { return ['edit', 'duplicate', 'delete'] }                
+            },
         },
         data() {
             return {
