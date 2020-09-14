@@ -17,7 +17,7 @@
                         :preserve-search="true"
                         placeholder="Choose a Port"
                         label="display_name"
-                        @input="getSaleTerms()"
+                        @input="getValues()"
                         track-by="display_name"
                         class="q-select ml-3"
                     ></multiselect>
@@ -186,8 +186,8 @@
                     </h5>
 
                     <span class="ml-3">
-                        <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera" />
-                        Barcelona, ESBCN
+                        <img v-bind:src="'/images/flags/1x1/' + this.code_port + '.svg'" alt="bandera" style="width:15px; border-radius:2px;"/>&nbsp;
+                        <b>{{this.port}}</b>
                     </span>
                 </div>
 
@@ -236,22 +236,42 @@
                         </b-thead>
 
                         <b-tbody>
-                            <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
+                            <b-tr class="q-tr" v-for="(localcharge, key) in this.localcharges" :key="key">
                                 <b-td>
                                     <b-form-checkbox value="carrier"></b-form-checkbox>
                                 </b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
+                                    <multiselect
+                                        v-model="localcharge.surcharge"
+                                        :options="datalists['surcharges']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a surcharge"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
-
+                                
                                 <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
+                                    <multiselect
+                                        v-model="localcharge.calculation_type"
+                                        :options="datalists['calculationtypes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
                                 <b-td>
                                     <multiselect
-                                        v-model="charge.surcharge"
+                                        v-model="localcharge.surcharge"
                                         :options="datalists['surcharges']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -264,27 +284,27 @@
                                 </b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="MSC" class="q-input"></b-form-input>
+                                    <multiselect
+                                        v-model="localcharge.automatic_rate.carrier"
+                                        :options="datalists['carriers']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a provider"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
+                                <b-td v-for="(item, key) in quoteEquip" :key="key">
                                     <b-form-input placeholder="1500" class="q-input"></b-form-input>
                                     <b-form-input placeholder="100" class="q-input"></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <multiselect
-                                        v-model="charge.currency"
+                                        v-model="localcharge.currency"
                                         :options="datalists['currency']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -401,7 +421,10 @@ export default {
             options: [],
             saleterms: [],
             charges: [],
+            localcharges: [],
             harbors: [],
+            port: [],
+            code_port: "",
             currencies: this.datalists.currency,
             remark_field: {
                 remarks: {
@@ -419,6 +442,10 @@ export default {
         showModal() {
             this.$refs["my-modal"].show();
         },
+        getValues() {
+            this.getSaleTerms();
+            this.getLocalCharges();
+        },
         getSaleTerms() {
             this.saleterms = [];
             this.charges = [];
@@ -428,7 +455,7 @@ export default {
                     this.value.id +
                     "/" +
                     this.equipment.id +
-                     "/" +
+                    "/" +
                     this.value.type,
                 (err, data) => {
                     this.saleterms = data;
@@ -443,6 +470,23 @@ export default {
                 (err, data) => {
                     this.charges = data;
                     console.log(this.charges);
+                }
+            );
+        },
+        getLocalCharges() {
+            this.localcharges = [];
+            this.port = [];
+            api.getData(
+                {},
+                "/api/quote/localcharge/" +
+                    this.value.id +
+                    "/" +
+                    this.value.type,
+                (err, data) => {
+                    this.localcharges = data.charges;
+                    this.port = data.port.display_name;
+                    this.code_port = data.port.country.code;
+                    console.log(this.localcharges);
                 }
             );
         },
