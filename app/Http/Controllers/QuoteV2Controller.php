@@ -644,6 +644,8 @@ class QuoteV2Controller extends Controller
     {
         $charge = AutomaticInland::find($request->pk);
         $name = explode("->", $request->name);
+        $amount = $this->tofloat($request->value);
+        
         if (strpos($request->name, '->') == true) {
             if ($name[0] == 'rate') {
                 $array = json_decode($charge->rate, true);
@@ -674,12 +676,12 @@ class QuoteV2Controller extends Controller
             }
 
             $field = (string) $name[0];
-            $array[$name[1]] = $request->value;
+            $array[$name[1]] = $amount;
             $array = json_encode($array);
             $charge->$field = $array;
         } else {
             $name = $request->name;
-            $charge->$name = $request->value;
+            $charge->$name = $amount;
         }
         $charge->update();
         return response()->json(['success' => 'Ok']);
