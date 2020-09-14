@@ -563,9 +563,10 @@ class ContractController extends Controller
                     'direction_id' => $direction,
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
+                    'status' => 'incomplete',
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $code,
+                    'code' => $request->reference,
                 ]);
                 break;
             case 'LCL':
@@ -575,8 +576,9 @@ class ContractController extends Controller
                     'direction_id' => $direction,
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
+                    'status' => 'incomplete',
                     'type' => $type,
-                    'code' => $code,
+                    'code' => $request->reference,
                 ]);
                 break;
         }
