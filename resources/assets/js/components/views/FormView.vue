@@ -318,6 +318,8 @@
 
                     }
 
+                    data['keys'] = fields_keys;
+
                     if(component.massivechange)
                         data['ids'] = component.massivedata;
                 });

@@ -81,9 +81,11 @@
                         :multiList="true"
                         :multiId="freight.id"
                         :paginated="false"
-                        :massiveactions="['openmodalcontainer', 'delete']"
+                        :massiveactions="['delete']"
+                        :singleActions="['edit','delete']"
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
+                        @onEditSuccess="onEdit"
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
@@ -118,12 +120,12 @@
         </b-card>
         <!-- End Freight Card -->
 
-        <!--  Modal  -->
+        <!--  Add Charge Modal  -->
         <b-modal id="addCharge" hide-footer title="Add Freight">
             <div class="d-flex flex-column align-items-center justify-content-center mb-5">
                 <FormView
                     :data="{}"
-                    :fields="modal_fields"
+                    :fields="addChargeModal_fields"
                     :vdatalists="datalists"
                     btnTxt="Add Freight"
                     @exit="closeModal('addCharge')"
@@ -132,29 +134,30 @@
                 ></FormView>
             </div>
         </b-modal>
-        <!--  End Modal  -->
-
+        <!--  End Add Charge Modal  -->
+        
+        <!--  Edit Charge Modal  -->
         <b-modal
-            id="editContainers"
+            id="editCharge"
             size="lg"
             cancel-title="Cancel"
             hide-header-close
-            title="Edit Containers"
+            title="Edit Charge"
             hide-footer
         >
             <FormView
-                :data="{}"
+                :data="currentChargeData"
                 :massivedata="ids_selected"
-                :fields="containers_fields"
+                :fields="form_fields"
                 :vdatalists="datalists"
-                btnTxt="Update Containers"
-                @exit="closeModal('editContainers')"
-                @success="closeModal('editContainers')"
-                :actions="actions"
+                btnTxt="Update Charge"
+                @exit="closeModal('editCharge')"
+                @success="closeModal('editCharge')"
+                :actions="actions.charges"
                 :update="true"
-                :massivechange="true"
             ></FormView>
         </b-modal>
+        <!--  Edit Charge Modal end -->
     </div>
 </template>
 
@@ -188,6 +191,7 @@ export default {
             openFreight: false,
             openModal: false,
             vdata: {},
+            currentChargeData:{},
             value: "",
             actions: actions,
             header_fields: {
@@ -235,7 +239,7 @@ export default {
                     colClass: "col-sm-12",
                 },
             },
-            modal_fields: {
+            addChargeModal_fields: {
                 POL: {
                     label: "POL",
                     type: "select",
@@ -261,6 +265,7 @@ export default {
                     options: "carriers",
                 },
             },
+            editChargeModal_fields:{},
             loaded: true,
             form_fields: {},
             extra_fields: {},
@@ -372,6 +377,11 @@ export default {
             this.$bvModal.show("addCharge");
         },
 
+        onEdit(data){
+            this.currentChargeData = data;
+            this.$bvModal.show("editCharge");
+        },
+
         /* Single Actions */
         formFieldUpdated(containers_fields) {
             let component = this;
@@ -388,9 +398,8 @@ export default {
         },
 
         openModalContainer(ids) {
-            console.log("test modal");
             this.ids_selected = ids;
-            this.$bvModal.show("editContainers");
+            this.$bvModal.show("editCharge");
         },
 
         closeModal(modal) {
@@ -398,6 +407,10 @@ export default {
             this.ids_selected = [];
 
             let component = this;
+
+            component.freights.forEach(function(freight){
+                freight.expanded=false;
+            });
 
             component.loaded = false;
             setTimeout(function () {
@@ -432,6 +445,7 @@ export default {
                 type: "span",
             };
         },
+
         setCollapseState(freight) {
             let component = this;
 
