@@ -105,16 +105,16 @@ class ChargeController extends Controller
         }
 
         foreach($data as $key=>$value){
-            if(isset($charge->$key)){
+            if(isset($charge->$key) || $charge->$key==null){
                 $charge->update([$key=>$value]);
             }
         }
-        
+
         if(isset($data['fixed_currency'])){
             $charge->update(['currency_id'=>$data['fixed_currency']]);
             $autorate->totalize($request->input('fixed_currency'));
         } else {
-            $autorate->totalize($request->input('currency_id'));
+            $autorate->totalize($autorate->currency_id);
         }  
 
         return new ChargeResource($charge);

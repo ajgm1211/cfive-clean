@@ -5,6 +5,10 @@
             <a href="#" id="show-btn" @click="showModal" class="btn btn-link">+ Add Freight</a>
         </div>
 
+        <div v-if="freights.length == 0">
+            <h2>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal">adding a new freight</a></h2>
+        </div>
+
         <!-- Freight Card -->
         <b-card v-for="freight in freights" :key="freight.id" class="q-card q-freight-card">
             
@@ -16,13 +20,19 @@
                     <!-- Logo, origen, destino -->
                     <div>
                         <img
-                            src="https://i.ibb.co/BNf0WNM/download-logo-HLAG-1.png"
+                            :src="freight.carrierLogo"
                             alt="logo"
+                            width="100" 
+                            height="50"
                             class="mr-4"
                         />
 
                         <span class="mr-4 ml-4">
-                            <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera" />
+                            <img :src="freight.originFlag" 
+                            alt="bandera"
+                            width="20" 
+                            height="20"
+                            style="border-radius: 50%;" />
                             {{freight.originPortName}}
                         </span>
 
@@ -33,7 +43,11 @@
                         ></i>
 
                         <span class="mr-4 ml-4">
-                            <img src="https://i.ibb.co/7WffMF5/china-1-1.png" alt="bandera" />
+                            <img :src="freight.destFlag" 
+                            alt="bandera"
+                            width="20" 
+                            height="20"
+                            style="border-radius: 50%;" />
                             {{freight.destPortName}}
                         </span>
                     </div>
@@ -48,12 +62,11 @@
             </div>
 
             <b-collapse :id="String(freight.id)" class="row">
-                <div v-if="freight.expanded" class="mt-3 mb-3 mr-3 ml-3">
+                <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
                     <FormInlineView
                         v-if="loaded"
-                        :multi="true"
-                        :multiId="freight.id"
+                        :data ="freight.rateData"
                         :fields="header_fields"
                         :datalists="datalists"
                         :actions="actions.automaticrates"
@@ -86,6 +99,7 @@
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
                         @onEditSuccess="onEdit"
+                        :ref="freight.id"
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
@@ -105,9 +119,8 @@
                         <h5 class="q-title">Remarks</h5>
                         <FormInlineView
                             v-if="loaded"
+                            :data="freight.rateData"
                             :fields="remarks_fields"
-                            :multi="true"
-                            :multiId="freight.id"
                             :actions="actions.automaticrates"
                             :datalists="datalists"
                             :update="true"
@@ -121,15 +134,15 @@
         <!-- End Freight Card -->
 
         <!--  Add Charge Modal  -->
-        <b-modal id="addCharge" hide-footer title="Add Freight">
+        <b-modal id="addFreight" hide-footer title="Add Freight">
             <div class="d-flex flex-column align-items-center justify-content-center mb-5">
                 <FormView
                     :data="{}"
-                    :fields="addChargeModal_fields"
+                    :fields="addFreightModal_fields"
                     :vdatalists="datalists"
                     btnTxt="Add Freight"
-                    @exit="closeModal('addCharge')"
-                    @success="closeModal('addCharge')"
+                    @exit="closeModal('addFreight')"
+                    @success="closeModal('addFreight')"
                     :actions="actions.automaticrates"
                 ></FormView>
             </div>
@@ -190,8 +203,8 @@ export default {
         return {
             openFreight: false,
             openModal: false,
+            imageFolder: "/images/flags/1x1/",
             vdata: {},
-            currentChargeData:{},
             value: "",
             actions: actions,
             header_fields: {
@@ -239,7 +252,7 @@ export default {
                     colClass: "col-sm-12",
                 },
             },
-            addChargeModal_fields: {
+            addFreightModal_fields: {
                 POL: {
                     label: "POL",
                     type: "select",
@@ -270,6 +283,8 @@ export default {
             form_fields: {},
             extra_fields: {},
             containers_fields: {},
+            currentChargeData: {},
+            modalCharge: {},
             ids_selected: [],
 
             /* Table headers */
@@ -356,30 +371,21 @@ export default {
         };
     },
     created() {
-        let component = this;
-
         this.setTotalsFields();
 
-        component.freights.forEach(function (freight) {
-            freight.expanded=false;
-            component.datalists.harbors.forEach(function (harbor) {
-                if (harbor.id == freight.origin_port_id) {
-                    freight.originPortName = harbor.display_name;
-                } else if (harbor.id == freight.destination_port_id) {
-                    freight.destPortName = harbor.display_name;
-                }
-            });
-        });
+        this.setFreightData();
 
     },
     methods: {
         showModal() {
-            this.$bvModal.show("addCharge");
+            this.$bvModal.show("addFreight");
         },
 
-        onEdit(data){
+        onEdit(data,id){
             this.currentChargeData = data;
             this.$bvModal.show("editCharge");
+            this.modalCharge = id;
+            
         },
 
         /* Single Actions */
@@ -403,20 +409,21 @@ export default {
         },
 
         closeModal(modal) {
-            this.$bvModal.hide(modal);
-            this.ids_selected = [];
-
             let component = this;
 
-            component.freights.forEach(function(freight){
-                freight.expanded=false;
-            });
+            component.$bvModal.hide(modal);
+            component.ids_selected = [];
+            if(modal=="editCharge"){
+                component.$emit("chargeUpdated")
 
-            component.loaded = false;
-            setTimeout(function () {
-                component.loaded = true;
-            }, 100);
+                component.$refs[component.modalCharge][0].refreshTable()
 
+            }else if(modal=="addFreight"){
+                let id = this.$route.params.id;
+
+                component.$emit("freightAdded",id)
+
+            }
         },
 
         setTotalsFields() {
@@ -449,13 +456,49 @@ export default {
         setCollapseState(freight) {
             let component = this;
 
+            if(!freight.loaded){
+                actions.automaticrates
+                    .retrieve(freight.id,component.$route)
+                    .then((response) => {
+                        freight.rateData=response.data.data;
+                        })
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                        });
+
+                freight.loaded = true;
+            }
+
             setTimeout(function() {
                 component.$nextTick(() => {
-                    freight.expanded = !freight.expanded;
                     component.$forceUpdate()
                 });
             },100);
-        }
+        },
+
+        setFreightData(){
+            let component = this;
+
+            component.freights.forEach(function (freight) {
+                freight.loaded = false;
+                component.datalists.carriers.forEach(function (carrier){
+                    if(freight.carrier_id==carrier.id){
+                        freight.carrierLogo = "/imgcarrier/".concat(carrier.image)
+                    }
+                });
+
+            component.datalists.harbors.forEach(function (harbor) {
+                if (harbor.id == freight.origin_port_id) {
+                    freight.originFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                    freight.originPortName = harbor.display_name;
+                } else if (harbor.id == freight.destination_port_id) {
+                    freight.destFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                    freight.destPortName = harbor.display_name;
+                    }
+                });
+            });
+
+        },
     },
 };
 </script>
