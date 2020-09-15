@@ -29,7 +29,8 @@ class Inland extends Model implements Auditable
         'expire',
         'company_user_id',
         'gp_container_id',
-        'direction_id'
+        'direction_id',
+        'provider_id'
     ];
 
     public function inlandRange()

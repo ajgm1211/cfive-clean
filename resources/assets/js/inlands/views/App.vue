@@ -68,7 +68,8 @@
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
-                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
+                    { key: 'providers', label: 'Provider' },
                 ],
 
                 /* Form Modal Fields */
@@ -123,6 +124,15 @@
                         trackby: 'name', 
                         placeholder: 'Select option', 
                         options: 'directions' 
+                    },
+                    providers: { 
+                        label:'Provider', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select option', 
+                        options: 'providers' 
                     },
                 }
             }
