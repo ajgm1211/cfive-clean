@@ -13,6 +13,7 @@ use App\Container;
 use App\InlandType;
 use App\Harbor;
 use App\InlandPort;
+use App\Providers;
 
 class InlandController extends Controller
 {
@@ -55,6 +56,10 @@ class InlandController extends Controller
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
             return $company->only(['id', 'business_name']);
         });
+        
+        $providers = Providers::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
+            return $providers->only(['id', 'name']);
+        });
 
         $containers = Container::get();
 
@@ -66,6 +71,7 @@ class InlandController extends Controller
             'currencies' => $currencies,
             'companies' => $companies,
             'harbors' => $harbors,
+            'providers' => $providers,
         ];
 
 
@@ -89,7 +95,9 @@ class InlandController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'ports' => 'required'
+            'ports' => 'required',
+            'providers' => 'required',
+            
         ]);
 
         $inland = Inland::create([
@@ -101,7 +109,8 @@ class InlandController extends Controller
             'expire' => $data['expire'],
             'status' => 'publish',
             'inland_type_id' => '1',
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
+            'provider_id' => $data ['providers']
         ]);
 
         $inland->InlandPortsSync($data['ports']);
@@ -127,7 +136,9 @@ class InlandController extends Controller
             'direction' => 'required',
             'gp_container' => 'required',
             'restrictions' => 'sometimes',
-            'ports' => 'required'
+            'ports' => 'required',
+            'providers' => 'required',
+            
         ]);
 
         $inland->update([
@@ -136,7 +147,8 @@ class InlandController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'inland_type_id' => $data['type'],
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
+            'provider_id' => $data ['providers']
         ]);
 
         $inland->InlandPortsSync($data['ports']);

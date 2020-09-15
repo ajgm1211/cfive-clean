@@ -38,5 +38,18 @@ class Providers extends Model
         return (new  ProvidersFilter($request, $builder))->filter();
     }
 
+    /* Duplicate Contract Model instance with relations */
+    
+    public function duplicate()
+    {
+
+        $new_provider = $this->replicate();
+        $new_provider->name .= ' copy';
+        $new_provider->description.=' copy';
+        $new_provider->save();
+
+        return $new_provider;
+    }
+
 
 }
