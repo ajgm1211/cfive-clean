@@ -114,6 +114,20 @@ class ProvidersController extends Controller
         return new ProvidersResource($providers);
     }
 
+    
+        /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\Providers  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(Providers $providers)
+    {
+        $new_provider = $providers->duplicate();
+
+        return new ProvidersResource($new_provider);
+    }
+
 
     /**
      * Remove the specified resource from storage.

@@ -116,11 +116,6 @@
                 // After Create the item redirect to:
                 window.location = `/api/providers`;
             },
-            /* Single Actions */
-            onEdit(data){
-                // Single actions to redirect to:
-                window.location = `/api/providers`;
-            },
             onEdit(data){
                 // Single actions to redirect to:
                 this.currentData = data;
