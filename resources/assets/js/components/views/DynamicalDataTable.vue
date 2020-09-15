@@ -20,6 +20,7 @@
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
+        ref="table"
         >
     </DataTable>
 
@@ -120,7 +121,11 @@
         methods: {
             /* Single Actions */
             onEdit(data){
-                this.$emit('onEditSuccess', data);
+                if(!this.multiId){
+                    this.$emit('onEditSuccess', data);
+                }else{
+                    this.$emit('onEditSuccess', data,this.multiId);
+                }
             },
 
             /* Reset all fields */
@@ -246,6 +251,9 @@
             },
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
+            },
+            refreshTable(){
+                this.$refs.table.refreshData();
             }
            
         },

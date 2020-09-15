@@ -711,6 +711,7 @@
                 this.currentData = data;
                 this.$bvModal.show('editModal');
                 this.$emit('onEdit', data);
+                this.refreshData();
             },
             onDelete(id){
               
