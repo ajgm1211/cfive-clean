@@ -62,12 +62,13 @@
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
+                            @freightAdded="setInitialData"
                             ></ocean>
                         </b-tab>
 
-                        <b-tab title="Local Charges">
+                        <b-tab title="Local Charges" @click="changeView('locals')">
                             <Local
-                                v-if="loaded"
+                                v-if="locals"
                                 :equipment="equip"
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
@@ -114,6 +115,7 @@ export default {
             actions: actions,
             loaded: false,
             ocean: false,
+            locals: false,
             tabs_loaded: false,
             form_fields: {
                 quote_id: {
@@ -278,15 +280,8 @@ export default {
             this.loaded = true;
         });
 
-        actions.quotes
-            .retrieve(id)
-            .then((response) => {
-                this.currentData = response.data.data;
-                this.onSuccess(this.currentData);
-            })
-            .catch((data) => {
-                this.$refs.observer.setErrors(data.data.errors);
-            });
+        this.setInitialData(id);
+    
     },
 
     methods: {
@@ -295,6 +290,7 @@ export default {
             this.datalists = data;
             //console.log(this.datalists);
         },
+
         onSuccess(data) {
             let component = this;
 
@@ -308,8 +304,32 @@ export default {
 
             if(val == 'freight'){
                 this.ocean = true;
+            } else if(val == 'locals'){
+                this.locals = true;
+            }
+        },
+
+        setInitialData(id){
+            let component=this;
+
+            actions.quotes
+                .retrieve(id)
+                .then((response) => {
+                    component.currentData = response.data.data;
+                    component.onSuccess(component.currentData);
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
+                });
+            
+            if(component.ocean){
+                component.ocean=false;
+                setTimeout(function() {
+                    component.ocean=true
+                },100);
             }
         }
+        
     },
 
     

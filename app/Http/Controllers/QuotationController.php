@@ -50,7 +50,7 @@ class QuotationController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name']);
+            return $carrier->only(['id', 'name','image']);
         });
 
         $companies = Company::where('company_user_id','=',$company_user_id)->get()->map(function ($company){
@@ -79,7 +79,7 @@ class QuotationController extends Controller
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
-          return $harbor->only(['id', 'display_name','country_id']);
+          return $harbor->only(['id', 'display_name','country_id','code']);
         });
 
         $payment_conditions = PaymentCondition::get()->map(function ($payment_condition){
@@ -247,32 +247,6 @@ class QuotationController extends Controller
                     
                     $freight->setContractInfo($info_decoded,$rate_decoded,$rate);
                     
-                    $freight->setCalculationType($data['container_type']);
-                }
-            }
-        } else {
-            $origins = $quote->originDest($data['originport']);
-            $destinations = $quote->originDest($data['destinyport']);
-        
-            foreach($origins as $orig){
-                foreach($destinations as $dest){
-                    $rate = AutomaticRate::create([
-                        'quote_id' => $quote->id,
-                        'contract' => '',
-                        'validity_start' => explode("/",$data['date'])[0],
-                        'validity_end' => explode("/",$data['date'])[1],
-                        'origin_port_id' => $orig,
-                        'destination_port_id' => $dest,
-                        'currency_id' => $company_user->currency_id       
-                    ]);
-
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $rate->id,
-                        'type_id' => '3',
-                        'calculation_type_id' => '5',
-                        'currency_id' => $rate->currency_id,
-                    ]);
-
                     $freight->setCalculationType($data['container_type']);
                 }
             }
