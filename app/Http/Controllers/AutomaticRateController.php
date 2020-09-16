@@ -34,7 +34,8 @@ class AutomaticRateController extends Controller
                 'validity_end' => $quote->validity_end,
                 'origin_port_id' => $data['POL'],
                 'destination_port_id' => $data['POD'],
-                'currency_id' => '149'     
+                'currency_id' => '149',
+                'carrier_id' => $data['carrier'],
                 ]);
 
         $freight = Charge::create([
@@ -51,8 +52,13 @@ class AutomaticRateController extends Controller
     {   
 
         $form_keys = $request->input('keys');
-        
-        if(!in_array('profits_currency',$form_keys)){
+
+        if(in_array('remarks',$form_keys)){
+            $data = $request->input();
+
+            $autorate->update(['remarks'=>$data['remarks']]);
+
+        }else if(!in_array('profits_currency',$form_keys)){
             $data = $request->validate([
                 'transit_time' => 'numeric'
             ]);

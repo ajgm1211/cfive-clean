@@ -226,7 +226,7 @@ export default {
             type: Boolean,
             required: false,
             default: false,
-        }
+        },
         
     },
     data() {
@@ -241,22 +241,14 @@ export default {
         //console.log(this.data);
         this.vdata = this.data;
 
-
         fields_keys.forEach(function (key) {
             if(component.fields[key].isLocker){
                 component.unlock(component.fields[key],key)
             }
-        });        
-    },
-    beforeUpdate() {
-        let fields_keys = Object.keys(this.fields);
-        let component = this;
-
-        fields_keys.forEach(function (key) {
             if(component.fields[key].isHiding){
                 component.showHidden(component.fields[key],key)
-        }
-        });
+            }
+        });        
     },
     methods: {
         closeModal() {

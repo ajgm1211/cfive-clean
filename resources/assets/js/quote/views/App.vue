@@ -65,7 +65,6 @@ export default {
 
   },
   methods: {
-      /* Set the Dropdown lists to use in form */
       onEdit(data){
           window.location = `/api/quote/${data.id}/edit`;
       },
