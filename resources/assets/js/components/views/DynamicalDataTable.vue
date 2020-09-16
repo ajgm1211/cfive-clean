@@ -16,9 +16,11 @@
         :actions="actions"
         :massiveactions="massiveactions"
         :extraRow="extraRow"
+        :singleActions="singleActions"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
+        ref="table"
         >
     </DataTable>
 
@@ -96,7 +98,12 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
-            }
+            },
+            singleActions: {
+                type: Array,
+                required: false,
+                default: () => { return ['edit', 'duplicate', 'delete'] }                
+            },
         },
         data() {
             return {
@@ -114,7 +121,11 @@
         methods: {
             /* Single Actions */
             onEdit(data){
-                this.$emit('onEditSuccess', data);
+                if(!this.multiId){
+                    this.$emit('onEditSuccess', data);
+                }else{
+                    this.$emit('onEditSuccess', data,this.multiId);
+                }
             },
 
             /* Reset all fields */
@@ -240,6 +251,9 @@
             },
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
+            },
+            refreshTable(){
+                this.$refs.table.refreshData();
             }
            
         },
