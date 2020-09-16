@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Providers;
+use App\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +33,7 @@ class ProvidersController extends Controller
      */
     public function list(Request $request)
     {
-        $results = Providers::filterByCurrentCompany()->filter($request);
+        $results = Provider::filterByCurrentCompany()->filter($request);
         return ProvidersResource::collection($results);
     }
 
@@ -48,7 +48,7 @@ class ProvidersController extends Controller
     {
         $company_user_id = \Auth::user()->company_user_id;
 
-        $providers = Providers::get()->map(function ($providers) {
+        $providers = Provider::get()->map(function ($providers) {
             return $providers->only(['id', 'name','description']);
         });
 
@@ -82,7 +82,7 @@ class ProvidersController extends Controller
             'description' => 'required',    
         ]);
 
-        $providers = providers::create([
+        $providers = provider::create([
             'name' => $data['name'],
             'description' => $data['description'],
             'company_user_id' => $company_user_id,       
@@ -99,7 +99,7 @@ class ProvidersController extends Controller
      * @param  \App\Contract $contract
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Providers $providers)
+    public function update(Request $request, Provider $providers)
     {
         $data = $request->validate([
             'name' => 'required',
@@ -118,10 +118,10 @@ class ProvidersController extends Controller
         /**
      * Duplicate the specified resource.
      *
-     * @param  \App\Providers  $contract
+     * @param  \App\Provider  $providers)
      * @return \Illuminate\Http\Response
      */
-    public function duplicate(Providers $providers)
+    public function duplicate(Provider $providers)
     {
         $new_provider = $providers->duplicate();
 
@@ -132,10 +132,10 @@ class ProvidersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Providers  $providers
+     * @param  \App\Provider  $providers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Providers $providers)
+    public function destroy(Provider $providers)
     {
         $providers->delete();
 

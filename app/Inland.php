@@ -59,7 +59,7 @@ class Inland extends Model implements Auditable
 
     public function providers()
     {
-        return $this->belongsTo('App\Providers', 'provider_id', 'id');
+        return $this->belongsTo('App\Provider', 'provider_id');
     }
 
     public function inland_company_restriction()

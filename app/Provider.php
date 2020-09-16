@@ -4,13 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Filters\ProvidersFilter;
+use App\Http\Filters\ProviderFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 
-class Providers extends Model
+class Provider extends Model
 {
+    protected $table    = "providers";
     protected $fillable = ['id','name', 'description','company_user_id'];
 
 
@@ -35,7 +36,7 @@ class Providers extends Model
      */
     public function scopeFilter(Builder $builder, Request $request)
     {
-        return (new  ProvidersFilter($request, $builder))->filter();
+        return (new  ProviderFilter($request, $builder))->filter();
     }
 
     /* Duplicate Contract Model instance with relations */
