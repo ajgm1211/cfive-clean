@@ -69,7 +69,7 @@
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
                     { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
-                    { key: 'providers', label: 'Provider' },
+                    { key: 'providers', label: 'Provider', formatter: (value)=> { return value.name } },
                 ],
 
                 /* Form Modal Fields */

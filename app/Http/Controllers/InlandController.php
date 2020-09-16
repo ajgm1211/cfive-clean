@@ -13,7 +13,7 @@ use App\Container;
 use App\InlandType;
 use App\Harbor;
 use App\InlandPort;
-use App\Providers;
+use App\Provider;
 
 class InlandController extends Controller
 {
@@ -57,7 +57,7 @@ class InlandController extends Controller
             return $company->only(['id', 'business_name']);
         });
         
-        $providers = Providers::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
+        $providers = Provider::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
             return $providers->only(['id', 'name']);
         });
 
@@ -99,6 +99,7 @@ class InlandController extends Controller
             'providers' => 'required',
             
         ]);
+        
 
         $inland = Inland::create([
             'provider' => $data['reference'],
@@ -140,12 +141,15 @@ class InlandController extends Controller
             'providers' => 'required',
             
         ]);
+        
+        $status= $this->updateStatus($data['expire']);
 
         $inland->update([
             'provider' => $data['reference'],
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
+            'status' => $status,
             'inland_type_id' => $data['type'],
             'gp_container_id' => $data['gp_container'],
             'provider_id' => $data ['providers']
@@ -156,6 +160,20 @@ class InlandController extends Controller
         $inland->InlandRestrictionsSync($data['restrictions'] ?? []);
 
         return new InlandResource($inland);
+    }
+
+        public function updateStatus($data){
+    
+            $date= date('Y-m-d');
+            $expire=date('Y-m-d', strtotime($data));
+                    
+            if($expire<=$date){
+                $status='expired';
+            }else{
+                $status='publish';
+            } 
+                    
+            return $status;
     }
 
     /**

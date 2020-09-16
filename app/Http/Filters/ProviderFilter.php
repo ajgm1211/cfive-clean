@@ -4,7 +4,7 @@ namespace App\Http\Filters;
 
 use App\Http\Filters\AbstractFilter;
 
-class ProvidersFilter extends AbstractFilter
+class ProviderFilter extends AbstractFilter
 {
     protected $paginate = 10;
     protected $filter_by = ['name','description'];
