@@ -182,11 +182,18 @@
             <div class="row">
                 <div class="col-12 col-lg-6 d-flex alig-items-center">
                     <h5>
-                        <b>Origin Costs at:</b>
+                        <b>
+                            <span v-if="this.value.type == 1">Origin</span>
+                            <span v-if="this.value.type == 2">Destination</span> Costs at:
+                        </b>
                     </h5>
 
-                    <span class="ml-3">
-                        <img v-bind:src="'/images/flags/1x1/' + this.code_port + '.svg'" alt="bandera" style="width:15px; border-radius:2px;"/>&nbsp;
+                    <span class="ml-3" v-if="this.port != ''">
+                        <img
+                            v-bind:src="'/images/flags/1x1/' + this.code_port + '.svg'"
+                            alt="bandera"
+                            style="width:15px; border-radius:2px;"
+                        />&nbsp;
                         <b>{{this.port}}</b>
                     </span>
                 </div>
@@ -200,7 +207,7 @@
                                 <b-th></b-th>
 
                                 <b-th>
-                                    <span class="label-text">charge</span>
+                                    <span class="label-text">Charge</span>
                                 </b-th>
 
                                 <b-th>
@@ -212,23 +219,15 @@
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">provider</span>
+                                    <span class="label-text">Provider</span>
+                                </b-th>
+
+                                <b-th v-for="(item, key) in quoteEquip" :key="key">
+                                    <span class="label-text">{{item}} + Profit</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">20 DV + Profit</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 DV + Profit</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 HC + Profit</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
+                                    <span class="label-text">Currency</span>
                                 </b-th>
 
                                 <b-th></b-th>
@@ -236,7 +235,11 @@
                         </b-thead>
 
                         <b-tbody>
-                            <b-tr class="q-tr" v-for="(localcharge, key) in this.localcharges" :key="key">
+                            <b-tr
+                                class="q-tr"
+                                v-for="(localcharge, key) in this.localcharges"
+                                :key="key"
+                            >
                                 <b-td>
                                     <b-form-checkbox value="carrier"></b-form-checkbox>
                                 </b-td>
@@ -254,7 +257,7 @@
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
-                                
+
                                 <b-td>
                                     <multiselect
                                         v-model="localcharge.calculation_type"
@@ -298,8 +301,16 @@
                                 </b-td>
 
                                 <b-td v-for="(item, key) in quoteEquip" :key="key">
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
+                                    <b-form-input
+                                        placeholder
+                                        v-model="localcharge.price['c'+item]"
+                                        class="q-input"
+                                    ></b-form-input>
+                                    <b-form-input
+                                        placeholder
+                                        v-model="localcharge.markup['m'+item]"
+                                        class="q-input"
+                                    ></b-form-input>
                                 </b-td>
 
                                 <b-td>
@@ -416,15 +427,18 @@ export default {
             openModal: false,
             fdata: {},
             vdata: {},
+            pre_c: "c20DV",
             value: "",
             template: "",
             options: [],
             saleterms: [],
             charges: [],
             localcharges: [],
+            local_remarks: "",
             harbors: [],
             port: [],
             code_port: "",
+            rate_id: "",
             currencies: this.datalists.currency,
             remark_field: {
                 remarks: {
@@ -476,6 +490,7 @@ export default {
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
+            let list = [];
             api.getData(
                 {},
                 "/api/quote/localcharge/" +
@@ -486,7 +501,17 @@ export default {
                     this.localcharges = data.charges;
                     this.port = data.port.display_name;
                     this.code_port = data.port.country.code;
-                    console.log(this.localcharges);
+                    this.rate_id = data.automatic_rate_id;
+                }
+            );
+        },
+        getRemarks() {
+            this.local_remarks = [];
+            api.getData(
+                {},
+                "/api/quote/localcharge/remarks/" + this.rate_id,
+                (err, data) => {
+                    this.local_remarks = data;
                 }
             );
         },
