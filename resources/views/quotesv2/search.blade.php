@@ -1209,8 +1209,8 @@ background-color: #36A3F7;
 </div>
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
-    <!-- {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!} -->
-    {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!}
+    {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!} 
+    <!-- {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!} -->
     <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
     <input type="hidden" name="form" value="{{ json_encode($form) }}"

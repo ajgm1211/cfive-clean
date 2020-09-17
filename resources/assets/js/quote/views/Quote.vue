@@ -33,6 +33,7 @@
                                                 :datalists="datalists"
                                                 :actions="actions.quotes"
                                                 :update="true"
+                                                @success="setTermsField"
                                             ></FormInlineView>
                                         </div>
                                     </div>
@@ -62,7 +63,9 @@
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
+                            :quoteLanguage="this.currentData.language['name']"
                             @freightAdded="setInitialData"
+                            ref="oceanTab"
                             ></ocean>
                         </b-tab>
 
@@ -256,14 +259,7 @@ export default {
                     options:"languages",
                 },
             },
-            term_fields: {
-                terms_and_conditions: {
-                    type: "ckeditor",
-                    rules: "required",
-                    placeholder: "Insert terms",
-                    colClass: "col-sm-12",
-                },
-            },
+            term_fields: {},
             currentData: {},
             vdata: {},
             datalists: {},
@@ -283,7 +279,9 @@ export default {
         this.setInitialData(id);
     
     },
-
+    beforeUpdate(){
+        this.setTermsField();
+    },
     methods: {
         //Set dropdowns
         setDropdownLists(err, data) {
@@ -301,11 +299,12 @@ export default {
         },
 
         changeView(val){
+            let component = this;
 
             if(val == 'freight'){
-                this.ocean = true;
+                component.ocean = true;
             } else if(val == 'locals'){
-                this.locals = true;
+                component.locals = true;
             }
         },
 
@@ -328,10 +327,39 @@ export default {
                     component.ocean=true
                 },100);
             }
-        }
+        },
         
-    },
+        setTermsField(){
+            if(this.currentData.language['name']=="Spanish"){
+                this.term_fields = { 
+                    terms_and_conditions: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }                 
+            }else if(this.currentData.language['name']=="Portuguese"){
+                this.term_fields = { 
+                    terms_portuguese: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
+            }else if(this.currentData.language['name']=="English"){
+                this.term_fields = { 
+                    terms_english: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
+            }
 
+            if(this.ocean){
+                if(typeof this.$refs.oceanTab!="undefined"){
+                    this.$refs.oceanTab.setRemarksField(this.currentData.language['name']);
+                }
+            }
+        },
+    },
     
 };
 </script>
