@@ -53,10 +53,14 @@ class AutomaticRateController extends Controller
 
         $form_keys = $request->input('keys');
 
-        if(in_array('remarks',$form_keys)){
+        $remarks_keys = ['remarks_english','remarks_spanish','remarks_portuguese'];
+
+        if(array_intersect($form_keys,$remarks_keys)!=[]){
             $data = $request->input();
 
-            $autorate->update(['remarks'=>$data['remarks']]);
+            foreach($data as $key=>$value){
+                $autorate->update([$key=>$value]);
+            }
 
         }else if(!in_array('profits_currency',$form_keys)){
             $data = $request->validate([
