@@ -12,7 +12,13 @@ use App\SaleTermCharge;
 use App\SaleTermV3;
 
 class LocalChargeQuotationController extends Controller
-{
+{    
+    /**
+     * harbors
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function harbors(Request $request)
     {
 
@@ -34,7 +40,13 @@ class LocalChargeQuotationController extends Controller
 
         return $collection;
     }
-
+    
+    /**
+     * saleterms
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function saleterms(Request $request)
     {
 
@@ -42,7 +54,13 @@ class LocalChargeQuotationController extends Controller
 
         return $saleterms;
     }
-
+    
+    /**
+     * charges
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function charges(Request $request)
     {
 
@@ -50,7 +68,13 @@ class LocalChargeQuotationController extends Controller
 
         return $charges;
     }
-
+    
+    /**
+     * localcharges
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function localcharges(Request $request)
     {
         switch ($request->type) {
@@ -62,10 +86,16 @@ class LocalChargeQuotationController extends Controller
                 break;
         }
     }
-
+    
+    /**
+     * localChargesOrigin
+     *
+     * @param  mixed $port_id
+     * @return void
+     */
     public function localChargesOrigin($port_id)
     {
-        $charges = Charge::where('type_id', 1)->whereHas('automatic_rate', function ($q) use ($port_id) {
+        $charges = Charge::select('*','amount as price','markups as markup')->where('type_id', 1)->whereHas('automatic_rate', function ($q) use ($port_id) {
             $q->where('origin_port_id', $port_id);
         })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
 
@@ -78,10 +108,16 @@ class LocalChargeQuotationController extends Controller
 
         return $data;
     }
-
+    
+    /**
+     * localChargesDestination
+     *
+     * @param  mixed $port_id
+     * @return void
+     */
     public function localChargesDestination($port_id)
     {
-        $charges = Charge::where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id) {
+        $charges = Charge::select('*','amount as price','markups as markup')->where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id) {
             $q->where('destination_port_id', $port_id);
         })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
 
