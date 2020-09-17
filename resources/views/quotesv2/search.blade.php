@@ -669,7 +669,7 @@ background-color: #36A3F7;
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
@@ -744,6 +744,7 @@ background-color: #36A3F7;
                                     <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
+                                        
                                             <option value="{{ $origin }}"  selected="selected">{{ $harbors[$origin] }}</option>
                                         @endforeach
                                     @endif
@@ -1209,8 +1210,7 @@ background-color: #36A3F7;
 </div>
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
-    <!-- {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!} -->
-    {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!}
+    {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
     <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
     <input type="hidden" name="form" value="{{ json_encode($form) }}"
