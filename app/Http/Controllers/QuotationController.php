@@ -257,6 +257,10 @@ class QuotationController extends Controller
 
     public function edit (Request $request, QuoteV2 $quote)
     {
+        $autorates = $quote->rate()->get();
+        foreach($autorates as $auto){
+            $auto->totalize($auto->currency_id);
+        }
         return view('quote.edit');
     }
 
@@ -264,7 +268,9 @@ class QuotationController extends Controller
     {   
         $form_keys = $request->input('keys');
 
-        if(!in_array('terms_and_conditions',$form_keys) && !in_array('remarks',$form_keys)){
+        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english'];
+
+        if(array_intersect($terms_keys,$form_keys)==[]){
             $data = $request->validate([
                 'delivery_type' => 'required',
                 'equipment' => 'required',

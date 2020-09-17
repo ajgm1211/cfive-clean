@@ -68,6 +68,7 @@
                         v-if="loaded"
                         :data ="freight.rateData"
                         :fields="header_fields"
+                        :multi="true"
                         :datalists="datalists"
                         :actions="actions.automaticrates"
                         :update="true"
@@ -121,6 +122,7 @@
                             v-if="loaded"
                             :data="freight.rateData"
                             :fields="remarks_fields"
+                            :multi="true"
                             :actions="actions.automaticrates"
                             :datalists="datalists"
                             :update="true"
@@ -141,8 +143,8 @@
                     :fields="addFreightModal_fields"
                     :vdatalists="datalists"
                     btnTxt="Add Freight"
-                    @exit="closeModal('addFreight')"
-                    @success="closeModal('addFreight')"
+                    @exit="closeModal('addFreight','cancel')"
+                    @success="closeModal('addFreight','add')"
                     :actions="actions.automaticrates"
                 ></FormView>
             </div>
@@ -164,8 +166,8 @@
                 :fields="form_fields"
                 :vdatalists="datalists"
                 btnTxt="Update Charge"
-                @exit="closeModal('editCharge')"
-                @success="closeModal('editCharge')"
+                @exit="closeModal('editCharge','cancel')"
+                @success="closeModal('editCharge','edit')"
                 :actions="actions.charges"
                 :update="true"
             ></FormView>
@@ -198,6 +200,7 @@ export default {
         freights: Array,
         quoteEquip: Array,
         currentQuoteData: Object,
+        quoteLanguage: String,
     },
     data() {
         return {
@@ -245,13 +248,7 @@ export default {
                     colClass: "col-lg-2",
                 },
             },
-            remarks_fields: {
-                remarks: {
-                    type: "ckeditor",
-                    placeholder: "Insert remarks",
-                    colClass: "col-sm-12",
-                },
-            },
+            remarks_fields: {},
             addFreightModal_fields: {
                 POL: {
                     label: "POL",
@@ -376,6 +373,9 @@ export default {
         this.setFreightData();
 
     },
+    beforeUpdate() {
+        this.setRemarksField(this.quoteLanguage);
+    },
     methods: {
         showModal() {
             this.$bvModal.show("addFreight");
@@ -408,17 +408,17 @@ export default {
             this.$bvModal.show("editCharge");
         },
 
-        closeModal(modal) {
+        closeModal(modal,action) {
             let component = this;
 
             component.$bvModal.hide(modal);
             component.ids_selected = [];
-            if(modal=="editCharge"){
+            if(modal=="editCharge" && action=='edit'){
                 component.$emit("chargeUpdated")
 
                 component.$refs[component.modalCharge][0].refreshTable()
 
-            }else if(modal=="addFreight"){
+            }else if(modal=="addFreight" && action=='add'){
                 let id = this.$route.params.id;
 
                 component.$emit("freightAdded",id)
@@ -497,7 +497,31 @@ export default {
                     }
                 });
             });
+        },
 
+        setRemarksField(language){
+            if(language=="Spanish"){
+                this.remarks_fields = {
+                    remarks_spanish: {
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
+                    },
+                }  
+            }else if(language=="Portuguese"){
+                this.remarks_fields = {
+                    remarks_portuguese: {
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
+                    },
+                }  
+            }else if(language=="English"){
+                this.remarks_fields = {
+                    remarks_english: {
+                    type: "ckeditor",
+                    colClass: "col-sm-12",
+                    },
+                }  
+            }
         },
     },
 };

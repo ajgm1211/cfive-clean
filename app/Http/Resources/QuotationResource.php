@@ -40,6 +40,8 @@ class QuotationResource extends JsonResource
         'user_id' => $this->user,
         'payment_conditions' => $this->payment_conditions,
         'terms_and_conditions' => $this->terms_and_conditions,
+        'terms_english' => $this->terms_english,
+        'terms_portuguese' => $this->terms_portuguese,
         'language' => $this->user->companyUser->language,
         'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : ['id'=>$this->incoterm_id,'name'=>$this->incoterm()->first()->name],
         'rates' => $this->rates_v2()->get(),
