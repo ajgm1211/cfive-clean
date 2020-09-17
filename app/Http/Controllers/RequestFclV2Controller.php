@@ -437,6 +437,11 @@ class RequestFclV2Controller extends Controller
         }
 
     }
+    
+    public function sendEmailRequest(Request $request){
+
+        return response()->json(['success'=>true,'data'=>$request->data]);
+    }
 
     // Descargar archivos, dependiendo si es Storage o Media
     public function donwloadFiles(Request $request,$id,$selector)

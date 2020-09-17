@@ -77,3 +77,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
     });
 });
+
+Route::group(['prefix' => 'request','middleware' => 'auth:api'], function () {
+//Route::group(['prefix' => 'request'], function () {
+    Route::post('sendEmail', 'RequestFclV2Controller@sendEmailRequest');
+});
