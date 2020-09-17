@@ -1991,7 +1991,7 @@ class QuoteV2Controller extends Controller
             $modo = $request->input('mode');
             // FCL
             if ($typeText == 'FCL') {
-                foreach ($request->input('originport') as $origP) {
+                /**foreach ($request->input('originport') as $origP) {
                     $infoOrig = explode("-", $origP);
                     $origin_port[] = $infoOrig[0];
                 }
@@ -2015,12 +2015,12 @@ class QuoteV2Controller extends Controller
                         $oceanFreight->total = $arregloNull;
                         $oceanFreight->save();
                     }
-                }
+                }**/
 
                 $this->saveTerms($quote->id, 'FCL', $modo);
             }
             if ($typeText == 'LCL') {
-                foreach ($request->input('originport') as $origP) {
+                /**foreach ($request->input('originport') as $origP) {
                     $infoOrig = explode("-", $origP);
                     $origin_port[] = $infoOrig[0];
                 }
@@ -2045,7 +2045,7 @@ class QuoteV2Controller extends Controller
                         $oceanFreight->currency_id = $idCurrency;
                         $oceanFreight->save();
                     }
-                }
+                }**/
 
                 $this->saveTerms($quote->id, 'LCL', $modo);
             }
@@ -2351,7 +2351,8 @@ class QuoteV2Controller extends Controller
             $this->saveTerms($quote->id, 'FCL', $form->mode);
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        //return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        return redirect()->action('QuotationController@edit', $quote);
     }
 
     /**
