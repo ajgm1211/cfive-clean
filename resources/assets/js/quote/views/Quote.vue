@@ -352,12 +352,6 @@ export default {
                     }
                 }
             }
-
-            if(this.ocean){
-                if(typeof this.$refs.oceanTab!="undefined"){
-                    this.$refs.oceanTab.setRemarksField(this.currentData.language['name']);
-                }
-            }
         },
     },
     
