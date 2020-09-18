@@ -372,9 +372,13 @@ export default {
 
         this.setFreightData();
 
-    },
-    beforeUpdate() {
         this.setRemarksField(this.quoteLanguage);
+
+    },
+    watch: {
+        quoteLanguage: function(newVal,oldVal) {this.setRemarksField(newVal);},
+
+        freights: function() {this.setFreightData();},
     },
     methods: {
         showModal() {
