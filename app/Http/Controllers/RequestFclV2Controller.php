@@ -437,10 +437,35 @@ class RequestFclV2Controller extends Controller
         }
 
     }
-    
-    public function sendEmailRequest(Request $request){
 
-        return response()->json(['success'=>true,'data'=>$request->data]);
+    public function sendEmailRequest(Request $request){
+        $success = false;
+        $error   = null;
+        try{
+            $id         = $request->request_id;
+            $Ncontract  = NewContractRequest::find($id);
+            $users      = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+            $message    = 'The request was processed N°: ' . $Ncontract->id;
+            foreach ($users as $user) {
+                $user->notify(new N_general(\Auth::user(),$message));
+            }
+
+            $usercreador    = User::find($Ncontract->user_id);
+            $message        = "The importation ".$Ncontract->id." was completed";
+            $usercreador->notify(new SlackNotification($message));
+            if(env('APP_VIEW') == 'operaciones') {
+                SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id)->onQueue('operaciones');
+            } else {
+                SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);				
+            }
+            $success = true;
+        } catch(\Exception $e){
+            $success = false;
+            Log::error($e);
+            $error  = $e->getMessage();
+        } finally {
+            return response()->json(['success'=>$success,'error'=>$error]);            
+        }
     }
 
     // Descargar archivos, dependiendo si es Storage o Media
