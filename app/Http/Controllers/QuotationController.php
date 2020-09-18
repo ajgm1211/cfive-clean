@@ -302,8 +302,6 @@ class QuotationController extends Controller
         }
     }
 
-    //Need funcs to update remarks and update terms?
-
     public function destroy(QuoteV2 $quote)
     {
         $quote->delete();
