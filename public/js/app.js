@@ -89367,51 +89367,61 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 var Api = function () {
-	function Api() {
-		_classCallCheck(this, Api);
-	}
+    function Api() {
+        _classCallCheck(this, Api);
+    }
 
-	_createClass(Api, [{
-		key: 'call',
-		value: function call(requestType, url) {
-			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    _createClass(Api, [{
+        key: 'call',
+        value: function call(requestType, url) {
+            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
 
-			return new Promise(function (resolve, reject) {
-				__WEBPACK_IMPORTED_MODULE_0_axios___default.a[requestType](url, data).then(function (response) {
-					resolve(response);
-				}).catch(function (_ref) {
-					var response = _ref.response;
+            return new Promise(function (resolve, reject) {
+                __WEBPACK_IMPORTED_MODULE_0_axios___default.a[requestType](url, data).then(function (response) {
+                    resolve(response);
+                }).catch(function (_ref) {
+                    var response = _ref.response;
 
-					reject(response);
-					if (response.status === 422) {
+                    reject(response);
+                    if (response.status === 422) {
 
-						if ('general' in response.data.errors) event.$swal("Oops!!", response.data.errors.general[0], "error");
+                        if ('general' in response.data.errors) event.$swal("Oops!!", response.data.errors.general[0], "error");
 
-						delete response.data.errors['general'];
-					} else {
-						//Event.$swal("Oops!!", response.data.message, "error"); 
-					}
+                        delete response.data.errors['general'];
+                    } else {
+                        //Event.$swal("Oops!!", response.data.message, "error"); 
+                    }
 
-					if (response.status === 401) {
-						auth.logout();
-					}
-				});
-			});
-		}
-	}, {
-		key: 'getData',
-		value: function getData(params, url, callback) {
+                    if (response.status === 401) {
+                        auth.logout();
+                    }
+                });
+            });
+        }
+    }, {
+        key: 'getData',
+        value: function getData(params, url, callback) {
 
-			this.call('get', url, { params: params }).then(function (response) {
-				callback(null, response.data);
-			}).catch(function (error) {
-				callback(error, error.response.data);
-			});
-		}
-	}]);
+            this.call('get', url, { params: params }).then(function (response) {
+                callback(null, response.data);
+            }).catch(function (error) {
+                callback(error, error.response.data);
+            });
+        }
+    }, {
+        key: 'postData',
+        value: function postData(params, url, callback) {
 
-	return Api;
+            this.call('post', url, { params: params }).then(function (response) {
+                callback(null, response.data);
+            }).catch(function (error) {
+                callback(error, error.response.data);
+            });
+        }
+    }]);
+
+    return Api;
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (Api);
