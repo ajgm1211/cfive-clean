@@ -8,11 +8,12 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
+use App\LocalChargeQuote;
 use App\SaleTermCharge;
 use App\SaleTermV3;
 
 class LocalChargeQuotationController extends Controller
-{    
+{
     /**
      * harbors
      *
@@ -24,14 +25,16 @@ class LocalChargeQuotationController extends Controller
 
         $quote = QuoteV2::with('origin_harbor', 'destination_harbor')->where('id', $request->quote_id)->first();
 
-        $origin_ports = $quote->origin_harbor->map(function ($value) {
+        $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
             $value['type'] = 1;
-            return $value->only(['id', 'display_name', 'type']);
+            $value['quote_id'] = $quote->id;
+            return $value->only(['id', 'display_name', 'type', 'quote_id']);
         });
 
-        $destination_ports = $quote->destination_harbor->map(function ($value, $index) {
+        $destination_ports = $quote->destination_harbor->map(function ($value) use ($quote) {
             $value['type'] = 2;
-            return $value->only(['id', 'display_name', 'type']);
+            $value['quote_id'] = $quote->id;
+            return $value->only(['id', 'display_name', 'type', 'quote_id']);
         });
 
         $harbors = $origin_ports->merge($destination_ports)->unique();
@@ -40,7 +43,7 @@ class LocalChargeQuotationController extends Controller
 
         return $collection;
     }
-    
+
     /**
      * saleterms
      *
@@ -54,7 +57,7 @@ class LocalChargeQuotationController extends Controller
 
         return $saleterms;
     }
-    
+
     /**
      * charges
      *
@@ -68,7 +71,7 @@ class LocalChargeQuotationController extends Controller
 
         return $charges;
     }
-    
+
     /**
      * localcharges
      *
@@ -79,24 +82,25 @@ class LocalChargeQuotationController extends Controller
     {
         switch ($request->type) {
             case 1:
-                return $this->localChargesOrigin($request->port_id);
+                return $this->localChargesOrigin($request->quote_id, $request->port_id);
                 break;
             case 2:
-                return $this->localChargesDestination($request->port_id);
+                return $this->localChargesDestination($request->quote_id, $request->port_id);
                 break;
         }
     }
-    
+
     /**
      * localChargesOrigin
      *
+     * @param  mixed $quote_id
      * @param  mixed $port_id
      * @return void
      */
-    public function localChargesOrigin($port_id)
+    public function localChargesOrigin($quote_id, $port_id)
     {
-        $charges = Charge::select('*','amount as price','markups as markup')->where('type_id', 1)->whereHas('automatic_rate', function ($q) use ($port_id) {
-            $q->where('origin_port_id', $port_id);
+        $charges = Charge::select('*', 'amount as price', 'markups as markup')->where('type_id', 1)->whereHas('automatic_rate', function ($q) use ($port_id, $quote_id) {
+            $q->where('origin_port_id', $port_id)->where('quote_id', $quote_id);
         })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
 
         $port = Harbor::with('country')->find($port_id);
@@ -108,17 +112,18 @@ class LocalChargeQuotationController extends Controller
 
         return $data;
     }
-    
+
     /**
      * localChargesDestination
      *
+     * @param  mixed $quote_id
      * @param  mixed $port_id
      * @return void
      */
-    public function localChargesDestination($port_id)
+    public function localChargesDestination($quote_id, $port_id)
     {
-        $charges = Charge::select('*','amount as price','markups as markup')->where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id) {
-            $q->where('destination_port_id', $port_id);
+        $charges = Charge::select('*', 'amount as price', 'markups as markup')->where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id, $quote_id) {
+            $q->where('destination_port_id', $port_id)->where('quote_id', $quote_id);
         })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
 
         $port = Harbor::with('country')->find($port_id);
@@ -129,5 +134,46 @@ class LocalChargeQuotationController extends Controller
         );
 
         return $data;
+    }
+
+    public function store(Request $request)
+    {
+
+        $ids = $request->params['ids'];
+
+        foreach ($ids as $id) {
+            $localcharge = Charge::findOrFail($id);
+
+            $price = json_decode($localcharge->amount);
+            $profit = json_decode($localcharge->markups);
+
+            LocalChargeQuote::create([
+                'price' => $price,
+                'profit' => $profit,
+                'surcharge_id' => $localcharge->surcharge_id,
+                'calculation_type_id' => $localcharge->calculation_type_id,
+                'currency_id' => $localcharge->currency_id,
+                'port_id' => $request->params['port_id'],
+                'quote_id' => $request->params['quote_id'],
+                'type_id' => $request->params['type_id'],
+            ]);
+        }
+
+        $local_charge_quote = LocalChargeQuote::where([
+            'quote_id' => $request->params['quote_id'], 'type_id' => $request->params['type_id'],
+            'port_id' => $request->params['port_id']
+        ])->with('surcharge', 'calculation_type', 'currency')->get();
+
+        return $local_charge_quote;
+    }
+
+    public function storedCharges(Request $request)
+    {
+        $local_charge_quotes = LocalChargeQuote::where([
+            'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
+            'port_id' => $request->port_id
+        ])->with('surcharge', 'calculation_type', 'currency')->get();
+
+        return $local_charge_quotes;
     }
 }

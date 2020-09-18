@@ -1058,9 +1058,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
     Route::get('/api/quote/local/saleterm/{port_id}/{type}/{type_route}', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@charges')->name('get.quote.charges');
-    Route::get('/api/quote/localcharge/{port_id}/{type}', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
+    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
     Route::get('/api/quote/localcharge/remarks/{rate_id}', 'LocalChargeQuotationController@remarks')->name('get.quote.localcharges.remarks');
-
+    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
+    Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
+    
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
 

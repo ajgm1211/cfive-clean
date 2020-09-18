@@ -77,11 +77,17 @@
                         <b-tbody>
                             <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
                                 <b-td>
-                                    <b-form-input
-                                        placeholder
-                                        v-model="charge.sale_term_code.name"
-                                        class="q-input"
-                                    ></b-form-input>
+                                    <multiselect
+                                        v-model="charge.surcharge"
+                                        :options="datalists['surcharges']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a surcharge"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
                                 <b-td>
                                     <multiselect
@@ -99,7 +105,7 @@
                                 <b-td v-for="(item, key) in quoteEquip" :key="key">
                                     <b-form-input
                                         placeholder
-                                        v-model="charge.amount"
+                                        v-model="charge.price['c'+item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -178,7 +184,14 @@
         </b-card>
 
         <!--  Modal  -->
-        <b-modal ref="my-modal" size="xl" centered hide-footer title="Add Charges">
+        <b-modal
+            ref="my-modal"
+            id="localcharges"
+            size="xl"
+            centered
+            hide-footer
+            title="Add Charges"
+        >
             <div class="row">
                 <div class="col-12 col-lg-6 d-flex alig-items-center">
                     <h5>
@@ -241,7 +254,11 @@
                                 :key="key"
                             >
                                 <b-td>
-                                    <b-form-checkbox value="carrier"></b-form-checkbox>
+                                    <b-form-checkbox
+                                        v-model="ids"
+                                        :id="'id_'+localcharge.id"
+                                        :value="localcharge.id"
+                                    ></b-form-checkbox>
                                 </b-td>
 
                                 <b-td>
@@ -382,7 +399,11 @@
 
                 <div class="col-12 d-flex justify-content-end mb-5 mt-3">
                     <button class="btn btn-link mr-2">+ Add New</button>
-                    <button class="btn btn-primary btn-bg">+ Add Charges</button>
+                    <button
+                        class="btn btn-primary btn-bg"
+                        @click="onSubmit"
+                        @success="closeModal('localcharges')"
+                    >+ Add Charges</button>
                 </div>
             </div>
         </b-modal>
@@ -423,20 +444,20 @@ export default {
     },
     data() {
         return {
-            actions: actions,
+            actions: actions.localcharges,
             openModal: false,
             fdata: {},
             vdata: {},
-            pre_c: "c20DV",
-            value: "",
-            template: "",
+            values: [],
+            ids: [],
             options: [],
             saleterms: [],
             charges: [],
             localcharges: [],
-            local_remarks: "",
             harbors: [],
             port: [],
+            value: "",
+            template: "",
             code_port: "",
             rate_id: "",
             currencies: this.datalists.currency,
@@ -459,6 +480,10 @@ export default {
         getValues() {
             this.getSaleTerms();
             this.getLocalCharges();
+            this.getStoredCharges();
+        },
+        closeModal(modal) {
+            this.$bvModal.hide(modal);
         },
         getSaleTerms() {
             this.saleterms = [];
@@ -487,16 +512,30 @@ export default {
                 }
             );
         },
+        getStoredCharges() {
+            this.charges = [];
+            api.getData(
+                {
+                    quote_id: this.value.quote_id,
+                    port_id: this.value.id,
+                    type_id: this.value.type,
+                },
+                "/api/quote/get/localcharge",
+                (err, data) => {
+                    this.charges = data;
+                }
+            );
+        },
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
-            let list = [];
             api.getData(
-                {},
-                "/api/quote/localcharge/" +
-                    this.value.id +
-                    "/" +
-                    this.value.type,
+                {
+                    quote_id: this.value.quote_id,
+                    port_id: this.value.id,
+                    type: this.value.type,
+                },
+                "/api/quote/localcharge",
                 (err, data) => {
                     this.localcharges = data.charges;
                     this.port = data.port.display_name;
@@ -505,13 +544,19 @@ export default {
                 }
             );
         },
-        getRemarks() {
-            this.local_remarks = [];
-            api.getData(
-                {},
-                "/api/quote/localcharge/remarks/" + this.rate_id,
+        onSubmit() {
+            this.charges = [];
+            api.postData(
+                {
+                    ids: this.ids,
+                    quote_id: this.value.quote_id,
+                    port_id: this.value.id,
+                    type_id: this.value.type,
+                },
+                "/api/quote/localcharge/store",
                 (err, data) => {
-                    this.local_remarks = data;
+                    this.charges = data;
+                    console.log(this.charges);
                 }
             );
         },

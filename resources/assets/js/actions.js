@@ -373,7 +373,7 @@ export default {
         retrieve(autorate_id) {
             return api.call('get', `/api/quotes/ocean_freight/${autorate_id}/charge`, {})
         },
-        update(charge_id, data,route) {
+        update(charge_id, data, route) {
             return api.call('post', `/api/quotes/ocean_freight/charge/${charge_id}/update`, data)
         },
         delete(id) {
@@ -382,5 +382,10 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
         }
+    },
+    localcharges: {
+        create(data, route) {
+            return api.call('post', `/api/quote/localcharge/store`, data);
+        },
     }
 };
