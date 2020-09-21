@@ -147,7 +147,7 @@ class LocalChargeQuotationController extends Controller
             $price = json_decode($localcharge->amount);
             $profit = json_decode($localcharge->markups);
 
-            LocalChargeQuote::create([
+            $local_charge = LocalChargeQuote::create([
                 'price' => $price,
                 'profit' => $profit,
                 'surcharge_id' => $localcharge->surcharge_id,
@@ -157,6 +157,8 @@ class LocalChargeQuotationController extends Controller
                 'quote_id' => $request->params['quote_id'],
                 'type_id' => $request->params['type_id'],
             ]);
+
+            $local_charge->sumarize();
         }
 
         $local_charge_quote = LocalChargeQuote::where([
@@ -175,5 +177,12 @@ class LocalChargeQuotationController extends Controller
         ])->with('surcharge', 'calculation_type', 'currency')->get();
 
         return $local_charge_quotes;
+    }
+
+    public function destroy($id)
+    {
+        LocalChargeQuote::where('id', $id)->delete();
+
+        return 'OK';
     }
 }
