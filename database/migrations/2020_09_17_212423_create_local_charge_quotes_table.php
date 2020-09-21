@@ -15,8 +15,8 @@ class CreateLocalChargeQuotesTable extends Migration
     {
         Schema::create('local_charge_quotes', function (Blueprint $table) {
             $table->increments('id');
-            $table->json('price');
-            $table->json('profit');
+            $table->json('price')->nullable();
+            $table->json('profit')->nullable();
             $table->integer('surcharge_id')->unsigned()->nullable();
             $table->foreign('surcharge_id')->references('id')->on('surcharges');
             $table->integer('calculation_type_id')->unsigned()->nullable();

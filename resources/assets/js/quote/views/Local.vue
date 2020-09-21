@@ -105,7 +105,7 @@
                                 <b-td v-for="(item, key) in quoteEquip" :key="key">
                                     <b-form-input
                                         placeholder
-                                        v-model="charge.price['c'+item]"
+                                        v-model="charge.total['c'+item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -123,7 +123,11 @@
                                     ></multiselect>
                                 </b-td>
                                 <b-td>
-                                    <button type="button" class="btn-delete">
+                                    <button
+                                        type="button"
+                                        class="btn-delete"
+                                        v-on:click="onDelete(charge.id)"
+                                    >
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                     </button>
                                 </b-td>
@@ -543,6 +547,18 @@ export default {
                     this.rate_id = data.automatic_rate_id;
                 }
             );
+        },
+        onDelete(id) {
+            api.getData(
+                {},
+                "/api/quote/localcharge/delete/" + id,
+                (err, data) => {
+                    //
+                }
+            );
+            this.charges = this.charges.filter(function (item) {
+                return id != item.id;
+            });
         },
         onSubmit() {
             this.charges = [];
