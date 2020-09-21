@@ -42,9 +42,7 @@ class Visualtrans
 
         $response = $this->callApi('https://pr-altius.visualtrans.net/rest/api1-facturas-venta.pro?v=ejercicio%3A' . $year . '%2C%20cliente%3A' . $client_id . '&k=ENTICARGOFIVE75682100');
 
-        $count = count($response);
-
-        if ($count > 0) {
+        if ($response['count'] > 0) {
             return true;
         }
 
