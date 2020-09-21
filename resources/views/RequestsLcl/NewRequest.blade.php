@@ -71,8 +71,8 @@
                                     <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    
+                                    'class'=>'form-control m-input','required'])!!}
                                 </div>
                                 <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
@@ -381,17 +381,50 @@
     });
 
     $('#button-submit').on('click',function(){
+        var direction =$('select#direction').val();
+        if(direction == 0){
+            swal(
+                "Error",
+                "Error, Please select the Direction!", "error",
+                true,
+            );
+        }
+    }); 
+
+    $('#button-submit').on('click',function(){
+        var carrier =$('select#carrierM').val();
+        if(carrier == 0){
+            swal(
+                "Error",
+                "Error, Please select Carrier!", "error",
+                true,
+            );
+        }
+    });
+ 
+    $('#button-submit').on('click',function(){
         var date = $('#m_daterangepicker_1').val().split(' / ');
         var date_star = $.trim(date[0]);
         var date_end  = $.trim(date[1]);
         if(date_star == date_end){
             swal(
                 "Error",
-                "Error, Please select the date!", "error",
+                "Error, Please select the Date!", "error",
                 true,
             );
         }else {
             $('#form').submit();
+        }
+    });
+    
+    $('#button-submit').on('click',function(){
+        var reference =$('#nameid').val();
+        if(reference == 0){
+            swal(
+                "Error",
+                "Error, Please Enter Contract Name!", "error",
+                true,
+            );
         }
     });
 
