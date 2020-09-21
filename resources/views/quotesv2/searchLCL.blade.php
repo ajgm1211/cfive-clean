@@ -796,7 +796,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$quoteType,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
