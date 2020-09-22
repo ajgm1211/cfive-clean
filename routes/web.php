@@ -1057,10 +1057,11 @@ Route::group(['middleware' => ['auth']], function () {
     /** End Inlands routes view **/
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
     Route::get('/api/quote/local/saleterm/{port_id}/{type}/{type_route}', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
-    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@charges')->name('get.quote.charges');
+    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');
     Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
     Route::get('/api/quote/localcharge/remarks/{rate_id}', 'LocalChargeQuotationController@remarks')->name('get.quote.localcharges.remarks');
     Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
+    Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::get('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
 

@@ -449,10 +449,8 @@ export default {
     data() {
         return {
             actions: actions.localcharges,
+            currencies: this.datalists.currency,
             openModal: false,
-            fdata: {},
-            vdata: {},
-            values: [],
             ids: [],
             options: [],
             saleterms: [],
@@ -464,7 +462,6 @@ export default {
             template: "",
             code_port: "",
             rate_id: "",
-            currencies: this.datalists.currency,
             remark_field: {
                 remarks: {
                     type: "ckeditor",
@@ -507,12 +504,16 @@ export default {
         },
         getCharges() {
             this.charges = [];
-            api.getData(
-                {},
-                "/api/quote/local/sale/charge/" + this.template.id,
+            api.postData(
+                {
+                    id: this.template.id,
+                    quote_id: this.value.quote_id,
+                    port_id: this.value.id,
+                    type_id: this.value.type,
+                },
+                "/api/quote/localcharge/store/salecharge",
                 (err, data) => {
                     this.charges = data;
-                    console.log(this.charges);
                 }
             );
         },

@@ -8,6 +8,7 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
+use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
 use App\SaleTermCharge;
 use App\SaleTermV3;
@@ -64,7 +65,7 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function charges(Request $request)
+    public function salecharges(Request $request)
     {
 
         $charges = SaleTermCharge::where('sale_term_id', $request->id)->with('calculation_type', 'currency', 'sale_term_code')->get();
@@ -135,7 +136,7 @@ class LocalChargeQuotationController extends Controller
 
         return $data;
     }
-    
+
     /**
      * store new charges
      *
@@ -174,7 +175,42 @@ class LocalChargeQuotationController extends Controller
 
         return $local_charge_quote;
     }
-    
+
+    /**
+     * store new charges from sale terms
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeChargeSaleTerm(Request $request)
+    {
+        $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
+        
+        foreach ($sale_charges as $sale_charge) {
+
+            $local_charge = LocalChargeQuote::create([
+                'price' => $sale_charge->total,
+                'profit' => [],
+                'surcharge_id' => $sale_charge->sale_term_code_id,
+                'calculation_type_id' => $sale_charge->calculation_type_id,
+                'currency_id' => $sale_charge->currency_id,
+                'port_id' => $request->params['port_id'],
+                'quote_id' => $request->params['quote_id'],
+                'type_id' => $request->params['type_id'],
+            ]);
+
+            $local_charge->sumarize();
+
+        }
+
+        $local_charge_quote = LocalChargeQuote::where([
+            'quote_id' => $request->params['quote_id'], 'type_id' => $request->params['type_id'],
+            'port_id' => $request->params['port_id']
+        ])->with('surcharge', 'calculation_type', 'currency')->get();
+
+        return $local_charge_quote;
+    }
+
     /**
      * get previous stored local charges
      *
@@ -190,7 +226,7 @@ class LocalChargeQuotationController extends Controller
 
         return $local_charge_quotes;
     }
-    
+
     /**
      * destroy a local charge
      *

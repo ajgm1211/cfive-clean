@@ -26,6 +26,7 @@ class SaleTermChargeResource extends JsonResource
 			'currency' => $this->currency,
 			'sale_term_code_id' => $this->sale_term_code_id,
 			'sale_term_code' => $this->sale_term_code,
+			'total' => $this->json_containers,
 		];
     }
 }
