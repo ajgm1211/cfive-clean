@@ -17,6 +17,7 @@
         :massiveactions="massiveactions"
         :extraRow="extraRow"
         :singleActions="singleActions"
+        :autoupdateData="autoupdateData"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -104,6 +105,11 @@
                 required: false,
                 default: () => { return ['edit', 'duplicate', 'delete'] }                
             },
+            autoupdateData: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
         },
         data() {
             return {
@@ -142,9 +148,11 @@
                 let fixedKey = '';
 
                 fields.forEach(function (item){
-                    if(item.key.includes('_id')){
-                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                    if(component.extraRow){
+                        if(item.key.includes('_id')){
+                            fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                            component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        }
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
@@ -216,9 +224,11 @@
                     fields = this.initialFields;
 
                 fields.forEach(function (item){
-                    if(item.key.includes('_id')){
-                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        if(component.extraRow){
+                        if(item.key.includes('_id')){
+                            fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                            component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        }
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
@@ -246,12 +256,15 @@
                 this.isLoaded = true;
                 this.$emit('onFormFieldUpdated', containers);
             },
+            
             onChangeContainersView(value){
                 this.extra_field_state = !this.extra_field_state;
             },
+            
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
             },
+            
             refreshTable(){
                 this.$refs.table.refreshData();
             }
