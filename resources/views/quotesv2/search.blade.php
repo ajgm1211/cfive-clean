@@ -741,10 +741,10 @@ background-color: #36A3F7;
                             <div class="{{ $origenClass }}" id="origin_port">
                                 <div id="origin_harbor_label">
                                     <label>Origin port</label>
-                                    <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true">
+                                    <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
-                                            <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
+                                            <option value="{{ $origin }}"  selected="selected">{{ $harbors[$origin] }}</option>
                                         @endforeach
                                     @endif
                                     </select>
@@ -772,7 +772,7 @@ background-color: #36A3F7;
                             <div class="{{ $destinationClass }}" id="destination_port">
                                 <div id="destination_harbor_label">
                                     <label>Destination port</label>
-                                    <select id="destination_harbor" name="destinyport[]" class="portharbors form-control" multiple="true">
+                                    <select id="destination_harbor" name="destinyport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['destinyport'] != null)
                                         @foreach(@$form['destinyport'] as $origin)
                                             <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
@@ -1305,10 +1305,6 @@ background-color: #36A3F7;
                                                     <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
                                                 </div>
                                                 <div class="col-lg-4 d-flex flex-column justify-content-center">
-                                                    @if($arr->service != '')
-                                                    {{$arr->service}}
-
-                                                    @endif
                                                     @if($arr->via != '')
                                                     <span style="color:#2e0084; text-align: center">Via :</span>
                                                     <span style="color:#1d3b6e; text-align: center">{{$arr->via}}</span>
@@ -1320,7 +1316,7 @@ background-color: #36A3F7;
                                                             aria-valuemax="100"></div>
                                                     </div>
                                                     @if($arr->transit_time != '')
-                                                    <span style="color:#2e0084; text-align: center">Transit :</span>
+                                                    <span style="color:#2e0084; text-align: center">Transit Time:</span>
                                                     <span
                                                         style="color:#1d3b6e; text-align: center">{{$arr->transit_time}}
                                                         Days</span>
@@ -1403,10 +1399,8 @@ background-color: #36A3F7;
 
                                                     <span class="portalphacode"
                                                         style="margin-left: 20px; margin-right: 10px; text-align: right">Contract:
-                                                    </span> <span
-                                                        title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
+                                                    </span> <span title="{{$arr->contract->name}}">{{ $arr->contract->name }}</span>
                                                      {{ $arr->contract->number }}
-
                                                 </div>
                                                 @endif
 
@@ -1889,7 +1883,7 @@ background-color: #36A3F7;
                                         <span class="darkblue cabezeras">Remarks</span><br><br>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} <br> {!!
+                                        <div class="col-lg-12"><span class="monto-down">{!! $arr->remarks !!} <br> {!!
                                                 $arr->remarksG !!}</span></div>
 
                                     </div>
@@ -2377,6 +2371,15 @@ function getContainerByGroup(id_group) {
         }
     });
 }
+
+$('#mySelect2').select2({
+  // ...
+  templateSelection: function (data, container) {
+    // Add custom attributes to the <option> tag for the selected option
+    $(data.element).attr('data-custom-attribute', data.customValue);
+    return data.text;
+  }
+});
 </script>
 
 @stop

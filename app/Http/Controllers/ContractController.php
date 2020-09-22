@@ -572,7 +572,6 @@ class ContractController extends Controller
                 $contract = ContractLcl::create([
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
-                    'validation' => $request->valid_until,
                     'direction_id' => $direction,
                     'validity' =>  $request->valid_from,
                     'expire' => $request->valid_until,
@@ -599,7 +598,7 @@ class ContractController extends Controller
             case 'FCL':
                 $request = NewContractRequest::create([
                     'namecontract' => $contract->name,
-                    'validation' => $contract->expire,
+                    'validation' => $contract->validity.' / '.$contract->expire,
                     'direction_id' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
                     'namefile' => $filename,
@@ -613,7 +612,7 @@ class ContractController extends Controller
             case 'LCL':
                 $request = NewContractRequestLcl::create([
                     'namecontract' => $contract->name,
-                    'validation' => $contract->expire,
+                    'validation' => $contract->validity.' / '.$contract->expire,
                     'direction' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
                     'namefile' => $filename,
