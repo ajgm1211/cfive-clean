@@ -382,5 +382,18 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
         }
+    },
+    automaticinlands: {
+        list(params, callback, route) {
+
+            let quote_id = route.params.id;
+
+            api.call('get', `/api/quotes/${quote_id}/automatic_inlands`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
     }
 };

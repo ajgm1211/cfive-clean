@@ -2181,6 +2181,8 @@ class QuoteV2Controller extends Controller
                             $inlandDest->automatic_rate_id = $rate->id;
                             $inlandDest->provider = "Inland " . $form->destination_address;
                             $inlandDest->distance = $inlandDestiny->km;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD
+                            $inlandDest->charge = $info_D->providerName;
                             $inlandDest->contract = $info_D->contract->id;
                             $inlandDest->port_id = $inlandDestiny->port_id;
                             $inlandDest->type = $inlandDestiny->type;
@@ -2223,6 +2225,8 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->automatic_rate_id = $rate->id;
                             $inlandOrig->provider = "Inland " . $form->origin_address;
                             $inlandOrig->distance = $inlandOrigin->km;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD
+                            $inlandOrig->charge = $info_D->providerName;
                             $inlandOrig->contract = $info_D->contract->id;
                             $inlandOrig->port_id = $inlandOrigin->port_id;
                             $inlandOrig->type = $inlandOrigin->type;
