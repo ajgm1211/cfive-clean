@@ -2930,7 +2930,7 @@ class QuoteV2Controller extends Controller
 
             // ************************* CONSULTA RATE API ******************************
 
-            if ($chargesAPI != null) {
+            /*if ($chargesAPI != null) {
 
                 $client = new Client();
 
@@ -2951,7 +2951,7 @@ class QuoteV2Controller extends Controller
                 $arreglo2 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('number', 'CMA CGM');
                 });
-            }
+            }*/
 
             /* if ($chargesAPI_M != null) {
 
@@ -2999,13 +2999,13 @@ class QuoteV2Controller extends Controller
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
 
             $arreglo = $arreglo->get();
-
-            if ($chargesAPI != null) {
+            
+            /*if ($chargesAPI != null) {
                 $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo2 = $arreglo2->get();
 
                 $arreglo = $arreglo->merge($arreglo2);
-            }
+            }*/
 
             /*    if ($chargesAPI_M != null) {
             $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
