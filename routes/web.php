@@ -1025,7 +1025,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
-    
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
@@ -1037,13 +1037,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
-   
+
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'AutomaticRateController@retrieve')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
-    
+
     /**Charge Routes**/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
@@ -1051,7 +1051,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
     Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
-    
+
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
@@ -1063,7 +1063,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::get('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
-    
+
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
 
@@ -1075,10 +1075,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/sale_terms/{saleterm}/edit', 'SaleTermV3Controller@edit')->name('sale_term_v3.edit')->middleware('check_company:saleterm');
     /** End Sale terms routes view **/
 
-     /** Inlands V2 view routes **/
+    /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
-    
+
+    /** Providers view routes **/
+    Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
+    /** End providers routes view **/
 });
 
 
@@ -1222,6 +1225,19 @@ Route::group(['prefix' => 'api/v2/sale_codes'], function () {
     Route::get('{code}', 'SaleTermCodeController@retrieve')->middleware('check_company:code');
     /** End API Sale Terms EndPoints **/
 });
+Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
+
+    /** API Providers endpoint **/
+    Route::get('', 'ProvidersController@list');
+    Route::get('data', 'ProvidersController@data');
+    Route::post('store', 'ProvidersController@store');
+    Route::post('{providers}/update', 'ProvidersController@update');
+    Route::post('{providers}/duplicate', 'ProvidersController@duplicate');
+    Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+
+    /** providers **/
+});
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
