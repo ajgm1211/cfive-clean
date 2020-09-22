@@ -51,18 +51,26 @@ class LocalChargeQuote extends Model
         }
 
         if ($this->price != null) {
-            foreach ($this->price as $key => $price) {
-                $totals[$key] += $price;
+            foreach ($equip_array as $eq) {
+                foreach ($this->price as $key => $price) {
+                    if ($key == 'c' . $eq) {
+                        $totals[$key] += $price;
+                    }
+                }
             }
         }
 
         if ($this->profit != null) {
-            foreach ($this->profit as $k => $profit) {
-                $clear_key = str_replace('m', 'c', $k);
-                $totals[$clear_key] += $profit;
+            foreach ($equip_array as $eq) {
+                foreach ($this->profit as $k => $profit) {
+                    if ($k == 'c' . $eq) {
+                        $clear_key = str_replace('m', 'c', $k);
+                        $totals[$clear_key] += $profit;
+                    }
+                }
             }
         }
-
+        
         $this->update(['total' => $totals]);
     }
 }

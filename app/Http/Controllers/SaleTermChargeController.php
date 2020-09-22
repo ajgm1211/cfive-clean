@@ -45,6 +45,8 @@ class SaleTermChargeController extends Controller
             'sale_term_code_id' => $request->sale_term_code
         ]);
 
+        $charge->jsonTotal();
+
         return new SaleTermChargeResource($charge);
     }
 
