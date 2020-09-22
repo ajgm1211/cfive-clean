@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
         /*$schedule->job(new ProcessExpiredContractsJob)->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
-        $schedule->job(new SyncCompaniesJob)->everyFifteenMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesJob)->twiceDaily(6, 14)->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
         
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
