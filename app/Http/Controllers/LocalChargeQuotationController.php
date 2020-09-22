@@ -135,7 +135,13 @@ class LocalChargeQuotationController extends Controller
 
         return $data;
     }
-
+    
+    /**
+     * store new charges
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function store(Request $request)
     {
 
@@ -168,7 +174,13 @@ class LocalChargeQuotationController extends Controller
 
         return $local_charge_quote;
     }
-
+    
+    /**
+     * get previous stored local charges
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function storedCharges(Request $request)
     {
         $local_charge_quotes = LocalChargeQuote::where([
@@ -178,10 +190,16 @@ class LocalChargeQuotationController extends Controller
 
         return $local_charge_quotes;
     }
-
+    
+    /**
+     * destroy a local charge
+     *
+     * @param  mixed $id
+     * @return void
+     */
     public function destroy($id)
     {
-        LocalChargeQuote::where('id', $id)->delete();
+        LocalChargeQuote::destroy($id);
 
         return 'OK';
     }
