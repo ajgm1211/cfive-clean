@@ -28,7 +28,8 @@ class StoreNewRequestLcl extends FormRequest
             'name' => 'required',
 			'validation_expire' => 'required',
 			'carrier' => 'required',
-			'direction' => 'required',
+            'direction' => 'required',
+            'file' => 'required',
                   
         ];
     }
