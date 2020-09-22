@@ -107,6 +107,7 @@ Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
+    Route::get('DTTB/{identificador}', 'SurchargesController@loadDatatables')->name('surcharges.load.datatables')->middleware(['auth', 'role:administrator|data_entry']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
@@ -803,6 +804,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('ManagerCar
 Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
 
     Route::get('list', 'SearchController@listar')->name('search.list');
+    Route::get('listLCL', 'SearchController@getListLCL')->name('search.lcl'); 
+    Route::get('listFCL', 'SearchController@getListFCL')->name('search.fcl');
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
@@ -1026,6 +1029,10 @@ Route::group(['middleware' => ['auth']], function () {
     /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
+
+    /** Providers view routes **/
+    Route::get('api/providers', 'ProvidersController@index')->name('providers.index'); 
+    /** End providers routes view **/
 });
 
 
@@ -1135,6 +1142,21 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
     Route::post('/destroyAll', 'TransitTimeController@destroyAll');
     /** End API Transit Time EndPoints **/
 });
+
+Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
+
+    /** API Inlands endpoint (Pending to check) **/
+    Route::get('', 'ProvidersController@list');
+    Route::get('data', 'ProvidersController@data');
+    Route::post('store', 'ProvidersController@store');
+    Route::post('{providers}/update', 'ProvidersController@update');
+    Route::post('{providers}/duplicate', 'ProvidersController@duplicate');
+    Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+    
+/** providers **/
+
+});
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
