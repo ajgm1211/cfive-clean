@@ -224,14 +224,10 @@ export default {
                     placeholder: "Select service",
                     colClass: "col-lg-2",
                     options: "schedule_types",
-                    hiding: "via",
-                    showCondition: "Transfer",
-                    isHiding: true,
                 },
                 via: {
                     label: "VIA",
                     searchable: true,
-                    hidden: true,
                     type: "text",
                     placeholder: "Transfer",
                     colClass: "col-lg-2",
@@ -491,13 +487,13 @@ export default {
                     }
                 });
 
-            component.datalists.harbors.forEach(function (harbor) {
-                if (harbor.id == freight.origin_port_id) {
-                    freight.originFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
-                    freight.originPortName = harbor.display_name;
-                } else if (harbor.id == freight.destination_port_id) {
-                    freight.destFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
-                    freight.destPortName = harbor.display_name;
+                component.datalists.harbors.forEach(function (harbor) {
+                    if (harbor.id == freight.origin_port_id) {
+                        freight.originFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                        freight.originPortName = harbor.display_name;
+                    } else if (harbor.id == freight.destination_port_id) {
+                        freight.destFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                        freight.destPortName = harbor.display_name;
                     }
                 });
             });
