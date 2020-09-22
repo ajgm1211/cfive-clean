@@ -332,6 +332,14 @@
                                 </a>
                             </li>
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{url('api/providers')}}" class="m-menu__link "> 
+                                    <i class="m-menu__link-icon la la-cube"></i>
+                                    <span class="m-menu__link-text">
+                                        Providers
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{ route('remarks.list') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-comment"></i>
                                     <span class="m-menu__link-text">
@@ -430,6 +438,14 @@
                                     <i class="m-menu__link-icon flaticon-graph"></i>
                                     <span class="m-menu__link-text">
                                         Dashboard
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('search.list')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search"></i>
+                                    <span class="m-menu__link-text">
+                                        Search History
                                     </span>
                                 </a>
                             </li>
@@ -620,14 +636,7 @@ Group Surchargers
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('search.list')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search"></i>
-                                    <span class="m-menu__link-text">
-                                        Search History
-                                    </span>
-                                </a>
-                            </li>
+                
                             @endrole
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
