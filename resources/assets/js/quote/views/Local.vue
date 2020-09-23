@@ -77,17 +77,11 @@
                         <b-tbody>
                             <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
                                 <b-td>
-                                    <multiselect
-                                        v-model="charge.surcharge"
-                                        :options="datalists['surcharges']"
-                                        :multiple="false"
-                                        :show-labels="false"
-                                        :close-on-select="true"
-                                        :preserve-search="true"
-                                        placeholder="Choose a surcharge"
-                                        label="name"
-                                        track-by="name"
-                                    ></multiselect>
+                                    <b-form-input
+                                        placeholder
+                                        v-model="charge.charge"
+                                        class="q-input"
+                                    ></b-form-input>
                                 </b-td>
                                 <b-td>
                                     <multiselect
@@ -458,6 +452,7 @@ export default {
             localcharges: [],
             harbors: [],
             port: [],
+            total: [],
             value: "",
             template: "",
             code_port: "",
@@ -516,6 +511,7 @@ export default {
                     this.charges = data;
                 }
             );
+            this.getTotal();
         },
         getStoredCharges() {
             this.charges = [];
@@ -528,6 +524,19 @@ export default {
                 "/api/quote/get/localcharge",
                 (err, data) => {
                     this.charges = data;
+                }
+            );
+        },
+        getTotal() {
+            this.total = [];
+            api.getData(
+                {
+                    quote_id: this.value.quote_id,
+                },
+                "/api/quote/localcharge/total",
+                (err, data) => {
+                    this.total = data;
+                    console.log(this.total);
                 }
             );
         },
@@ -576,6 +585,7 @@ export default {
                     console.log(this.charges);
                 }
             );
+            this.getTotal();
         },
     },
 };

@@ -10,8 +10,11 @@ use App\ChargeLclAir;
 use App\Harbor;
 use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
+use App\LocalChargeQuoteTotal;
 use App\SaleTermCharge;
+use App\SaleTermCode;
 use App\SaleTermV3;
+use App\Surcharge;
 
 class LocalChargeQuotationController extends Controller
 {
@@ -43,6 +46,30 @@ class LocalChargeQuotationController extends Controller
         $collection = $harbors->values()->all();
 
         return $collection;
+    }
+    
+    /**
+     * data
+     *
+     * @return void
+     */
+    public function data(){
+        $surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->get();
+        $sale_codes = SaleTermCode::where('company_user_id', \Auth::user()->company_user_id)->get();
+
+        $surcharges = $surcharges->map(function ($value){
+            $value['type'] = 'surcharge';
+            return $value->only(['name','type']);
+        });
+        
+        $sale_codes = $sale_codes->map(function ($value){
+            $value['type'] = 'salecode';
+            return $value->only(['name','type']);
+        });
+        
+        $merged = $surcharges->merge($sale_codes);
+        
+        return $merged->all();
     }
 
     /**
@@ -157,6 +184,7 @@ class LocalChargeQuotationController extends Controller
             $local_charge = LocalChargeQuote::create([
                 'price' => $price,
                 'profit' => $profit,
+                'charge' => $localcharge->surcharge->name,
                 'surcharge_id' => $localcharge->surcharge_id,
                 'calculation_type_id' => $localcharge->calculation_type_id,
                 'currency_id' => $localcharge->currency_id,
@@ -166,6 +194,7 @@ class LocalChargeQuotationController extends Controller
             ]);
 
             $local_charge->sumarize();
+            $local_charge->totalize();
         }
 
         $local_charge_quote = LocalChargeQuote::where([
@@ -191,6 +220,7 @@ class LocalChargeQuotationController extends Controller
             $local_charge = LocalChargeQuote::create([
                 'price' => $sale_charge->total,
                 'profit' => [],
+                'charge' => $sale_charge->sale_term_code->name,
                 'surcharge_id' => $sale_charge->sale_term_code_id,
                 'calculation_type_id' => $sale_charge->calculation_type_id,
                 'currency_id' => $sale_charge->currency_id,
@@ -200,6 +230,7 @@ class LocalChargeQuotationController extends Controller
             ]);
 
             $local_charge->sumarize();
+            $local_charge->totalize();
 
         }
 
@@ -238,5 +269,13 @@ class LocalChargeQuotationController extends Controller
         LocalChargeQuote::destroy($id);
 
         return 'OK';
+    }
+
+    public function getTotal(Request $request){
+
+        $total = LocalChargeQuoteTotal::where('quote_id', $request->params['quote_id'])->first();
+
+        return $total;
+
     }
 }

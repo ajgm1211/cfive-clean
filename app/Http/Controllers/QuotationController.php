@@ -27,6 +27,7 @@ use App\Surcharge;
 use App\ScheduleType;
 use App\Country;
 use App\Http\Resources\QuotationResource;
+use App\SaleTermCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -128,6 +129,20 @@ class QuotationController extends Controller
             return $country->only(['id','code','name']);
         });
 
+        $sale_surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
+            $value['type'] = 'surcharge';
+            return $value->only(['name','type']);
+        });
+
+        $sale_codes = SaleTermCode::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
+            $value['type'] = 'salecode';
+            return $value->only(['name','type']);
+        });
+        
+        $merged = $sale_surcharges->merge($sale_codes);
+        
+        $salecode_surcharges = $merged->all();
+
         $data = compact(
             'companies',
             'contacts',
@@ -146,7 +161,8 @@ class QuotationController extends Controller
             'surcharges',
             'schedule_types',
             'countries',
-            'languages'
+            'languages',
+            'salecode_surcharges'
         );
 
         return response()->json(['data'=>$data]);
