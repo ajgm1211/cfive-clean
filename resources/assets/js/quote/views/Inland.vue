@@ -11,8 +11,91 @@
                     <h5><b>Inland at:</b></h5>
 
                     <multiselect
-                        v-model="value"
-                        :options="options"
+                        v-model="currentPort"
+                        :options="port_options"
+                        :searchable="true"
+                        :close-on-select="false"
+                        :show-labels="false"
+                        placeholder="Select Template"
+                        class="q-select ml-3">
+                    </multiselect>
+
+                    <img src="https://i.ibb.co/YjfjzkS/delivery-2-1.png" alt="delivery-2-1" border="0" class="mr-4 ml-4">
+                        
+                    <h5>
+                        <b>From:</b>
+                        <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera" class="ml-2 mr-1">
+                        <span style="font-size: 14px">Madrid Spain, 23423</span>
+                    </h5>
+
+                </div>
+                <!-- End Origen -> Destino -->
+
+                <div class="col-12 col-lg-4 d-flex justify-content-end align-items-center">
+
+                    <a href="#" class="btn btn-primary btn-bg" id="show-btn" @click="showModal">+ Add Inland</a>
+
+                </div>
+
+                <div class="col-12 mt-5">
+
+                    <!-- DataTable -->
+                    <DynamicalDataTable
+                        v-if="loaded"
+                        :initialFields="fields"
+                        :initialFormFields="vform_fields"
+                        :searchBar="false"
+                        :withTotals="true"
+                        :totalsFields="totalsFields"
+                        :datalists="datalists"
+                        :equipment="equipment"
+                        :actions="actions.automaticinlands"
+                        :quoteEquip="quoteEquip"
+                        :limitEquipment="true"
+                        :paginated="false"
+                        :autoupdateData="true"
+                        :massiveactions="['delete']"
+                        :singleActions="['delete']"
+                        @onFormFieldUpdated="formFieldUpdated"
+                    ></DynamicalDataTable>
+                    <!-- End DataTable -->
+                
+                </div>
+
+                <!-- Checkbox Group Action -->
+                <div class="col-12 d-flex">
+
+                    <b-form-checkbox value="carrier" class="mr-4"><span>Group as:</span> </b-form-checkbox>
+
+                    <multiselect 
+                        v-model="value" 
+                        :options="options" 
+                        :searchable="true" 
+                        :close-on-select="false" 
+                        :show-labels="false" 
+                        placeholder="Forfait"
+                        style="width:8%">
+                    </multiselect>
+
+                </div>
+                <!-- End Checkbox Group Action -->
+
+            </div>
+
+        </b-card>
+
+        <b-card class="q-card">
+
+            <div class="row justify-content-between">
+
+                <!-- Origen -> Destino -->
+                <div class="col-12 col-lg-8 d-flex align-items-center">
+
+                    <h5><b>Inland at:</b></h5>
+
+                    <multiselect
+                        v-model="currentPort"
+                        :options="port_options"
                         :searchable="true"
                         :close-on-select="false"
                         :show-labels="false"
@@ -444,22 +527,147 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import 'vue-multiselect/dist/vue-multiselect.min.css';
+    import DynamicalDataTable from "../../components/views/DynamicalDataTable";
     export default {
         components: {
             Multiselect,
+            DynamicalDataTable,
+        },
+        props: {
+            datalists: Object,
+            freights: Array,
+            currentQuoteData: Object,
+            equipment: Object,
+            quoteEquip: Array,
+            actions: Object,
         },
         data() {
             return {
                 openModal: false,
                 vdata: {},
                 value: '',
-                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
+                loaded: false,
+                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+                currentPort: '',
+                port_options: [],
+                  /* Table headers */
+                fields: [
+                    {
+                        key: "charge",
+                        label: "CHARGE",
+                    },
+                    {
+                        key: "provider",
+                        label: "PROVIDER",
+                    },
+                    {
+                        key: "currency_id",
+                        label: "CURRENCY",
+                        formatter: (value) => {
+                            return value.alphacode;
+                        },
+                    },
+                ],
+                /* Table inputs */
+                vform_fields: {
+                    charge: {
+                        label: "CHARGE",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select charge",
+                    },
+                    provider: {
+                        label: "PROVIDER",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select Provider",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                },
+                totalsFields: {
+                    Profits: {},
+                    Totals: {},
+                },
             }
+        },
+        created() {
+            this.setPorts();
+
+            this.setTotalsFields();
         },
         methods: {
             showModal() {
                 this.$refs['my-modal'].show();
-            }
-        }
+            },
+            
+            setPorts() {
+                let component = this;
+
+                component.freights.forEach(function(freight){
+                    component.datalists.harbors.forEach(function (harbor) {
+                        if(freight.origin_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
+                            component.port_options.push(harbor.display_name);
+                        }
+                        if(freight.destination_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
+                            component.port_options.push(harbor.display_name);
+                        }
+                    });
+                });
+
+                component.port_options.sort();
+
+                if(component.currentPort == ''){
+                    component.currentPort = component.port_options[0];
+                }
+
+                component.loaded = true
+            },
+
+            setTotalsFields() {
+                let component = this;
+
+                component.quoteEquip.forEach(function (eq) {
+                    component.totalsFields["Profits"]["profits_".concat(eq)] = {
+                        type: "text",
+                        placeholder: eq,
+                    };
+                    component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                        type: "span",
+                    };
+                });
+
+                component.totalsFields["Profits"]["profits_currency"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
+                };
+                component.totalsFields["Totals"]["totals_currency"] = {
+                    type: "span",
+                };
+            },
+
+            /* Single Actions */
+            formFieldUpdated(containers_fields) {
+                let component = this;
+
+                component.containers_fields = containers_fields;
+                component.form_fields = {
+                    ...this.vform_fields,
+                    ...containers_fields,
+                };
+            },
+        },
     }
 </script>

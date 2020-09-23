@@ -216,8 +216,17 @@
 
                     <!-- Fields data -->
                     <b-td v-for="(col, key) in fields" :key="key">
-                       <span v-if="'formatter' in col" v-html="col.formatter(item[col.key])"></span>
-                       <span v-else>{{item[col.key]}}</span>
+                        <div v-if="autoupdateData">
+                            <b-form-input
+                                v-model="fdata[col.key]"
+                                :id="col.key"
+                            ></b-form-input>
+                        </div>
+
+                        <div v-else>
+                            <span v-if="'formatter' in col" v-html="col.formatter(item[col.key])"></span>
+                            <span v-else>{{item[col.key]}}</span>
+                        </div>
                     </b-td>
                     <!-- End Fields Data -->
 
@@ -397,7 +406,12 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
-            }
+            },
+            autoupdateData: {
+                type: Boolean,
+                required:false,
+                default: false,
+            },
         },
         components: { 
             Multiselect,
