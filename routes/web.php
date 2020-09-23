@@ -1064,6 +1064,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::get('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
+    Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
+    Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
