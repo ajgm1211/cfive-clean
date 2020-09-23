@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Filters\AutomaticInlandFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class AutomaticInland extends Model
 {
@@ -73,5 +76,14 @@ class AutomaticInland extends Model
         $array = json_decode(json_decode($array));
 
         return $array;
+    }
+
+    public function scopeFilterByQuote($query,$quote_id){
+        return $query->where( 'quote_id', '=', $quote_id );
+    }
+
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new AutomaticInlandFilter($request, $builder))->filter();
     }
 }
