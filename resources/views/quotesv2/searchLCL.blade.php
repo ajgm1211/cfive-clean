@@ -796,7 +796,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$quoteType,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
@@ -1712,12 +1712,12 @@
 
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localfreight['montoMarkup'] /   $localfreight['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localfreight['monto']}} </span>
+                                                                    {{ $localfreight['montoMarkup']}} </span>
                                                             </div>
 
                                                             <div class="wth">
