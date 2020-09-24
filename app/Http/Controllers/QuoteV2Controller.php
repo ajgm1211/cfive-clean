@@ -2181,8 +2181,6 @@ class QuoteV2Controller extends Controller
                             $inlandDest->automatic_rate_id = $rate->id;
                             $inlandDest->provider = "Inland " . $form->destination_address;
                             $inlandDest->distance = $inlandDestiny->km;
-                            //FOR QUOTE MODULE, CREATED NEW FIELD
-                            $inlandDest->charge = $info_D->providerName;
                             $inlandDest->contract = $info_D->contract->id;
                             $inlandDest->port_id = $inlandDestiny->port_id;
                             $inlandDest->type = $inlandDestiny->type;
@@ -2191,7 +2189,20 @@ class QuoteV2Controller extends Controller
                             $inlandDest->validity_start = $inlandDestiny->validity_start;
                             $inlandDest->validity_end = $inlandDestiny->validity_end;
                             $inlandDest->currency_id = $info_D->idCurrency;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD CHARGE
+                            $inlandDest->charge = $info_D->providerName;
                             $inlandDest->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandDestTotals = new AutomaticInlandTotal();
+                            $inlandDestTotals->quote_id = $quote->id;
+                            $inlandDestTotals->port_id = $inlandDestiny->port_id;
+                            $inlandDestTotals->currency_id = $info_D->idCurrency;
+                            $inlandDestTotals->totals = $arregloMontoInDest;
+                            $inlandDestTotals->markups = $arregloMarkupsInDest;
+                            $inlandDestTotals->type = $inlandDestiny->type;
+                            $inlandDestTotals->save();
+
                         }
                     }
                     //INLAND ORIGEN
@@ -2236,6 +2247,16 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             $inlandOrig->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandOrigTotals = new AutomaticInlandTotal();
+                            $inlandOrigTotals->quote_id = $quote->id;
+                            $inlandOrigTotals->port_id = $inlandOrigin->port_id;
+                            $inlandOrigTotals->currency_id = $info_D->idCurrency;
+                            $inlandOrigTotals->totals = $arregloMontoInOrig;
+                            $inlandOrigTotals->markups = $arregloMarkupsInOrig;
+                            $inlandOrigTotals->type = $inlandOrigin->type;
+                            $inlandOrigTotals->save();
                         }
                     }
 
