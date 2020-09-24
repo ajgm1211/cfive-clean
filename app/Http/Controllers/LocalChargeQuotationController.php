@@ -266,16 +266,28 @@ class LocalChargeQuotationController extends Controller
      */
     public function destroy($id)
     {
-        LocalChargeQuote::destroy($id);
+        $local_charge_quote = LocalChargeQuote::findOrFail($id);
+
+        $local_charge_quote->delete();
+
+        $local_charge_quote->totalize();
 
         return 'OK';
     }
 
     public function getTotal(Request $request){
 
-        $total = LocalChargeQuoteTotal::where('quote_id', $request->quote_id)->first();
+        $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->first();
         
         return $total;
+
+    }
+
+    public function getRemarks($id){
+
+        $remarks = QuoteV2::select('localcharge_remarks')->findOrFail($id);
+        
+        return $remarks;
 
     }
 }
