@@ -466,18 +466,15 @@ export default {
             let caller = item;
             let callerKey = key;
 
-            fields_keys.forEach(function(key) {
-                if(caller.hiding === key && component.vdata[callerKey]!=null){
-                    console.log(component.fields[key])
-                    console.log(caller.parentId)
-                    if(caller.showCondition==component.vdata[callerKey].name){
-                        component.fields[key].hidden = false;
-                    } else{
-                        component.fields[key].hidden = true;
-                        component.vdata[key] = null;
-                    }
-                }
-            });
+            if(component.vdata[callerKey]==null || component.vdata[callerKey].name!=caller.showCondition){
+                console.log(caller.parentId,'not good')
+                /**if(caller.parentId == component.fields[caller.showCondition].parentId){
+                    component.fields[caller.hiding].hidden = true;
+                    component.vdata[caller.hiding] = null;               
+                }**/
+            }else if(component.vdata[callerKey].name==caller.showCondition){
+                console.log(caller.parentId,'is good')
+            }
         },
 
         getOptions(options){

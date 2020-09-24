@@ -78,8 +78,15 @@
                             ></Local>
                         </b-tab>
 
-                        <b-tab title="Inland">
-                            <Inland></Inland>
+                        <b-tab title="Inland" @click="changeView('inlands')">
+                            <Inland v-if="inlands"
+                            :currentQuoteData="currentData"
+                            :equipment="equip"
+                            :quoteEquip="quoteEquip"
+                            :actions="actions"
+                            :datalists="datalists"
+                            :freights="freights"
+                            ></Inland>
                         </b-tab>
 
                         <b-tab title="Totals">Totales</b-tab>
@@ -119,6 +126,7 @@ export default {
             loaded: false,
             ocean: false,
             locals: false,
+            inlands: false,
             tabs_loaded: false,
             form_fields: {
                 quote_id: {
@@ -305,6 +313,8 @@ export default {
                 component.ocean = true;
             } else if(val == 'locals'){
                 component.locals = true;
+            } else if(val == 'inlands'){
+                component.inlands = true;
             }
         },
 
@@ -325,6 +335,12 @@ export default {
                 component.ocean=false;
                 setTimeout(function() {
                     component.ocean=true
+                },100);
+            }
+            if(component.inlands){
+                component.inlands=false;
+                setTimeout(function() {
+                    component.inlands=true
                 },100);
             }
         },
@@ -350,12 +366,6 @@ export default {
                     type: "ckeditor",
                     colClass: "col-lg-12",
                     }
-                }
-            }
-
-            if(this.ocean){
-                if(typeof this.$refs.oceanTab!="undefined"){
-                    this.$refs.oceanTab.setRemarksField(this.currentData.language['name']);
                 }
             }
         },
