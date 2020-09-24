@@ -25,7 +25,9 @@
                 <!-- End Titulo y Pais -->
 
                 <!-- Agregar Charges -->
-                <div class="col-12 col-lg-6 d-flex justify-content-end align-items-center">
+                <div
+                    class="col-12 col-lg-6 d-flex justify-content-end align-items-center"
+                >
                     <multiselect
                         v-model="template"
                         :options="saleterms"
@@ -45,13 +47,21 @@
                         class="btn btn-primary btn-bg"
                         id="show-btn"
                         @click="showModal"
-                    >+ Add Charges</button>
+                    >
+                        + Add Charges
+                    </button>
                 </div>
                 <!-- End Agregar Charges -->
 
                 <div class="col-12 mt-5">
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive borderless :striped="false">
+                    <b-table-simple
+                        hover
+                        small
+                        responsive
+                        borderless
+                        :striped="false"
+                    >
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
@@ -63,8 +73,11 @@
                                     <span class="label-text">Detail</span>
                                 </b-th>
 
-                                <b-th v-for="(item, key) in quoteEquip" :key="key">
-                                    <span class="label-text">{{item}}</span>
+                                <b-th
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <span class="label-text">{{ item }}</span>
                                 </b-th>
 
                                 <b-th>
@@ -75,7 +88,11 @@
 
                         <!-- Body table -->
                         <b-tbody>
-                            <b-tr class="q-tr" v-for="(charge, key) in this.charges" :key="key">
+                            <b-tr
+                                class="q-tr"
+                                v-for="(charge, key) in this.charges"
+                                :key="key"
+                            >
                                 <b-td>
                                     <b-form-input
                                         placeholder
@@ -96,10 +113,13 @@
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
-                                <b-td v-for="(item, key) in quoteEquip" :key="key">
+                                <b-td
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
                                     <b-form-input
                                         placeholder
-                                        v-model="charge.total['c'+item]"
+                                        v-model="charge.total['c' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -122,7 +142,10 @@
                                         class="btn-delete"
                                         v-on:click="onDelete(charge.id)"
                                     >
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        <i
+                                            class="fa fa-times"
+                                            aria-hidden="true"
+                                        ></i>
                                     </button>
                                 </b-td>
                             </b-tr>
@@ -136,21 +159,12 @@
                                     </span>
                                 </b-td>
 
-                                <b-td>
-                                    <span>
-                                        <b>1600</b>
-                                    </span>
-                                </b-td>
-
-                                <b-td>
-                                    <span>
-                                        <b>500</b>
-                                    </span>
-                                </b-td>
-
-                                <b-td>
-                                    <span>
-                                        <b>150</b>
+                                <b-td
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <span v-if="totals.total">
+                                        <b>{{totals.total['c'+item]}}</b>
                                     </span>
                                 </b-td>
 
@@ -195,17 +209,20 @@
                     <h5>
                         <b>
                             <span v-if="this.value.type == 1">Origin</span>
-                            <span v-if="this.value.type == 2">Destination</span> Costs at:
+                            <span v-if="this.value.type == 2">Destination</span>
+                            Costs at:
                         </b>
                     </h5>
 
                     <span class="ml-3" v-if="this.port != ''">
                         <img
-                            v-bind:src="'/images/flags/1x1/' + this.code_port + '.svg'"
+                            v-bind:src="
+                                '/images/flags/1x1/' + this.code_port + '.svg'
+                            "
                             alt="bandera"
-                            style="width:15px; border-radius:2px;"
+                            style="width: 15px; border-radius: 2px"
                         />&nbsp;
-                        <b>{{this.port}}</b>
+                        <b>{{ this.port }}</b>
                     </span>
                 </div>
 
@@ -233,8 +250,13 @@
                                     <span class="label-text">Provider</span>
                                 </b-th>
 
-                                <b-th v-for="(item, key) in quoteEquip" :key="key">
-                                    <span class="label-text">{{item}} + Profit</span>
+                                <b-th
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <span class="label-text"
+                                        >{{ item }} + Profit</span
+                                    >
                                 </b-th>
 
                                 <b-th>
@@ -254,7 +276,7 @@
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="ids"
-                                        :id="'id_'+localcharge.id"
+                                        :id="'id_' + localcharge.id"
                                         :value="localcharge.id"
                                     ></b-form-checkbox>
                                 </b-td>
@@ -303,7 +325,9 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="localcharge.automatic_rate.carrier"
+                                        v-model="
+                                            localcharge.automatic_rate.carrier
+                                        "
                                         :options="datalists['carriers']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -315,15 +339,18 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td v-for="(item, key) in quoteEquip" :key="key">
+                                <b-td
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
                                     <b-form-input
                                         placeholder
-                                        v-model="localcharge.price['c'+item]"
+                                        v-model="localcharge.price['c' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
-                                        v-model="localcharge.markup['m'+item]"
+                                        v-model="localcharge.markup['m' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -344,7 +371,10 @@
 
                                 <b-td>
                                     <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        <i
+                                            class="fa fa-times"
+                                            aria-hidden="true"
+                                        ></i>
                                     </button>
                                 </b-td>
                             </b-tr>
@@ -401,7 +431,9 @@
                         class="btn btn-primary btn-bg"
                         @click="onSubmit"
                         @success="closeModal('localcharges')"
-                    >+ Add Charges</button>
+                    >
+                        + Add Charges
+                    </button>
                 </div>
             </div>
         </b-modal>
@@ -445,6 +477,7 @@ export default {
             actions: actions.localcharges,
             currencies: this.datalists.currency,
             openModal: false,
+            busy: false,
             ids: [],
             options: [],
             saleterms: [],
@@ -452,7 +485,7 @@ export default {
             localcharges: [],
             harbors: [],
             port: [],
-            total: [],
+            totals: [],
             value: "",
             template: "",
             code_port: "",
@@ -477,6 +510,7 @@ export default {
             this.getSaleTerms();
             this.getLocalCharges();
             this.getStoredCharges();
+            this.getTotal();
         },
         closeModal(modal) {
             this.$bvModal.hide(modal);
@@ -528,15 +562,15 @@ export default {
             );
         },
         getTotal() {
-            this.total = [];
+            this.totals = [];
             api.getData(
                 {
                     quote_id: this.value.quote_id,
                 },
                 "/api/quote/localcharge/total",
                 (err, data) => {
-                    this.total = data;
-                    console.log(this.total);
+                    this.totals = data;
+                    this.busy = true;
                 }
             );
         },
