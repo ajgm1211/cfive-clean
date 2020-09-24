@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\AutomaticInlandTotal;
 use App\Http\Resources\AutomaticRateResource;
 use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
@@ -37,13 +38,28 @@ class AutomaticRateController extends Controller
                 'currency_id' => '149',
                 'carrier_id' => $data['carrier'],
                 ]);
-
+                
         $freight = Charge::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
                 'calculation_type_id' => '5',
                 'currency_id' => $rate->currency_id,
                 ]);
+
+        $originInland = AutomaticInlandTotal::create([
+                    'quote_id' => $quote->id,
+                    'port_id' => $rate->origin_port_id,
+                    'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
+                    'type' => 'Origin',
+                    ]);
+
+        $destInland = AutomaticInlandTotal::create([
+                    'quote_id' => $quote->id,
+                    'port_id' => $rate->destination_port_id,
+                    'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
+                    'type' => 'Destination',
+                    ]);
+
                 
         return new AutomaticRateResource($rate);
     }
@@ -62,7 +78,7 @@ class AutomaticRateController extends Controller
                 $autorate->update([$key=>$value]);
             }
 
-        }else if(!in_array('profits_currency',$form_keys)){
+        }else{
             $data = $request->validate([
                 'transit_time' => 'numeric'
             ]);
@@ -85,39 +101,56 @@ class AutomaticRateController extends Controller
             foreach(array_keys($data) as $key){
                 $autorate->update([$key=>$data[$key]]);
             }
-        
-        }else{
+        }
+    }
 
-            $data=[];
+    public function updateTotals(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
+    {
+        $form_keys = $request->input('keys');
+
+        $data=[];
            
-            foreach($form_keys as $fkey){
-                if(strpos($fkey,'profits') !== false){
-                    $data += $request->validate([$fkey=>'numeric|nullable']);
-                }
+        foreach($form_keys as $fkey){
+            if(strpos($fkey,'profits') !== false){
+                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
             }
-    
-            $markups = [];
-            
-            foreach($data as $key=>$value){
-                if($value==null){$value=0;}
-                if($key!='profits_currency'){
-                    $markups['m'.str_replace('profits_','',$key)] = $value;
-                }
+        }
+
+        $markups = [];
+        
+        foreach($data as $key=>$value){
+            if($value==null){$value=0;}
+            if($key!='profits_currency'){
+                $markups['m'.str_replace('profits_','',$key)] = $value;
             }
+        }
 
-            if(count($markups) != 0){
-                $markups_json = json_encode($markups);
-    
-                $autorate->update(['markups'=>$markups_json]);
+        if(count($markups) != 0){
+            $markups_json = json_encode($markups);
 
-                $autorate->totalize($request->input('profits_currency'));
-            }
+            $autorate->update(['markups'=>$markups_json]);
 
+            $autorate->totalize($request->input('profits_currency'));
         }
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)
     {
         return new AutomaticRateResource($autorate);
+    }
+
+    public function destroy(AutomaticRate $autorate)
+    {
+        $autorate->delete();
+        
+        $originInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->origin_port_id]])->first();
+
+        $originInland->delete();
+
+        $destInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->destination_port_id]])->first();
+
+        $destInland->delete();
+
+        return response()->json(null, 204);
     }
 }

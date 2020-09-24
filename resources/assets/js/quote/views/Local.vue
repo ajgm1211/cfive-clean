@@ -466,6 +466,7 @@ export default {
             .catch((data) => {
                 this.$refs.observer.setErrors(data.data.errors);
             });
+
     },
     props: {
         equipment: Object,
@@ -616,7 +617,6 @@ export default {
                 "/api/quote/localcharge/store",
                 (err, data) => {
                     this.charges = data;
-                    console.log(this.charges);
                 }
             );
             this.getTotal();
