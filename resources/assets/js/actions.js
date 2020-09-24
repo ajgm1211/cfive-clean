@@ -348,10 +348,17 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_rate/${id}/update`, data)
         },
+        updateTotals(autorate_id,data,route){
+            let quote_id= route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autorate_id}/totals/update`, data)
+        },
         retrieve(id, route) {
             let quote_id = route.params.id;
             return api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, {})
-        }
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy/`, {});
+        },
 
     },
     charges: {
@@ -384,16 +391,38 @@ export default {
         }
     },
     automaticinlands: {
-        list(params, callback, route) {
+        list(port_id, params, callback, route) {
 
             let quote_id = route.params.id;
 
-            api.call('get', `/api/quotes/${quote_id}/automatic_inlands`, { params })
+            api.call('get', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands`, { params })
                 .then(response => {
                     callback(null, response.data);
                 }).catch(error => {
                     callback(error, error.response.data);
                 });
         },
+        create(port_id,data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/store`, data);
+        },
+        update(autoinland_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autoinland_id}/update`, data)
+        },
+        updateTotals(port_id,data,route){
+            let quote_id= route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}/update`, data)
+        },
+        retrieve(port_id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}`, {})
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/automatic_inland/${id}/destroy/`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_inland/destroyAll`, { ids: ids });
+        }
     }
 };
