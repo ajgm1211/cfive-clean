@@ -109,6 +109,7 @@ class LocalChargeQuote extends Model
         LocalChargeQuoteTotal::create([
             'total' => $totals,
             'quote_id' => $quote->id,
+            'port_id' => $this->port_id,
         ]);
         
     }
