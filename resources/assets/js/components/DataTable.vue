@@ -63,7 +63,7 @@
             <b-tbody v-if="!isBusy">
 
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields)">
+                <b-tr v-if="!isEmpty(inputFields) && autoAdd">
 
                     <b-td v-if="firstEmpty"></b-td>
                     
@@ -216,11 +216,24 @@
 
                     <!-- Fields data -->
                     <b-td v-for="(col, key) in fields" :key="key">
-                        <div v-if="autoupdateData">
-                            <b-form-input
-                                v-model="fdata[col.key]"
-                                :id="col.key"
+                        <div v-if="autoupdateDataTable">
+                            <b-form-input v-if="col.type=='text'"
+                                v-model="item[col.key]"
+                                :id="String(item['id'])"
+                                @blur="onSubmitAutoupdate(item['id'])"
                             ></b-form-input>
+
+                            <multiselect v-else-if="col.type=='select'"
+                                v-model="item[col.key]"
+                                :searchable="true"
+                                :close-on-select="true"
+                                :options="datalists[col.options]"
+                                :show-labels="false"
+                                :id="String(item['id'])"
+                                :label="col.trackby"
+                                :track-by="col.trackby"
+                                @input="onSubmitAutoupdate(item['id'])">
+                            </multiselect>
                         </div>
 
                         <div v-else>
@@ -407,10 +420,20 @@
                 required: false,
                 default: () => { return {} }
             },
-            autoupdateData: {
+            autoupdateDataTable: {
                 type: Boolean,
                 required:false,
                 default: false,
+            },
+            portType: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            autoAdd: {
+                type: Boolean,
+                required:false,
+                default: true
             },
         },
         components: { 
@@ -425,6 +448,7 @@
                 currentData: [],
                 totalsData: [],
                 fixedData: [],
+                autoupdateTableData: [],
                 refresh: true,
                 datalists: {},
                 search: null,
@@ -501,6 +525,7 @@
                     this.error = err.toString();
                 } else {
                     this.data = records;
+                    this.autoupdateTableData = records;
                     this.pageCount = Math.ceil(meta.total/meta.per_page);
                 }
             },
@@ -538,7 +563,7 @@
 
                 let data = {};
                 let keys = [];
-                
+
                 if(type=='table'){
                     for (const key in this.inputFields) {
 
@@ -554,6 +579,10 @@
                                 data[key].push(item.id)
                             });
                         }
+                    }
+
+                    if(this.autoupdateDataTable){
+                        data['type'] = this.portType;
                     }
                 
                 }else if(type=='extra'){
@@ -642,6 +671,8 @@
                 
                 let data = this.prepareData('extra');
 
+                console.log(data);
+
                 //this.isBusy = true;
                 if(!this.multiList){
                     this.actions.update(data,this.$route)
@@ -701,23 +732,63 @@
                     });
                 });
                 }else{
-                    this.totalActions.update(this.multiId,data,this.$route)
+                    if(!this.autoupdateDataTable){
+                        this.totalActions.update(this.multiId,data,this.$route)
+                        .then( ( response ) => {
+                            this.updateDinamicalFieldOptions();
+                            this.refreshData();
+    
+                        })
+                            .catch(( error, errors ) => {
+        
+                            let errors_key = Object.keys(error.data.errors);
+        
+                            errors_key.forEach(function(key){ 
+                                $(`#id_f_table_${key}`).css({'display':'block'});
+                                $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                            });
+                        });
+                    }else{
+                        this.totalActions.updateTotals(this.multiId,data,this.$route)
+                        .then( ( response ) => {
+                            this.updateDinamicalFieldOptions();
+                            this.refreshData();
+    
+                        })
+                            .catch(( error, errors ) => {
+        
+                            let errors_key = Object.keys(error.data.errors);
+        
+                            errors_key.forEach(function(key){ 
+                                $(`#id_f_table_${key}`).css({'display':'block'});
+                                $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                            });
+                        });
+                    }
+                }
+            },
+
+            onSubmitAutoupdate(id){
+                let component = this;
+                let uData = {};
+                let keys = [];
+                
+                component.data.forEach(function(item){
+                    for (const key in component.inputFields){
+                        if(item["id"]==id){
+                            keys.push(key);
+                            uData[key] = item[key];
+                        }
+                    }
+                });
+
+                uData["keys"] = keys;
+
+                this.actions.update(id,uData,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
                         this.refreshData();
-
                 })
-                    .catch(( error, errors ) => {
-
-                    let errors_key = Object.keys(error.data.errors);
-
-                    errors_key.forEach(function(key){ 
-                        $(`#id_f_table_${key}`).css({'display':'block'});
-                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
-                    });
-                });
-                }
-
             },
 
             /* Single Actions */
@@ -822,7 +893,7 @@
             onOpenModalContainer(){
                 let ids = this.selected.map(item => item.id);
                 this.$emit('onOpenModalContainerView', ids);
-            }
+            },
         },
         watch: {
             vdatalists: {

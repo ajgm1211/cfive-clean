@@ -63,6 +63,8 @@ class ChargeController extends Controller
 
         $autorate->totalize($autorate->currency_id);
 
+        return new ChargeResource($charge);
+
     }
 
     public function update(Request $request, Charge $charge)
@@ -103,7 +105,11 @@ class ChargeController extends Controller
 
         foreach($data as $key=>$value){
             if(isset($charge->$key) || $charge->$key==null){
-                $charge->update([$key=>$value]);
+                if(strpos($key,'_id')!==false){
+                    $charge->update([$key=>$value['id']]);
+                }else{
+                    $charge->update([$key=>$value]);
+                }
             }
         }
 

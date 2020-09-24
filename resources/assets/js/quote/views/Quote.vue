@@ -337,6 +337,12 @@ export default {
                     component.ocean=true
                 },100);
             }
+            if(component.inlands){
+                component.inlands=false;
+                setTimeout(function() {
+                    component.inlands=true
+                },100);
+            }
         },
         
         setTermsField(){
