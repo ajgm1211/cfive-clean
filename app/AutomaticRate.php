@@ -149,7 +149,7 @@ class AutomaticRate extends Model
 
         array_splice($equip_array,-1,1);
 
-        $charges = $this->charge()->where('surcharge_id','!=',null)->get();
+        $charges = $this->charge()->where([['surcharge_id','!=',null],['type_id',3]])->get();
 
         $ocean_freight = $this->charge()->where('surcharge_id',null)->first();
 

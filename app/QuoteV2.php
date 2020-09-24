@@ -129,6 +129,16 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasOne('App\IntegrationQuoteStatus', 'quote_id', 'id');
     }
 
+    public function kind_of_cargo()
+    {
+        return $this->hasOne('App\CargoKind','name','kind_of_cargo');
+    }
+
+    public function status_quote()
+    {
+        return $this->hasOne('App\StatusQuote','name','status');
+    }
+
     public function scopeExclude($query, $value = array())
     {
         return $query->select(array_diff($this->columns, (array) $value));

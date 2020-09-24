@@ -1045,8 +1045,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'AutomaticRateController@retrieve')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_inland/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
+    Route::delete('api/quotes/automatic_rate/{autorate}/destroy/', 'AutomaticRateController@destroy');
 
-    /**Charge Routes**/
+    /** Charge Routes**/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
     Route::delete('api/quotes/ocean_freight/charge/{charge}/destroy', 'ChargeController@destroy');
@@ -1054,9 +1056,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
 
-    //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-    //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
-    /** End Inlands routes view **/
+    /** AutomaticInlands Routes **/
+    Route::get('api/quotes/{quote}/port/{port_id}/automatic_inlands', 'AutomaticInlandController@list')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/store', 'AutomaticInlandController@store')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_inland/{autoinland}/update', 'AutomaticInlandController@update');
+    Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
+    Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
+    Route::get('api/quotes/{quote}/automatic_inland/totals/{port_id}', 'AutomaticInlandController@retrieve');
+    Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
+
+    /** Local charges routes */
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
     Route::get('/api/quote/local/saleterm/{port_id}/{type}/{type_route}', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');

@@ -2,11 +2,11 @@
     <div v-if="loaded" style="padding: 0px 25px">
 
         <div style="width: 100%" class="mb-3 d-flex justify-content-end">
-            <a href="#" id="show-btn" @click="showModal" class="btn btn-link">+ Add Freight</a>
+            <a href="#" id="show-btn" @click="showModal('addFreight')" class="btn btn-link">+ Add Freight</a>
         </div>
 
         <div v-if="freights.length == 0">
-            <h2>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal">adding a new freight</a></h2>
+            <h2>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal('addFreight')">adding a new freight</a></h2>
         </div>
 
         <!-- Freight Card -->
@@ -54,9 +54,12 @@
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->
-                    <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
-                        <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
-                    </button>
+                    <div>
+                        <a href="#" class="btn btn-primary btn-bg" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                        <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
+                            <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
+                        </button>
+                    </div>
                 </div>
                 <!-- End Logo(compañia), origen, destino y add freight -->
             </div>
@@ -64,18 +67,22 @@
             <b-collapse :id="String(freight.id)" class="row">
                 <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
-                    <FormInlineView
-                        v-if="loaded"
-                        :data ="freight.rateData"
-                        :fields="header_fields"
-                        :multi="true"
-                        :datalists="datalists"
-                        :actions="actions.automaticrates"
-                        :update="true"
-                    ></FormInlineView>
+                    <div>
+                        <FormInlineView
+                            v-if="loaded"
+                            :data ="freight.rateData"
+                            :fields="header_fields"
+                            :multi="true"
+                            :datalists="datalists"
+                            :actions="actions.automaticrates"
+                            :update="true"
+                        ></FormInlineView>
 
-                    <!-- Inputs Freight -->
-                    <!-- End Inputs Freight -->
+                        <!-- Inputs Freight -->
+
+                        <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-link">+ Add Charge</a>
+                        <!-- End Inputs Freight -->
+                    </div>
 
                     <DynamicalDataTable
                         v-if="loaded"
@@ -85,11 +92,13 @@
                         :searchBar="false"
                         :extraRow="true"
                         :withTotals="true"
+                        :autoAdd="false"
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
                         :actions="actions.charges"
                         :totalActions="actions.automaticrates"
+                        :autoupdateDataTable="true"
                         :quoteEquip="quoteEquip"
                         :limitEquipment="true"
                         :multiList="true"
@@ -135,7 +144,7 @@
         </b-card>
         <!-- End Freight Card -->
 
-        <!--  Add Charge Modal  -->
+        <!--  Add Freight Modal  -->
         <b-modal id="addFreight" hide-footer title="Add Freight">
             <div class="d-flex flex-column align-items-center justify-content-center mb-5">
                 <FormView
@@ -144,10 +153,33 @@
                     :vdatalists="datalists"
                     btnTxt="Add Freight"
                     @exit="closeModal('addFreight','cancel')"
-                    @success="closeModal('addFreight','add')"
+                    @success="closeModal('addFreight','addFreight')"
                     :actions="actions.automaticrates"
                 ></FormView>
             </div>
+        </b-modal>
+        <!--  End Add Freight Modal  -->
+
+        <!--  Add Charge Modal  -->
+        <b-modal
+            id="addCharge"
+            size="lg"
+            cancel-title="Cancel"
+            hide-header-close
+            title="Add Charge"
+            hide-footer
+        >
+            <FormView
+                :data="{}"
+                :fields="form_fields"
+                :vdatalists="datalists"
+                :multi="true"
+                :multiId="modalFreight"
+                btnTxt="Add Charge"
+                @exit="closeModal('addCharge','cancel')"
+                @success="closeModal('addCharge','addCharge')"
+                :actions="actions.charges"
+            ></FormView>
         </b-modal>
         <!--  End Add Charge Modal  -->
         
@@ -173,6 +205,7 @@
             ></FormView>
         </b-modal>
         <!--  Edit Charge Modal end -->
+        
     </div>
 </template>
 
@@ -224,14 +257,10 @@ export default {
                     placeholder: "Select service",
                     colClass: "col-lg-2",
                     options: "schedule_types",
-                    hiding: "via",
-                    showCondition: "Transfer",
-                    isHiding: true,
                 },
                 via: {
                     label: "VIA",
                     searchable: true,
-                    hidden: true,
                     type: "text",
                     placeholder: "Transfer",
                     colClass: "col-lg-2",
@@ -281,7 +310,7 @@ export default {
             extra_fields: {},
             containers_fields: {},
             currentChargeData: {},
-            modalCharge: {},
+            modalFreight: {},
             ids_selected: [],
 
             /* Table headers */
@@ -289,23 +318,23 @@ export default {
                 {
                     key: "surcharge_id",
                     label: "CHARGE",
-                    formatter: (value) => {
-                        return value.name;
-                    },
+                    type: "select",
+                    trackby: "name",
+                    options: "surcharges",
                 },
                 {
                     key: "calculation_type_id",
                     label: "PROVIDER",
-                    formatter: (value) => {
-                        return value.name;
-                    },
+                    type: "select",
+                    trackby: "name",
+                    options: "calculationtypes",
                 },
                 {
                     key: "currency_id",
                     label: "CURRENCY",
-                    formatter: (value) => {
-                        return value.alphacode;
-                    },
+                    type: "select",
+                    trackby: "alphacode",
+                    options: "currency",
                 },
             ],
 
@@ -372,19 +401,23 @@ export default {
 
         this.setFreightData();
 
-    },
-    beforeUpdate() {
         this.setRemarksField(this.quoteLanguage);
+
+    },
+    watch: {
+        quoteLanguage: function(newVal,oldVal) {this.setRemarksField(newVal);},
+
+        freights: function() {this.setFreightData();},
     },
     methods: {
-        showModal() {
-            this.$bvModal.show("addFreight");
+        showModal(modal,freight_id) {
+            this.$bvModal.show(modal);
         },
 
         onEdit(data,id){
             this.currentChargeData = data;
             this.$bvModal.show("editCharge");
-            this.modalCharge = id;
+            this.modalFreight = id;
             
         },
 
@@ -416,13 +449,15 @@ export default {
             if(modal=="editCharge" && action=='edit'){
                 component.$emit("chargeUpdated")
 
-                component.$refs[component.modalCharge][0].refreshTable()
+                component.$refs[component.modalFreight][0].refreshTable()
 
-            }else if(modal=="addFreight" && action=='add'){
+            }else if(modal=="addFreight" && action=='addFreight'){
                 let id = this.$route.params.id;
 
                 component.$emit("freightAdded",id)
 
+            }else if(modal=="addCharge" && action=='addCharge'){
+                component.$refs[component.modalFreight][0].refreshTable()
             }
         },
 
@@ -487,13 +522,13 @@ export default {
                     }
                 });
 
-            component.datalists.harbors.forEach(function (harbor) {
-                if (harbor.id == freight.origin_port_id) {
-                    freight.originFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
-                    freight.originPortName = harbor.display_name;
-                } else if (harbor.id == freight.destination_port_id) {
-                    freight.destFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
-                    freight.destPortName = harbor.display_name;
+                component.datalists.harbors.forEach(function (harbor) {
+                    if (harbor.id == freight.origin_port_id) {
+                        freight.originFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                        freight.originPortName = harbor.display_name;
+                    } else if (harbor.id == freight.destination_port_id) {
+                        freight.destFlag = component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")
+                        freight.destPortName = harbor.display_name;
                     }
                 });
             });
@@ -523,6 +558,24 @@ export default {
                 }  
             }
         },
+
+        deleteFreight(id){
+            actions.automaticrates
+                .delete(id)
+                .then( ( response ) => {
+                    this.setFreightData();
+                })
+                    .catch(( data ) => {
+                });
+
+            let quote_id = this.$route.params.id;
+
+            this.$emit("freightAdded",quote_id)
+        },
+
+        setCurrentFreight(id){
+            this.modalFreight = id;
+        }
     },
 };
 </script>
