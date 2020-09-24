@@ -124,7 +124,7 @@ Route::prefix('globalcharges')->group(function () {
 
     Route::get('indexAdm', 'GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth', 'role:administrator|data_entry']);
     Route::get('createAdm', 'GlobalChargesController@createAdm_proc')->name('gcadm.create')->middleware(['auth', 'role:administrator|data_entry']);
-    Route::get('addAdm', 'GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth', 'role:administrator|data_entry']);
+    Route::post('addAdm', 'GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth', 'role:administrator|data_entry']);
     Route::get('typeChargeAdm/{id}', 'GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth', 'role:administrator|data_entry']);
     Route::post('StoreAdm', 'GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth', 'role:administrator|data_entry']);
     Route::post('ShowAdm/{id}', 'GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth', 'role:administrator|data_entry']);
@@ -435,6 +435,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('Harbors')-
     Route::resource('UploadFile', 'FileHarborsPortsController');
     Route::get('/loadViewAdd', 'FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
     Route::get('/destroyharbor/{id}', 'FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+    Route::get('/loadViewChild/{id}', 'HarborController@loadviewChild')->name('load.View.Child');
+    Route::post('storeHierarchy', 'HarborController@storeHierarchy')->name('store.hierarchy');
 });
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {

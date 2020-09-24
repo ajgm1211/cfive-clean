@@ -1464,6 +1464,10 @@ trait QuoteV2Trait
 
                 $typeCurrency =  @$company_user->currency->alphacode;
 
+                if($charge_lcl->type_id == 3){
+                    $typeCurrency = $rate->currency->alphacode;
+                }
+
                 $currency_rate = $this->ratesCurrency($charge_lcl->currency_id, $typeCurrency);
 
                 if ($charge_lcl->type_id == 3) {
