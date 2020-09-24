@@ -164,7 +164,7 @@
                                     :key="key"
                                 >
                                     <span v-if="totals.total">
-                                        <b>{{totals.total['c'+item]}}</b>
+                                        <b>{{ totals.total["c" + item] }}</b>
                                     </span>
                                 </b-td>
 
@@ -187,12 +187,13 @@
         <!-- Remarks -->
         <b-card class="mt-5">
             <h5 class="q-title">Remarks</h5>
-            <FormInlineView
-                :data="currentData"
-                :fields="remark_field"
-                :update="true"
-                :actions="actions.quotes"
-            ></FormInlineView>
+            <br />
+            <ckeditor
+                id="inline-form-input-name"
+                type="classic"
+                v-model="remarks"
+                v-on:blur="onSubmit()"
+            ></ckeditor>
         </b-card>
 
         <!--  Modal  -->
@@ -379,7 +380,7 @@
                                 </b-td>
                             </b-tr>
 
-                            <b-tr class="q-total">
+                            <!--<b-tr class="q-total">
                                 <b-td></b-td>
 
                                 <b-td></b-td>
@@ -419,7 +420,7 @@
                                 </b-td>
 
                                 <b-td></b-td>
-                            </b-tr>
+                            </b-tr>-->
                         </b-tbody>
                     </b-table-simple>
                     <!-- End DataTable -->
@@ -458,6 +459,8 @@ export default {
             this.harbors = data;
         });
 
+        this.getRemarks(id);
+
         actions.quotes
             .retrieve(id)
             .then((response) => {
@@ -466,7 +469,6 @@ export default {
             .catch((data) => {
                 this.$refs.observer.setErrors(data.data.errors);
             });
-
     },
     props: {
         equipment: Object,
@@ -478,7 +480,6 @@ export default {
             actions: actions.localcharges,
             currencies: this.datalists.currency,
             openModal: false,
-            busy: false,
             ids: [],
             options: [],
             saleterms: [],
@@ -492,13 +493,14 @@ export default {
             code_port: "",
             rate_id: "",
             remark_field: {
-                remarks: {
+                localcharge_remarks: {
                     type: "ckeditor",
                     rules: "required",
                     placeholder: "Insert remarks",
                     colClass: "col-sm-12",
                 },
             },
+            remarks: "",
             currentData: {},
             datalists: {},
         };
@@ -512,6 +514,7 @@ export default {
             this.getLocalCharges();
             this.getStoredCharges();
             this.getTotal();
+            //this.getRemarks();
         },
         closeModal(modal) {
             this.$bvModal.hide(modal);
@@ -567,11 +570,11 @@ export default {
             api.getData(
                 {
                     quote_id: this.value.quote_id,
+                    port_id: this.value.id,
                 },
                 "/api/quote/localcharge/total",
                 (err, data) => {
                     this.totals = data;
-                    this.busy = true;
                 }
             );
         },
@@ -598,7 +601,7 @@ export default {
                 {},
                 "/api/quote/localcharge/delete/" + id,
                 (err, data) => {
-                    //
+                    this.getTotal();
                 }
             );
             this.charges = this.charges.filter(function (item) {
@@ -607,6 +610,7 @@ export default {
         },
         onSubmit() {
             this.charges = [];
+            this.totals = [];
             api.postData(
                 {
                     ids: this.ids,
@@ -617,9 +621,20 @@ export default {
                 "/api/quote/localcharge/store",
                 (err, data) => {
                     this.charges = data;
+                    this.getTotal();
                 }
             );
-            this.getTotal();
+        },
+        getRemarks(id) {
+            let self = this;
+            actions.localcharges
+                .remarks(id)
+                .then((response) => {
+                    self.remarks = response.data.localcharge_remarks;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
     },
 };
