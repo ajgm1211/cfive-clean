@@ -273,8 +273,8 @@ class LocalChargeQuotationController extends Controller
 
     public function getTotal(Request $request){
 
-        $total = LocalChargeQuoteTotal::where('quote_id', $request->params['quote_id'])->first();
-
+        $total = LocalChargeQuoteTotal::where('quote_id', $request->quote_id)->first();
+        
         return $total;
 
     }
