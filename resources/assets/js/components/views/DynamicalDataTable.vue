@@ -17,7 +17,9 @@
         :massiveactions="massiveactions"
         :extraRow="extraRow"
         :singleActions="singleActions"
-        :autoupdateData="autoupdateData"
+        :autoupdateDataTable="autoupdateDataTable"
+        :portType="portType"
+        :autoAdd="autoAdd"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -105,10 +107,20 @@
                 required: false,
                 default: () => { return ['edit', 'duplicate', 'delete'] }                
             },
-            autoupdateData: {
+            autoupdateDataTable: {
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            portType: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            autoAdd: {
+                type: Boolean,
+                required:false,
+                default: true
             },
         },
         data() {
@@ -185,7 +197,7 @@
                     {
                         freight = 'freights_'+item.code;
                         rate = 'rates_'+item.code;
-                        component.fields.push({ key: rate, label: item.name });
+                        component.fields.push({ key: rate, label: item.name, type: 'text' });
                         component.form_fields[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         containers[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         if(table.extraRow){
