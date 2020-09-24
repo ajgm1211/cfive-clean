@@ -36,14 +36,7 @@ class AutomaticInlandResource extends JsonResource
 
     public function addContainers($data)
     {
-        if($this->markup!=null){
-            $profits = json_decode($data['markup']);
-            foreach($profits as $code=>$profit){
-                $prof_key = str_replace('m','',$code);
-                $data['profits_'.$prof_key] = $profit;
-                }
-            }
-        
+   
         if($this->rate!=null){
             $totals = json_decode($data['rate']);
             foreach($totals as $code=>$total){
