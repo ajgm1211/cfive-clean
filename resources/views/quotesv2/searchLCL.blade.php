@@ -1050,7 +1050,7 @@
                                 </div>
                             </div>
                             <!-- By packing -->
-                            <div class="tab-pane fade {{ $paquete }} " id="tab_1_2">
+                            <div class="tab-pane fade {{ @$paquete }} " id="tab_1_2">
                                 <input type="hidden" value="@$form['total_pallets']" id="total_pallets"
                                     name="total_pallets" />
                                 <input type="hidden" value="@$form['total_packages']" id="total_packages"
