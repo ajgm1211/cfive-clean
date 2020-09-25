@@ -2838,8 +2838,8 @@ class QuoteV2Controller extends Controller
                 foreach ($origin_port as $orig) {
                     foreach ($destiny_port as $dest) {
                         //$url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
-                        $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
+                       /* $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);*/
                         try {
                             $response = $client->request('GET', $url);
                         } catch (\Exception $e) {
