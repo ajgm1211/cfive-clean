@@ -1067,7 +1067,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /** Local charges routes */
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
-    Route::get('/api/quote/local/saleterm/{port_id}/{type}/{type_route}', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
+    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');
     Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
     Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
@@ -1077,6 +1077,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
     Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
     Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
+    Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
+    Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');

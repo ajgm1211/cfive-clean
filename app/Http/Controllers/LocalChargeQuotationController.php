@@ -81,7 +81,7 @@ class LocalChargeQuotationController extends Controller
     public function saleterms(Request $request)
     {
 
-        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->type, 'type_id' => $request->type_route])->get();
+        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->equipment, 'type_id' => $request->type])->get();
 
         return $saleterms;
     }
@@ -173,7 +173,7 @@ class LocalChargeQuotationController extends Controller
     public function store(Request $request)
     {
 
-        $ids = $request->params['ids'];
+        $ids = $request->ids;
 
         foreach ($ids as $id) {
             $localcharge = Charge::findOrFail($id);
@@ -188,9 +188,9 @@ class LocalChargeQuotationController extends Controller
                 'surcharge_id' => $localcharge->surcharge_id,
                 'calculation_type_id' => $localcharge->calculation_type_id,
                 'currency_id' => $localcharge->currency_id,
-                'port_id' => $request->params['port_id'],
-                'quote_id' => $request->params['quote_id'],
-                'type_id' => $request->params['type_id'],
+                'port_id' => $request->port_id,
+                'quote_id' => $request->quote_id,
+                'type_id' => $request->type_id,
             ]);
 
             $local_charge->sumarize();
@@ -198,8 +198,8 @@ class LocalChargeQuotationController extends Controller
         }
 
         $local_charge_quote = LocalChargeQuote::where([
-            'quote_id' => $request->params['quote_id'], 'type_id' => $request->params['type_id'],
-            'port_id' => $request->params['port_id']
+            'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
+            'port_id' => $request->port_id
         ])->with('surcharge', 'calculation_type', 'currency')->get();
 
         return $local_charge_quote;
@@ -300,6 +300,42 @@ class LocalChargeQuotationController extends Controller
         $remarks = QuoteV2::select('localcharge_remarks')->findOrFail($id);
         
         return $remarks;
+
+    }
+    
+    /**
+     * update
+     *
+     * @param  mixed $request
+     * @param  mixed $id
+     * @return void
+     */
+    public function update(Request $request, $id){
+
+        $index = $request->index;
+
+        LocalChargeQuote::find($id)->update([
+            $index => $request->data
+        ]);
+        
+        return 'Updated!';
+
+    }
+    
+    /**
+     * updateRemarks
+     *
+     * @param  mixed $request
+     * @param  mixed $quote_id
+     * @return void
+     */
+    public function updateRemarks(Request $request, $quote_id){
+
+        QuoteV2::findOrFail($quote_id)->update([
+            'localcharge_remarks' => $request->data
+        ]);
+        
+        return 'Updated!';
 
     }
 }

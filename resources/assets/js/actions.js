@@ -426,11 +426,23 @@ export default {
         }
     },
     localcharges: {
-        create(data, route) {
+        create(data) {
             return api.call('post', `/api/quote/localcharge/store`, data);
         },
         remarks(quote_id) {
             return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
+        },
+        update(id, data, index) {
+            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index });
+        },
+        updateRemarks(data, quote_id) {
+            return api.call('post', `/api/quote/localcharge/updates/${quote_id}/remarks`, { data: data });
+        },
+        delete(id) {
+            return api.call('get', `/api/quote/localcharge/delete/${id}`, {});
+        },
+        retrieve(data) {
+            return api.call('get', `/api/quote/localcharge/saleterm`, data);
         },
     },
     providers: {

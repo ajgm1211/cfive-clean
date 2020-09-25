@@ -95,9 +95,15 @@
                             >
                                 <b-td>
                                     <b-form-input
-                                        placeholder
                                         v-model="charge.charge"
                                         class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.charge,
+                                                'charge'
+                                            )
+                                        "
                                     ></b-form-input>
                                 </b-td>
                                 <b-td>
@@ -111,6 +117,13 @@
                                         placeholder="Choose a calculation type"
                                         label="name"
                                         track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.calculation_type.id,
+                                                'calculation_type_id'
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
                                 <b-td
@@ -118,9 +131,15 @@
                                     :key="key"
                                 >
                                     <b-form-input
-                                        placeholder
                                         v-model="charge.total['c' + item]"
                                         class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.total['c' + item],
+                                                'total.c' + item
+                                            )
+                                        "
                                     ></b-form-input>
                                 </b-td>
                                 <b-td>
@@ -134,6 +153,13 @@
                                         placeholder="Choose a currency"
                                         label="alphacode"
                                         track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.currency.id,
+                                                'currency_id'
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
                                 <b-td>
@@ -192,7 +218,7 @@
                 id="inline-form-input-name"
                 type="classic"
                 v-model="remarks"
-                v-on:blur="onSubmit()"
+                v-on:blur="updateRemarks(remarks)"
             ></ckeditor>
         </b-card>
 
@@ -523,13 +549,12 @@ export default {
             this.saleterms = [];
             this.charges = [];
             api.getData(
-                {},
-                "/api/quote/local/saleterm/" +
-                    this.value.id +
-                    "/" +
-                    this.equipment.id +
-                    "/" +
-                    this.value.type,
+                {
+                    equipment: this.equipment.id,
+                    port_id: this.value.id,
+                    type: this.value.type,
+                },
+                "/api/quote/localcharge/saleterm",
                 (err, data) => {
                     this.saleterms = data;
                 }
@@ -540,7 +565,7 @@ export default {
             api.postData(
                 {
                     id: this.template.id,
-                    quote_id: this.value.quote_id,
+                    quote_id: this.$route.params.id,
                     port_id: this.value.id,
                     type_id: this.value.type,
                 },
@@ -555,7 +580,7 @@ export default {
             this.charges = [];
             api.getData(
                 {
-                    quote_id: this.value.quote_id,
+                    quote_id: this.$route.params.id,
                     port_id: this.value.id,
                     type_id: this.value.type,
                 },
@@ -583,7 +608,7 @@ export default {
             this.port = [];
             api.getData(
                 {
-                    quote_id: this.value.quote_id,
+                    quote_id: this.$route.params.id,
                     port_id: this.value.id,
                     type: this.value.type,
                 },
@@ -596,14 +621,27 @@ export default {
                 }
             );
         },
+        getRemarks(id) {
+            let self = this;
+            actions.localcharges
+                .remarks(id)
+                .then((response) => {
+                    self.remarks = response.data.localcharge_remarks;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
         onDelete(id) {
-            api.getData(
-                {},
-                "/api/quote/localcharge/delete/" + id,
-                (err, data) => {
+            actions.localcharges
+                .delete(id)
+                .then((response) => {
                     this.getTotal();
-                }
-            );
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+
             this.charges = this.charges.filter(function (item) {
                 return id != item.id;
             });
@@ -611,26 +649,41 @@ export default {
         onSubmit() {
             this.charges = [];
             this.totals = [];
-            api.postData(
-                {
-                    ids: this.ids,
-                    quote_id: this.value.quote_id,
-                    port_id: this.value.id,
-                    type_id: this.value.type,
-                },
-                "/api/quote/localcharge/store",
-                (err, data) => {
-                    this.charges = data;
+            let data = {
+                ids: this.ids,
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type_id: this.value.type,
+            };
+
+            actions.localcharges
+                .create(data)
+                .then((response) => {
+                    this.charges = response.data;
                     this.getTotal();
-                }
-            );
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
-        getRemarks(id) {
+        onUpdate(id, data, index) {
             let self = this;
             actions.localcharges
-                .remarks(id)
+                .update(id, data, index)
                 .then((response) => {
-                    self.remarks = response.data.localcharge_remarks;
+                    //
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
+        updateRemarks(remarks) {
+            let quote_id = this.$route.params.id;
+
+            actions.localcharges
+                .updateRemarks(remarks, quote_id)
+                .then((response) => {
+                    //
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
