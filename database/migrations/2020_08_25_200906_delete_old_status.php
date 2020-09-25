@@ -14,7 +14,7 @@ class DeleteOldStatus extends Migration
      */
     public function up()
     {
-        if(StatusQuote::where('name', 'Negotiated')->first() != null){
+        /*if(StatusQuote::where('name', 'Negotiated')->first() != null){
             StatusQuote::where('name', 'Negotiated')->first()->delete();
         }
         if(StatusQuote::where('name', 'Lost')->first() != null){
@@ -22,7 +22,7 @@ class DeleteOldStatus extends Migration
         }
         if(DB::table('status_quotes')->where('name', 'Win') != null){
             DB::table('status_quotes')->where('name', 'Win')->update(['name' => 'Won']);
-        }
+        }*/
     }
 
     /**
