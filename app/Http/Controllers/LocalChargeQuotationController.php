@@ -274,7 +274,13 @@ class LocalChargeQuotationController extends Controller
 
         return 'OK';
     }
-
+    
+    /**
+     * getTotal
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function getTotal(Request $request){
 
         $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->first();
@@ -282,7 +288,13 @@ class LocalChargeQuotationController extends Controller
         return $total;
 
     }
-
+    
+    /**
+     * getRemarks
+     *
+     * @param  mixed $id
+     * @return void
+     */
     public function getRemarks($id){
 
         $remarks = QuoteV2::select('localcharge_remarks')->findOrFail($id);
