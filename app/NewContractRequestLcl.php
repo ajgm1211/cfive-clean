@@ -30,7 +30,8 @@ class NewContractRequestLcl extends Model
         'sentemail',
         'contract_id',
         'type',
-        'data'
+        'data',
+        'username_load'
     ];
 
     public function user()
