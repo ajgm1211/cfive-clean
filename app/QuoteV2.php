@@ -27,7 +27,7 @@ class QuoteV2 extends Model  implements HasMedia
         'equipment' => 'array',
     ];
 
-    protected $fillable = ['remarks','company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions','terms_english','terms_portuguese'];
+    protected $fillable = ['remarks', 'company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'localcharge_remarks'];
 
     public function company()
     {
@@ -106,12 +106,12 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function origin_harbor()
     {
-        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id','id','origin_port_id');
+        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id', 'id', 'origin_port_id');
     }
 
     public function destination_harbor()
     {
-        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id','id','destination_port_id');
+        return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id', 'id', 'destination_port_id');
     }
 
     public function pdf_option()
@@ -131,12 +131,12 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function kind_of_cargo()
     {
-        return $this->hasOne('App\CargoKind','name','kind_of_cargo');
+        return $this->hasOne('App\CargoKind', 'name', 'kind_of_cargo');
     }
 
     public function status_quote()
     {
-        return $this->hasOne('App\StatusQuote','name','status');
+        return $this->hasOne('App\StatusQuote', 'name', 'status');
     }
 
     public function scopeExclude($query, $value = array())
@@ -457,23 +457,23 @@ class QuoteV2 extends Model  implements HasMedia
     public function automatic_inlands()
     {
         $this->hasMany('App\AutomaticInland');
-    }  
-    
+    }
+
     public function integration_quote_statuses()
     {
         $this->hasMany('App\IntegrationQuoteStatus');
     }
-    
+
     public function package_load_v2s()
     {
         $this->hasMany('App\PackageLoadV2');
-    }  
+    }
 
     public function payment_conditions()
     {
         $this->hasMany('App\PaymentCondition');
     }
-    
+
     public function sale_term_v2s()
     {
         $this->hasMany('App\SaleTermV2');
@@ -486,9 +486,16 @@ class QuoteV2 extends Model  implements HasMedia
         $new_quote->quote_id .= ' copy';
         $new_quote->save();
 
-        $this->with('automatic_inland_lcl_airs','automatic_inlands','integration_quote_statuses',
-                    'package_load_v2s','rate_v2','pdf_option','payment_conditions');
-       
+        $this->with(
+            'automatic_inland_lcl_airs',
+            'automatic_inlands',
+            'integration_quote_statuses',
+            'package_load_v2s',
+            'rate_v2',
+            'pdf_option',
+            'payment_conditions'
+        );
+
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
@@ -497,9 +504,9 @@ class QuoteV2 extends Model  implements HasMedia
                 $newRelationship = $relationRecord->replicate();
                 $newRelationship->quote_id = $new_quote->id;
                 $newRelationship->save();
-                }
             }
-        
+        }
+
         return $new_quote;
     }
 
@@ -514,54 +521,51 @@ class QuoteV2 extends Model  implements HasMedia
         return (new QuotationFilter($request, $builder))->filter();
     }
 
-    public function getContainerCodes($equip,$getGroup=false)
-    {   
+    public function getContainerCodes($equip, $getGroup = false)
+    {
         $size = count($equip);
-        if($size != 0){
-            $equip_array = explode(",",str_replace(["\"","[","]"],"",$equip));
+        if ($size != 0) {
+            $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
             $full_equip = "";
-        
-        foreach ($equip_array as $eq){
-            $full_equip.=Container::where('id','=',$eq)->first()->code.",";
-            if($getGroup){
-                $group_id = Container::where('id','=',$eq)->first()->gp_container_id;
-                $group = GroupContainer::where('id','=',$group_id)->first();
 
-                return $group;
+            foreach ($equip_array as $eq) {
+                $full_equip .= Container::where('id', '=', $eq)->first()->code . ",";
+                if ($getGroup) {
+                    $group_id = Container::where('id', '=', $eq)->first()->gp_container_id;
+                    $group = GroupContainer::where('id', '=', $group_id)->first();
+
+                    return $group;
+                }
             }
-        }
 
-        return $full_equip;
+            return $full_equip;
         } else {
             return $equip;
         }
-        
     }
 
     public function getContainerArray($equip)
     {
-        $cont_ids=[];
-        $cont_array = explode(",",$equip);
-        foreach ($cont_array as $cont){
-            if ($cont != ""){
-                $wh = Container::where('code','=',$cont)->first()->id;
-                array_push($cont_ids,$wh);
+        $cont_ids = [];
+        $cont_array = explode(",", $equip);
+        foreach ($cont_array as $cont) {
+            if ($cont != "") {
+                $wh = Container::where('code', '=', $cont)->first()->id;
+                array_push($cont_ids, $wh);
             }
         }
-        $conts = "[\"".implode("\",\"",$cont_ids)."\"]";
+        $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
 
         return $conts;
     }
 
     public function originDest($reqPorts)
     {
-        foreach($reqPorts as $port){
-            $info = explode("-",$port);
+        foreach ($reqPorts as $port) {
+            $info = explode("-", $port);
             $ports[] = $info[0];
         }
 
         return $ports;
-
     }
-
 }
