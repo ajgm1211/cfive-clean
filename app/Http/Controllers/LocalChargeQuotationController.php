@@ -175,16 +175,23 @@ class LocalChargeQuotationController extends Controller
 
         $ids = $request->ids;
 
-        foreach ($ids as $id) {
+        foreach ($ids as $key => $id) {
+            
             $localcharge = Charge::findOrFail($id);
 
             $price = json_decode($localcharge->amount);
             $profit = json_decode($localcharge->markups);
 
+            $charge = $localcharge->surcharge->name;
+
+            if(!empty($request->sale_codes[$key])){
+                $charge = $request->sale_codes[$key]['name'];
+            }
+
             $local_charge = LocalChargeQuote::create([
                 'price' => $price,
                 'profit' => $profit,
-                'charge' => $localcharge->surcharge->name,
+                'charge' => $charge,
                 'surcharge_id' => $localcharge->surcharge_id,
                 'calculation_type_id' => $localcharge->calculation_type_id,
                 'currency_id' => $localcharge->currency_id,
@@ -195,6 +202,7 @@ class LocalChargeQuotationController extends Controller
 
             $local_charge->sumarize();
             $local_charge->totalize();
+
         }
 
         $local_charge_quote = LocalChargeQuote::where([
@@ -315,9 +323,8 @@ class LocalChargeQuotationController extends Controller
         $index = $request->index;
 
         $local_charge = LocalChargeQuote::find($id);
-        $local_charge->update([
-            $index => $request->data
-        ]);
+        $local_charge->$index = $request->data;
+        $local_charge->update();
 
         $local_charge->totalize();
         
