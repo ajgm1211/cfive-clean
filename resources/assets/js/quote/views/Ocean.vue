@@ -54,8 +54,8 @@
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->
-                    <div>
-                        <a href="#" class="btn btn-primary btn-bg" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                    <div class="d-flex align-items-center">
+                        
                         <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
                             <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
                         </button>
@@ -65,9 +65,9 @@
             </div>
 
             <b-collapse :id="String(freight.id)" class="row">
-                <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
+                <div v-if="freight.loaded" class="mt-5 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
-                    <div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <FormInlineView
                             v-if="loaded"
                             :data ="freight.rateData"
@@ -79,10 +79,10 @@
                         ></FormInlineView>
 
                         <!-- Inputs Freight -->
-
                         <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-link">+ Add Charge</a>
                         <!-- End Inputs Freight -->
                     </div>
+
 
                     <DynamicalDataTable
                         v-if="loaded"
@@ -113,14 +113,20 @@
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
-                    <div class="col-12 d-flex mt-5 mb-3">
-                        <b-form-checkbox value="carrier" class="mr-4">
-                            <span>Show Carrier</span>
-                        </b-form-checkbox>
+                    <div class="col-12 d-flex justify-content-between align-items-center mt-5 mb-3">
+                        <div class="d-flex">
 
-                        <b-form-checkbox value="freight">
-                            <span>Freight All-In</span>
-                        </b-form-checkbox>
+                            <b-form-checkbox value="carrier" class="mr-4">
+                                <span>Show Carrier</span>
+                            </b-form-checkbox>
+
+                            <b-form-checkbox value="freight">
+                                <span>Freight All-In</span>
+                            </b-form-checkbox>
+
+                        </div>
+
+                        <a href="#" class="btn btn-primary btn-bg" style="margin-left: 50px" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
                     </div>
                     <!-- End Checkbox Freight-->
 
