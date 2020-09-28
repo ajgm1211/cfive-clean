@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LocalChargeQuote extends Model
 {
@@ -70,7 +71,7 @@ class LocalChargeQuote extends Model
                 }
             }
         }
-        
+
         $this->update(['total' => $totals]);
     }
 
@@ -94,23 +95,27 @@ class LocalChargeQuote extends Model
             $totals['c' . $eq] = 0;
         }
 
-        foreach($charges as $charge){
+        foreach ($charges as $charge) {
             if ($charge->total != null) {
                 foreach ($equip_array as $eq) {
                     foreach ($charge->total as $key => $total) {
                         if ($key == 'c' . $eq) {
-                            $totals[$key] += $total;
+                            $exchange = ratesCurrencyFunction($charge->currency_id, @Auth::user()->companyUser->currency->alphacode);
+                            $total_w_exchange = $total/$exchange;
+                            $totals[$key] += number_format((float)$total_w_exchange, 2, '.', '');
                         }
                     }
                 }
             }
         }
 
+        $currency = Auth::user()->companyUser->currency_id;
+        
         LocalChargeQuoteTotal::create([
             'total' => $totals,
             'quote_id' => $quote->id,
             'port_id' => $this->port_id,
+            'currency_id' => $currency,
         ]);
-        
     }
 }
