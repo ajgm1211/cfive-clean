@@ -10,7 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SaleTermCharge extends Model
 {
-    protected $fillable = ['id', 'name', 'sale_term_id', 'amount', 'calculation_type_id', 'currency_id', 'sale_term_code_id'];
+    protected $fillable = ['id', 'name', 'sale_term_id', 'amount', 'calculation_type_id', 'currency_id', 'sale_term_code_id', 'total'];
+
+    protected $casts = [
+        'total' => 'array',
+    ];
 
     /**
      * Scope a query to only include charges by sale term.
@@ -52,7 +56,7 @@ class SaleTermCharge extends Model
 
     public function sale_term_code()
     {
-        return $this->hasOne('App\SaleTermCode','id', 'sale_term_code_id');
+        return $this->hasOne('App\SaleTermCode', 'id', 'sale_term_code_id');
     }
 
     public function calculation_type()
@@ -63,5 +67,18 @@ class SaleTermCharge extends Model
     public function currency()
     {
         return $this->hasOne('App\Currency', 'id', 'currency_id');
+    }
+
+    public function jsonTotal()
+    {
+        $containers = Container::where('gp_container_id', $this->sale_term->group_container_id)->get();
+
+        $total = [];
+
+        foreach ($containers as $container) {
+            $total['c' . $container->code] = $this->amount;
+        }
+
+        $this->update(['total' => $total]);
     }
 }

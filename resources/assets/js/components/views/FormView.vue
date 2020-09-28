@@ -183,7 +183,17 @@
                 type: Boolean,
                 required: false,
                 default: false
-            }
+            },
+            multi: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            multiId: {
+                type: Number,
+                required: false,
+                deafult: 1
+            },
         },
         data() {
             return {
@@ -318,6 +328,8 @@
 
                     }
 
+                    data['keys'] = fields_keys;
+
                     if(component.massivechange)
                         data['ids'] = component.massivedata;
                 });
@@ -358,25 +370,39 @@
                         });
 
                     } else {
-
-                        this.actions.create(data, this.$route)
-                            .then( ( response ) => {
-                                this.$emit('success', response.data.data.id);
-                                this.vdata = {};
-                        })
-                            .catch(( error, errors ) => {
-
-                                let errors_key = Object.keys(error.data.errors);
-
-                                errors_key.forEach(function(key){ 
-                                    $(`#id_f_${key}`).css({'display':'block'});
-                                    $(`#id_f_${key}`).html(error.data.errors[key]);
-                                });
-                        });
+                        if(!this.multi){
+                            this.actions.create(data, this.$route)
+                                .then( ( response ) => {
+                                    this.$emit('success', response.data.data.id);
+                                    this.vdata = {};
+                            })
+                                .catch(( error, errors ) => {
+    
+                                    let errors_key = Object.keys(error.data.errors);
+    
+                                    errors_key.forEach(function(key){ 
+                                        $(`#id_f_${key}`).css({'display':'block'});
+                                        $(`#id_f_${key}`).html(error.data.errors[key]);
+                                    });
+                            });
+                        }else{
+                            this.actions.create(this.multiId,data, this.$route)
+                                .then( ( response ) => {
+                                    this.$emit('success', response.data.data.id);
+                                    this.vdata = {};
+                            })
+                                .catch(( error, errors ) => {
+    
+                                    let errors_key = Object.keys(error.data.errors);
+    
+                                    errors_key.forEach(function(key){ 
+                                        $(`#id_f_${key}`).css({'display':'block'});
+                                        $(`#id_f_${key}`).html(error.data.errors[key]);
+                                    });
+                            });
+                        }
                     }
-
                 }
-
             },
         },        
         watch: {

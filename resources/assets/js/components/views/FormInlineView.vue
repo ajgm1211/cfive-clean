@@ -17,6 +17,7 @@
                         >
                             <b-form-input
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :placeholder="item.placeholder"
                                 v-on:blur="onSubmit()"
                                 @change="cleanInput(key)"
@@ -38,6 +39,7 @@
                         >
                             <b-textarea
                                 id="inline-form-input-name"
+                                :parentId="item.parentId"
                                 v-model="vdata[key]"
                                 class="mb-2 mr-sm-2 mb-sm-0 remarks"
                                 v-on:blur="onSubmit()"
@@ -53,17 +55,22 @@
 
                     <!-- CKEditor -->
                     <div v-if="item.type == 'ckeditor'">
-                        <ckeditor
-                            id="inline-form-input-name"
-                            type="classic"
-                            v-model="vdata[key]"
-                            v-on:blur="onSubmit()"
-                            @change="cleanInput(key)"
-                        ></ckeditor>
-                        <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
-                        <span class="update-remark">
-                            <i class="fa fa-repeat" aria-hidden="true"></i>
-                        </span>
+                         <b-form-group
+                            :label="item.label"
+                        >
+                            <ckeditor
+                                id="inline-form-input-name"
+                                :parentId="item.parentId"
+                                type="classic"
+                                v-model="vdata[key]"
+                                v-on:blur="onSubmit()"
+                                @change="cleanInput(key)"
+                            ></ckeditor>
+                            <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
+                            <span class="update-remark">
+                                <i class="fa fa-repeat" aria-hidden="true"></i>
+                            </span>
+                        </b-form-group>
                     </div>
                     <!-- End CKEditor -->
 
@@ -85,6 +92,7 @@
                         >
                             <multiselect
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :multiple="false"
                                 :options="getOptions(item.options)"
                                 :disabled="item.disabled"
@@ -119,6 +127,7 @@
                         >
                             <multiselect
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :multiple="true"
                                 :options="datalists[item.options]"
                                 :searchable="item.searchable"
@@ -151,6 +160,7 @@
                         >
                             <date-range-picker
                                 :opens="'center'"
+                                :parentId="item.parentId"
                                 :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
                                 :singleDatePicker="false"
                                 :autoApply="true"
@@ -172,6 +182,7 @@
                         <b-form-group :label="item.label" class="d-block">
                             <b-form-datepicker
                                 :id="'id_'+key"
+                                :parentId="item.parentId"
                                 :label="item.label"
                                 :invalid-feedback="key+' is required'"
                                 valid-feedback="key+' is done!'"
@@ -226,7 +237,12 @@ export default {
             type: Boolean,
             required: false,
             default: false,
-        }
+        },
+        multi: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         
     },
     data() {
@@ -241,22 +257,17 @@ export default {
         //console.log(this.data);
         this.vdata = this.data;
 
-
         fields_keys.forEach(function (key) {
+            if(component.multi){
+                component.fields[key].parentId = component.$parent.id;
+            }
             if(component.fields[key].isLocker){
                 component.unlock(component.fields[key],key)
             }
-        });        
-    },
-    beforeUpdate() {
-        let fields_keys = Object.keys(this.fields);
-        let component = this;
-
-        fields_keys.forEach(function (key) {
             if(component.fields[key].isHiding){
                 component.showHidden(component.fields[key],key)
-        }
-        });
+            }
+        });        
     },
     methods: {
         closeModal() {
@@ -455,16 +466,15 @@ export default {
             let caller = item;
             let callerKey = key;
 
-            fields_keys.forEach(function(key) {
-                if(caller.hiding === key && component.vdata[callerKey]!=null){
-                    if(caller.showCondition==component.vdata[callerKey].name){
-                        component.fields[key].hidden = false;
-                    } else{
-                        component.fields[key].hidden = true;
-                        component.vdata[key] = null;
-                    }
-                }
-            });
+            if(component.vdata[callerKey]==null || component.vdata[callerKey].name!=caller.showCondition){
+                console.log(caller.parentId,'not good')
+                /**if(caller.parentId == component.fields[caller.showCondition].parentId){
+                    component.fields[caller.hiding].hidden = true;
+                    component.vdata[caller.hiding] = null;               
+                }**/
+            }else if(component.vdata[callerKey].name==caller.showCondition){
+                console.log(caller.parentId,'is good')
+            }
         },
 
         getOptions(options){

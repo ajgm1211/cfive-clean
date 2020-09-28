@@ -17,7 +17,7 @@
                                             <li class="m-width-120" style="border-left:none;">                                  
                                                 @if($quote->type!='AIR')
                                                     @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-                                                        <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                                                        <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$rate->carrier->image}}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
                                                     @endif
                                                 @else
                                                     @if(isset($rate->airline->image) && $rate->airline->image!='')
@@ -182,7 +182,7 @@
                                                                     <td colspan="4" class="tds"></td>
                                                                     <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
                                                                     <td class="tds"><input type="hidden" value="{{$total_freight}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total sub_total">{{$total_freight}}</span></b></td>
-                                                                    <td class="tds"><b><span class="td-a"> {{$company_user->currency->alphacode}}</span></b></td>
+                                                                    <td class="tds"><b><span class="td-a"> {{$rate->currency->alphacode}}</span></b></td>
                                                                 </tr>
                                                                 @endif
                                                             </div>

@@ -9,19 +9,17 @@ use App\Charge;
 use App\Http\Resources\AutomaticRateResource;
 use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        $autorates = AutomaticRate::where('quote_id',$quote->id)->get();
 
-        foreach($autorates as $auto){
-            $results[$auto->id] = Charge::where('surcharge_id','!=',null)->filterByAutorate($auto->id)->filter($request);
-            //$results[$auto->id] = Charge::filterByAutorate($auto->id)->filter($request);
-        }
-
-        return ChargeResource::collection($results[$autorate->id]);
+        $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        
+        return ChargeResource::collection($results);
     }
 
     public function store(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
@@ -65,18 +63,21 @@ class ChargeController extends Controller
 
         $autorate->totalize($autorate->currency_id);
 
+        return new ChargeResource($charge);
+
     }
 
-    public function update(Request $request, AutomaticRate $autorate)
+    public function update(Request $request, Charge $charge)
     {
-        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        $autorate = $charge->automatic_rate()->first();
+
         $form_keys = $request->input('keys');
 
         $data = [];
 
         foreach($form_keys as $fkey){
-            if(strpos($fkey,'freights') !== false){
-                $data += $request->validate([$fkey=>'numeric|nullable']);
+            if(strpos($fkey,'freights') !== false || strpos($fkey,'rates') !== false){
+                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
             }
         }
 
@@ -84,19 +85,42 @@ class ChargeController extends Controller
         
         foreach($data as $key=>$value){
             if($value==null){$value=0;}
-            $rates['c'.str_replace('freights_','',$key)] = $value;
+            
+            if(strpos($key,'freights') !== false){
+                $rates['c'.str_replace('freights_','',$key)] = $value;
+            } else if (strpos($key,'rates') !== false){
+                $rates['c'.str_replace('rates_','',$key)] = $value;
+            }
         }
         
-        $data += $request->validate(['fixed_currency'=>'required']);
-
-        $charge->update(['currency_id'=>$data['fixed_currency']]);
+        $data += $request->validate(['fixed_currency'=>'sometimes|required',
+                                    'surcharge_id'=>'sometimes|required',
+                                    'currency_id'=>'sometimes|required',
+                                    'calculation_type_id'=>'sometimes|required']);
 
         if(count($rates) != 0){
             $rates_json = json_encode($rates);
-            $charge->update(['amount'=>$rates_json]);
-
-            $autorate->totalize($request->input('fixed_currency'));
+            $data['amount'] = $rates_json;
         }
+
+        foreach($data as $key=>$value){
+            if(isset($charge->$key) || $charge->$key==null){
+                if(strpos($key,'_id')!==false){
+                    $charge->update([$key=>$value['id']]);
+                }else{
+                    $charge->update([$key=>$value]);
+                }
+            }
+        }
+
+        if(isset($data['fixed_currency'])){
+            $charge->update(['currency_id'=>$data['fixed_currency']]);
+            $autorate->totalize($request->input('fixed_currency'));
+        } else {
+            $autorate->totalize($autorate->currency_id);
+        }  
+
+        return new ChargeResource($charge);
         
     }
 
@@ -112,6 +136,13 @@ class ChargeController extends Controller
         
         $autorate = $charge->automatic_rate()->first();
         $autorate->totalize($autorate->currency_id);
+
+        return response()->json(null, 204);
+    }
+
+    public function destroyAll(Request $request)
+    {   
+        DB::table('charges')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
