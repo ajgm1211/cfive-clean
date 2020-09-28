@@ -16,9 +16,14 @@
         :actions="actions"
         :massiveactions="massiveactions"
         :extraRow="extraRow"
+        :singleActions="singleActions"
+        :autoupdateDataTable="autoupdateDataTable"
+        :portType="portType"
+        :autoAdd="autoAdd"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
+        ref="table"
         >
     </DataTable>
 
@@ -96,7 +101,27 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
-            }
+            },
+            singleActions: {
+                type: Array,
+                required: false,
+                default: () => { return ['edit', 'duplicate', 'delete'] }                
+            },
+            autoupdateDataTable: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            portType: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            autoAdd: {
+                type: Boolean,
+                required:false,
+                default: true
+            },
         },
         data() {
             return {
@@ -114,7 +139,11 @@
         methods: {
             /* Single Actions */
             onEdit(data){
-                this.$emit('onEditSuccess', data);
+                if(!this.multiId){
+                    this.$emit('onEditSuccess', data);
+                }else{
+                    this.$emit('onEditSuccess', data,this.multiId);
+                }
             },
 
             /* Reset all fields */
@@ -131,9 +160,11 @@
                 let fixedKey = '';
 
                 fields.forEach(function (item){
-                    if(item.key.includes('_id')){
-                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                    if(component.extraRow){
+                        if(item.key.includes('_id')){
+                            fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                            component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        }
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
@@ -166,7 +197,7 @@
                     {
                         freight = 'freights_'+item.code;
                         rate = 'rates_'+item.code;
-                        component.fields.push({ key: rate, label: item.name });
+                        component.fields.push({ key: rate, label: item.name, type: 'text' });
                         component.form_fields[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         containers[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         if(table.extraRow){
@@ -205,9 +236,11 @@
                     fields = this.initialFields;
 
                 fields.forEach(function (item){
-                    if(item.key.includes('_id')){
-                        fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
-                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        if(component.extraRow){
+                        if(item.key.includes('_id')){
+                            fixedKey = 'fixed_'.concat(item.key.replace('_id',''));
+                            component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];
+                        }
                     }
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
@@ -235,11 +268,17 @@
                 this.isLoaded = true;
                 this.$emit('onFormFieldUpdated', containers);
             },
+            
             onChangeContainersView(value){
                 this.extra_field_state = !this.extra_field_state;
             },
+            
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
+            },
+            
+            refreshTable(){
+                this.$refs.table.refreshData();
             }
            
         },

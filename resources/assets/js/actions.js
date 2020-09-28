@@ -273,7 +273,6 @@ export default {
             return api.call('post', `/api/v2/sale_terms/charge/destroyAll`, { ids: ids });
         }
     },
-
     sale_codes: {
         list(params, callback, route) {
 
@@ -349,10 +348,17 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_rate/${id}/update`, data)
         },
+        updateTotals(autorate_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autorate_id}/totals/update`, data)
+        },
         retrieve(id, route) {
             let quote_id = route.params.id;
             return api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, {})
-        }
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy/`, {});
+        },
 
     },
     charges: {
@@ -374,11 +380,98 @@ export default {
         retrieve(autorate_id) {
             return api.call('get', `/api/quotes/ocean_freight/${autorate_id}/charge`, {})
         },
-        update(autorate_id, data) {
-            return api.call('post', `/api/quotes/ocean_freight/${autorate_id}/charge/update`, data)
+        update(charge_id, data, route) {
+            return api.call('post', `/api/quotes/ocean_freight/charge/${charge_id}/update`, data)
         },
         delete(id) {
             return api.call('delete', `/api/quotes/ocean_freight/charge/${id}/destroy/`, {});
         },
-    }
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
+        }
+    },
+    automaticinlands: {
+        list(port_id, params, callback, route) {
+
+            let quote_id = route.params.id;
+
+            api.call('get', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/store`, data);
+        },
+        update(autoinland_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autoinland_id}/update`, data)
+        },
+        updateTotals(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}/update`, data)
+        },
+        retrieve(port_id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}`, {})
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/automatic_inland/${id}/destroy/`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_inland/destroyAll`, { ids: ids });
+        }
+    },
+    localcharges: {
+        create(data) {
+            return api.call('post', `/api/quote/localcharge/store`, data);
+        },
+        remarks(quote_id) {
+            return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
+        },
+        update(id, data, index) {
+            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index });
+        },
+        updateRemarks(data, quote_id) {
+            return api.call('post', `/api/quote/localcharge/updates/${quote_id}/remarks`, { data: data });
+        },
+        delete(id) {
+            return api.call('get', `/api/quote/localcharge/delete/${id}`, {});
+        },
+        retrieve(data) {
+            return api.call('get', `/api/quote/localcharge/saleterm`, data);
+        },
+    },
+    providers: {
+        list(params, callback, route) {
+
+            api.call('get', '/api/v2/providers', { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(data, route) {
+            return api.call('post', `/api/v2/providers/store`, data);
+        },
+        update(id, data, route) {
+            return api.call('post', `/api/v2/providers/${id}/update`, data);
+        },
+        retrieve(id) {
+            return api.call('get', `/api/v2/providers/${id}`, {});
+        },
+        duplicate(id, data) {
+            return api.call('post', `/api/v2/providers/${id}/duplicate`, data);
+        },
+        delete(id) {
+            return api.call('delete', `/api/v2/providers/${id}/destroy`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/providers/destroyAll`, { ids: ids });
+        },
+    },
 };

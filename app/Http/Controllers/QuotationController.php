@@ -27,6 +27,7 @@ use App\Surcharge;
 use App\ScheduleType;
 use App\Country;
 use App\Http\Resources\QuotationResource;
+use App\SaleTermCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,7 @@ class QuotationController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name']);
+            return $carrier->only(['id', 'name','image']);
         });
 
         $companies = Company::where('company_user_id','=',$company_user_id)->get()->map(function ($company){
@@ -79,7 +80,7 @@ class QuotationController extends Controller
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
-          return $harbor->only(['id', 'display_name','country_id']);
+          return $harbor->only(['id', 'display_name','country_id','code']);
         });
 
         $payment_conditions = PaymentCondition::get()->map(function ($payment_condition){
@@ -128,6 +129,20 @@ class QuotationController extends Controller
             return $country->only(['id','code','name']);
         });
 
+        $sale_surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
+            $value['type'] = 'surcharge';
+            return $value->only(['name','type']);
+        });
+
+        $sale_codes = SaleTermCode::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
+            $value['type'] = 'salecode';
+            return $value->only(['name','type']);
+        });
+        
+        $merged = $sale_surcharges->merge($sale_codes);
+        
+        $salecode_surcharges = $merged->all();
+
         $data = compact(
             'companies',
             'contacts',
@@ -146,7 +161,8 @@ class QuotationController extends Controller
             'surcharges',
             'schedule_types',
             'countries',
-            'languages'
+            'languages',
+            'salecode_surcharges'
         );
 
         return response()->json(['data'=>$data]);
@@ -250,32 +266,6 @@ class QuotationController extends Controller
                     $freight->setCalculationType($data['container_type']);
                 }
             }
-        } else {
-            $origins = $quote->originDest($data['originport']);
-            $destinations = $quote->originDest($data['destinyport']);
-        
-            foreach($origins as $orig){
-                foreach($destinations as $dest){
-                    $rate = AutomaticRate::create([
-                        'quote_id' => $quote->id,
-                        'contract' => '',
-                        'validity_start' => explode("/",$data['date'])[0],
-                        'validity_end' => explode("/",$data['date'])[1],
-                        'origin_port_id' => $orig,
-                        'destination_port_id' => $dest,
-                        'currency_id' => $company_user->currency_id       
-                    ]);
-
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $rate->id,
-                        'type_id' => '3',
-                        'calculation_type_id' => '5',
-                        'currency_id' => $rate->currency_id,
-                    ]);
-
-                    $freight->setCalculationType($data['container_type']);
-                }
-            }
         }
 
         return redirect()->action('QuotationController@edit', $quote) ;
@@ -283,6 +273,10 @@ class QuotationController extends Controller
 
     public function edit (Request $request, QuoteV2 $quote)
     {
+        $autorates = $quote->rate()->get();
+        foreach($autorates as $auto){
+            $auto->totalize($auto->currency_id);
+        }
         return view('quote.edit');
     }
 
@@ -290,7 +284,9 @@ class QuotationController extends Controller
     {   
         $form_keys = $request->input('keys');
 
-        if(!in_array('terms_and_conditions',$form_keys) && !in_array('remarks',$form_keys)){
+        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english'];
+
+        if(array_intersect($terms_keys,$form_keys)==[]){
             $data = $request->validate([
                 'delivery_type' => 'required',
                 'equipment' => 'required',
@@ -321,8 +317,6 @@ class QuotationController extends Controller
             $quote->update([$key=>$data[$key]]);
         }
     }
-
-    //Need funcs to update remarks and update terms?
 
     public function destroy(QuoteV2 $quote)
     {

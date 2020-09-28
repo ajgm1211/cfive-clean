@@ -25,7 +25,7 @@ class AutomaticRate extends Model
         'total' => 'array',
     ];
     
-    protected $fillable = ['id','quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id','remarks','schedule_type','transit_time','via'];
+    protected $fillable = ['id','quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','origin_airport_id','destination_airport_id','airline_id','remarks','remarks_english','remarks_spanish','remarks_portuguese','schedule_type','transit_time','via'];
 
     public function quote()
     {
@@ -149,7 +149,9 @@ class AutomaticRate extends Model
 
         array_splice($equip_array,-1,1);
 
-        $charges = $this->charge()->get();
+        $charges = $this->charge()->where([['surcharge_id','!=',null],['type_id',3]])->get();
+
+        $ocean_freight = $this->charge()->where('surcharge_id',null)->first();
 
         $this->update(['currency_id'=>$new_currency_id]);
 
@@ -160,7 +162,7 @@ class AutomaticRate extends Model
         foreach($equip_array as $eq){
             $totals_usd['c'.$eq] = 0;
         }
-
+        
         // adding all charges together
         foreach($charges as $charge){
             $amount_array = json_decode($charge->amount);
@@ -175,6 +177,15 @@ class AutomaticRate extends Model
             }
         }
 
+        //converting to autorate currency
+        if($currency->alphacode != 'USD'){
+            $conversion = $currency->rates;
+            foreach($totals_usd as $cont=>$price){
+                $conv_price = $price*$conversion;
+                $totals_usd[$cont] = round($conv_price,2);
+            }
+        }
+
         //adding autorate markups
         if($this->markups != null){
             $markups = json_decode($this->markups);
@@ -184,17 +195,17 @@ class AutomaticRate extends Model
             }
         }
 
-        //converting to autorate currency
-        if($currency->alphacode != 'USD'){
-            $conversion = $currency->rates;
-            foreach($totals_usd as $cont=>$price){
-                $price *= $conversion;
-                $price = round($price,2);
+        //adding ocean freight
+        if($ocean_freight->amount !=null){
+            $freight_amount = json_decode($ocean_freight->amount);
+            foreach($freight_amount as $fr=>$am){
+                $totals_usd[$fr]+=$am;
             }
         }
-           
+
         $totals = json_encode($totals_usd);
         
         $this->update(['total'=>$totals]);
+
     }
 }

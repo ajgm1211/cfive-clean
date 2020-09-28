@@ -3259,9 +3259,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $account = AccountFcl::find(145);
-        $json_account = json_decode($account->data,true);
-        dd($json_account,isset($json_account['final_columns']),Auth::user()->email);
+        $surchargersFined = PrvSurchargers::get_single_surcharger('isps');
+        dd($surchargersFined);
     }
 
 }
