@@ -60,7 +60,7 @@
             <!-- Loader gif -->
 
             <!-- Body table -->
-            <b-tbody v-if="!isBusy">
+            <b-tbody v-if="!isBusy" style="border-bottom: 1px solid #eee">
 
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields) && autoAdd">
@@ -259,11 +259,9 @@
 
             </b-tbody>
             <!-- Body table -->
-
-            <hr>
             
             <!-- Profits and Totals -->
-            <b-tbody v-if="withTotals==true" >
+            <b-tbody v-if="withTotals==true">
                 <b-tr v-for="(field,id) in totalsFields" :key="id">
 
                     <b-td></b-td>
