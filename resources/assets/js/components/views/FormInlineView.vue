@@ -179,7 +179,7 @@
                     <!-- End DateRange Field -->
 
                     <div v-if="item.type == 'datepicker'">
-                        <b-form-group :label="item.label" class="d-block">
+                        <b-form-group :label="item.label" class="d-block" style="border:none">
                             <b-form-datepicker
                                 :id="'id_'+key"
                                 :parentId="item.parentId"
@@ -187,6 +187,9 @@
                                 :invalid-feedback="key+' is required'"
                                 valid-feedback="key+' is done!'"
                                 v-model="vdata[key]"
+                                :locale="locale"
+                                :date-format-options="dateFormat"
+                                >
                             ></b-form-datepicker>
                         </b-form-group>
                     </div>
@@ -247,6 +250,9 @@ export default {
     },
     data() {
         return {
+             //Datepicker Options
+            locale: 'en-US',
+            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
             vdata: {},
         };
     },
