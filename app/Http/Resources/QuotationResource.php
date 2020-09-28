@@ -22,14 +22,14 @@ class QuotationResource extends JsonResource
       return [
         'id' => $this->id,
         'quote_id' => $this->quote_id,
-        'delivery_type' => is_null($this->delivery_type) ? $this->delivery_type : ['id'=>$this->delivery_type, 'name'=>$this->delivery_type()->first()->name],
+        'delivery_type' => is_null($this->delivery_type) ? $this->delivery_type : $this->delivery_type()->first(),
         'company_id' => $this->company,
         'contact_id' => is_null($this->contact_id) ? $this->contact_id : ['id'=>$this->contact_id,'company_id'=>$this->company()->first()->id,'name'=>$this->contact()->first()->getFullName()],
         'commodity' => $this->commodity,
-        'status' => ['id'=>1,'name'=>$this->status],
+        'status' => $this->status_quote()->first(),
         'type' => $this->type,
         'remarks' => $this->remarks,
-        'kind_of_cargo' => is_null($this->kind_of_cargo) ? $this->kind_of_cargo : ['name'=>$this->kind_of_cargo],
+        'kind_of_cargo' => is_null($this->kind_of_cargo) ? $this->kind_of_cargo : $this->kind_of_cargo()->first(),
         'company_user' => $this->companyUser,
         'company_user_id' => $this->company_user_id,
         'origin_address' => $this->origin_address,
@@ -40,11 +40,12 @@ class QuotationResource extends JsonResource
         'user_id' => $this->user,
         'payment_conditions' => $this->payment_conditions,
         'terms_and_conditions' => $this->terms_and_conditions,
+        'terms_english' => $this->terms_english,
+        'terms_portuguese' => $this->terms_portuguese,
         'language' => $this->user->companyUser->language,
-        'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : ['id'=>$this->incoterm_id,'name'=>$this->incoterm()->first()->name],
+        'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : $this->incoterm()->first(),
         'rates' => $this->rates_v2()->get(),
         'gp_container' => $this->getContainerCodes($this->equipment,true),
-        //'ports' => $this->inlandports->pluck('ports'),
       ];
     }
   }

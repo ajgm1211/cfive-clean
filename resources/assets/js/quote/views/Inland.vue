@@ -1,7 +1,11 @@
 <template>
     <div style="padding: 0px 25px">
 
-        <b-card class="q-card">
+        <div v-if="freights.length == 0">
+            <h2 style="margin: 10px;">Nothing to display. Start by adding a new freight at the Ocean Freight tab</h2>
+        </div>
+
+        <b-card v-else class="q-card">
 
             <div class="row justify-content-between">
 
@@ -11,11 +15,13 @@
                     <h5><b>Inland at:</b></h5>
 
                     <multiselect
-                        v-model="value"
-                        :options="options"
+                        v-model="currentPort"
+                        :options="port_options"
                         :searchable="true"
-                        :close-on-select="false"
+                        :close-on-select="true"
                         :show-labels="false"
+                        label="name"
+                        track-by="name"
                         placeholder="Select Template"
                         class="q-select ml-3">
                     </multiselect>
@@ -24,8 +30,14 @@
                         
                     <h5>
                         <b>From:</b>
-                        <img src="https://i.ibb.co/ZTq7994/spain.png" alt="bandera" class="ml-2 mr-1">
-                        <span style="font-size: 14px">Madrid Spain, 23423</span>
+                        <img :src="currentPort['flag']"
+                            width="20" 
+                            height="20"
+                            style="border-radius: 50%;"
+                            alt="bandera" 
+                            class="ml-2 mr-1">
+                        <span v-if="currentPortType=='Origin'" style="font-size: 14px">{{currentQuoteData.origin_address}}</span>
+                        <span v-else style="font-size: 14px">{{currentQuoteData.destination_address}}</span>
                     </h5>
 
                 </div>
@@ -40,192 +52,28 @@
                 <div class="col-12 mt-5">
 
                     <!-- DataTable -->
-                    <b-table-simple small responsive borderless>
-
-                        <!-- Header table -->
-                        <b-thead class="q-thead">
-
-                            <b-tr>
-
-                                <b-th>
-                                    <span class="label-text">charge</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">provider</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">20 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 dv</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 hc</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
-                                </b-th>
-
-                            </b-tr>
-
-                        </b-thead>
-                        <!-- End Header table -->
-
-                        <!-- Body table -->
-                        <b-tbody >
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Data -->
-                            <b-tr>
-
-                                <b-td>
-                                    <b-form-input placeholder="Surcharge" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="Per Container" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="50" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1000" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-                            <!-- End Data -->
-
-                            <!-- Profit -->
-                            <b-tr>
-
-                                <b-td></b-td>
-
-                                <b-td>
-                                    <span><b>Profit</b></span>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="0" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
-                                        :show-labels="false"
-                                        placeholder="Select Currency">
-                                    </multiselect>
-                                </b-td>
-                                
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Profit -->
-
-                            <!-- Total -->
-                            <b-tr class="q-total">
-
-                                <b-td></b-td>
-
-                                <b-td><span><b>Total</b></span></b-td>
-
-                                <b-td><span><b>1600</b></span></b-td>
-
-                                <b-td><span><b>500</b></span></b-td>
-                                
-                                <b-td><span><b>150</b></span></b-td>
-
-                                <b-td><span><b>EUR</b></span></b-td>
-
-                                <b-td></b-td>
-
-                            </b-tr>
-                            <!-- End Total -->
-
-                        </b-tbody>
-                        <!-- Body table -->
-
-                    </b-table-simple>
+                    <DynamicalDataTable
+                        v-if="loaded"
+                        :initialFields="fields"
+                        :initialFormFields="vform_fields"
+                        :searchBar="false"
+                        :withTotals="true"
+                        :totalsFields="totalsFields"
+                        :datalists="datalists"
+                        :equipment="equipment"
+                        :actions="actions.automaticinlands"
+                        :quoteEquip="quoteEquip"
+                        :limitEquipment="true"
+                        :totalActions="actions.automaticinlands"
+                        :paginated="false"
+                        :autoupdateDataTable="true"
+                        :multiList="true"
+                        :multiId="currentPort.id"
+                        :portType="currentPortType"
+                        :massiveactions="['delete']"
+                        :singleActions="['delete']"
+                        @onFormFieldUpdated="formFieldUpdated"
+                    ></DynamicalDataTable>
                     <!-- End DataTable -->
                 
                 </div>
@@ -263,19 +111,21 @@
                         <label class="mr-5">
                             PORT
                             <multiselect 
-                                v-model="value" 
-                                :options="options" 
+                                v-model="currentPort" 
+                                :options="port_options" 
                                 :searchable="true" 
                                 :close-on-select="false" 
-                                :show-labels="false" 
-                                placeholder="Select a country">
+                                :show-labels="false"
+                                label="name"
+                                track-by="name"
+                                placeholder="Select a port">
                             </multiselect>
                         </label>
 
                         <label>
                             ORIGIN ADDRESS
                             <multiselect 
-                                v-model="value" 
+                                v-model="currentAddress" 
                                 :options="options" 
                                 :searchable="true" 
                                 :close-on-select="false" 
@@ -444,22 +294,176 @@
 <script>
     import Multiselect from 'vue-multiselect';
     import 'vue-multiselect/dist/vue-multiselect.min.css';
+    import DynamicalDataTable from "../../components/views/DynamicalDataTable";
     export default {
         components: {
             Multiselect,
+            DynamicalDataTable,
+        },
+        props: {
+            datalists: Object,
+            freights: Array,
+            currentQuoteData: Object,
+            equipment: Object,
+            quoteEquip: Array,
+            actions: Object,
+        },
+        watch: {
+            currentPort: function(newVal,oldVal){this.updateTable(newVal);}
         },
         data() {
             return {
                 openModal: false,
                 vdata: {},
                 value: '',
-                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
+                imageFolder: "/images/flags/1x1/",
+                loaded: false,
+                options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+                currentPort: '',
+                currentPortType: '',
+                currentAddress: '',
+                port_options: [],
+                  /* Table headers */
+                fields: [
+                    {
+                        key: "charge",
+                        label: "CHARGE",
+                        type: "text",
+                    },
+                    {
+                        key: "provider",
+                        label: "PROVIDER",
+                        type: "text",
+                    },
+                    {
+                        key: "currency_id",
+                        label: "CURRENCY",
+                        type: "select",
+                        trackby: "alphacode",
+                        options: "currency",
+                    },
+                ],
+                /* Table inputs */
+                vform_fields: {
+                    charge: {
+                        label: "CHARGE",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select charge",
+                    },
+                    provider: {
+                        label: "PROVIDER",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select Provider",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                },
+                totalsFields: {
+                    Profits: {},
+                    Totals: {},
+                },
             }
+        },
+        created() {
+            this.setPorts();
+
+            this.setTotalsFields();
         },
         methods: {
             showModal() {
                 this.$refs['my-modal'].show();
-            }
-        }
+            },
+            
+            setPorts() {
+                let component = this;
+
+                component.freights.forEach(function(freight){
+                    component.datalists.harbors.forEach(function (harbor) {
+                        if(freight.origin_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
+                            component.port_options.push({"name":harbor.display_name,
+                                                        "id":harbor.id,
+                                                        "type":"Origin",
+                                                        "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")});
+                        }
+                        if(freight.destination_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
+                            component.port_options.push({"name":harbor.display_name,
+                                                        "id":harbor.id,
+                                                        "type":"Destination",
+                                                        "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")});
+                        }
+                    });
+                });
+
+                if(component.currentPort == ''){
+                    component.currentPort = component.port_options[0];
+                }
+
+                component.loaded = true
+            },
+
+            setTotalsFields() {
+                let component = this;
+
+                component.quoteEquip.forEach(function (eq) {
+                    component.totalsFields["Profits"]["profits_".concat(eq)] = {
+                        type: "text",
+                        placeholder: eq,
+                    };
+                    component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                        type: "span",
+                    };
+                });
+
+                component.totalsFields["Profits"]["currency_id"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
+                };
+                component.totalsFields["Totals"]["totals_currency"] = {
+                    type: "span",
+                    label: "alphacode",
+                };
+            },
+
+            /* Single Actions */
+            formFieldUpdated(containers_fields) {
+                let component = this;
+
+                component.containers_fields = containers_fields;
+                component.form_fields = {
+                    ...this.vform_fields,
+                    ...containers_fields,
+                };
+            },
+
+            updateTable(port) {
+                let component = this;
+
+                component.loaded = false;
+                setTimeout(function() {
+                    component.loaded = true;
+                },100);
+
+                this.currentPortType = port.type;
+                if(port.type == 'Origin'){
+                    this.currentAddress = this.currentQuoteData.origin_address
+                }else{
+                    this.currentAddress = this.currentQuoteData.destination_address
+                }
+            },
+        },
     }
 </script>

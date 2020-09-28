@@ -63,7 +63,7 @@
             <b-tbody v-if="!isBusy">
 
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields)">
+                <b-tr v-if="!isEmpty(inputFields) && autoAdd">
 
                     <b-td v-if="firstEmpty"></b-td>
                     
@@ -216,8 +216,30 @@
 
                     <!-- Fields data -->
                     <b-td v-for="(col, key) in fields" :key="key">
-                       <span v-if="'formatter' in col" v-html="col.formatter(item[col.key])"></span>
-                       <span v-else>{{item[col.key]}}</span>
+                        <div v-if="autoupdateDataTable">
+                            <b-form-input v-if="col.type=='text'"
+                                v-model="item[col.key]"
+                                :id="String(item['id'])"
+                                @blur="onSubmitAutoupdate(item['id'])"
+                            ></b-form-input>
+
+                            <multiselect v-else-if="col.type=='select'"
+                                v-model="item[col.key]"
+                                :searchable="true"
+                                :close-on-select="true"
+                                :options="datalists[col.options]"
+                                :show-labels="false"
+                                :id="String(item['id'])"
+                                :label="col.trackby"
+                                :track-by="col.trackby"
+                                @input="onSubmitAutoupdate(item['id'])">
+                            </multiselect>
+                        </div>
+
+                        <div v-else>
+                            <span v-if="'formatter' in col" v-html="col.formatter(item[col.key])"></span>
+                            <span v-else>{{item[col.key]}}</span>
+                        </div>
                     </b-td>
                     <!-- End Fields Data -->
 
@@ -397,7 +419,22 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
-            }
+            },
+            autoupdateDataTable: {
+                type: Boolean,
+                required:false,
+                default: false,
+            },
+            portType: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            autoAdd: {
+                type: Boolean,
+                required:false,
+                default: true
+            },
         },
         components: { 
             Multiselect,
@@ -411,6 +448,7 @@
                 currentData: [],
                 totalsData: [],
                 fixedData: [],
+                autoupdateTableData: [],
                 refresh: true,
                 datalists: {},
                 search: null,
@@ -443,15 +481,16 @@
                     if('initial' in this.inputFields[key])
                         this.fdata[key] = this.inputFields[key]['initial'];
                 }
-                
-                this.actions
-                    .retrieve(this.multiId)
-                    .then((response) => {
-                        this.fixedData=response.data.data;
-                        })
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                    });
+                if(this.extraRow){
+                    this.actions
+                        .retrieve(this.multiId)
+                        .then((response) => {
+                            this.fixedData=response.data.data;
+                            })
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                        });
+                }
             },
 
             /* Request the data with axios */
@@ -465,16 +504,18 @@
                     this.setData(err, data);
                     }, this.$route);
                 }
-
-                this.totalActions
-                    .retrieve(this.multiId,this.$route)
-                    .then((response) => {
-                        this.totalsData=response.data.data;
-                        })  
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                        });
-            },
+               
+                if(this.totalActions){
+                    this.totalActions
+                        .retrieve(this.multiId,this.$route)
+                        .then((response) => {
+                            this.totalsData=response.data.data;
+                            })  
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                            });
+                    }
+                },
 
             /* Set the data into datatable */
             setData(err, { data: records, links, meta }) {
@@ -484,6 +525,7 @@
                     this.error = err.toString();
                 } else {
                     this.data = records;
+                    this.autoupdateTableData = records;
                     this.pageCount = Math.ceil(meta.total/meta.per_page);
                 }
             },
@@ -521,7 +563,7 @@
 
                 let data = {};
                 let keys = [];
-                
+
                 if(type=='table'){
                     for (const key in this.inputFields) {
 
@@ -537,6 +579,10 @@
                                 data[key].push(item.id)
                             });
                         }
+                    }
+
+                    if(this.autoupdateDataTable){
+                        data['type'] = this.portType;
                     }
                 
                 }else if(type=='extra'){
@@ -625,6 +671,8 @@
                 
                 let data = this.prepareData('extra');
 
+                console.log(data);
+
                 //this.isBusy = true;
                 if(!this.multiList){
                     this.actions.update(data,this.$route)
@@ -643,7 +691,7 @@
                     });
                 });
                 }else{
-                    this.actions.update(this.multiId,data,this.$route)
+                    this.actions.update(this.fixedData.id,data,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
                         this.refreshData();
@@ -684,23 +732,63 @@
                     });
                 });
                 }else{
-                    this.totalActions.update(this.multiId,data,this.$route)
+                    if(!this.autoupdateDataTable){
+                        this.totalActions.update(this.multiId,data,this.$route)
+                        .then( ( response ) => {
+                            this.updateDinamicalFieldOptions();
+                            this.refreshData();
+    
+                        })
+                            .catch(( error, errors ) => {
+        
+                            let errors_key = Object.keys(error.data.errors);
+        
+                            errors_key.forEach(function(key){ 
+                                $(`#id_f_table_${key}`).css({'display':'block'});
+                                $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                            });
+                        });
+                    }else{
+                        this.totalActions.updateTotals(this.multiId,data,this.$route)
+                        .then( ( response ) => {
+                            this.updateDinamicalFieldOptions();
+                            this.refreshData();
+    
+                        })
+                            .catch(( error, errors ) => {
+        
+                            let errors_key = Object.keys(error.data.errors);
+        
+                            errors_key.forEach(function(key){ 
+                                $(`#id_f_table_${key}`).css({'display':'block'});
+                                $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                            });
+                        });
+                    }
+                }
+            },
+
+            onSubmitAutoupdate(id){
+                let component = this;
+                let uData = {};
+                let keys = [];
+                
+                component.data.forEach(function(item){
+                    for (const key in component.inputFields){
+                        if(item["id"]==id){
+                            keys.push(key);
+                            uData[key] = item[key];
+                        }
+                    }
+                });
+
+                uData["keys"] = keys;
+
+                this.actions.update(id,uData,this.$route)
                     .then( ( response ) => {
                         this.updateDinamicalFieldOptions();
                         this.refreshData();
-
                 })
-                    .catch(( error, errors ) => {
-
-                    let errors_key = Object.keys(error.data.errors);
-
-                    errors_key.forEach(function(key){ 
-                        $(`#id_f_table_${key}`).css({'display':'block'});
-                        $(`#id_f_table_${key}`).html(error.data.errors[key]);
-                    });
-                });
-                }
-
             },
 
             /* Single Actions */
@@ -708,6 +796,7 @@
                 this.currentData = data;
                 this.$bvModal.show('editModal');
                 this.$emit('onEdit', data);
+                this.refreshData();
             },
             onDelete(id){
               
@@ -804,7 +893,7 @@
             onOpenModalContainer(){
                 let ids = this.selected.map(item => item.id);
                 this.$emit('onOpenModalContainerView', ids);
-            }
+            },
         },
         watch: {
             vdatalists: {

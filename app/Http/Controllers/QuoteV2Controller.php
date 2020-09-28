@@ -1991,7 +1991,7 @@ class QuoteV2Controller extends Controller
             $modo = $request->input('mode');
             // FCL
             if ($typeText == 'FCL') {
-                foreach ($request->input('originport') as $origP) {
+                /**foreach ($request->input('originport') as $origP) {
                     $infoOrig = explode("-", $origP);
                     $origin_port[] = $infoOrig[0];
                 }
@@ -2015,12 +2015,12 @@ class QuoteV2Controller extends Controller
                         $oceanFreight->total = $arregloNull;
                         $oceanFreight->save();
                     }
-                }
+                }**/
 
                 $this->saveTerms($quote->id, 'FCL', $modo);
             }
             if ($typeText == 'LCL') {
-                foreach ($request->input('originport') as $origP) {
+                /**foreach ($request->input('originport') as $origP) {
                     $infoOrig = explode("-", $origP);
                     $origin_port[] = $infoOrig[0];
                 }
@@ -2045,7 +2045,7 @@ class QuoteV2Controller extends Controller
                         $oceanFreight->currency_id = $idCurrency;
                         $oceanFreight->save();
                     }
-                }
+                }**/
 
                 $this->saveTerms($quote->id, 'LCL', $modo);
             }
@@ -2189,7 +2189,20 @@ class QuoteV2Controller extends Controller
                             $inlandDest->validity_start = $inlandDestiny->validity_start;
                             $inlandDest->validity_end = $inlandDestiny->validity_end;
                             $inlandDest->currency_id = $info_D->idCurrency;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD CHARGE
+                            $inlandDest->charge = $info_D->providerName;
                             $inlandDest->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandDestTotals = new AutomaticInlandTotal();
+                            $inlandDestTotals->quote_id = $quote->id;
+                            $inlandDestTotals->port_id = $inlandDestiny->port_id;
+                            $inlandDestTotals->currency_id = $info_D->idCurrency;
+                            $inlandDestTotals->totals = $arregloMontoInDest;
+                            $inlandDestTotals->markups = $arregloMarkupsInDest;
+                            $inlandDestTotals->type = $inlandDestiny->type;
+                            $inlandDestTotals->save();
+
                         }
                     }
                     //INLAND ORIGEN
@@ -2223,6 +2236,8 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->automatic_rate_id = $rate->id;
                             $inlandOrig->provider = "Inland " . $form->origin_address;
                             $inlandOrig->distance = $inlandOrigin->km;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD
+                            $inlandOrig->charge = $info_D->providerName;
                             $inlandOrig->contract = $info_D->contract->id;
                             $inlandOrig->port_id = $inlandOrigin->port_id;
                             $inlandOrig->type = $inlandOrigin->type;
@@ -2232,6 +2247,16 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             $inlandOrig->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandOrigTotals = new AutomaticInlandTotal();
+                            $inlandOrigTotals->quote_id = $quote->id;
+                            $inlandOrigTotals->port_id = $inlandOrigin->port_id;
+                            $inlandOrigTotals->currency_id = $info_D->idCurrency;
+                            $inlandOrigTotals->totals = $arregloMontoInOrig;
+                            $inlandOrigTotals->markups = $arregloMarkupsInOrig;
+                            $inlandOrigTotals->type = $inlandOrigin->type;
+                            $inlandOrigTotals->save();
                         }
                     }
 
@@ -2351,7 +2376,8 @@ class QuoteV2Controller extends Controller
             $this->saveTerms($quote->id, 'FCL', $form->mode);
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        //return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        return redirect()->action('QuotationController@edit', $quote);
     }
 
     /**
@@ -2717,6 +2743,7 @@ class QuoteV2Controller extends Controller
 
         //resquest completo del form
         $form = $request->all();
+        
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -2751,18 +2778,81 @@ class QuoteV2Controller extends Controller
         //Settings de la compañia
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
         // Request Formulario
+        $origin_harbor_all = array();
+        $destination_harbor_all = array();
+        
         foreach ($request->input('originport') as $origP) {
 
             $infoOrig = explode("-", $origP);
-            $origin_port[] = $infoOrig[0];
-            $origin_country[] = $infoOrig[1];
+            if ($infoOrig[2] == null) {
+                $origin_port[] = $infoOrig[0];
+                $origin_country[] = $infoOrig[1];
+                $origin_harbor_all[] = $infoOrig[0]."-".$infoOrig[1]."-".$infoOrig[2];
+                $orig = Harbor::where('harbor_parent',  $infoOrig[0])->get();
+                foreach ($orig as $or) {
+                    $origin_port[] = "$or->id";
+                    $origin_country[] = "$or->country_id";
+                    $origin_harbor_all[]= "$or->id-$or->country_id-$or->harbor_parent";
+                }
+            }else{
+
+                $orig = Harbor::where('id',$infoOrig[2])->orwhere('harbor_parent',  $infoOrig[2])->get();
+                foreach ($orig as $or) {
+                    $origin_port[] = "$or->id";
+                    $origin_country[] = "$or->country_id";
+                    $origin_harbor_all[]= "$or->id-$or->country_id-$or->harbor_parent";
+                }
+            }
+          
+
         }
+
+        $origin_port = array_unique($origin_port);
+        $origin_country = array_unique($origin_country);
+        $origin_harbor_all = array_unique($origin_harbor_all);
+
+      
+
+        
         foreach ($request->input('destinyport') as $destP) {
 
             $infoDest = explode("-", $destP);
             $destiny_port[] = $infoDest[0];
             $destiny_country[] = $infoDest[1];
+
+            if ($infoDest[2] == null) {
+                $destiny_port[] = $infoDest[0];
+                $destiny_country[] = $infoDest[1];
+                $destination_harbor_all[] = $infoDest[0]."-".$infoDest[1]."-".$infoDest[2];
+
+                $dest = Harbor::where('harbor_parent',  $infoDest[0])->get();
+                foreach ($dest as $dt) {
+                    $destiny_port[] = "$dt->id";
+                    $destiny_country[] = "$dt->country_id";
+                    $destination_harbor_all[] = "$dt->id-$dt->country_id-$dt->harbor_parent";
+                }
+            }else{
+
+                $dest = Harbor::where('id',$infoDest[2])->orwhere('harbor_parent',  $infoDest[2])->get();
+                foreach ($dest as $dt) {
+                    $destiny_port[] = "$dt->id";
+                    $destiny_country[] = "$dt->country_id";
+                    $destination_harbor_all[] = "$dt->id-$dt->country_id-$dt->harbor_parent";
+                }
+            }
+
+
         }
+
+        $destiny_port = array_unique($destiny_port);
+        $destiny_country = array_unique($destiny_country);
+        $destination_harbor_all = array_unique($destination_harbor_all);
+        
+        $form['originport'] = $origin_harbor_all;
+        $form['destinyport'] = $destination_harbor_all;
+        
+
+      
 
         $equipment = $request->input('equipment');
 
@@ -2794,9 +2884,10 @@ class QuoteV2Controller extends Controller
 
         $validateEquipment = $this->validateEquipment($equipment, $containers);
         $groupContainer = $validateEquipment['gpId'];
-
+        $containerCode = $containers->whereIn('id',$equipment)->pluck('code')->toArray();
+        
         // Historial de busqueda
-        // $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$mode,$company_user_id,'FCL');
+        $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$containerCode,$delivery_type,$mode,$company_user_id,'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -2841,7 +2932,7 @@ class QuoteV2Controller extends Controller
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
 
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
@@ -2859,14 +2950,14 @@ class QuoteV2Controller extends Controller
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
                 });
             }
 
             // ************************* CONSULTA RATE API ******************************
 
-            if ($chargesAPI != null) {
+            /*if ($chargesAPI != null) {
 
                 $client = new Client();
 
@@ -2887,7 +2978,7 @@ class QuoteV2Controller extends Controller
                 $arreglo2 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('number', 'CMA CGM');
                 });
-            }
+            }*/
 
             /* if ($chargesAPI_M != null) {
 
@@ -2935,13 +3026,13 @@ class QuoteV2Controller extends Controller
             $arreglo = $this->filtrarRate($arreglo, $equipment, $validateEquipment['gpId'], $containers);
 
             $arreglo = $arreglo->get();
-
-            if ($chargesAPI != null) {
+            
+            /*if ($chargesAPI != null) {
                 $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
                 $arreglo2 = $arreglo2->get();
 
                 $arreglo = $arreglo->merge($arreglo2);
-            }
+            }*/
 
             /*    if ($chargesAPI_M != null) {
             $arreglo3 = $this->filtrarRate($arreglo3, $equipment, $validateEquipment['gpId'], $containers);
@@ -6178,13 +6269,13 @@ class QuoteV2Controller extends Controller
                                 if ($global->typedestiny_id == '1') {
 
                                     $subtotal_local = $totalVol * $global->ammount;
-                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMount;
+                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMountG;
                                     $mont = $global->ammount;
                                     $unidades = $totalVol;
 
                                     if ($subtotal_local < $global->minimum) {
                                         $subtotal_local = $global->minimum;
-                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMount;
+                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMountG;
                                     }
 
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -6211,13 +6302,13 @@ class QuoteV2Controller extends Controller
                             if ($chargesDestination != null && $totalVol != 0) {
                                 if ($global->typedestiny_id == '2') {
                                     $subtotal_local = $totalVol * $global->ammount;
-                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMount;
+                                    $totalAmmount = ($totalVol * $global->ammount) / $rateMountG;
                                     $mont = $global->ammount;
                                     $unidades = $totalVol;
 
                                     if ($subtotal_local < $global->minimum) {
                                         $subtotal_local = $global->minimum;
-                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMount;
+                                        $totalAmmount = ($totalVol * $subtotal_local) / $rateMountG;
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
@@ -6389,12 +6480,28 @@ class QuoteV2Controller extends Controller
 
             $totalFreightOrig = $totalFreight;
 
+  
+
+
+
             $rateTotal = $this->ratesCurrency($data->currency->id, $typeCurrency);
             $totalFreight = $totalFreight / $rateTotal;
             $totalFreight = number_format($totalFreight, 2, '.', '');
 
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
+
+
+            if ($chargesDestination == null && $chargesOrigin == null) {
+
+                $totalQuote = $totalFreightOrig;
+                $data->setAttribute('quoteCurrency', $data->currency->alphacode);
+                
+            } else{
+                $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
+                $data->setAttribute('quoteCurrency', $typeCurrency);
+
+            }
 
             if (!empty($collectionOrig)) {
                 $collectionOrig = $this->OrdenarCollectionLCL($collectionOrig);
@@ -6486,7 +6593,7 @@ class QuoteV2Controller extends Controller
             $data->setAttribute('totalChargeDest', $totalChargeDest);
             $data->setAttribute('totalInland', $totalInland);
             //Total quote atributes
-            $data->setAttribute('quoteCurrency', $typeCurrency);
+
             $data->setAttribute('rateCurrency', $data->currency->alphacode);
             $data->setAttribute('totalQuoteSin', $totalQuoteSin);
             $data->setAttribute('idCurrency', $idCurrency);

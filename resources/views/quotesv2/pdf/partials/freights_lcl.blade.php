@@ -248,7 +248,7 @@
                                    
                                     @else
                                        
-                                        <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                        <td><b>{{@$r->currency->alphacode}}</b></td>
                                    
                                     @endif
                                

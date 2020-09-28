@@ -33,6 +33,7 @@
                                                 :datalists="datalists"
                                                 :actions="actions.quotes"
                                                 :update="true"
+                                                @success="setTermsField"
                                             ></FormInlineView>
                                         </div>
                                     </div>
@@ -55,27 +56,37 @@
                             </div>
                         </b-tab>
 
-                        <b-tab title="Ocean Freight">
-                            <ocean v-if="loaded"
+                        <b-tab title="Ocean Freight" @click="changeView('freight')">
+                            <ocean v-if="ocean"
                             :equipment="equip"
                             :currentQuoteData="currentData"
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
+                            :quoteLanguage="this.currentData.language['name']"
+                            @freightAdded="setInitialData"
+                            ref="oceanTab"
                             ></ocean>
                         </b-tab>
 
-                        <b-tab title="Local Charges">
+                        <b-tab title="Local Charges" @click="changeView('locals')">
                             <Local
-                                v-if="loaded"
+                                v-if="locals"
                                 :equipment="equip"
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
                             ></Local>
                         </b-tab>
 
-                        <b-tab title="Inland">
-                            <Inland></Inland>
+                        <b-tab title="Inland" @click="changeView('inlands')">
+                            <Inland v-if="inlands"
+                            :currentQuoteData="currentData"
+                            :equipment="equip"
+                            :quoteEquip="quoteEquip"
+                            :actions="actions"
+                            :datalists="datalists"
+                            :freights="freights"
+                            ></Inland>
                         </b-tab>
 
                         <b-tab title="Totals">Totales</b-tab>
@@ -113,6 +124,9 @@ export default {
         return {
             actions: actions,
             loaded: false,
+            ocean: false,
+            locals: false,
+            inlands: false,
             tabs_loaded: false,
             form_fields: {
                 quote_id: {
@@ -253,14 +267,7 @@ export default {
                     options:"languages",
                 },
             },
-            term_fields: {
-                terms_and_conditions: {
-                    type: "ckeditor",
-                    rules: "required",
-                    placeholder: "Insert terms",
-                    colClass: "col-sm-12",
-                },
-            },
+            term_fields: {},
             currentData: {},
             vdata: {},
             datalists: {},
@@ -277,23 +284,19 @@ export default {
             this.loaded = true;
         });
 
-        actions.quotes
-            .retrieve(id)
-            .then((response) => {
-                this.currentData = response.data.data;
-                this.onSuccess(this.currentData);
-            })
-            .catch((data) => {
-                this.$refs.observer.setErrors(data.data.errors);
-            });
+        this.setInitialData(id);
+    
     },
-
+    beforeUpdate(){
+        this.setTermsField();
+    },
     methods: {
         //Set dropdowns
         setDropdownLists(err, data) {
             this.datalists = data;
             //console.log(this.datalists);
         },
+
         onSuccess(data) {
             let component = this;
 
@@ -302,6 +305,71 @@ export default {
             component.quoteEquip = data.equipment.split(",");
             component.quoteEquip.splice(-1, 1);
         },
+
+        changeView(val){
+            let component = this;
+
+            if(val == 'freight'){
+                component.ocean = true;
+            } else if(val == 'locals'){
+                component.locals = true;
+            } else if(val == 'inlands'){
+                component.inlands = true;
+            }
+        },
+
+        setInitialData(id){
+            let component=this;
+
+            actions.quotes
+                .retrieve(id)
+                .then((response) => {
+                    component.currentData = response.data.data;
+                    component.onSuccess(component.currentData);
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
+                });
+            
+            if(component.ocean){
+                component.ocean=false;
+                setTimeout(function() {
+                    component.ocean=true
+                },100);
+            }
+            if(component.inlands){
+                component.inlands=false;
+                setTimeout(function() {
+                    component.inlands=true
+                },100);
+            }
+        },
+        
+        setTermsField(){
+            if(this.currentData.language['name']=="Spanish"){
+                this.term_fields = { 
+                    terms_and_conditions: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }                 
+            }else if(this.currentData.language['name']=="Portuguese"){
+                this.term_fields = { 
+                    terms_portuguese: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
+            }else if(this.currentData.language['name']=="English"){
+                this.term_fields = { 
+                    terms_english: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
+            }
+        },
     },
+    
 };
 </script>

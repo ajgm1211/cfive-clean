@@ -1056,8 +1056,8 @@ class ApiController extends Controller
     public function processSearchByContract(Request $request, $code)
     {
         try {
-            $contract = Contract::where('code', $code)->first();
-            $contract_lcl = ContractLcl::where('code', $code)->first();
+            $contract = Contract::where('name', $code)->first();
+            $contract_lcl = ContractLcl::where('name', $code)->first();
 
             $response = $request->response;
             $convert = $request->convert;

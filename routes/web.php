@@ -124,7 +124,7 @@ Route::prefix('globalcharges')->group(function () {
 
     Route::get('indexAdm', 'GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth', 'role:administrator|data_entry']);
     Route::get('createAdm', 'GlobalChargesController@createAdm_proc')->name('gcadm.create')->middleware(['auth', 'role:administrator|data_entry']);
-    Route::get('addAdm', 'GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth', 'role:administrator|data_entry']);
+    Route::post('addAdm', 'GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth', 'role:administrator|data_entry']);
     Route::get('typeChargeAdm/{id}', 'GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth', 'role:administrator|data_entry']);
     Route::post('StoreAdm', 'GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth', 'role:administrator|data_entry']);
     Route::post('ShowAdm/{id}', 'GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth', 'role:administrator|data_entry']);
@@ -435,6 +435,8 @@ Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('Harbors')-
     Route::resource('UploadFile', 'FileHarborsPortsController');
     Route::get('/loadViewAdd', 'FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
     Route::get('/destroyharbor/{id}', 'FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+    Route::get('/loadViewChild/{id}', 'HarborController@loadviewChild')->name('load.View.Child');
+    Route::post('storeHierarchy', 'HarborController@storeHierarchy')->name('store.hierarchy');
 });
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {
@@ -1025,7 +1027,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
-    
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
@@ -1037,26 +1039,46 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
-   
+
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'AutomaticRateController@retrieve')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
-    
-    /**Charge Routes**/
+    Route::post('api/quotes/{quote}/automatic_inland/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
+    Route::delete('api/quotes/automatic_rate/{autorate}/destroy/', 'AutomaticRateController@destroy');
+
+    /** Charge Routes**/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/store', 'ChargeController@store')->middleware('check_company:quote');
     Route::delete('api/quotes/ocean_freight/charge/{charge}/destroy', 'ChargeController@destroy');
     Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
-    Route::post('/api/quotes/ocean_freight/{autorate}/charge/update', 'ChargeController@update');
-    
-    //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
-    //Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
-    /** End Inlands routes view **/
+    Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
+    Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
+
+    /** AutomaticInlands Routes **/
+    Route::get('api/quotes/{quote}/port/{port_id}/automatic_inlands', 'AutomaticInlandController@list')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/store', 'AutomaticInlandController@store')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_inland/{autoinland}/update', 'AutomaticInlandController@update');
+    Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
+    Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
+    Route::get('api/quotes/{quote}/automatic_inland/totals/{port_id}', 'AutomaticInlandController@retrieve');
+    Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
+
+    /** Local charges routes */
     Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
-    Route::get('/api/quote/local/saleterm/{port_id}/{type}', 'LocalChargeQuotationController@saleterms')->name('get.local.saleterms');
-    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@charges')->name('get.local.charges');
+    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
+    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');
+    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
+    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
+    Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
+    Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
+    Route::get('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
+    Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
+    Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
+    Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
+    Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
+    Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
@@ -1069,10 +1091,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/sale_terms/{saleterm}/edit', 'SaleTermV3Controller@edit')->name('sale_term_v3.edit')->middleware('check_company:saleterm');
     /** End Sale terms routes view **/
 
-     /** Inlands V2 view routes **/
+    /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
-    
+
+    /** Providers view routes **/
+    Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
+    /** End providers routes view **/
 });
 
 
@@ -1216,6 +1241,19 @@ Route::group(['prefix' => 'api/v2/sale_codes'], function () {
     Route::get('{code}', 'SaleTermCodeController@retrieve')->middleware('check_company:code');
     /** End API Sale Terms EndPoints **/
 });
+Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
+
+    /** API Providers endpoint **/
+    Route::get('', 'ProvidersController@list');
+    Route::get('data', 'ProvidersController@data');
+    Route::post('store', 'ProvidersController@store');
+    Route::post('{providers}/update', 'ProvidersController@update');
+    Route::post('{providers}/duplicate', 'ProvidersController@duplicate');
+    Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+
+    /** providers **/
+});
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **

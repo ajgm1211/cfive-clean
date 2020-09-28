@@ -31,7 +31,10 @@ Vue.use(VueCkeditor.plugin, options);
 
 const router = new VueRouter({
     mode: 'history',
-    routes: [{ path: '/api/quote/:id/edit', name: 'Quotes' }]
+    routes: [{ 
+        path: '/api/quote/:id/edit', 
+        name: 'quotes'
+    }],
 });
 
 window.api = new Api();
