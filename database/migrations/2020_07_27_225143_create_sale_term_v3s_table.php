@@ -21,7 +21,7 @@ class CreateSaleTermV3sTable extends Migration
             $table->integer('type_id')->unsigned();
             $table->foreign('type_id')->references('id')->on('sale_term_types')->onDelete('cascade'); 
             $table->integer('company_user_id')->unsigned();
-            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');  
+            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
         });
     }
