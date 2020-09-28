@@ -667,11 +667,12 @@ export default {
                 });
         },
         onUpdate(id, data, index) {
+            this.totals = [];
             let self = this;
             actions.localcharges
                 .update(id, data, index)
                 .then((response) => {
-                    //
+                    this.getTotal();
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);

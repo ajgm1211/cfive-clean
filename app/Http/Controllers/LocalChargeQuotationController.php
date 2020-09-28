@@ -314,9 +314,12 @@ class LocalChargeQuotationController extends Controller
 
         $index = $request->index;
 
-        LocalChargeQuote::find($id)->update([
+        $local_charge = LocalChargeQuote::find($id);
+        $local_charge->update([
             $index => $request->data
         ]);
+
+        $local_charge->totalize();
         
         return 'Updated!';
 
