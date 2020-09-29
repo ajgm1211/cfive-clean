@@ -55,7 +55,7 @@
 
                     <!-- Add Freight -->
                     <div class="d-flex align-items-center">
-                        
+
                         <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
                             <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
                         </button>
@@ -79,7 +79,10 @@
                         ></FormInlineView>
 
                         <!-- Inputs Freight -->
-                        <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-link">+ Add Charge</a>
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                            <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-primary btn-bg">+ Add Charge</a>
+                        </div>
                         <!-- End Inputs Freight -->
                     </div>
 
@@ -126,7 +129,6 @@
 
                         </div>
 
-                        <a href="#" class="btn btn-primary btn-bg" style="margin-left: 50px" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
                     </div>
                     <!-- End Checkbox Freight-->
 
