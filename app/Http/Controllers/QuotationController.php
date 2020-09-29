@@ -129,19 +129,9 @@ class QuotationController extends Controller
             return $country->only(['id','code','name']);
         });
 
-        $sale_surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
-            $value['type'] = 'surcharge';
-            return $value->only(['name','type']);
+        $sale_codes = SaleTermCode::where('company_user_id','=',$company_user_id)->get()->map(function ($surcharge){
+            return $surcharge->only(['id','name']);
         });
-
-        $sale_codes = SaleTermCode::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($value){
-            $value['type'] = 'salecode';
-            return $value->only(['name','type']);
-        });
-        
-        $merged = $sale_surcharges->merge($sale_codes);
-        
-        $salecode_surcharges = $merged->all();
 
         $data = compact(
             'companies',
@@ -162,7 +152,7 @@ class QuotationController extends Controller
             'schedule_types',
             'countries',
             'languages',
-            'salecode_surcharges'
+            'sale_codes'
         );
 
         return response()->json(['data'=>$data]);

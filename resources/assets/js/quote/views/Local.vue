@@ -126,6 +126,7 @@
                                         "
                                     ></multiselect>
                                 </b-td>
+
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -137,7 +138,7 @@
                                             onUpdate(
                                                 charge.id,
                                                 charge.total['c' + item],
-                                                'total.c' + item
+                                                'total->c' + item
                                             )
                                         "
                                     ></b-form-input>
@@ -338,13 +339,13 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="localcharge.surcharge"
-                                        :options="datalists['surcharges']"
+                                        v-model="sale_codes[key]"
+                                        :options="datalists['sale_codes']"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a surcharge"
+                                        placeholder="Choose a sale code"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
@@ -507,6 +508,7 @@ export default {
             currencies: this.datalists.currency,
             openModal: false,
             ids: [],
+            sale_codes: [],
             options: [],
             saleterms: [],
             charges: [],
@@ -518,6 +520,7 @@ export default {
             template: "",
             code_port: "",
             rate_id: "",
+            sale_code: "",
             remark_field: {
                 localcharge_remarks: {
                     type: "ckeditor",
@@ -545,6 +548,9 @@ export default {
         closeModal(modal) {
             this.$bvModal.hide(modal);
         },
+        addSaleCode(value) {
+            this.sale_codes.push(value); // what to push unto the rows array?
+        },
         getSaleTerms() {
             this.saleterms = [];
             this.charges = [];
@@ -562,6 +568,7 @@ export default {
         },
         getCharges() {
             this.charges = [];
+            this.totals = [];
             api.postData(
                 {
                     id: this.template.id,
@@ -572,6 +579,7 @@ export default {
                 "/api/quote/localcharge/store/salecharge",
                 (err, data) => {
                     this.charges = data;
+                    this.getTotal();
                 }
             );
             this.getTotal();
@@ -651,6 +659,7 @@ export default {
             this.totals = [];
             let data = {
                 ids: this.ids,
+                sale_codes: this.sale_codes,
                 quote_id: this.$route.params.id,
                 port_id: this.value.id,
                 type_id: this.value.type,
@@ -667,11 +676,12 @@ export default {
                 });
         },
         onUpdate(id, data, index) {
+            this.totals = [];
             let self = this;
             actions.localcharges
                 .update(id, data, index)
                 .then((response) => {
-                    //
+                    this.getTotal();
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
