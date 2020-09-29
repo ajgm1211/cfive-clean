@@ -121,7 +121,7 @@ class SaleTermV3Controller extends Controller
      */
     public function edit(Request $request, SaleTermV3 $saleterm)
     {
-        return view('saletermsV3.edit');
+        return view('saletermsv3.edit');
     }
 
     /**
