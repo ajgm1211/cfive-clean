@@ -8,33 +8,13 @@ use GuzzleHttp\Client;
 class Connection
 {
 
-    public function getData($setting)
+    public function getData($uri)
     {
-        try {
+        $response = $this->callApi($uri);
 
-            $page = 1;
-
-            do {
-
-                $uri_paginate =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
-
-                $response = $this->callApi($uri_paginate);
-
-                $max_page = ceil($response['count'] / 100);
-
-                SyncCompaniesJob::dispatch($response, $setting);
-                \Log::info('Running page: ' . $page);
-
-                sleep(20);
-                $page += 1;
-            } while ($page <= $max_page);
-
-            return true;
-        } catch (\Exception $e) {
-            \Log::info($e->getMessage());
-            return false;
-        }
+        return $response;
     }
+
 
     public function getInvoices($client_id)
     {
@@ -43,9 +23,7 @@ class Connection
 
         $response = $this->callApi('https://pr-altius.visualtrans.net/rest/api1-facturas-venta.pro?v=ejercicio%3A' . $year . '%2C%20cliente%3A' . $client_id . '&k=ENTICARGOFIVE75682100');
 
-        $count = count($response);
-
-        if ($count > 0) {
+        if ($response['count'] > 0) {
             return true;
         }
 
@@ -54,25 +32,33 @@ class Connection
 
     public function callApi($uri)
     {
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
-        ]);
+        try {
+            $client = new Client([
+                'verify' => false,
+                'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
+            ]);
 
-        $response = $client->get($uri);
+            $response = $client->get($uri);
 
-        $type = $response->getHeader('content-type');
+            $type = $response->getHeader('content-type');
 
-        $type = explode(';', $type[0]);
+            $type = explode(';', $type[0]);
 
-        $api_response = $response->getBody()->getContents();
+            $api_response = $response->getBody()->getContents();
 
-        if ($type[1] == 'charset=iso-8859-1') {
-            $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
+            if ($type[1] == 'charset=iso-8859-1') {
+                $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
+            }
+
+            $data = json_decode($api_response, true);
+
+            dump($uri);
+
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return false;
         }
 
-        $data = json_decode($api_response, true);
-
         return $data;
+
     }
 }
