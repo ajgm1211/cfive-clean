@@ -432,14 +432,14 @@ export default {
         remarks(quote_id) {
             return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
         },
-        update(id, data, index) {
-            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index });
+        update(id, data, index, type) {
+            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index, type: type });
         },
         updateRemarks(data, quote_id) {
             return api.call('post', `/api/quote/localcharge/updates/${quote_id}/remarks`, { data: data });
         },
-        delete(id) {
-            return api.call('get', `/api/quote/localcharge/delete/${id}`, {});
+        delete(id, type) {
+            return api.call('post', `/api/quote/localcharge/delete/${id}`, { type: type });
         },
         retrieve(data) {
             return api.call('get', `/api/quote/localcharge/saleterm`, data);

@@ -101,7 +101,8 @@
                                             onUpdate(
                                                 charge.id,
                                                 charge.charge,
-                                                'charge'
+                                                'charge',
+                                                1
                                             )
                                         "
                                     ></b-form-input>
@@ -121,7 +122,8 @@
                                             onUpdate(
                                                 charge.id,
                                                 charge.calculation_type.id,
-                                                'calculation_type_id'
+                                                'calculation_type_id',
+                                                1
                                             )
                                         "
                                     ></multiselect>
@@ -138,7 +140,8 @@
                                             onUpdate(
                                                 charge.id,
                                                 charge.total['c' + item],
-                                                'total->c' + item
+                                                'total->c' + item,
+                                                1
                                             )
                                         "
                                     ></b-form-input>
@@ -158,7 +161,8 @@
                                             onUpdate(
                                                 charge.id,
                                                 charge.currency.id,
-                                                'currency_id'
+                                                'currency_id',
+                                                1
                                             )
                                         "
                                     ></multiselect>
@@ -167,7 +171,7 @@
                                     <button
                                         type="button"
                                         class="btn-delete"
-                                        v-on:click="onDelete(charge.id)"
+                                        v-on:click="onDelete(charge.id, 1)"
                                     >
                                         <i
                                             class="fa fa-times"
@@ -196,7 +200,7 @@
                                 </b-td>
 
                                 <b-td>
-                                    <span>
+                                    <span v-if="loaded">
                                         <b>EUR</b>
                                     </span>
                                 </b-td>
@@ -320,6 +324,14 @@
                                         placeholder="Choose a surcharge"
                                         label="name"
                                         track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.surcharge.id,
+                                                'surcharge_id',
+                                                2
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
 
@@ -334,6 +346,14 @@
                                         placeholder="Choose a calculation type"
                                         label="name"
                                         track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.calculation_type.id,
+                                                'calculation_type_id',
+                                                2
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
 
@@ -364,6 +384,15 @@
                                         placeholder="Choose a provider"
                                         label="name"
                                         track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.automatic_rate
+                                                    .carrier.id,
+                                                'carrier',
+                                                2
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
 
@@ -375,11 +404,27 @@
                                         placeholder
                                         v-model="localcharge.price['c' + item]"
                                         class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.price['c' + item],
+                                                'c' + item,
+                                                3
+                                            )
+                                        "
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
                                         v-model="localcharge.markup['m' + item]"
                                         class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.markup['m' + item],
+                                                'm' + item,
+                                                4
+                                            )
+                                        "
                                     ></b-form-input>
                                 </b-td>
 
@@ -394,11 +439,23 @@
                                         placeholder="Choose a currency"
                                         label="alphacode"
                                         track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.currency.id,
+                                                'currency_id',
+                                                2
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
 
                                 <b-td>
-                                    <button type="button" class="btn-delete">
+                                    <button
+                                        type="button"
+                                        class="btn-delete"
+                                        v-on:click="onDelete(localcharge.id, 2)"
+                                    >
                                         <i
                                             class="fa fa-times"
                                             aria-hidden="true"
@@ -521,6 +578,7 @@ export default {
             code_port: "",
             rate_id: "",
             sale_code: "",
+            loaded: false,
             remark_field: {
                 localcharge_remarks: {
                     type: "ckeditor",
@@ -545,8 +603,8 @@ export default {
             this.getTotal();
             //this.getRemarks();
         },
-        closeModal(modal) {
-            this.$bvModal.hide(modal);
+        closeModal() {
+            this.$refs["my-modal"].show();
         },
         addSaleCode(value) {
             this.sale_codes.push(value); // what to push unto the rows array?
@@ -582,7 +640,6 @@ export default {
                     this.getTotal();
                 }
             );
-            this.getTotal();
         },
         getStoredCharges() {
             this.charges = [];
@@ -608,6 +665,7 @@ export default {
                 "/api/quote/localcharge/total",
                 (err, data) => {
                     this.totals = data;
+                    this.loaded = true;
                 }
             );
         },
@@ -640,9 +698,9 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
-        onDelete(id) {
+        onDelete(id, type) {
             actions.localcharges
-                .delete(id)
+                .delete(id, type)
                 .then((response) => {
                     this.getTotal();
                 })
@@ -651,6 +709,9 @@ export default {
                 });
 
             this.charges = this.charges.filter(function (item) {
+                return id != item.id;
+            });
+            this.localcharges = this.localcharges.filter(function (item) {
                 return id != item.id;
             });
         },
@@ -670,16 +731,17 @@ export default {
                 .then((response) => {
                     this.charges = response.data;
                     this.getTotal();
+                    this.closeModal();
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
-        onUpdate(id, data, index) {
+        onUpdate(id, data, index, type) {
             this.totals = [];
             let self = this;
             actions.localcharges
-                .update(id, data, index)
+                .update(id, data, index, type)
                 .then((response) => {
                     this.getTotal();
                 })
