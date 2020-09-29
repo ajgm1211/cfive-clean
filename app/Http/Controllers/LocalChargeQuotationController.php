@@ -272,15 +272,23 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $id
      * @return void
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $local_charge_quote = LocalChargeQuote::findOrFail($id);
+        switch($request->type){
+            case 1:
+                $local_charge_quote = LocalChargeQuote::findOrFail($id);
 
-        $local_charge_quote->delete();
+                $local_charge_quote->delete();
+        
+                $local_charge_quote->totalize();
+            break;
+            case 2:
+                Charge::destroy($id);
+            break;
 
-        $local_charge_quote->totalize();
+        }
 
-        return 'OK';
+        return response()->json(['success' => 'Ok']);
     }
     
     /**
@@ -291,7 +299,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function getTotal(Request $request){
 
-        $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->first();
+        $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
         
         return $total;
 
@@ -320,15 +328,50 @@ class LocalChargeQuotationController extends Controller
      */
     public function update(Request $request, $id){
 
-        $index = $request->index;
+        switch($request->type){
+            case 1:
+                $index = $request->index;
 
-        $local_charge = LocalChargeQuote::find($id);
-        $local_charge->$index = $request->data;
-        $local_charge->update();
-
-        $local_charge->totalize();
+                $local_charge = LocalChargeQuote::findOrFail($id);
+                $local_charge->$index = $request->data;
+                $local_charge->update();
         
-        return 'Updated!';
+                $local_charge->totalize();
+            break;
+            case 2:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $local_charge->$index = $request->data;
+                $local_charge->update();
+            break;
+            case 3:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $price = json_decode($local_charge->amount);
+                foreach($price as $key => $amount){
+                    if($key == $index){
+                        $price->$index = $request->data;
+                    }
+                }
+                $local_charge->amount = json_encode($price);
+                $local_charge->update();
+            break;
+            case 4:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $profit = json_decode($local_charge->markups);
+                foreach($profit as $key => $markup){
+                    if($key == $index){
+                        $profit->$index = $request->data;
+                    }
+                }
+                $local_charge->markups = json_encode($profit);
+                $local_charge->update();
+            break;
+
+        }
+        
+        return response()->json(['success' => 'Ok']);
 
     }
     
@@ -345,7 +388,7 @@ class LocalChargeQuotationController extends Controller
             'localcharge_remarks' => $request->data
         ]);
         
-        return 'Updated!';
+        return response()->json(['success' => 'Ok']);
 
     }
 }

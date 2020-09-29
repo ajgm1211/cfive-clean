@@ -11,4 +11,9 @@ class LocalChargeQuoteTotal extends Model
     protected $casts = [
         'total' => 'array',
     ];
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
+    }
 }
