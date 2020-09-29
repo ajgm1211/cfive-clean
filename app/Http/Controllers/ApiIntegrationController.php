@@ -141,20 +141,7 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        $integrations = ApiIntegration::where('module', 'Companies')->with('partner')->get();
-
-        foreach($integrations as $setting){
-    
-            $data = new Connection();
-            $response = $data->getData($setting);
-
-            if(!$response){
-                return response()->json(['message' => 'Something went wrong on our side']);
-            }
-        }
-
-        return response()->json(['message' => 'Ok']);
-
+        SyncCompaniesJob::dispatch();
     }
 
     public function getContacts($company_id)
