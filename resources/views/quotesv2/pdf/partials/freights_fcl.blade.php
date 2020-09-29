@@ -3,7 +3,7 @@
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1 && $quote->pdf_option->freight_no_grouping==0)
                     <div>
 
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}} estoy en freight  all in</p>
+                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}}</p>
                        
                         <br>
                     
