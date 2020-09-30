@@ -601,10 +601,9 @@ export default {
             this.getLocalCharges();
             this.getStoredCharges();
             this.getTotal();
-            //this.getRemarks();
         },
         closeModal() {
-            this.$refs["my-modal"].show();
+            this.$refs["my-modal"].hide();
         },
         addSaleCode(value) {
             this.sale_codes.push(value); // what to push unto the rows array?
@@ -731,6 +730,12 @@ export default {
                 .then((response) => {
                     this.charges = response.data;
                     this.getTotal();
+                    this.$toast.open({
+                        message: "Record saved successfully!",
+                        type: "success",
+                        duration: 5000,
+                        dismissible: true,
+                    });
                     this.closeModal();
                 })
                 .catch((data) => {
