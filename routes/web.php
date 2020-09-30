@@ -1066,11 +1066,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
 
     /** Local charges routes */
-    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
-    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
-    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');
-    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
-    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
+    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors');
+    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms');
+    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
+    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges');
+    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store');
+    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@storeCharge');
     Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
