@@ -429,6 +429,9 @@ export default {
         create(data) {
             return api.call('post', `/api/quote/localcharge/store`, data);
         },
+        createCharge(data) {
+            return api.call('post', `/api/quote/charge/store`, data);
+        },
         remarks(quote_id) {
             return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
         },
