@@ -35,7 +35,7 @@
                         :show-labels="false"
                         :close-on-select="true"
                         :preserve-search="true"
-                        placeholder="Select Template"
+                        placeholder="Select Sale Term"
                         label="name"
                         track-by="name"
                         @input="getCharges()"
@@ -43,8 +43,14 @@
                         style="position: relative; top: 4px"
                     ></multiselect>
 
-                    <button
+                    <a href="/api/sale_terms" target="_blank"
                         class="btn btn-primary btn-bg"
+                        id="show-btn"
+                    >
+                        + Add Sale Term
+                    </a>
+                    <button
+                        class="btn btn-link mr-4"
                         id="show-btn"
                         @click="showModal"
                     >
@@ -464,54 +470,120 @@
                                 </b-td>
                             </b-tr>
 
-                            <!--<b-tr class="q-total">
+                            <b-tr
+                                class="q-tr"
+                                v-for="(input, counter) in inputs"
+                                :key="counter"
+                            >
                                 <b-td></b-td>
-
-                                <b-td></b-td>
-
-                                <b-td></b-td>
-
-                                <b-td></b-td>
-
                                 <b-td>
-                                    <span>
-                                        <b>Total</b>
-                                    </span>
+                                    <multiselect
+                                        v-model="input.surcharge"
+                                        :options="datalists['surcharges']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a surcharge"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
                                 <b-td>
-                                    <span>
-                                        <b>1600</b>
-                                    </span>
+                                    <multiselect
+                                        v-model="input.calculation_type"
+                                        :options="datalists['calculationtypes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
                                 <b-td>
-                                    <span>
-                                        <b>500</b>
-                                    </span>
+                                    <multiselect
+                                        v-model="sale_codes[key]"
+                                        :options="datalists['sale_codes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a sale code"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
                                 <b-td>
-                                    <span>
-                                        <b>150</b>
-                                    </span>
+                                    <multiselect
+                                        v-model="input.carrier"
+                                        :options="datalists['carriers']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a provider"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
+                                </b-td>
+
+                                <b-td
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <b-form-input
+                                        placeholder
+                                        v-model="input.price['c' + item]"
+                                        class="q-input"
+                                    ></b-form-input>
+                                    <b-form-input
+                                        placeholder
+                                        v-model="input.markup['c' + item]"
+                                        class="q-input"
+                                    ></b-form-input>
                                 </b-td>
 
                                 <b-td>
-                                    <span>
-                                        <b>EUR</b>
-                                    </span>
+                                    <multiselect
+                                        v-model="input.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                    ></multiselect>
                                 </b-td>
 
-                                <b-td></b-td>
-                            </b-tr>-->
+                                <b-td>
+                                    <button
+                                        type="button"
+                                        class="btn"
+                                        v-on:click="onSubmitCharge(counter)"
+                                    >
+                                        <i
+                                            class="fa fa-save"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                </b-td>
+                            </b-tr>
                         </b-tbody>
                     </b-table-simple>
                     <!-- End DataTable -->
                 </div>
 
                 <div class="col-12 d-flex justify-content-end mb-5 mt-3">
-                    <button class="btn btn-link mr-2">+ Add New</button>
+                    <button class="btn btn-link mr-2" @click="add()">
+                        + Add New
+                    </button>
                     <button
                         class="btn btn-primary btn-bg"
                         @click="onSubmit"
@@ -544,15 +616,6 @@ export default {
         });
 
         this.getRemarks(id);
-
-        actions.quotes
-            .retrieve(id)
-            .then((response) => {
-                this.currentData = response.data.data;
-            })
-            .catch((data) => {
-                this.$refs.observer.setErrors(data.data.errors);
-            });
     },
     props: {
         equipment: Object,
@@ -573,11 +636,14 @@ export default {
             harbors: [],
             port: [],
             totals: [],
+            inputs: [],
+            datalists: {},
             value: "",
             template: "",
             code_port: "",
             rate_id: "",
             sale_code: "",
+            remarks: "",
             loaded: false,
             remark_field: {
                 localcharge_remarks: {
@@ -587,12 +653,29 @@ export default {
                     colClass: "col-sm-12",
                 },
             },
-            remarks: "",
-            currentData: {},
-            datalists: {},
         };
     },
     methods: {
+        add() {
+            if (this.value != "") {
+                this.inputs.push({
+                    surcharge: "",
+                    calculation_type: "",
+                    sale_codes: "",
+                    price: {},
+                    markup: {},
+                    currency: "",
+                });
+            } else {
+                this.$toast.open({
+                    message:
+                        "You must select a port before create a new charge",
+                    type: "error",
+                    duration: 5000,
+                    dismissible: true,
+                });
+            }
+        },
         showModal() {
             this.$refs["my-modal"].show();
         },
@@ -606,7 +689,7 @@ export default {
             this.$refs["my-modal"].hide();
         },
         addSaleCode(value) {
-            this.sale_codes.push(value); // what to push unto the rows array?
+            this.sale_codes.push(value);
         },
         getSaleTerms() {
             this.saleterms = [];
@@ -658,7 +741,7 @@ export default {
             this.totals = [];
             api.getData(
                 {
-                    quote_id: this.value.quote_id,
+                    quote_id: this.$route.params.id,
                     port_id: this.value.id,
                 },
                 "/api/quote/localcharge/total",
@@ -682,7 +765,7 @@ export default {
                     this.localcharges = data.charges;
                     this.port = data.port.display_name;
                     this.code_port = data.port.country.code;
-                    this.rate_id = data.automatic_rate_id;
+                    this.rate_id = data.automatic_rate.id;
                 }
             );
         },
@@ -715,28 +798,58 @@ export default {
             });
         },
         onSubmit() {
-            this.charges = [];
-            this.totals = [];
+            if (this.ids.length > 0) {
+                this.charges = [];
+                this.totals = [];
+                let data = {
+                    ids: this.ids,
+                    sale_codes: this.sale_codes,
+                    quote_id: this.$route.params.id,
+                    port_id: this.value.id,
+                    type_id: this.value.type,
+                };
+                actions.localcharges
+                    .create(data)
+                    .then((response) => {
+                        this.charges = response.data;
+                        this.getTotal();
+                        this.$toast.open({
+                            message: "Record saved successfully",
+                            type: "success",
+                            duration: 5000,
+                            dismissible: true,
+                        });
+                        this.closeModal();
+                        this.ids = [];
+                    })
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
+            } else {
+                this.$toast.open({
+                    message: "You must select a charge at least",
+                    type: "error",
+                    duration: 5000,
+                    dismissible: true,
+                });
+            }
+        },
+        onSubmitCharge(counter) {
             let data = {
-                ids: this.ids,
-                sale_codes: this.sale_codes,
+                charges: this.inputs[counter],
                 quote_id: this.$route.params.id,
-                port_id: this.value.id,
-                type_id: this.value.type,
+                rate_id: 32, //Attention
             };
-
             actions.localcharges
-                .create(data)
+                .createCharge(data)
                 .then((response) => {
-                    this.charges = response.data;
-                    this.getTotal();
+                    this.getLocalCharges();
                     this.$toast.open({
-                        message: "Record saved successfully!",
+                        message: "Record saved successfully",
                         type: "success",
                         duration: 5000,
                         dismissible: true,
                     });
-                    this.closeModal();
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
