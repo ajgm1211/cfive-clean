@@ -963,6 +963,7 @@ class QuoteV2Controller extends Controller
         $pdf_duplicate->show_carrier = $pdf->show_carrier;
         $pdf_duplicate->show_logo = $pdf->show_logo;
         $pdf_duplicate->show_gdp_logo = $pdf->show_gdp_logo;
+        $pdf_duplicate->freight_no_grouping = $pdf->freight_no_grouping;
         $pdf_duplicate->save();
     }
 
