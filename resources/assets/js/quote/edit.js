@@ -8,16 +8,19 @@ import VueRouter from 'vue-router';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import VueCkeditor from 'vue-ckeditor5';
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-default.css';
 
 /* Config files */
 import Quote from './views/Quote'; // Main Component
 import Api from '../api.js'; // Api calls controller
 
-// Install BootstrapVue
 Vue.use(BootstrapVue)
-    // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
+Vue.use(VueToast, {
+    position: 'top-right'
+});
 
 const options = {
     editors: {
@@ -31,8 +34,8 @@ Vue.use(VueCkeditor.plugin, options);
 
 const router = new VueRouter({
     mode: 'history',
-    routes: [{ 
-        path: '/api/quote/:id/edit', 
+    routes: [{
+        path: '/api/quote/:id/edit',
         name: 'quotes'
     }],
 });

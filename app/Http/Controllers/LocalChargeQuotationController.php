@@ -229,7 +229,6 @@ class LocalChargeQuotationController extends Controller
                 'price' => $sale_charge->total,
                 'profit' => [],
                 'charge' => $sale_charge->sale_term_code->name,
-                'surcharge_id' => $sale_charge->sale_term_code_id,
                 'calculation_type_id' => $sale_charge->calculation_type_id,
                 'currency_id' => $sale_charge->currency_id,
                 'port_id' => $request->params['port_id'],
