@@ -9,7 +9,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import VueCkeditor from 'vue-ckeditor5';
 import VueToast from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 /* Config files */
 import Quote from './views/Quote'; // Main Component
