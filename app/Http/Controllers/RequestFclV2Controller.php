@@ -134,82 +134,92 @@ class RequestFclV2Controller extends Controller
 
                 $color = HelperAll::statusColorRq($Ncontracts->status);
                 $color = 'color:'.$color;
+                if($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true){
                 return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
                 &nbsp;
                 <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
+                } else {
+                    return '<a  style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
+                    &nbsp;
+                    <samp class="la la-unlock" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
+                }
             })
             ->addColumn('action', function ($Ncontracts) use($permiso_eliminar) {
+                
+                if($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true){
+                    if(empty($Ncontracts->namefile) != true){
+                        $disk = 'storage';
+                    } else{
+                        $disk = 'media';
+                    }
 
-                if(empty($Ncontracts->namefile) != true){
-                    $disk = 'storage';
-                } else{
-                    $disk = 'media';
-                }
-
-                $buttons = '
+                    $buttons = '
 				    <a href="'.route("RequestFcl.donwload.files",[$Ncontracts->id,$disk]).'" title="Download File">
                         <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                     </a>&nbsp;&nbsp;';
 
-                $eliminiar_buton = '
+                    $eliminiar_buton = '
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
-                if($permiso_eliminar){
-                    $buttons = $buttons . $eliminiar_buton;
-                }
-
-                if(empty($Ncontracts->contract) != true){
-                    $butPrCt 	= '';
-                    $buttonDp	= '';
-                    if(strnatcasecmp($Ncontracts->status,'Done')==0){
-                        $hidden = '';
-                    } else {
-                        $hidden = 'hidden';                        
+                    if($permiso_eliminar){
+                        $buttons = $buttons . $eliminiar_buton;
                     }
-                    $buttonDp = "<a href='#' id='statusHiden".$Ncontracts->id."' ".$hidden." class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>                      <i style='color:#b90000' class='la la-copy'></i></a>";   
-                    if(strnatcasecmp($Ncontracts->status,'Pending')==0){
-                        $hiddenPrCt = 'hidden';
-                    } else {
-                        $hiddenPrCt = '';
-                    }
-                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
-                    $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;&nbsp;';
-                    $validator_color = 'color:#c000d0';
-                    $validator_toute = route('check.surchargers',$Ncontracts->contract);
-                    if($Ncontracts->validator_contract == 1){
-                        $validator_color = 'color:#04950f';
-                        $validator_toute = route('show.validator.surcharge',$Ncontracts->contract);
-                    }
-                    $butValidateR = '<a href="'.$validator_toute.'" '.$hiddenPrCt.' title="Validator" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-vine" style="font-size:20px;'.$validator_color.'"></samp></a>  &nbsp;&nbsp;';
+                    if(empty($Ncontracts->contract) != true){
+                        $butPrCt 	= '';
+                        $buttonDp	= '';
+                        if(strnatcasecmp($Ncontracts->status,'Done')==0){
+                            $hidden = '';
+                        } else {
+                            $hidden = 'hidden';                        
+                        }
+                        $buttonDp = "<a href='#' id='statusHiden".$Ncontracts->id."' ".$hidden." class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>                      <i style='color:#b90000' class='la la-copy'></i></a>";   
+                        if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                            $hiddenPrCt = 'hidden';
+                        } else {
+                            $hiddenPrCt = '';
+                        }
+                        $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
-                    $buttoEdit = '<a href="#" title="Edit FCL Contract">
+                        $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;&nbsp;';
+                        $validator_color = 'color:#c000d0';
+                        $validator_toute = route('check.surchargers',$Ncontracts->contract);
+                        if($Ncontracts->validator_contract == 1){
+                            $validator_color = 'color:#04950f';
+                            $validator_toute = route('show.validator.surcharge',$Ncontracts->contract);
+                        }
+                        $butValidateR = '<a href="'.$validator_toute.'" '.$hiddenPrCt.' title="Validator" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-vine" style="font-size:20px;'.$validator_color.'"></samp></a>  &nbsp;&nbsp;';
+
+                        $buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
                     </a>&nbsp;&nbsp;
                     ';
 
-                    $buttons = $butPrCt . $butFailsR . $butValidateR . $buttonDp . $buttoEdit . $buttons;
-                } else{
+                        $buttons = $butPrCt . $butFailsR . $butValidateR . $buttonDp . $buttoEdit . $buttons;
+                    } else{
 
-                    if(strnatcasecmp($Ncontracts->status,'Pending')==0){
-                        $hiddenPrRq = 'hidden';
-                    } else {
-                        $hiddenPrRq = '';
-                    }
-                    $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" '.$hiddenPrRq.' id="PrCHidden'.$Ncontracts->id.'" title="Proccess FCL Request">
+                        if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                            $hiddenPrRq = 'hidden';
+                        } else {
+                            $hiddenPrRq = '';
+                        }
+                        $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" '.$hiddenPrRq.' id="PrCHidden'.$Ncontracts->id.'" title="Proccess FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
-                    $buttons = $butPrRq . $buttons;
-                }
+                        $buttons = $butPrRq . $buttons;
+                    }
 
-                $excel_button = '&nbsp;&nbsp;
+                    $excel_button = '&nbsp;&nbsp;
 				    <a href="'.route("RequestFcl.edit",[$Ncontracts->id,$disk]).'" title="Download Template">
                         <samp class="la la-file-excel-o" style="font-size:20px; color:#9a028e"></samp>
                     </a>
                     &nbsp;&nbsp;';
-                $buttons = $excel_button . $buttons;
+                    $buttons = $excel_button . $buttons;
+                } else {
+                    $buttons = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                }
                 return $buttons;
             })->make();
     }
