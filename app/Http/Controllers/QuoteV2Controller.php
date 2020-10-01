@@ -4319,6 +4319,14 @@ class QuoteV2Controller extends Controller
             $collectionGloFreight = new Collection();
             $collectionRate = new Collection();
 
+            $dataGOrig = array();
+            $dataGDest = array();
+            $dataGFreight = array();
+
+            $dataOrig = array();
+            $dataDest = array();
+            $dataFreight = array();
+            
             $rateC = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
 
             $typeCurrencyFreight = $data->currency->alphacode;
@@ -5412,6 +5420,7 @@ class QuoteV2Controller extends Controller
                 });
             })->where('company_user_id', '=', $company_user_id)->with('globalcharportlcl.portOrig', 'globalcharportlcl.portDest', 'globalcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
 
+            
             foreach ($globalChar as $global) {
                 $rateMountG = $this->ratesCurrency($global->currency->id, $typeCurrency);
                 $rateC = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
@@ -5785,6 +5794,8 @@ class QuoteV2Controller extends Controller
                                     $arregloOrig = array('surcharge_terms' => $terminos, 'surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'calculation_id' => $global->calculationtypelcl->id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'currency_id' => $global->currency->id, 'idCurrency' => $global->currency->id, 'currency_orig_id' => $idCurrency, 'montoOrig' => $totalAmmount);
                                     $arregloOrig = array_merge($arregloOrig, $markupTONM3);
                                     $dataGOrig[] = $arregloOrig;
+
+                                    
 
                                     // ARREGLO GENERAL 99
 
