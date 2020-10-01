@@ -435,6 +435,9 @@ export default {
         remarks(quote_id) {
             return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
         },
+        carriers(quote) {
+            return api.call('get', `/api/quote/localcharge/carriers/${quote}`, {});
+        },
         update(id, data, index, type) {
             return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index, type: type });
         },
