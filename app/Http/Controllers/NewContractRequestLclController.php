@@ -28,6 +28,7 @@ use App\Mail\NewRequestLclToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
+use App\Http\Requests\StoreNewRequestLcl;
 
 class NewContractRequestLclController extends Controller
 {
@@ -211,7 +212,7 @@ class NewContractRequestLclController extends Controller
 		//dd($request->all());
 	}
 
-	public function store2(Request $request)
+	public function store2(StoreNewRequestLcl $request)
 	{
 		//dd($request->all());
 		$fileBoll = false;
