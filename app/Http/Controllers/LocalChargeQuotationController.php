@@ -24,11 +24,8 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function harbors(Request $request)
+    public function harbors(QuoteV2 $quote)
     {
-
-        $quote = QuoteV2::with('origin_harbor', 'destination_harbor')->where('id', $request->quote_id)->first();
-
         $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
             $value['type'] = 1;
             $value['quote_id'] = $quote->id;
@@ -46,6 +43,20 @@ class LocalChargeQuotationController extends Controller
         $collection = $harbors->values()->all();
 
         return $collection;
+    }
+
+    /**
+     * carriers
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function carriers(QuoteV2 $quote)
+    {
+
+        $carriers = $quote->carrier->unique('id')->values();
+
+        return $carriers;
     }
 
     /**
@@ -394,15 +405,16 @@ class LocalChargeQuotationController extends Controller
      */
     public function storeCharge(Request $request)
     {
-
         $quote = QuoteV2::findOrFail($request->quote_id);
-
+        
+        $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
+        
         Charge::create([
-            'automatic_rate_id' => $request->rate_id,
+            'automatic_rate_id' => $rate->id,
             'calculation_type_id' => $request->charges['calculation_type']['id'],
             'currency_id' => $request->charges['currency']['id'],
             'surcharge_id' => $request->charges['surcharge']['id'],
-            'type_id' => 1,
+            'type_id' => $request->type_id,
             'amount' => json_encode($request->charges['price']),
             'markups' => json_encode($request->charges['markup'])
         ]);

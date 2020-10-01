@@ -1066,7 +1066,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
 
     /** Local charges routes */
-    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors');
+    Route::get('/api/quote/local/data/{quote}', 'LocalChargeQuotationController@harbors');
+    Route::get('/api/quote/localcharge/carriers/{quote}', 'LocalChargeQuotationController@carriers');
     Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms');
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
     Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges');

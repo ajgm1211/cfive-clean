@@ -43,7 +43,9 @@
                         style="position: relative; top: 4px"
                     ></multiselect>
 
-                    <a href="/api/sale_terms" target="_blank"
+                    <a
+                        href="/api/sale_terms"
+                        target="_blank"
                         class="btn btn-primary btn-bg"
                         id="show-btn"
                     >
@@ -382,7 +384,7 @@
                                         v-model="
                                             localcharge.automatic_rate.carrier
                                         "
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -504,24 +506,12 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>
-                                    <multiselect
-                                        v-model="sale_codes[key]"
-                                        :options="datalists['sale_codes']"
-                                        :multiple="false"
-                                        :show-labels="false"
-                                        :close-on-select="true"
-                                        :preserve-search="true"
-                                        placeholder="Choose a sale code"
-                                        label="name"
-                                        track-by="name"
-                                    ></multiselect>
-                                </b-td>
+                                <b-td>--</b-td>
 
                                 <b-td>
                                     <multiselect
                                         v-model="input.carrier"
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -543,7 +533,7 @@
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
-                                        v-model="input.markup['c' + item]"
+                                        v-model="input.markup['m' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -565,11 +555,23 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn"
+                                        class="btn btn-default"
                                         v-on:click="onSubmitCharge(counter)"
                                     >
                                         <i
-                                            class="fa fa-save"
+                                            class="fa fa-check"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                </b-td>
+                                <b-td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-default"
+                                        v-on:click="onSubmitCharge(counter)"
+                                    >
+                                        <i
+                                            class="fa fa-trash"
                                             aria-hidden="true"
                                         ></i>
                                     </button>
@@ -637,6 +639,7 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            carriers: [],
             datalists: {},
             value: "",
             template: "",
@@ -684,12 +687,25 @@ export default {
             this.getLocalCharges();
             this.getStoredCharges();
             this.getTotal();
+            this.getCarriers();
         },
         closeModal() {
             this.$refs["my-modal"].hide();
         },
         addSaleCode(value) {
             this.sale_codes.push(value);
+        },
+        getCarriers() {
+            let self = this;
+            let quote = this.$route.params.id;
+            actions.localcharges
+                .carriers(quote)
+                .then((response) => {
+                    self.carriers = response.data;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
         getSaleTerms() {
             this.saleterms = [];
@@ -838,7 +854,8 @@ export default {
             let data = {
                 charges: this.inputs[counter],
                 quote_id: this.$route.params.id,
-                rate_id: 32, //Attention
+                port_id: this.value.id,
+                type_id: this.value.type,
             };
             actions.localcharges
                 .createCharge(data)
