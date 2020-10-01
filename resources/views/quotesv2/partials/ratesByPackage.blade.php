@@ -17,7 +17,7 @@
                                             <li class="m-width-120" style="border-left:none;">                                  
                                                 @if($quote->type!='AIR')
                                                     @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-                                                        <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                                                        <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$rate->carrier->image}}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
                                                     @endif
                                                 @else
                                                     @if(isset($rate->airline->image) && $rate->airline->image!='')

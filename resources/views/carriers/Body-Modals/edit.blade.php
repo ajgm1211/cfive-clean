@@ -40,7 +40,7 @@
             Preview:
         </label>
         <br>
-        <img id="blah" src="{{$image}}" alt="your image" width="175" height="150"/>
+        <img id="blah" src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$carrier->image}}" alt="your image" width="175" height="150"/>
     </div>
     <div class="col-lg-4 " id="imagDiv">
         <label><br></label>
