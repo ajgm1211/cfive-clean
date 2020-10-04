@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LocalChargeQuote extends Model
 {
-    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id'];
+    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id'];
 
     protected $casts = [
         'price' => 'array',
