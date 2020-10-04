@@ -260,7 +260,7 @@
                                 '/images/flags/1x1/' + this.code_port + '.svg'
                             "
                             alt="bandera"
-                            style="width: 15px; border-radius: 2px"
+                            width="20" height="20" style="border-radius: 50%;"
                         />&nbsp;
                         <b>{{ this.port }}</b>
                     </span>
@@ -555,7 +555,7 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn btn-default"
+                                        class="btn action-app btn-secondary"
                                         v-on:click="onSubmitCharge(counter)"
                                     >
                                         <i
@@ -567,11 +567,11 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn btn-default"
-                                        v-on:click="onSubmitCharge(counter)"
+                                        class="btn action-app btn-secondary"
+                                        v-on:click="onRemove(counter)"
                                     >
                                         <i
-                                            class="fa fa-trash"
+                                            class="fa fa-close"
                                             aria-hidden="true"
                                         ></i>
                                     </button>
@@ -780,7 +780,7 @@ export default {
                 (err, data) => {
                     this.localcharges = data.charges;
                     this.port = data.port.display_name;
-                    this.code_port = data.port.country.code;
+                    this.code_port = data.port.country.code.toLowerCase();
                     this.rate_id = data.automatic_rate.id;
                 }
             );
@@ -861,6 +861,7 @@ export default {
                 .createCharge(data)
                 .then((response) => {
                     this.getLocalCharges();
+                    this.onRemove(counter);
                     this.$toast.open({
                         message: "Record saved successfully",
                         type: "success",
@@ -871,6 +872,9 @@ export default {
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        onRemove(index) {
+            this.inputs.splice(index, 1);
         },
         onUpdate(id, data, index, type) {
             this.totals = [];
