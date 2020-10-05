@@ -20,6 +20,8 @@
         :autoupdateDataTable="autoupdateDataTable"
         :portType="portType"
         :autoAdd="autoAdd"
+        :changeAddMode="changeAddMode"
+        :portAddress="portAddress"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -121,6 +123,16 @@
                 type: Boolean,
                 required:false,
                 default: true
+            },
+            changeAddMode: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            portAddress: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
             },
         },
         data() {

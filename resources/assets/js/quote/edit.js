@@ -10,6 +10,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import VueCkeditor from 'vue-ckeditor5';
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
+import * as VueGoogleMaps from 'vue2-google-maps';
 
 /* Config files */
 import Quote from './views/Quote'; // Main Component
@@ -30,6 +31,14 @@ const options = {
 }
 
 Vue.use(VueCkeditor.plugin, options);
+
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: 'AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0',
+        libraries: 'places',
+    },
+    installComponents: true
+})
 
 
 const router = new VueRouter({
