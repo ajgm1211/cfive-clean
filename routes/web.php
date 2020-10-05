@@ -512,7 +512,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
     Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
     Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+    //Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
     Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
@@ -1081,6 +1081,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
     Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
     Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
+
+    /** PDF */
+    Route::get('/api/quote/pdf/{quote_id}', 'PdfController@quote');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');
