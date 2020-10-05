@@ -143,7 +143,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" type="checkbox" name="freight_no_grouping" value="1" id="freight_no_grouping" data-quote-id="{{$quote->id}}" data-name="freight_no_grouping" data-type="checkbox" {{$quote->pdf_option->freight_no_grouping==1 ? 'checked':''}}>
                                     <span class="form-check-label title-quote input_form" for="freight_no_grouping">
-                                        Freight not grouped
+                                        Skip freight grouping
                                     </span>
                                 </label>
                             </div>
