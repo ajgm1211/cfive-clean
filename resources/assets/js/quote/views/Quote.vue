@@ -12,7 +12,7 @@
                             <b>FCL Quote</b>
                         </h4>
                         <div>
-                            <a href="#" class="btn btn-primary btn-bg">+ PDF</a>
+                            <a :href="'/api/quote/pdf/' + this.quote_id" target="_blank" class="btn btn-primary btn-bg">+ PDF</a>
                         </div>
                     </div>
                 </div>
@@ -274,6 +274,7 @@ export default {
             equip: {},
             freights: {},
             quoteEquip: [],
+            quote_id: this.$route.params.id,
         };
     },
     created() {
