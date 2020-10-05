@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\CompanyUser;
 use App\Container;
+use App\ContainerCalculation;
 use App\Currency;
 use App\Http\Traits\QuoteV2Trait;
 use App\QuoteV2;
 use App\Rate;
 use App\SaleTermV2;
+use App\CalculationType;
+
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -788,7 +791,9 @@ class ExcelController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+        $container_calculation = ContainerCalculation::get();
 
+   
         $arrayFirstPart = array(
             'Contract',
             'Reference',
@@ -826,13 +831,13 @@ class ExcelController extends Controller
                 })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
             }
 
-        })->get();
+        })->orderBy('contract_id')->get();
 
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo,$arrayComplete,$containers) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo,$arrayComplete,$containers) {
+        Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers,$container_calculation) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers,$container_calculation) {
                 //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
@@ -842,12 +847,16 @@ class ExcelController extends Controller
                 //$sheet->setBorder('A1:AO1', 'thin');
 
                 $sheet->row(1, $arrayComplete);
-                $i = 2;
+                $a = 2;
+                $contractId = -1;
                 foreach ($arreglo as $data) {
 
                     $montos = array();
                     $montos2 = array();
                     foreach ($containers as $cont) {
+
+                        $var = 'array' . $cont->code;
+                        $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
 
                         $options = json_decode($cont->options);
                         //dd($options);
@@ -870,12 +879,12 @@ class ExcelController extends Controller
                     }
                     $arrayFirstPartAmount = array(
                         'Contract' => $data->contract->name,
-                        'Reference' => $data->carrier->name,
+                        'Reference' => $data->contract->id,
                         'Carrier' => $data->carrier->name,
                         'Direction' => $data->contract->direction->name,
                         'Origin' => ucwords(strtolower($data->port_origin->name)),
                         'Destination' => ucwords(strtolower($data->port_destiny->name)),
-                        'Charge' => 'freight'
+                        'Charge' => 'freight',
                     );
                     $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
                     $arraySecondPartAmount = array(
@@ -885,9 +894,59 @@ class ExcelController extends Controller
 
                     );
                     $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+                    $sheet->row($a, $arrayCompleteAmount);
+                    $a++;
+                    // Local charges
+                    if ($contractId != $data->contract->id) {
 
-                    
-                    $sheet->row($i, $arrayCompleteAmount);
+                        $contractId = $data->contract->id;
+                        $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
+
+                        for ($i = 0; $i < count($data1); $i++) {
+                            //'country_orig' =>  $data1[$i]->country_orig,
+                            //  'country_dest' =>   $data1[$i]->country_dest,
+                            $montosLocal = array();
+                            $montosLocal2 = array();
+                            $arrayFirstPartLocal = array(
+                                'Contract' => $data->contract->name,
+                                'Reference' => $data->contract->id,
+                                'Carrier' => $data1[$i]->carrier,
+                                'Direction' => $data->contract->direction->name,
+                                'Origin' => $data1[$i]->port_orig,
+                                'Destination' => $data1[$i]->port_dest,
+                                'Charge' => $data1[$i]->surcharge,
+
+                            );
+
+                            $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+
+                            foreach ($containers as $cont) {
+                                $name_arreglo = 'array' . $cont->code;
+                                if (in_array($calculationID->id, $$name_arreglo)) {
+                                    $montosLocal2 = array($cont->code => $data1[$i]->ammount);
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+
+                                }else{
+                                    $montosLocal2 = array($cont->code =>'0');
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                }
+
+                            }
+                            $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
+
+                            $arraySecondPartLocal = array(
+                                'Currency' => $data1[$i]->currency,
+                                'From' => $data->contract->validity,
+                                'Until' => $data->contract->expire,
+                            );
+                            $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+
+                            $sheet->row($a, $arrayCompleteLocal);
+                            $a++;
+                        }
+
+                    }
+
                     $sheet->setBorder('A1:I' . $i, 'thin');
                     $sheet->cells('C' . $i, function ($cells) {
                         $cells->setAlignment('center');
@@ -895,7 +954,7 @@ class ExcelController extends Controller
                     $sheet->cells('I' . $i, function ($cells) {
                         $cells->setAlignment('center');
                     });
-                    $i++;
+
                 }
             })->download('xlsx');
         });
