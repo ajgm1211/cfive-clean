@@ -138,7 +138,18 @@
                         trackby: 'business_name', 
                         placeholder: 'Select options', 
                         options: 'companies' 
+					},
+                    providers: { 
+                        label: 'Provider', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select options', 
+                        options: 'providers',
+                        
                     },
+					
 				}
 			}
 		},

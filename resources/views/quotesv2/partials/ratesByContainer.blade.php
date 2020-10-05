@@ -11,7 +11,7 @@
                             <ul >
                                 <li class="m-width-120" style="border-left:none;">
                                     @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-                                        <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="45" height="auto" style="margin-top: 15px;" />
+                                        <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$rate->carrier->image}}"  class="img img-responsive" width="45" height="auto" style="margin-top: 15px;" />
                                     @endif
                                 </li>
                                 <li class="size-12px long-text m-width-200"><b>POL:</b> &nbsp;{{$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
