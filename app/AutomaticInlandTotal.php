@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class AutomaticInlandTotal extends Model
 {
-    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type'];
+    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id'];
 
     public function quotev2()
     {
@@ -32,7 +32,11 @@ class AutomaticInlandTotal extends Model
 
         $currency = $this->currency()->first();
 
-        $inlands = AutomaticInland::where([['quote_id',$this->quote_id],['port_id',$this->port_id],['type',$this->type]])->get();
+        $inlands = AutomaticInland::where([
+            ['quote_id',$this->quote_id],
+            ['port_id',$this->port_id],
+            ['type',$this->type],
+            ['inland_address_id',$this->inland_address_id]])->get();
 
         $totals_usd = [];
 
