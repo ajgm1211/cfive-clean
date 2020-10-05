@@ -259,8 +259,6 @@
 
             </b-tbody>
             <!-- Body table -->
-
-            <hr>
             
             <!-- Profits and Totals -->
             <b-tbody v-if="withTotals==true" >
@@ -435,6 +433,16 @@
                 required:false,
                 default: true
             },
+            changeAddMode: {
+                type: Boolean,
+                required:false,
+                default: false
+            },
+            portAddress: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
+            },
         },
         components: { 
             Multiselect,
@@ -500,22 +508,41 @@
                     this.setData(err, data);
                     }, this.$route);
                 } else {
-                    this.actions.list(this.multiId,params, (err, data) => {
-                    this.setData(err, data);
-                    }, this.$route);
+                    if(Object.keys(this.portAddress).length == 0){
+                        this.actions.list(this.multiId,params, (err, data) => {
+                        this.setData(err, data);
+                        }, this.$route);
+                    }else{
+                        let portAddressCombo = [this.multiId+';'+this.portAddress['id']]
+                        this.actions.list(portAddressCombo,params, (err, data) => {
+                        this.setData(err, data);
+                        }, this.$route);
+                    }
                 }
                
                 if(this.totalActions){
-                    this.totalActions
-                        .retrieve(this.multiId,this.$route)
-                        .then((response) => {
-                            this.totalsData=response.data.data;
-                            })  
-                        .catch((data) => {
-                            this.$refs.observer.setErrors(data.data.errors);
-                            });
+                    if(Object.keys(this.portAddress).length == 0){
+                        this.totalActions
+                            .retrieve(this.multiId,this.$route)
+                            .then((response) => {
+                                this.totalsData=response.data.data;
+                                })  
+                            .catch((data) => {
+                                this.$refs.observer.setErrors(data.data.errors);
+                                });
+                    }else{
+                        let portAddressCombo = [this.multiId+';'+this.portAddress['id']]
+                        this.totalActions
+                            .retrieve(portAddressCombo,this.$route)
+                            .then((response) => {
+                                this.totalsData=response.data.data;
+                                })  
+                            .catch((data) => {
+                                this.$refs.observer.setErrors(data.data.errors);
+                                });
                     }
-                },
+                }
+            },
 
             /* Set the data into datatable */
             setData(err, { data: records, links, meta }) {
@@ -583,6 +610,7 @@
 
                     if(this.autoupdateDataTable){
                         data['type'] = this.portType;
+                        data['address'] = this.portAddress
                     }
                 
                 }else if(type=='extra'){
@@ -664,6 +692,9 @@
                         $(`#id_f_table_${key}`).html(error.data.errors[key]);
                     });
                 });
+                }
+                if(this.changeAddMode){
+                    this.autoAdd = false;
                 }
             },
 
