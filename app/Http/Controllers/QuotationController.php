@@ -25,6 +25,7 @@ use App\Charge;
 use App\CalculationType;
 use App\Surcharge;
 use App\ScheduleType;
+use App\Provider;
 use App\Country;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
@@ -143,6 +144,10 @@ class QuotationController extends Controller
         
         $salecode_surcharges = $merged->all();
 
+        $providers = Provider::where('company_user_id',$company_user_id)->get()->map(function ($provider){
+            return $provider->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -162,7 +167,8 @@ class QuotationController extends Controller
             'schedule_types',
             'countries',
             'languages',
-            'salecode_surcharges'
+            'salecode_surcharges',
+            'providers'
         );
 
         return response()->json(['data'=>$data]);

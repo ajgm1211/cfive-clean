@@ -80,7 +80,7 @@
 
                         <!-- Inputs Freight -->
 
-                        <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-link">+ Add Charge</a>
+                        <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-link">+ Add Charge</a>
                         <!-- End Inputs Freight -->
                     </div>
 
@@ -93,6 +93,7 @@
                         :extraRow="true"
                         :withTotals="true"
                         :autoAdd="false"
+                        :changeAddMode="true"
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
@@ -160,29 +161,6 @@
         </b-modal>
         <!--  End Add Freight Modal  -->
 
-        <!--  Add Charge Modal  -->
-        <b-modal
-            id="addCharge"
-            size="lg"
-            cancel-title="Cancel"
-            hide-header-close
-            title="Add Charge"
-            hide-footer
-        >
-            <FormView
-                :data="{}"
-                :fields="form_fields"
-                :vdatalists="datalists"
-                :multi="true"
-                :multiId="modalFreight"
-                btnTxt="Add Charge"
-                @exit="closeModal('addCharge','cancel')"
-                @success="closeModal('addCharge','addCharge')"
-                :actions="actions.charges"
-            ></FormView>
-        </b-modal>
-        <!--  End Add Charge Modal  -->
-        
         <!--  Edit Charge Modal  -->
         <b-modal
             id="editCharge"
@@ -410,7 +388,7 @@ export default {
         freights: function() {this.setFreightData();},
     },
     methods: {
-        showModal(modal,freight_id) {
+        showModal(modal) {
             this.$bvModal.show(modal);
         },
 
@@ -456,8 +434,6 @@ export default {
 
                 component.$emit("freightAdded",id)
 
-            }else if(modal=="addCharge" && action=='addCharge'){
-                component.$refs[component.modalFreight][0].refreshTable()
             }
         },
 
@@ -573,9 +549,13 @@ export default {
             this.$emit("freightAdded",quote_id)
         },
 
-        setCurrentFreight(id){
-            this.modalFreight = id;
-        }
+        setTableInsert(id){
+            let component = this;
+
+            component.modalFreight = id;
+
+            component.$refs[component.modalFreight][0].autoAdd = true;
+        },
     },
 };
 </script>

@@ -16,11 +16,11 @@ class CreateAutomaticInlandTotalsTable extends Migration
         Schema::create('automatic_inland_totals', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('quote_id');
-            $table->foreign('quote_id')->references('id')->on('quote_v2s');
+            $table->foreign('quote_id')->references('id')->on('quote_v2s')->onDelete('cascade');
             $table->unsignedInteger('port_id');
-            $table->foreign('port_id')->references('id')->on('harbors');
+            $table->foreign('port_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->unsignedInteger('currency_id');
-            $table->foreign('currency_id')->references('id')->on('currency');
+            $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
             $table->enum('type',['Origin','Destination']);
             $table->json('totals')->nullable();
             $table->json('markups')->nullable();
