@@ -209,7 +209,11 @@
 
                                 <b-td>
                                     <span v-if="loaded">
-                                        <b>EUR</b>
+                                        <b>{{
+                                            currentQuoteData.client_currency[
+                                                "alphacode"
+                                            ]
+                                        }}</b>
                                     </span>
                                 </b-td>
 
@@ -260,7 +264,9 @@
                                 '/images/flags/1x1/' + this.code_port + '.svg'
                             "
                             alt="bandera"
-                            width="20" height="20" style="border-radius: 50%;"
+                            width="20"
+                            height="20"
+                            style="border-radius: 50%"
                         />&nbsp;
                         <b>{{ this.port }}</b>
                     </span>
@@ -623,6 +629,7 @@ export default {
         equipment: Object,
         datalists: Object,
         quoteEquip: Array,
+        currentQuoteData: Object,
     },
     data() {
         return {
@@ -800,6 +807,7 @@ export default {
             actions.localcharges
                 .delete(id, type)
                 .then((response) => {
+                    this.alert("Record deleted successfully", "success");
                     this.getTotal();
                 })
                 .catch((data) => {
@@ -829,12 +837,7 @@ export default {
                     .then((response) => {
                         this.charges = response.data;
                         this.getTotal();
-                        this.$toast.open({
-                            message: "Record saved successfully",
-                            type: "success",
-                            duration: 5000,
-                            dismissible: true,
-                        });
+                        this.alert("Record saved successfully", "success");
                         this.closeModal();
                         this.ids = [];
                     })
@@ -862,12 +865,7 @@ export default {
                 .then((response) => {
                     this.getLocalCharges();
                     this.onRemove(counter);
-                    this.$toast.open({
-                        message: "Record saved successfully",
-                        type: "success",
-                        duration: 5000,
-                        dismissible: true,
-                    });
+                    this.alert("Record saved successfully", "success");
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
@@ -899,6 +897,14 @@ export default {
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        alert(msg, type) {
+            this.$toast.open({
+                message: msg,
+                type: type,
+                duration: 5000,
+                dismissible: true,
+            });
         },
     },
 };
