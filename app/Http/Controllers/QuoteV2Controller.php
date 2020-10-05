@@ -2871,6 +2871,8 @@ class QuoteV2Controller extends Controller
 
         $dateUntil = $dateRange[1];
 
+        
+
         //Colecciones
         $inlandDestiny = new collection();
         $inlandOrigin = new collection();
