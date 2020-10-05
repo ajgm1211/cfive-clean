@@ -43,7 +43,9 @@
                         style="position: relative; top: 4px"
                     ></multiselect>
 
-                    <a href="/api/sale_terms" target="_blank"
+                    <a
+                        href="/api/sale_terms"
+                        target="_blank"
                         class="btn btn-primary btn-bg"
                         id="show-btn"
                     >
@@ -207,7 +209,11 @@
 
                                 <b-td>
                                     <span v-if="loaded">
-                                        <b>EUR</b>
+                                        <b>{{
+                                            currentQuoteData.client_currency[
+                                                "alphacode"
+                                            ]
+                                        }}</b>
                                     </span>
                                 </b-td>
 
@@ -258,7 +264,9 @@
                                 '/images/flags/1x1/' + this.code_port + '.svg'
                             "
                             alt="bandera"
-                            style="width: 15px; border-radius: 2px"
+                            width="20"
+                            height="20"
+                            style="border-radius: 50%"
                         />&nbsp;
                         <b>{{ this.port }}</b>
                     </span>
@@ -382,7 +390,7 @@
                                         v-model="
                                             localcharge.automatic_rate.carrier
                                         "
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -504,24 +512,12 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>
-                                    <multiselect
-                                        v-model="sale_codes[key]"
-                                        :options="datalists['sale_codes']"
-                                        :multiple="false"
-                                        :show-labels="false"
-                                        :close-on-select="true"
-                                        :preserve-search="true"
-                                        placeholder="Choose a sale code"
-                                        label="name"
-                                        track-by="name"
-                                    ></multiselect>
-                                </b-td>
+                                <b-td>--</b-td>
 
                                 <b-td>
                                     <multiselect
                                         v-model="input.carrier"
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -543,7 +539,7 @@
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
-                                        v-model="input.markup['c' + item]"
+                                        v-model="input.markup['m' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -565,11 +561,23 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn"
+                                        class="btn action-app btn-secondary"
                                         v-on:click="onSubmitCharge(counter)"
                                     >
                                         <i
-                                            class="fa fa-save"
+                                            class="fa fa-check"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                </b-td>
+                                <b-td>
+                                    <button
+                                        type="button"
+                                        class="btn action-app btn-secondary"
+                                        v-on:click="onRemove(counter)"
+                                    >
+                                        <i
+                                            class="fa fa-close"
                                             aria-hidden="true"
                                         ></i>
                                     </button>
@@ -621,6 +629,7 @@ export default {
         equipment: Object,
         datalists: Object,
         quoteEquip: Array,
+        currentQuoteData: Object,
     },
     data() {
         return {
@@ -637,6 +646,7 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            carriers: [],
             datalists: {},
             value: "",
             template: "",
@@ -684,12 +694,25 @@ export default {
             this.getLocalCharges();
             this.getStoredCharges();
             this.getTotal();
+            this.getCarriers();
         },
         closeModal() {
             this.$refs["my-modal"].hide();
         },
         addSaleCode(value) {
             this.sale_codes.push(value);
+        },
+        getCarriers() {
+            let self = this;
+            let quote = this.$route.params.id;
+            actions.localcharges
+                .carriers(quote)
+                .then((response) => {
+                    self.carriers = response.data;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
         getSaleTerms() {
             this.saleterms = [];
@@ -764,7 +787,7 @@ export default {
                 (err, data) => {
                     this.localcharges = data.charges;
                     this.port = data.port.display_name;
-                    this.code_port = data.port.country.code;
+                    this.code_port = data.port.country.code.toLowerCase();
                     this.rate_id = data.automatic_rate.id;
                 }
             );
@@ -784,6 +807,7 @@ export default {
             actions.localcharges
                 .delete(id, type)
                 .then((response) => {
+                    this.alert("Record deleted successfully", "success");
                     this.getTotal();
                 })
                 .catch((data) => {
@@ -813,12 +837,7 @@ export default {
                     .then((response) => {
                         this.charges = response.data;
                         this.getTotal();
-                        this.$toast.open({
-                            message: "Record saved successfully",
-                            type: "success",
-                            duration: 5000,
-                            dismissible: true,
-                        });
+                        this.alert("Record saved successfully", "success");
                         this.closeModal();
                         this.ids = [];
                     })
@@ -838,22 +857,22 @@ export default {
             let data = {
                 charges: this.inputs[counter],
                 quote_id: this.$route.params.id,
-                rate_id: 32, //Attention
+                port_id: this.value.id,
+                type_id: this.value.type,
             };
             actions.localcharges
                 .createCharge(data)
                 .then((response) => {
                     this.getLocalCharges();
-                    this.$toast.open({
-                        message: "Record saved successfully",
-                        type: "success",
-                        duration: 5000,
-                        dismissible: true,
-                    });
+                    this.onRemove(counter);
+                    this.alert("Record saved successfully", "success");
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        onRemove(index) {
+            this.inputs.splice(index, 1);
         },
         onUpdate(id, data, index, type) {
             this.totals = [];
@@ -878,6 +897,14 @@ export default {
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        alert(msg, type) {
+            this.$toast.open({
+                message: msg,
+                type: type,
+                duration: 5000,
+                dismissible: true,
+            });
         },
     },
 };

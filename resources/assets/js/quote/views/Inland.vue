@@ -36,9 +36,19 @@
                             style="border-radius: 50%;"
                             alt="bandera" 
                             class="ml-2 mr-1">
-                        <span v-if="currentPortType=='Origin'" style="font-size: 14px">{{currentQuoteData.origin_address}}</span>
-                        <span v-else style="font-size: 14px">{{currentQuoteData.destination_address}}</span>
                     </h5>
+
+                    <multiselect
+                        v-model="currentAddress"
+                        :options="address_options"
+                        :searchable="true"
+                        :close-on-select="true"
+                        :show-labels="false"
+                        label="address"
+                        track-by="address"
+                        placeholder="Select an Address"
+                        class="q-select ml-3">
+                    ></multiselect>
 
                 </div>
                 <!-- End Origen -> Destino -->
@@ -49,7 +59,11 @@
 
                 </div>
 
-                <div class="col-12 mt-5">
+                <div v-if="currentAddress==undefined || currentAddress.length==0">
+                    <h4 style="margin: 30px;">No address registered for this port. Add a new Inland to start</h4>
+                </div>
+
+                <div v-else class="col-12 mt-5">
 
                     <!-- DataTable -->
                     <DynamicalDataTable
@@ -63,13 +77,15 @@
                         :equipment="equipment"
                         :actions="actions.automaticinlands"
                         :quoteEquip="quoteEquip"
+                        :autoAdd="false"
                         :limitEquipment="true"
                         :totalActions="actions.automaticinlands"
                         :paginated="false"
                         :autoupdateDataTable="true"
                         :multiList="true"
                         :multiId="currentPort.id"
-                        :portType="currentPortType"
+                        :portType="currentPort['type']"
+                        :portAddress="currentAddress"
                         :massiveactions="['delete']"
                         :singleActions="['delete']"
                         @onFormFieldUpdated="formFieldUpdated"
@@ -90,8 +106,8 @@
                         :close-on-select="false" 
                         :show-labels="false" 
                         placeholder="Forfait"
-                        style="width:8%">
-                    </multiselect>
+                        style="width:8%"
+                    ></multiselect>
 
                 </div>
                 <!-- End Checkbox Group Action -->
@@ -101,7 +117,7 @@
         </b-card>
 
         <!--  Modal  -->
-        <b-modal ref="my-modal" size="xl" centered hide-footer title="Inland Charges">
+        <b-modal ref="addInland" size="xl" centered hide-footer title="Inland Charges">
             
             <div class="row">
 
@@ -114,7 +130,7 @@
                                 v-model="currentPort" 
                                 :options="port_options" 
                                 :searchable="true" 
-                                :close-on-select="false" 
+                                :close-on-select="true" 
                                 :show-labels="false"
                                 label="name"
                                 track-by="name"
@@ -123,20 +139,18 @@
                         </label>
 
                         <label>
-                            ORIGIN ADDRESS
-                            <multiselect 
-                                v-model="currentAddress" 
-                                :options="options" 
-                                :searchable="true" 
-                                :close-on-select="false" 
-                                :show-labels="false" 
-                                placeholder="Select a country">
-                            </multiselect>
+                            ADDRESS
                         </label>
+                            <gmap-autocomplete 
+                                @place_changed="setPlace"
+                                class="form-input"
+                                placeholder="Start typing an address"
+                                >
+                            </gmap-autocomplete>
                     </div>
 
                     <div>
-                        <button class="btn btn-link mr-2">+ Add Manual</button>
+                        <button class="btn btn-link mr-2" @click="setModalTable">+ Add Manual</button>
                         <button class="btn btn-primary btn-bg">Search</button>
                     </div>
 
@@ -145,141 +159,174 @@
                 <div class="col-12 mt-5">
 
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive borderless>
-
+                    <b-table-simple v-if="inlandAddRequested" hover small responsive borderless>
                         <!-- Header table -->
                         <b-thead class="q-thead">
-
                             <b-tr>
 
                                 <b-th></b-th>
 
                                 <b-th>
-                                    <span class="label-text">provider</span>
+                                    <span class="label-text">Charge</span>
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">20 DV + Profit</span>
+                                    <span class="label-text">Provider</span>
+                                </b-th>
+
+                                <b-th
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <span class="label-text"
+                                        >{{ item }} + Profit</span
+                                    >
                                 </b-th>
 
                                 <b-th>
-                                    <span class="label-text">40 DV + Profit</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">40 HC + Profit</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
+                                    <span class="label-text">Currency</span>
                                 </b-th>
 
                                 <b-th></b-th>
-
                             </b-tr>
-
                         </b-thead>
 
                         <b-tbody>
-                        
-                            <b-tr class="q-tr">
-                                
+                            <b-tr
+                                class="q-tr"
+                                v-for="(inlandAdd, key) in this.inlandAdds"
+                                :key="key"
+                            >
                                 <b-td>
-                                    <b-form-checkbox value="carrier"></b-form-checkbox>
+                                    <b-form-checkbox
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        v-model="inlandAdd.selected"
+                                        :id="'id_' + inlandAdd.id"
+                                    ></b-form-checkbox>
                                 </b-td>
 
                                 <b-td>
-                                    <b-form-input placeholder="MSC" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
+                                    <b-form-input
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        v-model="inlandAdd.charge"
+                                        placeholder="Choose a charge"
+                                    ></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        v-model="inlandAdd.provider_id"
+                                        :options="datalists['providers']"
                                         :show-labels="false"
-                                        placeholder="Currency">
-                                    </multiselect>
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a provider"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
                                 </b-td>
 
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                    </button>
-                                </b-td>
-
-                            </b-tr>
-
-                            <b-tr class="q-tr">
-                                
-                                <b-td>
-                                    <b-form-checkbox value="carrier"></b-form-checkbox>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="MSC" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input placeholder="1500" class="q-input"></b-form-input>
-                                    <b-form-input placeholder="100" class="q-input"></b-form-input>
+                                <b-td
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key"
+                                >
+                                    <b-form-input
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        :placeholder = item
+                                        v-model="inlandAdd.price['c' + item]"
+                                        type="number"
+                                        class="q-input"
+                                        @input = totalizeModalInlands
+                                    ></b-form-input>
+                                    <b-form-input
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        :placeholder = item
+                                        v-model="inlandAdd.markup['m' + item]"
+                                        type="number"
+                                        class="q-input"
+                                        @input = totalizeModalInlands
+                                    ></b-form-input>
                                 </b-td>
 
                                 <b-td>
                                     <multiselect
-                                        v-model="value"
-                                        :options="options"
-                                        :searchable="true"
-                                        :close-on-select="false"
+                                        v-if="inlandAdd.port==currentPort['id']"
+                                        v-model="inlandAdd.currency_id"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
                                         :show-labels="false"
-                                        placeholder="Currency">
-                                    </multiselect>
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        @input="totalizeModalInlands"
+                                    ></multiselect>
                                 </b-td>
 
                                 <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    <button v-if="inlandAdd.port==currentPort['id']"
+                                            type="button" 
+                                            class="btn-delete" 
+                                            @click="deleteModalInland(inlandAdd.id)"
+                                    >
+                                        <i
+                                            class="fa fa-times"
+                                            aria-hidden="true"
+                                        ></i>
                                     </button>
                                 </b-td>
-                                
                             </b-tr>
 
+                            <b-tr class="q-total">
+                                <b-td></b-td>
+
+                                <b-td></b-td>
+
+                                <b-td>
+                                    <span>
+                                        <b>Total</b>
+                                    </span>
+                                </b-td>
+
+                                <b-td 
+                                    v-for="(item, key) in quoteEquip"
+                                    :key="key">
+                                        <span>
+                                            <b>{{inlandModalTotals['c' + item]}}</b>
+                                        </span>
+                                </b-td>
+
+                                <b-td>
+                                    <span>
+                                        <b>{{client_currency.alphacode}}</b>
+                                    </span>
+                                </b-td>
+
+                                <b-td></b-td>
+                            </b-tr>
                         </b-tbody>
-                        
                     </b-table-simple>
                     <!-- End DataTable -->
 
                 </div>
 
+                <div v-if="modalWarning!=''" class="alert alert-danger" role="alert">
+                    {{modalWarning + ' cannot be empty'}}
+                </div>
+
+                <div v-if="modalSelected" class="alert alert-warning" role="alert">
+                    Select an Inland to add
+                </div>
+
+                <div v-if="modalSuccess" class="alert alert-success" role="alert">
+                    Selected Inlands added successfully!
+                </div>
+
                 <div class="col-12 d-flex justify-content-end mb-5 mt-3">
 
-                    <button class="btn btn-primary btn-bg">Add Inland</button>
+                    <button class="btn btn-primary btn-bg" @click="addInland">Add Inland</button>
 
                 </div>
 
@@ -295,6 +342,7 @@
     import Multiselect from 'vue-multiselect';
     import 'vue-multiselect/dist/vue-multiselect.min.css';
     import DynamicalDataTable from "../../components/views/DynamicalDataTable";
+    import * as VueGoogleMaps from 'vue2-google-maps'
     export default {
         components: {
             Multiselect,
@@ -309,20 +357,34 @@
             actions: Object,
         },
         watch: {
-            currentPort: function(newVal,oldVal){this.updateTable(newVal);}
+            currentPort: function(newVal,oldVal){this.updateTable();this.setAddresses();},
+
+            freights: function(newVal,oldVal){this.createInlandTotals(newVal);},
+
+            currentAddress: function(newVal,oldVal){this.createInlandTotals(this.freights);}
         },
         data() {
             return {
                 openModal: false,
                 vdata: {},
                 value: '',
+                ids:[],
                 imageFolder: "/images/flags/1x1/",
                 loaded: false,
                 options: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-                currentPort: '',
-                currentPortType: '',
-                currentAddress: '',
                 port_options: [],
+                currentPort: '',
+                address_options: [],
+                currentAddress: {},
+                modalAddress: '',
+                modalSuccess: false,
+                modalSelected: false,
+                inlandAddRequested: false,
+                inlandAdds:[],
+                modalWarning: '',
+                autocomplete:'',
+                inlandModalTotals:{},
+                client_currency: this.currentQuoteData.client_currency,
                   /* Table headers */
                 fields: [
                     {
@@ -331,9 +393,11 @@
                         type: "text",
                     },
                     {
-                        key: "provider",
+                        key: "provider_id",
                         label: "PROVIDER",
-                        type: "text",
+                        type: "select",
+                        trackby: "name",
+                        options: "providers",
                     },
                     {
                         key: "currency_id",
@@ -351,11 +415,14 @@
                         rules: "required",
                         placeholder: "Select charge",
                     },
-                    provider: {
+                    provider_id: {
                         label: "PROVIDER",
-                        type: "text",
+                        type: "select",
+                        searchable: true,
                         rules: "required",
+                        trackby: "name",
                         placeholder: "Select Provider",
+                        options: "providers",
                     },
                     currency_id: {
                         label: "CURRENCY",
@@ -373,14 +440,17 @@
                 },
             }
         },
-        created() {
+        created() {            
             this.setPorts();
 
             this.setTotalsFields();
         },
+        mounted() {
+            this.createInlandTotals(this.freights);
+        },
         methods: {
             showModal() {
-                this.$refs['my-modal'].show();
+                this.$refs["addInland"].show();
             },
             
             setPorts() {
@@ -406,8 +476,38 @@
                 if(component.currentPort == ''){
                     component.currentPort = component.port_options[0];
                 }
+                
+                component.currentAddress = [];
 
                 component.loaded = true
+            },
+
+            setAddresses() {
+                let component = this;
+
+                component.actions.automaticinlands
+                    .retrieveAddresses(component.currentPort['id'], component.$route)
+                    .then( ( response ) => {
+                        component.address_options = response.data.data;
+                        component.currentAddress = component.address_options[0];
+                    })
+                    .catch(( data ) => {
+                        component.$refs.observer.setErrors(data.data.errors);
+                    });
+
+                if(component.inlandAdds != []){
+                    let valid = false;
+
+                    component.inlandAdds.forEach(function(inlandAdd){
+                        if(inlandAdd['port'] == component.currentPort['id']){
+                            valid = true;
+                        }
+                    });
+
+                    if(!valid){
+                        component.inlandAddRequested = false;
+                    }
+                }
             },
 
             setTotalsFields() {
@@ -449,7 +549,7 @@
                 };
             },
 
-            updateTable(port) {
+            updateTable() {
                 let component = this;
 
                 component.loaded = false;
@@ -457,12 +557,177 @@
                     component.loaded = true;
                 },100);
 
-                this.currentPortType = port.type;
-                if(port.type == 'Origin'){
-                    this.currentAddress = this.currentQuoteData.origin_address
-                }else{
-                    this.currentAddress = this.currentQuoteData.destination_address
+            },
+
+            createInlandTotals(freights){
+                let component = this;
+
+                if(Object.keys(this.inlandModalTotals).length == 0 && component.currentAddress!=undefined && Object.keys(this.currentAddress).length!=0){
+                    freights.forEach(function (freight){
+                        let portAddressCombo = [freight.id +  ';' + 
+                                                component.currentAddress['address'] + ';' + 
+                                                component.currentPort['type'] + ';' +
+                                                component.currentPort['id']];
+
+                        component.actions.automaticinlands
+                            .createTotals(portAddressCombo,component.$route)
+                            .then( ( response ) => {
+                                component.updateTable();
+                            })
+                            .catch((data) => {
+                                this.$refs.observer.setErrors(data.data.errors);
+                        });
+                    });
                 }
+
+            },
+
+            setModalTable(){
+                let highest = Number;
+                let addId = Number;
+                let newInlandAdd = {};
+                let component = this;
+
+                if(component.modalAddress != ''){
+                    component.currentAddress = {};
+                    component.currentAddress['address'] = component.modalAddress;
+
+                    component.inlandAddRequested = true;
+                    
+                    if(component.ids.length != 0){
+                        highest = component.ids.sort(function(a,b){return b-a});
+                        component.ids.push(highest[0]+1)
+                        addId = highest[0]+1;
+                    }else{
+                        component.ids.push(0);
+                        addId = 0;
+                    }
+
+                    newInlandAdd = {
+                        id: component.ids[addId],
+                        port: component.currentPort['id'],
+                        charge: '',
+                        address: '',
+                        type: '',
+                        provider_id:{},
+                        currency_id:{},
+                        price:{},
+                        markup:{},
+                        selected: false,
+                    }
+
+                    this.quoteEquip.forEach(function(equip){
+                        newInlandAdd.price['c' + equip] = '';
+                        newInlandAdd.markup['m' + equip] = '';
+                        newInlandAdd['rates_' + equip] = '';
+                    });
+
+                    component.inlandAdds.push(newInlandAdd);
+                }else{
+                    component.modalWarning = 'Address'
+                        setTimeout(() => {
+                            component.modalWarning = '';
+                        }, 3000);
+                }
+            },
+
+            deleteModalInland(id){
+                const index = this.inlandAdds.indexOf(this.inlandAdds[id]);
+
+                this.inlandAdds.splice(index,1);
+            },
+
+            totalizeModalInlands(){
+                let component = this;
+                    
+                component.inlandAdds.forEach(function(inlandAdd){
+                    let modalInlandCurrency = inlandAdd.currency_id;
+
+                    if(modalInlandCurrency['alphacode']==undefined){
+                        return
+                    } else {
+                        let inlandAddCurrency = modalInlandCurrency['alphacode'];
+                        let inlandAddConversion = modalInlandCurrency['rates'];
+                        let clientCurrency = component.currentQuoteData.client_currency['alphacode'];
+                        let clientConversion = component.currentQuoteData.client_currency['rates'];
+
+                        component.quoteEquip.forEach(function(equip){
+                            let price_num = Number(inlandAdd.price['c'+equip]);
+                            let markup_num = Number(inlandAdd.markup['m'+equip]);
+                            let totals = Number;
+
+                            inlandAdd['rates_' + equip] = price_num += markup_num;
+
+                            if(inlandAddCurrency == clientCurrency){
+                                totals = price_num+=markup_num;
+                                
+                            }else{
+                                let price_usd = Number;
+                                let markup_usd = Number;
+                                let totals_usd = Number;
+
+                                price_usd = price_num / inlandAddConversion;
+                                markup_usd = markup_num / inlandAddConversion;
+
+                                totals_usd = price_usd + markup_usd;
+
+                                totals = totals_usd * clientConversion;
+                            } 
+                            
+                            component.inlandModalTotals['c'+equip] = totals.toFixed(2);
+                        });
+                    }
+                });
+            },
+
+            addInland(){
+                let component = this;
+
+                component.inlandAdds.forEach(function(inlandAdd){
+                    if(inlandAdd.selected){
+                        if(Object.keys(inlandAdd.provider_id).length == 0){
+                            component.modalWarning = 'Provider';
+                            setTimeout(() => {
+                                component.modalWarning = '';
+                            }, 3000);
+                        }else if(Object.keys(inlandAdd.currency_id).length == 0){
+                            component.modalWarning = 'Currency'
+                            setTimeout(() => {
+                                component.modalWarning = '';
+                            }, 3000);
+                        }else{
+                            inlandAdd['type'] = component.currentPort['type']
+                            inlandAdd['address'] = component.modalAddress
+
+                            component.actions.automaticinlands
+                                .create(component.currentPort['id'],inlandAdd, component.$route)
+                                .then( ( response ) => {
+                                    component.inlandAdds.splice(component.inlandAdds.indexOf(inlandAdd));
+                                    component.totalizeModalInlands()
+                                    component.modalSuccess = true;
+                                    component.updateTable();
+                                    setTimeout(function(){
+                                        component.$refs["addInland"].hide();
+                                        component.inlandAddRequested = false;
+                                        component.modalSuccess = false;
+                                    },3000);
+                                })
+                                .catch(( data ) => {
+                                    component.$refs.observer.setErrors(data.data.errors);
+                                });
+                            } 
+                        }else{
+                            component.modalSelected = true;
+                            setTimeout(function(){ 
+                                component.modalSelected = false;
+                            },3000);
+                    }
+
+                });
+            },
+
+            setPlace(place){
+                this.modalAddress = place.formatted_address;
             },
         },
     }
