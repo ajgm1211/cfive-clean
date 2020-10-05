@@ -75,6 +75,7 @@
                                 :equipment="equip"
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
+                                :currentQuoteData="currentData"
                             ></Local>
                         </b-tab>
 
