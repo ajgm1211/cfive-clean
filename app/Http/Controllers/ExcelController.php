@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\CompanyUser;
+use App\Container;
+use App\Currency;
+use App\Http\Traits\QuoteV2Trait;
+use App\QuoteV2;
+use App\Rate;
+use App\SaleTermV2;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use App\QuoteV2;
-use App\AutomaticRate;
-use App\CompanyUser;
-use App\Currency;
-use App\Container;
-use App\SaleTermV2;
-use App\Harbor;
-use App\Http\Traits\QuoteV2Trait;
 
 class ExcelController extends Controller
 {
@@ -241,7 +239,7 @@ class ExcelController extends Controller
             }
 
             $i = 42;
-            
+
             if ($quote->type == 'LCL' || $quote->type == 'AIR') {
                 foreach ($item->charge_lcl_air as $charge) {
                     $type = $this->getAmountType($charge->type_id);
@@ -264,7 +262,7 @@ class ExcelController extends Controller
             } else {
 
                 $this->calculateFcl($item, $containers);
-                
+
                 foreach ($item->charge as $charge) {
 
                     $col_amount = 'D';
@@ -305,7 +303,7 @@ class ExcelController extends Controller
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code] + @$markups['m' . $c->code]);
+                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code]+@$markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -327,11 +325,11 @@ class ExcelController extends Controller
                     $inland_markups = $this->processOldContainers($inland_markups, 'markups');
 
                     $sheet->setCellValue('B' . $i, $inland->provider);
-                    $sheet->setCellValue('C' . $i, $inland->distance.' Km');
+                    $sheet->setCellValue('C' . $i, $inland->distance . ' Km');
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code] + @$inland_markups['m' . $c->code]);
+                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code]+@$inland_markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -369,8 +367,8 @@ class ExcelController extends Controller
                 }
 
                 $check_port_destination = $this->find_key_value($destination_sales->toArray(), 'port_id', $item->destination_port_id);
-                
-                if($check_port_destination){
+
+                if ($check_port_destination) {
                     foreach ($sale_terms_destination as $sale_term_destination) {
                         foreach ($sale_term_destination->charge as $sale_destination) {
                             $col_sale = 'D';
@@ -544,72 +542,6 @@ class ExcelController extends Controller
         return response()->download(storage_path('app/public/' . $name . '-' . $carrier . '.xlsx'))->deleteFileAfterSend();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function calculateFcl($rates, $containers)
     {
         $sum = 'sum';
@@ -629,7 +561,7 @@ class ExcelController extends Controller
 
             $company = CompanyUser::find(\Auth::user()->company_user_id);
 
-            $typeCurrency =  $company->currency->alphacode;
+            $typeCurrency = $company->currency->alphacode;
 
             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
@@ -671,7 +603,7 @@ class ExcelController extends Controller
 
             $company = CompanyUser::find(\Auth::user()->company_user_id);
 
-            $typeCurrency =  $company->currency->alphacode;
+            $typeCurrency = $company->currency->alphacode;
 
             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
@@ -702,13 +634,11 @@ class ExcelController extends Controller
             $item->currency_eur = $currency_charge->rates_eur;
         }
 
-
         return $rates;
     }
 
     public function calculateFclOld($rates)
     {
-
 
         $sum20 = 0;
         $sum40 = 0;
@@ -742,7 +672,7 @@ class ExcelController extends Controller
 
             $company = CompanyUser::find(\Auth::user()->company_user_id);
 
-            $typeCurrency =  $company->currency->alphacode;
+            $typeCurrency = $company->currency->alphacode;
 
             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
@@ -846,5 +776,129 @@ class ExcelController extends Controller
                 return 'Freight';
                 break;
         }
+    }
+
+    public function downloadRates()
+    {
+        $containers = Container::where('gp_container_id', '1')->get();
+        $contArray = $containers->pluck('code')->toArray();
+        $dateSince = '2020-10-01';
+        $dateUntil = '2020-10-30';
+        $company_id = '';
+        $company_user_id = \Auth::user()->company_user_id;
+        $user_id = \Auth::user()->id;
+        $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        $arrayFirstPart = array(
+            'Contract',
+            'Reference',
+            'Carrier',
+            'Direction',
+            'Origin',
+            'Destination',
+            'Charge',
+
+        );
+        $arrayFirstPart = array_merge($arrayFirstPart, $contArray);
+        $arraySecondPart = array(
+            'Currency',
+            'From',
+            'Until',
+        );
+        $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
+
+        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+            $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
+                $a->where('user_id', '=', $user_id);
+            })->orDoesntHave('contract_user_restriction');
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+            $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
+                $b->where('company_id', '=', $company_id);
+            })->orDoesntHave('contract_company_restriction');
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting) {
+            if ($company_setting->future_dates == 1) {
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+            } else {
+                $q->where(function ($query) use ($dateSince, $dateUntil) {
+                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+            }
+
+        })->get();
+
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
+        $nameFile = str_replace([' '], '_', $now . '_rates');
+        Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo,$arrayComplete,$containers) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo,$arrayComplete,$containers) {
+                //dd($contract);
+                $sheet->cells('A1:AG1', function ($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setValignment('center');
+                });
+                //$sheet->setBorder('A1:AO1', 'thin');
+
+                $sheet->row(1, $arrayComplete);
+                $i = 2;
+                foreach ($arreglo as $data) {
+
+                    $montos = array();
+                    $montos2 = array();
+                    foreach ($containers as $cont) {
+
+                        $options = json_decode($cont->options);
+                        //dd($options);
+                        if (@$options->field_rate == 'containers') {
+                            $test = json_encode($data->{$options->field_rate});
+                            $jsonContainer = json_decode($data->{$options->field_rate});
+                            if (isset($jsonContainer->{'C' . $cont->code})) {
+                                $rateMount = $jsonContainer->{'C' . $cont->code};
+                            } else {
+                                $rateMount = 0;
+                            }
+
+                        } else {
+                            $rateMount = $data->{$options->field_rate};
+                        }
+
+                        $montos2 = array($cont->code => $rateMount);
+                        $montos = array_merge($montos, $montos2);
+
+                    }
+                    $arrayFirstPartAmount = array(
+                        'Contract' => $data->contract->name,
+                        'Reference' => $data->carrier->name,
+                        'Carrier' => $data->carrier->name,
+                        'Direction' => $data->contract->direction->name,
+                        'Origin' => ucwords(strtolower($data->port_origin->name)),
+                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
+                        'Charge' => 'freight'
+                    );
+                    $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
+                    $arraySecondPartAmount = array(
+                        'Currency' => $data->currency->alphacode,
+                        'From' => $data->contract->validity,
+                        'Until' => $data->contract->expire,
+
+                    );
+                    $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+
+                    
+                    $sheet->row($i, $arrayCompleteAmount);
+                    $sheet->setBorder('A1:I' . $i, 'thin');
+                    $sheet->cells('C' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+                    $sheet->cells('I' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+                    $i++;
+                }
+            })->download('xlsx');
+        });
+
     }
 }
