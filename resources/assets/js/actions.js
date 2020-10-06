@@ -414,9 +414,9 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/store`, {})
         },
-        updateTotals(port_id, data, route) {
+        updateTotals(combo, data, route) {
             let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}/update`, data)
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/update`, data)
         },
         retrieve(combo, route) {
             let quote_id = route.params.id;
