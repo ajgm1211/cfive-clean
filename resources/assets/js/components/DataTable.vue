@@ -383,8 +383,8 @@
                     }
                     else if(this.inputFields[key].type == "multiselect_data"){
                         data[key] = [];
-
-                        this.item['values'].forEach(function(item){
+                        
+                        this.inputFields[key].values.forEach(function(item){
                             data[key].push(item.id)
                         });
                     }
