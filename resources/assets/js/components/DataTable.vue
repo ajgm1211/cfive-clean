@@ -780,21 +780,41 @@
                             });
                         });
                     }else{
-                        this.totalActions.updateTotals(this.multiId,data,this.$route)
-                        .then( ( response ) => {
-                            this.updateDinamicalFieldOptions();
-                            this.refreshData();
-    
-                        })
-                            .catch(( error, errors ) => {
+                        if(Object.keys(this.portAddress).length == 0){
+                            this.totalActions.updateTotals(this.multiId,data,this.$route)
+                            .then( ( response ) => {
+                                this.updateDinamicalFieldOptions();
+                                this.refreshData();
         
-                            let errors_key = Object.keys(error.data.errors);
-        
-                            errors_key.forEach(function(key){ 
-                                $(`#id_f_table_${key}`).css({'display':'block'});
-                                $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                            })
+                                .catch(( error, errors ) => {
+            
+                                let errors_key = Object.keys(error.data.errors);
+            
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_table_${key}`).css({'display':'block'});
+                                    $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                                });
                             });
-                        });
+                        }else{
+                            let combo = [this.multiId + ';' + this.portAddress['id']]
+
+                            this.totalActions.updateTotals(combo,data,this.$route)
+                            .then( ( response ) => {
+                                this.updateDinamicalFieldOptions();
+                                this.refreshData();
+        
+                            })
+                                .catch(( error, errors ) => {
+            
+                                let errors_key = Object.keys(error.data.errors);
+            
+                                errors_key.forEach(function(key){ 
+                                    $(`#id_f_table_${key}`).css({'display':'block'});
+                                    $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                                });
+                            });
+                        }
                     }
                 }
             },
