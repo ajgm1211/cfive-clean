@@ -45,7 +45,7 @@ class SyncCompaniesEvery30Job implements ShouldQueue
                 }
             }
         } catch (\Exception $e) {
-            $e->getMessage();
+            \Log::error($e->getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ class SyncCompaniesEvery30Job implements ShouldQueue
             foreach ($response['entidades'] as $item) {
 
                 if ($item['fecha-alta'] >= '2020-01-01') {
-                    \Log::info('Here');
+
                     Company::updateOrCreate([
                         'api_id' => $item['codigo']
                     ], [
@@ -76,7 +76,6 @@ class SyncCompaniesEvery30Job implements ShouldQueue
                         'api_id' => $item['codigo'],
                         'api_status' => 'created',
                     ]);
-                    \Log::info('Saved '.$item['codigo']);
                 }
             }
 
