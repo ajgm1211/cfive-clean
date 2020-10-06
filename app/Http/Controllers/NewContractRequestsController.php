@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use Spatie\Permission\Models\Permission;
 use GuzzleHttp\Exception\RequestException;
+use App\Http\Requests\StoreNewRequestFcl;
 
 
 class NewContractRequestsController extends Controller
@@ -170,7 +171,7 @@ class NewContractRequestsController extends Controller
 		//dd($request->all());
 	}
 
-	public function store2(Request $request)
+	public function store2(StoreNewRequestFcl $request)
 	{
 		//dd($request->all());
 		//return response()->json($request);
