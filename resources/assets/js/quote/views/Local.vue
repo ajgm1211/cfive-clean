@@ -321,9 +321,9 @@
                             >
                                 <b-td>
                                     <b-form-checkbox
-                                        v-model="ids"
+                                        v-model="selectedCharges"
                                         :id="'id_' + localcharge.id"
-                                        :value="localcharge.id"
+                                        :value="localcharge"
                                     ></b-form-checkbox>
                                 </b-td>
 
@@ -373,7 +373,7 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="sale_codes[key]"
+                                        v-model="localcharge.sale_codes"
                                         :options="datalists['sale_codes']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -646,6 +646,7 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            selectedCharges: [],
             carriers: [],
             datalists: {},
             value: "",
@@ -686,6 +687,7 @@ export default {
                 });
             }
         },
+
         showModal() {
             this.$refs["my-modal"].show();
         },
@@ -822,11 +824,11 @@ export default {
             });
         },
         onSubmit() {
-            if (this.ids.length > 0) {
+            if (this.selectedCharges.length > 0) {
                 this.charges = [];
                 this.totals = [];
                 let data = {
-                    ids: this.ids,
+                    selectedCharges: this.selectedCharges,
                     sale_codes: this.sale_codes,
                     quote_id: this.$route.params.id,
                     port_id: this.value.id,
@@ -839,18 +841,13 @@ export default {
                         this.getTotal();
                         this.alert("Record saved successfully", "success");
                         this.closeModal();
-                        this.ids = [];
+                        this.selectedCharges = [];
                     })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
             } else {
-                this.$toast.open({
-                    message: "You must select a charge at least",
-                    type: "error",
-                    duration: 5000,
-                    dismissible: true,
-                });
+                this.alert("You must select a charge at least", "error");
             }
         },
         onSubmitCharge(counter) {

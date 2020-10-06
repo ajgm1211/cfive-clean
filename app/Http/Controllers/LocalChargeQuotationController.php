@@ -183,28 +183,23 @@ class LocalChargeQuotationController extends Controller
     public function store(Request $request)
     {
 
-        $ids = $request->ids;
+        $selectedCharges = $request->selectedCharges;
 
-        foreach ($ids as $key => $id) {
+        foreach ($selectedCharges as $localcharge) {
 
-            $localcharge = Charge::findOrFail($id);
+            $charge = $localcharge['surcharge']['name'];
 
-            $price = json_decode($localcharge->amount);
-            $profit = json_decode($localcharge->markups);
-
-            $charge = $localcharge->surcharge->name;
-
-            if (!empty($request->sale_codes[$key])) {
-                $charge = $request->sale_codes[$key]['name'];
+            if (!empty($localcharge['sale_codes'])) {
+                $charge = $localcharge['sale_codes']['name'];
             }
 
             $local_charge = LocalChargeQuote::create([
-                'price' => $price,
-                'profit' => $profit,
+                'price' => $localcharge['price'],
+                'profit' => $localcharge['markup'],
                 'charge' => $charge,
-                'surcharge_id' => $localcharge->surcharge_id,
-                'calculation_type_id' => $localcharge->calculation_type_id,
-                'currency_id' => $localcharge->currency_id,
+                'surcharge_id' => $localcharge['surcharge_id'],
+                'calculation_type_id' => $localcharge['calculation_type_id'],
+                'currency_id' => $localcharge['currency_id'],
                 'port_id' => $request->port_id,
                 'quote_id' => $request->quote_id,
                 'type_id' => $request->type_id,
