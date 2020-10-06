@@ -96,7 +96,7 @@ class AutomaticInlandController extends Controller
             'validity_end' => $quote->validity_end,
         ]);
 
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address',$inland_address->id]])->first();
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
 
         if($totals == null){
             $totals = AutomaticInlandTotal::create([
@@ -236,11 +236,17 @@ class AutomaticInlandController extends Controller
         return new AutomaticInlandResource($autoinland);
     }
 
-    public function updateTotals(Request $request, QuoteV2 $quote, $port_id)
-    {        
+    public function updateTotals(Request $request, QuoteV2 $quote, $combo)
+    {    
+        $combo_array = explode(';',$combo);
+
+        $port_id = $combo_array[0];
+
+        $address_id = $combo_array[1];
+
         $form_keys = $request->input('keys');
 
-        $total = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id]])->first();
+        $total = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$address_id]])->first();
 
         $data=[];
            
