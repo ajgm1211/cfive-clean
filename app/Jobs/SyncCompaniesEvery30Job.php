@@ -40,14 +40,16 @@ class SyncCompaniesEvery30Job implements ShouldQueue
             $integrations = ApiIntegration::where(['module' => 'Companies', 'frecuency' => 30])->with('partner')->get();
 
             foreach ($integrations as $setting) {
-                $this->setData($setting);
+                if ($setting->partner->name == 'Visualtrans') {
+                    $this->setDataVs($setting);
+                }
             }
         } catch (\Exception $e) {
             $e->getMessage();
         }
     }
 
-    public function setData($setting)
+    public function setDataVs($setting)
     {
         $data = new Connection();
 
@@ -62,17 +64,20 @@ class SyncCompaniesEvery30Job implements ShouldQueue
             $max_page = ceil($response['count'] / 100);
 
             foreach ($response['entidades'] as $item) {
-                $data = new Connection();
 
-                Company::updateOrCreate([
-                    'api_id' => $item['codigo']
-                ], [
-                    'business_name' => $item['nombre-fiscal'],
-                    'tax_number' => $item['cif-nif'],
-                    'company_user_id' => $setting->company_user_id,
-                    'api_id' => $item['codigo'],
-                    'api_status' => 'created',
-                ]);
+                if ($item['fecha-alta'] >= '2020-01-01') {
+                    \Log::info('Here');
+                    Company::updateOrCreate([
+                        'api_id' => $item['codigo']
+                    ], [
+                        'business_name' => $item['nombre-fiscal'],
+                        'tax_number' => $item['cif-nif'],
+                        'company_user_id' => $setting->company_user_id,
+                        'api_id' => $item['codigo'],
+                        'api_status' => 'created',
+                    ]);
+                    \Log::info('Saved '.$item['codigo']);
+                }
             }
 
             $page += 1;

@@ -7,7 +7,7 @@ use App\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StorePriceLevels;
+use App\Http\Requests\StoreProviders;
 use App\Http\Resources\ProvidersResource;
 
 class ProvidersController extends Controller
@@ -73,7 +73,7 @@ class ProvidersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePriceLevels $request)
+    public function store(StoreProviders $request)
     {
         $company_user_id = Auth::user('web')->company_user_id;
 
