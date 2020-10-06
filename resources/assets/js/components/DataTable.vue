@@ -143,7 +143,25 @@
                             <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
                         </div>
                         <!-- End Select -->
-
+                            <div v-if="item.type == 'multiselect_data' && refresh ">
+                            <multiselect 
+                                 v-model="item.values" 
+                                 :multiple="true" 
+                                 :options="datalists[item.options]" 
+                                 :searchable="item.searchable"
+                                 :close-on-select="true"
+                                 :clear-on-select="true"
+                                 track-by="id" 
+                                 :id="key"
+                                 :label="item.trackby" 
+                                 :show-labels="false"
+                                 :placeholder="item.placeholder"
+                                 @input="refreshValues"
+                                 @select="cleanInput(key)">
+                            </multiselect>
+                            <span :id="'id_f_table_'+key" class="invalid-feedback" style="margin-top:-4px"></span>
+                        </div>
+            
                     </b-td>
 
                     <b-td>
@@ -354,7 +372,7 @@
 
                     if(this.inputFields[key].type == "text")
                         data[key] = this.fdata[key];
-                    else if(["select", "pre_select"].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
+                    else if(["select", "pre_select",].includes(this.inputFields[key].type) && typeof this.fdata[key] !== 'undefined')
                         data[key] = this.fdata[key].id;
                     else if(this.inputFields[key].type == "multiselect"){
                         data[key] = [];
@@ -363,6 +381,14 @@
                             data[key].push(item.id)
                         });
                     }
+                    else if(this.inputFields[key].type == "multiselect_data"){
+                        data[key] = [];
+
+                        this.item['values'].forEach(function(item){
+                            data[key].push(item.id)
+                        });
+                    }
+                    
                 }
 
                 return data;
