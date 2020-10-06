@@ -117,7 +117,7 @@
                     origin: { 
                         label: 'Origin Port', 
                         searchable: true, 
-                        type: 'select', 
+                        type: 'multiselect', 
                         rules: 'required', 
                         trackby: 'display_name', 
                         placeholder: 'Select Origin Port', 
@@ -126,7 +126,7 @@
                     destination: { 
                         label: 'Destination Port', 
                         searchable: true, 
-                        type: 'select', 
+                        type: 'multiselect', 
                         rules: 'required', 
                         trackby: 'display_name', 
                         placeholder: 'Select Destination Port', 
@@ -135,7 +135,7 @@
                     carrier: { 
                         label: 'Carrier', 
                         searchable: true, 
-                        type: 'select', 
+                        type: 'multiselect', 
                         rules: 'required', 
                         trackby: 'name', 
                         placeholder: 'Select Carrier Port', 
