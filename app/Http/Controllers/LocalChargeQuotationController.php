@@ -92,7 +92,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function saleterms(Request $request)
     {
-        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->equipment, 'type_id' => $request->type])->get();
+        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->equipment, 'type_id' => $request->type, 'company_user_id' => \Auth::user()->company_user_id])->get();
 
         return $saleterms;
     }

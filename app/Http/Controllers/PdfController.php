@@ -36,7 +36,9 @@ class PdfController extends Controller
 
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'equipmentHides' => $equipmentHides, 'containers' => $containers]);
+        $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
+
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -111,6 +113,93 @@ class PdfController extends Controller
         return $freight_charges_grouped;
     }
 
+    public function freightChargesDetailed($freight_charges, $quote, $containers)
+    {
+
+        $freight_charges_grouped = collect($freight_charges);
+
+        $freight_charges_grouped = $freight_charges_grouped->groupBy([
+
+            function ($item) {
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+            },
+            function ($item) {
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },
+
+        ], $preserveKeys = true);
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+        $charge_freight = 0;
+
+        foreach ($freight_charges_grouped as $freight) {
+            foreach ($freight as $detail) {
+                foreach ($detail as $item) {
+                    foreach ($containers as $c) {
+                        ${$total . $amount . $c->code} = 0;
+                        ${$total . $amount . $markup . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = 0;
+                    }
+
+                    foreach ($item as $rate) {
+                        foreach ($rate->charge as $amounts) {
+                            if ($amounts->type_id == 3) {
+
+                                if ($quote->pdf_option->grouped_freight_charges == 1) {
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                } else {
+                                    $typeCurrency = $rate->currency->alphacode;
+                                }
+
+                                $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
+                                $array_amounts = json_decode($amounts->amount, true);
+                                $array_markups = json_decode($amounts->markups, true);
+
+                                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                                foreach ($containers as $c) {
+                                    ${$sum . $c->code} = 0;
+                                    ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                                    ${$total . $c->code} = 0;
+                                    ${$total . $sum . $c->code} = $total . $sum . $c->code;
+
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    }
+
+                                    if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                                        $charge_freight++;
+                                        $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                                        $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code}, true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $freight->charge_freight = $charge_freight;
+        }
+
+        return $freight_charges_grouped;
+    }
+
+
     /**
      * Mostrar/Ocultar contenedores en la vista
      * @param array $equipmentForm 
@@ -148,8 +237,6 @@ class PdfController extends Controller
             }
             $equipment->put($cont->code, $$hidden);
         }
-
-
 
         // Clases para reordenamiento de la tabla y ajuste
         $originClass = 'col-md-2';
