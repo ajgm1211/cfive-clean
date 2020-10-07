@@ -27,6 +27,7 @@ use App\Surcharge;
 use App\ScheduleType;
 use App\Provider;
 use App\Country;
+use App\InlandDistance;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
 use Illuminate\Support\Collection;
@@ -148,6 +149,10 @@ class QuotationController extends Controller
             return $provider->only(['id','name']);
         });
 
+        $distances = InlandDistance::get()->map(function ($distance){
+            return $distance->only(['id','display_name','harbor_id','distance']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -168,7 +173,8 @@ class QuotationController extends Controller
             'countries',
             'languages',
             'salecode_surcharges',
-            'providers'
+            'providers',
+            'distances'
         );
 
         return response()->json(['data'=>$data]);

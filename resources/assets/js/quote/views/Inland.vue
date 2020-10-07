@@ -137,15 +137,28 @@
                             </multiselect>
                         </label>
 
-                        <label>
+                        <label class="mr-5">
                             ADDRESS
-                        </label>
                             <gmap-autocomplete 
+                                v-if="!modalDistance"
                                 @place_changed="setPlace"
                                 class="form-input"
                                 placeholder="Start typing an address"
                                 >
                             </gmap-autocomplete>
+
+                            <multiselect
+                                v-else
+                                v-model="modalAddress"
+                                :options="distance_options"
+                                :searchable="true" 
+                                :close-on-select="true" 
+                                :show-labels="false"
+                                label="display_name"
+                                track-by="display_name"
+                                placeholder="Select Address"
+                            ></multiselect>
+                        </label>
                     </div>
 
                     <div>
@@ -356,7 +369,7 @@
         watch: {
             currentPort: function(newVal,oldVal){this.updateTable();this.setAddresses();},
 
-            freights: function(newVal,oldVal){this.createInlandTotals(newVal,this.currentAddress['address']);},
+            freights: function(newVal,oldVal){this.createInlandTotals(this.currentAddress['address']);},
 
             currentAddress: function(newVal,oldVal){this.updateTable();}
         },
@@ -373,6 +386,7 @@
                 currentPort: '',
                 address_options: [],
                 currentAddress: {},
+                distance_options: [],
                 modalAddress: '',
                 modalSuccess: false,
                 modalSelected: false,
@@ -380,6 +394,7 @@
                 inlandAdds:[],
                 modalWarning: '',
                 autocomplete:'',
+                modalDistance: false,
                 inlandModalTotals:{},
                 client_currency: this.currentQuoteData.client_currency,
                   /* Table headers */
@@ -443,11 +458,21 @@
             this.setTotalsFields();
         },
         mounted() {
-            this.createInlandTotals(this.freights,this.currentAddress['address']);
+            this.createInlandTotals(this.currentAddress['address']);
         },
         methods: {
             showModal() {
-                this.$refs["addInland"].show();
+                let component = this;
+
+                component.modalDistance = false;
+
+                component.$refs["addInland"].show();
+                component.datalists.distances.forEach(function(distance){
+                    if(component.currentPort.id == distance.harbor_id){
+                        component.modalDistance = true;
+                        component.distance_options.push(distance);
+                    }
+                })
             },
             
             setPorts() {
@@ -455,17 +480,37 @@
 
                 component.freights.forEach(function(freight){
                     component.datalists.harbors.forEach(function (harbor) {
-                        if(freight.origin_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
-                            component.port_options.push({"name":harbor.display_name,
-                                                        "id":harbor.id,
-                                                        "type":"Origin",
-                                                        "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")});
+                        let portMatch = false;
+
+                        if(freight.origin_port_id == harbor.id){
+                            var harbor_opt = {
+                                "name":harbor.display_name,
+                                "id":harbor.id,
+                                "type":"Origin",
+                                "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")}
+                            portMatch = true;
                         }
-                        if(freight.destination_port_id == harbor.id && !component.port_options.includes(harbor.display_name)){
-                            component.port_options.push({"name":harbor.display_name,
-                                                        "id":harbor.id,
-                                                        "type":"Destination",
-                                                        "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")});
+                        if(freight.destination_port_id == harbor.id){
+                            var harbor_opt = {
+                                "name":harbor.display_name,
+                                "id":harbor.id,
+                                "type":"Destination",
+                                "flag":component.imageFolder.concat(harbor.code.slice(0,2).toLowerCase()).concat(".svg")}
+                            portMatch = true;
+                        }
+
+                        if(portMatch){
+                            let inOptions = false;
+
+                            component.port_options.forEach(function(opt){
+                                if(harbor_opt['name'] == opt.name){
+                                    inOptions = true;
+                                }
+                            });
+
+                            if(!inOptions){
+                                component.port_options.push(harbor_opt);
+                            }
                         }
                     });
                 });
@@ -564,31 +609,27 @@
 
             },
 
-            createInlandTotals(freights,totalAddress){
+            createInlandTotals(totalAddress){
                 let component = this;
 
-                if(Object.keys(this.inlandModalTotals).length == 0 && component.currentAddress!=undefined && Object.keys(this.currentAddress).length!=0){
-                    freights.forEach(function (freight){
-                        let portAddressCombo = [freight.id +  ';' + 
-                                                totalAddress + ';' + 
-                                                component.currentPort['type'] + ';' +
-                                                component.currentPort['id']];
+                if((Object.keys(this.inlandModalTotals).length == 0 && component.currentAddress!=undefined && Object.keys(this.currentAddress).length!=0) || totalAddress==component.modalAddress){
+                    let portAddressCombo = [totalAddress + ';' + 
+                                            component.currentPort['type'] + ';' +
+                                            component.currentPort['id']];
 
-                        component.actions.automaticinlands
-                            .createTotals(portAddressCombo,component.$route)
-                            .then( ( response ) => {
-                                if(component.modalAddress != ''){
-                                    component.setAddresses(component.modalAddress);
-                                }else{
-                                    component.updateTable();
-                                }
-                            })
-                            .catch((data) => {
-                                this.$refs.observer.setErrors(data.data.errors);
-                        });
+                    component.actions.automaticinlands
+                        .createTotals(portAddressCombo,component.$route)
+                        .then( ( response ) => {
+                            if(component.modalAddress != ''){
+                                component.setAddresses(component.modalAddress);
+                            }else{
+                                component.updateTable();
+                            }
+                        })
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
                     });
                 }
-
             },
 
             setModalTable(){
@@ -619,6 +660,7 @@
                     price:{},
                     markup:{},
                     selected: false,
+                    distance: 0,
                 }
 
                 this.quoteEquip.forEach(function(equip){
@@ -695,8 +737,13 @@
                                 component.modalWarning = '';
                             }, 3000);
                         }else{
-                            inlandAdd['type'] = component.currentPort['type']
-                            inlandAdd['address'] = component.modalAddress
+                            inlandAdd['type'] = component.currentPort['type'];
+                            if(component.modalDistance){
+                                inlandAdd['address'] = component.modalAddress.display_name;
+                                inlandAdd['distance'] = component.modalAddress.distance;
+                            }else{
+                                inlandAdd['address'] = component.modalAddress;
+                            }
 
                             component.actions.automaticinlands
                                 .create(component.currentPort['id'],inlandAdd, component.$route)
@@ -744,8 +791,12 @@
                     })
 
                     if(control || component.address_options.length == 0){
-                        component.currentAddress = '-';
-                        component.createInlandTotals(component.freights,component.modalAddress);
+                        if(!component.modalDistance){
+                            component.createInlandTotals(component.modalAddress);
+                        }else{
+                            component.createInlandTotals(component.modalAddress.display_name);
+                        }
+                        control = false;
                     }
                 }else{
                     component.modalWarning = 'Address'
