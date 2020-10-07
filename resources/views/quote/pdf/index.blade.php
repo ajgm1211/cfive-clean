@@ -21,6 +21,8 @@
         @include('quote.pdf.partials.details_fcl')
         <!-- FREIGHTS -->
         @include('quote.pdf.partials.freights_fcl')
+        <!-- FREIGHTS -->
+        @include('quote.pdf.partials.detail_freights_fcl')
     </main>
 
 
