@@ -282,11 +282,10 @@ class Contract extends Model implements HasMedia, Auditable
         $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
 
         /*$chargesOrigin = 'true';
-        $chargesDestination = 'true';
-        $chargesFreight = 'true';*/
+        $chargesDestination = 'true';*/
+        $chargesFreight = 'true';
         $markup = null;
         $remarks = "";
-        //$remarksGeneral = "";
 
         $equipment = array();
         $totalesCont = array();
@@ -295,7 +294,7 @@ class Contract extends Model implements HasMedia, Auditable
         $general = new collection();
         $collectionRate = new Collection();
 
-        //$idCurrency = $company->currency_id;
+        $idCurrency = $company->currency_id;
         $company_user_id = $company->id;
 
         $equipment = array('1', '2', '3', '4', '5');
@@ -371,10 +370,9 @@ class Contract extends Model implements HasMedia, Auditable
             $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSaveR']);
 
             $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
-            //$arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
             $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
 
-            /*$equipmentFilter = $arregloR['arregloEquipment'];
+            $equipmentFilter = $arregloR['arregloEquipment'];
 
             $carrier_all = Carrier::where('name', 'ALL')->select('id')->first();
 
@@ -403,7 +401,7 @@ class Contract extends Model implements HasMedia, Auditable
                     if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
                         $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
-                        if ($chargesOrigin != null) {
+                        /*if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
                                 foreach ($containers as $cont) {
                                     $name_arreglo = 'array' . $cont->code;
@@ -425,7 +423,7 @@ class Contract extends Model implements HasMedia, Auditable
                                     }
                                 }
                             }
-                        }
+                        }*/
                         //Freight
                         if ($chargesFreight != null) {
                             if ($local->typedestiny_id == '3') {
@@ -448,7 +446,7 @@ class Contract extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-            }*/
+            }
 
             $totalRates += $totalT;
             $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
@@ -478,22 +476,10 @@ class Contract extends Model implements HasMedia, Auditable
             }
 
             foreach ($containers as $cont) {
-                foreach ($collectionOrigin as $origin) {
-                    if ($cont->code == $origin['type']) {
-                        $rateCurrency = $this->ratesCurrency($origin['currency_id'], $typeCurrency);
-                        ${$sum_origin . $cont->code} +=  $origin['price'] / $rateCurrency;
-                    }
-                }
                 foreach ($collectionFreight as $freight) {
                     if ($cont->code == $freight['type']) {
                         $rateCurrency = $this->ratesCurrency($freight['currency_id'], $typeCurrency);
                         ${$sum_freight . $cont->code} +=  $freight['price'] / $rateCurrency;
-                    }
-                }
-                foreach ($collectionDestiny as $destination) {
-                    if ($cont->code == $destination['type']) {
-                        $rateCurrency = $this->ratesCurrency($destination['currency_id'], $typeCurrency);
-                        ${$sum_destination . $cont->code} +=  $destination['price'] / $rateCurrency;
                     }
                 }
             }
@@ -519,14 +505,11 @@ class Contract extends Model implements HasMedia, Auditable
                 $remarks = $data->contract->remarks . "<br>";
             }
 
-            //$remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
-
             $routes['type'] = 'FCL';
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
             $routes['ocean_freight']['rates'] = $arregloRate;
-
 
             if (!empty($collectionFreight)) {
                 $routes['freight_charges'] = $collectionFreight;
