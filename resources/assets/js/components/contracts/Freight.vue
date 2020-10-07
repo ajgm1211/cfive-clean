@@ -93,7 +93,8 @@
         props: {
             equipment: Object,
             datalists: Object,
-            actions: Object
+            actions: Object,
+            contractData: Object
         },
         data() {
             return {
@@ -134,11 +135,12 @@
                     carrier: { 
                         label: 'Carrier', 
                         searchable: true, 
-                        type: 'multiselect', 
+                        type: 'multiselect_data', 
                         rules: 'required', 
                         trackby: 'name', 
                         placeholder: 'Select Carrier Port', 
-                        options: 'carriers' 
+                        options: 'carriers',
+                        values: this.contractData.carriers
                     },
                     currency: { 
                         label: 'Origin Port', 
@@ -154,6 +156,7 @@
         methods: {
             /* Single Actions */
             onEdit(data){
+                
                 this.currentData = data;
                 this.$bvModal.show('editOFreight');
             },
