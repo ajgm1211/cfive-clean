@@ -11,11 +11,15 @@ use App\QuoteV2;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\AutomaticInlandTotal;
+use App\Http\Traits\SearchTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AutomaticInlandController extends Controller
 {
+
+    use SearchTrait;
+
     public function list(Request $request, QuoteV2 $quote,$combo)
     {   
         $combo_array = explode(';',$combo);
@@ -78,6 +82,13 @@ class AutomaticInlandController extends Controller
         $rates_json = json_encode($inland_rates);
         $markups_json = json_encode($inland_markup);
 
+        if($request->input('distance') != 0){
+            $distance = $request->input('distance');
+        }else{
+            //$distance = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode, $groupContainer);
+            $distance = 40;
+        }
+
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
@@ -88,7 +99,7 @@ class AutomaticInlandController extends Controller
             'port_id' => $port_id,
             'inland_address_id'=> $inland_address->id,
             'type' => $request->input('type'),
-            'distance' => 40.00, //CHECK THIS LATER
+            'distance' => $distance,
             'contract' => 1, 
             'rate' => $rates_json,
             'markup' => $markups_json,
@@ -113,13 +124,11 @@ class AutomaticInlandController extends Controller
     {   
         $combo_array = explode(';',$combo);
         
-        $autorate_id = $combo_array[0];
+        $address = $combo_array[0];
 
-        $address = $combo_array[1];
+        $port_type = $combo_array[1];
 
-        $port_type = $combo_array[2];
-
-        $port_id = $combo_array[3];
+        $port_id = $combo_array[2];
         
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
         
@@ -132,63 +141,23 @@ class AutomaticInlandController extends Controller
             ]);
         }
 
-        $autorate = AutomaticRate::where('id',$autorate_id)->first();
-
         $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
 
-        if($address == $quote->origin_address){
-            
-            $origTotal = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$autorate->origin_port_id],['inland_address_id',$inland_address->id]])->first();
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
 
-            if($origTotal == null){
-                $inland_totals = AutomaticInlandTotal::create([
-                    'quote_id' => $quote->id,
-                    'currency_id' => $user_currency,
-                    'port_id' => $autorate->origin_port_id,
-                    'inland_address_id' => $inland_address->id,
-                    'type' => 'Origin',
-                    'totals' => null,
-                    'markups' => null,
-                ]);
-            }else{
-                $origTotal->totalize();
-            }
-        }else if($address == $quote->destination_address) {
-
-            $destTotal = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$autorate->destination_port_id],['inland_address_id',$inland_address->id]])->first();
-            
-            if($destTotal == null){
-                $inland_totals = AutomaticInlandTotal::create([
-                    'quote_id' => $quote->id,
-                    'currency_id' => $user_currency,
-                    'port_id' => $autorate->destination_port_id,
-                    'inland_address_id' => $inland_address->id,
-                    'type' => 'Destination',
-                    'totals' => null,
-                    'markups' => null,
-                ]);
-            }else{
-                $destTotal->totalize();
-            }
+        if($totals == null){
+            $totals = AutomaticInlandTotal::create([
+                'quote_id' => $quote->id,
+                'currency_id' => $user_currency,
+                'port_id' => $port_id,
+                'inland_address_id' => $inland_address->id,
+                'type' => $port_type,
+                'totals' => null,
+                'markups' => null                    
+            ]);
         }else{
-
-            $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
-
-            if($totals == null){
-                $totals = AutomaticInlandTotal::create([
-                    'quote_id' => $quote->id,
-                    'currency_id' => $user_currency,
-                    'port_id' => $port_id,
-                    'inland_address_id' => $inland_address->id,
-                    'type' => $port_type,
-                    'totals' => null,
-                    'markups' => null                    
-                ]);
-            }else{
-                $totals->totalize();
-            }
+            $totals->totalize();
         }
-
     }
 
     public function update(Request $request, QuoteV2 $quote, AutomaticInland $autoinland)
