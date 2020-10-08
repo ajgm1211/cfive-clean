@@ -16,4 +16,14 @@ class LocalChargeQuoteTotal extends Model
     {
         return $this->belongsTo('App\Currency');
     }
+
+    public function scopeQuote($query, $quote)
+    {
+        return $query->where('quote_id', $quote);
+    }
+
+    public function scopePort($query, $port)
+    {
+        return $query->where('port_id', $port);
+    }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\AutomaticRate;
 use App\Container;
 use App\Http\Traits\UtilTrait;
+use App\LocalChargeQuote;
+use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
 use Illuminate\Support\Collection;
 
@@ -13,14 +15,12 @@ class PdfController extends Controller
 
     use UtilTrait;
 
-    public function quote($id)
+    public function quote(QuoteV2 $quote)
     {
-        $quote = QuoteV2::findOrFail($id);
-        
-        switch($quote->type){
+        switch ($quote->type) {
             case "FCL":
                 return $this->generateFclPdf($quote);
-            break;
+                break;
         }
     }
 
@@ -30,21 +30,51 @@ class PdfController extends Controller
 
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
-        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-            $query->where('type_id', 3);
-        })->with('charge')->where('quote_id', $quote->id)->get();
+        $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
+
+        $origin_charges = $this->localCharges($quote, 1);
+
+        $destination_charges = $this->localCharges($quote, 2);
 
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
+    }
+
+    public function localCharges($quote, $type)
+    {
+        $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
+
+        $localcharges = $localcharges->groupBy([
+
+            function ($item) {
+                return $item['port']['name'] . ', ' . $item['port']['code'];
+            },
+
+        ]);
+
+        $total_price = null;
+
+        foreach ($localcharges as $charge) {
+            foreach ($charge as $item) {
+                $total_price = LocalChargeQuoteTotal::Quote($quote->id)->Port($item->port_id)->first();
+            }
+        }
+
+        $localcharges = $localcharges->map(function ($item, $key) use($total_price) {
+            $item['total'] = $total_price;
+            return $item;
+        });
+        
+        return $localcharges;
     }
 
     public function freightCharges($freight_charges, $quote, $containers)
