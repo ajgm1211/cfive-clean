@@ -35,6 +35,11 @@ class LocalChargeQuote extends Model
         return $this->belongsTo('App\Currency');
     }
 
+    public function port()
+    {
+        return $this->belongsTo('App\Harbor', 'port_id');
+    }
+
     public function sumarize()
     {
         $quote = $this->quotev2()->first();
@@ -117,5 +122,13 @@ class LocalChargeQuote extends Model
             'port_id' => $this->port_id,
             'currency_id' => $currency,
         ]);
+    }
+
+    public function scopeQuote($query, $id){
+        return $query->where('quote_id', $id);
+    }
+
+    public function scopeType($query, $type){
+        return $query->where('type_id', $type);
     }
 }

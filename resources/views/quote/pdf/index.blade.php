@@ -20,9 +20,12 @@
         <!-- DETAILS -->
         @include('quote.pdf.partials.details_fcl')
         <!-- FREIGHTS -->
-        @include('quote.pdf.partials.freights_fcl')
-        <!-- FREIGHTS -->
-        @include('quote.pdf.partials.detail_freights_fcl')
+        @if($freight_charges->count()>1)
+            @include('quote.pdf.partials.freights_fcl')
+        @else
+            @include('quote.pdf.partials.detail_freights_fcl')
+        @endif
+        @include('quote.pdf.partials.origins_fcl');
     </main>
 
 
