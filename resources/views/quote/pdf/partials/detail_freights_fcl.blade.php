@@ -184,7 +184,7 @@
 
                                         <tr>
 
-                                            <td><b>{{__('pdf.total_local')}}</b></td>
+                                            <td><b>{{__('pdf.total')}}</b></td>
 
                                             <td></td>
 
