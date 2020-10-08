@@ -3243,7 +3243,7 @@ class ImportationController extends Controller
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        chmod($path, 0777);
+        //chmod($path, 0777);
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
