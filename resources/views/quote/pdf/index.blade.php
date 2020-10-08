@@ -25,7 +25,10 @@
         @else
             @include('quote.pdf.partials.detail_freights_fcl')
         @endif
+        <!-- ORIGIN -->
         @include('quote.pdf.partials.origins_fcl');
+        <!-- DESTINY -->
+        @include('quote.pdf.partials.destinations_fcl');
     </main>
 
 
