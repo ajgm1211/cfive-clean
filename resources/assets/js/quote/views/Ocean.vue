@@ -69,12 +69,12 @@
                 <!-- End Logo(compañia), origen, destino y add freight -->
             </div>
 
-            <b-collapse :id="String(freight.id)" class="row">
-                <div v-if="freight.loaded" class="mt-5 mb-3 mr-3 ml-3">
+            <b-collapse :id="String(freight.id)" class="row" v-model="freight.initialCollapse">
+                <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
                     <div class="d-flex justify-content-between align-items-center">
                         <FormInlineView
-                            v-if="loaded"
+                            v-if="rateLoaded"
                             :data ="freight.rateData"
                             :fields="header_fields"
                             :multi="true"
@@ -135,7 +135,7 @@
                     <b-card class="mt-5">
                         <h5 class="q-title">Remarks</h5>
                         <FormInlineView
-                            v-if="loaded"
+                            v-if="rateLoaded"
                             :data="freight.rateData"
                             :fields="remarks_fields"
                             :multi="true"
@@ -290,6 +290,7 @@ export default {
             },
             editChargeModal_fields:{},
             loaded: true,
+            rateLoaded: false,
             form_fields: {},
             extra_fields: {},
             containers_fields: {},
@@ -334,7 +335,7 @@ export default {
                     options: "surcharges",
                 },
                 calculation_type_id: {
-                    label: "PROVIDER",
+                    label: "DETAIL",
                     searchable: true,
                     type: "select",
                     rules: "required",
@@ -383,9 +384,9 @@ export default {
     created() {
         this.setTotalsFields();
 
-        this.setFreightData();
-
         this.setRemarksField(this.quoteLanguage);
+        
+        this.setFreightData();
 
     },
     watch: {
@@ -477,12 +478,13 @@ export default {
                 actions.automaticrates
                     .retrieve(freight.id,component.$route)
                     .then((response) => {
-                        freight.rateData=response.data.data;
+                        freight.rateData = response.data.data;
+                        component.rateLoaded = true;
                         })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                         });
-
+                        
                 freight.loaded = true;
             }
 
@@ -495,6 +497,7 @@ export default {
 
         setFreightData(){
             let component = this;
+            let firstOpen = false;
 
             component.freights.forEach(function (freight) {
                 freight.loaded = false;
@@ -513,6 +516,14 @@ export default {
                         freight.destPortName = harbor.display_name;
                     }
                 });
+                
+                if(!firstOpen){
+                    component.setCollapseState(freight);
+                    freight.initialCollapse = true;
+                    firstOpen = true;
+                }else{
+                    freight.initialCollapse = false;
+                }
             });
         },
 

@@ -1063,7 +1063,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
     Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
     Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieve');
-    Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
+    Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/update', 'AutomaticInlandController@updateTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');
     /** Local charges routes */
