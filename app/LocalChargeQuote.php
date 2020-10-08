@@ -84,9 +84,9 @@ class LocalChargeQuote extends Model
     {
         $quote = $this->quotev2()->first();
 
-        LocalChargeQuoteTotal::where('quote_id', $quote->id)->delete();
+        LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->delete();
 
-        $charges = $this->where('quote_id', $quote->id)->get();
+        $charges = $this->where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->get();
 
         $equip = $quote->getContainerCodes($quote->equipment);
 
@@ -106,7 +106,7 @@ class LocalChargeQuote extends Model
                     foreach ($charge->total as $key => $total) {
                         if ($key == 'c' . $eq) {
                             $exchange = ratesCurrencyFunction($charge->currency_id, @Auth::user()->companyUser->currency->alphacode);
-                            $total_w_exchange = $total/$exchange;
+                            $total_w_exchange = $total / $exchange;
                             $totals[$key] += number_format((float)$total_w_exchange, 2, '.', '');
                         }
                     }
@@ -115,20 +115,23 @@ class LocalChargeQuote extends Model
         }
 
         $currency = Auth::user()->companyUser->currency_id;
-        
+
         LocalChargeQuoteTotal::create([
             'total' => $totals,
             'quote_id' => $quote->id,
             'port_id' => $this->port_id,
             'currency_id' => $currency,
+            'type_id' => $this->type_id,
         ]);
     }
 
-    public function scopeQuote($query, $id){
+    public function scopeQuote($query, $id)
+    {
         return $query->where('quote_id', $id);
     }
 
-    public function scopeType($query, $type){
+    public function scopeType($query, $type)
+    {
         return $query->where('type_id', $type);
     }
 }
