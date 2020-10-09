@@ -7,8 +7,7 @@
 
                     </div>
                     <!-- End Section Title -->
-            
-                    <table border="0" cellspacing="1" cellpadding="1" >
+                    <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-left header-table">
                             <tr >
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
@@ -21,7 +20,7 @@
                                         @endif
                                     @endforeach
                                 @endforeach
-                                @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                @if($freight_charges->contains('transit_time', '!=', ''))
                                     <th class="unit"><b>{{__('pdf.tt')}}</b></th>
                                     <th class="unit"><b>{{__('pdf.via')}}</b></th>                                
                                 @endif
@@ -62,7 +61,7 @@
                                             @endif
                                         @endforeach
                                     @endforeach
-                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                    @if($freight_charges->contains('transit_time', '!=', ''))
                                         <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
                                         <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
                                     @endif
@@ -75,3 +74,4 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <br>

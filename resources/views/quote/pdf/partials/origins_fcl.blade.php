@@ -1,6 +1,7 @@
 <!-- Origins detailed -->
 @if($origin_charges->count()>0)
     @foreach($origin_charges as $port => $value)
+        <br>
         <!-- Section Title -->
         <div>
 
