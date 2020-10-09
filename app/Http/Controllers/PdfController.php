@@ -45,7 +45,7 @@ class PdfController extends Controller
         $pdf = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
-        
+
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
 
@@ -61,20 +61,18 @@ class PdfController extends Controller
 
         ]);
 
-        $total_price = null;
-
-        foreach ($localcharges as $charge) {
-            foreach ($charge as $item) {
-                $total_price = LocalChargeQuoteTotal::Quote($quote->id)->Port($item->port_id)->first();
-            }
+        foreach ($localcharges as $value) {
+            $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
         }
 
-        $localcharges = $localcharges->map(function ($item, $key) use($total_price) {
-            $item['total'] = $total_price;
-            return $item;
-        });
-        
         return $localcharges;
+    }
+
+    public function localChargeTotals($quote, $type, $port)
+    {
+        $total = LocalChargeQuoteTotal::Quote($quote)->Port($port)->Type($type)->first();
+
+        return $total;
     }
 
     public function freightCharges($freight_charges, $quote, $containers)
