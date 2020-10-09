@@ -431,6 +431,10 @@ export default {
         },
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_inland/destroyAll`, { ids: ids });
+        },
+        search(port_id,data,route){
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
         }
     },
     localcharges: {
