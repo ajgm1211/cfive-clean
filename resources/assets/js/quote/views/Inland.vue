@@ -117,7 +117,7 @@
         </b-card>
 
         <!--  Modal  -->
-        <b-modal ref="addInland" size="xl" centered hide-footer title="Inland Charges" @close="inlandAdds = [];inlandAddRequested = false">
+        <b-modal ref="addInland" size="xl" centered hide-footer title="Inland Charges" @close="unsetModal">
             
             <div class="row">
 
@@ -163,7 +163,7 @@
 
                     <div>
                         <button class="btn btn-link mr-2" @click="setNewAddress">+ Add Manual</button>
-                        <button class="btn btn-primary btn-bg">Search</button>
+                        <button class="btn btn-primary btn-bg" @click="searchInlands">Search</button>
                     </div>
 
                 </div>
@@ -328,6 +328,10 @@
                     {{modalWarning + ' cannot be empty'}}
                 </div>
 
+                <div v-if="modalSearchWarning" class="alert alert-danger" role="alert">
+                    No results for this particular port
+                </div>
+
                 <div v-if="modalSelected" class="alert alert-warning" role="alert">
                     Select an Inland to add
                 </div>
@@ -393,6 +397,7 @@
                 inlandAddRequested: false,
                 inlandAdds:[],
                 modalWarning: '',
+                modalSearchWarning: false,
                 autocomplete:'',
                 modalDistance: false,
                 inlandModalTotals:{},
@@ -632,44 +637,99 @@
                 }
             },
 
-            setModalTable(){
+            setModalTable(inlandSearch = null){
                 let highest = Number;
                 let addId = Number;
                 let newInlandAdd = {};
                 let component = this;
 
                 component.inlandAddRequested = true;
-                
-                if(component.ids.length != 0){
-                    highest = component.ids.sort(function(a,b){return b-a});
-                    component.ids.push(highest[0]+1)
-                    addId = highest[0]+1;
+                if(inlandSearch != null){
+                    inlandSearch.forEach(function(search){
+                        if(component.ids.length != 0){
+                            highest = component.ids.sort(function(a,b){return b-a});
+                            component.ids.push(highest[0]+1)
+                            addId = highest[0]+1;
+                        }else{
+                            component.ids.push(0);
+                            addId = 0;
+                        }
+
+                        newInlandAdd = {
+                            id: component.ids[addId],
+                            port: component.currentPort['id'],
+                            charge: '',
+                            address: '',
+                            type: '',
+                            provider_id:{},
+                            currency_id:{},
+                            price:{},
+                            markup:{},
+                            selected: false,
+                            distance: 0,
+                        }
+
+                        component.quoteEquip.forEach(function(equip){
+                            newInlandAdd.price['c' + equip] = '';
+                            newInlandAdd.markup['m' + equip] = '';
+                            newInlandAdd['rates_' + equip] = '';
+                        });
+
+                        newInlandAdd['charge'] = search['providerName'];
+                        component.quoteEquip.forEach(function(equip){
+                            newInlandAdd.price['c' + equip] = search['inlandDetails'][equip]['montoInlandT'];
+                            newInlandAdd.markup['m' + equip] = search['inlandDetails'][equip]['markup'];
+                            newInlandAdd['rates_' + equip] = search['inlandDetails'][equip]['montoInlandT'];
+                        });
+                        component.datalists.currency.forEach(function (curr){
+                            if(curr.alphacode == search['type_currency']){
+                                newInlandAdd.currency_id = curr;
+                            }
+                        })
+                        component.datalists.providers.forEach(function (prov){
+                            if(prov.id == search['prov_id']){
+                                newInlandAdd.provider_id = prov;
+                            }
+                        })
+
+                        component.inlandAdds.push(newInlandAdd);
+
+                        component.totalizeModalInlands();
+                    })
                 }else{
-                    component.ids.push(0);
-                    addId = 0;
+                    if(component.ids.length != 0){
+                            highest = component.ids.sort(function(a,b){return b-a});
+                            component.ids.push(highest[0]+1)
+                            addId = highest[0]+1;
+                        }else{
+                            component.ids.push(0);
+                            addId = 0;
+                        }
+
+                        newInlandAdd = {
+                            id: component.ids[addId],
+                            port: component.currentPort['id'],
+                            charge: '',
+                            address: '',
+                            type: '',
+                            provider_id:{},
+                            currency_id:{},
+                            price:{},
+                            markup:{},
+                            selected: false,
+                            distance: 0,
+                        }
+
+                        component.quoteEquip.forEach(function(equip){
+                            newInlandAdd.price['c' + equip] = '';
+                            newInlandAdd.markup['m' + equip] = '';
+                            newInlandAdd['rates_' + equip] = '';
+                        });
+                    
+                    component.inlandAdds.push(newInlandAdd);
                 }
 
-                newInlandAdd = {
-                    id: component.ids[addId],
-                    port: component.currentPort['id'],
-                    charge: '',
-                    address: '',
-                    type: '',
-                    provider_id:{},
-                    currency_id:{},
-                    price:{},
-                    markup:{},
-                    selected: false,
-                    distance: 0,
-                }
 
-                this.quoteEquip.forEach(function(equip){
-                    newInlandAdd.price['c' + equip] = '';
-                    newInlandAdd.markup['m' + equip] = '';
-                    newInlandAdd['rates_' + equip] = '';
-                });
-
-                component.inlandAdds.push(newInlandAdd);
             },
 
             deleteModalInland(id){
@@ -784,7 +844,6 @@
                     component.address_options.forEach(function(address){
                         if(component.modalAddress == address['address']){
                             component.currentAddress = address;
-                            component.setModalTable();
                         } else {
                             control = true;
                         }
@@ -804,6 +863,49 @@
                             component.modalWarning = '';
                         }, 3000);
                 }
+            },
+
+            searchInlands(){
+                if(this.modalAddress != ''){
+                    let data = {};
+                    let inlandSearch = {};
+                    let component = this;
+
+                    data['address'] = component.modalAddress;
+                    if(component.modalDistance){
+                        data['distance'] = component.modalAddress.distance;
+                    }else{
+                        data['distance'] = 0;
+                    }
+
+                    component.actions.automaticinlands
+                        .search(component.currentPort['id'],data, component.$route)
+                        .then( ( response ) => {
+                            inlandSearch = response.data;
+                            if(inlandSearch.length == 0){
+                                component.modalSearchWarning = true;
+                                setTimeout(() => {
+                                    component.modalSearchWarning = false;
+                                }, 3000);
+                            }else{
+                                component.setModalTable(inlandSearch);
+                            }
+                        })
+                        .catch(( data ) => {
+                            component.$refs.observer.setErrors(data.data.errors);
+                        });
+                }else{
+                    this.modalWarning = 'Address'
+                    setTimeout(() => {
+                        this.modalWarning = '';
+                    }, 3000);
+                }
+            },
+
+            unsetModal(){
+                this.inlandAdds = [];
+                this.inlandAddRequested = false;
+                this.inlandModalTotals = {};
             },
         },
     }
