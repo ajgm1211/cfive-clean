@@ -2930,7 +2930,7 @@ class QuoteV2Controller extends Controller
         $hideD = 'hide';
 
         $markup = $this->markups($price_id, $typeCurrency, $request); // 'share this post'
-
+        dump($price_id, $typeCurrency, $request);
         // Fin Markups
 
         // Consulta base de datos rates
