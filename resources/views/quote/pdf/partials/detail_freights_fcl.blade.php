@@ -38,7 +38,7 @@
                                                 @endforeach
                                             @endforeach
 
-                                            @if($quote->pdf_option->show_schedules==1)
+                                            @if($freight_charges->contains('transit_time', '!=', ''))
 
                                                 <th class="unit"><b>{{__('pdf.tt')}}</b></th>
 
@@ -124,7 +124,7 @@
                                                                     @endforeach
                                                                 @endforeach
 
-                                                                @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                                                @if($freight_charges->contains('transit_time', '!=', ''))
 
                                                                     <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
 
@@ -162,7 +162,7 @@
                                                                         @endforeach
                                                                     @endforeach
 
-                                                                    @if($quote->pdf_option->show_schedules==1)
+                                                                    @if($freight_charges->contains('transit_time', '!=', ''))
 
                                                                         <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                                         <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
@@ -198,7 +198,7 @@
                                                 @endforeach
                                             @endforeach
 
-                                            @if($quote->pdf_option->show_schedules==1)
+                                            @if($freight_charges->contains('transit_time', '!=', ''))
 
                                                 <td></td>
                                                 <td></td>

@@ -26,4 +26,9 @@ class LocalChargeQuoteTotal extends Model
     {
         return $query->where('port_id', $port);
     }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type_id', $type);
+    }
 }
