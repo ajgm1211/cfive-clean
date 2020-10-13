@@ -14,6 +14,7 @@ use App\Contact;
 use App\Jobs\SyncCompaniesJob;
 use App\Partner;
 use App\Http\Requests\StoreApiIntegration;
+use App\Jobs\SyncCompaniesEvery30Job;
 use App\Visualtrans;
 use App\Vforwarding;
 
@@ -141,7 +142,7 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        SyncCompaniesJob::dispatch();
+        SyncCompaniesEvery30Job::dispatch();
     }
 
     public function getContacts($company_id)

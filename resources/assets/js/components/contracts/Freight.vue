@@ -93,7 +93,8 @@
         props: {
             equipment: Object,
             datalists: Object,
-            actions: Object
+            actions: Object,
+            currentContractData: Object,
         },
         data() {
             return {

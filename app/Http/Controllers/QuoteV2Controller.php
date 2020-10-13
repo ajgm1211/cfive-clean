@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Airline;
 use App\Airport;
 use App\AutomaticInland;
+use App\AutomaticInlandTotal;
+use App\InlandAddress;
 use App\AutomaticInlandLclAir;
 use App\AutomaticRate;
 use App\CalculationType;
@@ -292,7 +294,7 @@ class QuoteV2Controller extends Controller
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
+          <a target="_blank" class="dropdown-item" href="/api/quote/' . obtenerRouteKey($colletion['idSet']) . '/edit">
           <span>
           <i class="la la-edit"></i>
           &nbsp;
@@ -306,7 +308,7 @@ class QuoteV2Controller extends Controller
           PDF
           </span>
           </a>
-          <a href="/v2/quotes/duplicate/' . $colletion['idSet'] . '" class="dropdown-item" >
+          <a href="/api/quotes/' . obtenerRouteKey($colletion['idSet']) . '/duplicate" class="dropdown-item" >
           <span>
           <i class="la la-plus"></i>
           &nbsp;
@@ -963,6 +965,7 @@ class QuoteV2Controller extends Controller
         $pdf_duplicate->show_carrier = $pdf->show_carrier;
         $pdf_duplicate->show_logo = $pdf->show_logo;
         $pdf_duplicate->show_gdp_logo = $pdf->show_gdp_logo;
+        $pdf_duplicate->freight_no_grouping = $pdf->freight_no_grouping;
         $pdf_duplicate->save();
     }
 
@@ -2153,7 +2156,6 @@ class QuoteV2Controller extends Controller
                     $inlandO = $request->input('inlandO' . $rateO->rate_id);
                     //INLAND DESTINO
                     if (!empty($inlandD)) {
-
                         foreach ($inlandD as $inlandDestiny) {
 
                             $inlandDestiny = json_decode($inlandDestiny);
@@ -2174,6 +2176,13 @@ class QuoteV2Controller extends Controller
                                 }
                             }
 
+                            //NEW TABLE INLAND ADDRESS
+                            $inlandDestAddress = new InlandAddress();
+                            $inlandDestAddress->quote_id = $quote->id;
+                            $inlandDestAddress->address = $form->destination_address;
+                            $inlandDestAddress->port_id = $inlandDestiny->port_id;
+                            $inlandDestAddress->save();
+
                             $arregloMontoInDest = json_encode($montoInDest);
                             $arregloMarkupsInDest = json_encode($markupInDest);
                             $inlandDest = new AutomaticInland();
@@ -2190,7 +2199,9 @@ class QuoteV2Controller extends Controller
                             $inlandDest->validity_end = $inlandDestiny->validity_end;
                             $inlandDest->currency_id = $info_D->idCurrency;
                             //FOR QUOTE MODULE, CREATED NEW FIELD CHARGE
-                            $inlandDest->charge = $info_D->providerName;
+                            $inlandDest->charge = $inlandDestiny->providerName;
+                            $inlandDest->provider_id = $inlandDestiny->prov_id;
+                            $inlandDest->inland_address_id = $inlandDestAddress->id;
                             $inlandDest->save();
 
                             //NEW TABLE INLAND TOTALS
@@ -2201,6 +2212,7 @@ class QuoteV2Controller extends Controller
                             $inlandDestTotals->totals = $arregloMontoInDest;
                             $inlandDestTotals->markups = $arregloMarkupsInDest;
                             $inlandDestTotals->type = $inlandDestiny->type;
+                            $inlandDestTotals->inland_address_id = $inlandDestAddress->id;
                             $inlandDestTotals->save();
 
                         }
@@ -2229,6 +2241,13 @@ class QuoteV2Controller extends Controller
                                 }
                             }
 
+                            //NEW TABLE INLAND ADDRESS
+                            $inlandOrigAddress = new InlandAddress();
+                            $inlandOrigAddress->quote_id = $quote->id;
+                            $inlandOrigAddress->address = $form->origin_address;
+                            $inlandOrigAddress->port_id = $inlandDestiny->port_id;
+                            $inlandOrigAddress->save();
+
                             $arregloMontoInOrig = json_encode($montoInOrig);
                             $arregloMarkupsInOrig = json_encode($markupInOrig);
                             $inlandOrig = new AutomaticInland();
@@ -2236,8 +2255,6 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->automatic_rate_id = $rate->id;
                             $inlandOrig->provider = "Inland " . $form->origin_address;
                             $inlandOrig->distance = $inlandOrigin->km;
-                            //FOR QUOTE MODULE, CREATED NEW FIELD
-                            $inlandOrig->charge = $info_D->providerName;
                             $inlandOrig->contract = $info_D->contract->id;
                             $inlandOrig->port_id = $inlandOrigin->port_id;
                             $inlandOrig->type = $inlandOrigin->type;
@@ -2246,6 +2263,10 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_start = $inlandOrigin->validity_start;
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
+                            //FOR QUOTE MODULE, CREATED NEW FIELD
+                            $inlandOrig->provider_id = $inlandDestiny->prov_id;
+                            $inlandOrig->charge = $inlandOrig->providerName;
+                            $inlandOrig->inland_address_id = $inlandOrigAddress->id;
                             $inlandOrig->save();
 
                             //NEW TABLE INLAND TOTALS
@@ -2255,8 +2276,10 @@ class QuoteV2Controller extends Controller
                             $inlandOrigTotals->currency_id = $info_D->idCurrency;
                             $inlandOrigTotals->totals = $arregloMontoInOrig;
                             $inlandOrigTotals->markups = $arregloMarkupsInOrig;
+                            $inlandOrigTotals->inland_address_id = $inlandOrigAddress->id;
                             $inlandOrigTotals->type = $inlandOrigin->type;
                             $inlandOrigTotals->save();
+
                         }
                     }
 

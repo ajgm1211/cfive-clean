@@ -137,6 +137,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" type="checkbox" name="freight_no_grouping" value="1" id="freight_no_grouping" data-quote-id="{{$quote->id}}" data-name="freight_no_grouping" data-type="checkbox" {{$quote->pdf_option->freight_no_grouping==1 ? 'checked':''}}>
+                                    <span class="form-check-label title-quote input_form" for="freight_no_grouping">
+                                        Freight not grouped
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     @if($quote->type=='LCL')
                         <div class="row">
                             <div class="col-md-3">
