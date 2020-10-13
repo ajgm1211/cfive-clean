@@ -118,17 +118,17 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'equipments',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
 	                },
 	                type: { 
-	                    label: 'Calculation Type', 
+	                    label: 'Calculation', 
 	                    searchable: true, 
 	                    type: 'select', 
 	                    rules: 'required', 
 	                    trackby: 'name', 
-	                    placeholder: 'Select option', 
+	                    placeholder: 'Select', 
 	                    options: 'types',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-1'
 	                },
                     restrictions: { 
                         label:'Restrictions', 
@@ -144,8 +144,9 @@
                         type: 'select', 
                         rules: 'required', 
                         trackby: 'name', 
-                        placeholder: 'Select options', 
-                        options: 'providers',
+                        placeholder: 'Select', 
+						options: 'providers',
+						colClass: 'col-lg-1'
                         
                     },
 					
