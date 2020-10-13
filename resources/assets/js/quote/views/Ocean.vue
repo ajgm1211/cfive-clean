@@ -54,8 +54,13 @@
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->
-                    <div>
-                        <a href="#" class="btn btn-primary btn-bg" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                    <div class="d-flex align-items-center">
+                                                <!-- Inputs Freight -->
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                            <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-primary btn-bg">+ Add Charge</a>
+                        </div>
+                        <!-- End Inputs Freight -->
                         <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
                             <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
                         </button>
@@ -67,7 +72,7 @@
             <b-collapse :id="String(freight.id)" class="row" v-model="freight.initialCollapse">
                 <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
-                    <div>
+                    <div class="d-flex justify-content-between align-items-center">
                         <FormInlineView
                             v-if="rateLoaded"
                             :data ="freight.rateData"
@@ -77,12 +82,8 @@
                             :actions="actions.automaticrates"
                             :update="true"
                         ></FormInlineView>
-
-                        <!-- Inputs Freight -->
-
-                        <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-link">+ Add Charge</a>
-                        <!-- End Inputs Freight -->
                     </div>
+
 
                     <DynamicalDataTable
                         v-if="loaded"

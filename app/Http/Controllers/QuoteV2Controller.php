@@ -965,6 +965,7 @@ class QuoteV2Controller extends Controller
         $pdf_duplicate->show_carrier = $pdf->show_carrier;
         $pdf_duplicate->show_logo = $pdf->show_logo;
         $pdf_duplicate->show_gdp_logo = $pdf->show_gdp_logo;
+        $pdf_duplicate->freight_no_grouping = $pdf->freight_no_grouping;
         $pdf_duplicate->save();
     }
 
@@ -2954,7 +2955,7 @@ class QuoteV2Controller extends Controller
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
 
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
@@ -2972,7 +2973,7 @@ class QuoteV2Controller extends Controller
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
                 });
             }
