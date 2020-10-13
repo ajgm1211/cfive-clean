@@ -128,7 +128,7 @@ Importation Request FCL
                                             <div class="m-scrollable" data-scrollbar-shown="true" data-scrollable="true" data-max-height="300" style="overflow:hidden; height: 300px">
                                                 <div class="form-group row"> 
                                                     <div class="col-md-4"> 
-                                                        <h5> Surcharges Details Found</h5>
+                                                        <h5><strong>Recargos Detallados, Encontrados En El Tarifario</strong></h5>
                                                         <ul>
                                                             @foreach($data['surcharMas_locals_found'] as $surcharMas_locals_found )
                                                             <li> 
@@ -138,7 +138,7 @@ Importation Request FCL
                                                         </ul>
                                                     </div>  
                                                     <div class="col-md-4"> 
-                                                        <h5> Surcharges Details Not Found</h5>
+                                                        <h5><strong>Posibles Recargos D. Que Hacen Falta En El Tarifario</strong></h5>
                                                         <ul>
                                                             @foreach($data['surcharMas_locals_not_found'] as $surcharMas_locals_not_found )
                                                             <li> 
@@ -148,7 +148,7 @@ Importation Request FCL
                                                         </ul>
                                                     </div>
                                                     <div class="col-md-4"> 
-                                                        <h5> Surcharges not found in  Surcharge Details</h5>
+                                                        <h5><strong>Lista de Recargos No Encontrados Recargos Detallados</strong></h5>
                                                         <ul>
                                                             @foreach($data['local_not_found_in_sur_mast'] as $local_not_found_in_sur_mast )
                                                             <li> 
@@ -161,7 +161,8 @@ Importation Request FCL
                                                 <div class="m-separator m-separator--space m-separator--dashed"></div>
                                                 <div class="form-group row"> 
                                                     <div class="col-md-4"> 
-                                                        <h5> Surcharge not Registered</h5>
+                                                        <h5><strong>Lista de Recargos No Registrados</strong></h5>
+                                                        <h6>(En la tabla o en variaciones)</h6>
                                                         <ul>
                                                             @foreach($data['surcharge_not_registred'] as $surcharge_not_registred )
                                                             <li> 
@@ -171,7 +172,7 @@ Importation Request FCL
                                                         </ul>
                                                     </div>
                                                     <div class="col-md-4"> 
-                                                        <h5> Surcharges Duplicated "Variations"</h5>
+                                                        <h5><strong>Lista de Recargos Duplicados En "Variaciones"</strong></h5>
                                                         <ul>
                                                             @foreach($data['surcharge_duplicated'] as $surcharge_duplicated )
                                                             <li> 

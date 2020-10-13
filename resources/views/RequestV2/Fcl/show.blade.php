@@ -359,8 +359,9 @@
     } );
 
     var requesttableV = '';
+    var accounttableV = '';
     $(function() {    
-        $('#myatest').DataTable({
+        accounttableV = $('#myatest').DataTable({
             processing: true,
             ajax: {
                 url:'{!! route("index.Account.import.fcl") !!}',
@@ -457,6 +458,15 @@
     //            table.draw();
     //        }
 
+    $(document).ready(function(){
+        setInterval(refreshDataTable, 300000);
+    });
+    
+    function refreshDataTable(){
+        requesttableV.draw();
+        accounttableV.draw();
+    }
+    
     function showModal(id){
         var url = '{{ route("RequestFcl.show",":id") }}';
         url = url.replace(':id',id);
