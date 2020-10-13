@@ -44,11 +44,9 @@
 
 
 <script>
-
     import DataTable from '../../components/DataTable';
     import actions from '../../actions';
     import FormView from '../../components/views/FormView.vue';
-
     export default {
         components: { 
             DataTable,
@@ -59,7 +57,6 @@
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 datalists: {},
-
                 /* Table headers */
                 fields: [
                     { key: "reference", label: "Reference" },
@@ -68,9 +65,9 @@
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
-                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } }
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
+                    { key: 'providers', label: 'Provider', formatter: (value)=> { return value.name } },
                 ],
-
                 /* Form Modal Fields */
                 form_fields: {
                     reference: { 
@@ -124,32 +121,36 @@
                         placeholder: 'Select option', 
                         options: 'directions' 
                     },
+                    providers: { 
+                        label:'Provider', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select option', 
+                        options: 'providers' 
+                    },
                 }
             }
         },
         created() {
-
             /* Return the lists data for dropdowns */
             api.getData({}, '/api/v2/inland/data', (err, data) => {
                 this.setDropdownLists(err, data.data);
             });
-
         },
         methods: {
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
                 this.datalists = data;
             },
-
             closeModal(modal){
                 this.$bvModal.hide(modal);
             },
-
             success(id){
                 // After Create the item redirect to:
                 window.location = `/api/inlands/${id}/edit`;
             },
-
             /* Single Actions */
             onEdit(data){
                 // Single actions to redirect to:

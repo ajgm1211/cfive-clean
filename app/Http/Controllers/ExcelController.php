@@ -794,7 +794,9 @@ class ExcelController extends Controller
             'gp_container' => 'required',
             ]);
         //dd($request->input('validity'));
-        $containers = Container::where('gp_container_id', '1')->get();
+        $direction = $request->input('direction');//'2020/10/01';
+        $code = $request->input('gp_container');//'2020/10/01';
+        $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
         $dateSince = $request->input('validity');//'2020/10/01';
         $dateUntil = $request->input('expire');//'2020/10/30';
@@ -803,7 +805,11 @@ class ExcelController extends Controller
         $user_id = \Auth::user()->id;
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
-
+        
+        if($direction == 3)
+            $direction = array(1,2,3);
+        else
+            $direction = array($direction);
    
         $arrayFirstPart = array(
             'Contract',
@@ -823,23 +829,23 @@ class ExcelController extends Controller
         );
         $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
 
-        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id,$direction) {
             $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                 $a->where('user_id', '=', $user_id);
             })->orDoesntHave('contract_user_restriction');
-        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id,$direction) {
             $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
-        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting) {
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting,$direction) {
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
             }
 
         })->orderBy('contract_id')->get();
