@@ -224,7 +224,7 @@ class ContactController extends Controller
             return $collection;
         }
 
-        return view('contacts.show', compact('conact'));
+        return view('contacts.show', compact('contact'));
     }
 
     public function delete($id)
@@ -241,10 +241,10 @@ class ContactController extends Controller
             $contact->delete();
 
             if ($request->ajax()) {
-                return response()->json('Contact deleted successfully!');
+                return response()->json(['message' =>'Contact deleted successfully!']);
             }
 
-            return response()->json(['message' => 'Ok']);
+            return response()->json(['message' => 'OK']);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
