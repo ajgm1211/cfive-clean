@@ -11,6 +11,7 @@ use App\QuoteV2;
 use App\Rate;
 use App\SaleTermV2;
 use App\CalculationType;
+use Illuminate\Http\Request;
 
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -781,12 +782,22 @@ class ExcelController extends Controller
         }
     }
 
-    public function downloadRates()
+    public function downloadRates(Request $request)
     {
+
+
+        $data = $request->validate([
+           
+            'direction' => 'required',
+            'validity' => 'required',
+            'expire' => 'required',
+            'gp_container' => 'required',
+            ]);
+        //dd($request->input('validity'));
         $containers = Container::where('gp_container_id', '1')->get();
         $contArray = $containers->pluck('code')->toArray();
-        $dateSince = '2020-10-01';
-        $dateUntil = '2020-10-30';
+        $dateSince = $request->input('validity');//'2020/10/01';
+        $dateUntil = $request->input('expire');//'2020/10/30';
         $company_id = '';
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
@@ -836,7 +847,7 @@ class ExcelController extends Controller
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers,$container_calculation) {
+        $file =  Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers,$container_calculation) {
             $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers,$container_calculation) {
                 //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
@@ -923,7 +934,8 @@ class ExcelController extends Controller
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
                                 if (in_array($calculationID->id, $$name_arreglo)) {
-                                    $montosLocal2 = array($cont->code => $data1[$i]->ammount);
+                                    $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
+                                    $montosLocal2 = array($cont->code => $monto);
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
 
                                 }else{
@@ -956,8 +968,34 @@ class ExcelController extends Controller
                     });
 
                 }
-            })->download('xlsx');
-        });
+            });
+        })->store('xls', storage_path('excel/exports'));
+        
+        $path = storage_path('excel/exports').'/'.$nameFile.'.xls'; // or storage_path() if needed
+        $header = [
+            'Content-Type' => 'application/*',
+        ];
+        return response()->download($path, $nameFile, $header);
+        
+        
 
+    }
+
+
+    public function perTeu($monto, $calculation_type, $code)
+    {
+        $arrayTeu = CalculationType::where('options->isteu', true)->pluck('id')->toArray();
+        $codeArray = Container::where('code', 'like', '20%')->pluck('code')->toArray();
+
+        if (!in_array($code, $codeArray)) {
+            if (in_array($calculation_type, $arrayTeu)) {
+                $monto = $monto * 2;
+                return $monto;
+            } else {
+                return $monto;
+            }
+        } else {
+            return $monto;
+        }
     }
 }

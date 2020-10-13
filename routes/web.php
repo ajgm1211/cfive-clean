@@ -173,7 +173,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('excel/{id}', 'ContractsController@getMediaSimple')->name('contracts.excel');
     Route::get('excelzip/{id}', 'ContractsController@getMediaAll')->name('contracts.excelZip');
     Route::get('excel-delete/{id}/{id_contract}', ['uses' => 'ContractsController@deleteMedia', 'as' => 'contracts.exceldelete']);
-    Route::get('export', 'ExcelController@downloadRates')->name('contracts-rates.download');
+    
+    Route::post('export', 'ExcelController@downloadRates')->name('contracts-rates.download');
 
     //----- developer
 
