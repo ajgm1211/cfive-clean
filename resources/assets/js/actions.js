@@ -36,6 +36,13 @@ export default {
             return api.call('post', `/api/v2/contracts/${id}/removefile`, data);
         }
     },
+    excel: {
+       
+        create(data, route) {
+            return api.call('post', `/contracts/export`, data);
+        }
+       
+    },
     oceanfreights: {
         list(params, callback, route) {
 
