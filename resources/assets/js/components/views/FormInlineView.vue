@@ -104,7 +104,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit(),unlock(item,key),showHidden(item,key)"
+                                @input="onSubmit(),unlock(item,key)"
                                 @select="cleanInput(key)"
                             ></multiselect>
                             <span
@@ -264,9 +264,9 @@ export default {
             if(component.fields[key].isLocker){
                 component.unlock(component.fields[key],key)
             }
-            if(component.fields[key].isHiding){
+            /**if(component.fields[key].isHiding){
                 component.showHidden(component.fields[key],key)
-            }
+            }**/
         });        
     },
     methods: {

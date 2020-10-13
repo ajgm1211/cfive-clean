@@ -241,7 +241,7 @@ export default {
                     colClass: "col-lg-3",
                 },
                 validity_end: {
-                    label: "VALIDITY",
+                    label: "VALID UNTIL",
                     type: "datepicker",
                     rules: "required",
                     colClass: "col-lg-3",

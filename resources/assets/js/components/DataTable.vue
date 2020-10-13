@@ -24,6 +24,7 @@
                 <b-tr>
                     <b-th>
                         <b-form-checkbox
+                             v-if="massiveSelect"
                              v-model="allSelected"
                              :indeterminate="false"
                              >
@@ -443,6 +444,11 @@
                 required: false,
                 default: () => { return {} }
             },
+            massiveSelect: {
+                type: Boolean,
+                required: false,
+                default: true,
+            },
         },
         components: { 
             Multiselect,
@@ -701,8 +707,6 @@
             onSubmitFixed() {
                 
                 let data = this.prepareData('extra');
-
-                console.log(data);
 
                 //this.isBusy = true;
                 if(!this.multiList){

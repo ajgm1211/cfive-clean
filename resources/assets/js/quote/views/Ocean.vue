@@ -107,6 +107,7 @@
                         :paginated="false"
                         :massiveactions="['delete']"
                         :singleActions="['edit','delete']"
+                        :massiveSelect="false"
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
                         @onEditSuccess="onEdit"
@@ -115,35 +116,37 @@
 
                     <!-- Checkbox Freight-->
                     <div class="col-12 d-flex mt-5 mb-3">
-                        <b-form-checkbox value="carrier" class="mr-4">
-                            <span>Show Carrier</span>
-                        </b-form-checkbox>
-
-                        <b-form-checkbox value="freight">
+                        <b-form-checkbox v-if="freights.length < 3" v-model="allIn">
                             <span>Freight All-In</span>
                         </b-form-checkbox>
                     </div>
                     <!-- End Checkbox Freight-->
-
-                    <!-- Remarks -->
-                    <b-card class="mt-5">
-                        <h5 class="q-title">Remarks</h5>
-                        <FormInlineView
-                            v-if="rateLoaded"
-                            :data="freight.rateData"
-                            :fields="remarks_fields"
-                            :multi="true"
-                            :actions="actions.automaticrates"
-                            :datalists="datalists"
-                            :update="true"
-                        ></FormInlineView>
-                    </b-card>
-                    <!-- End Remarks -->
                 </div>
 
             </b-collapse>
         </b-card>
         <!-- End Freight Card -->
+
+        <!-- Show Carrier checkbox -->
+        <b-form-checkbox class="mr-4" v-model="showCarrier">
+            <span>Show Carrier</span>
+        </b-form-checkbox>
+        <!-- End show Carrier checkbox -->
+
+        <!-- Global Remarks -->
+        <b-card class="mt-5">
+            <h5 class="q-title">{{'Remarks ' + quoteLanguage.toLowerCase()}}</h5>
+            <FormInlineView
+                v-if="rateLoaded"
+                :data="currentQuoteData"
+                :fields="remarks_fields"
+                :multi="true"
+                :actions="actions.quotes"
+                :datalists="datalists"
+                :update="true"
+            ></FormInlineView>
+        </b-card>
+        <!-- End global remarks -->
 
         <!--  Add Freight Modal  -->
         <b-modal id="addFreight" hide-footer title="Add Freight">
@@ -256,6 +259,7 @@ export default {
                 },
             },
             remarks_fields: {},
+            global_remarks_fields: {},
             addFreightModal_fields: {
                 POL: {
                     label: "POL",
@@ -291,6 +295,8 @@ export default {
             currentChargeData: {},
             modalFreight: {},
             ids_selected: [],
+            showCarrier: true,
+            allIn: true,
 
             /* Table headers */
             fields: [
@@ -303,7 +309,7 @@ export default {
                 },
                 {
                     key: "calculation_type_id",
-                    label: "PROVIDER",
+                    label: "DETAIL",
                     type: "select",
                     trackby: "name",
                     options: "calculationtypes",
@@ -539,10 +545,17 @@ export default {
             }else if(language=="English"){
                 this.remarks_fields = {
                     remarks_english: {
-                    type: "ckeditor",
-                    colClass: "col-sm-12",
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
                     },
                 }  
+            }
+
+            this.global_remarks_fields = {
+                remarks: {
+                    type: "ckeditor",
+                    colClass: "col-sm-12",
+                }
             }
         },
 
