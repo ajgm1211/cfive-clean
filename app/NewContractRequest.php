@@ -30,7 +30,8 @@ class NewContractRequest extends Model implements HasMedia
         'time_star_one',
         'sentemail',
         'contract_id',
-        'data'
+        'data',
+        'username_load'
     ];
 
     public function user()

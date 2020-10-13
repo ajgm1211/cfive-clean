@@ -791,11 +791,22 @@ input.multiselect__input:focus {
     border: 2px solid #eee !important;
 }
 
+.form-control {
+    border: 2px solid #eee !important;
+}
+
+#id_exp_date__value_,
+#id_validity_start__value_,
+#id_validity_end__value_ {
+    border: none !important;
+}
+
 .q-width {
     width: 50%;
 }
 
 .q-input:focus,
+.form-control:hover,
 .q-input:hover {
     border-color: #006BFA !important;
 }
