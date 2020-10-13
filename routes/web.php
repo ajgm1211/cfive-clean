@@ -512,7 +512,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
     Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
     Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+    //Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
     Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
@@ -1037,7 +1037,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quote/{quote}/edit', 'QuotationController@edit')->middleware('check_company:quote');
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
-    Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote')->name('quote.duplicate');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
 
     /** AutomaticRate routes**/
@@ -1057,28 +1057,34 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
 
     /** AutomaticInlands Routes **/
-    Route::get('api/quotes/{quote}/port/{port_id}/automatic_inlands', 'AutomaticInlandController@list')->middleware('check_company:quote');
+    Route::get('api/quotes/{quote}/port/{combo}/automatic_inlands', 'AutomaticInlandController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/store', 'AutomaticInlandController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_inland/{autoinland}/update', 'AutomaticInlandController@update');
     Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
     Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
-    Route::get('api/quotes/{quote}/automatic_inland/totals/{port_id}', 'AutomaticInlandController@retrieve');
-    Route::post('api/quotes/{quote}/automatic_inland/totals/{port_id}/update', 'AutomaticInlandController@updateTotals');
-
+    Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieve');
+    Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/update', 'AutomaticInlandController@updateTotals');
+    Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
+    Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');
     /** Local charges routes */
-    Route::get('/api/quote/local/data/{quote_id}', 'LocalChargeQuotationController@harbors')->name('get.local.harbors');
-    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms')->name('get.quote.saleterms');
-    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges')->name('get.quote.charges');
-    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges')->name('get.quote.localcharges');
-    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store')->name('get.quote.localcharges.store');
+    Route::get('/api/quote/local/data/{quote}', 'LocalChargeQuotationController@harbors');
+    Route::get('/api/quote/localcharge/carriers/{quote}', 'LocalChargeQuotationController@carriers');
+    Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms');
+    Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
+    Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges');
+    Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store');
+    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@storeCharge');
     Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
-    Route::get('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
+    Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
     Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
     Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
     Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
     Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
     Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
+
+    /** PDF */
+    Route::get('/api/quote/pdf/{quote}', 'PdfController@quote');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');

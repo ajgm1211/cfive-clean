@@ -391,11 +391,11 @@ export default {
         }
     },
     automaticinlands: {
-        list(port_id, params, callback, route) {
+        list(combo, params, callback, route) {
 
             let quote_id = route.params.id;
 
-            api.call('get', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands`, { params })
+            api.call('get', `/api/quotes/${quote_id}/port/${combo}/automatic_inlands`, { params })
                 .then(response => {
                     callback(null, response.data);
                 }).catch(error => {
@@ -410,13 +410,21 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autoinland_id}/update`, data)
         },
-        updateTotals(port_id, data, route) {
+        createTotals(combo, route) {
             let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}/update`, data)
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/store`, {})
         },
-        retrieve(port_id, route) {
+        updateTotals(combo, data, route) {
             let quote_id = route.params.id;
-            return api.call('get', `/api/quotes/${quote_id}/automatic_inland/totals/${port_id}`, {})
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/update`, data)
+        },
+        retrieve(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}`, {})
+        },
+        retrieveAddresses(port_id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland/addresses/${port_id}`, {})
         },
         delete(id) {
             return api.call('delete', `/api/quotes/automatic_inland/${id}/destroy/`, {});
@@ -429,17 +437,23 @@ export default {
         create(data) {
             return api.call('post', `/api/quote/localcharge/store`, data);
         },
+        createCharge(data) {
+            return api.call('post', `/api/quote/charge/store`, data);
+        },
         remarks(quote_id) {
             return api.call('get', `/api/quote/localcharge/remarks/${quote_id}`, {});
         },
-        update(id, data, index) {
-            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index });
+        carriers(quote) {
+            return api.call('get', `/api/quote/localcharge/carriers/${quote}`, {});
+        },
+        update(id, data, index, type) {
+            return api.call('post', `/api/quote/localcharge/updates/${id}`, { data: data, index: index, type: type });
         },
         updateRemarks(data, quote_id) {
             return api.call('post', `/api/quote/localcharge/updates/${quote_id}/remarks`, { data: data });
         },
-        delete(id) {
-            return api.call('get', `/api/quote/localcharge/delete/${id}`, {});
+        delete(id, type) {
+            return api.call('post', `/api/quote/localcharge/delete/${id}`, { type: type });
         },
         retrieve(data) {
             return api.call('get', `/api/quote/localcharge/saleterm`, data);

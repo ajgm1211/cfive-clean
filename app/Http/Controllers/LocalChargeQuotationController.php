@@ -19,16 +19,13 @@ use App\Surcharge;
 class LocalChargeQuotationController extends Controller
 {
     /**
-     * harbors
+     * get harbors
      *
      * @param  mixed $request
      * @return void
      */
-    public function harbors(Request $request)
+    public function harbors(QuoteV2 $quote)
     {
-
-        $quote = QuoteV2::with('origin_harbor', 'destination_harbor')->where('id', $request->quote_id)->first();
-
         $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
             $value['type'] = 1;
             $value['quote_id'] = $quote->id;
@@ -47,61 +44,74 @@ class LocalChargeQuotationController extends Controller
 
         return $collection;
     }
-    
+
+    /**
+     * carriers
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function carriers(QuoteV2 $quote)
+    {
+
+        $carriers = $quote->carrier->unique('id')->values();
+
+        return $carriers;
+    }
+
     /**
      * data
      *
      * @return void
      */
-    public function data(){
+    public function data()
+    {
         $surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->get();
         $sale_codes = SaleTermCode::where('company_user_id', \Auth::user()->company_user_id)->get();
 
-        $surcharges = $surcharges->map(function ($value){
+        $surcharges = $surcharges->map(function ($value) {
             $value['type'] = 'surcharge';
-            return $value->only(['name','type']);
+            return $value->only(['name', 'type']);
         });
-        
-        $sale_codes = $sale_codes->map(function ($value){
+
+        $sale_codes = $sale_codes->map(function ($value) {
             $value['type'] = 'salecode';
-            return $value->only(['name','type']);
+            return $value->only(['name', 'type']);
         });
-        
+
         $merged = $surcharges->merge($sale_codes);
-        
+
         return $merged->all();
     }
 
     /**
-     * saleterms
+     * get sale terms' templates
      *
      * @param  mixed $request
      * @return void
      */
     public function saleterms(Request $request)
     {
-
-        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->equipment, 'type_id' => $request->type])->get();
+        $saleterms = SaleTermV3::select('id', 'name')->where(['port_id' => $request->port_id, 'group_container_id' => $request->equipment, 'type_id' => $request->type, 'company_user_id' => \Auth::user()->company_user_id])->get();
 
         return $saleterms;
     }
 
     /**
-     * charges
+     * get sale terms' charges
      *
      * @param  mixed $request
      * @return void
      */
     public function salecharges(Request $request)
     {
-
         $charges = SaleTermCharge::where('sale_term_id', $request->id)->with('calculation_type', 'currency', 'sale_term_code')->get();
 
         return $charges;
     }
 
     /**
-     * localcharges
+     * get local charges
      *
      * @param  mixed $request
      * @return void
@@ -119,7 +129,7 @@ class LocalChargeQuotationController extends Controller
     }
 
     /**
-     * localChargesOrigin
+     * get local charges in origin
      *
      * @param  mixed $quote_id
      * @param  mixed $port_id
@@ -142,7 +152,7 @@ class LocalChargeQuotationController extends Controller
     }
 
     /**
-     * localChargesDestination
+     * get local charges in destiny
      *
      * @param  mixed $quote_id
      * @param  mixed $port_id
@@ -173,28 +183,23 @@ class LocalChargeQuotationController extends Controller
     public function store(Request $request)
     {
 
-        $ids = $request->ids;
+        $selectedCharges = $request->selectedCharges;
 
-        foreach ($ids as $key => $id) {
-            
-            $localcharge = Charge::findOrFail($id);
+        foreach ($selectedCharges as $localcharge) {
 
-            $price = json_decode($localcharge->amount);
-            $profit = json_decode($localcharge->markups);
+            $charge = $localcharge['surcharge']['name'];
 
-            $charge = $localcharge->surcharge->name;
-
-            if(!empty($request->sale_codes[$key])){
-                $charge = $request->sale_codes[$key]['name'];
+            if (!empty($localcharge['sale_codes'])) {
+                $charge = $localcharge['sale_codes']['name'];
             }
 
             $local_charge = LocalChargeQuote::create([
-                'price' => $price,
-                'profit' => $profit,
+                'price' => $localcharge['price'],
+                'profit' => $localcharge['markup'],
                 'charge' => $charge,
-                'surcharge_id' => $localcharge->surcharge_id,
-                'calculation_type_id' => $localcharge->calculation_type_id,
-                'currency_id' => $localcharge->currency_id,
+                'surcharge_id' => $localcharge['surcharge_id'],
+                'calculation_type_id' => $localcharge['calculation_type_id'],
+                'currency_id' => $localcharge['currency_id'],
                 'port_id' => $request->port_id,
                 'quote_id' => $request->quote_id,
                 'type_id' => $request->type_id,
@@ -202,7 +207,6 @@ class LocalChargeQuotationController extends Controller
 
             $local_charge->sumarize();
             $local_charge->totalize();
-
         }
 
         $local_charge_quote = LocalChargeQuote::where([
@@ -221,25 +225,26 @@ class LocalChargeQuotationController extends Controller
      */
     public function storeChargeSaleTerm(Request $request)
     {
-        $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
+        LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
         
+        $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
+
         foreach ($sale_charges as $sale_charge) {
 
             $local_charge = LocalChargeQuote::create([
                 'price' => $sale_charge->total,
                 'profit' => [],
                 'charge' => $sale_charge->sale_term_code->name,
-                'surcharge_id' => $sale_charge->sale_term_code_id,
                 'calculation_type_id' => $sale_charge->calculation_type_id,
                 'currency_id' => $sale_charge->currency_id,
                 'port_id' => $request->params['port_id'],
                 'quote_id' => $request->params['quote_id'],
+                'sale_term_v3_id' => $request->params['id'],
                 'type_id' => $request->params['type_id'],
             ]);
 
             $local_charge->sumarize();
             $local_charge->totalize();
-
         }
 
         $local_charge_quote = LocalChargeQuote::where([
@@ -272,80 +277,146 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $id
      * @return void
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $local_charge_quote = LocalChargeQuote::findOrFail($id);
+        switch ($request->type) {
+            case 1:
+                $local_charge_quote = LocalChargeQuote::findOrFail($id);
 
-        $local_charge_quote->delete();
+                $local_charge_quote->delete();
 
-        $local_charge_quote->totalize();
+                $local_charge_quote->totalize();
+                break;
+            case 2:
+                Charge::destroy($id);
+                break;
+        }
 
-        return 'OK';
+        return response()->json(['success' => 'Ok']);
     }
-    
+
     /**
      * getTotal
      *
      * @param  mixed $request
      * @return void
      */
-    public function getTotal(Request $request){
+    public function getTotal(Request $request)
+    {
 
-        $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->first();
-        
+        $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
+
         return $total;
-
     }
-    
+
     /**
-     * getRemarks
+     * get localcharges' remarks
      *
      * @param  mixed $id
      * @return void
      */
-    public function getRemarks($id){
+    public function getRemarks($id)
+    {
 
         $remarks = QuoteV2::select('localcharge_remarks')->findOrFail($id);
-        
-        return $remarks;
 
+        return $remarks;
     }
-    
+
     /**
-     * update
+     * update charges and localcharges
      *
      * @param  mixed $request
      * @param  mixed $id
      * @return void
      */
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
-        $index = $request->index;
+        switch ($request->type) {
+            case 1:
+                $index = $request->index;
 
-        $local_charge = LocalChargeQuote::find($id);
-        $local_charge->$index = $request->data;
-        $local_charge->update();
+                $local_charge = LocalChargeQuote::findOrFail($id);
+                $local_charge->$index = $request->data;
+                $local_charge->update();
 
-        $local_charge->totalize();
-        
-        return 'Updated!';
+                $local_charge->totalize();
+                break;
+            case 2:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $local_charge->$index = $request->data;
+                $local_charge->update();
+                break;
+            case 3:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $price = json_decode($local_charge->amount);
+                foreach ($price as $key => $amount) {
+                    if ($key == $index) {
+                        $price->$index = $request->data;
+                    }
+                }
+                $local_charge->amount = json_encode($price);
+                $local_charge->update();
+                break;
+            case 4:
+                $index = $request->index;
+                $local_charge = Charge::findOrFail($id);
+                $profit = json_decode($local_charge->markups);
+                foreach ($profit as $key => $markup) {
+                    if ($key == $index) {
+                        $profit->$index = $request->data;
+                    }
+                }
+                $local_charge->markups = json_encode($profit);
+                $local_charge->update();
+                break;
+        }
 
+        return response()->json(['success' => 'Ok']);
     }
-    
+
     /**
-     * updateRemarks
+     * update localcharges' remarks
      *
      * @param  mixed $request
      * @param  mixed $quote_id
      * @return void
      */
-    public function updateRemarks(Request $request, $quote_id){
+    public function updateRemarks(Request $request, $quote_id)
+    {
 
         QuoteV2::findOrFail($quote_id)->update([
             'localcharge_remarks' => $request->data
         ]);
-        
-        return 'Updated!';
 
+        return response()->json(['success' => 'Ok']);
+    }
+
+    /**
+     * store charge's info
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeCharge(Request $request)
+    {
+        $quote = QuoteV2::findOrFail($request->quote_id);
+        
+        $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
+        
+        Charge::create([
+            'automatic_rate_id' => $rate->id,
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'surcharge_id' => $request->charges['surcharge']['id'],
+            'type_id' => $request->type_id,
+            'amount' => json_encode($request->charges['price']),
+            'markups' => json_encode($request->charges['markup'])
+        ]);
+
+        return response()->json(['success' => 'Ok']);
     }
 }
