@@ -641,14 +641,16 @@ class CompanyController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
+            
             $company = Company::findOrFail($id);
             $company->delete();
 
-            if ($request->ajax()) {
-                return response()->json('Company deleted successfully!', 200);
-            }
 
-            return response()->json(['message' => 'Ok']);
+
+            if ($request->ajax()) {
+                return response()->json(['message' =>  'Company deleted successfully!']);
+            }
+            // return response()->json(['message' => 'Ok']);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([

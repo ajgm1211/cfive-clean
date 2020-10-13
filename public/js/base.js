@@ -625,7 +625,7 @@ $(document).on('click', '#delete-contact', function() {
                 type: 'get',
                 url: '/contacts/delete/' + id,
                 success: function(data) {
-                    if (data.message == 'Ok') {
+                    if (data.message == 'Contact deleted successfully!') {
                         swal(
                             'Deleted!',
                             'Your file has been deleted.',
@@ -671,14 +671,14 @@ $(document).on('click', '#delete-company', function() {
                             text: "There are " + data.message + " clients associated with this company. If you delete it, those contacts will be deleted.",
                             type: 'warning',
                             showCancelButton: true,
-                            confirmButtonText: 'Yes, delete it!'
+                            confirmButtonText: 'Ok'
                         }).then(function(result) {
                             if (result.value) {
                                 $.ajax({
                                     type: 'get',
                                     url: '/companies/destroy/' + id,
                                     success: function(data) {
-                                        if (data === 'Company deleted successfully!') {
+                                        if (data.message === 'Company deleted successfully!') {
                                             swal(
                                                 'Deleted!',
                                                 'The company has been deleted.',
@@ -703,7 +703,7 @@ $(document).on('click', '#delete-company', function() {
                             type: 'get',
                             url: '/companies/destroy/' + id,
                             success: function(data) {
-                                if (data === 'Company deleted successfully!') {
+                                if (data.message === 'Company deleted successfully!') {
                                     swal(
                                         'Deleted!',
                                         'The company has been deleted.',
