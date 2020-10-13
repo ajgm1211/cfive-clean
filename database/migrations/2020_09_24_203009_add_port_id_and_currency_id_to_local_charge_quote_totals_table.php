@@ -17,7 +17,7 @@ class AddPortIdAndCurrencyIdToLocalChargeQuoteTotalsTable extends Migration
             $table->integer('port_id')->unsigned()->after('quote_id');
             $table->foreign('port_id')->references('id')->on('harbors');
             $table->integer('currency_id')->unsigned()->after('port_id');
-            $table->foreign('currency_id')->references('id')->on('harbors');
+            $table->foreign('currency_id')->references('id')->on('currency');
         });
     }
 

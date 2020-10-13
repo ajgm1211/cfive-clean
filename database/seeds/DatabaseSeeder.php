@@ -41,5 +41,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProvincesTableSeeder::class);
         $this->call(InlandDistancesTableSeeder::class);
         $this->call(SaleTermTypesTableSeeder::class);
+        $this->call(CargoKindsTableSeeder::class);
     }
 }

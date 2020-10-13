@@ -13,7 +13,6 @@ trait SearchTrait
 
     public function inlands($inlandParams, $markup, $equipment, $contain, $type, $mode, $groupContainer, $distancia = 0)
     {
-
         $modality_inland = $mode; // FALTA AGREGAR EXPORT
         $company_inland = $inlandParams['company_id_quote'];
 

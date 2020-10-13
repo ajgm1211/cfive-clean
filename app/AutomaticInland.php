@@ -14,7 +14,7 @@ class AutomaticInland extends Model
 		'rate' => 'array',
 	];
 
-	protected $fillable = ['quote_id','charge','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','rate','markup','currency_id'];
+	protected $fillable = ['quote_id','charge','automatic_rate_id','provider','provider_id','contract','validity_start','validity_end','port_id','type','distance','rate','markup','currency_id','inland_address_id'];
 
 	public function quote()
 	{
@@ -34,7 +34,12 @@ class AutomaticInland extends Model
 	public function port()
 	{
 		return $this->hasOne('App\Harbor','id','port_id');
-	}
+    }
+    
+    public function provider()
+	{
+		return $this->hasMany('App\Provider','id','provider_id');
+    }
 
 	public function country_code()
 	{
