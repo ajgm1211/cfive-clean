@@ -22,6 +22,7 @@
         :autoAdd="autoAdd"
         :changeAddMode="changeAddMode"
         :portAddress="portAddress"
+        :massiveSelect="massiveSelect"
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
@@ -133,6 +134,11 @@
                 type: Object,
                 required: false,
                 default: () => { return {} }
+            },
+            massiveSelect: {
+                type: Boolean,
+                required: false,
+                default: true,
             },
         },
         data() {

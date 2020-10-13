@@ -808,6 +808,7 @@
                             component.actions.automaticinlands
                                 .create(component.currentPort['id'],inlandAdd, component.$route)
                                 .then( ( response ) => {
+                                    component.inlandAddRequested = false;
                                     component.inlandAdds.splice(component.inlandAdds.indexOf(inlandAdd));
                                     component.totalizeModalInlands()
                                     component.modalSuccess = true;
