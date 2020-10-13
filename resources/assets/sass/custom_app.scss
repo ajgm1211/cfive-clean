@@ -590,7 +590,18 @@ i.mx-icon-calendar {
 }
 
 .reportrange-text {
+    height: 35px;
     border: 2px solid #eee !important;
+}
+
+.multiselect--disabled {
+    min-height: 35px !important;
+    .multiselect__select {
+        height: 35px;
+    }
+    .multiselect__tags {
+        background: #e9ecef;
+    }
 }
 
 .vue-daterange-picker {
@@ -668,7 +679,11 @@ input.multiselect__input:focus {
 
 .btn-adds {
     right: 60px;
-    position: fixed;
+    /* position: fixed; */
+}
+
+.input-h {
+    height: 35px;
 }
 
 .dropzone.dz-started .dz-message {
