@@ -296,7 +296,7 @@ class QuotationController extends Controller
     {   
         $form_keys = $request->input('keys');
 
-        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english'];
+        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
 
         if(array_intersect($terms_keys,$form_keys)==[]){
             $data = $request->validate([
