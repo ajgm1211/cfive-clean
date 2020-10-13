@@ -171,7 +171,7 @@
                         placeholder: 'Select option', 
                         options: 'directions' 
                     },
-                },
+                }
 
 
             }
