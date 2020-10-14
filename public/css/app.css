@@ -86779,3 +86779,9 @@ th#options-limit-fcl {
   z-index: 1050;
 }
 
+.btn-save {
+  border: none;
+  color: #031B4E;
+  background: transparent;
+}
+
