@@ -1192,8 +1192,8 @@ $(document).on('click', '#delete-quote-v2', function() {
 
         if (result.value) {
             $.ajax({
-                type: 'get',
-                url: '/v2/quotes/delete/' + id,
+                type: 'delete',
+                url: '/api/quote/' + id + '/destroy',
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -1209,6 +1209,20 @@ $(document).on('click', '#delete-quote-v2', function() {
     });
 });
 
+//Duplicar quote
+$(document).on('click', '#duplicate-quote-v2', function() {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+        $.ajax({
+            type: 'post',
+            url: '/api/quotes/' + id + '/duplicate',
+            success: function(data) {
+                console.log(data.message);
+                location.reload();
+                //REFRESH TABLE?
+            }
+        });
+    });
 
 $(document).on('click', '#delete-quote-show', function() {
     var id = $(this).attr('data-quote-show-id');

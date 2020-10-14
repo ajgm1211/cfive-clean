@@ -298,6 +298,7 @@ class QuotationController extends Controller
                 'validity_start' => 'required',
                 'user_id'=>'required',
                 'validity_end' => 'required',
+                'language_id' => 'required',
             ]);
         } else {
             $data = [];
@@ -325,7 +326,7 @@ class QuotationController extends Controller
     {
         $quote->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Ok']);
     }
 
     public function retrieve(QuoteV2 $quote)
