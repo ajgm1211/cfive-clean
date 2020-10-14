@@ -63,7 +63,7 @@
                             :quoteEquip="quoteEquip"
                             :datalists="datalists"
                             :freights="freights"
-                            :quoteLanguage="this.currentData.language['name']"
+                            :quoteLanguage="this.currentData.language_id['name']"
                             @freightAdded="setInitialData"
                             ref="oceanTab"
                             ></ocean>
@@ -257,7 +257,7 @@ export default {
                     options: "incoterms",
                     colClass: "col-lg-3",
                 },
-                language: {
+                language_id: {
                     label: "LANGUAGE",
                     searchable: true,
                     type: "select",
@@ -348,21 +348,21 @@ export default {
         },
         
         setTermsField(){
-            if(this.currentData.language['name']=="Spanish"){
+            if(this.currentData.language_id['name']=="Spanish"){
                 this.term_fields = { 
                     terms_and_conditions: {
                     type: "ckeditor",
                     colClass: "col-lg-12",
                     }
                 }                 
-            }else if(this.currentData.language['name']=="Portuguese"){
+            }else if(this.currentData.language_id['name']=="Portuguese"){
                 this.term_fields = { 
                     terms_portuguese: {
                     type: "ckeditor",
                     colClass: "col-lg-12",
                     }
                 }
-            }else if(this.currentData.language['name']=="English"){
+            }else if(this.currentData.language_id['name']=="English"){
                 this.term_fields = { 
                     terms_english: {
                     type: "ckeditor",
