@@ -298,6 +298,7 @@ class QuotationController extends Controller
                 'validity_start' => 'required',
                 'user_id'=>'required',
                 'validity_end' => 'required',
+                'language_id' => 'required',
             ]);
         } else {
             $data = [];
