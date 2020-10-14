@@ -325,7 +325,7 @@ class QuotationController extends Controller
     {
         $quote->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Ok']);
     }
 
     public function retrieve(QuoteV2 $quote)

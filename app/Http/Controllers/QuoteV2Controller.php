@@ -308,14 +308,14 @@ class QuoteV2Controller extends Controller
           PDF
           </span>
           </a>
-          <a href="/api/quotes/' . obtenerRouteKey($colletion['idSet']) . '/duplicate" class="dropdown-item" >
+          <a href="#" class="dropdown-item" id="duplicate-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
           <span>
           <i class="la la-plus"></i>
           &nbsp;
           Duplicate
           </span>
           </a>
-          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . $colletion['idSet'] . '" >
+          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
           <span>
           <i class="la la-eraser"></i>
           &nbsp;
@@ -2126,6 +2126,21 @@ class QuoteV2Controller extends Controller
                     $arregloNull = array();
 
                     $remarks = $info_D->remarks . "<br>";
+
+                    //NEW REMARKS FOR QUOTE
+                    $quote_language = $company->companyUser->pdf_language;
+
+                    if($quote_language == 1){
+                        $quote->remarks_english = $remarks;
+                        $quote->save();
+                    }else if($quote_language == 2){
+                        $quote->remarks_spanish = $remarks;
+                        $quote->save();
+                    }else if($quote_language == 3){
+                        $quote->remarks_portuguese = $remarks;
+                        $quote->save();
+                    }
+
                     // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
                     //$request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
@@ -2931,7 +2946,6 @@ class QuoteV2Controller extends Controller
         $hideD = 'hide';
 
         $markup = $this->markups($price_id, $typeCurrency, $request); // 'share this post'
-        dump($price_id, $typeCurrency, $request);
         // Fin Markups
 
         // Consulta base de datos rates
