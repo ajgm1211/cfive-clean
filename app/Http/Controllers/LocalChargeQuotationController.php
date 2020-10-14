@@ -8,6 +8,7 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
+use App\Http\Requests\StoreLocalChargeQuote;
 use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
@@ -39,6 +40,8 @@ class LocalChargeQuotationController extends Controller
         });
 
         $harbors = $origin_ports->merge($destination_ports)->unique();
+
+        $harbors = $harbors->sortBy('display_name');
 
         $collection = $harbors->values()->all();
 
@@ -401,8 +404,11 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function storeCharge(Request $request)
+    public function storeCharge(StoreLocalChargeQuote $request)
     {
+
+        $request->validated();
+
         $quote = QuoteV2::findOrFail($request->quote_id);
         
         $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
@@ -416,6 +422,27 @@ class LocalChargeQuotationController extends Controller
             'amount' => json_encode($request->charges['price']),
             'markups' => json_encode($request->charges['markup'])
         ]);
+
+        $charge = $request->charges['surcharge']['name'];
+
+        if (!empty($request->charges['sale_codes'])) {
+            $charge = $request->charges['sale_codes']['name'];
+        }
+
+        $local_charge = LocalChargeQuote::create([
+            'price' => $request->charges['price'],
+            'profit' => $request->charges['markup'],
+            'charge' => $charge,
+            'surcharge_id' =>  $request->charges['surcharge']['id'],
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'port_id' => $request->port_id,
+            'quote_id' => $request->quote_id,
+            'type_id' => $request->type_id,
+        ]);
+
+        $local_charge->sumarize();
+        $local_charge->totalize();
 
         return response()->json(['success' => 'Ok']);
     }
