@@ -173,6 +173,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('excel/{id}', 'ContractsController@getMediaSimple')->name('contracts.excel');
     Route::get('excelzip/{id}', 'ContractsController@getMediaAll')->name('contracts.excelZip');
     Route::get('excel-delete/{id}/{id_contract}', ['uses' => 'ContractsController@deleteMedia', 'as' => 'contracts.exceldelete']);
+    
+    Route::post('export', 'ExcelController@downloadRates')->name('contracts-rates.download');
 
     //----- developer
 
@@ -1031,6 +1033,10 @@ Route::group(['middleware' => ['auth']], function () {
     /** Inlands V2 view routes **/
     Route::get('api/transit_time', 'TransitTimeController@index')->name('transit_time.index')->middleware(['role:administrator|data_entry']);
     /** End Inlands routes view **/
+
+    /** Providers view routes **/
+    Route::get('api/providers', 'ProvidersController@index')->name('providers.index'); 
+    /** End providers routes view **/
 });
 
 
@@ -1140,6 +1146,21 @@ Route::group(['prefix' => 'api/v2/transit_time'], function () {
     Route::post('/destroyAll', 'TransitTimeController@destroyAll');
     /** End API Transit Time EndPoints **/
 });
+
+Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
+
+    /** API Inlands endpoint (Pending to check) **/
+    Route::get('', 'ProvidersController@list');
+    Route::get('data', 'ProvidersController@data');
+    Route::post('store', 'ProvidersController@store');
+    Route::post('{providers}/update', 'ProvidersController@update');
+    Route::post('{providers}/duplicate', 'ProvidersController@duplicate');
+    Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+    
+/** providers **/
+
+});
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
