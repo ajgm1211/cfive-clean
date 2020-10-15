@@ -47,6 +47,7 @@
                 :data="fdata2" 
                 :fields="form_fields_excel"
                 :vdatalists="datalists"
+                :download=true
                 btnTxt="Export Excel"
                 @exit="closeModal('exportExcel')"
                 @success="closeModal('exportExcel')"
