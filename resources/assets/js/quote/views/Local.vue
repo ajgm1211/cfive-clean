@@ -272,7 +272,7 @@
                     </span>
                 </div>
 
-                <div class="col-12 mt-5" style="overflow-y: auto;">
+                <div class="col-12 mt-5" style="overflow-y: auto">
                     <!-- DataTable -->
                     <b-table-simple hover small responsive="sm" borderless>
                         <!-- Header table -->
@@ -631,6 +631,8 @@ export default {
         /* Return the lists data for dropdowns */
         api.getData({}, "/api/quote/local/data/" + id, (err, data) => {
             this.harbors = data;
+            this.value = this.harbors[0];
+            this.getValues();
         });
 
         this.getRemarks(id);
@@ -848,6 +850,7 @@ export default {
                     .create(data)
                     .then((response) => {
                         this.charges = response.data;
+                        this.getStoredCharges();
                         this.getTotal();
                         this.alert("Record saved successfully", "success");
                         this.closeModal();
