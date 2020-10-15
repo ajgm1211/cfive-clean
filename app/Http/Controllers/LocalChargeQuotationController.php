@@ -212,12 +212,7 @@ class LocalChargeQuotationController extends Controller
             $local_charge->totalize();
         }
 
-        $local_charge_quote = LocalChargeQuote::where([
-            'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
-            'port_id' => $request->port_id
-        ])->with('surcharge', 'calculation_type', 'currency')->get();
-
-        return $local_charge_quote;
+        return response()->json(['success' => 'Ok']);
     }
 
     /**
@@ -229,7 +224,7 @@ class LocalChargeQuotationController extends Controller
     public function storeChargeSaleTerm(Request $request)
     {
         LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
-        
+
         $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
 
         foreach ($sale_charges as $sale_charge) {
@@ -357,9 +352,7 @@ class LocalChargeQuotationController extends Controller
                 $local_charge = Charge::findOrFail($id);
                 $price = json_decode($local_charge->amount);
                 foreach ($price as $key => $amount) {
-                    if ($key == $index) {
-                        $price->$index = $request->data;
-                    }
+                    $price->$index = $request->data;
                 }
                 $local_charge->amount = json_encode($price);
                 $local_charge->update();
@@ -369,9 +362,7 @@ class LocalChargeQuotationController extends Controller
                 $local_charge = Charge::findOrFail($id);
                 $profit = json_decode($local_charge->markups);
                 foreach ($profit as $key => $markup) {
-                    if ($key == $index) {
-                        $profit->$index = $request->data;
-                    }
+                    $profit->$index = $request->data;
                 }
                 $local_charge->markups = json_encode($profit);
                 $local_charge->update();
@@ -410,9 +401,9 @@ class LocalChargeQuotationController extends Controller
         $request->validated();
 
         $quote = QuoteV2::findOrFail($request->quote_id);
-        
+
         $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
-        
+
         Charge::create([
             'automatic_rate_id' => $rate->id,
             'calculation_type_id' => $request->charges['calculation_type']['id'],

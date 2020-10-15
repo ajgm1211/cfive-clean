@@ -26,9 +26,13 @@
             @include('quote.pdf.partials.detail_freights_fcl')
         @endif
         <!-- ORIGIN -->
-        @include('quote.pdf.partials.origins_fcl');
+        @include('quote.pdf.partials.origins_fcl')
         <!-- DESTINY -->
-        @include('quote.pdf.partials.destinations_fcl');
+        @include('quote.pdf.partials.destinations_fcl')
+        <!-- TERMS -->
+        @include('quote.pdf.partials.terms')
+        <!-- REMARKS -->
+        @include('quote.pdf.partials.remarks')
     </main>
 
 

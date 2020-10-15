@@ -39,7 +39,12 @@ class LocalChargeQuote extends Model
     {
         return $this->belongsTo('App\Harbor', 'port_id');
     }
-
+    
+    /**
+     * sumarize
+     *
+     * @return void
+     */
     public function sumarize()
     {
         $quote = $this->quotev2()->first();
@@ -79,7 +84,12 @@ class LocalChargeQuote extends Model
 
         $this->update(['total' => $totals]);
     }
-
+    
+    /**
+     * totalize
+     *
+     * @return void
+     */
     public function totalize()
     {
         $quote = $this->quotev2()->first();
@@ -124,12 +134,26 @@ class LocalChargeQuote extends Model
             'type_id' => $this->type_id,
         ]);
     }
-
+    
+    /**
+     * scopeQuote
+     *
+     * @param  mixed $query
+     * @param  mixed $id
+     * @return void
+     */
     public function scopeQuote($query, $id)
     {
         return $query->where('quote_id', $id);
     }
-
+    
+    /**
+     * scopeType
+     *
+     * @param  mixed $query
+     * @param  mixed $type
+     * @return void
+     */
     public function scopeType($query, $type)
     {
         return $query->where('type_id', $type);
