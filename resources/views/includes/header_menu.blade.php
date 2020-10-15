@@ -190,7 +190,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    <b>Global Charges</b>
+                                    <b>Local Charges</b>
                                 </span>
                             </span>
                         </span>
@@ -204,7 +204,7 @@
                                 <a href="{{route('globalcharges.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-globe"></i>
                                     <span class="m-menu__link-text">
-                                        Sea Freight FCL
+                                        Local Charges FCL
                                     </span>
                                 </a>
                             </li>
@@ -212,7 +212,15 @@
                                 <a href="{{route('globalchargeslcl.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-globe"></i>
                                     <span class="m-menu__link-text">
-                                        Sea Freight LCL
+                                        Local Charges LCL
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('sale_term_v3.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Sales Templates FCL
                                     </span>
                                 </a>
                             </li>
