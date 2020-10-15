@@ -15,7 +15,7 @@
             <div class="row">
                 
                 <!-- Logo(compañia), origen, destino y add freight -->
-                <div class="col-12 d-flex justify-content-between">
+                <div class="col-12 quote-card">
                    
                     <!-- Logo, origen, destino -->
                     <div>
@@ -27,29 +27,31 @@
                             class="mr-4"
                         />
 
-                        <span class="mr-4 ml-4">
+                        <div>
+                            <span class="mr-4 ml-4">
                             <img :src="freight.originFlag" 
                             alt="bandera"
                             width="20" 
                             height="20"
                             style="border-radius: 50%;" />
                             {{freight.originPortName}}
-                        </span>
+                            </span>
 
-                        <i
-                            class="fa fa-long-arrow-right"
-                            aria-hidden="true"
-                            style="font-size: 18px"
-                        ></i>
+                            <i
+                                class="fa fa-long-arrow-right"
+                                aria-hidden="true"
+                                style="font-size: 18px"
+                            ></i>
 
-                        <span class="mr-4 ml-4">
-                            <img :src="freight.destFlag" 
-                            alt="bandera"
-                            width="20" 
-                            height="20"
-                            style="border-radius: 50%;" />
-                            {{freight.destPortName}}
-                        </span>
+                            <span class="mr-4 ml-4">
+                                <img :src="freight.destFlag" 
+                                alt="bandera"
+                                width="20" 
+                                height="20"
+                                style="border-radius: 50%;" />
+                                {{freight.destPortName}}
+                            </span>
+                        </div>
                     </div>
                     <!-- End Logo, origen, destino -->
 
