@@ -17,7 +17,7 @@
         <!-- End Search Input -->
  
         <!-- DataTable -->
-        <b-table-simple hover small responsive borderless>
+        <b-table-simple hover small responsive="sm" borderless>
             
             <!-- Header table -->
             <b-thead>
