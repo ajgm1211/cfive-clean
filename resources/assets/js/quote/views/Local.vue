@@ -274,7 +274,7 @@
 
                 <div class="col-12 mt-5" style="overflow-y: auto;">
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive borderless>
+                    <b-table-simple hover small responsive="sm" borderless>
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
