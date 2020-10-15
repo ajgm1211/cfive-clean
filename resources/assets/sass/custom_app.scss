@@ -778,6 +778,50 @@ input.multiselect__input:focus {
     }
 }
 
+.quote-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.quote-card div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gmap {
+    border: 2px solid #eeeeee;
+    padding: 6px 15px;
+    display: block;
+    border-radius: 4px !important;
+}
+
+.gmap:hover,
+.gmap:focus {
+    border-color: #006BFA !important;
+}
+
+.warning-no-address {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-card div:nth-child(2) {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+@media only screen and (min-width: 426px) {
+    .quote-card {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
 .label-text {
     color: #182026;
     font-size: 10px;
