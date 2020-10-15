@@ -307,7 +307,7 @@ class ExcelController extends Controller
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code]+@$markups['m' . $c->code]);
+                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code] + @$markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -333,7 +333,7 @@ class ExcelController extends Controller
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code]+@$inland_markups['m' . $c->code]);
+                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code] + @$inland_markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -787,30 +787,31 @@ class ExcelController extends Controller
 
 
         $data = $request->validate([
-           
-            'direction' => 'required',
-            'validity' => 'required',
-            'expire' => 'required',
-            'gp_container' => 'required',
-            ]);
+
+            'data.direction' => 'required',
+            'data.validity' => 'required',
+            'data.expire' => 'required',
+            'data.gp_container' => 'required',
+        ]);
         //dd($request->input('validity'));
-        $direction = $request->input('direction');//'2020/10/01';
-        $code = $request->input('gp_container');//'2020/10/01';
+
+        $direction = $data['data']['direction']; //'2020/10/01';
+        $code = $data['data']['gp_container']; //'2020/10/01';
         $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
-        $dateSince = $request->input('validity');//'2020/10/01';
-        $dateUntil = $request->input('expire');//'2020/10/30';
+        $dateSince = $data['data']['validity']; //'2020/10/01';
+        $dateUntil = $data['data']['expire']; //'2020/10/30';
         $company_id = '';
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
-        
-        if($direction == 3)
-            $direction = array(1,2,3);
+
+        if ($direction == 3)
+            $direction = array(1, 2, 3);
         else
             $direction = array($direction);
-   
+
         $arrayFirstPart = array(
             'Contract',
             'Reference',
@@ -829,15 +830,15 @@ class ExcelController extends Controller
         );
         $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
 
-        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id,$direction) {
+        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
             $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                 $a->where('user_id', '=', $user_id);
             })->orDoesntHave('contract_user_restriction');
-        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id,$direction) {
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
             $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                 $b->where('company_id', '=', $company_id);
             })->orDoesntHave('contract_company_restriction');
-        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting,$direction) {
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction) {
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
@@ -847,14 +848,13 @@ class ExcelController extends Controller
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                 })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
             }
-
         })->orderBy('contract_id')->get();
 
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file =  Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers,$container_calculation) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers,$container_calculation) {
+        $file =  Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation) {
                 //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
@@ -885,14 +885,12 @@ class ExcelController extends Controller
                             } else {
                                 $rateMount = 0;
                             }
-
                         } else {
                             $rateMount = $data->{$options->field_rate};
                         }
 
                         $montos2 = array($cont->code => $rateMount);
                         $montos = array_merge($montos, $montos2);
-
                     }
                     $arrayFirstPartAmount = array(
                         'Contract' => $data->contract->name,
@@ -917,7 +915,7 @@ class ExcelController extends Controller
                     if ($contractId != $data->contract->id) {
 
                         $contractId = $data->contract->id;
-                        $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
+                        //$data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
 
                         for ($i = 0; $i < count($data1); $i++) {
                             //'country_orig' =>  $data1[$i]->country_orig,
@@ -943,12 +941,10 @@ class ExcelController extends Controller
                                     $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
                                     $montosLocal2 = array($cont->code => $monto);
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
-
-                                }else{
-                                    $montosLocal2 = array($cont->code =>'0');
+                                } else {
+                                    $montosLocal2 = array($cont->code => '0');
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 }
-
                             }
                             $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
 
@@ -962,7 +958,6 @@ class ExcelController extends Controller
                             $sheet->row($a, $arrayCompleteLocal);
                             $a++;
                         }
-
                     }
 
                     $sheet->setBorder('A1:I' . $i, 'thin');
@@ -972,19 +967,16 @@ class ExcelController extends Controller
                     $sheet->cells('I' . $i, function ($cells) {
                         $cells->setAlignment('center');
                     });
-
                 }
             });
-        })->store('xls', storage_path('excel/exports'));
-        
-        $path = storage_path('excel/exports').'/'.$nameFile.'.xls'; // or storage_path() if needed
+        })->store('csv', storage_path('excel/exports'));
+
+        $path = storage_path('excel/exports') . '/' . $nameFile . '.csv'; // or storage_path() if needed
         $header = [
             'Content-Type' => 'application/*',
         ];
-        return response()->download($path, $nameFile, $header);
-        
-        
 
+        return response()->download($path, $nameFile, $header);
     }
 
 
