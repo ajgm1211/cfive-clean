@@ -94,7 +94,7 @@ class LocalChargeQuote extends Model
     {
         $quote = $this->quotev2()->first();
 
-        LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->delete();
+        $local_charge_quote_total = LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->first();
 
         $charges = $this->where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->get();
 
@@ -110,12 +110,20 @@ class LocalChargeQuote extends Model
             $totals['c' . $eq] = 0;
         }
 
+        $currency = @Auth::user()->companyUser->currency->alphacode;
+        $currency_id = @Auth::user()->companyUser->currency_id;
+
+        if(!empty($local_charge_quote_total)){
+            $currency = $local_charge_quote_total->currency->alphacode;
+            $currency_id = $local_charge_quote_total->currency_id;
+        }
+
         foreach ($charges as $charge) {
             if ($charge->total != null) {
                 foreach ($equip_array as $eq) {
                     foreach ($charge->total as $key => $total) {
                         if ($key == 'c' . $eq) {
-                            $exchange = ratesCurrencyFunction($charge->currency_id, @Auth::user()->companyUser->currency->alphacode);
+                            $exchange = ratesCurrencyFunction($charge->currency_id, $currency);
                             $total_w_exchange = $total / $exchange;
                             $totals[$key] += number_format((float)$total_w_exchange, 2, '.', '');
                         }
@@ -124,13 +132,14 @@ class LocalChargeQuote extends Model
             }
         }
 
-        $currency = Auth::user()->companyUser->currency_id;
-
-        LocalChargeQuoteTotal::create([
+        LocalChargeQuoteTotal::updateOrCreate(
+        [
+            'id'   => $local_charge_quote_total->id,
+        ],[
             'total' => $totals,
             'quote_id' => $quote->id,
             'port_id' => $this->port_id,
-            'currency_id' => $currency,
+            'currency_id' => $currency_id,
             'type_id' => $this->type_id,
         ]);
     }
