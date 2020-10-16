@@ -166,13 +166,15 @@ class QuoteV2 extends Model  implements HasMedia
         $rate = null;
 
         if ($type == 1) {
-            $rate = $this->rates_v2()->where(['origin_port_id' => $port, 'carrier_id' => $carrier])->first();
+            $rate = $this->rates_v2()->where(['quote_id' => $this->id, 'origin_port_id' => $port, 'carrier_id' => $carrier])->first();
         } else if ($type == 2) {
-            $rate = $this->rates_v2()->where(['destination_port_id' => $port, 'carrier_id' => $carrier])->first();
+            $rate = $this->rates_v2()->where(['quote_id' => $this->id, 'destination_port_id' => $port, 'carrier_id' => $carrier])->first();
         }
 
         if ($rate == null) {
-            $rate = $this->rates_v2()->where('origin_port_id', $port)->orWhere('destination_port_id', $port)->first();
+            $rate = $this->rates_v2()->where('quote_id', $this->id)->where(function ($query) use ($port) {
+                $query->where('origin_port_id', $port)->orWhere('destination_port_id', $port);
+            })->first();
         }
 
         return $rate;
