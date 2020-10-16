@@ -300,7 +300,7 @@ export default {
         },
     },
     quotes: {
-        list(params, callback, route) {
+        list(params, callback) {
 
             api.call('get', '/api/quote/list', { params })
                 .then(response => {
@@ -309,10 +309,10 @@ export default {
                     callback(error, error.response.data);
                 });
         },
-        create(data, route) {
+        create(data) {
             return api.call('post', `/api/quote/store`, data);
         },
-        update(id, data, route) {
+        update(id, data) {
             return api.call('post', `/api/quote/${id}/update`, data);
         },
         retrieve(id) {
