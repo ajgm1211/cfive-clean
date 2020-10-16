@@ -132,10 +132,11 @@ class LocalChargeQuote extends Model
             }
         }
 
-        LocalChargeQuoteTotal::updateOrCreate(
-        [
-            'id'   => $local_charge_quote_total->id,
-        ],[
+        if(!empty($local_charge_quote_total)){
+            $local_charge_quote_total->delete();
+        }
+
+        LocalChargeQuoteTotal::create([
             'total' => $totals,
             'quote_id' => $quote->id,
             'port_id' => $this->port_id,
