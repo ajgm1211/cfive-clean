@@ -1056,25 +1056,11 @@ class QuoteV2Controller extends Controller
     public function idPersonalizado()
     {
         $user_company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
-        $iniciales = strtoupper(substr($user_company->name, 0, 2));
-        $quote = QuoteV2::where('company_user_id', $user_company->id)->orderBy('created_at', 'desc')->first();
+        $company_code = strtoupper(substr($user_company->name, 0, 2));
+        $higherq_id = $user_company->getHigherId($company_code);
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
-        if ($quote == null) {
-            $iniciales = $iniciales . "-1";
-        } else {
-
-            $numeroFinal = explode('-', $quote->quote_id);
-
-            if(strpos($numeroFinal[1],'copy') !== false){
-                $numeroFinal[1] = str_replace(' copy','',$numeroFinal[1]);
-            }
-
-            //dd($quote->quote_id);
-            $numeroFinal = $numeroFinal[1] + 1;
-
-            $iniciales = $iniciales . "-" . $numeroFinal;
-        }
-        return $iniciales;
+        return $newq_id;
     }
 
     /**
