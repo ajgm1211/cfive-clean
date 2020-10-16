@@ -166,7 +166,7 @@ class LocalChargeQuotationController extends Controller
         $charges = Charge::select('*', 'amount as price', 'markups as markup')->where('type_id', 2)->whereHas('automatic_rate', function ($q) use ($port_id, $quote_id) {
             $q->where('destination_port_id', $port_id)->where('quote_id', $quote_id);
         })->with('currency', 'surcharge', 'calculation_type', 'automatic_rate.carrier')->get();
-
+        
         $port = Harbor::with('country')->find($port_id);
 
         $data = compact(
@@ -411,7 +411,7 @@ class LocalChargeQuotationController extends Controller
         $quote = QuoteV2::findOrFail($request->quote_id);
 
         $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
-
+        
         Charge::create([
             'automatic_rate_id' => $rate->id,
             'calculation_type_id' => $request->charges['calculation_type']['id'],
