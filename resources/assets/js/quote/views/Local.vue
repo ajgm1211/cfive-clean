@@ -209,11 +209,25 @@
 
                                 <b-td>
                                     <span v-if="loaded">
-                                        <b>{{
-                                            currentQuoteData.client_currency[
-                                                "alphacode"
-                                            ]
-                                        }}</b>
+                                        <multiselect
+                                            v-model="totals.currency"
+                                            :options="datalists['currency']"
+                                            :multiple="false"
+                                            :show-labels="false"
+                                            :close-on-select="true"
+                                            :preserve-search="true"
+                                            placeholder="Select a currency"
+                                            label="alphacode"
+                                            track-by="alphacode"
+                                            @input="
+                                                onUpdate(
+                                                    totals.id,
+                                                    totals.currency.id,
+                                                    'currency_id',
+                                                    5
+                                                )
+                                            "
+                                        ></multiselect>
                                     </span>
                                 </b-td>
 

@@ -367,6 +367,14 @@ class LocalChargeQuotationController extends Controller
                 $local_charge->markups = json_encode($profit);
                 $local_charge->update();
                 break;
+            case 5:
+                $index = $request->index;
+                $total = LocalChargeQuoteTotal::findOrFail($id);
+                $total->$index = $request->data;
+                $total->update();
+
+                $total->totalize();
+                break;
         }
 
         return response()->json(['success' => 'Ok']);

@@ -70,7 +70,7 @@ class PdfController extends Controller
 
     public function localChargeTotals($quote, $type, $port)
     {
-        $total = LocalChargeQuoteTotal::Quote($quote)->Port($port)->Type($type)->first();
+        $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
 
         return $total;
     }
