@@ -39,7 +39,7 @@ class LocalChargeQuote extends Model
     {
         return $this->belongsTo('App\Harbor', 'port_id');
     }
-    
+
     /**
      * sumarize
      *
@@ -84,7 +84,7 @@ class LocalChargeQuote extends Model
 
         $this->update(['total' => $totals]);
     }
-    
+
     /**
      * totalize
      *
@@ -113,7 +113,7 @@ class LocalChargeQuote extends Model
         $currency = @Auth::user()->companyUser->currency->alphacode;
         $currency_id = @Auth::user()->companyUser->currency_id;
 
-        if(!empty($local_charge_quote_total)){
+        if (!empty($local_charge_quote_total)) {
             $currency = $local_charge_quote_total->currency->alphacode;
             $currency_id = $local_charge_quote_total->currency_id;
         }
@@ -132,7 +132,7 @@ class LocalChargeQuote extends Model
             }
         }
 
-        if(!empty($local_charge_quote_total)){
+        if (!empty($local_charge_quote_total)) {
             $local_charge_quote_total->delete();
         }
 
@@ -146,6 +146,37 @@ class LocalChargeQuote extends Model
     }
     
     /**
+     * Grouping charges by sale code
+     *
+     * @param  mixed $localcharge
+     * @return void
+     */
+    public function groupingCharges($localcharge)
+    {
+        foreach ($this->price as $key => $price) {
+            ${'price_' . $key} = 'price->' . $key;
+            foreach ($localcharge['price'] as $k => $new_price) {
+                if ($key == $k) {
+                    $price += $new_price;
+                    $this->${'price_' . $key} = $price;
+                    $this->update();
+                }
+            }
+        }
+
+        foreach ($this->profit as $keyp => $profit) {
+            ${'profit_' . $keyp} = 'profit->' . $keyp;
+            foreach ($localcharge['markup'] as $kp => $new_profit) {
+                if ($keyp == $kp) {
+                    $profit += $new_profit;
+                    $this->${'profit_' . $keyp} = $profit;
+                    $this->update();
+                }
+            }
+        }
+    }
+
+    /**
      * scopeQuote
      *
      * @param  mixed $query
@@ -156,7 +187,7 @@ class LocalChargeQuote extends Model
     {
         return $query->where('quote_id', $id);
     }
-    
+
     /**
      * scopeType
      *
