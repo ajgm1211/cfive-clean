@@ -891,6 +891,7 @@ export default {
                     this.onRemove(counter);
                     this.getStoredCharges();
                     this.getTotal();
+                    this.closeModal();
                     this.alert("Record saved successfully", "success");
                 })
                 .catch((data) => {
