@@ -119,7 +119,7 @@
 
                     <!-- Checkbox Freight-->
                     <div class="col-12 d-flex mt-5 mb-3">
-                        <b-form-checkbox v-if="freights.length < 3" v-model="allIn">
+                        <b-form-checkbox v-if="freights.length < 2" v-model="allIn" @input="updatePdfOptions()">
                             <span>Freight All-In</span>
                         </b-form-checkbox>
                     </div>
@@ -131,7 +131,7 @@
         <!-- End Freight Card -->
 
         <!-- Show Carrier checkbox -->
-        <b-form-checkbox class="mr-4" v-model="showCarrier">
+        <b-form-checkbox class="mr-4" v-if="freights.length!=0" v-model="showCarrier" @input="updatePdfOptions()">
             <span>Show Carrier</span>
         </b-form-checkbox>
         <!-- End show Carrier checkbox -->
@@ -385,12 +385,21 @@ export default {
         };
     },
     created() {
+        if(typeof this.currentQuoteData.pdf_options == "string"){
+            var pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
+        }else{
+            var pdfOptions = this.currentQuoteData.pdf_options;
+        }
+
         this.setTotalsFields();
 
         this.setRemarksField(this.quoteLanguage);
         
         this.setFreightData();
 
+        this.allIn = pdfOptions['allIn'];
+
+        this.showCarrier = pdfOptions['showCarrier'];
     },
     watch: {
         quoteLanguage: function(newVal,oldVal) {this.setRemarksField(newVal);},
@@ -582,6 +591,25 @@ export default {
             component.modalFreight = id;
 
             component.$refs[component.modalFreight][0].autoAdd = true;
+        },
+
+        updatePdfOptions(){
+            let pdfOptions = 
+            {pdf_options:
+                {
+                    'allIn' : this.allIn,
+                    'showCarrier' : this.showCarrier,
+                }
+            };
+
+            this.actions.quotes
+                .update(this.currentQuoteData['id'], pdfOptions)
+                    .then( ( response ) => {
+                        console.log('updated!')
+                    })
+                    .catch(( data ) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
         },
     },
 };
