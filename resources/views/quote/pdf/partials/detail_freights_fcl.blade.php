@@ -25,8 +25,8 @@
                                             <th class="unit"><b>{{__('pdf.charge')}}</b></th>
 
                                             <th class="unit"><b>{{__('pdf.detail')}}</b></th>
-
-                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+                                            @php $pdf_options = json_decode(@$quote->pdf_options); @endphp
+                                            <th class="unit" {{$pdf_options->showCarrier ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                             
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
@@ -111,7 +111,7 @@
 
                                                                 @endif
 
-                                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
+                                                                <td {{$pdf_options->showCarrier ? '':'hidden'}}>{{@$r->carrier->name}}</td>
 
                                                                 @foreach ($equipmentHides as $key=>$hide)
                                                                     @foreach ($containers as $c)
@@ -150,7 +150,7 @@
 
                                                                     <td>{{$v->calculation_type->name}}</td>
 
-                                                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
+                                                                    <td {{$pdf_options->showCarrier ? '':'hidden'}}>{{@$r->carrier->name}}</td>
 
                                                                     @foreach ($equipmentHides as $key=>$hide)
                                                                         @foreach ($containers as $c)
@@ -188,7 +188,7 @@
 
                                             <td></td>
 
-                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+                                            <td {{$pdf_options->showCarrier ? '':'hidden'}}></td>
                                             
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
