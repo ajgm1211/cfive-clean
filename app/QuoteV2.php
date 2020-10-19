@@ -25,6 +25,11 @@ class QuoteV2 extends Model  implements HasMedia
 
     protected $casts = [
         'equipment' => 'array',
+        'pdf_options' => 'json'
+    ];
+
+    protected $attributes = [
+        'pdf_options' => '{"allIn": true, "showCarrier": true}'
     ];
 
     protected $fillable = [
@@ -32,7 +37,7 @@ class QuoteV2 extends Model  implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id'
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options'
     ];
 
     public function company()
