@@ -1081,9 +1081,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
     Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
     Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
-    Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
+    Route::get('/api/quote/localcharge/remarks/{quote}', 'LocalChargeQuotationController@getRemarks');
     Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
-    Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
+    Route::post('/api/quote/localcharge/updates/{quote}/remarks', 'LocalChargeQuotationController@updateRemarks');
 
     /** PDF */
     Route::get('/api/quote/pdf/{quote}', 'PdfController@quote');

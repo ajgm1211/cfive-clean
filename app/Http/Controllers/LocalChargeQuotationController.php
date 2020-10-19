@@ -418,10 +418,10 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $quote_id
      * @return void
      */
-    public function updateRemarks(Request $request, $quote_id)
+    public function updateRemarks(Request $request, QuoteV2 $quote)
     {
-
-        QuoteV2::findOrFail($quote_id)->update([
+        
+        $quote->update([
             'localcharge_remarks' => $request->data
         ]);
 

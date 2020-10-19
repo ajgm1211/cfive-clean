@@ -20,7 +20,8 @@
         <!-- DETAILS -->
         @include('quote.pdf.partials.details_fcl')
         <!-- FREIGHTS -->
-        @if($freight_charges->count()>1)
+        @php $pdf_options = json_decode(@$quote->pdf_options); @endphp
+        @if($freight_charges->count()>1 || ($freight_charges->count()==1 && $pdf_options->allIn))
             @include('quote.pdf.partials.freights_fcl')
         @else
             @include('quote.pdf.partials.detail_freights_fcl')
@@ -31,6 +32,8 @@
         @include('quote.pdf.partials.origins_fcl')
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
+        <!-- LOCALCHARGE REMARKS -->
+        @include('quote.pdf.partials.localcharge_remarks')
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
     </main>
