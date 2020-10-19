@@ -1,7 +1,5 @@
 
-@if($quote->remarks_english != '' || $quote->remarks_spanish != '' || $quote->remarks_portuguese != '')    
-
-    <br>
+@if($quote->remarks_english != '' || $quote->remarks_spanish != '' || $quote->remarks_portuguese != '')
 
     <div class="clearfix">
 
