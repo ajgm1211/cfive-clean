@@ -285,30 +285,35 @@ class QuotationController extends Controller
 
     public function update (Request $request, QuoteV2 $quote)
     {   
+        
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
 
-        if(array_intersect($terms_keys,$form_keys)==[]){
-            $data = $request->validate([
-                'delivery_type' => 'required',
-                'equipment' => 'required',
-                'status' => 'required',
-                'type' => 'required',
-                'validity_start' => 'required',
-                'user_id'=>'required',
-                'validity_end' => 'required',
-                'language_id' => 'required',
-            ]);
+        if($form_keys!=null){
+            if(array_intersect($terms_keys,$form_keys)==[]){
+                $data = $request->validate([
+                    'delivery_type' => 'required',
+                    'equipment' => 'required',
+                    'status' => 'required',
+                    'type' => 'required',
+                    'validity_start' => 'required',
+                    'user_id'=>'required',
+                    'validity_end' => 'required',
+                    'language_id' => 'required',
+                ]);
+            } else {
+                $data = [];
+            }
+
+            foreach($form_keys as $fkey){
+                if(!in_array($fkey,$data) && $fkey != 'keys'){
+                    $data[$fkey] = $request->input($fkey);
+                }
+            }
         } else {
             $data = [];
         }
-        
-        foreach($form_keys as $fkey){
-            if(!in_array($fkey,$data) && $fkey != 'keys'){
-                $data[$fkey] = $request->input($fkey);
-            }
-        };
 
         foreach(array_keys($data) as $key){
             if ($key=='equipment'){
@@ -319,6 +324,11 @@ class QuotationController extends Controller
                 }
             }
             $quote->update([$key=>$data[$key]]);
+        }
+
+        if($request->input('pdf_options') != null){
+            $opts = json_encode($request->input('pdf_options'));
+            $quote->update(['pdf_options'=>$opts]);
         }
     }
 
