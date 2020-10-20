@@ -18,6 +18,7 @@ use App\TermAndConditionV2;
 use App\DeliveryType;
 use App\StatusQuote;
 use App\CargoKind;
+use App\CargoType;
 use App\Language;
 use App\Currency;
 use App\Container;
@@ -143,6 +144,10 @@ class QuotationController extends Controller
             return $distance->only(['id','display_name','harbor_id','distance']);
         });
 
+        $cargo_types = CargoType::get()->map(function ($tcargo){
+            return $tcargo->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -165,7 +170,8 @@ class QuotationController extends Controller
             'sale_codes',
             'providers',
             'providers',
-            'distances'
+            'distances',
+            'cargo_types'
         );
 
         return response()->json(['data'=>$data]);
@@ -291,7 +297,7 @@ class QuotationController extends Controller
         $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
 
         if($form_keys!=null){
-            if(array_intersect($terms_keys,$form_keys)==[]){
+            if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id')==null){
                 $data = $request->validate([
                     'delivery_type' => 'required',
                     'equipment' => 'required',
@@ -302,15 +308,24 @@ class QuotationController extends Controller
                     'validity_end' => 'required',
                     'language_id' => 'required',
                 ]);
+            } else if($request->input('cargo_type_id')!=null){
+                $data = $request->validate([
+                    'cargo_type_id' => 'nullable',
+                    'total_quantity' => 'nullable',
+                    'total_volume' => 'nullable',
+                    'total_weight' => 'nullable',
+                    'chargeable_weight' => 'nullable',
+                ]);
             } else {
                 $data = [];
-            }
 
-            foreach($form_keys as $fkey){
-                if(!in_array($fkey,$data) && $fkey != 'keys'){
-                    $data[$fkey] = $request->input($fkey);
+                foreach($form_keys as $fkey){
+                    if(!in_array($fkey,$data) && $fkey != 'keys'){
+                        $data[$fkey] = $request->input($fkey);
+                    }
                 }
             }
+
         } else {
             $data = [];
         }
@@ -321,6 +336,12 @@ class QuotationController extends Controller
             } else if($key=='contact_id'){
                 if ($quote->company_id == null){
                     $data[$key] = null;
+                }
+            } else if($key=='cargo_type_id'){
+                if($data[$key]=='Pallets'){
+                    $data[$key] = 1;
+                }else{
+                    $data[$key] = 2;
                 }
             }
             $quote->update([$key=>$data[$key]]);
