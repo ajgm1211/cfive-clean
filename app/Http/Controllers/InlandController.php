@@ -13,6 +13,7 @@ use App\Container;
 use App\InlandType;
 use App\Harbor;
 use App\InlandPort;
+use App\Provider;
 
 class InlandController extends Controller
 {
@@ -55,6 +56,10 @@ class InlandController extends Controller
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
             return $company->only(['id', 'business_name']);
         });
+        
+        $providers = Provider::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
+            return $providers->only(['id', 'name']);
+        });
 
         $containers = Container::get();
 
@@ -66,6 +71,7 @@ class InlandController extends Controller
             'currencies' => $currencies,
             'companies' => $companies,
             'harbors' => $harbors,
+            'providers' => $providers,
         ];
 
 
@@ -89,8 +95,11 @@ class InlandController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'ports' => 'required'
+            'ports' => 'required',
+            'providers' => 'required',
+            
         ]);
+        
 
         $inland = Inland::create([
             'provider' => $data['reference'],
@@ -101,7 +110,8 @@ class InlandController extends Controller
             'expire' => $data['expire'],
             'status' => 'publish',
             'inland_type_id' => '1',
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
+            'provider_id' => $data ['providers']
         ]);
 
         $inland->InlandPortsSync($data['ports']);
@@ -127,16 +137,22 @@ class InlandController extends Controller
             'direction' => 'required',
             'gp_container' => 'required',
             'restrictions' => 'sometimes',
-            'ports' => 'required'
+            'ports' => 'required',
+            'providers' => 'required',
+            
         ]);
+        
+        $status= $this->updateStatus($data['expire']);
 
         $inland->update([
             'provider' => $data['reference'],
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
+            'status' => $status,
             'inland_type_id' => $data['type'],
-            'gp_container_id' => $data['gp_container']
+            'gp_container_id' => $data['gp_container'],
+            'provider_id' => $data ['providers']
         ]);
 
         $inland->InlandPortsSync($data['ports']);
@@ -144,6 +160,20 @@ class InlandController extends Controller
         $inland->InlandRestrictionsSync($data['restrictions'] ?? []);
 
         return new InlandResource($inland);
+    }
+
+        public function updateStatus($data){
+    
+            $date= date('Y-m-d');
+            $expire=date('Y-m-d', strtotime($data));
+                    
+            if($expire<=$date){
+                $status='expired';
+            }else{
+                $status='publish';
+            } 
+                    
+            return $status;
     }
 
     /**
