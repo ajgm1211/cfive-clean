@@ -31,6 +31,8 @@
         @include('quote.pdf.partials.origins_fcl')
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
+        <!-- INLANDS -->
+        @include('quote.pdf.partials.inlands_fcl')
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
     </main>
