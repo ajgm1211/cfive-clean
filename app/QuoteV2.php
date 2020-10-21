@@ -574,13 +574,8 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function getContainerCodes($equip, $getGroup = false)
     {
-<<<<<<< HEAD
-        $size = count((array)$equip);
-        if ($size != 0) {
-=======
         $size = count($equip);
         if ($size != 0 && $equip != "[]") {
->>>>>>> aefb2bb044d831fadd567eef78060085d6790525
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
             $full_equip = "";
 
