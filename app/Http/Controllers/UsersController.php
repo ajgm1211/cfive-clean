@@ -237,8 +237,8 @@ class UsersController extends Controller
 
   public function destroy($id)
   {
-   $user = User::find($id);
-    //$user->delete();
+    $user = User::find($id);
+    $user->delete();
 
     $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
     $cliente =  $client->users->getUsers(["email" => $user->email]);
