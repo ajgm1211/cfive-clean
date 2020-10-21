@@ -36,9 +36,9 @@ class AutomaticInland extends Model
 		return $this->hasOne('App\Harbor','id','port_id');
     }
     
-    public function provider()
+    public function providers()
 	{
-		return $this->hasMany('App\Provider','id','provider_id');
+		return $this->hasOne('App\Provider','id','provider_id');
     }
 
 	public function country_code()
