@@ -29,7 +29,7 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true}'
+        'pdf_options' => '{allIn: true, showCarrier: true}'
     ];
 
     protected $fillable = [
@@ -37,7 +37,7 @@ class QuoteV2 extends Model  implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks'
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'cargo_type_id'
     ];
 
     public function company()
@@ -163,6 +163,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function language()
     {
         return $this->hasOne('App\Language', 'id', 'language_id');
+    }
+
+    public function cargoType()
+    {
+        return $this->hasOne('App\CargoType', 'id', 'cargo_type_id');
     }
 
     public function getRate($type, $port, $carrier)
@@ -564,8 +569,13 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function getContainerCodes($equip, $getGroup = false)
     {
+<<<<<<< HEAD
         $size = count((array)$equip);
         if ($size != 0) {
+=======
+        $size = count($equip);
+        if ($size != 0 && $equip != "[]") {
+>>>>>>> aefb2bb044d831fadd567eef78060085d6790525
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
             $full_equip = "";
 

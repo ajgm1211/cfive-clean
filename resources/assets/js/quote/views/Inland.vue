@@ -126,39 +126,42 @@
                     <div>
                         <label class="mr-5">
                             PORT
-                            <multiselect 
-                                v-model="currentPort" 
-                                :options="port_options" 
-                                :searchable="true" 
-                                :close-on-select="true" 
-                                :show-labels="false"
-                                label="name"
-                                track-by="name">
-                            </multiselect>
                         </label>
+                        <multiselect 
+                            v-model="currentPort" 
+                            :options="port_options" 
+                            :searchable="true" 
+                            :close-on-select="true" 
+                            :show-labels="false"
+                            label="name"
+                            track-by="name">
+                        </multiselect>
+                    </div>
 
+                    <div>
                         <label class="mr-5">
                             ADDRESS
-                            <gmap-autocomplete 
-                                v-if="!modalDistance"
-                                @place_changed="setPlace"
-                                class="form-input gmap"
-                                placeholder="Start typing an address"
-                                >
-                            </gmap-autocomplete>
-
-                            <multiselect
-                                v-else
-                                v-model="modalAddress"
-                                :options="distance_options"
-                                :searchable="true" 
-                                :close-on-select="true" 
-                                :show-labels="false"
-                                label="display_name"
-                                track-by="display_name"
-                                placeholder="Select Address"
-                            ></multiselect>
                         </label>
+                        <gmap-autocomplete 
+                            v-if="!modalDistance"
+                            @place_changed="setPlace"
+                            :value="search"
+                            class="form-input"
+                            placeholder="Start typing an address"
+                            >
+                        </gmap-autocomplete>
+
+                        <multiselect
+                            v-else
+                            v-model="modalAddress"
+                            :options="distance_options"
+                            :searchable="true" 
+                            :close-on-select="true" 
+                            :show-labels="false"
+                            label="display_name"
+                            track-by="display_name"
+                            placeholder="Select Address"
+                        ></multiselect>
                     </div>
 
                     <div>
@@ -391,9 +394,11 @@
                 address_options: [],
                 currentAddress: {},
                 distance_options: [],
+                search: null,
                 modalAddress: '',
                 modalSuccess: false,
                 modalSelected: false,
+                inlandFound: false,
                 inlandAddRequested: false,
                 inlandAdds:[],
                 modalWarning: '',
@@ -564,6 +569,9 @@
                         component.inlandAddRequested = false;
                     }
                 }
+
+                component.modalAddress = '';
+                component.search = null;
             },
 
             setTotalsFields() {
@@ -857,6 +865,8 @@
                             component.createInlandTotals(component.modalAddress.display_name);
                         }
                         control = false;
+                    }else if(!component.inlandFound){
+                        component.setModalTable();
                     }
                 }else{
                     component.modalWarning = 'Address'
@@ -888,8 +898,10 @@
                                 setTimeout(() => {
                                     component.modalSearchWarning = false;
                                 }, 3000);
+                                component.inlandFound = false;
                             }else{
                                 component.setModalTable(inlandSearch);
+                                component.inlandFound = true;
                             }
                         })
                         .catch(( data ) => {
@@ -907,6 +919,7 @@
                 this.inlandAdds = [];
                 this.inlandAddRequested = false;
                 this.inlandModalTotals = {};
+                this.inlandFound = false;
             },
         },
     }

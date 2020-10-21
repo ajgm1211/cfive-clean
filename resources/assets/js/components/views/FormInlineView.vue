@@ -212,6 +212,15 @@
                         </b-form-group>
                     </div>
                     <!-- End Status Field -->
+
+                    <!-- Span field -->
+                    <div v-if="item.type == 'span'">
+                        <span 
+                            style="font-weight:bold;"
+                            v-html="vdata[key]">
+                        </span>
+                    </div>
+                    <!-- Span field end -->
                 </div>
             </div>
         </form>
