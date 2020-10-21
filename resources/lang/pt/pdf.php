@@ -52,4 +52,7 @@ return [
     "height" => "Alta",
     "cargo_details" => "Carregando detalhes",
     "payment_conditions" => "Condições de pagamento",
+    "inland" => "Frete terrestre",
+    "provider" => "Fornecedor",
+    "distance" => "Distância",
 ];
