@@ -40,6 +40,21 @@
                                 </b-card>
                                 <!-- End Quote inputs -->
 
+                                <!-- LCL Fields -->
+
+                                <b-card class="mt-5" v-if="equip == '[]'">
+                                    <FormInlineView
+                                        v-if="loaded"
+                                        :data="currentData"
+                                        :fields="LCL_fields"
+                                        :actions="actions.quotes"
+                                        :update="true"
+                                        @success="setChargeable()"
+                                    ></FormInlineView>
+                                </b-card>
+
+                                <!-- LCL Fields End -->
+
                                 <!-- Terms and Condition -->
                                 <b-card class="mt-5">
                                     <h5 class="q-title">Terms and Conditions</h5>
@@ -269,6 +284,48 @@ export default {
                 },
             },
             term_fields: {},
+            LCL_fields: {
+                cargo_type_id: {
+                    label: "CARGO TYPE",
+                    type: "text",
+                    disabled: true,
+                    trackby: "name",
+                    colClass: "col-lg-2",
+                },
+                total_quantity: {
+                    label: "TOTAL QUANTITY",
+                    type: "text",
+                    colClass: "col-lg-2",
+                },
+                total_weight: {
+                    label: "TOTAL WEIGHT",
+                    type: "text",
+                    colClass: "col-lg-2",
+                },
+                weight_units: {
+                    type: "span",
+                    colClass: "col-lg",
+                },
+                total_volume: {
+                    label: "TOTAL VOLUME",
+                    type: "text",
+                    colClass: "col-lg-2",
+                },
+                volume_units: {
+                    type: "span",
+                    colClass: "col-lg",
+                },
+                chargeable_weight: {
+                    label: "CHARGEABLE WEIGHT",
+                    type: "text",
+                    disabled: true,
+                    colClass: "col-lg-2",
+                },
+                chargeable_units: {
+                    type: "span",
+                    colClass: "col-lg",
+                },
+            },
             currentData: {},
             vdata: {},
             datalists: {},
@@ -277,6 +334,9 @@ export default {
             quoteEquip: [],
             quote_id: this.$route.params.id,
         };
+    },
+    watch: {
+        currentData: function() {this.setChargeable();},
     },
     created() {
         let id = this.$route.params.id;
@@ -287,7 +347,6 @@ export default {
         });
 
         this.setInitialData(id);
-    
     },
     beforeUpdate(){
         this.setTermsField();
@@ -306,6 +365,10 @@ export default {
             component.freights = data.rates;
             component.quoteEquip = data.equipment.split(",");
             component.quoteEquip.splice(-1, 1);
+
+            component.currentData['volume_units'] = 'm' + '3'.sup();
+            component.currentData['weight_units'] = 'Kg'; 
+            component.currentData['chargeable_units'] = 'm' + '3'.sup();
         },
 
         changeView(val){
@@ -369,6 +432,17 @@ export default {
                     colClass: "col-lg-12",
                     }
                 }
+            }
+        },
+
+        setChargeable(){
+            let calc_volume = parseFloat(this.currentData['total_volume']);
+            let calc_weight = parseFloat(this.currentData['total_weight'])/1000;
+            
+            if (calc_volume > calc_weight) {
+                this.currentData['chargeable_weight'] = calc_volume;
+            } else {
+                this.currentData['chargeable_weight'] = calc_weight;
             }
         },
     },
