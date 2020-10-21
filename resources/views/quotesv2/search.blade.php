@@ -8,6 +8,14 @@
 body {
     background: #f6f6f6;
 }
+
+.tooltip-inner{
+    background-color: #031B4E; 
+    color: #FFFFFF; 
+    border: 1px solid rgb(0, 85, 128); 
+    padding: 5px;
+    font-size: 11px;
+}
 .bg-manual {
 
 background-color: #969cc0;
@@ -1185,7 +1193,7 @@ background-color: #36A3F7;
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create
+                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual" data-type="1">Create
                                         Manual</span></button>
                                 </center>
                             </div>
@@ -1210,7 +1218,7 @@ background-color: #36A3F7;
 </div>
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
-    {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!} 
+    {!! Form::open(['class' => 'form-group m-form__group full-width', 'id' => 'rateForm']) !!} 
     <!-- {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!} -->
     <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
@@ -1240,8 +1248,10 @@ background-color: #36A3F7;
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6" align='right'> <button type="submit"
-                                        class="btn m-btn--pill    btn-info">Create Quote</button></div>
+                                <div class="col-lg-6" align='right'> 
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)">Create Quote</button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">Create New Quote</button>
+                                </div>
                             </div>
 
                             <div class="row">

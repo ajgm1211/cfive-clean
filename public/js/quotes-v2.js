@@ -1213,16 +1213,16 @@ $(document).on('click', '#delete-quote-v2', function() {
 $(document).on('click', '#duplicate-quote-v2', function() {
     var id = $(this).attr('data-quote-id');
     var theElement = $(this);
-        $.ajax({
-            type: 'post',
-            url: '/api/quotes/' + id + '/duplicate',
-            success: function(data) {
-                console.log(data.message);
-                location.reload();
-                //REFRESH TABLE?
-            }
-        });
+    $.ajax({
+        type: 'post',
+        url: '/api/quotes/' + id + '/duplicate',
+        success: function(data) {
+            console.log(data.message);
+            location.reload();
+            //REFRESH TABLE?
+        }
     });
+});
 
 $(document).on('click', '#delete-quote-show', function() {
     var id = $(this).attr('data-quote-show-id');
@@ -2771,11 +2771,24 @@ $(".quote_search").on("click", function() {
     });
 });
 
+function submitForm(type) {
+
+    if (type == 1) {
+        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+    } else {
+        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+    }
+
+    $("#rateForm").submit();
+}
+
+$('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
+
 $(".quote_man").on("click", function() {
 
-
     //$('#FormQuote').attr('action', '/api/quote/store');
-    $('#FormQuote').attr('action', '/v2/quotes/store');
+    var type = $(this).attr('type');
+    $('#FormQuote').attr('action', '/v2/quotes/store/' + type);
 
     if ($('#quoteType').val() == 2) {
 
@@ -2788,10 +2801,7 @@ $(".quote_man").on("click", function() {
         if ($("#total_volume_pkg_input").val() > 0) {
             $("#total_volume").val($("#total_volume_pkg_input").val());
         }
-
     }
-
-
 
     $(".quote_man").attr("type", "submit");
 });
