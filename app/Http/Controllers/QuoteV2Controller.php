@@ -1890,7 +1890,6 @@ class QuoteV2Controller extends Controller
 
     public function store(Request $request)
     {
-
         if (!empty($request->input('form'))) {
             $form = json_decode($request->input('form'));
             $info = $request->input('info');
@@ -1934,6 +1933,8 @@ class QuoteV2Controller extends Controller
 
             $language = $company->companyUser->language()->first();
             $quote->language_id = $language->id;
+            $cargo_type_id = $request->input('cargo_type');
+            $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
 
 
@@ -1991,6 +1992,8 @@ class QuoteV2Controller extends Controller
 
             $language = $company->companyUser->language()->first();
             $quote->language_id = $language->id;
+            $cargo_type_id = $request->input('cargo_type');
+            $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
             $modo = $request->input('mode');
             // FCL
