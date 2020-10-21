@@ -6,14 +6,14 @@
                         <br>
 
                     </div>
+                    
                     <!-- End Section Title -->
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-left header-table">
                             <tr >
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
                                 <th class="unit"><b>{{__('pdf.pod')}}</b></th>
-                                @php $pdf_options = json_decode(@$quote->pdf_options); @endphp
-                                <th class="unit" {{@$pdf_options->showCarrier ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+                                <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
                                         @if($c->code == $key)
@@ -54,7 +54,7 @@
                                 <tr class="text-left color-table">
                                     <td >@if($rate->origin_address=='' && $rate->origin_port_id!='') {{$rate->origin_port->name}}, {{$rate->origin_port->code}} @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}} @else  {{$rate->origin_address}} @endif</td>
                                     <td >@if($rate->destination_address=='' && $rate->destination_port_id!='') {{$rate->destination_port->name}}, {{$rate->destination_port->code}} @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}@else {{$rate->destination_address}} @endif</td>
-                                    <td {{@$pdf_options->showCarrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
+                                    <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)

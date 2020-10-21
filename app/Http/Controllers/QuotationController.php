@@ -348,7 +348,7 @@ class QuotationController extends Controller
         }
 
         if($request->input('pdf_options') != null){
-            $opts = json_encode($request->input('pdf_options'));
+            $opts = $request->input('pdf_options');
             $quote->update(['pdf_options'=>$opts]);
         }
     }
