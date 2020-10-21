@@ -560,7 +560,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('send/air', 'PdfV2Controller@send_pdf_quote_air')->name('quotes-v2.send_pdf_air');
     Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
-    Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
+    Route::post('/store/{type}', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
     Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');

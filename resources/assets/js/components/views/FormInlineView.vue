@@ -59,6 +59,7 @@
                          <b-form-group
                             :label="item.label"
                         >
+                        <br>
                             <ckeditor
                                 id="inline-form-input-name"
                                 :parentId="item.parentId"

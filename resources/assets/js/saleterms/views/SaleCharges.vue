@@ -98,7 +98,7 @@ export default {
             fields: [
                 {
                     key: "sale_term_code",
-                    label: "Charge code",
+                    label: "Sale code",
                     formatter: (value) => {
                         return value.name;
                     },
@@ -124,7 +124,7 @@ export default {
             input_fields: {
                 check: { label: "", type: "checkbox" },
                 sale_term_code: {
-                    label: "Charge code",
+                    label: "Sale code",
                     searchable: true,
                     type: "select",
                     rules: "required",
