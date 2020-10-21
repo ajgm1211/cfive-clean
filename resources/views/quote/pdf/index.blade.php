@@ -20,8 +20,7 @@
         <!-- DETAILS -->
         @include('quote.pdf.partials.details_fcl')
         <!-- FREIGHTS -->
-        @php $pdf_options = json_decode(@$quote->pdf_options); @endphp
-        @if($freight_charges->count()>1 || ($freight_charges->count()==1 && $pdf_options->allIn))
+        @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
             @include('quote.pdf.partials.freights_fcl')
         @else
             @include('quote.pdf.partials.detail_freights_fcl')
