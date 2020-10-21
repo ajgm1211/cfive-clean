@@ -29,6 +29,7 @@
 							:equipment="equipment" 
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
+							:contractData="currentData"
 							></ocean-freight>
 						</b-tab>
 
