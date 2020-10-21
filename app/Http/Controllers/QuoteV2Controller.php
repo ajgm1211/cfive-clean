@@ -1888,7 +1888,7 @@ class QuoteV2Controller extends Controller
         UpdatePdf::dispatch($id, Auth::user()->company_user_id, Auth::user()->id)->onQueue('default')->delay(now()->addMinutes(3));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $type)
     {
         if (!empty($request->input('form'))) {
             $form = json_decode($request->input('form'));
@@ -2418,8 +2418,12 @@ class QuoteV2Controller extends Controller
             $this->saveTerms($quote->id, 'FCL', $form->mode);
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
-        //return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
-        return redirect()->action('QuotationController@edit', $quote);
+        
+        if($type == 1){
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        }else{
+            return redirect()->action('QuotationController@edit', $quote);
+        }
     }
 
     /**

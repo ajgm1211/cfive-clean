@@ -220,7 +220,7 @@
                                 <a href="{{route('sale_term_v3.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-globe"></i>
                                     <span class="m-menu__link-text">
-                                        Sales Templates FCL
+                                        Sale Templates FCL
                                     </span>
                                 </a>
                             </li>
