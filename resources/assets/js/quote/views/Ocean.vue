@@ -95,8 +95,8 @@
                         :searchBar="false"
                         :extraRow="true"
                         :withTotals="true"
-                        :autoAdd="false"
                         :changeAddMode="true"
+                        :autoAdd="false"
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
@@ -585,23 +585,15 @@ export default {
             this.$emit("freightAdded",quote_id)
         },
 
-        setTableInsert(id){
-            let component = this;
-
-            component.modalFreight = id;
-
-            component.$refs[component.modalFreight][0].autoAdd = true;
-        },
-
         updatePdfOptions(){
             let pdfOptions = 
             {pdf_options:
                 {
-                    'allIn' : this.allIn,
-                    'showCarrier' : this.showCarrier,
+                    "allIn" : this.allIn,
+                    "showCarrier" : this.showCarrier,
                 }
             };
-
+            
             this.actions.quotes
                 .update(this.currentQuoteData['id'], pdfOptions)
                     .then( ( response ) => {
@@ -610,6 +602,12 @@ export default {
                     .catch(( data ) => {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
+        },
+
+        setTableInsert(id){
+            this.modalFreight = id;
+
+            this.$refs[this.modalFreight][0].addInsert();
         },
     },
 };

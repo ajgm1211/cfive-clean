@@ -40,7 +40,7 @@ class QuotationResource extends JsonResource
         'validity_start' => $this->validity_start,
         'validity_end' => $this->validity_end,
         'equipment' => $this->getContainerCodes($this->equipment),
-        'cargo_type_id' => $this->cargoType()->first()->name ?? null,
+        'cargo_type_id' => is_null($this->cargo_type_id) ? $this->cargo_type_id : $this->cargoType()->first()->name,
         'total_quantity' => $this->total_quantity,
         'total_weight' => $this->total_weight,
         'total_volume' => $this->total_volume,
