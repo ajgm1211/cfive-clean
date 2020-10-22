@@ -39,6 +39,7 @@
     </thead>
     <tbody>
         <?php
+            
             foreach ($containers as $c){ 
                 ${'sum_total_origin'.$c->code} = 0;
                 ${'sum_total_destination'.$c->code} = 0;
@@ -49,7 +50,7 @@
         ?>
         @foreach($rates as $rate)
             <?php 
-
+                
                 foreach ($containers as $c){ 
                     ${'total_'.$c->code} = 0;
                     ${'sum_total_'.$c->code} = 0;
@@ -151,20 +152,23 @@
                 
                 if(!$rate->inland->isEmpty()){
                     foreach($rate->inland as $inland){
-                        if($rate->inland->where('port_id', $inland->port_id)->count()==1){
-                            if($inland->type == 'Origin' && !$sale_terms_origin->count()>0){
+                        //if($rate->inland->where('port_id', $inland->port_id)->count()==1){
+                            
+                            if($inland->type == 'Origin' && $sale_terms_origin->count()==0){
                                 foreach ($containers as $c){
                                     ${'sum_inland_origin'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
                                     ${'sum_total_inland_origin'.$c->code}+=${'sum_inland_origin'.$c->code};
                                 }
                             }
-                            if($inland->type == 'Destination'){
+                            if($inland->type == 'Destination' && $sale_terms_destination->count()==0){
+                                
                                 foreach ($containers as $c){
                                     ${'sum_inland_destination'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
                                     ${'sum_total_inland_destination'.$c->code}+=${'sum_inland_destination'.$c->code};
+                                    dd(${'sum_total_inland_destination'.$c->code});
                                 }
                             }
-                        }
+                        //}
                     }
                 }
             ?>
