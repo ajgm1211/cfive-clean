@@ -2073,7 +2073,7 @@ class QuoteV2Controller extends Controller
                 $oceanFreight->currency_id = $idCurrency;
                 $oceanFreight->save();
             }
-            //LCL        $input = Input::all();
+            //LCL
 
             if ($typeText == 'LCL' || $typeText == 'AIR') {
                 $input = Input::all();
@@ -4375,6 +4375,11 @@ class QuoteV2Controller extends Controller
 
         foreach ($arreglo as $data) {
 
+            //dd($arreglo);
+
+            $tt = $data->transit_time;
+            $va = $data->via;
+
             $totalFreight = 0;
             $FreightCharges = 0;
             $totalRates = 0;
@@ -6564,10 +6569,21 @@ class QuoteV2Controller extends Controller
 
             $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
 
-            $data->setAttribute('via', $transit_time['via']);
+            /*$data->setAttribute('via', $transit_time['via']);
             $data->setAttribute('transit_time', $transit_time['transit_time']);
             $data->setAttribute('service', $transit_time['service']);
+            $data->setAttribute('sheduleType', null);*/
+
             $data->setAttribute('sheduleType', null);
+            $data->setAttribute('via', $va);
+            $data->setAttribute('transit_time', $tt);
+            if($tt!='' && $tt!=null){
+                $data->setAttribute('service', 'Transfer');
+            }else{
+                $data->setAttribute('service', 'Direct');
+            }
+            
+            
 
             /*    if ($data->schedule_type_id != null) {
             $sheduleType = ScheduleType::find($data->schedule_type_id);
@@ -6672,7 +6688,6 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $quoteType = $request->input('type');
 
-        //dd($form);
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name', 'id');
 
@@ -6751,7 +6766,6 @@ class QuoteV2Controller extends Controller
 
     public function storeLCL(Request $request)
     {
-
         if (!empty($request->input('form'))) {
             $form = json_decode($request->input('form'));
 
@@ -6792,6 +6806,12 @@ class QuoteV2Controller extends Controller
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
             $quantity = array_values(array_filter($form->quantity));
+
+            $language = $company->companyUser->language()->first();
+            $quote->language_id = $language->id;
+            $cargo_type_id = $form->cargo_type;
+            $quote->cargo_type_id = $cargo_type_id;
+            $quote->save();
             //dd($input);
             $type_cargo = array_values(array_filter($form->type_load_cargo));
             $height = array_values(array_filter($form->height));
@@ -7062,7 +7082,7 @@ class QuoteV2Controller extends Controller
         //$request->session()->flash('message.content', 'Register completed successfully!');
         //return redirect()->route('quotes.index');
 
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        return redirect()->action('QuotationController@edit', $quote->id);
     }
 
     public function unidadesTON($unidades)

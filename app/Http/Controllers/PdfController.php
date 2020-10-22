@@ -9,6 +9,8 @@ use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PdfController extends Controller
 {
@@ -17,6 +19,12 @@ class PdfController extends Controller
 
     public function quote(QuoteV2 $quote)
     {
+        $filter = $quote->FilterByCurrentCompany()->first();
+        
+        if(!$filter){
+            return Redirect::route('quotes-v2.index');
+        }
+
         switch ($quote->type) {
             case "FCL":
                 return $this->generateFclPdf($quote);

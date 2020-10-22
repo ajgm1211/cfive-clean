@@ -348,8 +348,7 @@ class QuotationController extends Controller
         }
 
         if($request->input('pdf_options') != null){
-            $opts = $request->input('pdf_options');
-            $quote->update(['pdf_options'=>$opts]);
+            $quote->update(['pdf_options'=>$request->input('pdf_options')]);
         }
     }
 

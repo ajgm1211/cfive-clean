@@ -105,7 +105,7 @@
                             ></Inland>
                         </b-tab>
 
-                        <b-tab title="Totals">Totales</b-tab>
+                        <!--<b-tab title="Totals">Totales</b-tab>-->
                     </b-tabs>
                 </b-card>
                 <!-- End Tabs Section -->
