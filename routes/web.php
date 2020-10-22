@@ -1086,7 +1086,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/updates/{quote}/remarks', 'LocalChargeQuotationController@updateRemarks');
 
     /** PDF */
-    Route::get('/api/quote/pdf/{quote}', 'PdfController@quote');
+    Route::get('/api/quote/pdf/{quote}', 'PdfController@quote')->middleware('check_company:quote');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');

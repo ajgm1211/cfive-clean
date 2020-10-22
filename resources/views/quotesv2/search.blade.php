@@ -1187,7 +1187,7 @@ background-color: #36A3F7;
                                 <center>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_search"
-                                        id="quote_search">Search</button>
+                                        id="quote_search"><i class="flaticon-search-magnifier-interface-symbol"></i> &nbsp;Search</button>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide"
                                         id="quote_searching">Searching &nbsp;<i
@@ -1249,8 +1249,10 @@ background-color: #36A3F7;
                                     </div>
                                 </div>
                                 <div class="col-lg-6" align='right'> 
-                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)">Create Quote</button>
-                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">Create New Quote</button>
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)"><b>Create Quote</b></button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">
+                                        Create FCL Quote
+                                    </button>
                                 </div>
                             </div>
 

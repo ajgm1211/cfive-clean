@@ -19,12 +19,6 @@ class PdfController extends Controller
 
     public function quote(QuoteV2 $quote)
     {
-        $filter = $quote->FilterByCurrentCompany()->first();
-        
-        if(!$filter){
-            return Redirect::route('quotes-v2.index');
-        }
-
         switch ($quote->type) {
             case "FCL":
                 return $this->generateFclPdf($quote);
