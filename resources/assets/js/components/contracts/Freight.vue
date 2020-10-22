@@ -94,7 +94,7 @@
             equipment: Object,
             datalists: Object,
             actions: Object,
-            currentContractData: Object,
+            contractData: Object
         },
         data() {
             return {
@@ -187,7 +187,6 @@
             link(){
                  window.location = '/RequestFcl/NewRqFcl';
             }
-           
         }
     }
 </script>
