@@ -297,7 +297,11 @@
             
             refreshTable(){
                 this.$refs.table.refreshData();
-            }
+            },
+
+            addInsert(){
+                this.$refs.table.addInsert();
+            },
            
         },
         watch: {
