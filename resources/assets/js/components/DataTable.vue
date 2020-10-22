@@ -64,7 +64,7 @@
             <b-tbody v-if="!isBusy" style="border-bottom: 1px solid #eee">
 
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields) && autoAdd">
+                <b-tr v-if="!isEmpty(inputFields) && addTableInsert">
 
                     <b-td v-if="firstEmpty"></b-td>
                     
@@ -149,6 +149,7 @@
 
                     <b-td>
                         <b-button class="action-app" href="#" tabindex="0" v-on:click="onSubmit()"><i class="fa fa-check" aria-hidden="true"></i></b-button>
+                        <b-button v-if="changeAddMode" class="action-app" href="#" tabindex="0" v-on:click="addInsert()"><i class="fa fa-minus" aria-hidden="true"></i></b-button>
                     </b-td>
                     
                 </b-tr>
@@ -429,7 +430,7 @@
                 required: false,
                 default: ''
             },
-            autoAdd: {
+            autoAdd:{
                 type: Boolean,
                 required:false,
                 default: true
@@ -464,16 +465,26 @@
                 fixedData: [],
                 autoupdateTableData: [],
                 refresh: true,
+                autoAddRequested: false,
                 datalists: {},
                 search: null,
                 /* Pagination */
                 initialPage: 1,
                 pageCount: 0,
-
                 /* Checkboxes */
                 selected: [],
                 allSelected: false,
                 indeterminate: false,
+                
+            }
+        },
+        computed: {
+            addTableInsert: function(){
+                if(this.autoAddRequested){
+                    return true
+                } else if(!this.autoAdd) {
+                    return false
+                }
                 
             }
         },
@@ -672,6 +683,9 @@
                         this.clearForm();
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
+                        if(this.changeAddMode){
+                            this.autoAddRequested = !this.autoAddRequested;
+                        }
                 })
                     .catch(( error, errors ) => {
 
@@ -688,7 +702,10 @@
                         this.clearForm();
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
-                })
+                        if(this.changeAddMode){
+                            this.autoAddRequested = !this.autoAddRequested;
+                        }
+                    })
                     .catch(( error, errors ) => {
 
                     let errors_key = Object.keys(error.data.errors);
@@ -696,11 +713,8 @@
                     errors_key.forEach(function(key){ 
                         $(`#id_f_table_${key}`).css({'display':'block'});
                         $(`#id_f_table_${key}`).html(error.data.errors[key]);
+                        });
                     });
-                });
-                }
-                if(this.changeAddMode){
-                    this.autoAdd = false;
                 }
             },
 
@@ -853,6 +867,7 @@
                 this.$emit('onEdit', data);
                 this.refreshData();
             },
+
             onDelete(id){
               
                 this.isBusy = true;
@@ -864,6 +879,7 @@
                         .catch(( data ) => {
                     });
             },
+
             onDeleteAll(){
               
                 this.isBusy = true;
@@ -877,6 +893,7 @@
                         .catch(( data ) => {
                     });
             },
+
             onDuplicate(id){
 
                 this.isBusy = true;
@@ -935,6 +952,7 @@
                     }      
                 }
             },
+
             isEmpty(obj){
                 for(var key in obj) {
                     if(obj.hasOwnProperty(key))
@@ -942,12 +960,18 @@
                 }
                 return true;
             },
+
             onChangeContainersView(){
                 this.$emit('onChangeContainersView', true);
             },
+
             onOpenModalContainer(){
                 let ids = this.selected.map(item => item.id);
                 this.$emit('onOpenModalContainerView', ids);
+            },
+
+            addInsert(){
+                this.autoAddRequested = !this.autoAddRequested
             },
         },
         watch: {
