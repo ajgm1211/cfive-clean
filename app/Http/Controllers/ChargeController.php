@@ -16,8 +16,11 @@ class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-
-        $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        if($quote->type = 'FCL'){
+            $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        } else {
+            $results = ChargeLclAir::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        }
         
         return ChargeResource::collection($results);
     }
@@ -126,6 +129,7 @@ class ChargeController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
+        if($autorate)
         $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
         return new ChargeResource($charge);
     }

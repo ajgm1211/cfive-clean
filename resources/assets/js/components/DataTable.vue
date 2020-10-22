@@ -17,7 +17,7 @@
         <!-- End Search Input -->
 
         <!-- DataTable -->
-        <b-table-simple hover small responsive="sm" borderless>
+        <b-table-simple hover small responsive borderless>
             <!-- Header table -->
             <b-thead>
                 <b-tr>
@@ -99,7 +99,7 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy" style="border-bottom: 1px solid #eee">
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields) && autoAdd">
+                <b-tr v-if="!isEmpty(inputFields) && addTableInsert">
                     <b-td v-if="firstEmpty"></b-td>
 
                     <b-td
@@ -197,7 +197,6 @@
                                 style="margin-top: -4px"
                             ></span>
                         </div>
-
                         <div v-if="item.type == 'multiselect_data' && refresh">
                             <multiselect
                                 v-model="item.values"
@@ -231,6 +230,14 @@
                             tabindex="0"
                             v-on:click="onSubmit()"
                             ><i class="fa fa-check" aria-hidden="true"></i
+                        ></b-button>
+                        <b-button
+                            v-if="changeAddMode"
+                            class="action-app"
+                            href="#"
+                            tabindex="0"
+                            v-on:click="addInsert()"
+                            ><i class="fa fa-minus" aria-hidden="true"></i
                         ></b-button>
                     </b-td>
                 </b-tr>
@@ -617,17 +624,26 @@ export default {
             fixedData: [],
             autoupdateTableData: [],
             refresh: true,
+            autoAddRequested: false,
             datalists: {},
             search: null,
             /* Pagination */
             initialPage: 1,
             pageCount: 0,
-
             /* Checkboxes */
             selected: [],
             allSelected: false,
             indeterminate: false,
         };
+    },
+    computed: {
+        addTableInsert: function () {
+            if (this.autoAddRequested) {
+                return true;
+            } else if (!this.autoAdd) {
+                return false;
+            }
+        },
     },
     created() {
         this.initialData();
@@ -784,7 +800,9 @@ export default {
                         this.fdata[key].forEach(function (item) {
                             data[key].push(item.id);
                         });
-                    } else if (this.inputFields[key].type == "multiselect_data") {
+                    } else if (
+                        this.inputFields[key].type == "multiselect_data"
+                    ) {
                         data[key] = [];
 
                         this.inputFields[key].values.forEach(function (item) {
@@ -851,6 +869,9 @@ export default {
                         this.clearForm();
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
+                        if (this.changeAddMode) {
+                            this.autoAddRequested = !this.autoAddRequested;
+                        }
                     })
                     .catch((error, errors) => {
                         let errors_key = Object.keys(error.data.errors);
@@ -869,6 +890,9 @@ export default {
                         this.clearForm();
                         this.refreshData();
                         this.updateDinamicalFieldOptions();
+                        if (this.changeAddMode) {
+                            this.autoAddRequested = !this.autoAddRequested;
+                        }
                     })
                     .catch((error, errors) => {
                         let errors_key = Object.keys(error.data.errors);
@@ -880,9 +904,6 @@ export default {
                             );
                         });
                     });
-            }
-            if (this.changeAddMode) {
-                this.autoAdd = false;
             }
         },
 
@@ -1045,6 +1066,7 @@ export default {
             this.$emit("onEdit", data);
             this.refreshData();
         },
+
         onDelete(id) {
             this.isBusy = true;
 
@@ -1055,6 +1077,7 @@ export default {
                 })
                 .catch((data) => {});
         },
+
         onDeleteAll() {
             this.isBusy = true;
 
@@ -1067,6 +1090,7 @@ export default {
                 })
                 .catch((data) => {});
         },
+
         onDuplicate(id) {
             this.isBusy = true;
 
@@ -1137,18 +1161,25 @@ export default {
                 }
             }
         },
+
         isEmpty(obj) {
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) return false;
             }
             return true;
         },
+
         onChangeContainersView() {
             this.$emit("onChangeContainersView", true);
         },
+
         onOpenModalContainer() {
             let ids = this.selected.map((item) => item.id);
             this.$emit("onOpenModalContainerView", ids);
+        },
+
+        addInsert() {
+            this.autoAddRequested = !this.autoAddRequested;
         },
     },
     watch: {
