@@ -145,7 +145,8 @@
                         <gmap-autocomplete 
                             v-if="!modalDistance"
                             @place_changed="setPlace"
-                            :value="search"
+                            @input="clearAutocomplete"
+                            ref="autocomplete"
                             class="form-input"
                             placeholder="Start typing an address"
                             >
@@ -394,7 +395,6 @@
                 address_options: [],
                 currentAddress: {},
                 distance_options: [],
-                search: null,
                 modalAddress: '',
                 modalSuccess: false,
                 modalSelected: false,
@@ -534,7 +534,7 @@
                 component.loaded = true
             },
 
-            setAddresses(newAddress = null) {
+            setAddresses(newAddress = null,clear=false) {
                 let component = this;
 
                 component.actions.automaticinlands
@@ -570,8 +570,6 @@
                     }
                 }
 
-                component.modalAddress = '';
-                component.search = null;
             },
 
             setTotalsFields() {
@@ -876,7 +874,7 @@
                 }
             },
 
-            searchInlands(){
+            searchInlands(){            
                 if(this.modalAddress != ''){
                     let data = {};
                     let inlandSearch = {};
@@ -921,6 +919,10 @@
                 this.inlandModalTotals = {};
                 this.inlandFound = false;
             },
+
+            clearAutocomplete(){
+                this.modalAddress = '';
+            }
         },
     }
 </script>

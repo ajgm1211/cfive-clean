@@ -29,7 +29,7 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{allIn: true, showCarrier: true}'
+        'pdf_options' => '{"allIn": true, "showCarrier": true}'
     ];
 
     protected $fillable = ['remarks','company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 
