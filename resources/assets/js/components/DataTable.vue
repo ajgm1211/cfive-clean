@@ -480,12 +480,11 @@
         },
         computed: {
             addTableInsert: function(){
-                if(this.autoAddRequested){
+                if(this.autoAddRequested || this.autoAdd){
                     return true
                 } else if(!this.autoAdd) {
                     return false
                 }
-                
             }
         },
         created() {
@@ -511,6 +510,7 @@
                         .retrieve(this.multiId)
                         .then((response) => {
                             this.fixedData=response.data.data;
+                            console.log(this.fixedData)
                             })
                         .catch((data) => {
                             this.$refs.observer.setErrors(data.data.errors);
