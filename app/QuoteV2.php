@@ -237,6 +237,42 @@ class QuoteV2 extends Model  implements HasMedia
         );
     }
 
+    public function scopeNewQuoteSelect($q)
+    {
+        return $q->select(
+            'id',
+            'type',
+            'quote_id',
+            'custom_quote_id',
+            'equipment',
+            'delivery_type as delivery',
+            'cargo_type',
+            'total_quantity',
+            'total_volume',
+            'total_weight',
+            'chargeable_weight',
+            'price_id',
+            'incoterm_id',
+            'user_id',
+            'company_id',
+            'contact_id',
+            'validity_start as valid_from',
+            'validity_end as valid_until',
+            'commodity',
+            'kind_of_cargo',
+            'gdp',
+            'risk_level',
+            'date_issued',
+            'status',
+            'payment_conditions',
+            'terms_and_conditions',
+            'terms_english',
+            'terms_portuguese',
+            'created_at',
+            'updated_at'
+        );
+    }
+
     public function scopeConditionalWhen($q, $type, $status, $integration)
     {
         return $q->when($type, function ($query, $type) {
@@ -270,6 +306,13 @@ class QuoteV2 extends Model  implements HasMedia
         }]);
     }
 
+    public function scopeNewUserRelation($q)
+    {
+        return $q->with(['user' => function ($query) {
+            $query->select('id', 'name', 'lastname', 'email', 'phone');
+        }]);
+    }
+
     public function scopeCompanyRelation($q)
     {
         return $q->with(['company' => function ($query) {
@@ -286,12 +329,33 @@ class QuoteV2 extends Model  implements HasMedia
         }]);
     }
 
+    public function scopeNewCompanyRelation($q)
+    {
+        return $q->with(['company' => function ($query) {
+            $query->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'options');
+        }]);
+    }
+
     public function scopeContactRelation($q)
     {
         return $q->with(['contact' => function ($query) {
             $query->with(['company' => function ($q) {
                 $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'options');
             }]);
+        }]);
+    }
+
+    public function scopeNewContactRelation($q)
+    {
+        return $q->with(['contact' => function ($query) {
+            $query->select('id', 'first_name', 'last_name', 'email', 'phone', 'options');
+        }]);
+    }
+
+    public function scopeIncotermRelation($q)
+    {
+        return $q->with(['incoterm' => function ($q) {
+            $q->select('name');
         }]);
     }
 
@@ -329,6 +393,41 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return $q->with(['destination_harbor' => function ($q) {
             $q->select('id', 'display_name');
+        }]);
+    }
+
+    public function scopeNewRateV2($q)
+    {
+        return $q->with(['rates_v2' => function ($query) {
+            $query->select(
+                'id',
+                'quote_id',
+                'contract',
+                'validity_start as valid_from',
+                'validity_end as valid_until',
+                'origin_port_id',
+                'destination_port_id',
+                'carrier_id',
+                'currency_id',
+                'remarks',
+                'remarks_english',
+                'remarks_spanish',
+                'remarks_portuguese',
+                'transit_time',
+                'via'
+            );
+            $query->with(['origin_port' => function ($q) {
+                $q->select('id', 'name', 'code');
+            }]);
+            $query->with(['destination_port' => function ($q) {
+                $q->select('id', 'name', 'code');
+            }]);
+            $query->with(['carrier' => function ($q) {
+                $q->select('id', 'name', 'uncode', 'image as url');
+            }]);
+            $query->with(['currency' => function ($q) {
+                $q->select('id', 'alphacode');
+            }]);
         }]);
     }
 
