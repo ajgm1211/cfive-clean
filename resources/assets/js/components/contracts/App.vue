@@ -9,9 +9,10 @@
                         </div>
                         <div class="col-6">
                             <div class="float-right">
+                                <button class="btn btn-link" v-b-modal.exportExcel>+ Export Excel</button>
                                 <button class="btn btn-link" v-b-modal.addContract>+ Add Contract</button>
                                 <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" >+ Import Contracts</a>
-                            </div>
+                            </div> 
                         </div>
                     </div>
 
@@ -39,6 +40,23 @@
         </b-modal>
         <!-- End Create Form -->
 
+                
+        <!-- Create Form -->
+        <b-modal id="exportExcel" size="md" hide-header-close title="Export Contract" hide-footer>
+            <FormView 
+                :data="fdata2" 
+                :fields="form_fields_excel"
+                :vdatalists="datalists"
+                :download=true
+                btnTxt="Export Excel"
+                @exit="closeModal('exportExcel')"
+                @success="closeModal('exportExcel')"
+                :actions="actions.excel"
+                >
+            </FormView>
+        </b-modal>
+        <!-- End Create Form -->
+
     </div>
 
 </template>
@@ -59,6 +77,7 @@
                 isBusy:true, // Loader
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
+                fdata2: { validity: { startDate: null, endDate: null } },
                 
                 // Dropdown Lists
                 datalists: {
@@ -124,7 +143,38 @@
                         placeholder: 'Select option', 
                         options: 'directions' 
                     },
+                },
+                form_fields_excel: {
+            
+                    validity: { 
+                        label: 'Validity', 
+                        rules: 'required', 
+                        type:"daterange", 
+                        sdName: 'validity', 
+                        edName: 'expire'
+                    },
+                          gp_container: { 
+                        label: 'Equipment', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select option', 
+                        options: 'equipments' 
+                    },
+                
+                    direction: { 
+                        label:'Direction', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select option', 
+                        options: 'directions' 
+                    },
                 }
+
+
             }
         },
         created() {

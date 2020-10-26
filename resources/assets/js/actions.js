@@ -432,7 +432,7 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_inland/destroyAll`, { ids: ids });
         },
-        search(port_id,data,route){
+        search(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
         }
@@ -491,5 +491,12 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/v2/providers/destroyAll`, { ids: ids });
         },
+    },
+    excel: {
+
+        create(data, route) {
+            return api.call('post', `/contracts/export`, data);
+        }
+
     },
 };
