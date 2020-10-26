@@ -14,7 +14,7 @@ class AddFieldToPdfOptionsTable extends Migration
     public function up()
     {
         Schema::table('pdf_options', function (Blueprint $table) {
-            $table->boolean('freight_no_grouping')->default(0)->after('grouped_freight_charges');
+            $table->boolean('freight_no_grouping')->default(0);
         });
     }
 

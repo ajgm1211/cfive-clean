@@ -14,9 +14,9 @@ class AddRemarksByLanguageToQuotev2 extends Migration
     public function up()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->text('remarks_spanish')->nullable()->after('remarks');
+            /* $table->text('remarks_spanish')->nullable()->after('remarks');
             $table->text('remarks_english')->nullable()->after('remarks_spanish');
-            $table->text('remarks_portuguese')->nullable()->after('remarks_english');
+            $table->text('remarks_portuguese')->nullable()->after('remarks_english'); */
         });
     }
 

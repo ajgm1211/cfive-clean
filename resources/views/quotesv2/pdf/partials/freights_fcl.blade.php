@@ -110,7 +110,7 @@
 
                                             @else
 
-                                                <td >{{$currency_cfg->alphacode}}</td>
+                                                <td >{{@$rate->currency->alphacode}}</td>
 
                                             @endif
 

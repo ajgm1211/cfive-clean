@@ -560,7 +560,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('send/air', 'PdfV2Controller@send_pdf_quote_air')->name('quotes-v2.send_pdf_air');
     Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
-    Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
+    Route::post('/store/{type}', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
     Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
@@ -1081,12 +1081,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
     Route::get('/api/quote/localcharge/datalist', 'LocalChargeQuotationController@data');
     Route::get('/api/quote/localcharge/total', 'LocalChargeQuotationController@getTotal');
-    Route::get('/api/quote/localcharge/remarks/{quote_id}', 'LocalChargeQuotationController@getRemarks');
+    Route::get('/api/quote/localcharge/remarks/{quote}', 'LocalChargeQuotationController@getRemarks');
     Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
-    Route::post('/api/quote/localcharge/updates/{quote_id}/remarks', 'LocalChargeQuotationController@updateRemarks');
+    Route::post('/api/quote/localcharge/updates/{quote}/remarks', 'LocalChargeQuotationController@updateRemarks');
 
     /** PDF */
-    Route::get('/api/quote/pdf/{quote}', 'PdfController@quote');
+    Route::get('/api/quote/pdf/{quote}', 'PdfController@quote')->middleware('check_company:quote');
 
     /* NUEVO QUOTE PRUEBAS */
     Route::get('api/quote', 'QuoteTestController@index')->name('quote.index');

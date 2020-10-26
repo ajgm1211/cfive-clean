@@ -35,7 +35,7 @@
                         :show-labels="false"
                         :close-on-select="true"
                         :preserve-search="true"
-                        placeholder="Select Sale Term"
+                        placeholder="Select Sale Template"
                         label="name"
                         track-by="name"
                         @input="getCharges()"
@@ -46,13 +46,13 @@
                     <a
                         href="/api/sale_terms"
                         target="_blank"
-                        class="btn btn-primary btn-bg"
+                        class="btn btn-link mr-4"
                         id="show-btn"
                     >
-                        + Add Sale Term
+                        + Add Sale Template
                     </a>
                     <button
-                        class="btn btn-link mr-4"
+                        class="btn btn-primary btn-bg"
                         id="show-btn"
                         @click="showModal"
                     >
@@ -209,11 +209,25 @@
 
                                 <b-td>
                                     <span v-if="loaded">
-                                        <b>{{
-                                            currentQuoteData.client_currency[
-                                                "alphacode"
-                                            ]
-                                        }}</b>
+                                        <multiselect
+                                            v-model="totals.currency"
+                                            :options="datalists['currency']"
+                                            :multiple="false"
+                                            :show-labels="false"
+                                            :close-on-select="true"
+                                            :preserve-search="true"
+                                            placeholder="Select a currency"
+                                            label="alphacode"
+                                            track-by="alphacode"
+                                            @input="
+                                                onUpdate(
+                                                    totals.id,
+                                                    totals.currency.id,
+                                                    'currency_id',
+                                                    5
+                                                )
+                                            "
+                                        ></multiselect>
                                     </span>
                                 </b-td>
 
@@ -272,9 +286,9 @@
                     </span>
                 </div>
 
-                <div class="col-12 mt-5">
+                <div class="col-12 mt-5" style="overflow-y: auto">
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive borderless>
+                    <b-table-simple hover small responsive="sm" borderless>
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
@@ -512,7 +526,19 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>--</b-td>
+                                <b-td>
+                                    <multiselect
+                                        v-model="input.sale_codes"
+                                        :options="datalists['sale_codes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a sale code"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
+                                </b-td>
 
                                 <b-td>
                                     <multiselect
@@ -561,7 +587,7 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn action-app btn-secondary"
+                                        class="btn-save"
                                         v-on:click="onSubmitCharge(counter)"
                                     >
                                         <i
@@ -569,11 +595,9 @@
                                             aria-hidden="true"
                                         ></i>
                                     </button>
-                                </b-td>
-                                <b-td>
                                     <button
                                         type="button"
-                                        class="btn action-app btn-secondary"
+                                        class="btn-delete"
                                         v-on:click="onRemove(counter)"
                                     >
                                         <i
@@ -621,6 +645,8 @@ export default {
         /* Return the lists data for dropdowns */
         api.getData({}, "/api/quote/local/data/" + id, (err, data) => {
             this.harbors = data;
+            this.value = this.harbors[0];
+            this.getValues();
         });
 
         this.getRemarks(id);
@@ -838,6 +864,7 @@ export default {
                     .create(data)
                     .then((response) => {
                         this.charges = response.data;
+                        this.getStoredCharges();
                         this.getTotal();
                         this.alert("Record saved successfully", "success");
                         this.closeModal();
@@ -862,6 +889,9 @@ export default {
                 .then((response) => {
                     this.getLocalCharges();
                     this.onRemove(counter);
+                    this.getStoredCharges();
+                    this.getTotal();
+                    this.closeModal();
                     this.alert("Record saved successfully", "success");
                 })
                 .catch((data) => {

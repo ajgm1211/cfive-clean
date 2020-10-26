@@ -237,7 +237,7 @@ class ContactController extends Controller
             $contact->delete();
 
             if ($request->ajax()) {
-                return response()->json('Contact deleted successfully!');
+                return response()->json(['message' => 'Contact deleted successfully!']);
             }
 
             return response()->json(['message' => 'Ok']);

@@ -8,7 +8,6 @@
                 </div>
                 <div class="col-6">
                     <div class="float-right">
-                        <button class="btn btn-link" v-b-modal.addOFreight>+ Add Freight</button>
                         <button class="btn btn-primary btn-bg" v-on:click="link">+ Import Contract</button>
                     </div>
                 </div>
@@ -94,7 +93,7 @@
             equipment: Object,
             datalists: Object,
             actions: Object,
-            currentContractData: Object,
+            contractData: Object
         },
         data() {
             return {
@@ -135,11 +134,12 @@
                     carrier: { 
                         label: 'Carrier', 
                         searchable: true, 
-                        type: 'multiselect', 
+                        type: 'multiselect_data', 
                         rules: 'required', 
                         trackby: 'name', 
                         placeholder: 'Select Carrier Port', 
-                        options: 'carriers' 
+                        options: 'carriers',
+                        values: this.contractData.carriers
                     },
                     currency: { 
                         label: 'Origin Port', 
@@ -155,6 +155,7 @@
         methods: {
             /* Single Actions */
             onEdit(data){
+                
                 this.currentData = data;
                 this.$bvModal.show('editOFreight');
             },
@@ -185,7 +186,6 @@
             link(){
                  window.location = '/RequestFcl/NewRqFcl';
             }
-           
         }
     }
 </script>
