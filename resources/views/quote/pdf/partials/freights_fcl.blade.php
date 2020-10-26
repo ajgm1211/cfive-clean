@@ -25,7 +25,6 @@
                                     <th class="unit"><b>{{__('pdf.tt')}}</b></th>
                                     <th class="unit"><b>{{__('pdf.via')}}</b></th>                                
                                 @endif
-                                <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,18 +57,13 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{$hide}}>{{ @$total->${'c'.$c->code} }}</td>
+                                                <td {{$hide}}>{{ @$total->${'c'.$c->code} }}&nbsp;{{$quote->pdf_option->grouped_freight_charges==1 ? $quote->pdf_option->freight_charges_currency:$rate->currency->alphacode}}</td>
                                             @endif
                                         @endforeach
                                     @endforeach
                                     @if($freight_charges->contains('transit_time', '!=', ''))
                                         <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
                                         <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
-                                    @endif
-                                    @if($quote->pdf_option->grouped_freight_charges==1)
-                                        <td >{{$quote->pdf_option->freight_charges_currency}}</td>
-                                    @else
-                                        <td >{{$rate->currency->alphacode}}</td>
                                     @endif
                                 </tr>
                             @endforeach
