@@ -6867,6 +6867,7 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->total = $rateO->subtotal;
                     $oceanFreight->markup = $rateO->markup;
                     $oceanFreight->currency_id = $rateO->idCurrency;
+                    $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
 
                     //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
@@ -6988,7 +6989,6 @@ class QuoteV2Controller extends Controller
 
                     foreach ($localdestiny as $localD) {
                         foreach ($localD as $local) {
-
                             $price_per_unit = $local->monto / $local->cantidad;
                             $chargeDestiny = new ChargeLclAir();
                             $chargeDestiny->automatic_rate_id = $rate->id;
