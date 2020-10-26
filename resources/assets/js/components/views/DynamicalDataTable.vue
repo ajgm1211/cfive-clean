@@ -263,28 +263,50 @@
                     component.fields.push(item);
                     component.form_fields[item.key] = component.initialFormFields[item.key];
                 });
-
             },
 
             /* Set Container Columns and fields by equipment */
             setColumns(equipment){
-               
-                this.resetValues();
 
-                let component = this;
-                let containers = {};
+                if(Object.keys(equipment).length!=0){
+                    this.resetValues();
+    
+                    let component = this;
+                    let containers = {};
+    
+                    if(!this.onLast)
+                        this.setFirstColumns(component);
+    
+                    if(this.extra_field_state)
+                        containers = this.setExtraColumns(equipment, component);
+                    else
+                        containers = this.setMiddleColumns(equipment, component);
+    
+                    this.setLastColumns(component);
+                    this.isLoaded = true;
+                    this.$emit('onFormFieldUpdated', containers);
+                }else{
+                    let component = this;
 
-                if(!this.onLast)
-                    this.setFirstColumns(component);
+                    this.resetValues();
 
-                if(this.extra_field_state)
-                    containers = this.setExtraColumns(equipment, component);
-                else
-                    containers = this.setMiddleColumns(equipment, component);
-
-                this.setLastColumns(component);
-                this.isLoaded = true;
-                this.$emit('onFormFieldUpdated', containers);
+                    component.initialFields.forEach(function (item){
+                        component.fields.push(item);
+                        component.form_fields[item.key] = component.initialFormFields[item.key];
+                        component.extra_fields[item.key] = component.initialFormFields[item.key];
+                        if(item.key == 'surcharge_id'){
+                            component.extra_fields[item.key]['type'] = "extraText";
+                            component.extra_fields[item.key]['disabled'] = true;
+                            component.extra_fields[item.key]['placeholder'] = "Freight";
+                        }
+                        if(component.extra_fields[item.key]['type'] == "text"){
+                            component.extra_fields[item.key]['type'] = "extraText";
+                        } else if(component.extra_fields[item.key]['type'] == "select"){
+                            component.extra_fields[item.key]['type'] = "extraSelect";
+                        }
+                    });
+                    this.isLoaded = true;
+                }
             },
             
             onChangeContainersView(value){

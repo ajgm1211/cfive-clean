@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\ChargeLclAir;
 use App\Http\Resources\AutomaticRateResource;
 use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,9 @@ class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        if($quote->type = 'FCL'){
+        if($quote->type == 'FCL'){
             $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
-        } else {
+        } else if($quote->type == 'LCL'){
             $results = ChargeLclAir::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
         }
         
@@ -129,8 +130,12 @@ class ChargeController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        if($autorate)
-        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        $quote = $autorate->quotev2()->first();
+        if($quote->type == 'FCL'){
+            $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        }else if($quote->type=='LCL'){
+            $charge = ChargeLclAir::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        }
         return new ChargeResource($charge);
     }
 
