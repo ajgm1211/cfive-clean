@@ -9,6 +9,8 @@ use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PdfController extends Controller
 {
@@ -32,6 +34,10 @@ class PdfController extends Controller
 
         $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
 
+        $inlands = $quote->load('inland');
+
+        $inlands = $this->processInland($inlands->inland, $containers);
+
         $origin_charges = $this->localCharges($quote, 1);
 
         $destination_charges = $this->localCharges($quote, 2);
@@ -40,7 +46,7 @@ class PdfController extends Controller
 
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -70,9 +76,75 @@ class PdfController extends Controller
 
     public function localChargeTotals($quote, $type, $port)
     {
-        $total = LocalChargeQuoteTotal::Quote($quote)->Port($port)->Type($type)->first();
+        $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
 
         return $total;
+    }
+
+    public function processInland($values, $containers)
+    {
+
+        $inlands = collect($values);
+
+
+        $inlands = $inlands->groupBy([
+
+            function ($item) {
+                return $item['type'];
+            },
+            function ($item) {
+                return $item['port']['name'] . ', ' . $item['port']['code'];
+            },
+
+        ], $preserveKeys = true);
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+
+        foreach ($inlands as $inland) {
+            foreach ($inland as $values) {
+                foreach ($values as $item) {
+
+                    foreach ($containers as $c) {
+                        ${$total . $amount . $c->code} = 0;
+                        ${$total . $amount . $markup . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = 0;
+                    }
+
+                    $array_amounts = json_decode($item->rate, true);
+                    $array_markups = json_decode($item->markup, true);
+
+                    $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                    $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                    foreach ($containers as $c) {
+                        ${$sum . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                        ${$total . $c->code} = 0;
+                        ${$total . $sum . $c->code} = $total . $sum . $c->code;
+
+                        if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        }
+
+                        if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                            $item->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $inlands;
     }
 
     public function freightCharges($freight_charges, $quote, $containers)

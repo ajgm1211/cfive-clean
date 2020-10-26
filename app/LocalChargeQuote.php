@@ -40,6 +40,11 @@ class LocalChargeQuote extends Model
         return $this->belongsTo('App\Harbor', 'port_id');
     }
 
+    /**
+     * sumarize
+     *
+     * @return void
+     */
     public function sumarize()
     {
         $quote = $this->quotev2()->first();
@@ -80,11 +85,16 @@ class LocalChargeQuote extends Model
         $this->update(['total' => $totals]);
     }
 
+    /**
+     * totalize
+     *
+     * @return void
+     */
     public function totalize()
     {
         $quote = $this->quotev2()->first();
 
-        LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->delete();
+        $local_charge_quote_total = LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->first();
 
         $charges = $this->where(['quote_id' => $quote->id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->get();
 
@@ -100,12 +110,20 @@ class LocalChargeQuote extends Model
             $totals['c' . $eq] = 0;
         }
 
+        $currency = @Auth::user()->companyUser->currency->alphacode;
+        $currency_id = @Auth::user()->companyUser->currency_id;
+
+        if (!empty($local_charge_quote_total)) {
+            $currency = $local_charge_quote_total->currency->alphacode;
+            $currency_id = $local_charge_quote_total->currency_id;
+        }
+
         foreach ($charges as $charge) {
             if ($charge->total != null) {
                 foreach ($equip_array as $eq) {
                     foreach ($charge->total as $key => $total) {
                         if ($key == 'c' . $eq) {
-                            $exchange = ratesCurrencyFunction($charge->currency_id, @Auth::user()->companyUser->currency->alphacode);
+                            $exchange = ratesCurrencyFunction($charge->currency_id, $currency);
                             $total_w_exchange = $total / $exchange;
                             $totals[$key] += number_format((float)$total_w_exchange, 2, '.', '');
                         }
@@ -114,22 +132,69 @@ class LocalChargeQuote extends Model
             }
         }
 
-        $currency = Auth::user()->companyUser->currency_id;
+        if (!empty($local_charge_quote_total)) {
+            $local_charge_quote_total->delete();
+        }
 
         LocalChargeQuoteTotal::create([
             'total' => $totals,
             'quote_id' => $quote->id,
             'port_id' => $this->port_id,
-            'currency_id' => $currency,
+            'currency_id' => $currency_id,
             'type_id' => $this->type_id,
         ]);
     }
+    
+    /**
+     * Grouping charges by sale code
+     *
+     * @param  mixed $localcharge
+     * @return void
+     */
+    public function groupingCharges($localcharge)
+    {
+        foreach ($this->price as $key => $price) {
+            ${'price_' . $key} = 'price->' . $key;
+            foreach ($localcharge['price'] as $k => $new_price) {
+                if ($key == $k) {
+                    $price += $new_price;
+                    $this->${'price_' . $key} = $price;
+                    $this->update();
+                }
+            }
+        }
 
+        foreach ($this->profit as $keyp => $profit) {
+            ${'profit_' . $keyp} = 'profit->' . $keyp;
+            foreach ($localcharge['markup'] as $kp => $new_profit) {
+                if ($keyp == $kp) {
+                    $profit += $new_profit;
+                    $this->${'profit_' . $keyp} = $profit;
+                    $this->update();
+                }
+            }
+        }
+    }
+
+    /**
+     * scopeQuote
+     *
+     * @param  mixed $query
+     * @param  mixed $id
+     * @return void
+     */
     public function scopeQuote($query, $id)
     {
         return $query->where('quote_id', $id);
     }
 
+    /**
+     * scopeType
+     *
+     * @param  mixed $query
+     * @param  mixed $type
+     * @return void
+     */
     public function scopeType($query, $type)
     {
         return $query->where('type_id', $type);

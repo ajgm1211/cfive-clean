@@ -51,4 +51,7 @@ return [
     "height" => "Height",
     "cargo_details" => "Cargo details",
     "payment_conditions" => "Payment conditions",
+    "inland" => "Inland",
+    "provider" => "Provider",
+    "distance" => "Distance",
 ];

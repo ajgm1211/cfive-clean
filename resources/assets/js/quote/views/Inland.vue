@@ -26,7 +26,7 @@
                         class="q-select ml-3">
                     </multiselect>
 
-                    <img src="https://i.ibb.co/YjfjzkS/delivery-2-1.png" alt="delivery-2-1" border="0" class="mr-4 ml-4">
+                    <img src="https://i.ibb.co/YjfjzkS/delivery-2-1.png" alt="delivery-2-1" border="0" class="mr-4 ml-4" width="25" height="25">
                         
                     <h5>
                         <b>From:</b>
@@ -59,8 +59,8 @@
 
                 </div>
 
-                <div v-if="currentAddress==undefined || currentAddress.length==0">
-                    <h4 style="margin: 30px;">No address registered for this port. Add a new Inland to start</h4>
+                <div v-if="currentAddress==undefined || currentAddress.length==0" class="warning-no-address">
+                    <h5 class="d-flex align-items-center"><img src="/images/advertir.svg"  alt="advertir" width="25" height="25" style="margin-right: 10px;"> No address registered for this port. Add a new Inland to start.</h5>
                 </div>
 
                 <div v-else class="col-12 mt-5">
@@ -174,7 +174,7 @@
                 <div class="col-12 mt-5">
 
                     <!-- DataTable -->
-                    <b-table-simple v-if="inlandAddRequested" hover small responsive borderless>
+                    <b-table-simple v-if="inlandAddRequested" hover small responsive="sm" borderless>
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
