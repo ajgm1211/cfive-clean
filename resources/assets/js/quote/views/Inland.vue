@@ -1,10 +1,10 @@
 <template>
     <div style="padding: 0px 25px">
         <div v-if="freights.length == 0">
-            <h2 style="margin: 10px">
+            <h4 style="margin: 10px">
                 Nothing to display. Start by adding a new freight at the Ocean
                 Freight tab
-            </h2>
+            </h4>
         </div>
 
         <b-card v-else class="q-card">
