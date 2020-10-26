@@ -510,7 +510,6 @@
                         .retrieve(this.multiId)
                         .then((response) => {
                             this.fixedData=response.data.data;
-                            console.log(this.fixedData)
                             })
                         .catch((data) => {
                             this.$refs.observer.setErrors(data.data.errors);

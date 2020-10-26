@@ -300,65 +300,15 @@ export default {
             allIn: true,
 
             /* Table headers */
-            fields: [
-                {
-                    key: "surcharge_id",
-                    label: "CHARGE",
-                    type: "select",
-                    trackby: "name",
-                    options: "surcharges",
-                },
-                {
-                    key: "calculation_type_id",
-                    label: "DETAIL",
-                    type: "select",
-                    trackby: "name",
-                    options: "calculationtypes",
-                },
-                {
-                    key: "currency_id",
-                    label: "CURRENCY",
-                    type: "select",
-                    trackby: "alphacode",
-                    options: "currency",
-                },
-            ],
+            fields: [],
 
             /* Table input inline fields */
-            vform_fields: {
-                surcharge_id: {
-                    label: "CHARGE",
-                    type: "select",
-                    searchable: true,
-                    rules: "required",
-                    placeholder: "Select charge type",
-                    trackby: "name",
-                    options: "surcharges",
-                },
-                calculation_type_id: {
-                    label: "DETAIL",
-                    searchable: true,
-                    type: "select",
-                    rules: "required",
-                    trackby: "name",
-                    placeholder: "Select Provider",
-                    options: "calculationtypes",
-                },
-                currency_id: {
-                    label: "CURRENCY",
-                    searchable: true,
-                    type: "select",
-                    rules: "required",
-                    trackby: "alphacode",
-                    placeholder: "Select Currency",
-                    options: "currency",
-                },
-            },
+            vform_fields: {},
             eform_fields: {
                 fixed_surcharge: {
                     type: "extraText",
                     disabled: true,
-                    placeholder: "Ocean Freight",
+                    placeholder: "Freight",
                 },
                 fixed_calculation_type: {
                     type: "extraText",
@@ -388,6 +338,8 @@ export default {
         }else{
             var pdfOptions = this.currentQuoteData.pdf_options;
         }
+
+        this.setTableFields();
 
         this.setTotalsFields();
 
@@ -606,6 +558,148 @@ export default {
             this.modalFreight = id;
 
             this.$refs[this.modalFreight][0].addInsert();
+        },
+
+        setTableFields(){
+            if(Object.keys(this.equipment).length!=0){
+                this.fields.push(
+                {
+                    key: "surcharge_id",
+                    label: "CHARGE",
+                    type: "select",
+                    trackby: "name",
+                    options: "surcharges",
+                },
+                {
+                    key: "calculation_type_id",
+                    label: "DETAIL",
+                    type: "select",
+                    trackby: "name",
+                    options: "calculationtypes",
+                },
+                {
+                    key: "currency_id",
+                    label: "CURRENCY",
+                    type: "select",
+                    trackby: "alphacode",
+                    options: "currency",
+                },)
+
+                this.vform_fields = {
+                    surcharge_id: {
+                        label: "CHARGE",
+                        type: "select",
+                        searchable: true,
+                        rules: "required",
+                        placeholder: "Select charge type",
+                        trackby: "name",
+                        options: "surcharges",
+                    },
+                    calculation_type_id: {
+                        label: "DETAIL",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "calculationtypes",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
+            } else {
+                this.fields.push(
+                {
+                    key: "surcharge_id",
+                    label: "CHARGE",
+                    type: "select",
+                    trackby: "name",
+                    options: "surcharges",
+                },
+                {
+                    key: "calculation_type_id",
+                    label: "DETAIL",
+                    type: "select",
+                    trackby: "name",
+                    options: "calculationtypes",
+                },
+                {
+                    key: "units",
+                    label: "UNITS",
+                    type: "text",
+                },
+                //MINIMUM GOES HERE
+                {
+                    key: "price_per_unit",
+                    label: "TON/M3",
+                    type: "text",
+                },
+                {
+                    key: "total",
+                    label: "TOTAL",
+                    type: "text",
+                },
+                {
+                    key: "currency_id",
+                    label: "CURRENCY",
+                    type: "select",
+                    trackby: "alphacode",
+                    options: "currency",
+                },)
+
+                this.vform_fields ={
+                    surcharge_id: {
+                        label: "CHARGE",
+                        type: "select",
+                        searchable: true,
+                        rules: "required",
+                        placeholder: "Select charge type",
+                        trackby: "name",
+                        options: "surcharges",
+                    },
+                    calculation_type_id: {
+                        label: "DETAIL",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "calculationtypes",
+                    },
+                    units: {
+                        label: "UNITS",
+                        type: "text",
+                        rules: "required",
+                    },
+                    //MINIMUM GOES HERE
+                    price_per_unit: {
+                        label: "TON/M3",
+                        type: "text",
+                        rules: "required",
+                    },
+                    total: {
+                        label: "TOTAL",
+                        type: "text",
+                        rules: "required",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
+            }
         },
     },
 };
