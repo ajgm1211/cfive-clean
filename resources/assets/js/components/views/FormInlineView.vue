@@ -194,6 +194,7 @@
                                 v-model="vdata[key]"
                                 :locale="locale"
                                 :date-format-options="dateFormat"
+                                @input="cleanInputSubmit(key)"
                                 class="input-h"
                                 >
                             ></b-form-datepicker>
