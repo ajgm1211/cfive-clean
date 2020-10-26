@@ -11,7 +11,9 @@
                         <button
                             class="btn btn-primary btn-bg btn-adds"
                             v-b-modal.addCharge
-                        >+ Add Charge</button>
+                        >
+                            + Add Charge
+                        </button>
                     </div>
                 </div>
             </div>
@@ -51,7 +53,13 @@
         <!-- End Edit Form -->
 
         <!-- Create Form -->
-        <b-modal id="addCharge" size="lg" hide-header-close title="Add Charge" hide-footer>
+        <b-modal
+            id="addCharge"
+            size="lg"
+            hide-header-close
+            title="Add Charge"
+            hide-footer
+        >
             <FormView
                 :fields="input_fields"
                 :vdatalists="fdatalists"
@@ -88,10 +96,9 @@ export default {
 
             /* Table headers */
             fields: [
-                { key: "name", label: "Name" },
                 {
                     key: "sale_term_code",
-                    label: "Charge code",
+                    label: "Sale code",
                     formatter: (value) => {
                         return value.name;
                     },
@@ -111,27 +118,20 @@ export default {
                         return value.alphacode;
                     },
                 },
-                
             ],
 
             /* Table input inline fields */
             input_fields: {
                 check: { label: "", type: "checkbox" },
-                name: {
-                    label: "Name",
-                    type: "text",
-                    rules: "required",
-                    placeholder: "Name",
-                    colClass: "col-sm-12",
-                },
                 sale_term_code: {
-                    label: "Charge code",
+                    label: "Sale code",
                     searchable: true,
                     type: "select",
                     rules: "required",
                     trackby: "name",
                     placeholder: "Select option",
                     options: "sale_term_codes",
+                    colClass: "col-lg-12",
                 },
                 calculation_type: {
                     label: "Calculation type",
@@ -141,12 +141,14 @@ export default {
                     trackby: "name",
                     placeholder: "Select option",
                     options: "calculation_types",
+                    colClass: "col-lg-6",
                 },
                 amount: {
                     label: "Amount",
                     type: "text",
                     rules: "required",
                     placeholder: "Amount",
+                    colClass: "col-lg-6",
                 },
                 currency: {
                     label: "Currency",
@@ -156,6 +158,7 @@ export default {
                     trackby: "alphacode",
                     placeholder: "Select option",
                     options: "currencies",
+                    colClass: "col-lg-6",
                 },
             },
         };

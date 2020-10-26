@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SaleTermCharge extends Model
 {
-    protected $fillable = ['id', 'name', 'sale_term_id', 'amount', 'calculation_type_id', 'currency_id', 'sale_term_code_id', 'total'];
+    protected $fillable = ['id', 'sale_term_id', 'amount', 'calculation_type_id', 'currency_id', 'sale_term_code_id', 'total'];
 
     protected $casts = [
         'total' => 'array',
@@ -43,7 +43,6 @@ class SaleTermCharge extends Model
     public function duplicate()
     {
         $new_sale_term_charge = $this->replicate();
-        $new_sale_term_charge->name .= ' copy';
         $new_sale_term_charge->save();
 
         return $new_sale_term_charge;

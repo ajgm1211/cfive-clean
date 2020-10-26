@@ -22,6 +22,7 @@
                                 v-on:blur="onSubmit()"
                                 @change="cleanInput(key)"
                                 :disabled="item.disabled"
+                                class="input-h"
                             ></b-form-input>
                             <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
                         </b-form-group>
@@ -58,6 +59,7 @@
                          <b-form-group
                             :label="item.label"
                         >
+                        <br>
                             <ckeditor
                                 id="inline-form-input-name"
                                 :parentId="item.parentId"
@@ -106,6 +108,7 @@
                                 :placeholder="item.placeholder"
                                 @input="onSubmit(),unlock(item,key)"
                                 @select="cleanInput(key)"
+                                class="input-h"
                             ></multiselect>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -139,6 +142,7 @@
                                 :placeholder="item.placeholder"
                                 @input="onSubmit()"
                                 @select="cleanInput(key)"
+                                class="input-h"
                             ></multiselect>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -154,7 +158,7 @@
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
+                            class="d-block input-h"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                         >
@@ -168,6 +172,7 @@
                                 v-model="vdata[key]"
                                 :linkedCalendars="true"
                                 @update="cleanInputSubmit(key)"
+                                class="input-h"
                             ></date-range-picker>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -189,6 +194,7 @@
                                 v-model="vdata[key]"
                                 :locale="locale"
                                 :date-format-options="dateFormat"
+                                class="input-h"
                                 >
                             ></b-form-datepicker>
                         </b-form-group>
@@ -199,7 +205,7 @@
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
+                            class="d-block input-h"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                         >

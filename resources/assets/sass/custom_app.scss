@@ -590,7 +590,18 @@ i.mx-icon-calendar {
 }
 
 .reportrange-text {
+    height: 35px;
     border: 2px solid #eee !important;
+}
+
+.multiselect--disabled {
+    min-height: 35px !important;
+    .multiselect__select {
+        height: 35px;
+    }
+    .multiselect__tags {
+        background: #e9ecef;
+    }
 }
 
 .vue-daterange-picker {
@@ -668,7 +679,11 @@ input.multiselect__input:focus {
 
 .btn-adds {
     right: 60px;
-    position: fixed;
+    /* position: fixed; */
+}
+
+.input-h {
+    height: 35px;
 }
 
 .dropzone.dz-started .dz-message {
@@ -760,6 +775,50 @@ input.multiselect__input:focus {
 .quote-content-tab {
     .tab-content {
         background-color: #f8f8fc !important;
+    }
+}
+
+.quote-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.quote-card div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gmap {
+    border: 2px solid #eeeeee;
+    padding: 6px 15px;
+    display: block;
+    border-radius: 4px !important;
+}
+
+.gmap:hover,
+.gmap:focus {
+    border-color: #006BFA !important;
+}
+
+.warning-no-address {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-card div:nth-child(2) {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+@media only screen and (min-width: 426px) {
+    .quote-card {
+        flex-direction: row;
+        justify-content: space-between;
     }
 }
 

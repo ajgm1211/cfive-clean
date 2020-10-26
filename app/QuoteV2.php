@@ -32,11 +32,13 @@ class QuoteV2 extends Model  implements HasMedia
         'pdf_options' => '{"allIn": true, "showCarrier": true}'
     ];
 
-    protected $fillable = ['remarks','company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end', 
-        'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id', 
-        'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type', 
-        'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions','terms_english','terms_portuguese','remarks_english',
-        'remarks_spanish','remarks_portuguese','language_id','pdf_options','cargo_type_id'];
+    protected $fillable = [
+        'remarks', 'company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end',
+        'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
+        'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
+        'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'cargo_type_id'
+    ];
 
     public function company()
     {
@@ -108,6 +110,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasMany('App\AutomaticRate', 'quote_id', 'id');
     }
 
+    public function inland()
+    {
+        return $this->hasMany('App\AutomaticInland', 'quote_id', 'id');
+    }
+
     public function charge()
     {
         return $this->hasManyThrough('App\Charge', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
@@ -174,9 +181,15 @@ class QuoteV2 extends Model  implements HasMedia
         $rate = null;
 
         if ($type == 1) {
-            $rate = $this->rates_v2()->where(['origin_port_id' => $port, 'carrier_id' => $carrier])->first();
+            $rate = $this->rates_v2()->where(['quote_id' => $this->id, 'origin_port_id' => $port, 'carrier_id' => $carrier])->first();
         } else if ($type == 2) {
-            $rate = $this->rates_v2()->where(['destination_port_id' => $port, 'carrier_id' => $carrier])->first();
+            $rate = $this->rates_v2()->where(['quote_id' => $this->id, 'destination_port_id' => $port, 'carrier_id' => $carrier])->first();
+        }
+
+        if ($rate == null) {
+            $rate = $this->rates_v2()->where('quote_id', $this->id)->where(function ($query) use ($port) {
+                $query->where('origin_port_id', $port)->orWhere('destination_port_id', $port);
+            })->first();
         }
 
         return $rate;
@@ -561,7 +574,9 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function getContainerCodes($equip, $getGroup = false)
     {
-        $size = count($equip);
+
+        $size = count((array)$equip);
+
         if ($size != 0 && $equip != "[]") {
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
             $full_equip = "";
