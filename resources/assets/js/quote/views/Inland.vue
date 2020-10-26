@@ -117,7 +117,7 @@
         </b-card>
 
         <!--  Modal  -->
-        <b-modal ref="addInland" size="xl" centered hide-footer title="Inland Charges" @close="unsetModal">
+        <b-modal ref="addInland" size="xl" centered hide-footer title="Inland Charges" @close="unsetModal" @hidden="unsetModal">
             
             <div class="row">
 
@@ -146,7 +146,6 @@
                             v-if="!modalDistance"
                             @place_changed="setPlace"
                             @input="clearAutocomplete"
-                            ref="autocomplete"
                             class="form-input"
                             placeholder="Start typing an address"
                             >
@@ -377,8 +376,6 @@
         watch: {
             currentPort: function(newVal,oldVal){this.updateTable();this.setAddresses();},
 
-            freights: function(newVal,oldVal){this.createInlandTotals(this.currentAddress['address']);},
-
             currentAddress: function(newVal,oldVal){this.updateTable();}
         },
         data() {
@@ -403,7 +400,6 @@
                 inlandAdds:[],
                 modalWarning: '',
                 modalSearchWarning: false,
-                autocomplete:'',
                 modalDistance: false,
                 inlandModalTotals:{},
                 client_currency: this.currentQuoteData.client_currency,
@@ -534,7 +530,7 @@
                 component.loaded = true
             },
 
-            setAddresses(newAddress = null,clear=false) {
+            setAddresses(newAddress = null) {
                 let component = this;
 
                 component.actions.automaticinlands
@@ -620,19 +616,58 @@
 
             },
 
+            setNewAddress(){
+                let component = this;
+                let addressMatch = false;
+
+                if(component.modalAddress != ''){
+                    component.address_options.forEach(function(address){
+                        if(component.modalAddress == address['address']){
+                            component.currentAddress = address;
+                        } else {
+                            addressMatch = true;
+                        }
+                    })
+
+                    if(addressMatch || component.address_options.length == 0){
+                        component.createInlandTotals(component.modalAddress);
+                        addressMatch = false;
+                    }else if(!component.inlandFound){
+                        component.setModalTable();
+                    }
+                }else{
+                    component.modalWarning = 'Address'
+                        setTimeout(() => {
+                            component.modalWarning = '';
+                        }, 3000);
+                }
+            },
+
             createInlandTotals(totalAddress){
                 let component = this;
 
-                if((Object.keys(this.inlandModalTotals).length == 0 && component.currentAddress!=undefined && Object.keys(this.currentAddress).length!=0) || totalAddress==component.modalAddress){
-                    let portAddressCombo = [totalAddress + ';' + 
-                                            component.currentPort['type'] + ';' +
-                                            component.currentPort['id']];
+                if((component.currentAddress!=undefined && Object.keys(this.currentAddress).length!=0) || totalAddress==component.modalAddress){
+                    if(this.modalDistance){
+                        var portAddressCombo = [
+                            totalAddress['display_name'] + ';' + 
+                            component.currentPort['type'] + ';' +
+                            component.currentPort['id']];
+                    } else {
+                        var portAddressCombo = [
+                            totalAddress + ';' + 
+                            component.currentPort['type'] + ';' +
+                            component.currentPort['id']];
+                    }
 
                     component.actions.automaticinlands
                         .createTotals(portAddressCombo,component.$route)
                         .then( ( response ) => {
                             if(component.modalAddress != ''){
-                                component.setAddresses(component.modalAddress);
+                                if(this.modalDistance){
+                                    component.setAddresses(component.modalAddress['display_name']);
+                                } else {
+                                    component.setAddresses(component.modalAddress);
+                                }
                             }else{
                                 component.updateTable();
                             }
@@ -843,37 +878,6 @@
                 this.modalAddress = place.formatted_address;
             },
 
-            setNewAddress(){
-                let component = this;
-                let control = false;
-
-                if(component.modalAddress != ''){
-                    component.address_options.forEach(function(address){
-                        if(component.modalAddress == address['address']){
-                            component.currentAddress = address;
-                        } else {
-                            control = true;
-                        }
-                    })
-
-                    if(control || component.address_options.length == 0){
-                        if(!component.modalDistance){
-                            component.createInlandTotals(component.modalAddress);
-                        }else{
-                            component.createInlandTotals(component.modalAddress.display_name);
-                        }
-                        control = false;
-                    }else if(!component.inlandFound){
-                        component.setModalTable();
-                    }
-                }else{
-                    component.modalWarning = 'Address'
-                        setTimeout(() => {
-                            component.modalWarning = '';
-                        }, 3000);
-                }
-            },
-
             searchInlands(){            
                 if(this.modalAddress != ''){
                     let data = {};
@@ -918,6 +922,7 @@
                 this.inlandAddRequested = false;
                 this.inlandModalTotals = {};
                 this.inlandFound = false;
+                this.modalAddress = '';
             },
 
             clearAutocomplete(){

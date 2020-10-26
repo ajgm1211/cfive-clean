@@ -9,7 +9,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title mt-3">
-                            <b>FCL Quote</b>
+                            <b>{{currentData.type}} Quote</b>
                         </h4>
                         <div>
                             <a :href="'/api/quote/pdf/' + this.quote_id" target="_blank" class="btn btn-primary btn-bg">+ PDF</a>
@@ -362,6 +362,9 @@ export default {
             let component = this;
 
             component.equip = data.gp_container;
+            if (component.equip == '[]'){
+                component.equip = {};
+            }
             component.freights = data.rates;
             component.quoteEquip = data.equipment.split(",");
             component.quoteEquip.splice(-1, 1);
