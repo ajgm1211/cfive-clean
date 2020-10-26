@@ -2,7 +2,7 @@
 
             @foreach($inlands as $type => $inland)
                 @foreach($inland as $port => $item)
-                    
+                    @if($type == 'Origin')
                     <!-- Section Title -->
                     <div>
                         
@@ -85,7 +85,7 @@
 
                     </table>
                     <!-- End Table -->
-
+                    @endif
                 @endforeach
             @endforeach
             <br>
