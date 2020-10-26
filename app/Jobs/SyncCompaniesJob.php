@@ -39,6 +39,13 @@ class SyncCompaniesJob implements ShouldQueue
      */
     public function handle()
     {
+        try {
+
+        $integrations = ApiIntegration::where(['module' ,'Companies', 'status'=>1])->with('partner')->get();
+
+     
+       
+    
         switch($this->partner->name){
             case 'vForwarding':
                 $i = 0;
@@ -115,6 +122,9 @@ class SyncCompaniesJob implements ShouldQueue
                 }
 
             break;
+        } 
+        } catch (\Exception $e) {
+            $e->getMessage();
         }
     }
 }
