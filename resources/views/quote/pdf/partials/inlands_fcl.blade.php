@@ -35,7 +35,7 @@
                                     @endforeach
                                 @endforeach   
 
-                                <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+                                <!--<th class="unit"><b>{{__('pdf.currency')}}</b></th>-->
 
                             </tr>
 
@@ -63,14 +63,14 @@
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
                             
-                                                    <td {{ $hide }}>{{ $rate->${'total_sum_'.$c->code} }}</td>
+                                                    <td {{ $hide }}>{{ $rate->${'total_sum_'.$c->code} }} {{$rate->currency->alphacode}}</td>
                             
                                                 @endif
                                             @endforeach
                                         @endforeach
                             
                             
-                                    <td >{{$rate->currency->alphacode}}</td>
+                                    <!--<td >{{$rate->currency->alphacode}}</td>-->
                             
                                 </tr>
                             @endforeach
