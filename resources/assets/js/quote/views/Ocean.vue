@@ -6,7 +6,7 @@
         </div>
 
         <div v-if="freights.length == 0">
-            <h2>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal('addFreight')">adding a new freight</a></h2>
+            <h4>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal('addFreight')">adding a new freight</a></h4>
         </div>
 
         <!-- Freight Card -->
