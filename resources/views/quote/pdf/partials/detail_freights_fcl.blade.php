@@ -43,9 +43,7 @@
 
                                                 <th class="unit"><b>{{__('pdf.via')}}</b></th>
 
-                                            @endif      
-
-                                            <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+                                            @endif
 
                                         </tr>
 
@@ -117,7 +115,7 @@
                                                                         @if($c->code == $key)
 
                                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
-                                                                            <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code} == null ? 0 : @$v->${'sum_amount_markup_'.$c->code} }}</td>
+                                                                            <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code} == null ? 0 : @$v->${'sum_amount_markup_'.$c->code} . ' ' .$v->currency->alphacode}}</td>
 
                                                                         @endif
                                                                     @endforeach
@@ -130,8 +128,6 @@
                                                                     <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
 
                                                                 @endif
-
-                                                                <td>{{$v->currency->alphacode}}</td>
 
                                                             </tr>
                                                             
@@ -155,7 +151,7 @@
                                                                         @foreach ($containers as $c)
                                                                             @if($c->code == $key)
 
-                                                                                <td {{ $hide }}>{{ $v->${'total_sum_'.$c->code} }}</td>
+                                                                                <td {{ $hide }}>{{ $v->${'total_sum_'.$c->code} .' '.$currency_cfg->alphacod }}</td>
 
                                                                             @endif
                                                                         @endforeach
@@ -167,8 +163,6 @@
                                                                         <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
 
                                                                     @endif
-
-                                                                    <td >{{$currency_cfg->alphacode}}</td>
 
                                                                 </tr>
 
@@ -192,7 +186,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{$hide}}><b>{{ @$total_freight->${'c'.$c->code} }}</b></td>
+                                                        <td {{$hide}}><b>{{ @$total_freight->${'c'.$c->code} .' '. @$r->currency->alphacode }}</b></td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -203,8 +197,6 @@
                                                 <td></td>
 
                                             @endif
-
-                                            <td><b>{{@$r->currency->alphacode}}</b></td>
 
                                         </tr>
 
