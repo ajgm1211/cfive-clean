@@ -716,8 +716,8 @@ export default {
                     this.totalActions
                         .retrieve(this.multiId, this.$route)
                         .then((response) => {
-                            this.totalsData = response.data.data;
-                        })
+                            this.totalsData=response.data.data;
+                            })
                         .catch((data) => {
                             this.$refs.observer.setErrors(data.data.errors);
                         });

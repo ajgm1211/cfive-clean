@@ -20,6 +20,8 @@ class ChargeResource extends JsonResource
             'type_id' => $this->type_id,
             'surcharge_id' => is_null($this->surcharge_id) ? $this->surcharge_id : $this->surcharge()->first(), 
             'calculation_type_id' => $this->calculation_type,
+            'units' => $this->units,
+            'price_per_unit' => $this->price_per_unit,
             'amount' => $this->amount, 
             'markups' => $this->markups,
             'currency_id' => $this->currency()->first(),

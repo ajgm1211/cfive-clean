@@ -11,7 +11,6 @@ class ChargeFilter extends AbstractFilter
     protected $filter_by_relations = [];
     protected $with = ['automatic_rate', 
                     'type',
-                    'surcharge',
                     'calculation_type',
                     'currency',
                     ];

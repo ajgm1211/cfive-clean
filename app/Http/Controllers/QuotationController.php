@@ -290,14 +290,13 @@ class QuotationController extends Controller
     }
 
     public function update (Request $request, QuoteV2 $quote)
-    {   
-        
+    {                   
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
 
         if($form_keys!=null){
-            if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id')==null){
+            if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id') == null){
                 $data = $request->validate([
                     'delivery_type' => 'required',
                     'equipment' => 'required',
@@ -307,6 +306,13 @@ class QuotationController extends Controller
                     'user_id'=>'required',
                     'validity_end' => 'required',
                     'language_id' => 'required',
+                    'commodity' => 'sometimes|nullable',
+                    'contact_id' => 'sometimes|nullable',
+                    'company_id' => 'sometimes|nullable',
+                    'incoterm_id' => 'sometimes|nullable',
+                    'payment_conditions' => 'sometimes|nullable',
+                    'kind_of_cargo' => 'sometimes|nullable'
+
                 ]);
             } else if($request->input('cargo_type_id')!=null){
                 $data = $request->validate([
