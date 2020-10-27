@@ -788,19 +788,19 @@ class ExcelController extends Controller
 
         $data = $request->validate([
 
-            'direction' => 'required',
-            'validity' => 'required',
-            'expire' => 'required',
-            'gp_container' => 'required',
+            'data.direction' => 'required',
+            'data.validity' => 'required',
+            'data.expire' => 'required',
+            'data.gp_container' => 'required',
         ]);
         //dd($request->input('validity'));
 
-        $direction = $data['direction']; //'2020/10/01';
-        $code = $data['gp_container']; //'2020/10/01';
+        $direction = $data['data']['direction']; //'2020/10/01';
+        $code = $data['data']['gp_container']; //'2020/10/01';
         $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
-        $dateSince = $data['validity']; //'2020/10/01';
-        $dateUntil = $data['expire']; //'2020/10/30';
+        $dateSince = $data['data']['validity']; //'2020/10/01';
+        $dateUntil = $data['data']['expire']; //'2020/10/30';
         $company_id = '';
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
