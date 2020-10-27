@@ -82,4 +82,11 @@ class User extends Authenticatable implements Auditable
     {
         return 'https://hooks.slack.com/services/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';
     }
+    public function setPasswordAttribute($password)
+    {   
+        if (!empty($password))
+        {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
 }
