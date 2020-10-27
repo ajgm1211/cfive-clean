@@ -8,7 +8,6 @@
                 </div>
                 <div class="col-6">
                     <div class="float-right">
-                        <button class="btn btn-link" v-b-modal.addOFreight>+ Add Freight</button>
                         <button class="btn btn-primary btn-bg" v-on:click="link">+ Import Contract</button>
                     </div>
                 </div>
@@ -187,7 +186,6 @@
             link(){
                  window.location = '/RequestFcl/NewRqFcl';
             }
-           
         }
     }
 </script>

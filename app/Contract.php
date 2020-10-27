@@ -306,7 +306,7 @@ class Contract extends Model implements HasMedia, Auditable
 
         if ($validateEquipment['count'] < 2) {
             $rates = Rate::whereHas('contract', function ($q) use ($company_user_id) {
-                $q->where('company_user_id', '=', $company_user_id)->where('status', 'publish')->where('code', $this->code);
+                $q->where('company_user_id', '=', $company_user_id)->where('status', 'publish')->where('name', $this->name);
             })->with(['carrier' => function ($query) {
                 $query->select('id', 'name', 'uncode', 'image', 'image as url');
             }])->get();

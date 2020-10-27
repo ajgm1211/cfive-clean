@@ -86768,3 +86768,20 @@ th#options-limit-fcl {
   border: 1px solid #c5c5c5;
 }
 
+.pac-container {
+  background-color: #ffffff;
+  z-index: 1050;
+  position: fixed;
+  display: inline-block;
+}
+
+.modal {
+  z-index: 1050;
+}
+
+.btn-save {
+  border: none;
+  color: #031B4E;
+  background: transparent;
+}
+
