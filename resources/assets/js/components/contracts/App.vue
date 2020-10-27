@@ -9,9 +9,9 @@
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-link" v-b-modal.exportExcel>+ Export Excel</button>
-                                <button class="btn btn-link" v-b-modal.addContract>+ Add Contract</button>
-                                <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" >+ Import Contracts</a>
+                                <button class="btn btn-link" v-b-modal.exportExcel><i class="fa fa-download"></i> Export Excel</button>
+                                <button class="btn btn-link" v-b-modal.addContract><i class="fa fa-plus"></i> Add Contract</button>
+                                <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" ><i class="fa fa-upload"></i> Import Contract</a>
                             </div> 
                         </div>
                     </div>
