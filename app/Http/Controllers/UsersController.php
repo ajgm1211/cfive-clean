@@ -191,11 +191,12 @@ class UsersController extends Controller
                 'required',
                 Rule::unique('users')->ignore($id),
             ],
-            'password' => 'sometimes|required',
+            'password' => 'sometimes|confirmed',
+            'password_confirmation' => 'required_with:password',
         ]);
 
     $requestForm = $request->all();
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     $roles = $user->getRoleNames();
 
     if (!$roles->isEmpty()) {
@@ -214,7 +215,7 @@ class UsersController extends Controller
     if ($request->type == "data_entry") {
       $user->assignRole('data_entry');
     }
-
+    
     $user->update($requestForm);
 
     if ($request->ajax()) {
