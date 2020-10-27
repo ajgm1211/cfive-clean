@@ -46,7 +46,7 @@ class SyncCompaniesEvery30Job implements ShouldQueue
                 }
             }
         } catch (\Exception $e) {
-            $e->getMessage();
+            \Log::error($e->getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ class SyncCompaniesEvery30Job implements ShouldQueue
 
             foreach ($response['entidades'] as $item) {
 
-                if ($item['fecha-alta'] > '2019-12-31') {
+                if ($item['fecha-alta'] >= '2020-01-01') {
 
                     Company::updateOrCreate([
                         'api_id' => $item['codigo']
@@ -75,8 +75,8 @@ class SyncCompaniesEvery30Job implements ShouldQueue
                         'tax_number' => $item['cif-nif'],
                         'company_user_id' => $setting->company_user_id,
                         'api_id' => $item['codigo'],
+                        'api_status' => 'created',
                     ]);
-
                 }
             }
 
