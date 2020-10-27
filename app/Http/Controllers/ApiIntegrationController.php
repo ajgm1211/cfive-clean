@@ -9,10 +9,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Message\Request as ClienteR;
 use GuzzleHttp\Message\Response;
 use App\Company;
+use App\Connection;
 use App\Contact;
 use App\Jobs\SyncCompaniesJob;
 use App\Partner;
 use App\Http\Requests\StoreApiIntegration;
+use App\Jobs\SyncCompaniesEvery30Job;
 use App\Visualtrans;
 use App\Vforwarding;
 
@@ -140,40 +142,7 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
-            $query->where('company_user_id', \Auth::user()->company_user_id);
-        })->with('partner')->first();
-
-        $setting->status = 1;
-        $setting->save();
-
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
-        ]);
-
-        switch($setting->partner->name){
-            case 'vForwarding':
-                $endpoint = $setting->url . $setting->api_key;
-                $data = new Vforwarding();
-                $response = $data->getData($client, $endpoint, $setting);
-            break;
-            case 'Visualtrans':
-                $endpoint = $setting->url . $setting->api_key;
-                $data = new Visualtrans();
-                $response = $data->getData($client, $endpoint, $setting);
-            break;
-        }
-
-        if(!$response){
-            return response()->json(['message' => 'Something went wrong on our side']);
-        }
-
-        $setting->status = 0;
-        $setting->save();
-
-        return response()->json(['message' => 'Ok']);
-
+        SyncCompaniesEvery30Job::dispatch();
     }
 
     public function getContacts($company_id)
