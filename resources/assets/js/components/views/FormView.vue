@@ -155,7 +155,7 @@
                     <!-- End DateRange Field -->
                 </div>
 
-                <div class="btns-form-modal">
+                <div class="btns-form-modal" v-if="!download">
                     <button class="btn" @click="close" type="button">
                         Cancel
                     </button>
@@ -165,6 +165,19 @@
                         @click="onSubmit"
                     >
                         {{ btnTxt }}
+                    </button>
+                </div>
+                <div class="btns-form-modal" v-if="download">
+                    <button class="btn" @click="close" type="button">
+                        Cancel
+                    </button>
+                    <button
+                        class="btn btn-primary btn-bg"
+                        type="button"
+                        @click="downloadFile"
+                    >
+                        <span v-if="!downloading">{{ btnTxt }}</span>
+                        <span v-if="downloading">Downloading <i class="fa fa-spinner fa-spin"></i></span>
                     </button>
                 </div>
             </div>
@@ -227,12 +240,16 @@ export default {
             required: false,
             deafult: 1,
         },
+        download: {
+            type: Boolean,
+        },
     },
     data() {
         return {
             vdata: {},
             datalists: {},
             refresh: true,
+            downloading: false,
         };
     },
     created() {
@@ -456,6 +473,7 @@ export default {
         },
         downloadFile() {
             let data = this.prepareData();
+            this.downloading = true;
             axios({
                 method: "post",
                 url: "/contracts/export",
@@ -466,6 +484,8 @@ export default {
             })
                 .then((response) => {
                     this.forceFileDownload(response, data);
+                    this.close();
+                    this.downloading = false;
                 })
                 .catch(() => console.log("error"));
         },
