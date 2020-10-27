@@ -177,7 +177,7 @@
                         @click="downloadFile"
                     >
                         <span v-if="!downloading">{{ btnTxt }}</span>
-                        <span v-if="downloading">Downloading <i class="fa fa-spinner fa-spin"></i></span>
+                        <span v-if="downloading">Processing <i class="fa fa-spinner fa-spin"></i></span>
                     </button>
                 </div>
             </div>
