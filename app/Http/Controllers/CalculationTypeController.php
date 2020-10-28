@@ -36,7 +36,8 @@ class CalculationTypeController extends Controller
     public function store(Request $request){
         $calculation        = new CalculationType();
         $calculation->name  = $request->name;
-        $calculation->code	= $request->code;
+        $calculation->display_name = strtoupper($request->name);
+        $calculation->code	= strtoupper($request->code);
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
@@ -77,7 +78,8 @@ class CalculationTypeController extends Controller
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
         $calculation->name  = $request->name;
-        $calculation->code	= $request->code;
+        $calculation->display_name = strtoupper($request->name);
+        $calculation->code	= strtoupper($request->code);
         if(!$request->name_prin_ch){
             $name_prin_inp = $request->name_prin_inp;
         } else {
