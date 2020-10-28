@@ -642,12 +642,8 @@ export default {
     },
     created() {
         let id = this.$route.params.id;
-        /* Return the lists data for dropdowns */
-        api.getData({}, "/api/quote/local/data/" + id, (err, data) => {
-            this.harbors = data;
-            this.value = this.harbors[0];
-            this.getValues();
-        });
+
+        this.getHarbors(id);
 
         this.getRemarks(id);
     },
@@ -703,12 +699,32 @@ export default {
                     currency: "",
                 });
             } else {
-                this.alert("You must select a port before create a new charge", "error");
+                this.alert(
+                    "You must select a port before create a new charge",
+                    "error"
+                );
             }
         },
-
         showModal() {
             this.$refs["my-modal"].show();
+        },
+        closeModal() {
+            this.$refs["my-modal"].hide();
+        },
+        addSaleCode(value) {
+            this.sale_codes.push(value);
+        },
+        getHarbors(id) {
+            actions.localcharges
+                .harbors(id)
+                .then((response) => {
+                    this.harbors = response.data;
+                    this.value = this.harbors[0];
+                    this.getValues();
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getValues() {
             this.getSaleTerms();
@@ -717,72 +733,74 @@ export default {
             this.getTotal();
             this.getCarriers();
         },
-        closeModal() {
-            this.$refs["my-modal"].hide();
-        },
-        addSaleCode(value) {
-            this.sale_codes.push(value);
-        },
         getSaleTerms() {
             this.saleterms = [];
             this.charges = [];
             this.template = null;
-            api.getData(
-                {
-                    equipment: this.equipment.id,
-                    port_id: this.value.id,
-                    type: this.value.type,
-                },
-                "/api/quote/localcharge/saleterm",
-                (err, data) => {
-                    this.saleterms = data;
-                }
-            );
+            let data = {
+                equipment: this.equipment.id,
+                port_id: this.value.id,
+                type: this.value.type,
+            };
+            actions.localcharges
+                .saleterms(data)
+                .then((response) => {
+                    this.saleterms = response.data;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getCharges() {
             this.charges = [];
             this.totals = [];
-            api.postData(
-                {
-                    id: this.template.id,
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type_id: this.value.type,
-                },
-                "/api/quote/localcharge/store/salecharge",
-                (err, data) => {
-                    this.charges = data;
+            let data = {
+                id: this.template.id,
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type_id: this.value.type,
+            };
+            actions.localcharges
+                .storedCharges(data)
+                .then((response) => {
+                    this.charges = response.data;
                     this.getTotal();
-                }
-            );
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getStoredCharges() {
             this.charges = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type_id: this.value.type,
-                },
-                "/api/quote/get/localcharge",
-                (err, data) => {
-                    this.charges = data;
-                }
-            );
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type_id: this.value.type,
+            };
+            actions.localcharges
+                .storedCharges(data)
+                .then((response) => {
+                    this.charges = response.data;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getTotal() {
             this.totals = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                },
-                "/api/quote/localcharge/total",
-                (err, data) => {
-                    this.totals = data;
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+            };
+            actions.localcharges
+                .total(data)
+                .then((response) => {
+                    this.totals = response.data;
                     this.loaded = true;
-                }
-            );
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getCarriers() {
             let self = this;

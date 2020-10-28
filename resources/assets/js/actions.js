@@ -463,7 +463,22 @@ export default {
             return api.call('get', '/api/quote/localcharge/saleterm', { data });
         },
         localcharges(params) {
-           return api.call('get', '/api/quote/localcharge', { params })     
+            return api.call('get', '/api/quote/localcharge', { params })
+        },
+        total(params) {
+            return api.call('get', '/api/quote/localcharge/total', { params })
+        },
+        storedCharges(params) {
+            return api.call('get', '/api/quote/get/localcharge', { params })
+        },
+        charges(params) {
+            return api.call('get', '/api/quote/localcharge/store/salecharge', { params })
+        },
+        saleterms(params) {
+            return api.call('get', '/api/quote/localcharge/saleterm', { params })
+        },
+        harbors(id) {
+            return api.call('get', `/api/quote/local/data/${id}`, {})
         },
     },
     providers: {
