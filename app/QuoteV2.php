@@ -532,9 +532,13 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function duplicate()
     {
-
+        $company_user = Auth::user('web')->worksAt();
+        $company_code = strtoupper(substr($company_user->name, 0, 2));
+        $higherq_id = $company_user->getHigherId($company_code);
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);
+        
         $new_quote = $this->replicate();
-        $new_quote->quote_id .= ' copy';
+        $new_quote->quote_id = $newq_id.' copy';
         $new_quote->save();
 
         $this->with(
@@ -599,17 +603,19 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function getContainerArray($equip)
     {
-        $cont_ids = [];
-        $cont_array = explode(",", $equip);
-        foreach ($cont_array as $cont) {
-            if ($cont != "") {
-                $wh = Container::where('code', '=', $cont)->first()->id;
-                array_push($cont_ids, $wh);
+        if($equip != '[]'){
+            $cont_ids = [];
+            $cont_array = explode(",", $equip);
+            foreach ($cont_array as $cont) {
+                if ($cont != "") {
+                    $wh = Container::where('code', '=', $cont)->first()->id;
+                    array_push($cont_ids, $wh);
+                }
             }
+            $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
+    
+            return $conts;
         }
-        $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
-
-        return $conts;
     }
 
     public function originDest($reqPorts)
