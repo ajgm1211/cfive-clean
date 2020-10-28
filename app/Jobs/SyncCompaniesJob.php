@@ -37,7 +37,7 @@ class SyncCompaniesJob implements ShouldQueue
     {
         try {
 
-            $integrations = ApiIntegration::where('module', 'Companies')->with('partner')->get();
+            $integrations = ApiIntegration::where(['module' => 'Companies', 'status' => 1])->with('partner')->get();
 
             foreach ($integrations as $setting) {
                 $this->setData($setting);
@@ -52,7 +52,7 @@ class SyncCompaniesJob implements ShouldQueue
         $data = new Connection();
 
         $page = 1;
-        
+
         do {
 
             $uri =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
@@ -79,7 +79,6 @@ class SyncCompaniesJob implements ShouldQueue
             }
 
             $page += 1;
-            
         } while ($page <= $max_page);
 
         \Log::info('Syncronization with vForwarding completed successfully!');
