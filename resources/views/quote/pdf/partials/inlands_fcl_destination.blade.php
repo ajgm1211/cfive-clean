@@ -6,7 +6,7 @@
                         <!-- Section Title -->
                         <div>
                             
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
+                            <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
                             
                             <br>
 
@@ -55,15 +55,15 @@
                                 
                                     <tr class="text-left color-table">
                                 
-                                        <td>{{$rate->charge}}</td>
+                                        <td>{{@$rate->charge ?? '--'}}</td>
                                 
-                                        <td>{{$rate->providers->name}}</td>
+                                        <td>{{@$rate->providers->name ?? '--'}}</td>
                                 
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
                                 
-                                                        <td {{ $hide }}>{{ $rate->${'total_sum_'.$c->code} }} {{$rate->currency->alphacode}}</td>
+                                                        <td {{ $hide }}>{{ @$rate->${'total_sum_'.$c->code} }} {{@$rate->currency->alphacode}}</td>
                                 
                                                     @endif
                                                 @endforeach
