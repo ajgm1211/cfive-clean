@@ -460,7 +460,10 @@ export default {
             return api.call('post', `/api/quote/localcharge/delete/${id}`, { type: type });
         },
         retrieve(data) {
-            return api.call('get', `/api/quote/localcharge/saleterm`, data);
+            return api.call('get', '/api/quote/localcharge/saleterm', { data });
+        },
+        localcharges(params) {
+           return api.call('get', '/api/quote/localcharge', { params })     
         },
     },
     providers: {
