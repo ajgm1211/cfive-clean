@@ -2773,11 +2773,7 @@ $(".quote_search").on("click", function() {
 
 function submitForm(type) {
 
-    if (type == 1) {
-        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
-    } else {
-        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
-    }
+    $('#rateForm').attr('action', '/v2/quotes/store/' + type);
 
     $("#rateForm").submit();
 }
@@ -2787,7 +2783,7 @@ $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
 $(".quote_man").on("click", function() {
 
     //$('#FormQuote').attr('action', '/api/quote/store');
-    var type = $(this).attr('type');
+    var type = 1;
     $('#FormQuote').attr('action', '/v2/quotes/store/' + type);
 
     if ($('#quoteType').val() == 2) {
