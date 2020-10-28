@@ -100,7 +100,7 @@
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
-                        :actions="actions.charges"
+                        :actions="tableActions"
                         :totalActions="actions.automaticrates"
                         :autoupdateDataTable="true"
                         :quoteEquip="quoteEquip"
@@ -184,7 +184,7 @@
                 btnTxt="Update Charge"
                 @exit="closeModal('editCharge','cancel')"
                 @success="closeModal('editCharge','edit')"
-                :actions="actions.charges"
+                :actions="tableActions"
                 :update="true"
             ></FormView>
         </b-modal>
@@ -227,6 +227,7 @@ export default {
             vdata: {},
             value: "",
             actions: actions,
+            tableActions: Object,
             header_fields: {
                 transit_time: {
                     label: "TRANSIT TIME",
@@ -306,25 +307,7 @@ export default {
 
             /* Table input inline fields */
             vform_fields: {},
-            eform_fields: {
-                fixed_surcharge: {
-                    type: "extraText",
-                    disabled: true,
-                    placeholder: "Freight",
-                },
-                fixed_calculation_type: {
-                    type: "extraText",
-                    disabled: true,
-                },
-                fixed_currency: {
-                    searchable: true,
-                    type: "extraSelect",
-                    rules: "required",
-                    trackby: "alphacode",
-                    placeholder: "Select Currency",
-                    options: "currency",
-                },
-            },
+            eform_fields: {},
             totalsFields: {
                 Profits: {},
                 Totals: {},
@@ -374,15 +357,17 @@ export default {
         formFieldUpdated(containers_fields) {
             let component = this;
 
-            component.containers_fields = containers_fields;
-            component.form_fields = {
-                ...this.vform_fields,
-                ...containers_fields,
-            };
-            component.extra_fields = {
-                ...this.eform_fields,
-                ...containers_fields,
-            };
+            if(Object.keys(this.equipment).length!=0){
+                component.containers_fields = containers_fields;
+                component.form_fields = {
+                    ...this.vform_fields,
+                    ...containers_fields,
+                };
+                component.extra_fields = {
+                    ...this.eform_fields,
+                    ...containers_fields,
+                };
+            }
         },
 
         openModalContainer(ids) {
@@ -411,28 +396,56 @@ export default {
         setTotalsFields() {
             let component = this;
 
-            component.quoteEquip.forEach(function (eq) {
-                component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                    type: "text",
-                    placeholder: eq,
+            if(Object.keys(this.equipment).length!=0){
+                component.quoteEquip.forEach(function (eq) {
+                    component.totalsFields["Profits"]["profits_".concat(eq)] = {
+                        type: "text",
+                        placeholder: eq,
+                    };
+                    component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                        type: "span",
+                    };
+                });
+    
+                component.totalsFields["Profits"]["profits_currency"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
                 };
-                component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                component.totalsFields["Totals"]["totals_currency"] = {
                     type: "span",
                 };
-            });
-
-            component.totalsFields["Profits"]["profits_currency"] = {
-                searchable: true,
-                type: "select",
-                rules: "required",
-                trackby: "alphacode",
-                placeholder: "Select Currency",
-                options: "currency",
-                disabled: true,
-            };
-            component.totalsFields["Totals"]["totals_currency"] = {
-                type: "span",
-            };
+            }else{
+                component.totalsFields["Profits"]["profits_per_unit"] = {
+                    type: "text",
+                };
+                component.totalsFields["Profits"]["profits_total"] = {
+                    type: "text",
+                    disabled: true,
+                };
+                component.totalsFields["Profits"]["profits_currency"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
+                };
+                component.totalsFields["Totals"]["totals_per_unit"] = {
+                    type: "span",
+                };
+                component.totalsFields["Totals"]["totals_total"] = {
+                    type: "span",
+                };
+                component.totalsFields["Totals"]["totals_currency"] = {
+                    type: "span",
+                };
+            }
         },
 
         setCollapseState(freight) {
@@ -564,6 +577,9 @@ export default {
 
         setTableFields(){
             if(Object.keys(this.equipment).length!=0){
+
+                this.tableActions = this.actions.charges;
+
                 this.fields.push(
                 {
                     key: "surcharge_id",
@@ -616,7 +632,30 @@ export default {
                         options: "currency",
                     },
                 }
+
+                this.eform_fields = {
+                    fixed_surcharge: {
+                        type: "extraText",
+                        disabled: true,
+                        placeholder: "Freight",
+                    },
+                    fixed_calculation_type: {
+                        type: "extraText",
+                        disabled: true,
+                    },
+                    fixed_currency: {
+                        searchable: true,
+                        type: "extraSelect",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
             } else {
+
+                this.tableActions = this.actions.chargeslcl;
+
                 this.fields.push(
                 {
                     key: "surcharge_id",
@@ -630,14 +669,18 @@ export default {
                     label: "DETAIL",
                     type: "select",
                     trackby: "name",
-                    options: "calculationtypes",
+                    options: "calculationtypeslcl",
                 },
                 {
                     key: "units",
                     label: "UNITS",
                     type: "text",
                 },
-                //MINIMUM GOES HERE
+                {
+                    key: "minimum",
+                    label: "MINIMUM",
+                    type: "text",
+                },
                 {
                     key: "price_per_unit",
                     label: "TON/M3",
@@ -647,6 +690,7 @@ export default {
                     key: "total",
                     label: "TOTAL",
                     type: "text",
+                    disabled: true,
                 },
                 {
                     key: "currency_id",
@@ -673,14 +717,18 @@ export default {
                         rules: "required",
                         trackby: "name",
                         placeholder: "Select Provider",
-                        options: "calculationtypes",
+                        options: "calculationtypeslcl",
                     },
                     units: {
                         label: "UNITS",
                         type: "text",
                         rules: "required",
                     },
-                    //MINIMUM GOES HERE
+                    minimum: {
+                        label: "MINIMUM",
+                        type: "text",
+                        rules: "required",
+                    },
                     price_per_unit: {
                         label: "TON/M3",
                         type: "text",
@@ -688,6 +736,7 @@ export default {
                     },
                     total: {
                         label: "TOTAL",
+                        disabled: true,
                         type: "text",
                         rules: "required",
                     },
@@ -695,6 +744,39 @@ export default {
                         label: "CURRENCY",
                         searchable: true,
                         type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
+
+                this.eform_fields = {
+                    fixed_surcharge_id: {
+                        type: "extraText",
+                        disabled: true,
+                        placeholder: "Freight",
+                    },
+                    fixed_calculation_type_id: {
+                        type: "extraText",
+                        disabled: true,
+                    },
+                    fixed_units: {
+                        type: "extraText",
+                    },
+                    fixed_minimum: {
+                        type: "extraText",
+                    },
+                    fixed_price_per_unit: {
+                        type: "extraText",
+                    },
+                    fixed_total: {
+                        type: "extraText",
+                        disabled: true,
+                    },
+                    fixed_currency_id: {
+                        searchable: true,
+                        type: "extraSelect",
                         rules: "required",
                         trackby: "alphacode",
                         placeholder: "Select Currency",

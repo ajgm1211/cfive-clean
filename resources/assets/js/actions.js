@@ -350,7 +350,7 @@ export default {
         },
         updateTotals(autorate_id, data, route) {
             let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autorate_id}/totals/update`, data)
+            return api.call('post', `/api/quotes/${quote_id}/automatic_rate/${autorate_id}/totals/update`, data)
         },
         retrieve(id, route) {
             let quote_id = route.params.id;
@@ -388,6 +388,35 @@ export default {
         },
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
+        }
+    },
+    chargeslcl: {
+        list(id, params, callback, route) {
+
+            let quote_id = route.params.id;
+
+            api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}/chargeslcl`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(autorate_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_rate/${autorate_id}/storelcl`, data);
+        },
+        retrieve(autorate_id) {
+            return api.call('get', `/api/quotes/ocean_freight/${autorate_id}/chargelcl`, {})
+        },
+        update(charge_id, data, route) {
+            return api.call('post', `/api/quotes/ocean_freight/chargelcl/${charge_id}/update`, data)
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/ocean_freight/chargelcl/${id}/destroy/`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_rate/chargeslcl/destroyAll`, { ids: ids });
         }
     },
     automaticinlands: {
