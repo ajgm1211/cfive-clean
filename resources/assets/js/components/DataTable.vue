@@ -112,6 +112,7 @@
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
+                                :disabled="item.disabled"
                                 :id="key"
                                 @change="cleanInput(key)"
                             >
@@ -155,6 +156,7 @@
                                 :id="key"
                                 :multiple="false"
                                 :options="datalists[item.options]"
+                                :disabled="item.disabled"
                                 :searchable="item.searchable"
                                 :close-on-select="true"
                                 :clear-on-select="false"
@@ -319,6 +321,7 @@
                             <b-form-input
                                 v-if="col.type == 'text'"
                                 v-model="item[col.key]"
+                                :disabled="col.disabled"
                                 :id="String(item['id'])"
                                 @blur="onSubmitAutoupdate(item['id'])"
                             ></b-form-input>
@@ -327,6 +330,7 @@
                                 v-else-if="col.type == 'select'"
                                 v-model="item[col.key]"
                                 :searchable="true"
+                                :disabled="col.disabled"
                                 :close-on-select="true"
                                 :options="datalists[col.options]"
                                 :show-labels="false"
@@ -400,6 +404,10 @@
 
                     <b-td></b-td>
 
+                    <b-td v-if="Object.keys(equipment).length==0"></b-td>
+
+                    <b-td v-if="Object.keys(equipment).length==0"></b-td>
+
                     <b-td
                         ><span style="float: right; font-weight: bold">{{
                             id
@@ -417,6 +425,7 @@
                             <b-form-input
                                 v-model="totalsData[key]"
                                 :placeholder="item.placeholder"
+                                :disabled="item.disabled"
                                 :id="key"
                                 v-on:blur="onSubmitTotals()"
                             >
@@ -498,6 +507,7 @@ import paginate from "./paginate";
 export default {
     props: {
         fields: Array,
+        equipment: Object,
         inputFields: {
             type: Object,
             required: false,
@@ -668,7 +678,6 @@ export default {
                     .retrieve(this.multiId)
                     .then((response) => {
                         this.fixedData = response.data.data;
-                        console.log(this.fixedData);
                     })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
@@ -754,7 +763,7 @@ export default {
         refreshData() {
             this.$router.push({});
             this.initialPage = 1;
-            this.getData({});
+            this.initialData({});
         },
 
         /* Pagination Callback */
