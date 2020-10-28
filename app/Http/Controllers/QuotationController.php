@@ -391,4 +391,12 @@ class QuotationController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function show($id){
+
+        $quote_id = obtenerRouteKey($id);
+        $quote = QuoteV2::firstOrFail($quote_id);
+
+        return redirect()->action('QuotationController@edit', $quote);
+    }
 }
