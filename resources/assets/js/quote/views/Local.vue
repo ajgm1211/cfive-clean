@@ -674,13 +674,12 @@ export default {
             inputs: [],
             selectedCharges: [],
             carriers: [],
-            datalists: {},
             value: "",
             template: "",
             code_port: "",
             rate_id: "",
             sale_code: "",
-            remarks: "",
+            remarks: null,
             loaded: false,
             remark_field: {
                 localcharge_remarks: {
@@ -704,13 +703,7 @@ export default {
                     currency: "",
                 });
             } else {
-                this.$toast.open({
-                    message:
-                        "You must select a port before create a new charge",
-                    type: "error",
-                    duration: 5000,
-                    dismissible: true,
-                });
+                this.alert("You must select a port before create a new charge", "error");
             }
         },
 
@@ -730,21 +723,10 @@ export default {
         addSaleCode(value) {
             this.sale_codes.push(value);
         },
-        getCarriers() {
-            let self = this;
-            let quote = this.$route.params.id;
-            actions.localcharges
-                .carriers(quote)
-                .then((response) => {
-                    self.carriers = response.data;
-                })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                });
-        },
         getSaleTerms() {
             this.saleterms = [];
             this.charges = [];
+            this.template = null;
             api.getData(
                 {
                     equipment: this.equipment.id,
@@ -802,23 +784,38 @@ export default {
                 }
             );
         },
+        getCarriers() {
+            let self = this;
+            let quote = this.$route.params.id;
+            actions.localcharges
+                .carriers(quote)
+                .then((response) => {
+                    self.carriers = response.data;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type: this.value.type,
-                },
-                "/api/quote/localcharge",
-                (err, data) => {
-                    this.localcharges = data.charges;
-                    this.port = data.port.display_name;
-                    this.code_port = data.port.country.code.toLowerCase();
-                    this.rate_id = data.automatic_rate.id;
-                }
-            );
+            let self = this;
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type: this.value.type,
+            };
+            actions.localcharges
+                .localcharges(data)
+                .then((response) => {
+                    self.localcharges = response.data.charges;
+                    self.port = response.data.port.display_name;
+                    self.code_port = response.data.port.country.code.toLowerCase();
+                    self.rate_id = response.data.automatic_rate.id;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getRemarks(id) {
             let self = this;
