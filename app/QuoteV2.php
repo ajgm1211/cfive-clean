@@ -615,6 +615,8 @@ class QuoteV2 extends Model  implements HasMedia
             $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
     
             return $conts;
+        }else{
+            return $equip;
         }
     }
 
