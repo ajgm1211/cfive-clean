@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\SendQuotesJob;
 use App\Jobs\ProcessExpiredContractsJob;
+use App\Jobs\SyncCompaniesEvery30Job;
 use App\Jobs\SyncCompaniesJob;
 use App\Jobs\UpdateCurrenciesJob;
 use App\Jobs\UpdateCurrenciesEurJob;
@@ -38,8 +39,9 @@ class Kernel extends ConsoleKernel
         /*$schedule->job(new ProcessExpiredContractsJob)->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
-        $schedule->job(new SyncCompaniesJob)->twiceDaily(6, 14)->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
-        
+        $schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesEvery30Job)->everyThirtyMinutes()->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
+
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:updateCurrenciesEur')
@@ -54,8 +56,8 @@ class Kernel extends ConsoleKernel
         //->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
 
         // Comandos para backups
-        //$schedule->command('backup:clean')->daily()->at('01:40');
-       // $schedule->command('backup:run')->daily()->at('02:00');
+        $schedule->command('backup:clean')->daily()->at('01:40');
+        $schedule->command('backup:run')->daily()->at('02:00');
     }
 
     /**
@@ -65,7 +67,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
