@@ -114,6 +114,10 @@ class QuotationController extends Controller
             return $curr->only(['id','alphacode','rates','rates_eur']);
         });
 
+        $filtered_currencies = Currency::whereIn('id', ['46','149'])->get()->map(function ($curr){
+            return $curr->only(['id','alphacode','rates','rates_eur']);
+        });
+
         $containers = Container::all();
 
         $calculationtypes = CalculationType::get()->map(function ($ctype){
@@ -171,7 +175,8 @@ class QuotationController extends Controller
             'providers',
             'providers',
             'distances',
-            'cargo_types'
+            'cargo_types',
+            'filtered_currencies'
         );
 
         return response()->json(['data'=>$data]);
