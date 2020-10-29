@@ -211,7 +211,7 @@
                                     <span v-if="loaded">
                                         <multiselect
                                             v-model="totals.currency"
-                                            :options="datalists['currency']"
+                                            :options="datalists['filtered_currencies']"
                                             :multiple="false"
                                             :show-labels="false"
                                             :close-on-select="true"
