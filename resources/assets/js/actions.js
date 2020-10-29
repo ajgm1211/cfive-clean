@@ -472,7 +472,7 @@ export default {
             return api.call('get', '/api/quote/get/localcharge', { params })
         },
         charges(params) {
-            return api.call('get', '/api/quote/localcharge/store/salecharge', { params })
+            return api.call('post', '/api/quote/localcharge/store/salecharge', { params })
         },
         saleterms(params) {
             return api.call('get', '/api/quote/localcharge/saleterm', { params })
