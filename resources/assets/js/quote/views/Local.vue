@@ -761,7 +761,7 @@ export default {
                 type_id: this.value.type,
             };
             actions.localcharges
-                .storedCharges(data)
+                .charges(data)
                 .then((response) => {
                     this.charges = response.data;
                     this.getTotal();
