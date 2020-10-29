@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Container;
+use App\Http\Traits\QuotationApiTrait;
 use App\IntegrationQuoteStatus;
 use App\QuoteV2;
+use App\AutomaticRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Http\Traits\UtilTrait;
@@ -13,6 +16,7 @@ class QuotationApiController extends Controller
 {
 
     use UtilTrait;
+    use QuotationApiTrait;
 
     /**
      * Show quotes list
@@ -78,14 +82,52 @@ class QuotationApiController extends Controller
         $integration = $request->integration;
         $company_user_id = Auth::user()->company_user_id;
 
-        $quote = QuoteV2::NewQuoteSelect()->ConditionalWhen($type, $status, $integration)
-            ->NewRateV2()->AuthUserCompany($company_user_id)
-            ->NewUserRelation()->NewCompanyRelation()
-            ->NewContactRelation()->IncotermRelation()->findOrFail($id);
+        $quote = QuoteV2::NewQuoteSelect()->NewCompanyRelation()
+        ->NewContactRelation()->IncotermRelation()->findOrFail($id);
+
+        $containers = Container::all();
+
+        $freight_charges = AutomaticRate::SelectFields()
+            ->SelectCharge()->where('quote_id', $quote->id)->get();
+
+        $ocean_freight = $this->mapFreightCharges($freight_charges);
+
+        $origin_charges = $this->localCharges($quote, 1);
+
+        $destination_charges = $this->localCharges($quote, 2);
 
         //Modify equipment array
         $this->transformEquipmentSingle($quote);
 
-        return $quote;
+        $quote = $quote->makeHidden(['incoterm_id','contact_id','company_id'])->toArray();
+
+        $data = compact(
+            'quote',
+            'ocean_freight',
+            'origin_charges',
+            'destination_charges'
+        );
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function mapFreightCharges($collection)
+    {
+        $collection->map(function ($value) {
+            $value['currency_code'] = $value->currency->alphacode;
+            $value['origin'] = $value->origin_port->display_name;
+            $value['destiny'] = $value->destination_port->display_name;
+            unset($value['origin_port_id']);
+            unset($value['destination_port_id']);
+            unset($value['origin_address']);
+            unset($value['destination_address']);
+            unset($value['currency_id']);
+            unset($value['currency']);
+            unset($value['origin_port']);
+            unset($value['destination_port']);
+            return $value;
+        });
+
+        return $collection;
     }
 }
