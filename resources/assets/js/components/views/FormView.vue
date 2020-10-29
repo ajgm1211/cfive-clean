@@ -94,7 +94,7 @@
                     <!-- End Select Field -->
 
                     <!-- MultiSelect Field -->
-                    <div v-if="item.type == 'multiselect'">
+                    <div v-if="item.type == 'multiselect' || item.type == 'multiselect_data'">
                         <b-form-group
                             :label="item.label"
                             :invalid-feedback="key + ' is required'"
