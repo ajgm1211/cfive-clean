@@ -155,8 +155,13 @@
         methods: {
             /* Single Actions */
             onEdit(data){
+                let component = this;
+
+                data['origin'] = Array(data['origin']);
+                data['destination'] = Array(data['destination']);
+
+                component.currentData = data;
                 
-                this.currentData = data;
                 this.$bvModal.show('editOFreight');
             },
 

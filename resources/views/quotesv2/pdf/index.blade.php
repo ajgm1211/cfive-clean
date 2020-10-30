@@ -9,10 +9,10 @@
 
         </style>
     </head>
-    <body style="background-color: white; font-size: 11px;">
+    <body style="background-color: white; font-size: 11px; margin: 50px 50px 50px 50px">
         
 
-        <main style="padding: 50px 50px 30px 50px">
+        <main>
             <!-- HEADER -->
             @include('quotesv2.pdf.partials.header')
 
