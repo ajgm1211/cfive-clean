@@ -379,6 +379,13 @@ export default {
                         )
                             data[key] = component.vdata[key].map((e) => e.id);
                         break;
+                    case "multiselect_data":
+                        if (
+                            key in component.vdata &&
+                            component.vdata[key].length > 0
+                        )
+                            data[key] = component.vdata[key].map((e) => e.id);
+                        break;
                     case "daterange":
                         if (
                             component.vdata[key]["startDate"] &&
