@@ -7,9 +7,8 @@
                                 <!-- Section Title -->
                                 <div>
 
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
 
-                                    <br>
                                 </div>
                                 <!-- End Section Title -->
 
@@ -114,9 +113,7 @@
                             
                             <!-- Section Title -->
                             <div> 
-                                <p class="title"  style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
-
-                                <br>
+                                <p class="title"  style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
 
                             </div>
                             <!-- End Section Title -->
@@ -242,9 +239,9 @@
                                 <!-- Section Title -->
                                 <div>
 
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
 
-                                    <br>
+                                    
 
                                 </div>
                                 <!-- End Section Title -->
@@ -348,9 +345,9 @@
                                 <!-- Section Title -->
                                 <div>
 
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
 
-                                    <br>
+                                    
 
                                 </div>
                                 <!-- End Section Title -->

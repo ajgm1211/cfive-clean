@@ -6,9 +6,9 @@
                             <!-- Section Title -->
                             <div>
 
-                                <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$origin}} estoy en destination</p>
+                                <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$origin}}</b></p>
 
-                                <br>
+                                
 
                             </div>
                             <!-- End Section Title-->
@@ -134,9 +134,9 @@
                                     <!-- Section Title -->
                                     <div>
 
-                                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$destination}}</p>
+                                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$destination}}</b></p>
                                     
-                                        <br>
+                                        
                                     
                                     </div>
                                     <!-- End Section Title-->
@@ -237,8 +237,8 @@
 
                                 <!-- Section Title -->
                                 <div>
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$destination}}</p>
-                                    <br>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$destination}}</b></p>
+                                    
                                 </div>
                                 <!-- End Section Title -->
 
@@ -351,9 +351,9 @@
                                 <!-- Section Title -->
                                 <div>
 
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$destination}}</p>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$destination}}</b></p>
 
-                                    <br>
+                                    
 
                                 </div>
                                 <!-- End Section Title -->
