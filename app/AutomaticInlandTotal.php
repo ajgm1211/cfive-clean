@@ -20,6 +20,11 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\Currency','id','currency_id');
     }
 
+    public function inland_address()
+    {
+        return $this->hasOne('App\InlandAddress','id','inland_address_id');
+    }
+
     public function totalize()
     {
         $quote = $this->quotev2()->first();

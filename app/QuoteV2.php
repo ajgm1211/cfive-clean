@@ -510,6 +510,16 @@ class QuoteV2 extends Model  implements HasMedia
         $this->hasMany('App\AutomaticInland');
     }
 
+    public function inland_addresses()
+    {
+        return $this->hasMany('App\InlandAddress','quote_id','id');
+    }
+
+    public function automatic_inland_totals()
+    {
+        return $this->hasMany('App\AutomaticInlandTotal','quote_id','id');
+    }
+
     public function integration_quote_statuses()
     {
         $this->hasMany('App\IntegrationQuoteStatus');
@@ -538,29 +548,29 @@ class QuoteV2 extends Model  implements HasMedia
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
         
         $new_quote = $this->replicate();
-        $new_quote->quote_id = $newq_id.' copy';
+        $new_quote->quote_id = $newq_id;
         $new_quote->save();
 
-        $this->with(
-            'automatic_inland_lcl_airs',
-            'automatic_inlands',
-            'integration_quote_statuses',
-            'package_load_v2s',
-            'rate_v2',
-            'pdf_option',
-            'payment_conditions'
-        );
+        if($new_quote->type == 'FCL'){
+            $this->load(
+                'rates_v2',
+                'inland_addresses'
+            );
+        }else if($new_quote->type == 'LCL'){
+            $this->with(
+                'rates_v2',
+                'inland_addresses'
+            );
+        }
 
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
             foreach ($relation as $relationRecord) {
 
-                $newRelationship = $relationRecord->replicate();
-                $newRelationship->quote_id = $new_quote->id;
-                $newRelationship->save();
+                $newRelationship = $relationRecord->duplicate($new_quote);
             }
-        }
+        }    
 
         return $new_quote;
     }

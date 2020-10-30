@@ -223,8 +223,6 @@ class AutomaticRate extends Model
         
             $currency = $this->currency()->first();
 
-            $total_units = 0;
-    
             $totals_usd = [];
             $totals_usd['total'] = 0;
             $totals_usd['per_unit'] = 0;
@@ -245,7 +243,6 @@ class AutomaticRate extends Model
                     $tots_value = $charge->total;
                     $per_unit_value = $charge->price_per_unit;
                 }
-                $total_units += $charge_units;
                 $totals_usd['total'] += $tots_value;
                 $totals_usd['per_unit'] += $per_unit_value;
             }
@@ -262,7 +259,7 @@ class AutomaticRate extends Model
             //adding ocean freight
             $freight_amount_per_unit = $ocean_freight->price_per_unit;
             $freight_amount = $ocean_freight->total;
-            $total_units += $ocean_freight->units;
+            $total_units = $ocean_freight->units;
             $totals_usd['total'] += $freight_amount;
             $totals_usd['per_unit'] += $freight_amount_per_unit;
             $totals_usd['total'] = round($totals_usd['total'],2);
@@ -299,5 +296,36 @@ class AutomaticRate extends Model
     public function scopeGetQuote($query, $id)
     {
         return $query->where('quote_id', $id);
+    }
+
+    public function duplicate($quote)
+    {
+       
+        $new_rate = $this->replicate();
+        $new_rate->quote_id = $quote->id;
+        $new_rate->save();
+
+        if($quote->type == 'FCL'){
+            $this->load(
+                'charge'
+            );
+        }else if($quote->type == 'LCL'){
+            $this->load(
+                'charge_lcl_airs'
+            );
+        }
+
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->automatic_rate_id = $new_rate->id;
+                $newRelationship->save();
+            }
+        }    
+
+        return $new_rate;
     }
 }

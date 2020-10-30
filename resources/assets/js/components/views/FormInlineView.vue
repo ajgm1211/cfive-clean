@@ -106,7 +106,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit(),unlock(item,key)"
+                                @input="unlock(item,key,1),onSubmit()"
                                 @select="cleanInput(key)"
                                 class="input-h"
                             ></multiselect>
@@ -359,16 +359,21 @@ export default {
                     case "text":
                     case "textarea":
                     case "ckeditor":
-                        if (component.vdata[key])
-                            data[key] = component.vdata[key];
+                        data[key] = component.vdata[key];
                         break;
                     case "select":
-                        if (component.vdata[key])
+                        if (component.vdata[key]){
                             data[key] = component.vdata[key].id;
+                        }else{
+                            data[key] = component.vdata[key]
+                        }
                         break;
                     case "multiselect":
-                        if (component.vdata[key].length)
+                        if (component.vdata[key].length){
                             data[key] = component.vdata[key].map((e) => e.id);
+                        }else{
+                            data[key] = component.vdata[key]
+                        }
                         break;
                     case "daterange":
                         if (
@@ -450,7 +455,7 @@ export default {
             }
         },
         
-        unlock(item,key) {
+        unlock(item,key,iterator=null) {
             let component = this;
             let fields_keys = Object.keys(this.fields);
             let caller = item;
@@ -465,6 +470,9 @@ export default {
                         const lockTracker = lockedItem.lock_tracker;
                         const tracker = lockedItem.trackby;
                         const validator = component.vdata[callerKey];
+                        if(iterator != null){
+                            component.vdata[key] = null;
+                        }
                         if(validator != null){
                             lockedItem.options = [];
                             lockedItem.disabled = false;
