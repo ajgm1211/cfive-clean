@@ -165,7 +165,6 @@
                                 foreach ($containers as $c){
                                     ${'sum_inland_destination'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
                                     ${'sum_total_inland_destination'.$c->code}+=${'sum_inland_destination'.$c->code};
-                                    dd(${'sum_total_inland_destination'.$c->code});
                                 }
                             }
                         //}
