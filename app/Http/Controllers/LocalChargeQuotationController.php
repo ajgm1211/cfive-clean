@@ -122,10 +122,10 @@ class LocalChargeQuotationController extends Controller
     public function localcharges(Request $request)
     {
         switch ($request->type) {
-            case 1:
+            case "1":
                 return $this->localChargesOrigin($request->quote_id, $request->port_id);
                 break;
-            case 2:
+            case "2":
                 return $this->localChargesDestination($request->quote_id, $request->port_id);
                 break;
         }
@@ -382,8 +382,12 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $price = json_decode($local_charge->amount);
-                foreach ($price as $key => $amount) {
-                    $price->$index = $request->data;
+                if(empty($price)){
+                    $price[$index] = $request->data;
+                }else{
+                    foreach ($price as $key => $amount) {
+                        $price->$index = $request->data;
+                    }
                 }
                 $local_charge->amount = json_encode($price);
                 $local_charge->update();
@@ -392,8 +396,12 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $profit = json_decode($local_charge->markups);
-                foreach ($profit as $key => $markup) {
-                    $profit->$index = $request->data;
+                if(empty($profit)){
+                    $profit[$index] = $request->data;
+                }else{
+                    foreach ($profit as $key => $markup) {
+                        $profit->$index = $request->data;
+                    }
                 }
                 $local_charge->markups = json_encode($profit);
                 $local_charge->update();

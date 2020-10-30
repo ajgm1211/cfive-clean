@@ -86,7 +86,6 @@ class PdfController extends Controller
 
         $inlands = collect($values);
 
-
         $inlands = $inlands->groupBy([
 
             function ($item) {

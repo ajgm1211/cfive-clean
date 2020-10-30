@@ -9,7 +9,7 @@ class CalculationType extends Model
 
 
     protected $table    = "calculationtype";
-    protected $fillable = ['id', 'name','options','gp_pcontainer','group_container_id'];
+    protected $fillable = ['id', 'name','options','gp_pcontainer','group_container_id','display_name'];
 
 
     public function localcharge()
