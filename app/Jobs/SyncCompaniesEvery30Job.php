@@ -37,7 +37,7 @@ class SyncCompaniesEvery30Job implements ShouldQueue
     {
         try {
 
-            $integrations = ApiIntegration::where(['module' => 'Companies', 'frecuency' => 30])->with('partner')->get();
+            $integrations = ApiIntegration::where(['module' => 'Companies', 'frecuency' => 30,'status'=>1])->with('partner')->get();
 
             foreach ($integrations as $setting) {
                 if ($setting->partner->name == 'Visualtrans') {
