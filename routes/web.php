@@ -1228,6 +1228,7 @@ Route::group(['prefix' => 'api/v2/sale_terms'], function () {
     Route::post('{saleterm}/duplicate', 'SaleTermV3Controller@duplicate')->middleware('check_company:saleterm');
     Route::delete('{saleterm}/destroy', 'SaleTermV3Controller@destroy')->middleware('check_company:saleterm');
     Route::get('{saleterm}', 'SaleTermV3Controller@retrieve')->middleware('check_company:saleterm');
+    Route::post('destroyAll', 'SaleTermV3Controller@destroyAll');
     /** End API Sale Terms EndPoints **/
 
     /** API Sale Terms Charges EndPoints **/
@@ -1260,6 +1261,8 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
     Route::post('{providers}/update', 'ProvidersController@update');
     Route::post('{providers}/duplicate', 'ProvidersController@duplicate');
     Route::delete('{providers}/destroy', 'ProvidersController@destroy');
+    Route::post('destroyAll', 'ProvidersController@destroyAll');
+
 
     /** providers **/
 });

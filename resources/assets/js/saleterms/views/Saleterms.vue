@@ -2,7 +2,11 @@
 	<div class="container-fluid">
 		<div class="row mt-5">
 			<div class="col-12">
-
+			<div class="col-12 mb-2" style="padding: 0px 35px">
+				<a href="/api/sale_terms/" class="p-light quote-link">
+					<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
+				</a>
+			</div>
 				<!-- Form Contract Inline -->
 				<FormInlineView
 				v-if="loaded"
