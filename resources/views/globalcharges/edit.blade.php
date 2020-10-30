@@ -240,7 +240,7 @@ activarCountry('{{ $activacion['act'] }}');
         <!--  ****************** EXCEPCIONES ******************* -->
 
 
-
+@if(@$api_global!=1)
         <div class="form-group m-form__group row">
 
             <div class="excepcionPortOrig" hidden='true'>
@@ -277,6 +277,7 @@ activarCountry('{{ $activacion['act'] }}');
 
         </div>
     </div>
+@endif
     <br>
 
     <div class="m-portlet__foot m-portlet__foot--fit" style="border-top:none;">

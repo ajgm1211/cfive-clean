@@ -115,6 +115,10 @@ class QuotationController extends Controller
             return $curr->only(['id','alphacode','rates','rates_eur']);
         });
 
+        $filtered_currencies = Currency::whereIn('id', ['46','149'])->get()->map(function ($curr){
+            return $curr->only(['id','alphacode','rates','rates_eur']);
+        });
+
         $containers = Container::all();
 
         $calculationtypes = CalculationType::get()->map(function ($ctype){
@@ -177,7 +181,8 @@ class QuotationController extends Controller
             'providers',
             'distances',
             'cargo_types',
-            'calculationtypeslcl'
+            'calculationtypeslcl',
+            'filtered_currencies'
         );
 
         return response()->json(['data'=>$data]);
@@ -396,5 +401,13 @@ class QuotationController extends Controller
         DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function show($id){
+
+        $quote_id = obtenerRouteKey($id);
+        $quote = QuoteV2::firstOrFail($quote_id);
+
+        return redirect()->action('QuotationController@edit', $quote);
     }
 }

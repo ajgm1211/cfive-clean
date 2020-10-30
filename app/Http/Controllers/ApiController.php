@@ -421,7 +421,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Show quotes list
+     * Show quotes by ID
      * @param Request $request 
      * @return JSON
      */

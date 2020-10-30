@@ -461,7 +461,7 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_inland/destroyAll`, { ids: ids });
         },
-        search(port_id,data,route){
+        search(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
         }
@@ -489,7 +489,25 @@ export default {
             return api.call('post', `/api/quote/localcharge/delete/${id}`, { type: type });
         },
         retrieve(data) {
-            return api.call('get', `/api/quote/localcharge/saleterm`, data);
+            return api.call('get', '/api/quote/localcharge/saleterm', { data });
+        },
+        localcharges(params) {
+            return api.call('get', '/api/quote/localcharge', { params })
+        },
+        total(params) {
+            return api.call('get', '/api/quote/localcharge/total', { params })
+        },
+        storedCharges(params) {
+            return api.call('get', '/api/quote/get/localcharge', { params })
+        },
+        charges(params) {
+            return api.call('post', '/api/quote/localcharge/store/salecharge', { params })
+        },
+        saleterms(params) {
+            return api.call('get', '/api/quote/localcharge/saleterm', { params })
+        },
+        harbors(id) {
+            return api.call('get', `/api/quote/local/data/${id}`, {})
         },
     },
     providers: {
@@ -520,5 +538,12 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/v2/providers/destroyAll`, { ids: ids });
         },
+    },
+    excel: {
+
+        create(data, route) {
+            return api.call('post', `/contracts/export`, data);
+        }
+
     },
 };
