@@ -396,8 +396,13 @@ trait QuoteV2Trait
 
                 $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
 
-                $array_amounts = json_decode($item->rate, true);
-                $array_markups = json_decode($item->markup, true);
+                if(!is_array($item->rate) && !is_array($item->markup)){
+                    $array_amounts = json_decode($item->rate, true);
+                    $array_markups = json_decode($item->markup, true);
+                }else{
+                    $array_amounts = $item->rate;
+                    $array_markups = $item->markup;
+                }
 
                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -654,8 +659,13 @@ trait QuoteV2Trait
 
                             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
-                            $array_amounts = json_decode($value->rate, true);
-                            $array_markups = json_decode($value->markup, true);
+                            if(!is_array($value->rate) && !is_array($value->markup)){
+                                $array_amounts = json_decode($value->rate, true);
+                                $array_markups = json_decode($value->markup, true);
+                            }else{
+                                $array_amounts = $value->rate;
+                                $array_markups = $value->markup;
+                            }
 
                             $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                             $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -823,8 +833,16 @@ trait QuoteV2Trait
 
                                 $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
 
-                                $array_amounts = json_decode($inland_value->rate, true);
-                                $array_markups = json_decode($inland_value->markup, true);
+                                //$array_amounts = json_decode($inland_value->rate, true);
+                                //$array_markups = json_decode($inland_value->markup, true);
+
+                                if(!is_array($inland_value->rate) && !is_array($inland_value->markup)){
+                                    $array_amounts = json_decode($inland_value->rate, true);
+                                    $array_markups = json_decode($inland_value->markup, true);
+                                }else{
+                                    $array_amounts = $inland_value->rate;
+                                    $array_markups = $inland_value->markup;
+                                }
 
                                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -1569,8 +1587,14 @@ trait QuoteV2Trait
             foreach ($rate->inland as $inland) {
                 $typeCurrency =  $company_user->currency->alphacode;
                 $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
-                $array_amounts = json_decode($inland->rate, true);
-                $array_markups = json_decode($inland->markup, true);
+                
+                if(!is_array($inland->rate) && !is_array($inland->markup)){
+                    $array_amounts = json_decode($inland->rate, true);
+                    $array_markups = json_decode($inland->markup, true);
+                }else{
+                    $array_amounts = $inland->rate;
+                    $array_markups = $inland->markup;
+                }
 
                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                 $array_markups = $this->processOldContainers($array_markups, 'markups');
