@@ -665,6 +665,11 @@ class QuoteV2 extends Model  implements HasMedia
         return (new QuotationFilter($request, $builder))->filter();
     }
 
+    public function scopeTypeFCL($query)
+    {
+        return $query->where('type', '=', 'FCL');
+    }
+
     public function getContainerCodes($equip, $getGroup = false)
     {
 
