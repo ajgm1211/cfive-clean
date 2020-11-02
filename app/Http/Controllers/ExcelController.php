@@ -958,13 +958,15 @@ class ExcelController extends Controller
                             );
 
                             $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+                            $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
 
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
                                 $name_rate = 'rate' . $cont->code;
                                 if (in_array($calculationID->id, $$name_arreglo)) {
                                     $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
-                                    $$name_rate  =   $$name_rate  + $monto;
+                                    $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
+                                    $$name_rate  = number_format($$name_rate  + ( $monto / $currency_rate ), 2, '.', '');  
                                     $montosAllInTot[$cont->code] = $$name_rate;
                                     $montosLocal2 = array($cont->code => $monto);
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
@@ -1048,4 +1050,5 @@ class ExcelController extends Controller
             return $monto;
         }
     }
+
 }
