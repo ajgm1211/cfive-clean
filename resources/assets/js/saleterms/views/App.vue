@@ -5,11 +5,11 @@
                 <b-card>
                     <div class="row">
                         <div class="col-6">
-                            <b-card-title>Sale terms</b-card-title>
+                            <b-card-title>Sale Templates FCL</b-card-title>
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-primary btn-bg" v-b-modal.addSaleterm>+ Add Sale term</button>
+                                <button class="btn btn-primary btn-bg" v-b-modal.addSaleterm>+ Add New</button>
                             </div>
                         </div>
                     </div>

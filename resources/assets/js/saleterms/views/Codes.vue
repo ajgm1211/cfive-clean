@@ -5,11 +5,11 @@
                 <b-card>
                     <div class="row">
                         <div class="col-6">
-                            <b-card-title>Sale codes</b-card-title>
+                            <b-card-title>Sale Codes</b-card-title>
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-primary btn-bg" v-b-modal.addSaleCode>+ Add Sale code</button>
+                                <button class="btn btn-primary btn-bg" v-b-modal.addSaleCode>+ Add Sale Code</button>
                             </div>
                         </div>
                     </div>

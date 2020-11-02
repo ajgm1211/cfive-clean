@@ -37,7 +37,6 @@ class SaleTermChargeController extends Controller
     {
 
         $charge = SaleTermCharge::create([
-            'name' => $request->name,
             'calculation_type_id' => $request->calculation_type,
             'amount' => $request->amount,
             'currency_id' => $request->currency,
@@ -73,7 +72,6 @@ class SaleTermChargeController extends Controller
     public function update(Request $request, SaleTermCharge $charge)
     {
         $data = $request->validate([
-            'name' => 'required',
             'calculation_type' => 'required',
             'amount' => 'required',
             'currency' => 'required',
@@ -81,7 +79,6 @@ class SaleTermChargeController extends Controller
         ]);
         
         $charge->update([
-            'name' => $data['name'],
             'calculation_type_id' => $data['calculation_type'],
             'amount' => $data['amount'],
             'currency_id' => $data['currency'],

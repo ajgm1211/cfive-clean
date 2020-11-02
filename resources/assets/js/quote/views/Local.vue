@@ -35,7 +35,7 @@
                         :show-labels="false"
                         :close-on-select="true"
                         :preserve-search="true"
-                        placeholder="Select Sale Term"
+                        placeholder="Select Sale Template"
                         label="name"
                         track-by="name"
                         @input="getCharges()"
@@ -43,14 +43,16 @@
                         style="position: relative; top: 4px"
                     ></multiselect>
 
-                    <a href="/api/sale_terms" target="_blank"
-                        class="btn btn-primary btn-bg"
+                    <a
+                        href="/api/sale_terms"
+                        target="_blank"
+                        class="btn btn-link mr-4"
                         id="show-btn"
                     >
-                        + Add Sale Term
+                        + Add Sale Template
                     </a>
                     <button
-                        class="btn btn-link mr-4"
+                        class="btn btn-primary btn-bg"
                         id="show-btn"
                         @click="showModal"
                     >
@@ -207,7 +209,25 @@
 
                                 <b-td>
                                     <span v-if="loaded">
-                                        <b>EUR</b>
+                                        <multiselect
+                                            v-model="totals.currency"
+                                            :options="datalists['filtered_currencies']"
+                                            :multiple="false"
+                                            :show-labels="false"
+                                            :close-on-select="true"
+                                            :preserve-search="true"
+                                            placeholder="Select a currency"
+                                            label="alphacode"
+                                            track-by="alphacode"
+                                            @input="
+                                                onUpdate(
+                                                    totals.id,
+                                                    totals.currency.id,
+                                                    'currency_id',
+                                                    5
+                                                )
+                                            "
+                                        ></multiselect>
                                     </span>
                                 </b-td>
 
@@ -258,15 +278,17 @@
                                 '/images/flags/1x1/' + this.code_port + '.svg'
                             "
                             alt="bandera"
-                            style="width: 15px; border-radius: 2px"
+                            width="20"
+                            height="20"
+                            style="border-radius: 50%"
                         />&nbsp;
                         <b>{{ this.port }}</b>
                     </span>
                 </div>
 
-                <div class="col-12 mt-5">
+                <div class="col-12 mt-5" style="overflow-y: auto">
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive borderless>
+                    <b-table-simple hover small responsive="sm" borderless>
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
@@ -313,9 +335,9 @@
                             >
                                 <b-td>
                                     <b-form-checkbox
-                                        v-model="ids"
+                                        v-model="selectedCharges"
                                         :id="'id_' + localcharge.id"
-                                        :value="localcharge.id"
+                                        :value="localcharge"
                                     ></b-form-checkbox>
                                 </b-td>
 
@@ -365,7 +387,7 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="sale_codes[key]"
+                                        v-model="localcharge.sale_codes"
                                         :options="datalists['sale_codes']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -382,7 +404,7 @@
                                         v-model="
                                             localcharge.automatic_rate.carrier
                                         "
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -506,7 +528,7 @@
 
                                 <b-td>
                                     <multiselect
-                                        v-model="sale_codes[key]"
+                                        v-model="input.sale_codes"
                                         :options="datalists['sale_codes']"
                                         :multiple="false"
                                         :show-labels="false"
@@ -521,7 +543,7 @@
                                 <b-td>
                                     <multiselect
                                         v-model="input.carrier"
-                                        :options="datalists['carriers']"
+                                        :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -543,7 +565,7 @@
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
-                                        v-model="input.markup['c' + item]"
+                                        v-model="input.markup['m' + item]"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -565,11 +587,21 @@
                                 <b-td>
                                     <button
                                         type="button"
-                                        class="btn"
+                                        class="btn-save"
                                         v-on:click="onSubmitCharge(counter)"
                                     >
                                         <i
-                                            class="fa fa-save"
+                                            class="fa fa-check"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn-delete"
+                                        v-on:click="onRemove(counter)"
+                                    >
+                                        <i
+                                            class="fa fa-close"
                                             aria-hidden="true"
                                         ></i>
                                     </button>
@@ -610,10 +642,8 @@ export default {
     },
     created() {
         let id = this.$route.params.id;
-        /* Return the lists data for dropdowns */
-        api.getData({}, "/api/quote/local/data/" + id, (err, data) => {
-            this.harbors = data;
-        });
+
+        this.getHarbors(id);
 
         this.getRemarks(id);
     },
@@ -621,6 +651,7 @@ export default {
         equipment: Object,
         datalists: Object,
         quoteEquip: Array,
+        currentQuoteData: Object,
     },
     data() {
         return {
@@ -637,13 +668,14 @@ export default {
             port: [],
             totals: [],
             inputs: [],
-            datalists: {},
+            selectedCharges: [],
+            carriers: [],
             value: "",
             template: "",
             code_port: "",
             rate_id: "",
             sale_code: "",
-            remarks: "",
+            remarks: null,
             loaded: false,
             remark_field: {
                 localcharge_remarks: {
@@ -667,23 +699,14 @@ export default {
                     currency: "",
                 });
             } else {
-                this.$toast.open({
-                    message:
-                        "You must select a port before create a new charge",
-                    type: "error",
-                    duration: 5000,
-                    dismissible: true,
-                });
+                this.alert(
+                    "You must select a port before create a new charge",
+                    "error"
+                );
             }
         },
         showModal() {
             this.$refs["my-modal"].show();
-        },
-        getValues() {
-            this.getSaleTerms();
-            this.getLocalCharges();
-            this.getStoredCharges();
-            this.getTotal();
         },
         closeModal() {
             this.$refs["my-modal"].hide();
@@ -691,83 +714,126 @@ export default {
         addSaleCode(value) {
             this.sale_codes.push(value);
         },
+        getHarbors(id) {
+            actions.localcharges
+                .harbors(id)
+                .then((response) => {
+                    this.harbors = response.data;
+                    this.value = this.harbors[0];
+                    this.getValues();
+                })
+                .catch((data) => {
+                    //
+                });
+        },
+        getValues() {
+            this.getSaleTerms();
+            this.getLocalCharges();
+            this.getStoredCharges();
+            this.getTotal();
+            this.getCarriers();
+        },
         getSaleTerms() {
             this.saleterms = [];
             this.charges = [];
-            api.getData(
-                {
-                    equipment: this.equipment.id,
-                    port_id: this.value.id,
-                    type: this.value.type,
-                },
-                "/api/quote/localcharge/saleterm",
-                (err, data) => {
-                    this.saleterms = data;
-                }
-            );
+            this.template = null;
+            let data = {
+                equipment: this.equipment.id,
+                port_id: this.value.id,
+                type: this.value.type,
+            };
+            actions.localcharges
+                .saleterms(data)
+                .then((response) => {
+                    this.saleterms = response.data;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getCharges() {
             this.charges = [];
             this.totals = [];
-            api.postData(
-                {
-                    id: this.template.id,
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type_id: this.value.type,
-                },
-                "/api/quote/localcharge/store/salecharge",
-                (err, data) => {
-                    this.charges = data;
+            let data = {
+                id: this.template.id,
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type_id: this.value.type,
+            };
+            actions.localcharges
+                .charges(data)
+                .then((response) => {
+                    this.charges = response.data;
                     this.getTotal();
-                }
-            );
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getStoredCharges() {
             this.charges = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type_id: this.value.type,
-                },
-                "/api/quote/get/localcharge",
-                (err, data) => {
-                    this.charges = data;
-                }
-            );
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type_id: this.value.type,
+            };
+            actions.localcharges
+                .storedCharges(data)
+                .then((response) => {
+                    this.charges = response.data;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getTotal() {
             this.totals = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                },
-                "/api/quote/localcharge/total",
-                (err, data) => {
-                    this.totals = data;
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+            };
+            actions.localcharges
+                .total(data)
+                .then((response) => {
+                    this.totals = response.data;
                     this.loaded = true;
-                }
-            );
+                })
+                .catch((data) => {
+                    //
+                });
+        },
+        getCarriers() {
+            let self = this;
+            let quote = this.$route.params.id;
+            actions.localcharges
+                .carriers(quote)
+                .then((response) => {
+                    self.carriers = response.data;
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
-            api.getData(
-                {
-                    quote_id: this.$route.params.id,
-                    port_id: this.value.id,
-                    type: this.value.type,
-                },
-                "/api/quote/localcharge",
-                (err, data) => {
-                    this.localcharges = data.charges;
-                    this.port = data.port.display_name;
-                    this.code_port = data.port.country.code;
-                    this.rate_id = data.automatic_rate.id;
-                }
-            );
+            let self = this;
+            let data = {
+                quote_id: this.$route.params.id,
+                port_id: this.value.id,
+                type: this.value.type,
+            };
+            actions.localcharges
+                .localcharges(data)
+                .then((response) => {
+                    self.localcharges = response.data.charges;
+                    self.port = response.data.port.display_name;
+                    self.code_port = response.data.port.country.code.toLowerCase();
+                    self.rate_id = response.data.automatic_rate.id;
+                })
+                .catch((data) => {
+                    //
+                });
         },
         getRemarks(id) {
             let self = this;
@@ -784,6 +850,7 @@ export default {
             actions.localcharges
                 .delete(id, type)
                 .then((response) => {
+                    this.alert("Record deleted successfully", "success");
                     this.getTotal();
                 })
                 .catch((data) => {
@@ -798,11 +865,11 @@ export default {
             });
         },
         onSubmit() {
-            if (this.ids.length > 0) {
+            if (this.selectedCharges.length > 0) {
                 this.charges = [];
                 this.totals = [];
                 let data = {
-                    ids: this.ids,
+                    selectedCharges: this.selectedCharges,
                     sale_codes: this.sale_codes,
                     quote_id: this.$route.params.id,
                     port_id: this.value.id,
@@ -812,48 +879,42 @@ export default {
                     .create(data)
                     .then((response) => {
                         this.charges = response.data;
+                        this.getStoredCharges();
                         this.getTotal();
-                        this.$toast.open({
-                            message: "Record saved successfully",
-                            type: "success",
-                            duration: 5000,
-                            dismissible: true,
-                        });
+                        this.alert("Record saved successfully", "success");
                         this.closeModal();
-                        this.ids = [];
+                        this.selectedCharges = [];
                     })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
             } else {
-                this.$toast.open({
-                    message: "You must select a charge at least",
-                    type: "error",
-                    duration: 5000,
-                    dismissible: true,
-                });
+                this.alert("You must select a charge at least", "error");
             }
         },
         onSubmitCharge(counter) {
             let data = {
                 charges: this.inputs[counter],
                 quote_id: this.$route.params.id,
-                rate_id: 32, //Attention
+                port_id: this.value.id,
+                type_id: this.value.type,
             };
             actions.localcharges
                 .createCharge(data)
                 .then((response) => {
                     this.getLocalCharges();
-                    this.$toast.open({
-                        message: "Record saved successfully",
-                        type: "success",
-                        duration: 5000,
-                        dismissible: true,
-                    });
+                    this.onRemove(counter);
+                    this.getStoredCharges();
+                    this.getTotal();
+                    this.closeModal();
+                    this.alert("Record saved successfully", "success");
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        onRemove(index) {
+            this.inputs.splice(index, 1);
         },
         onUpdate(id, data, index, type) {
             this.totals = [];
@@ -878,6 +939,14 @@ export default {
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+        alert(msg, type) {
+            this.$toast.open({
+                message: msg,
+                type: type,
+                duration: 5000,
+                dismissible: true,
+            });
         },
     },
 };
