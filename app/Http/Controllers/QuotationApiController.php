@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AutomaticInland;
 use App\Container;
 use App\Http\Traits\QuotationApiTrait;
 use App\IntegrationQuoteStatus;
@@ -83,12 +84,12 @@ class QuotationApiController extends Controller
         $company_user_id = Auth::user()->company_user_id;
 
         $quote = QuoteV2::NewQuoteSelect()->NewCompanyRelation()
-        ->NewContactRelation()->IncotermRelation()->findOrFail($id);
+            ->NewContactRelation()->IncotermRelation()->findOrFail($id);
 
         $containers = Container::all();
 
         $freight_charges = AutomaticRate::SelectFields()
-            ->SelectCharge()->where('quote_id', $quote->id)->get();
+            ->SelectCharge()->CarrierRelation()->where('quote_id', $quote->id)->get();
 
         $ocean_freight = $this->mapFreightCharges($freight_charges);
 
@@ -96,16 +97,21 @@ class QuotationApiController extends Controller
 
         $destination_charges = $this->localCharges($quote, 2);
 
+        $inlands = AutomaticInland::SelectFields()->where('quote_id', $id)->get();
+
+        $inlands = $this->mapInlandCharges($inlands);
+
         //Modify equipment array
         $this->transformEquipmentSingle($quote);
 
-        $quote = $quote->makeHidden(['incoterm_id','contact_id','company_id'])->toArray();
-
+        $quote = $quote->makeHidden(['incoterm_id', 'contact_id', 'company_id'])->toArray();
+        
         $data = compact(
             'quote',
             'ocean_freight',
             'origin_charges',
-            'destination_charges'
+            'destination_charges',
+            'inlands'
         );
 
         return response()->json(['data' => $data]);
@@ -125,6 +131,25 @@ class QuotationApiController extends Controller
             unset($value['currency']);
             unset($value['origin_port']);
             unset($value['destination_port']);
+            unset($value['carrier_id']);
+            return $value;
+        });
+
+        return $collection;
+    }
+
+    public function mapInlandCharges($collection)
+    {
+        $collection->map(function ($value) {
+            $value['currency_code'] = $value->currency->alphacode;
+            $value['port_name'] = $value->port->display_name;
+            $value['provider'] = $value->providers->name ?? null;
+            unset($value['port_id']);
+            unset($value['currency_id']);
+            unset($value['provider_id']);
+            unset($value['port']);
+            unset($value['currency']);
+            unset($value['providers']);
             return $value;
         });
 

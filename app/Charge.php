@@ -115,6 +115,38 @@ class Charge extends Model
         return $value;
     }
 
+    public function getProfitAttribute($array)
+    {
+        $array = json_decode(json_decode($array));
+
+        $value = array();
+
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount_value) {
+                if ($k == 'm20') {
+                    $value['m20DV'] = $amount_value;
+                } elseif ($k == 'm40') {
+                    $value['m40DV'] = $amount_value;
+                } elseif ($k == 'm40hc') {
+                    $value['m40HC'] = $amount_value;
+                } elseif ($k == 'm40nor') {
+                    $value['m40NOR'] = $amount_value;
+                } elseif ($k == 'm45hc') {
+                    $value['m45HC'] = $amount_value;
+                } else {
+                    $containers = Container::all();
+                    foreach ($containers as $container) {
+                        if ($k == 'm' . $container->code) {
+                            $value['m' . $container->code] = $amount_value;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $value;
+    }
+
     public function getTotalPriceAttribute($array)
     {
         $array = json_decode(json_decode($array));

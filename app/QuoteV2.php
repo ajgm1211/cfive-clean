@@ -256,6 +256,7 @@ class QuoteV2 extends Model  implements HasMedia
             'remarks_spanish',
             'remarks_english',
             'remarks_portuguese',
+            'localcharge_remarks',
             'terms_and_conditions as terms_spanish',
             'terms_english',
             'terms_portuguese',
@@ -753,6 +754,5 @@ class QuoteV2 extends Model  implements HasMedia
         }
         
         return $value;
-
     }
 }
