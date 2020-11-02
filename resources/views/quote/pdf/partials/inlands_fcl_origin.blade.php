@@ -57,7 +57,7 @@
                             
                                     <td>{{$rate->charge}}</td>
                             
-                                    <td>{{$rate->providers->name}}</td>
+                                    <td>{{$rate->providers->name ?? '--'}}</td>
                             
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
