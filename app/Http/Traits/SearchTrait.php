@@ -13,7 +13,6 @@ trait SearchTrait
 
     public function inlands($inlandParams, $markup, $equipment, $contain, $type, $mode, $groupContainer, $distancia = 0)
     {
-
         $modality_inland = $mode; // FALTA AGREGAR EXPORT
         $company_inland = $inlandParams['company_id_quote'];
 
@@ -49,6 +48,7 @@ trait SearchTrait
         $inlands = $inlands->get();
 
         $dataDest = array();
+
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
 
@@ -61,6 +61,7 @@ trait SearchTrait
 
             $inlandDetails = array();
             foreach ($inlandsValue->inlandports as $ports) {
+
                 $monto = 0;
                 if (in_array($ports->ports->id, $port)) {
 
@@ -69,11 +70,9 @@ trait SearchTrait
                         if ($type == 'destino') {
                             $origin = $ports->ports->coordinates;
                             $destination = $inlandParams['destination_address'];
-
                         } elseif ($type == 'origen') {
                             $origin = $inlandParams['origin_address'];
                             $destination = $ports->ports->coordinates;
-
                         }
                         $response = GoogleMaps::load('directions')
                             ->setParam([

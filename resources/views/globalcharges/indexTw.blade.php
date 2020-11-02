@@ -143,37 +143,37 @@ New \ Status Import  &nbsp;
                             style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th width="2%">
                                         Select
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Origin
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Destination
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Charge Type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Calculation type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Currency
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Carrier
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Amount
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Validity
                                     </th>
-                                    <th>
+                                    <th width="8%">
                                         Options
                                     </th>
                                 </tr>
@@ -269,10 +269,31 @@ New \ Status Import  &nbsp;
                 { data: 'validitylb', name: 'validitylb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
+            initComplete: function () {
+                this.api().columns([1,2,3,4,5,6,7,8,9]).every(function () {
+                    var column = this;
+                    $('#requesttable .head .head_hide').html('');
+
+                    var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select>')
+                    .prependTo($(column.header()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            },
             "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,
-            "ordering": true,
+            "ordering": false,
             "width": true,
             "autoWidth": false,
             "stateSave": true,

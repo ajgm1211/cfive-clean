@@ -31,24 +31,22 @@
   (function(){d=document;s=d.createElement('script');s.src='//client.crisp.chat/l.js';s.async=1;d.getElementsByTagName('head')[0].appendChild(s);})();
 </script>
 
-<script src="{{ asset('/js/crisp.js?v=1')}}" email="{{ Auth::user()->email }}" type="text/javascript"></script>-->
+-->
 
 
 
-   
+<script src="{{ asset('/js/intercom.js?v=2')}}" email="{{ \Auth::user()->email }}" name="{{ \Auth::user()->name }}  {{\Auth::user()->lastname }} " id="{{ \Auth::user()->id }}" company="{{ \Auth::user()->company_user_id }}"  type="text/javascript"></script>   
+
 
 <script>
   $(document).ready(function() {
+    
     $(".dropdown-toggle").dropdown();
   });
   var userId = {{ Auth::user()->id }}
 
 
-  var APP_ID = "s9q3w42n";
-    var current_user_email =  '{{\Auth::user()->email}}';
-    var current_user_name = '{{ \Auth::user()->name }} {{\Auth::user()->lastname }}';
-    var current_user_id =  '{{ \Auth::user()->id }}';
-    var current_company_id =  '{{ \Auth::user()->company_user_id }}';
+
     
     window.intercomSettings = {
         app_id: APP_ID,

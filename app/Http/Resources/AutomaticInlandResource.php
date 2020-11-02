@@ -19,6 +19,7 @@ class AutomaticInlandResource extends JsonResource
             'quote_id' => $this->quote_id,
             'automatic_rate_id' => $this->rate()->first(),
             'port_id' => $this->port,
+            'provider_id' => $this->providers()->first(),
             'provider' => $this->provider,
             'contract' => $this->contract,
             'type' => $this->type,

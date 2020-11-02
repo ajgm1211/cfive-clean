@@ -79,21 +79,45 @@
 
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
-                            <thead>
+                        <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="120%" style="width:120%">
+                            <thead >
                                 <tr>
-                                    <th>Select</th>
-                                    <th>Type</th>
-                                    <th>Origin Port</th>
-                                    <th>Destination Port</th>
-                                    <th>Charge Type</th>
-                                    <th>Calculation type</th>
-                                    <th>Currency</th>
-                                    <th>Carrier</th>
-                                    <th>Amount</th>
-                                    <th>Minimum</th>
-                                    <th>Validity</th>
-                                    <th>Options</th>
+                                    <th width="1%">
+                                        Select
+                                    </th>
+                                    <th  width="8%">
+                                        Type
+                                    </th>
+                                    <th width="9%">
+                                        Origin Port
+                                    </th>
+                                    <th width="9%">
+                                        Destination Port
+                                    </th>
+                                    <th width="9%">
+                                        Charge Type
+                                    </th>
+                                    <th width="9%">
+                                        Calculation type
+                                    </th>
+                                    <th width="9%">
+                                        Currency
+                                    </th>
+                                    <th width="11%">
+                                        Carrier
+                                    </th>
+                                    <th width="9%">
+                                        Amount
+                                    </th>
+                                    <th  width="9%">
+                                        Minimum
+                                    </th>
+                                    <th width="9%">
+                                        Validity
+                                    </th>
+                                    <th width="8%">
+                                        Options
+                                    </th>
                                 </tr>
                             </thead>
 
@@ -208,21 +232,66 @@
                 { data: 'validitylb', name: 'validitylb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
-            "order": [[0, 'des']],
+
+        initComplete: function () {
+                this.api().columns([1,2,3,4,5,6,7,8,9,10]).every(function () {
+                    var column = this;
+                    $('#requesttable .head .head_hide').html('');
+
+                    var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select>')
+                    .prependTo($(column.header()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            },
             "lengthChange": false,
             "searching": true,
-            "ordering": true,
-            "width": true,
+            "ordering": false,
             "info": true,
+            "autoWidth": true,
             "deferLoading": 57,
-            "stateSave": true,
-            "autoWidth": false,
             "processing": true,
             "dom": 'Bfrtip',
-            "paging": true
-        });
+            "paging": true,
+            "scrollX": true,
+            "stateSave": true,
 
-    });
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
+            ]
+        });
+        tabla.columns().search( '' ).draw();
+    });  
+
+
+ 
 
     $(document).on('click', '#bulk_delete', function(){
         var id = [];

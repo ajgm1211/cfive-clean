@@ -3,9 +3,9 @@
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1 && $quote->pdf_option->freight_no_grouping==0)
                     <div>
 
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}}</p>
+                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
                        
-                        <br>
+                        
                     
                     </div>
                     <!-- End Section Title -->
@@ -109,9 +109,7 @@
                                                 <td >{{$quote->pdf_option->freight_charges_currency}}</td>
 
                                             @else
-
-                                                <td >{{$currency_cfg->alphacode}}</td>
-
+                                                <td >{{@$rate->currency->alphacode}}</td>
                                             @endif
 
                                         </tr>
@@ -133,8 +131,8 @@
                 <!-- Freights table all in-->
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1 && $quote->pdf_option->freight_no_grouping==1)
                     <div>
-                       <p class="title">{{__('pdf.freight_charges')}}</p>
-                       <br>
+                       <p class="title"><b>{{__('pdf.freight_charges')}}</b></p>
+                       
                     </div>
             
                     <table border="0" cellspacing="1" cellpadding="1" >
@@ -431,7 +429,7 @@
                             <!-- Section Title -->
                             <div>
 
-                                <p class="title">{{__('pdf.freight_charges')}}</p>
+                                <p class="title"><b>{{__('pdf.freight_charges')}}</b></p>
 
                                 <br>
 
