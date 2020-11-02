@@ -72,7 +72,7 @@ class AutomaticInlandTotal extends Model
                 $clear_key = str_replace('m','c',$mark);
                 if($currency->alphacode != 'USD'){
                     $conversion = $currency->rates;
-                    $conv_profit = $profit*$conversion;
+                    $conv_profit = $profit/$conversion;
                     $totals_usd[$clear_key] += round($conv_profit,2);
                 }else{
                     $totals_usd[$clear_key] += $profit;
@@ -81,6 +81,7 @@ class AutomaticInlandTotal extends Model
         }
 
         if($currency->alphacode != 'USD'){
+            $conversion = $currency->rates;
             foreach($totals_usd as $cont=>$price){
                 $conv_price = $price*$conversion;
                 $totals_usd[$cont] = round($conv_price,2);
