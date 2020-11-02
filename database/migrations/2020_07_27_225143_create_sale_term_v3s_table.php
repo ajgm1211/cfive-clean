@@ -15,6 +15,7 @@ class CreateSaleTermV3sTable extends Migration
     {
         Schema::create('sale_term_v3s', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->integer('port_id')->unsigned();
             $table->foreign('port_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->integer('type_id')->unsigned();

@@ -2264,7 +2264,7 @@ class QuoteV2Controller extends Controller
                             $inlandDest->currency_id = $info_D->idCurrency;
                             //FOR QUOTE MODULE, CREATED NEW FIELD CHARGE
                             $inlandDest->charge = $inlandDestiny->providerName;
-                            $inlandDest->provider_id = $inlandDestiny->prov_id;
+                            //$inlandDest->provider_id = $inlandDestiny->prov_id;
                             $inlandDest->inland_address_id = $inlandDestAddress->id;
                             $inlandDest->save();
 
@@ -2308,7 +2308,7 @@ class QuoteV2Controller extends Controller
                             $inlandOrigAddress = new InlandAddress();
                             $inlandOrigAddress->quote_id = $quote->id;
                             $inlandOrigAddress->address = $form->origin_address;
-                            $inlandOrigAddress->port_id = $inlandDestiny->port_id;
+                            $inlandOrigAddress->port_id = $inlandOrigin->port_id;
                             $inlandOrigAddress->save();
 
                             $arregloMontoInOrig = json_encode($montoInOrig);
@@ -2327,8 +2327,8 @@ class QuoteV2Controller extends Controller
                             $inlandOrig->validity_end = $inlandOrigin->validity_end;
                             $inlandOrig->currency_id = $info_D->idCurrency;
                             //FOR QUOTE MODULE, CREATED NEW FIELD
-                            $inlandOrig->provider_id = $inlandDestiny->prov_id;
-                            $inlandOrig->charge = $inlandOrig->providerName;
+                            //$inlandOrig->provider_id = $inlandOrigin->prov_id;
+                            $inlandOrig->charge = $inlandOrigin->providerName;
                             $inlandOrig->inland_address_id = $inlandOrigAddress->id;
                             $inlandOrig->save();
 

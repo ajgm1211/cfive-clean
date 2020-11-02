@@ -7,9 +7,9 @@
                 <!-- Section Title -->
                 <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}> 
 
-                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}}    - {{$destination}}</p> 
+                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}}    - {{$destination}}</b></p> 
 
-                    <br>
+                    
 
                 </div>
                 <!-- End Section Title-->
@@ -118,9 +118,9 @@
                             <!-- Section Title -->
                             <div>
 
-                                <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}}    - {{$destination}}</p>      
+                                <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}}    - {{$destination}}</b></p>      
 
-                                <br>
+                                
 
                             </div>
                             <!-- End Section Title-->
@@ -208,9 +208,9 @@
                         <!-- Section Title -->
                         <div>
 
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$destination}}</p>
+                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$destination}}</b></p>
 
-                            <br>
+                            
 
                         </div>
                             <!-- End Section Title-->
@@ -318,9 +318,9 @@
                         <!-- Section Title -->
                         <div>
 
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.destination_charges')}} - {{$destination}}</p>   
+                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$destination}}</b></p>   
 
-                            <br>
+                            
 
                         </div>
                         <!-- End Section Title-->

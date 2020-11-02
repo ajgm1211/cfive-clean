@@ -15,7 +15,7 @@
 
     <div class="clearfix">
 
-        <span class="color-title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b><br><br/></span>
+        <span class="title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b></span>
 
         @foreach($rates as $rate)
             @if(trim(strip_tags($rate->remarks)) !== '')
@@ -48,5 +48,3 @@
 
     </div>
 @endif
-
-    <br>
