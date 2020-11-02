@@ -57,12 +57,28 @@ class SaleTermV3 extends Model
         return $this->belongsTo('App\CompanyUser');
     }
 
-    /* Duplicate Inland Model instance with relations */
+    public function sale_term_charges()
+    {
+        return $this->hasMany('App\SaleTermCharge', 'sale_term_id', 'id');
+    }
+
+    /* Duplicate Sale Term Template Model instance with relations */
     public function duplicate()
     {
         $new_saleterm = $this->replicate();
         $new_saleterm->name .= ' copy';
         $new_saleterm->save();
+
+        $this->load('sale_term_charges');
+        $relations = $this->getRelations();
+        
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->sale_term_id = $new_saleterm->id;
+                $newRelationship->save();
+            }
+        }
 
         return $new_saleterm;
     }
