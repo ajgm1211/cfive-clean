@@ -57,7 +57,7 @@ class AutomaticInlandController extends Controller
                 
         $vdata = [
             'charge' => 'nullable|sometimes',
-            'provider_id' => 'required',
+            'provider_id' => 'nullable',
             'currency_id' => 'required',
         ];
         
@@ -69,7 +69,6 @@ class AutomaticInlandController extends Controller
 
         $autoDistance = $request->input('distance');
 
-        
         foreach($equip_array as $eq){
             $vdata['rates_'.$eq] = 'sometimes|nullable|numeric';
         }
@@ -132,7 +131,7 @@ class AutomaticInlandController extends Controller
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
             'provider'=> 'old field',
-            'provider_id' => $validate['provider_id']['id'],
+            'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
@@ -239,7 +238,7 @@ class AutomaticInlandController extends Controller
         
         $data += $request->validate([
             'charge' => 'nullable',
-            'provider_id'=>'required',
+            'provider_id'=>'nullable',
             'currency_id'=>'required',
             ]);
 
@@ -251,7 +250,7 @@ class AutomaticInlandController extends Controller
 
         foreach($data as $key=>$value){
             if(isset($autoinland->$key) || $autoinland->$key==null){
-                if($key=="currency_id" || $key=='provider_id'){
+                if($key=="currency_id" || ($key=='provider_id' && $data[$key]!=null)){
                     $autoinland->update([$key=>$value['id']]);
                 }else{
                     $autoinland->update([$key=>$value]);

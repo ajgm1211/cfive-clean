@@ -28,6 +28,8 @@ class Contact extends Model implements Auditable
 
     public function getFullName()
     {
-        return $this->first_name . ' ' . $this->last_name; 
+        if($this->first_name && $this->last_name){
+            return $this->first_name . ' ' . $this->last_name; 
+        }
     }
 }
