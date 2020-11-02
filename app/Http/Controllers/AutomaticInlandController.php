@@ -237,9 +237,11 @@ class AutomaticInlandController extends Controller
             }
         }
         
-        $data += $request->validate(['provider_id'=>'required',
-                                    'currency_id'=>'required',
-                                    ]);
+        $data += $request->validate([
+            'charge' => 'nullable',
+            'provider_id'=>'required',
+            'currency_id'=>'required',
+            ]);
 
         if(count($rates) != 0){
             $rates_json = json_encode($rates);
