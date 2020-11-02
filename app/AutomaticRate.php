@@ -25,10 +25,12 @@ class AutomaticRate extends Model
         'total' => 'array',
     ];
 
-    protected $fillable = ['id', 'quote_id', 'contract', 'validity_start', 'validity_end', 'origin_port_id', 
-        'destination_port_id', 'carrier_id', 'rates', 'markups', 'currency_id', 'total', 'amount', 'origin_airport_id', 
-        'destination_airport_id', 'airline_id', 'remarks', 'remarks_english', 'remarks_spanish', 'remarks_portuguese', 
-        'schedule_type', 'transit_time', 'via'];
+    protected $fillable = [
+        'id', 'quote_id', 'contract', 'validity_start', 'validity_end', 'origin_port_id',
+        'destination_port_id', 'carrier_id', 'rates', 'markups', 'currency_id', 'total', 'amount', 'origin_airport_id',
+        'destination_airport_id', 'airline_id', 'remarks', 'remarks_english', 'remarks_spanish', 'remarks_portuguese',
+        'schedule_type', 'transit_time', 'via'
+    ];
 
     public function quote()
     {
@@ -208,6 +210,29 @@ class AutomaticRate extends Model
                     $totals_usd[$fr] = round($totals_usd[$fr],2);
                 }
             }
+        $equip = $quote->getContainerCodes($quote->equipment);
+
+        $equip_array = explode(',', $equip);
+
+        array_splice($equip_array, -1, 1);
+
+        if ($quote->type == 'FCL') {
+            $charges = $this->charge()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
+        } else if ($quote->type == 'LCL') {
+            $charges = $this->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
+        }
+
+        if ($quote->type == 'FCL') {
+            $ocean_freight = $this->charge()->where('surcharge_id', null)->first();
+        } else if ($quote->type == 'LCL') {
+            $ocean_freight = $this->charge_lcl_air()->where('surcharge_id', null)->first();
+        }
+
+        $this->update(['currency_id' => $new_currency_id]);
+
+        $currency = $this->currency()->first();
+
+        $totals_usd = [];
 
             $totals = json_encode($totals_usd);
     
@@ -327,5 +352,23 @@ class AutomaticRate extends Model
         }    
 
         return $new_rate;
+    }
+    
+    public function scopeSelectCharge($q)
+    {
+        return $q->with(['charge' => function ($query) {
+            $query->where('type_id', 3);
+            $query->select(
+                'id',
+                'automatic_rate_id',
+                'amount as price',
+                'markups as markup'
+            );
+        }]);
+    }
+
+    public function scopeSelectFields($query)
+    {
+        return $query->select('id', 'quote_id', 'contract', 'validity_start as valid_from', 'validity_end as valid_until', 'markups', 'total', 'origin_port_id', 'destination_port_id', 'currency_id');
     }
 }

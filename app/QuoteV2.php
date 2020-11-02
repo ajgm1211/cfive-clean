@@ -247,27 +247,21 @@ class QuoteV2 extends Model  implements HasMedia
             'equipment',
             'delivery_type as delivery',
             'cargo_type',
-            'total_quantity',
-            'total_volume',
-            'total_weight',
-            'chargeable_weight',
-            'price_id',
             'incoterm_id',
-            'user_id',
-            'company_id',
-            'contact_id',
-            'validity_start as valid_from',
-            'validity_end as valid_until',
             'commodity',
             'kind_of_cargo',
             'gdp',
             'risk_level',
             'date_issued',
-            'status',
-            'payment_conditions',
-            'terms_and_conditions',
+            'remarks_spanish',
+            'remarks_english',
+            'remarks_portuguese',
+            'terms_and_conditions as terms_spanish',
             'terms_english',
             'terms_portuguese',
+            'payment_conditions',
+            'contact_id',
+            'company_id',
             'created_at',
             'updated_at'
         );
@@ -355,7 +349,7 @@ class QuoteV2 extends Model  implements HasMedia
     public function scopeIncotermRelation($q)
     {
         return $q->with(['incoterm' => function ($q) {
-            $q->select('name');
+            $q->select('id', 'name');
         }]);
     }
 
@@ -685,6 +679,11 @@ class QuoteV2 extends Model  implements HasMedia
         return (new QuotationFilter($request, $builder))->filter();
     }
 
+    public function scopeTypeFCL($query)
+    {
+        return $query->where('type', '=', 'FCL');
+    }
+
     public function getContainerCodes($equip, $getGroup = false)
     {
 
@@ -737,5 +736,23 @@ class QuoteV2 extends Model  implements HasMedia
         }
 
         return $ports;
+    }
+
+    public function getDeliveryAttribute($value){
+
+        if($value == 1){
+            $value = 'Port to Port';
+        }elseif($value == 2){
+            $value = 'Port to Door';
+        }elseif($value == 3){
+            $value = 'Door to Port';
+        }elseif($value == 4){
+            $value = 'Door to Door';
+        }else{
+            $value = 'Port to Port';
+        }
+        
+        return $value;
+
     }
 }
