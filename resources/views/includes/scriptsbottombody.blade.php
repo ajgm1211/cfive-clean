@@ -35,7 +35,7 @@
 
 
 
-<script src="{{ asset('/js/intercom.js?v=2')}}" email="{{ \Auth::user()->email }}" name="{{ \Auth::user()->name }}  {{\Auth::user()->lastname }} " id="{{ \Auth::user()->id }}" company="{{ \Auth::user()->company_user_id }}"  type="text/javascript"></script>   
+<script src="{{ asset('/js/intercom.js?v=3')}}" email="{{ \Auth::user()->email }}" name="{{ \Auth::user()->name }}  {{\Auth::user()->lastname }} " id="{{ \Auth::user()->id }}" company="{{ \Auth::user()->company_user_id }}"  type="text/javascript"></script>   
 
 
 <script>

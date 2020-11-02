@@ -94,7 +94,7 @@
                     <!-- End Select Field -->
 
                     <!-- MultiSelect Field -->
-                    <div v-if="item.type == 'multiselect'">
+                    <div v-if="item.type == 'multiselect' || item.type == 'multiselect_data'">
                         <b-form-group
                             :label="item.label"
                             :invalid-feedback="key + ' is required'"
@@ -373,6 +373,13 @@ export default {
                             data[key] = component.vdata[key].id;
                         break;
                     case "multiselect":
+                        if (
+                            key in component.vdata &&
+                            component.vdata[key].length > 0
+                        )
+                            data[key] = component.vdata[key].map((e) => e.id);
+                        break;
+                    case "multiselect_data":
                         if (
                             key in component.vdata &&
                             component.vdata[key].length > 0

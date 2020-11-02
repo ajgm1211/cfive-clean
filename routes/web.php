@@ -568,8 +568,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
     Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
     Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');
-    Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
-    Route::post('store/sale/charge', 'SaleTermV2Controller@storeSaleCharge')->name('quotes-v2.store.sale.charge');
+    Route::post('charge/store', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
+    Route::post('sale/charge/store', 'SaleTermV2Controller@storeSaleCharge')->name('quotes-v2.store.sale.charge');
     Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
     Route::post('lcl/inland/charge/update', 'QuoteV2Controller@updateInlandChargeLcl')->name('quotes-v2.update.inland.charge.lcl');
     Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
@@ -585,7 +585,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('excelLcl/{id2}/{id3}', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
     Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
     //Sale terms
-    Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
+    Route::post('saleterm/store', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
     Route::post('sale/charges/update', 'SaleTermV2Controller@updateSaleCharges')->name('quotes-v2.saleterm.update.charges');
     Route::get('sale/edit/{sale_id}', 'SaleTermV2Controller@editSaleTerm')->name('quotes-v2.saleterm.edit');
     Route::post('sale/update', 'SaleTermV2Controller@updateSaleTerm')->name('quotes-v2.saleterm.update');
