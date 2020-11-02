@@ -556,7 +556,6 @@ export default {
                     label: "PROVIDER",
                     type: "select",
                     searchable: true,
-                    rules: "required",
                     trackby: "name",
                     placeholder: "Select Provider",
                     options: "providers",
@@ -973,12 +972,7 @@ export default {
 
             component.inlandAdds.forEach(function (inlandAdd) {
                 if (inlandAdd.selected) {
-                    if (Object.keys(inlandAdd.provider_id).length == 0) {
-                        component.modalWarning = "Provider";
-                        setTimeout(() => {
-                            component.modalWarning = "";
-                        }, 3000);
-                    } else if (Object.keys(inlandAdd.currency_id).length == 0) {
+                    if (Object.keys(inlandAdd.currency_id).length == 0) {
                         component.modalWarning = "Currency";
                         setTimeout(() => {
                             component.modalWarning = "";
