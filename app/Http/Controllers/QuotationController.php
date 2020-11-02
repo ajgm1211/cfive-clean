@@ -18,6 +18,7 @@ use App\TermAndConditionV2;
 use App\DeliveryType;
 use App\StatusQuote;
 use App\CargoKind;
+use App\CargoType;
 use App\Language;
 use App\Currency;
 use App\Container;
@@ -25,7 +26,9 @@ use App\Charge;
 use App\CalculationType;
 use App\Surcharge;
 use App\ScheduleType;
+use App\Provider;
 use App\Country;
+use App\InlandDistance;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
 use Illuminate\Support\Collection;
@@ -111,6 +114,10 @@ class QuotationController extends Controller
             return $curr->only(['id','alphacode','rates','rates_eur']);
         });
 
+        $filtered_currencies = Currency::whereIn('id', ['46','149'])->get()->map(function ($curr){
+            return $curr->only(['id','alphacode','rates','rates_eur']);
+        });
+
         $containers = Container::all();
 
         $calculationtypes = CalculationType::get()->map(function ($ctype){
@@ -133,6 +140,18 @@ class QuotationController extends Controller
             return $surcharge->only(['id','name']);
         });
 
+        $providers = Provider::where('company_user_id',$company_user_id)->get()->map(function ($provider){
+            return $provider->only(['id','name']);
+        });
+
+        $distances = InlandDistance::get()->map(function ($distance){
+            return $distance->only(['id','display_name','harbor_id','distance']);
+        });
+
+        $cargo_types = CargoType::get()->map(function ($tcargo){
+            return $tcargo->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -152,7 +171,12 @@ class QuotationController extends Controller
             'schedule_types',
             'countries',
             'languages',
-            'sale_codes'
+            'sale_codes',
+            'providers',
+            'providers',
+            'distances',
+            'cargo_types',
+            'filtered_currencies'
         );
 
         return response()->json(['data'=>$data]);
@@ -271,30 +295,51 @@ class QuotationController extends Controller
     }
 
     public function update (Request $request, QuoteV2 $quote)
-    {   
+    {                   
         $form_keys = $request->input('keys');
 
-        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english'];
+        $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
 
-        if(array_intersect($terms_keys,$form_keys)==[]){
-            $data = $request->validate([
-                'delivery_type' => 'required',
-                'equipment' => 'required',
-                'status' => 'required',
-                'type' => 'required',
-                'validity_start' => 'required',
-                'user_id'=>'required',
-                'validity_end' => 'required',
-            ]);
+        if($form_keys!=null){
+            if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id') == null){
+                $data = $request->validate([
+                    'delivery_type' => 'required',
+                    'equipment' => 'required',
+                    'status' => 'required',
+                    'type' => 'required',
+                    'validity_start' => 'required',
+                    'user_id'=>'required',
+                    'validity_end' => 'required',
+                    'language_id' => 'required',
+                    'commodity' => 'sometimes|nullable',
+                    'contact_id' => 'sometimes|nullable',
+                    'company_id' => 'sometimes|nullable',
+                    'incoterm_id' => 'sometimes|nullable',
+                    'payment_conditions' => 'sometimes|nullable',
+                    'kind_of_cargo' => 'sometimes|nullable'
+
+                ]);
+            } else if($request->input('cargo_type_id')!=null){
+                $data = $request->validate([
+                    'cargo_type_id' => 'nullable',
+                    'total_quantity' => 'nullable',
+                    'total_volume' => 'nullable',
+                    'total_weight' => 'nullable',
+                    'chargeable_weight' => 'nullable',
+                ]);
+            } else {
+                $data = [];
+
+                foreach($form_keys as $fkey){
+                    if(!in_array($fkey,$data) && $fkey != 'keys'){
+                        $data[$fkey] = $request->input($fkey);
+                    }
+                }
+            }
+
         } else {
             $data = [];
         }
-        
-        foreach($form_keys as $fkey){
-            if(!in_array($fkey,$data) && $fkey != 'keys'){
-                $data[$fkey] = $request->input($fkey);
-            }
-        };
 
         foreach(array_keys($data) as $key){
             if ($key=='equipment'){
@@ -303,8 +348,26 @@ class QuotationController extends Controller
                 if ($quote->company_id == null){
                     $data[$key] = null;
                 }
+            } else if($key=='cargo_type_id'){
+                if($data[$key]=='Pallets'){
+                    $data[$key] = 1;
+                }else{
+                    $data[$key] = 2;
+                }
+            } else if($key=='status'){
+                if($data[$key] == 1){
+                    $data[$key] = 'Draft';
+                }else if($data[$key] == 2){
+                    $data[$key] = 'Sent';
+                }else if($data[$key] == 5){
+                    $data[$key] = 'Won';
+                }
             }
             $quote->update([$key=>$data[$key]]);
+        }
+
+        if($request->input('pdf_options') != null){
+            $quote->update(['pdf_options'=>$request->input('pdf_options')]);
         }
     }
 
@@ -312,7 +375,7 @@ class QuotationController extends Controller
     {
         $quote->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Ok']);
     }
 
     public function retrieve(QuoteV2 $quote)
@@ -332,5 +395,13 @@ class QuotationController extends Controller
         DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function show($id){
+
+        $quote_id = obtenerRouteKey($id);
+        $quote = QuoteV2::firstOrFail($quote_id);
+
+        return redirect()->action('QuotationController@edit', $quote);
     }
 }

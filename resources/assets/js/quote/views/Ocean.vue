@@ -6,7 +6,7 @@
         </div>
 
         <div v-if="freights.length == 0">
-            <h2>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal('addFreight')">adding a new freight</a></h2>
+            <h4>Nothing to display. Start by <a href="#" id="show-btn" @click="showModal('addFreight')">adding a new freight</a></h4>
         </div>
 
         <!-- Freight Card -->
@@ -15,7 +15,7 @@
             <div class="row">
                 
                 <!-- Logo(compañia), origen, destino y add freight -->
-                <div class="col-12 d-flex justify-content-between">
+                <div class="col-12 quote-card">
                    
                     <!-- Logo, origen, destino -->
                     <div>
@@ -27,35 +27,42 @@
                             class="mr-4"
                         />
 
-                        <span class="mr-4 ml-4">
+                        <div>
+                            <span class="mr-4 ml-4">
                             <img :src="freight.originFlag" 
                             alt="bandera"
                             width="20" 
                             height="20"
                             style="border-radius: 50%;" />
                             {{freight.originPortName}}
-                        </span>
+                            </span>
 
-                        <i
-                            class="fa fa-long-arrow-right"
-                            aria-hidden="true"
-                            style="font-size: 18px"
-                        ></i>
+                            <i
+                                class="fa fa-long-arrow-right"
+                                aria-hidden="true"
+                                style="font-size: 18px"
+                            ></i>
 
-                        <span class="mr-4 ml-4">
-                            <img :src="freight.destFlag" 
-                            alt="bandera"
-                            width="20" 
-                            height="20"
-                            style="border-radius: 50%;" />
-                            {{freight.destPortName}}
-                        </span>
+                            <span class="mr-4 ml-4">
+                                <img :src="freight.destFlag" 
+                                alt="bandera"
+                                width="20" 
+                                height="20"
+                                style="border-radius: 50%;" />
+                                {{freight.destPortName}}
+                            </span>
+                        </div>
                     </div>
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->
                     <div class="d-flex align-items-center">
-
+                                                <!-- Inputs Freight -->
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                            <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-primary btn-bg">+ Add Charge</a>
+                        </div>
+                        <!-- End Inputs Freight -->
                         <button type="button" class="btn" v-b-toggle="String(freight.id)" @click="setCollapseState(freight)">
                             <i class="fa fa-angle-down" aria-hidden="true" style="font-size: 35px"></i>
                         </button>
@@ -64,12 +71,12 @@
                 <!-- End Logo(compañia), origen, destino y add freight -->
             </div>
 
-            <b-collapse :id="String(freight.id)" class="row">
-                <div v-if="freight.loaded" class="mt-5 mb-3 mr-3 ml-3">
+            <b-collapse :id="String(freight.id)" class="row" v-model="freight.initialCollapse">
+                <div v-if="freight.loaded" class="mt-3 mb-3 mr-3 ml-3">
                     <!-- Header TT,via,date,contract-->
                     <div class="d-flex justify-content-between align-items-center">
                         <FormInlineView
-                            v-if="loaded"
+                            v-if="rateLoaded"
                             :data ="freight.rateData"
                             :fields="header_fields"
                             :multi="true"
@@ -77,13 +84,6 @@
                             :actions="actions.automaticrates"
                             :update="true"
                         ></FormInlineView>
-
-                        <!-- Inputs Freight -->
-                        <div class="d-flex align-items-center">
-                            <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
-                            <a href="#" id="show-btn2" @click="showModal('addCharge');setCurrentFreight(freight.id)" class="btn btn-primary btn-bg">+ Add Charge</a>
-                        </div>
-                        <!-- End Inputs Freight -->
                     </div>
 
 
@@ -95,6 +95,7 @@
                         :searchBar="false"
                         :extraRow="true"
                         :withTotals="true"
+                        :changeAddMode="true"
                         :autoAdd="false"
                         :totalsFields="totalsFields"
                         :datalists="datalists"
@@ -109,6 +110,7 @@
                         :paginated="false"
                         :massiveactions="['delete']"
                         :singleActions="['edit','delete']"
+                        :massiveSelect="false"
                         @onFormFieldUpdated="formFieldUpdated"
                         @onOpenModalContainer="openModalContainer"
                         @onEditSuccess="onEdit"
@@ -116,41 +118,38 @@
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
-                    <div class="col-12 d-flex justify-content-between align-items-center mt-5 mb-3">
-                        <div class="d-flex">
-
-                            <b-form-checkbox value="carrier" class="mr-4">
-                                <span>Show Carrier</span>
-                            </b-form-checkbox>
-
-                            <b-form-checkbox value="freight">
-                                <span>Freight All-In</span>
-                            </b-form-checkbox>
-
-                        </div>
-
+                    <div class="col-12 d-flex mt-5 mb-3">
+                        <b-form-checkbox v-if="freights.length < 2" v-model="allIn" @input="updatePdfOptions()">
+                            <span>Freight All-In</span>
+                        </b-form-checkbox>
                     </div>
                     <!-- End Checkbox Freight-->
-
-                    <!-- Remarks -->
-                    <b-card class="mt-5">
-                        <h5 class="q-title">Remarks</h5>
-                        <FormInlineView
-                            v-if="loaded"
-                            :data="freight.rateData"
-                            :fields="remarks_fields"
-                            :multi="true"
-                            :actions="actions.automaticrates"
-                            :datalists="datalists"
-                            :update="true"
-                        ></FormInlineView>
-                    </b-card>
-                    <!-- End Remarks -->
                 </div>
 
             </b-collapse>
         </b-card>
         <!-- End Freight Card -->
+
+        <!-- Show Carrier checkbox -->
+        <b-form-checkbox class="mr-4" v-if="freights.length!=0" v-model="showCarrier" @input="updatePdfOptions()">
+            <span>Show Carrier</span>
+        </b-form-checkbox>
+        <!-- End show Carrier checkbox -->
+
+        <!-- Global Remarks -->
+        <b-card class="mt-5">
+            <h5 class="q-title">{{'Remarks ' + quoteLanguage.toLowerCase()}}</h5>
+            <FormInlineView
+                v-if="rateLoaded"
+                :data="currentQuoteData"
+                :fields="remarks_fields"
+                :multi="true"
+                :actions="actions.quotes"
+                :datalists="datalists"
+                :update="true"
+            ></FormInlineView>
+        </b-card>
+        <!-- End global remarks -->
 
         <!--  Add Freight Modal  -->
         <b-modal id="addFreight" hide-footer title="Add Freight">
@@ -168,29 +167,6 @@
         </b-modal>
         <!--  End Add Freight Modal  -->
 
-        <!--  Add Charge Modal  -->
-        <b-modal
-            id="addCharge"
-            size="lg"
-            cancel-title="Cancel"
-            hide-header-close
-            title="Add Charge"
-            hide-footer
-        >
-            <FormView
-                :data="{}"
-                :fields="form_fields"
-                :vdatalists="datalists"
-                :multi="true"
-                :multiId="modalFreight"
-                btnTxt="Add Charge"
-                @exit="closeModal('addCharge','cancel')"
-                @success="closeModal('addCharge','addCharge')"
-                :actions="actions.charges"
-            ></FormView>
-        </b-modal>
-        <!--  End Add Charge Modal  -->
-        
         <!--  Edit Charge Modal  -->
         <b-modal
             id="editCharge"
@@ -286,6 +262,7 @@ export default {
                 },
             },
             remarks_fields: {},
+            global_remarks_fields: {},
             addFreightModal_fields: {
                 POL: {
                     label: "POL",
@@ -314,73 +291,26 @@ export default {
             },
             editChargeModal_fields:{},
             loaded: true,
+            rateLoaded: false,
             form_fields: {},
             extra_fields: {},
             containers_fields: {},
             currentChargeData: {},
             modalFreight: {},
             ids_selected: [],
+            showCarrier: true,
+            allIn: true,
 
             /* Table headers */
-            fields: [
-                {
-                    key: "surcharge_id",
-                    label: "CHARGE",
-                    type: "select",
-                    trackby: "name",
-                    options: "surcharges",
-                },
-                {
-                    key: "calculation_type_id",
-                    label: "PROVIDER",
-                    type: "select",
-                    trackby: "name",
-                    options: "calculationtypes",
-                },
-                {
-                    key: "currency_id",
-                    label: "CURRENCY",
-                    type: "select",
-                    trackby: "alphacode",
-                    options: "currency",
-                },
-            ],
+            fields: [],
 
             /* Table input inline fields */
-            vform_fields: {
-                surcharge_id: {
-                    label: "CHARGE",
-                    type: "select",
-                    searchable: true,
-                    rules: "required",
-                    placeholder: "Select charge type",
-                    trackby: "name",
-                    options: "surcharges",
-                },
-                calculation_type_id: {
-                    label: "PROVIDER",
-                    searchable: true,
-                    type: "select",
-                    rules: "required",
-                    trackby: "name",
-                    placeholder: "Select Provider",
-                    options: "calculationtypes",
-                },
-                currency_id: {
-                    label: "CURRENCY",
-                    searchable: true,
-                    type: "select",
-                    rules: "required",
-                    trackby: "alphacode",
-                    placeholder: "Select Currency",
-                    options: "currency",
-                },
-            },
+            vform_fields: {},
             eform_fields: {
                 fixed_surcharge: {
                     type: "extraText",
                     disabled: true,
-                    placeholder: "Ocean Freight",
+                    placeholder: "Freight",
                 },
                 fixed_calculation_type: {
                     type: "extraText",
@@ -405,12 +335,23 @@ export default {
         };
     },
     created() {
+        if(typeof this.currentQuoteData.pdf_options == "string"){
+            var pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
+        }else{
+            var pdfOptions = this.currentQuoteData.pdf_options;
+        }
+
+        this.setTableFields();
+
         this.setTotalsFields();
 
+        this.setRemarksField(this.quoteLanguage);
+        
         this.setFreightData();
 
-        this.setRemarksField(this.quoteLanguage);
+        this.allIn = pdfOptions['allIn'];
 
+        this.showCarrier = pdfOptions['showCarrier'];
     },
     watch: {
         quoteLanguage: function(newVal,oldVal) {this.setRemarksField(newVal);},
@@ -418,7 +359,7 @@ export default {
         freights: function() {this.setFreightData();},
     },
     methods: {
-        showModal(modal,freight_id) {
+        showModal(modal) {
             this.$bvModal.show(modal);
         },
 
@@ -464,8 +405,6 @@ export default {
 
                 component.$emit("freightAdded",id)
 
-            }else if(modal=="addCharge" && action=='addCharge'){
-                component.$refs[component.modalFreight][0].refreshTable()
             }
         },
 
@@ -503,12 +442,13 @@ export default {
                 actions.automaticrates
                     .retrieve(freight.id,component.$route)
                     .then((response) => {
-                        freight.rateData=response.data.data;
+                        freight.rateData = response.data.data;
+                        component.rateLoaded = true;
                         })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                         });
-
+                        
                 freight.loaded = true;
             }
 
@@ -521,6 +461,7 @@ export default {
 
         setFreightData(){
             let component = this;
+            let firstOpen = false;
 
             component.freights.forEach(function (freight) {
                 freight.loaded = false;
@@ -539,6 +480,14 @@ export default {
                         freight.destPortName = harbor.display_name;
                     }
                 });
+                
+                if(!firstOpen){
+                    component.setCollapseState(freight);
+                    freight.initialCollapse = true;
+                    firstOpen = true;
+                }else{
+                    freight.initialCollapse = false;
+                }
             });
         },
 
@@ -560,10 +509,17 @@ export default {
             }else if(language=="English"){
                 this.remarks_fields = {
                     remarks_english: {
-                    type: "ckeditor",
-                    colClass: "col-sm-12",
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
                     },
                 }  
+            }
+
+            this.global_remarks_fields = {
+                remarks: {
+                    type: "ckeditor",
+                    colClass: "col-sm-12",
+                }
             }
         },
 
@@ -581,9 +537,172 @@ export default {
             this.$emit("freightAdded",quote_id)
         },
 
-        setCurrentFreight(id){
+        updatePdfOptions(){
+            let pdfOptions = 
+            {pdf_options:
+                {
+                    "allIn" : this.allIn,
+                    "showCarrier" : this.showCarrier,
+                }
+            };
+            
+            this.actions.quotes
+                .update(this.currentQuoteData['id'], pdfOptions)
+                    .then( ( response ) => {
+                        console.log('updated!')
+                    })
+                    .catch(( data ) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
+        },
+
+        setTableInsert(id){
             this.modalFreight = id;
-        }
+
+            this.$refs[this.modalFreight][0].addInsert();
+        },
+
+        setTableFields(){
+            if(Object.keys(this.equipment).length!=0){
+                this.fields.push(
+                {
+                    key: "surcharge_id",
+                    label: "CHARGE",
+                    type: "select",
+                    trackby: "name",
+                    options: "surcharges",
+                },
+                {
+                    key: "calculation_type_id",
+                    label: "DETAIL",
+                    type: "select",
+                    trackby: "name",
+                    options: "calculationtypes",
+                },
+                {
+                    key: "currency_id",
+                    label: "CURRENCY",
+                    type: "select",
+                    trackby: "alphacode",
+                    options: "currency",
+                },)
+
+                this.vform_fields = {
+                    surcharge_id: {
+                        label: "CHARGE",
+                        type: "select",
+                        searchable: true,
+                        rules: "required",
+                        placeholder: "Select charge type",
+                        trackby: "name",
+                        options: "surcharges",
+                    },
+                    calculation_type_id: {
+                        label: "DETAIL",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "calculationtypes",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
+            } else {
+                this.fields.push(
+                {
+                    key: "surcharge_id",
+                    label: "CHARGE",
+                    type: "select",
+                    trackby: "name",
+                    options: "surcharges",
+                },
+                {
+                    key: "calculation_type_id",
+                    label: "DETAIL",
+                    type: "select",
+                    trackby: "name",
+                    options: "calculationtypes",
+                },
+                {
+                    key: "units",
+                    label: "UNITS",
+                    type: "text",
+                },
+                //MINIMUM GOES HERE
+                {
+                    key: "price_per_unit",
+                    label: "TON/M3",
+                    type: "text",
+                },
+                {
+                    key: "total",
+                    label: "TOTAL",
+                    type: "text",
+                },
+                {
+                    key: "currency_id",
+                    label: "CURRENCY",
+                    type: "select",
+                    trackby: "alphacode",
+                    options: "currency",
+                },)
+
+                this.vform_fields ={
+                    surcharge_id: {
+                        label: "CHARGE",
+                        type: "select",
+                        searchable: true,
+                        rules: "required",
+                        placeholder: "Select charge type",
+                        trackby: "name",
+                        options: "surcharges",
+                    },
+                    calculation_type_id: {
+                        label: "DETAIL",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "calculationtypes",
+                    },
+                    units: {
+                        label: "UNITS",
+                        type: "text",
+                        rules: "required",
+                    },
+                    //MINIMUM GOES HERE
+                    price_per_unit: {
+                        label: "TON/M3",
+                        type: "text",
+                        rules: "required",
+                    },
+                    total: {
+                        label: "TOTAL",
+                        type: "text",
+                        rules: "required",
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                }
+            }
+        },
     },
 };
 </script>

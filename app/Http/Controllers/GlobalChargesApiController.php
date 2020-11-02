@@ -14,6 +14,7 @@ use App\GlobalChargeApi;
 use App\ApiProvider;
 use App\GlobalChargeProvider;
 use App\GlobalChargePortApi;
+use App\GlobalChargeApiPortException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -41,7 +42,8 @@ class GlobalChargesApiController extends Controller
         $countries = Country::pluck('name','id');
         $currency_cfg = $company_user->currency;
         $providers = ApiProvider::pluck('name','id');
-
+       
+        
         $route = 'globalchargesapi.store';
 
         $data = [
@@ -53,7 +55,8 @@ class GlobalChargesApiController extends Controller
         	'countries',
         	'currency_cfg', 
         	'providers',
-        	'route' 
+            'route',
+            
         ];
 
         return view('globalcharges.add', compact($data));
@@ -61,50 +64,87 @@ class GlobalChargesApiController extends Controller
 
     public function store(Request $request){
 
-        $detailscharges = $request->input('type');
-        $calculation_type = $request->input('calculationtype');
-
-        foreach($calculation_type as $ct => $ctype)
-        {
-
-            $global = new GlobalChargeApi();
-            $validation = explode('/',$request->validation_expire);
-            $global->validity = $validation[0];
-            $global->expire = $validation[1];
-            $global->surcharge_id = $request->input('type');
-            $global->typedestiny_id = $request->input('changetype');
-            $global->calculationtype_id = $ctype;
-            $global->amount = $request->input('ammount');
-            $global->currency_id = $request->input('localcurrency_id');
-            $global->save();
-
-            $providers = $request->input('providers');
-
-            foreach($providers as $p => $value)
-            {
-                $provider = new GlobalChargeProvider();
-                $provider->provider_id = $value;
-                $provider->globalcharge()->associate($global);
-                $provider->save();
-            }
-
-            $detailport = $request->input('port_orig');
-            $detailportDest = $request->input('port_dest');
-
-            foreach($detailport as $p => $value)
-            {
-                foreach($detailportDest as $dest => $valuedest)
-                {
-                    $ports = new GlobalChargePortApi();
-                    $ports->port_orig = $value;
-                    $ports->port_dest = $valuedest;
-                    $ports->typedestiny_id = $request->input('changetype');
-                    $ports->globalcharge()->associate($global);
-                    $ports->save();
-                }
-            }
+        if ($request->input('allOriginPort') != null) {
+            $all_port = array($request->input('allOriginPort'));
+            $request->request->add(['port_orig' => $all_port]);
         }
-		
+        if ($request->input('allDestinationPort') != null) {
+            $all_portD = array($request->input('allDestinationPort'));
+            $request->request->add(['port_dest' => $all_portD]);
+        }      
+        
+        $calculation_type = $request->input('calculationtype');
+ 
+            foreach ($calculation_type as $ct => $ctype) {
+                
+                $global = new GlobalChargeApi();
+                $validation = explode('/', $request->validation_expire);
+                $global->validity = $validation[0];
+                $global->expire = $validation[1];
+                $global->surcharge_id = $request->input('type');
+                $global->typedestiny_id = $request->input('changetype');
+                $global->calculationtype_id = $ctype;
+                $global->amount = $request->input('ammount');
+                $global->currency_id = $request->input('localcurrency_id');
+            
+                $global->save();
+           
+                $providers = $request->input('providers');
+                $route = 'globalchargesapi.update';
+                foreach($providers as $p => $value)
+                {
+                    $provider = new GlobalChargeProvider();
+                    $provider->provider_id = $value;
+                    $provider->globalcharge()->associate($global);
+                    $provider->save();
+                }
+
+                $typerate = $request->input('typeroute');
+
+                if ($typerate == 'port') {
+                    $detailport = $request->input('port_orig');
+                    $detailportDest = $request->input('port_dest');
+                    //Excepciones
+
+                    foreach ($detailport as $p => $value) {
+                        foreach ($detailportDest as $dest => $valuedest) {
+                            $ports = new GlobalChargePortApi();
+                            $ports->port_orig = $value;
+                            $ports->port_dest = $valuedest;
+                            $ports->typedestiny_id = $request->input('changetype');
+                            $ports->globalcharge()->associate($global);
+                            $ports->save();
+                        }
+                    }
+                } 
+                    
+                
+                //Excepciones Ports
+                if ($request->input('exceptionPortOrig') != null) {
+                    $exceptionPortOrig = $request->input('exceptionPortOrig');
+                    foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
+                        $ports = new GlobalChargeApiPortException();
+                        $ports->port_orig = $exPortOrig;
+
+                        $ports->globalchargeapi()->associate($global);
+                        $ports->save();
+                    }
+                }
+
+                if ($request->input('exceptionPortDest') != null) {
+                    $exceptionPortDest = $request->input('exceptionPortDest');
+                    foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
+                        $ports = new GlobalChargeApiPortException();
+
+                        $ports->port_dest = $exPortDest;
+                        $ports->globalchargeapi()->associate($global);
+                        $ports->save();
+                    }
+                }
+
+               
+            }
+         
 		Session::flash('globalcharge.msg', 'Global Charge Api Created'); 
         return redirect()->action('GlobalChargesApiController@index');
     }
@@ -126,7 +166,7 @@ class GlobalChargesApiController extends Controller
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
         $amount = $globalcharges->amount;
-
+        $api_global=1;
         $activacion = [
         	"rdrouteP" => true, 
         	"rdrouteC" => false,
@@ -146,7 +186,8 @@ class GlobalChargesApiController extends Controller
         	'providers',
         	'route',
         	'activacion',
-        	'amount'
+            'amount',
+            'api_global'
         ];
 
         return view('globalcharges.edit', compact($data));

@@ -7,11 +7,13 @@
 <div class="form-group m-form__group">
     {!! Form::text('email', null, ['placeholder' => 'Please enter your  email','class' => 'form-control m-input','required' => 'required']) !!}
 </div>
-@if($type == 'add' )
-    <div class="form-group m-form__group">
-        <input type="password" name="password" class="form-control m-input" placeholder="Please enter your password" required>
-    </div>
-@endif
+<div class="form-group m-form__group">
+    <input type="password" name="password" class="form-control m-input" placeholder="Please enter your password">
+</div>
+<div class="form-group m-form__group">
+    <input type="password" name="password_confirmation" class="form-control m-input" placeholder="Please confirm your password">
+</div>
+
 @if($type == 'add' )
     @if( Auth::user()->type == 'admin')
         <div class="form-group m-form__group">
