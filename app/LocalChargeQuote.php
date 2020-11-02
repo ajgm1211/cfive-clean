@@ -199,4 +199,11 @@ class LocalChargeQuote extends Model
     {
         return $query->where('type_id', $type);
     }
+
+    public function scopeGetPort($q)
+    {
+        return $q->with(['port' => function ($query) {
+            $query->select('id', 'display_name');
+        }]);
+    }
 }

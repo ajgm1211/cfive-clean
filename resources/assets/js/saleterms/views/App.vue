@@ -24,7 +24,7 @@
         </div>
         
         <!-- Create Form -->
-        <b-modal id="addSaleterm" size="md" hide-header-close title="Add Sale term" hide-footer>
+        <b-modal id="addSaleterm" size="md" hide-header-close title="Add Sale Template" hide-footer>
             <FormView 
                 :data="fdata" 
                 :fields="form_fields"
