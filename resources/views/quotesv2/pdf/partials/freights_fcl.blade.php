@@ -109,9 +109,7 @@
                                                 <td >{{$quote->pdf_option->freight_charges_currency}}</td>
 
                                             @else
-
                                                 <td >{{@$rate->currency->alphacode}}</td>
-
                                             @endif
 
                                         </tr>
