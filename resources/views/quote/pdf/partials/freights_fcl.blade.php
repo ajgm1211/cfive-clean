@@ -38,7 +38,12 @@
                             @endphp
                             @foreach($freight_charges as $rate)
                                 <?php
-                                    $total = json_decode($rate->total);
+                                    if(!is_array($rate->total)){
+                                        $total = json_decode($rate->total);
+                                    }else{
+                                        $total = $rate->total;
+                                    }
+                                    
                                     foreach ($containers as $c){
                                         ${'freight_'.$c->code} = 0;
                                         ${'inland_freight_'.$c->code} = 0;
