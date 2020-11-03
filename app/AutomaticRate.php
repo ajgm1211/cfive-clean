@@ -376,7 +376,7 @@ class AutomaticRate extends Model
         }]);
     }
 
-    public function getProfitAttribute($value){
+    /*public function getProfitAttribute($value){
         
         return json_decode(json_decode($value));
 
@@ -386,5 +386,5 @@ class AutomaticRate extends Model
         
         return json_decode(json_decode($value));
 
-    }
+    }*/
 }
