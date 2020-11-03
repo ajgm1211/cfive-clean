@@ -29,7 +29,8 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true}'
+        'pdf_options' => '{"allIn": true, "showCarrier": true}',
+        'language_id' => 1
     ];
 
     protected $fillable = [
