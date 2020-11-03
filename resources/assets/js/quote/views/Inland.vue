@@ -199,7 +199,7 @@
                             class="btn btn-link mr-2"
                             @click="setNewAddress"
                         >
-                            + Add Manual
+                            + Add Manually
                         </button>
                         <button
                             class="btn btn-primary btn-bg"
@@ -668,7 +668,7 @@ export default {
                         component.currentAddress = component.address_options[0];
                     } else {
                         component.address_options.forEach(function (address) {
-                            if (address["address"] == newAddress) {
+                            if (address["address"] == newAddress && !component.inlandFound) {
                                 component.currentAddress = address;
                                 component.setModalTable();
                             }
@@ -779,18 +779,18 @@ export default {
                 if (this.modalDistance) {
                     var portAddressCombo = [
                         totalAddress["display_name"] +
-                            ";" +
-                            component.currentPort["type"] +
-                            ";" +
-                            component.currentPort["id"],
+                        ";" +
+                        component.currentPort["type"] +
+                        ";" +
+                        component.currentPort["id"],
                     ];
                 } else {
                     var portAddressCombo = [
                         totalAddress +
-                            ";" +
-                            component.currentPort["type"] +
-                            ";" +
-                            component.currentPort["id"],
+                        ";" +
+                        component.currentPort["type"] +
+                        ";" +
+                        component.currentPort["id"],
                     ];
                 }
 
@@ -857,12 +857,18 @@ export default {
 
                     newInlandAdd["charge"] = search["providerName"];
                     component.quoteEquip.forEach(function (equip) {
-                        newInlandAdd.price["c" + equip] =
-                            search["inlandDetails"][equip]["montoInlandT"];
-                        newInlandAdd.markup["m" + equip] =
-                            search["inlandDetails"][equip]["markup"];
-                        newInlandAdd["rates_" + equip] =
-                            search["inlandDetails"][equip]["montoInlandT"];
+                        if(search["inlandDetails"][equip]!=null){
+                            newInlandAdd.price["c" + equip] =
+                                search["inlandDetails"][equip]["montoInlandT"];
+                            newInlandAdd.markup["m" + equip] =
+                                search["inlandDetails"][equip]["markup"];
+                            newInlandAdd["rates_" + equip] =
+                                search["inlandDetails"][equip]["montoInlandT"];
+                        }else{
+                            newInlandAdd.price["c" + equip] = 0;
+                            newInlandAdd.markup["m" + equip] = 0;
+                            newInlandAdd["rates_" + equip] = 0;
+                        }
                     });
                     component.datalists.currency.forEach(function (curr) {
                         if (curr.alphacode == search["type_currency"]) {
@@ -1052,6 +1058,7 @@ export default {
                             component.inlandFound = false;
                         } else {
                             component.setModalTable(inlandSearch);
+                            component.createInlandTotals(component.modalAddress);
                             component.inlandFound = true;
                         }
                     })
