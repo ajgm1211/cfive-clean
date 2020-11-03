@@ -1977,7 +1977,7 @@ class QuoteV2Controller extends Controller
             $currency = Currency::find($currency_id);
 
             $language = $company->companyUser->language()->first();
-            $quote->language_id = $language->id;
+            $quote->language_id = $language->id ?? 1;
             $cargo_type_id = $request->input('cargo_type');
             $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
