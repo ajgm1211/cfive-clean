@@ -366,7 +366,7 @@ class QuotationController extends Controller
                 }else if($data[$key] == 2){
                     $data[$key] = 'Sent';
                 }else if($data[$key] == 5){
-                    $data[$key] = 'Won';
+                    $data[$key] = 'Win';
                 }
             }
             $quote->update([$key=>$data[$key]]);
