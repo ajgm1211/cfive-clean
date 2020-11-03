@@ -265,7 +265,7 @@ class AutomaticInlandController extends Controller
     {
         $type = $request->input('type');
 
-        $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
+        $user_currency = $quote->user()->first()->companyUser()->first()->currency()->first();
 
         $autoDistance = $request->input('distance');
 
@@ -274,7 +274,7 @@ class AutomaticInlandController extends Controller
             'destiny_port' => [$port_id],
             'origin_port' => [$port_id], 
             'company_user_id' => $quote->company_user_id,
-            'typeCurrency' => $user_currency
+            'typeCurrency' => $user_currency->id
         ];
         
         if($type=='Origin'){
@@ -315,9 +315,9 @@ class AutomaticInlandController extends Controller
         $mode = strval(1);
 
         $groupContainer = $quote->getContainerCodes($quote->equipment,true)->id;
-        
-        $inlandArray = $this->inlands($inlandParams, $dMarkup, $dEquipment, $containers, $dType, $mode, $groupContainer, $autoDistance);
 
+        $inlandArray = $this->inlands($inlandParams, $dMarkup, $dEquipment, $containers, $dType, $mode, $groupContainer, $autoDistance);
+        
         return $inlandArray;
 
     }
