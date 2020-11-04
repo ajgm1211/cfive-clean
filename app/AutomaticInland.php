@@ -91,4 +91,9 @@ class AutomaticInland extends Model
     {
         return (new AutomaticInlandFilter($request, $builder))->filter();
     }
+
+    public function inland_address()
+    {
+        return $this->hasOne('App\InlandAddress','id','inland_address_id');
+    }
 }

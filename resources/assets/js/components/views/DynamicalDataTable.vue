@@ -9,6 +9,7 @@
         :searchBar="searchBar"
         :multiList="multiList"
         :multiId="multiId"
+        :equipment="equipment"
         :withTotals="withTotals"
         :totalsFields="totalsFields"
         :totalActions="totalActions"
@@ -287,23 +288,15 @@
                     this.$emit('onFormFieldUpdated', containers);
                 }else{
                     let component = this;
+                    var fixedKey = '';
 
                     this.resetValues();
 
                     component.initialFields.forEach(function (item){
                         component.fields.push(item);
                         component.form_fields[item.key] = component.initialFormFields[item.key];
-                        component.extra_fields[item.key] = component.initialFormFields[item.key];
-                        if(item.key == 'surcharge_id'){
-                            component.extra_fields[item.key]['type'] = "extraText";
-                            component.extra_fields[item.key]['disabled'] = true;
-                            component.extra_fields[item.key]['placeholder'] = "Freight";
-                        }
-                        if(component.extra_fields[item.key]['type'] == "text"){
-                            component.extra_fields[item.key]['type'] = "extraText";
-                        } else if(component.extra_fields[item.key]['type'] == "select"){
-                            component.extra_fields[item.key]['type'] = "extraSelect";
-                        }
+                        fixedKey = 'fixed_'.concat(item.key);
+                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];                        
                     });
                     this.isLoaded = true;
                 }
