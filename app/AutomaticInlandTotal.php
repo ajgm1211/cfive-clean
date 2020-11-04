@@ -20,6 +20,11 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\Currency','id','currency_id');
     }
 
+    public function inland_address()
+    {
+        return $this->hasOne('App\InlandAddress','id','inland_address_id');
+    }
+
     public function totalize()
     {
         $quote = $this->quotev2()->first();
@@ -30,7 +35,11 @@ class AutomaticInlandTotal extends Model
 
         array_splice($equip_array,-1,1);
 
-        $currency = $this->currency()->first();
+        $company_user = CompanyUser::find(\Auth::user()->company_user_id);
+
+        $currency = $company_user->currency()->first();
+
+        $this->currency_id = $currency->id;
 
         $inlands = AutomaticInland::where([
             ['quote_id',$this->quote_id],
@@ -57,19 +66,25 @@ class AutomaticInlandTotal extends Model
             }
         }
 
+        if($this->markups != null){
+            $markups = json_decode($this->markups);
+            foreach($markups as $mark=>$profit){
+                $clear_key = str_replace('m','c',$mark);
+                if($currency->alphacode != 'USD'){
+                    $conversion = $currency->rates;
+                    $conv_profit = $profit/$conversion;
+                    $totals_usd[$clear_key] += round($conv_profit,2);
+                }else{
+                    $totals_usd[$clear_key] += $profit;
+                }
+            }
+        }
+
         if($currency->alphacode != 'USD'){
             $conversion = $currency->rates;
             foreach($totals_usd as $cont=>$price){
                 $conv_price = $price*$conversion;
                 $totals_usd[$cont] = round($conv_price,2);
-            }
-        }
-
-        if($this->markups != null){
-            $markups = json_decode($this->markups);
-            foreach($markups as $mark=>$profit){
-                $clear_key = str_replace('m','c',$mark);
-                $totals_usd[$clear_key] += $profit;
             }
         }
 

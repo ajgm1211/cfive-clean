@@ -5,7 +5,7 @@
 			<!-- Tabs Section -->
 			<b-card no-body class="card-tabs">
 				<b-tabs card>
-					<b-tab title="Sale Terms" @click="changeView('saleterms')">
+					<b-tab title="Sale Templates" @click="changeView('saleterms')">
 						<Index v-if="saleterms"></Index>
 					</b-tab>
 					<b-tab title="Sale Codes" @click="changeView('codes')">
