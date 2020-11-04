@@ -366,7 +366,7 @@ class AutomaticRate extends Model
 
     public function scopeSelectFields($query)
     {
-        return $query->select('id', 'quote_id', 'contract', 'validity_start as valid_from', 'validity_end as valid_until', 'markups as profit', 'total', 'origin_port_id', 'destination_port_id', 'currency_id', 'carrier_id');
+        return $query->select('id', 'quote_id', 'contract', 'validity_start as valid_from', 'validity_end as valid_until', 'markups as profit', 'total', 'schedule_type', 'transit_time', 'via', 'origin_port_id', 'destination_port_id', 'currency_id', 'carrier_id');
     }
 
     public function scopeCarrierRelation($query)
@@ -376,15 +376,15 @@ class AutomaticRate extends Model
         }]);
     }
 
-    public function getProfitAttribute($value){
-        
-        return json_decode(json_decode($value));
+    public function getProfitAttribute($value)
+    {
 
+        return json_decode(json_decode($value));
     }
 
-    public function getTotalAttribute($value){
-        
-        return json_decode(json_decode($value));
+    public function getTotalAttribute($value)
+    {
 
+        return json_decode(json_decode($value));
     }
 }
