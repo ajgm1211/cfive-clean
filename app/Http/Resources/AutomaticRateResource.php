@@ -45,22 +45,38 @@ class AutomaticRateResource extends JsonResource
     }
 
     public function addContainers($data)
-    {
-        if($this->markups!=null){
-            $profits = json_decode($data['markups']);
-            foreach($profits as $code=>$profit){
-                $prof_key = str_replace('m','',$code);
-                $data['profits_'.$prof_key] = $profit;
+    {   
+        $quote = $this->quotev2()->first();
+
+        if($quote->type == 'FCL'){
+            if($this->markups!=null){
+                $profits = json_decode($data['markups']);
+                foreach($profits as $code=>$profit){
+                    $prof_key = str_replace('m','',$code);
+                    $data['profits_'.$prof_key] = $profit;
                 }
             }
-        
-        if($this->total!=null){
-            $totals = json_decode($data['total']);
-            foreach($totals as $code=>$total){
-                $total_key = str_replace('c','',$code);
-                $data['totals_'.$total_key] = $total;
+            if($this->total!=null){
+                $totals = json_decode($data['total']);
+                foreach($totals as $code=>$total){
+                    $total_key = str_replace('c','',$code);
+                    $data['totals_'.$total_key] = $total;
                 }
             }
+        }else if($quote->type == "LCL"){
+            if($this->markups!=null){
+                $profits = json_decode($data['markups']);
+                foreach($profits as $code=>$profit){
+                    $data['profits_'.$code] = $profit;
+                }
+            }
+            if($this->total!=null){
+                $totals = json_decode($data['total']);
+                foreach($totals as $code=>$total){
+                    $data['totals_'.$code] = $total;
+                }
+            }
+        }
 
         return $data;
     }

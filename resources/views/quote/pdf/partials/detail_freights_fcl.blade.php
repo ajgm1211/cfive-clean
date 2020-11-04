@@ -9,7 +9,7 @@
                                     
                                     <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</b></p>
                                     
-                                    <br>
+                        
 
                                 </div>
                                 <!-- End Section Title -->

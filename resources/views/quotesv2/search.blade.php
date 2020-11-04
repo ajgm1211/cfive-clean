@@ -2167,7 +2167,7 @@ $('#quoteType').on('change', function() {
             '</ul>' +
             '</span>' +
             '<span class="c5-select-multiple-container ' + clickOnID + '">' +
-            '<span class="c5-select-header">Types</span>' +
+           /*  '<span class="c5-select-header">Types</span>' +
             '<ul class="c5-select-list list-types-carriers">' +
             '<li class="c5-case"><label class="c5-label">CMA CGM Spot' +
             '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">' +
@@ -2178,7 +2178,7 @@ $('#quoteType').on('change', function() {
             '<li class="c5-case"><label class="c5-label">SAFMARINE Spot' +
             '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">' +
             '<span class="checkmark"></span></label></li>' +
-            '</ul>' +
+            '</ul>' + */
             '<span class="c5-select-header">Carriers</span>' +
             '<span class="c5-select-container-close">' +
             '<i class="fa fa-times" aria-hidden="true"></i>' +

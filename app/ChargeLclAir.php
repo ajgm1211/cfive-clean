@@ -11,7 +11,8 @@ use Illuminate\Http\Request;
 class ChargeLclAir extends Model
 {
     
-    protected $fillable = ['automatic_rate_id','type_id','surcharge_id','calculation_type_id','units','price_per_unit','currency_id','total','markup'];
+    protected $fillable = ['automatic_rate_id','type_id','surcharge_id','calculation_type_id','units','price_per_unit',
+        'currency_id','total','markup','minimum'];
 
     public function automatic_rate()
     {
