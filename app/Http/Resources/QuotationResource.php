@@ -38,7 +38,7 @@ class QuotationResource extends JsonResource
             'quote_id' => $this->quote_id,
             'delivery_type' => is_null($this->delivery_type) ? $this->delivery_type : $this->delivery_type()->first(),
             'company_id' => $this->company,
-            'contact_id' => is_null($this->contact_id) ? $this->contact_id : ['id' => $this->contact_id, 'company_id' => $this->company()->first()->id, 'name' => $this->contact()->first()->getFullName()],
+            'contact_id' => is_null($this->contact_id) ? $this->contact_id : ['id' => $this->contact_id, 'company_id' => $this->company_id, 'name' => $this->contact()->first()->getFullName()],
             'commodity' => $this->commodity,
             'status' => $this->status_quote()->first(),
             'type' => $this->type,

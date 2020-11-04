@@ -1050,7 +1050,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}', 'AutomaticRateController@retrieve')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
-    Route::post('api/quotes/{quote}/automatic_inland/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
+    Route::post('api/quotes/{quote}/automatic_rate/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
     Route::delete('api/quotes/automatic_rate/{autorate}/destroy/', 'AutomaticRateController@destroy');
 
     /** Charge Routes**/
@@ -1060,6 +1060,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
     Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
+    /**LCL **/
+    Route::get('api/quotes/{quote}/automatic_rate/{autorate}/chargeslcl', 'ChargeLclController@list')->middleware('check_company:quote');
+    Route::post('api/quotes/{quote}/automatic_rate/{autorate}/storelcl', 'ChargeLclController@store')->middleware('check_company:quote');
+    Route::delete('api/quotes/ocean_freight/chargelcl/{charge}/destroy', 'ChargeLclController@destroy');
+    Route::get('api/quotes/ocean_freight/{autorate}/chargelcl', 'ChargeLclController@retrieve');
+    Route::post('/api/quotes/ocean_freight/chargelcl/{charge}/update', 'ChargeLclController@update');
+    Route::post('api/quotes/automatic_rate/chargeslcl/destroyAll', 'ChargeLclController@destroyAll');
 
     /** AutomaticInlands Routes **/
     Route::get('api/quotes/{quote}/port/{combo}/automatic_inlands', 'AutomaticInlandController@list')->middleware('check_company:quote');

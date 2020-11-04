@@ -50,7 +50,9 @@ class PdfController extends Controller
 
         $pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view);
+
+        //$pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }

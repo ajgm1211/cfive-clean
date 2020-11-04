@@ -8,7 +8,7 @@
                         
                         <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
                         
-                        <br>
+                       
 
                     </div>
                     <!-- End Section Title -->
@@ -57,7 +57,7 @@
                             
                                     <td>{{$rate->charge}}</td>
                             
-                                    <td>{{$rate->providers->name}}</td>
+                                    <td>{{$rate->providers->name ?? '--'}}</td>
                             
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
