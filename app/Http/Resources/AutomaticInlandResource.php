@@ -24,8 +24,8 @@ class AutomaticInlandResource extends JsonResource
             'contract' => $this->contract,
             'type' => $this->type,
             'charge' => $this->charge,
-            'validity_start'=>$this->validity_start,
-            'validity_end'=>$this->validity_end,            
+            'validity_start' => $this->validity_start,
+            'validity_end' => $this->validity_end,
             'distance' => $this->distance,
             'currency_id' => $this->currency,
             'rate' => $this->rate,
@@ -37,14 +37,18 @@ class AutomaticInlandResource extends JsonResource
 
     public function addContainers($data)
     {
-   
-        if($this->rate!=null){
-            $totals = json_decode($data['rate']);
-            foreach($totals as $code=>$total){
-                $total_key = str_replace('c','',$code);
-                $data['rates_'.$total_key] = $total;
-                }
+
+        if ($this->rate != null) {
+            if (!is_array($data['rate'])) {
+                $totals = json_decode($data['rate']);
+            }else{
+                $totals = $data['rate'];
             }
+            foreach ($totals as $code => $total) {
+                $total_key = str_replace('c', '', $code);
+                $data['rates_' . $total_key] = $total;
+            }
+        }
 
         return $data;
     }

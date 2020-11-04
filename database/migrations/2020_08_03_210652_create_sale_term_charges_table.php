@@ -15,7 +15,6 @@ class CreateSaleTermChargesTable extends Migration
     {
         Schema::create('sale_term_charges', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->nullable();
             $table->json('json_containers')->nullable();
             $table->float('amount');
             $table->integer('sale_term_id')->unsigned();

@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\ChargeLclAir;
 use App\AutomaticInlandTotal;
 use App\Http\Resources\AutomaticRateResource;
-use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
 
 class AutomaticRateController extends Controller
@@ -23,42 +23,57 @@ class AutomaticRateController extends Controller
 
     public function store(Request $request, QuoteV2 $quote)
     {
-        $data = $request->validate(['POL' => 'required',
-                                    'POD' => 'required',
-                                    'carrier'=> 'required'
-                                    ]);
+        $data = $request->validate([
+            'POL' => 'required',
+            'POD' => 'required',
+            'carrier'=> 'required'
+        ]);
 
         $rate = AutomaticRate::create([
-                'quote_id' => $quote->id,
-                'contract' => '',
-                'validity_start' => $quote->validity_start,
-                'validity_end' => $quote->validity_end,
-                'origin_port_id' => $data['POL'],
-                'destination_port_id' => $data['POD'],
-                'currency_id' => '149',
-                'carrier_id' => $data['carrier'],
-                ]);
-                
-        $freight = Charge::create([
+            'quote_id' => $quote->id,
+            'contract' => '',
+            'validity_start' => $quote->validity_start,
+            'validity_end' => $quote->validity_end,
+            'origin_port_id' => $data['POL'],
+            'destination_port_id' => $data['POD'],
+            'currency_id' => '149',
+            'carrier_id' => $data['carrier'],
+        ]);
+        
+        if($quote->type == 'FCL'){
+            $freight = Charge::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
                 'calculation_type_id' => '5',
                 'currency_id' => $rate->currency_id,
-                ]);
+            ]);
+        }else if($quote->type == 'LCL'){
+            $freight = ChargeLclAir::create([
+                'automatic_rate_id' => $rate->id,
+                'type_id' => '3',
+                'calculation_type_id' => '10',
+                'units' => 1.00,
+                'price_per_unit' => 1.00,
+                'minimum' => 1.00,
+                'total' => 1.00,
+                'markup' => 1.00,
+                'currency_id' => $rate->currency_id,
+            ]);
+        }
 
         $originInland = AutomaticInlandTotal::create([
-                    'quote_id' => $quote->id,
-                    'port_id' => $rate->origin_port_id,
-                    'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-                    'type' => 'Origin',
-                    ]);
+            'quote_id' => $quote->id,
+            'port_id' => $rate->origin_port_id,
+            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
+            'type' => 'Origin',
+        ]);
 
         $destInland = AutomaticInlandTotal::create([
-                    'quote_id' => $quote->id,
-                    'port_id' => $rate->destination_port_id,
-                    'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-                    'type' => 'Destination',
-                    ]);
+            'quote_id' => $quote->id,
+            'port_id' => $rate->destination_port_id,
+            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
+            'type' => 'Destination',
+        ]);
 
                 
         return new AutomaticRateResource($rate);
@@ -66,7 +81,6 @@ class AutomaticRateController extends Controller
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-
         $form_keys = $request->input('keys');
 
         $remarks_keys = ['remarks_english','remarks_spanish','remarks_portuguese'];
@@ -108,7 +122,7 @@ class AutomaticRateController extends Controller
     {
         $form_keys = $request->input('keys');
 
-        $data=[];
+        $data = [];
            
         foreach($form_keys as $fkey){
             if(strpos($fkey,'profits') !== false){
@@ -117,14 +131,18 @@ class AutomaticRateController extends Controller
         }
 
         $markups = [];
-        
+
         foreach($data as $key=>$value){
             if($value==null){$value=0;}
             if($key!='profits_currency'){
-                $markups['m'.str_replace('profits_','',$key)] = $value;
+                if($quote->type == 'FCL'){
+                    $markups['m'.str_replace('profits_','',$key)] = $value;
+                }else if($quote->type == 'LCL'){
+                    $markups[str_replace('profits_','',$key)] = $value;
+                }
             }
         }
-
+            
         if(count($markups) != 0){
             $markups_json = json_encode($markups);
 
