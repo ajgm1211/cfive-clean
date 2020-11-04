@@ -29,6 +29,7 @@ use App\ScheduleType;
 use App\Provider;
 use App\Country;
 use App\InlandDistance;
+use App\CalculationTypeLcl;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
 use Illuminate\Support\Collection;
@@ -152,6 +153,10 @@ class QuotationController extends Controller
             return $tcargo->only(['id','name']);
         });
 
+        $calculationtypeslcl = CalculationTypeLcl::get()->map(function ($ctype){
+            return $ctype->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -176,6 +181,7 @@ class QuotationController extends Controller
             'providers',
             'distances',
             'cargo_types',
+            'calculationtypeslcl',
             'filtered_currencies'
         );
 

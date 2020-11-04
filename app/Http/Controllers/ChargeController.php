@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
-use App\ChargeLclAir;
 use App\Http\Resources\AutomaticRateResource;
 use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +16,7 @@ class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        if($quote->type == 'FCL'){
-            $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
-        } else if($quote->type == 'LCL'){
-            $results = ChargeLclAir::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
-        }
+        $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
         
         return ChargeResource::collection($results);
     }
@@ -68,7 +63,6 @@ class ChargeController extends Controller
         $autorate->totalize($autorate->currency_id);
 
         return new ChargeResource($charge);
-
     }
 
     public function update(Request $request, Charge $charge)
@@ -97,10 +91,11 @@ class ChargeController extends Controller
             }
         }
         
-        $data += $request->validate(['fixed_currency'=>'sometimes|required',
-                                    'surcharge_id'=>'sometimes|required',
-                                    'currency_id'=>'sometimes|required',
-                                    'calculation_type_id'=>'sometimes|required']);
+        $data += $request->validate([
+            'fixed_currency'=>'sometimes|required',
+            'surcharge_id'=>'sometimes|required',
+            'currency_id'=>'sometimes|required',
+            'calculation_type_id'=>'sometimes|required']);
 
         if(count($rates) != 0){
             $rates_json = json_encode($rates);
@@ -130,12 +125,8 @@ class ChargeController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        $quote = $autorate->quotev2()->first();
-        if($quote->type == 'FCL'){
-            $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
-        }else if($quote->type=='LCL'){
-            $charge = ChargeLclAir::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
-        }
+        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        
         return new ChargeResource($charge);
     }
 
