@@ -213,11 +213,11 @@
 
                                                     </div>
                                                     <div id='containerDinamic'>
-                                                        
+
                                                     </div>
                                             
                                                 </div>
-                                                <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                
                                          
                                             </div>
                                         </div>
@@ -235,12 +235,33 @@
                                                     </div>
                                                     <div class="form-group m-form__group row">
                                                         <div class="col-lg-12">
-                                                            <label class="form-control-label">
-                                                                * Cardholder Name:
-                                                            </label>
-                                                            <input type="text" name="billing_card_name"
-                                                                class="form-control m-input" placeholder=""
-                                                                value="Nick Stone">
+                                               
+                                                            <div class="m-portlet__body">
+                                                                <!--begin::Section-->
+                                                                <div class="m-section m-section--last">
+                                                                  <div class="m-section__content">
+                                                                    <!--begin::Preview-->
+                                                                    <div class="m-demo">
+                                                                      <div class="m-demo__preview">
+                                                                        <div class="col-lg-8 ">
+                                                                          <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
+                                                                            <div class="m-dropzone__msg dz-message needsclick">
+                                                                              <h3 class="m-dropzone__msg-title">
+                                                                                Drop files here or click to upload.
+                                                                              </h3>
+                                                                              <span class="m-dropzone__msg-desc">
+                                                                                Only image, pdf and psd files are allowed for upload
+                                                                              </span>
+                                                                            </div>
+                                                                          </div>
+                                                                        </div>
+                                            
+                                            
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
                                                         </div>
                                                     </div>
                                           
@@ -256,7 +277,7 @@
                                 </div>
                                 <!--end: Form Body -->
                                 <!--begin: Form Actions -->
-                                <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
+                                <div class="m-portlet__foot m-portlet__foot--fit ">
                                     <div class="m-form__actions m-form__actions">
                                         <div class="row">
                                             <div class="col-lg-2"></div>
