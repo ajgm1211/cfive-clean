@@ -6854,7 +6854,9 @@ class QuoteV2Controller extends Controller
             $quantity = array_values(array_filter($form->quantity));
 
             $language = $company->companyUser->language()->first();
-            $quote->language_id = $language->id;
+            if($language != null){
+                $quote->language_id = $language->id;
+            }
             $cargo_type_id = $form->cargo_type;
             $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
