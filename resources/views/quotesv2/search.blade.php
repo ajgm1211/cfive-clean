@@ -1181,7 +1181,14 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-
+  <div class="row">
+                            <div class="col-lg-12">
+                                <a  data-toggle="modal" data-target="#createContractModal">
+                                
+                                    <span  style="color:blue;"> + Add Contract</span>
+                                 </a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
@@ -1198,6 +1205,8 @@ background-color: #36A3F7;
                                 </center>
                             </div>
                         </div>
+
+                      
                     </div>
                 </div>
             </div>
@@ -1948,7 +1957,16 @@ background-color: #36A3F7;
         </div>
     </div>
 </div>
+
+
+
 @include('companies.partials.companiesModal')
+@include('quotesv2.partials.createContractModal')
+
+
+
+
+
 
 @endsection
 
@@ -1984,7 +2002,9 @@ precargar()
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript">
+
 </script>
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete"
     async defer></script>
@@ -2087,6 +2107,14 @@ function AbrirModal(action, id) {
         var url = '{{ route("contacts.addCM") }}';
         $('.modal-body').load(url, function() {
             $('#contactModalSearch').modal({
+                show: true
+            });
+        });
+    }
+    if (action == "addContract") {
+        var url = '{{ route("quotesv2.addContract") }}';
+        $('.modal-body').load(url, function() {
+            $('#createContractModal').modal({
                 show: true
             });
         });
