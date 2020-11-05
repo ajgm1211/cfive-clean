@@ -60,8 +60,7 @@
                     </button>
                 </div>
                 <!-- End Agregar Charges -->
-
-                <div class="col-12 mt-5">
+                <div class="col-12 mt-5" v-if="currentQuoteData.type == 'FCL'">
                     <!-- DataTable -->
                     <b-table-simple
                         hover
@@ -211,7 +210,9 @@
                                     <span v-if="loaded">
                                         <multiselect
                                             v-model="totals.currency"
-                                            :options="datalists['filtered_currencies']"
+                                            :options="
+                                                datalists['filtered_currencies']
+                                            "
                                             :multiple="false"
                                             :show-labels="false"
                                             :close-on-select="true"
@@ -230,6 +231,185 @@
                                         ></multiselect>
                                     </span>
                                 </b-td>
+
+                                <b-td></b-td>
+                            </b-tr>
+                        </b-tbody>
+                        <!-- End Body table -->
+                    </b-table-simple>
+                    <!-- End DataTable -->
+                </div>
+                <div class="col-12 mt-5" v-if="currentQuoteData.type == 'LCL'">
+                    <!-- DataTable -->
+                    <b-table-simple
+                        hover
+                        small
+                        responsive
+                        borderless
+                        :striped="false"
+                    >
+                        <!-- Header table -->
+                        <b-thead class="q-thead">
+                            <b-tr>
+                                <b-th>
+                                    <span class="label-text">charge</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">Detail</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">units</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">rate</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">total</span>
+                                </b-th>
+
+                                <b-th>
+                                    <span class="label-text">currency</span>
+                                </b-th>
+                            </b-tr>
+                        </b-thead>
+
+                        <!-- Body table -->
+                        <b-tbody>
+                            <b-tr
+                                class="q-tr"
+                                v-for="(charge, key) in this.charges"
+                                :key="key"
+                            >
+                                <b-td>
+                                    <b-form-input
+                                        v-model="charge.charge"
+                                        class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.charge,
+                                                'charge',
+                                                1
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+                                <b-td>
+                                    <multiselect
+                                        v-model="charge.calculation_type"
+                                        :options="datalists['calculationtypes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.calculation_type.id,
+                                                'calculation_type_id',
+                                                1
+                                            )
+                                        "
+                                    ></multiselect>
+                                </b-td>
+
+                                <b-td>
+                                    <b-form-input
+                                        v-model="charge.units"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.units,
+                                                'units',
+                                                1
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td>
+                                    <b-form-input
+                                        v-model="charge.price"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.price,
+                                                'price',
+                                                1
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td>
+                                    <b-form-input
+                                        v-model="charge.total"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.total,
+                                                'total',
+                                                1
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td>
+                                    <multiselect
+                                        v-model="charge.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.currency.id,
+                                                'currency_id',
+                                                1
+                                            )
+                                        "
+                                    ></multiselect>
+                                </b-td>
+                                <b-td>
+                                    <button type="button" class="btn-delete">
+                                        <i
+                                            class="fa fa-times"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                </b-td>
+                            </b-tr>
+
+                            <b-tr class="q-total">
+                                <b-td colspan="3"></b-td>
+
+                                <b-td
+                                    ><span><b>Total</b></span></b-td
+                                >
+
+                                <b-td
+                                    ><span><b>150</b></span></b-td
+                                >
+
+                                <b-td
+                                    ><span><b>EUR</b></span></b-td
+                                >
 
                                 <b-td></b-td>
                             </b-tr>
@@ -776,6 +956,7 @@ export default {
                 quote_id: this.$route.params.id,
                 port_id: this.value.id,
                 type_id: this.value.type,
+                type: this.currentQuoteData.type,
             };
             actions.localcharges
                 .storedCharges(data)
