@@ -80,7 +80,7 @@ class AutomaticRateController extends Controller
     }
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
-    {   dd($request);
+    {   
         $form_keys = $request->input('keys');
 
         $remarks_keys = ['remarks_english','remarks_spanish','remarks_portuguese'];
