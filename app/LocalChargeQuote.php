@@ -206,4 +206,9 @@ class LocalChargeQuote extends Model
             $query->select('id', 'display_name');
         }]);
     }
+
+    public function duplicate()
+    {
+        return $this->replicate();
+    }
 }

@@ -80,7 +80,7 @@ class AutomaticRateController extends Controller
     }
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
-    {   
+    {   dd($request);
         $form_keys = $request->input('keys');
 
         $remarks_keys = ['remarks_english','remarks_spanish','remarks_portuguese'];
@@ -94,7 +94,7 @@ class AutomaticRateController extends Controller
 
         }else{
             $data = $request->validate([
-                'transit_time' => 'numeric'
+                'transit_time' => 'numeric|nullable'
             ]);
             
             foreach($form_keys as $fkey){
