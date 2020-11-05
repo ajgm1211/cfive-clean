@@ -193,6 +193,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
     Route::post('Store-duplicated-FromRq/contract-fcl/{id}', 'ContractsController@duplicatedContractFromRequestStore')->name('contract.duplicated.from.request.store');
     Route::get('duplicatedOC/contract-fcl/{id}/{request_id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth', 'role:administrator|data_entry']);
+    
+    
 });
 
 Route::prefix('Requests')->group(function () {
@@ -1173,6 +1175,9 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
 
     /** API Contracts Remarks EndPoints **/
     Route::post('{contract}/storeMedia', 'ContractController@storeMedia')->middleware('check_company:contract');
+
+    /** Add Contract Search blade  */
+    Route::post('storeSearch', 'ContractController@storeContractSearch')->name('search-add.contract');
     /** End Contract **/
 });
 

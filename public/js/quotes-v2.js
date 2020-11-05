@@ -2434,7 +2434,7 @@ $(document).ready(function () {
 
 // dinamic 
 
-$("select[name='group_container']").on('change', function () {
+$("select[name='group_containerC']").on('change', function () {
 
     var valor = $(this).val();
    
