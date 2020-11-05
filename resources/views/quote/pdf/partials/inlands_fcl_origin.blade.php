@@ -8,7 +8,7 @@
                         
                         <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
                         
-                        <br>
+                       
 
                     </div>
                     <!-- End Section Title -->
