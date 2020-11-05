@@ -2716,6 +2716,7 @@ class QuoteV2Controller extends Controller
 
         //variables del modal contract
         $group_containerC =GroupContainer::pluck('name', 'id');   
+        $group_containerC->prepend('Select an option', '');
         $carrierC  =Carrier::pluck('name', 'id');   
         $directionC  =Direction::pluck('name', 'id');  
         //Fin variables
