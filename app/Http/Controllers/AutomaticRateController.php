@@ -94,7 +94,7 @@ class AutomaticRateController extends Controller
 
         }else{
             $data = $request->validate([
-                'transit_time' => 'numeric'
+                'transit_time' => 'numeric|nullable'
             ]);
             
             foreach($form_keys as $fkey){
