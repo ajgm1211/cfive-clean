@@ -123,6 +123,7 @@ class QuotationApiController extends Controller
     public function mapFreightCharges($collection)
     {
         $collection->map(function ($value) {
+            $value['total'] = json_decode($value->total);
             $value['currency_code'] = $value->currency->alphacode;
             $value['origin'] = $value->origin_port->display_name;
             $value['destiny'] = $value->destination_port->display_name;

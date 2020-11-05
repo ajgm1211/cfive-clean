@@ -17,6 +17,8 @@ class Charge extends Model
         'total' => 'array',
     ];
 
+    protected $appends = ['currency_code'];
+
     protected $fillable = ['automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'currency_id', 'total'];
 
     public function automatic_rate()
@@ -184,13 +186,13 @@ class Charge extends Model
         return (new ChargeFilter($request, $builder))->filter();
     }
 
-    public function scopeFilterByAutorate( $query, $automatic_rate_id )
+    public function scopeFilterByAutorate($query, $automatic_rate_id)
     {
-        return $query->where( 'automatic_rate_id', '=', $automatic_rate_id );
+        return $query->where('automatic_rate_id', '=', $automatic_rate_id);
     }
 
-    public function setContractInfo($info_decoded,$rate_decoded,$autoRate)
-    {   
+    public function setContractInfo($info_decoded, $rate_decoded, $autoRate)
+    {
 
         $rates = json_encode($rate_decoded->rate);
         $markups = json_encode($rate_decoded->markups);
@@ -210,30 +212,34 @@ class Charge extends Model
         $autoRate->carrier_id = $info_decoded->carrier->id;
         $autoRate->currency_id = $info_decoded->currency->id;
         $autoRate->remarks = $remarks;
-        if($transit_time!=''){
+        if ($transit_time != '') {
             $autoRate->transit_time = $transit_time;
         }
-        if($via != ''){
+        if ($via != '') {
             $autoRate->via = $via;
-        }        
+        }
         $autoRate->save();
-
     }
 
     public function setCalculationType($containerType)
     {
         $calctype = '';
-        if($containerType=='1'){
+        if ($containerType == '1') {
             $calctype = '3';
-        }else if($containerType=='2'){
+        } else if ($containerType == '2') {
             $calctype = '19';
-        }else if($containerType=='3'){
+        } else if ($containerType == '3') {
             $calctype = '20';
-        }else if($containerType=='4'){
+        } else if ($containerType == '4') {
             $calctype = '21';
         }
 
-        $this->calculation_type_id=$calctype;
+        $this->calculation_type_id = $calctype;
         $this->save();
+    }
+
+    public function getCurrencyCodeAttribute()
+    {
+        return $this->currency()->first()->alphacode ?? null;
     }
 }
