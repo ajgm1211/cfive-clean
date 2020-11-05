@@ -948,7 +948,7 @@ export default {
                         let markup_num = Number(inlandAdd.markup["m" + equip]);
                         let totals = Number;
 
-                        inlandAdd["rates_" + equip] = price_num += markup_num;
+                        inlandAdd["rates_" + equip] = price_num + markup_num;
 
                         if (inlandAddCurrency == clientCurrency) {
                             totals = price_num + markup_num;
