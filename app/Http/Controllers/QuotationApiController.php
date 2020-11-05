@@ -27,47 +27,50 @@ class QuotationApiController extends Controller
 
     public function list(Request $request)
     {
+
         $type = $request->type;
         $status = $request->status;
         $integration = $request->integration;
         $company_user_id = Auth::user()->company_user_id;
 
-        $query = QuoteV2::NewQuoteSelect()->ConditionalWhen($type, $status, $integration)
-            ->AuthUserCompany($company_user_id)
-            ->RateV2()->UserRelation()->NewCompanyRelation()
-            ->NewContactRelation()->PriceRelation()
-            ->IncotermRelation()->orderBy('created_at', 'desc');
+        $quotes = QuoteV2::NewQuoteSelect()->AuthUserCompany($company_user_id)->NewCompanyRelation()
+            ->NewContactRelation()->IncotermRelation()->get();
 
-        if ($request->paginate) {
-            $quotes = $query->paginate($request->paginate);
-        } else {
-            $quotes = $query->take($request->size)->get();
+        $containers = Container::all();
+
+        $array = array();
+
+        foreach ($quotes as $quote) {
+            $freight_charges = AutomaticRate::SelectFields()
+                ->SelectCharge()->CarrierRelation()->where('quote_id', $quote->id)->get();
+
+            $ocean_freight = $this->mapFreightCharges($freight_charges);
+
+            $origin_charges = $this->localCharges($quote, 1);
+
+            $destination_charges = $this->localCharges($quote, 2);
+
+            $inlands = AutomaticInland::SelectFields()->where('quote_id', $quote->id)->get();
+
+            $inlands = $this->mapInlandCharges($inlands);
+
+            //Modify equipment array
+            $this->transformEquipmentSingle($quote);
+
+            $basic_info = $this->transformQuoteInfo($quote);
+
+            $data = compact(
+                'basic_info',
+                'ocean_freight',
+                'origin_charges',
+                'destination_charges',
+                'inlands'
+            );
+
+            array_push($array, $data);
         }
 
-        //Modify equipment array
-        $this->transformEquipment($quotes);
-
-        //Update Integration Quote Status
-        if ($integration) {
-            foreach ($quotes as $quote) {
-                IntegrationQuoteStatus::where('quote_id', $quote->id)->update(['status' => 1]);
-            }
-        }
-
-        $collection = Collection::make($quotes);
-
-        if (!$request->paginate) {
-            $collection->transform(function ($quote, $key) {
-                unset($quote['origin_port_id']);
-                unset($quote['destination_port_id']);
-                unset($quote['origin_address']);
-                unset($quote['destination_address']);
-                unset($quote['currency_id']);
-                return $quote;
-            });
-        }
-
-        return $quotes;
+        return response()->json(['quotes' => $array]);
     }
 
     /**
@@ -104,22 +107,23 @@ class QuotationApiController extends Controller
         //Modify equipment array
         $this->transformEquipmentSingle($quote);
 
-        $quote = $quote->makeHidden(['incoterm_id', 'contact_id', 'company_id'])->toArray();
-        
+        $basic_info = $this->transformQuoteInfo($quote);
+
         $data = compact(
-            'quote',
+            'basic_info',
             'ocean_freight',
             'origin_charges',
             'destination_charges',
             'inlands'
         );
 
-        return response()->json(['data' => $data]);
+        return response()->json(['quote' => $data]);
     }
 
     public function mapFreightCharges($collection)
     {
         $collection->map(function ($value) {
+            $value['total'] = json_decode($value->total);
             $value['currency_code'] = $value->currency->alphacode;
             $value['origin'] = $value->origin_port->display_name;
             $value['destiny'] = $value->destination_port->display_name;
@@ -136,6 +140,15 @@ class QuotationApiController extends Controller
         });
 
         return $collection;
+    }
+
+    public function transformQuoteInfo($quote)
+    {
+        $value = $quote->makeHidden(['incoterm_id', 'contact_id', 'company_id'])->toArray();
+
+        $value['incoterm'] = $quote->incoterm->name ?? null;
+
+        return $value;
     }
 
     public function mapInlandCharges($collection)
