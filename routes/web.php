@@ -608,6 +608,9 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('update/chargeable/{id}', 'QuoteV2Controller@updateChargeable')->name('quotes-v2.update.chargeable');
     //Cost page
     Route::get('cost/page/{quote_id}', 'ExcelController@costPageQuote')->name('quotes-v2.cost.page');
+    // add Contract
+    Route::get('addContractV2', 'QuoteV2Controller@addContractWithModal')->name('quotesv2.addContract'); // with modal
+    Route::get('groupContainer/{group_id}', 'QuoteV2Controller@getGroupContainer')->name('quotesv2.getGroupContainer');
 });
 
 //Settings

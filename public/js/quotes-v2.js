@@ -1,6 +1,6 @@
 $.fn.editable.defaults.mode = 'inline';
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $.ajaxSetup({
         headers: {
@@ -8,16 +8,16 @@ $(document).ready(function() {
         }
     });
 
-    $(".open-inland-modal").click(function() {
+    $(".open-inland-modal").click(function () {
         var rate_id = $(this).data('rate-id');
         $(".modal-body .automatic_rate_id").val(rate_id);
     });
 
     //Modal para editar rates
-    $(document).on('click', '.edit_rate_modal', function() {
+    $(document).on('click', '.edit_rate_modal', function () {
         var url = "/v2/quotes/rates/edit";
         var rate_id = $(this).data('rate-id');
-        $.get(url + '/' + rate_id, function(data) {
+        $.get(url + '/' + rate_id, function (data) {
             //success data
             console.log(data.origin_port_id);
             $('.origin_port_id').val(data.origin_port_id);
@@ -39,57 +39,57 @@ $(document).ready(function() {
 
     //Mostrar montos totales en Freight
     var sum_freight = 0;
-    $(".total_freight_20").each(function() {
+    $(".total_freight_20").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40").each(function() {
+    $(".total_freight_40").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40hc").each(function() {
+    $(".total_freight_40hc").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_40nor").each(function() {
+    $(".total_freight_40nor").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
-    $(".total_freight_45").each(function() {
+    $(".total_freight_45").each(function () {
         sum_freight = sum_freight + parseFloat($(this).html());
     });
     $("#sub_total_freight").html(sum_freight + " USD");
 
     //Mostrar montos totales en Origin
     var sum_origin = 0;
-    $(".total_origin_20").each(function() {
+    $(".total_origin_20").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40").each(function() {
+    $(".total_origin_40").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40hc").each(function() {
+    $(".total_origin_40hc").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_40nor").each(function() {
+    $(".total_origin_40nor").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
-    $(".total_origin_45").each(function() {
+    $(".total_origin_45").each(function () {
         sum_origin = sum_origin + parseFloat($(this).html());
     });
     $("#sub_total_origin").html(sum_origin + " USD");
 
     //Mostrar montos totales en destination
     var sum_destination = 0;
-    $(".total_destination_20").each(function() {
+    $(".total_destination_20").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40").each(function() {
+    $(".total_destination_40").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40hc").each(function() {
+    $(".total_destination_40hc").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_40nor").each(function() {
+    $(".total_destination_40nor").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
-    $(".total_destination_45").each(function() {
+    $(".total_destination_45").each(function () {
         sum_destination = sum_destination + parseFloat($(this).html());
     });
     $("#sub_total_destination").html(sum_destination + " USD");
@@ -101,7 +101,7 @@ $(document).ready(function() {
     $('.editable').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             if (!response) {
                 return "Unknown error!";
@@ -116,7 +116,7 @@ $(document).ready(function() {
     $('.editable-saleterms').editable({
         url: '/v2/quotes/sale/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             if (!response) {
                 return "Unknown error!";
@@ -131,7 +131,7 @@ $(document).ready(function() {
     $('.editable-rate').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -146,7 +146,7 @@ $(document).ready(function() {
     $('.editable-quote-info').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             var total_volume = parseFloat($('#total-volume').html());
             var weight = parseFloat($('#total-weight').html());
@@ -184,7 +184,7 @@ $(document).ready(function() {
     $('.editable-quote-weight').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             var total_volume = parseFloat($('#total-volume').html());
             var weight = newValue;
@@ -222,7 +222,7 @@ $(document).ready(function() {
     $('.editable-quote-volume').editable({
         url: '/v2/quotes/info/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
             var total_volume = newValue;
             var weight = parseFloat($('#total-weight').html());
@@ -266,7 +266,7 @@ $(document).ready(function() {
             data: {
                 "chargeable_weight": chargeable_weight,
             },
-            success: function(data) {
+            success: function (data) {
                 //
             }
         });
@@ -276,7 +276,7 @@ $(document).ready(function() {
     $('.editable-lcl-air').editable({
         url: '/v2/quotes/lcl/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var sum = 0;
             var sum_total = 0;
             var sub_total = 0;
@@ -296,7 +296,7 @@ $(document).ready(function() {
 
             $(this).editable('setValue', newValue);
 
-            $(this).closest('table').find('.total-amount').each(function() {
+            $(this).closest('table').find('.total-amount').each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
@@ -320,7 +320,7 @@ $(document).ready(function() {
 
             $(this).closest('table').find('.sub_total').html(sum);
 
-            $(this).closest('div.amount_charges').find('.sub_total').each(function() {
+            $(this).closest('div.amount_charges').find('.sub_total').each(function () {
                 if ($(this).html()) {
                     sub_total = parseFloat($(this).html());
                     sum_total += sub_total;
@@ -330,7 +330,7 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.amount_charges').find('.sum_total_amount').html(sum_total.toFixed(2));
 
-            $(this).closest('div.amount_charges').find('.markup').each(function() {
+            $(this).closest('div.amount_charges').find('.markup').each(function () {
                 if ($(this).html()) {
                     sub_total_markup = parseFloat($(this).html());
                     sum_total_markup += sub_total_markup;
@@ -353,7 +353,7 @@ $(document).ready(function() {
     $('.editable-lcl-air-inland').editable({
         url: '/v2/quotes/lcl/inland/charge/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -368,7 +368,7 @@ $(document).ready(function() {
     $('.editable-inland').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             if (!response) {
                 return "Unknown error!";
@@ -383,7 +383,7 @@ $(document).ready(function() {
     $('.editable-inland-rate').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var code = $(this).attr('data-container');
             var amount = parseFloat($(this).closest('tr').find('.inland_markup_' + code).html());
 
@@ -416,7 +416,7 @@ $(document).ready(function() {
     $('.editable-inland-markup').editable({
         url: '/v2/quotes/inland/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var code = $(this).attr('data-container');
             var amount = parseFloat($(this).closest('tr').find('.inland_amount_' + code).html());
 
@@ -451,7 +451,7 @@ $(document).ready(function() {
     $('.editable-amount-rate').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var code = $(this).attr('data-container');
             var sum = 0;
@@ -479,7 +479,7 @@ $(document).ready(function() {
             $(this).closest('tr').find('.total_' + code).html(total);
 
             //Conversión de monedas dinámica
-            $(this).closest('table').find('.total_' + code).each(function() {
+            $(this).closest('table').find('.total_' + code).each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
@@ -498,7 +498,7 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.amount_' + code).each(function() {
+            $(this).closest('div.rates').find('.amount_' + code).each(function () {
                 console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
@@ -524,7 +524,7 @@ $(document).ready(function() {
     $('.editable-amount-markup').editable({
         url: '/v2/quotes/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var code = $(this).attr('data-container');
             var sum = 0;
@@ -553,7 +553,7 @@ $(document).ready(function() {
             $(this).closest('tr').find('.total_' + code).html(total);
 
             //Conversión de monedas dinámica
-            $(this).closest('table').find('.total_' + code).each(function() {
+            $(this).closest('table').find('.total_' + code).each(function () {
                 var value = parseFloat($(this).html());
                 var currency = $(this).closest('tr').find('.local_currency').html();
                 var isOceanFreight = $(this).closest('tr').find('.ocean_freight_rate').html();
@@ -575,7 +575,7 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.markup_' + code).each(function() {
+            $(this).closest('div.rates').find('.markup_' + code).each(function () {
                 console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
@@ -602,7 +602,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-20').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
@@ -620,7 +620,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-20').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
@@ -638,7 +638,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
@@ -656,7 +656,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
@@ -674,7 +674,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40hc').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
@@ -693,7 +693,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40hc').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
@@ -711,7 +711,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-40nor').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -729,7 +729,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-40nor').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -747,7 +747,7 @@ $(document).ready(function() {
     $('.editable-rate-amount-45').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
@@ -765,7 +765,7 @@ $(document).ready(function() {
     $('.editable-rate-markup-45').editable({
         url: '/v2/quotes/rate/charges/update',
         emptytext: 0,
-        success: function(response, newValue) {
+        success: function (response, newValue) {
 
             total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
@@ -787,7 +787,7 @@ $(document).ready(function() {
             weekStart: 1
         },
         url: '/v2/quotes/update/details',
-        success: function(response, newValue) {
+        success: function (response, newValue) {
             if (!response) {
                 return "Unknown error!";
             }
@@ -800,7 +800,7 @@ $(document).ready(function() {
 });
 
 //Guardar cargos LCL/AIR
-$(document).on('click', '.store_charge_lcl', function() {
+$(document).on('click', '.store_charge_lcl', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
     var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
@@ -817,7 +817,7 @@ $(document).on('click', '.store_charge_lcl', function() {
     if (surcharge_id == '' || calculation_type_id == '' || units == '' || price_per_unit == '') {
         notification('There are empty fields. Please verify and try again', 'error');
     } else {
-        $(this).closest("table").find('.total-amount').each(function() {
+        $(this).closest("table").find('.total-amount').each(function () {
             var sub_total = parseFloat($(this).html());
             var currency = $(this).closest('tr').find('.local_currency').html();
             var currency_cfg = $("#currency_id").val();
@@ -856,7 +856,7 @@ $(document).on('click', '.store_charge_lcl', function() {
                 "type_id": type_id,
                 "currency_id": currency_id
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.message == 'Ok') {
                     swal(
                         'Done!',
@@ -904,12 +904,12 @@ $(document).on('click', '.store_charge_lcl', function() {
     }
 });
 
-$(document).on('click', '.store_sale_charge', function() {
+$(document).on('click', '.store_sale_charge', function () {
     var theElement = $(this);
     var containers = ['20DV', '40DV', '40HC', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'];
     var equipments = {};
 
-    $.each(containers, function(index, value) {
+    $.each(containers, function (index, value) {
         equipments['c' + value] = theElement.closest("tr").find(".c" + value).val();
     });
     var id = $(this).closest("tr").find(".sale_term_id").val();
@@ -932,7 +932,7 @@ $(document).on('click', '.store_sale_charge', function() {
             "total": total,
             "currency_id": currency_id,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Success!',
@@ -945,7 +945,7 @@ $(document).on('click', '.store_sale_charge', function() {
 });
 
 //Guardar cargos FCL
-$(document).on('click', '.store_charge', function() {
+$(document).on('click', '.store_charge', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var number = $(this).closest("tr").find(".number").val();
     var theElement = $(this);
@@ -955,7 +955,7 @@ $(document).on('click', '.store_charge', function() {
     var equipments = {};
 
     //Creando variables para guardar en BD
-    $.each(containers, function(index, value) {
+    $.each(containers, function (index, value) {
         window['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
         window['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
         window['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
@@ -979,10 +979,10 @@ $(document).on('click', '.store_charge', function() {
             "type_id": type_id,
             "currency_id": currency_id
         },
-        beforeSend: function() {
+        beforeSend: function () {
             notification('Saving data &nbsp;<i class="fa fa-spinner fa-spin"></i>');
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 toastr.clear();
                 swal(
@@ -1003,7 +1003,7 @@ $(document).on('click', '.store_charge', function() {
             var currency = '';
             var currency_cfg = '';
 
-            $.each(containers, function(index, value) {
+            $.each(containers, function (index, value) {
                 window["amount_from_db_" + value] = amounts['c' + value] || 0;
                 window["markup_from_db_" + value] = markups['m' + value] || 0;
                 window["total_" + value] = parseFloat(window["amount_from_db_" + value]) + parseFloat(window["markup_from_db_" + value]);
@@ -1014,14 +1014,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_freight_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_freight_' + number).find('.total_freight_' + value).html('');
                     $('.total_freight_' + number).find('.total_freight_' + value).html(data.sum_total_freight[value]);
                 });
@@ -1030,7 +1030,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1039,7 +1039,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
                     console.log(window["amount_currency_" + value]);
@@ -1069,14 +1069,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_destination_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_destination_' + number).find('.total_destination_' + value).html('');
                     $('.total_destination_' + number).find('.total_destination_' + value).html(data.sum_total_destination[value]);
                 });
@@ -1085,7 +1085,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1094,7 +1094,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
@@ -1124,14 +1124,14 @@ $(document).on('click', '.store_charge', function() {
                 table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
                 table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
                 table_middle = '';
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + window["amount_from_db_" + value] + '</span> + <span class="td-a">' + window["markup_from_db_" + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
                 });
 
                 //Uniendo variables
                 $(table_first + table_middle + table_last).insertBefore('.total_origin_' + number);
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     $('.total_origin_' + number).find('.total_origin_' + value).html('');
                     $('.total_origin_' + number).find('.total_origin_' + value).html(data.sum_total_origin[value]);
                 });
@@ -1140,7 +1140,7 @@ $(document).on('click', '.store_charge', function() {
                 currency_cfg = $("#currency_id").val();
 
                 //Creando variables para sumatorias de totales y subtotales
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
                     window["subtotal_m" + value] = 0;
@@ -1149,7 +1149,7 @@ $(document).on('click', '.store_charge', function() {
                     window["sum_total_markup_" + value] = 0;
                 });
 
-                $.each(containers, function(index, value) {
+                $.each(containers, function (index, value) {
                     window["amount_currency_" + value] = currencyRate(currency, currency_cfg, window["amount_from_db_" + value]);
                     window["markup_currency_" + value] = currencyRate(currency, currency_cfg, window["markup_from_db_" + value]);
 
@@ -1179,7 +1179,7 @@ $(document).on('click', '.store_charge', function() {
 });
 
 //Borrar quote
-$(document).on('click', '#delete-quote-v2', function() {
+$(document).on('click', '#delete-quote-v2', function () {
     var id = $(this).attr('data-quote-id');
     var theElement = $(this);
     swal({
@@ -1188,13 +1188,13 @@ $(document).on('click', '#delete-quote-v2', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
+    }).then(function (result) {
 
         if (result.value) {
             $.ajax({
                 type: 'delete',
                 url: '/api/quote/' + id + '/destroy',
-                success: function(data) {
+                success: function (data) {
                     swal(
                         'Deleted!',
                         'Your file has been deleted.',
@@ -1210,13 +1210,13 @@ $(document).on('click', '#delete-quote-v2', function() {
 });
 
 //Duplicar quote
-$(document).on('click', '#duplicate-quote-v2', function() {
+$(document).on('click', '#duplicate-quote-v2', function () {
     var id = $(this).attr('data-quote-id');
     var theElement = $(this);
     $.ajax({
         type: 'post',
         url: '/api/quotes/' + id + '/duplicate',
-        success: function(data) {
+        success: function (data) {
             console.log(data.message);
             location.reload();
             //REFRESH TABLE?
@@ -1224,7 +1224,7 @@ $(document).on('click', '#duplicate-quote-v2', function() {
     });
 });
 
-$(document).on('click', '#delete-quote-show', function() {
+$(document).on('click', '#delete-quote-show', function () {
     var id = $(this).attr('data-quote-show-id');
     var theElement = $(this);
 
@@ -1234,13 +1234,13 @@ $(document).on('click', '#delete-quote-show', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
+    }).then(function (result) {
 
         if (result.value) {
             $.ajax({
                 type: 'get',
                 url: '/v2/quotes/delete/' + id,
-                success: function(data) {
+                success: function (data) {
                     swal(
                         'Deleted!',
                         'Your file has been deleted.',
@@ -1255,7 +1255,7 @@ $(document).on('click', '#delete-quote-show', function() {
 });
 
 //Borrar rates
-$(document).on('click', '.delete-rate', function() {
+$(document).on('click', '.delete-rate', function () {
     var id = $(this).attr('data-rate-id');
     var theElement = $(this);
     swal({
@@ -1264,12 +1264,12 @@ $(document).on('click', '.delete-rate', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/rate/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1287,7 +1287,7 @@ $(document).on('click', '.delete-rate', function() {
 
 //Guardar Sale Terms
 
-$('#saveSaleTerm').on('click', function(e) {
+$('#saveSaleTerm').on('click', function (e) {
     e.preventDefault();
     var origin_port = $("#origin_port_select").val();
     var destination_port = $("#destination_port_select").val();
@@ -1305,7 +1305,7 @@ $('#saveSaleTerm').on('click', function(e) {
 });
 
 //Borrar sale terms
-$(document).on('click', '.delete-sale-term', function() {
+$(document).on('click', '.delete-sale-term', function () {
     var id = $(this).attr('data-saleterm-id');
     var theElement = $(this);
     swal({
@@ -1314,12 +1314,12 @@ $(document).on('click', '.delete-sale-term', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/saleterm/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1336,7 +1336,7 @@ $(document).on('click', '.delete-sale-term', function() {
 });
 
 //Borrar cargo FCL
-$(document).on('click', '.delete-charge', function() {
+$(document).on('click', '.delete-charge', function () {
     var id = $(this).closest('tr').find('.charge_id').val();
     var type = $(this).closest('tr').find('.type').val();
     var theElement = $(this);
@@ -1346,7 +1346,7 @@ $(document).on('click', '.delete-charge', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
@@ -1354,7 +1354,7 @@ $(document).on('click', '.delete-charge', function() {
                     'type': type,
                 },
                 url: '/v2/quotes/delete/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1374,7 +1374,7 @@ $(document).on('click', '.delete-charge', function() {
 });
 
 //Borrar cargos SaleTerms
-$(document).on('click', '.delete-saleterm-charge', function() {
+$(document).on('click', '.delete-saleterm-charge', function () {
     var id = $(this).closest('tr').find('.saleterm_charge_id').val();
     var theElement = $(this);
     swal({
@@ -1383,12 +1383,12 @@ $(document).on('click', '.delete-saleterm-charge', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/saleterm/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1404,7 +1404,7 @@ $(document).on('click', '.delete-saleterm-charge', function() {
 });
 
 //Borrar cargo LCL/AIR
-$(document).on('click', '.delete-charge-lcl', function() {
+$(document).on('click', '.delete-charge-lcl', function () {
     var id = $(this).closest('tr').find('.charge_id').val();
     var type = $(this).closest('tr').find('.type').val();
     var theElement = $(this);
@@ -1414,7 +1414,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
@@ -1422,7 +1422,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
                     'type': type,
                 },
                 url: '/v2/quotes/lcl/delete/charge/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1442,7 +1442,7 @@ $(document).on('click', '.delete-charge-lcl', function() {
 });
 
 //Borrar inland
-$(document).on('click', '.delete-inland', function() {
+$(document).on('click', '.delete-inland', function () {
     var id = $(this).closest('ul').find('.inland_id').val();
     var theElement = $(this);
     swal({
@@ -1451,12 +1451,12 @@ $(document).on('click', '.delete-inland', function() {
         type: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
+    }).then(function (result) {
         if (result.value) {
             $.ajax({
                 type: 'GET',
                 url: '/v2/quotes/delete/inland/' + id,
-                success: function(data) {
+                success: function (data) {
                     if (data.message == 'Ok') {
                         swal(
                             'Updated!',
@@ -1472,21 +1472,21 @@ $(document).on('click', '.delete-inland', function() {
 });
 
 //Editar payments
-$(document).on('click', '#edit-payments', function() {
+$(document).on('click', '#edit-payments', function () {
     $(".payment_conditions_span").attr('hidden', 'true');
     $(".payment_conditions_textarea").removeAttr('hidden');
     $("#update_payments").removeAttr('hidden');
 });
 
 //Cancelar editar payments
-$(document).on('click', '#cancel-payments', function() {
+$(document).on('click', '#cancel-payments', function () {
     $(".payment_conditions_span").removeAttr('hidden');
     $(".payment_conditions_textarea").attr('hidden', 'true');
     $("#update_payments").attr('hidden', 'true');
 });
 
 //Actualizar payments
-$(document).on('click', '#update-payments', function() {
+$(document).on('click', '#update-payments', function () {
     var id = $(".id").val();
     var payments = tinymce.get("payment_conditions").getContent();
     $.ajax({
@@ -1495,7 +1495,7 @@ $(document).on('click', '#update-payments', function() {
         data: {
             'payments': payments,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1513,45 +1513,45 @@ $(document).on('click', '#update-payments', function() {
 });
 
 //Editar terms
-$(document).on('click', '#edit-terms', function() {
+$(document).on('click', '#edit-terms', function () {
     $(".terms_and_conditions_span").attr('hidden', 'true');
     $(".terms_and_conditions_textarea").removeAttr('hidden');
     $("#update_terms").removeAttr('hidden');
 });
 
-$(document).on('click', '#edit-terms-english', function() {
+$(document).on('click', '#edit-terms-english', function () {
     $(".terms_and_conditions_english_span").attr('hidden', 'true');
     $(".terms_and_conditions_english_textarea").removeAttr('hidden');
     $("#update_terms_english").removeAttr('hidden');
 });
 
-$(document).on('click', '#edit-terms-portuguese', function() {
+$(document).on('click', '#edit-terms-portuguese', function () {
     $(".terms_and_conditions_portuguese_span").attr('hidden', 'true');
     $(".terms_and_conditions_portuguese_textarea").removeAttr('hidden');
     $("#update_terms_portuguese").removeAttr('hidden');
 });
 
 //Cancelar editar terms
-$(document).on('click', '#cancel-terms', function() {
+$(document).on('click', '#cancel-terms', function () {
     $(".terms_and_conditions_span").removeAttr('hidden');
     $(".terms_and_conditions_textarea").attr('hidden', 'true');
     $("#update_terms").attr('hidden', 'true');
 });
 
-$(document).on('click', '#cancel-terms-english', function() {
+$(document).on('click', '#cancel-terms-english', function () {
     $(".terms_and_conditions_english_span").removeAttr('hidden');
     $(".terms_and_conditions_english_textarea").attr('hidden', 'true');
     $("#update_terms_english").attr('hidden', 'true');
 });
 
-$(document).on('click', '#cancel-terms-portuguese', function() {
+$(document).on('click', '#cancel-terms-portuguese', function () {
     $(".terms_and_conditions_portuguese_span").removeAttr('hidden');
     $(".terms_and_conditions_portuguese_textarea").attr('hidden', 'true');
     $("#update_terms_portuguese").attr('hidden', 'true');
 });
 
 //Actualizar terms
-$(document).on('click', '#update-terms', function() {
+$(document).on('click', '#update-terms', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions").getContent();
     $.ajax({
@@ -1561,7 +1561,7 @@ $(document).on('click', '#update-terms', function() {
             'name': 'terms_and_conditions',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1578,7 +1578,7 @@ $(document).on('click', '#update-terms', function() {
     });
 });
 
-$(document).on('click', '#update-terms-english', function() {
+$(document).on('click', '#update-terms-english', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions_english").getContent();
     $.ajax({
@@ -1588,7 +1588,7 @@ $(document).on('click', '#update-terms-english', function() {
             'name': 'terms_english',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1606,7 +1606,7 @@ $(document).on('click', '#update-terms-english', function() {
 });
 
 
-$(document).on('click', '#update-terms-portuguese', function() {
+$(document).on('click', '#update-terms-portuguese', function () {
     var id = $(".id").val();
     var terms = tinymce.get("terms_and_conditions_portuguese").getContent();
     $.ajax({
@@ -1616,7 +1616,7 @@ $(document).on('click', '#update-terms-portuguese', function() {
             'name': 'terms_portuguese',
             'terms': terms,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1634,7 +1634,7 @@ $(document).on('click', '#update-terms-portuguese', function() {
 });
 
 //Mostrar inputs Origin/Destination address
-$(document).on('change', '.delivery_type', function(e) {
+$(document).on('change', '.delivery_type', function (e) {
 
     if ($(this).val() == 1) {
         $(".origin_address_label").addClass('hide');
@@ -1676,7 +1676,7 @@ $(document).on('change', '.delivery_type', function(e) {
 });
 
 //Habilitar edicion campos de la cotizacion
-$(document).on('click', '#edit-quote', function() {
+$(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden', 'true');
     $(".company_span").attr('hidden', 'true');
     $(".status_span").attr('hidden', 'true');
@@ -1734,12 +1734,12 @@ $(document).on('click', '#edit-quote', function() {
         ajax: {
             url: '/companies/search',
             dataType: 'json',
-            data: function(params) {
+            data: function (params) {
                 return {
                     q: $.trim(params.term)
                 };
             },
-            processResults: function(data) {
+            processResults: function (data) {
                 return {
                     results: data
                 };
@@ -1756,7 +1756,7 @@ $(document).on('click', '#edit-quote', function() {
 });
 
 //Cancelar actualizacion de datos de cotizacion
-$(document).on('click', '#cancel', function() {
+$(document).on('click', '#cancel', function () {
     $(".quote_id_span").removeAttr('hidden');
     $(".company_span").removeAttr('hidden');
     $(".status_span").removeAttr('hidden');
@@ -1810,7 +1810,7 @@ $(document).on('click', '#cancel', function() {
 });
 
 //Actualizar datos de cotización
-$(document).on('click', '#update', function() {
+$(document).on('click', '#update', function () {
     var id = $(".id").val();
     var quote_id = $(".quote_id").val();
     var company_id = $(".company_id").val();
@@ -1858,7 +1858,7 @@ $(document).on('click', '#update', function() {
             'origin_address': origin_address,
             'destination_address': destination_address,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -1942,7 +1942,7 @@ $(document).on('click', '#update', function() {
                 $(".equipment").val(data.quote['equipment']);
                 $(".equipment_span").empty();
                 var length = $.parseJSON(data.quote['equipment']).length;
-                $.each($.parseJSON(data.quote['equipment']), function(index, value) {
+                $.each($.parseJSON(data.quote['equipment']), function (index, value) {
                     if (index === (length - 1)) {
                         $(".equipment_span").append(value);
                     } else {
@@ -2021,22 +2021,22 @@ $(document).on('click', '#update', function() {
 /** Cargos dinámicos **/
 
 //Remover campos en freight
-$(document).on('click', '.removeFreightCharge', function(e) {
+$(document).on('click', '.removeFreightCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Remover campos en origin
-$(document).on('click', '.removeOriginCharge', function(e) {
+$(document).on('click', '.removeOriginCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Remover campos en destination
-$(document).on('click', '.removeDestinationCharge', function(e) {
+$(document).on('click', '.removeDestinationCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
 //Enviando cotizaciones FCL
-$(document).on('click', '#send-pdf-quotev2', function() {
+$(document).on('click', '#send-pdf-quotev2', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2049,11 +2049,11 @@ $(document).on('click', '#send-pdf-quotev2', function() {
             type: 'POST',
             url: '/v2/quotes/send',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2088,7 +2088,7 @@ $(document).on('click', '#send-pdf-quotev2', function() {
 });
 
 //Enviando cotizaciones LCL
-$(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
+$(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2101,11 +2101,11 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
             type: 'POST',
             url: '/v2/quotes/send/lcl',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2-lcl-air').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2-lcl-air').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2140,7 +2140,7 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function() {
 });
 
 //Enviando cotizaciones AIR
-$(document).on('click', '#send-pdf-quotev2-air', function() {
+$(document).on('click', '#send-pdf-quotev2-air', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
     var to = $('#addresse').val();
@@ -2153,11 +2153,11 @@ $(document).on('click', '#send-pdf-quotev2-air', function() {
             type: 'POST',
             url: '/v2/quotes/send/air',
             data: { "email_template_id": email_template_id, "id": id, "subject": email_subject, "body": email_body, "to": to },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#send-pdf-quotev2-air').hide();
                 $('#send-pdf-quote-sending').show();
             },
-            success: function(data) {
+            success: function (data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2-air').show();
                 $('#send-pdf-quote-sending').hide();
@@ -2193,7 +2193,7 @@ $(document).on('click', '#send-pdf-quotev2-air', function() {
 
 //Calculando el total de un cargo en Saleterm
 
-$(document).on("change keyup keydown", ".units, .rate", function() {
+$(document).on("change keyup keydown", ".units, .rate", function () {
     var sum = 0;
     var total_amount = 0;
     var sum_total = 0;
@@ -2204,8 +2204,8 @@ $(document).on("change keyup keydown", ".units, .rate", function() {
     var self = this;
     var data = '';
     var currency_cfg = $("#currency_id").val();
-    $(".rate").each(function() {
-        $(this).each(function() {
+    $(".rate").each(function () {
+        $(this).each(function () {
             var quantity = $(this).closest('tr').find('.units').val();
 
             if (quantity > 0) {
@@ -2219,7 +2219,7 @@ $(document).on("change keyup keydown", ".units, .rate", function() {
     });
 });
 
-$(document).on('change', '#inland_type', function() {
+$(document).on('change', '#inland_type', function () {
     if ($('#inland_type').val() == 'Origin') {
         $(".origin_port").removeClass('hide');
         $(".destination_port").addClass('hide');
@@ -2234,7 +2234,7 @@ $(document).on('change', '#inland_type', function() {
 });
 
 //Mostrar y ocultar puertos en Sale Terms
-$(document).on('change', '#saleterm_type', function() {
+$(document).on('change', '#saleterm_type', function () {
     if ($('#saleterm_type').val() == 'origin') {
         $(".origin_port").removeClass('hide');
 
@@ -2258,7 +2258,7 @@ $(document).on('change', '#saleterm_type', function() {
 });
 
 //Mostrar y ocultar opciones pdf
-$(document).on('change', '#show_hide_select', function() {
+$(document).on('change', '#show_hide_select', function () {
     if ($('#show_hide_select').val() == 'total in') {
         $(".group_origin_charges").addClass('hide');
         $(".group_destination_charges").addClass('hide');
@@ -2272,7 +2272,7 @@ $(document).on('change', '#show_hide_select', function() {
 });
 
 //Actualizando opciones PDF
-$(document).on('change', '.pdf-feature', function() {
+$(document).on('change', '.pdf-feature', function () {
     var id = $(this).attr('data-quote-id');
     var name = $(this).attr('data-name');
     var value = 0;
@@ -2287,7 +2287,7 @@ $(document).on('change', '.pdf-feature', function() {
         type: 'POST',
         url: '/v2/quotes/feature/pdf/update',
         data: { "value": value, "name": name, "id": id },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 //$(this).attr('checked', true).val(0);
             }
@@ -2296,7 +2296,7 @@ $(document).on('change', '.pdf-feature', function() {
 });
 
 //GDP
-$(document).on('change', '.gdp', function() {
+$(document).on('change', '.gdp', function () {
     if ($(this).val() == 1) {
         $(".risk_level").removeAttr('hidden');
         $(".div_risk_level").removeAttr('hidden');
@@ -2308,7 +2308,7 @@ $(document).on('change', '.gdp', function() {
 });
 
 //King of cargo
-$(document).on('change', '.kind_of_cargo', function() {
+$(document).on('change', '.kind_of_cargo', function () {
     if ($(this).val() == 'Pharma') {
         $(".gdp").removeAttr('hidden');
         $(".gdp_span").attr('hidden', 'true');
@@ -2324,7 +2324,7 @@ $(document).on('change', '.kind_of_cargo', function() {
 
 //Calculando total en cada cargo LCL/AIR
 
-$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function() {
+$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function () {
     var sum = 0;
     var total_amount = 0;
     var sum_total = 0;
@@ -2335,8 +2335,8 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     var self = this;
     var data = '';
     var currency_cfg = $("#currency_id").val();
-    $(".price_per_unit").each(function() {
-        $(this).each(function() {
+    $(".price_per_unit").each(function () {
+        $(this).each(function () {
             var quantity = $(this).closest('tr').find('.units').val();
             var currency_id = $(self).closest('tr').find('.currency_id').val();
             var number = $(self).closest('tr').find('.number').val();
@@ -2346,7 +2346,7 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
                     $.ajax({
                         url: '/api/currency/' + currency_id,
                         dataType: 'json',
-                        success: function(json) {
+                        success: function (json) {
                             var amount = $(self).closest('tr').find('.price_per_unit').val();
                             var quantity = $(self).closest('tr').find('.units').val();
                             markup = $(self).closest('tr').find('.markup').val();
@@ -2382,10 +2382,10 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     });
 });
 
-$(document).on("change", ".total_22", function() {
+$(document).on("change", ".total_22", function () {
     var sum = 0;
     var value = 0;
-    $(this).each(function() {
+    $(this).each(function () {
         value = Number($(this).closest('table').find('.total-amount').html());
         sum += value;
     });
@@ -2394,22 +2394,22 @@ $(document).on("change", ".total_22", function() {
 
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     if ($("select[name='company_id']").val() == '') {
         $('select[name="contact_id"]').empty();
     }
 
-    $("select[name='company_id']").on('change', function() {
+    $("select[name='company_id']").on('change', function () {
         var company_id = $(this).val();
         if (company_id) {
             $('select[name="contact_id"]').empty();
             $.ajax({
                 url: "/quotes/company/contact/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="client"]').empty();
                     $('select[name="contact_id"]').append('<option value="">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2417,10 +2417,10 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/price/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="price_id"]').empty();
                     $('select[name="price_id"]').append('<option value="">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="price_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2432,9 +2432,46 @@ $(document).ready(function() {
     });
 });
 
+// dinamic 
+
+$("select[name='group_container']").on('change', function () {
+
+    var valor = $(this).val();
+   
+    if (valor) {
+        $.ajax({
+            url: "/v2/quotes/groupContainer/" + valor,
+            dataType: 'json',
+            success: function (data) {
+                var cont = 0;
+                var texto = "";
+                $.each(data, function (key, value) {
+                    
+                    if (cont == 0) {
+                        texto += "<div class='form-group m-form__group row'> ";
+
+                    }
+                    texto += "<label class='col-xl-5 col-lg-2 col-form-label'> "+ value['code']  +"  <br><input name='C"+ value['code']  +"' value= '0' type='text' class='form-control'  >   </label>  ";
+                    if (cont == 1) {
+                        texto += " </div>";
+                    }
+                    cont++;
+                    if (cont == 2) {
+                        cont = 0;
+                    }
+                });
+                $("#containerDinamic").html(texto);
+            }
+        });
+    }
+});
+
+
+
+
 /** Search **/
 
-$(document).on('change', '#quoteType', function(e) {
+$(document).on('change', '#quoteType', function (e) {
 
 
     if ($(this).val() == 1) {
@@ -2671,7 +2708,7 @@ $(document).on('change', '#quoteType', function(e) {
     }
 });
 
-$(document).on('change', '#delivery_type', function(e) {
+$(document).on('change', '#delivery_type', function (e) {
 
     if ($(this).val() == 1) {
         $("#origin_address_label").addClass('hide');
@@ -2696,13 +2733,13 @@ $(document).on('change', '#delivery_type', function(e) {
     }
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('.select2-selection__rendered').removeAttr('title');
     $('#select2-price_id-container').text('Please an option');
 
     // CLEARING COMPANIES SELECT
 
-    $("select[name='company_id_quote']").on('change', function() {
+    $("select[name='company_id_quote']").on('change', function () {
         var company_id = $(this).val();
         $("#contact_id").val('');
         if ($("#m_select2_2_modal").val() != '0')
@@ -2718,9 +2755,9 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/contact/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="contact_id"]').empty();
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
                 }
@@ -2729,10 +2766,10 @@ $(document).ready(function() {
             $.ajax({
                 url: "/quotes/company/price/id/" + company_id,
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     $('select[name="price_id"]').empty();
                     $('select[name="price_id"]').append('<option value="0">Select an option</option>');
-                    $.each(data, function(key, value) {
+                    $.each(data, function (key, value) {
                         $('select[name="price_id"]').append('<option value="' + key + '">' + value + '</option>');
                     });
 
@@ -2752,7 +2789,7 @@ $(document).ready(function() {
     });
 });
 
-$(".quote_search").on("click", function() {
+$(".quote_search").on("click", function () {
 
     //FCL
     if ($('#quoteType').val() == 1) {
@@ -2766,7 +2803,7 @@ $(".quote_search").on("click", function() {
     $(".quote_search").attr("type", "submit");
 
     var form = $(this).parents('form');
-    $(form).submit(function() {
+    $(form).submit(function () {
         notification('Searching  &nbsp;&nbsp;<i class="fa fa-spinner fa-spin"></i>', 'info');
     });
 });
@@ -2780,7 +2817,7 @@ function submitForm(type) {
 
 $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
 
-$(".quote_man").on("click", function() {
+$(".quote_man").on("click", function () {
 
     //$('#FormQuote').attr('action', '/api/quote/store');
     var type = 1;
@@ -2802,7 +2839,7 @@ $(".quote_man").on("click", function() {
     $(".quote_man").attr("type", "submit");
 });
 
-$('.btn-input__select').on('click', function() {
+$('.btn-input__select').on('click', function () {
 
     var idRate = $(this).attr('rate-id');
     $cantidadDestino = $('.labelDest' + idRate).length;
@@ -2828,16 +2865,16 @@ $('.btn-input__select').on('click', function() {
 
 });
 
-$('.btn-input__select-add').on('click', function() {
+$('.btn-input__select-add').on('click', function () {
     $(this).toggleClass('style__select-add');
 });
 
-$('.input-select').on('click', function() {
+$('.input-select').on('click', function () {
     var ident = $(this).attr('id');
     $('.' + ident + '').toggleClass('border-card');
 });
 
-$('.inlands').on('click', function() {
+$('.inlands').on('click', function () {
     $('.card-p__quotes').toggleClass('border-card-p');
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
@@ -3283,7 +3320,7 @@ $('.inlands').on('click', function() {
 
 });
 
-$('.inlandsO').on('click', function() {
+$('.inlandsO').on('click', function () {
     $('.card-p__quotes').toggleClass('border-card-p');
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
@@ -3726,7 +3763,7 @@ $('.inlandsO').on('click', function() {
 });
 
 //Calcular el volumen individual
-$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function() {
+$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function () {
     var sumAl = 0;
     var sumAn = 0;
     var sumLa = 0;
@@ -3738,32 +3775,32 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
     var quantity = 0;
     var weight = 0;
     var volume = 0;
-    $(".width").each(function() {
-        $(this).each(function() {
+    $(".width").each(function () {
+        $(this).each(function () {
             width = $(this).val();
             if (!isNaN(width)) {
                 width = parseInt(width);
             }
         });
     });
-    $(".height").each(function() {
-        $(this).each(function() {
+    $(".height").each(function () {
+        $(this).each(function () {
             thickness = $(this).val();
             if (!isNaN(thickness)) {
                 thickness = parseInt(thickness);
             }
         });
     });
-    $(".quantity").each(function() {
-        $(this).each(function() {
+    $(".quantity").each(function () {
+        $(this).each(function () {
             quantity = $(this).val();
             if (!isNaN(quantity)) {
                 quantity = parseInt(quantity);
             }
         });
     });
-    $(".weight").each(function() {
-        $(this).each(function() {
+    $(".weight").each(function () {
+        $(this).each(function () {
             weight = $(this).val();
             if (weight != '') {
                 weight = parseFloat(weight);
@@ -3771,8 +3808,8 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
         });
     });
 
-    $(".large").each(function() {
-        $(this).each(function() {
+    $(".large").each(function () {
+        $(this).each(function () {
             length = $(this).val();
             if (!isNaN(length)) {
                 length = parseInt(length);
@@ -3805,10 +3842,10 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
 });
 
 //Calculos por cantidad
-$(document).on("change keydown keyup", ".quantity_input", function() {
+$(document).on("change keydown keyup", ".quantity_input", function () {
     var sum = 0;
     //iterate through each textboxes and add the values
-    $(".quantity_input").each(function() {
+    $(".quantity_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseInt($(this).val());
@@ -3821,10 +3858,10 @@ $(document).on("change keydown keyup", ".quantity_input", function() {
 });
 
 //Calculos por volumen
-$(document).on("change keydown keyup", ".volume_input", function() {
+$(document).on("change keydown keyup", ".volume_input", function () {
     var sum = 0;
     //iterate through each textboxes and add the values
-    $(".volume_input").each(function() {
+    $(".volume_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseFloat($(this).val());
@@ -3838,12 +3875,12 @@ $(document).on("change keydown keyup", ".volume_input", function() {
 });
 
 //Calculos por peso
-$(document).on("change keydown keyup", ".weight_input", function() {
+$(document).on("change keydown keyup", ".weight_input", function () {
     var sum = 0;
     var sum_vol = 0;
 
     //iterate through each textboxes and add the values
-    $(".weight_input").each(function() {
+    $(".weight_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum += parseFloat($(this).val());
@@ -3852,7 +3889,7 @@ $(document).on("change keydown keyup", ".weight_input", function() {
     $("#total_weight_pkg").html(sum + " kg");
     $("#total_weight_pkg_input").val(sum);
 
-    $(".volume_input").each(function() {
+    $(".volume_input").each(function () {
         //add only if the value is number
         if ($(this).val() > 0 && $(this).val() != '') {
             sum_vol += parseFloat($(this).val());
@@ -3887,7 +3924,7 @@ $(document).on("change keydown keyup", ".weight_input", function() {
 });
 
 //Calcular peso tasable
-$(document).on('change keyup keydown', '#total_volume, #total_weight', function() {
+$(document).on('change keyup keydown', '#total_volume, #total_weight', function () {
     var chargeable_weight = 0;
     var volume = 0;
     var total_volume = 0;
@@ -3922,7 +3959,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function(
 });
 
 //Cambiar tipo de envio
-$(document).on('change', '#delivery_type_air', function(e) {
+$(document).on('change', '#delivery_type_air', function (e) {
 
     if ($(this).val() == 5) {
         $("#origin_address_label").addClass('hide');
@@ -3947,7 +3984,7 @@ $(document).on('change', '#delivery_type_air', function(e) {
 });
 
 //Agregar inputs dinámicos en LCL/AIR
-$(document).on('click', '#add_load_lcl_air', function(e) {
+$(document).on('click', '#add_load_lcl_air', function (e) {
     var $template = $('#lcl_air_load_template');
     $clone = $template.clone().removeClass('hide').removeAttr('id');
 
@@ -3965,7 +4002,7 @@ $(document).on('click', '#add_load_lcl_air', function(e) {
 });
 
 //Guardar compañía
-$(document).on('click', '#savecompany', function() {
+$(document).on('click', '#savecompany', function () {
 
     var $element = $('#addContactModal');
 
@@ -3983,17 +4020,17 @@ $(document).on('click', '#savecompany', function() {
                 'email': $('.email_input').val(),
 
             },
-            success: function(data) {
+            success: function (data) {
                 $.ajax({
                     url: "company/companies",
                     dataType: 'json',
-                    success: function(dataC) {
+                    success: function (dataC) {
                         $('select[name="company_id_quote"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="company_id_quote"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('select[name="company_id"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="company_id"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#companyModal').modal('hide');
@@ -4007,12 +4044,12 @@ $(document).on('click', '#savecompany', function() {
                             'success'
                         )
                     },
-                    error: function(request, status, error) {
+                    error: function (request, status, error) {
                         alert(request.responseText);
                     }
                 });
             },
-            error: function(request, status, error) {
+            error: function (request, status, error) {
                 swal(
                     'Error!',
                     'Please contact administrator',
@@ -4032,7 +4069,7 @@ $(document).on('click', '#savecompany', function() {
 });
 
 //Guardar contacto
-$(document).on('click', '#savecontact', function() {
+$(document).on('click', '#savecontact', function () {
 
     var $element = $('#contactModal');
 
@@ -4053,14 +4090,14 @@ $(document).on('click', '#savecontact', function() {
                 'company_id': $('.companyc_input').val(),
 
             },
-            success: function(data) {
+            success: function (data) {
                 var company_id = $("select[name='company_id_quote']").val();
                 $.ajax({
                     url: "contacts/contact/" + company_id,
                     dataType: 'json',
-                    success: function(dataC) {
+                    success: function (dataC) {
                         $('select[name="contact_id"]').empty();
-                        $.each(dataC, function(key, value) {
+                        $.each(dataC, function (key, value) {
                             $('select[name="contact_id"]').append('<option value="' + key + '">' + value + '</option>');
                         });
                         $('#contactModal').modal('hide');
@@ -4071,7 +4108,7 @@ $(document).on('click', '#savecontact', function() {
                             'success'
                         )
                     },
-                    error: function(request, status, error) {
+                    error: function (request, status, error) {
                         swal(
                             'Error!',
                             'Please contact administrator',
@@ -4080,7 +4117,7 @@ $(document).on('click', '#savecontact', function() {
                     }
                 });
             },
-            error: function(request, status, error) {
+            error: function (request, status, error) {
                 swal(
                     'Error!',
                     'Please contact administrator',
@@ -4109,7 +4146,7 @@ $(document).on('click', '#savecontact', function() {
 });
 
 //Remover inputs LCL/AIR
-$(document).on('click', '.remove_lcl_air_load', function(e) {
+$(document).on('click', '.remove_lcl_air_load', function (e) {
     var $row = $(this).closest('.template').remove();
     $row.remove();
 
@@ -4136,12 +4173,12 @@ $('#origin_airport_create').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4156,12 +4193,12 @@ $('#destination_airport_create').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4182,12 +4219,12 @@ $('#origin_airport').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4202,12 +4239,12 @@ $('#destination_airport').select2({
     ajax: {
         url: '/quotes/airports/find',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4222,12 +4259,12 @@ $('.company_dropdown').select2({
     ajax: {
         url: '/companies/search',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4242,12 +4279,12 @@ $('.portharbors').select2({
     ajax: {
         url: '/harbor/search',
         dataType: 'json',
-        data: function(params) {
+        data: function (params) {
             return {
                 q: $.trim(params.term)
             };
         },
-        processResults: function(data) {
+        processResults: function (data) {
             return {
                 results: data
             };
@@ -4339,7 +4376,7 @@ function precargar() {
     $.ajax({
         type: 'GET',
         url: '/inlandD/getDistance/' + ids,
-        success: function(data) {
+        success: function (data) {
             $('select[name="originA"]').empty();
             if (data.message == 'Ok') {
 
@@ -4349,7 +4386,7 @@ function precargar() {
                 $("#selectA").removeClass('hide');
                 $("#textA").addClass('hide');
 
-                $.each(data.data, function(key, value) {
+                $.each(data.data, function (key, value) {
                     if (key == origComb) {
                         selected = 'selected';
                     } else {
@@ -4376,7 +4413,7 @@ function precargar() {
     $.ajax({
         type: 'GET',
         url: '/inlandD/getDistance/' + ids,
-        success: function(data) {
+        success: function (data) {
             $('select[name="destinationA"]').empty();
 
 
@@ -4385,7 +4422,7 @@ function precargar() {
             if (data.message == 'Ok') {
                 $("#selectD").removeClass('hide');
                 $("#textD").addClass('hide');
-                $.each(data.data, function(key, value) {
+                $.each(data.data, function (key, value) {
                     if (key == destComb) {
                         selected = 'selected';
                     } else {
@@ -4438,9 +4475,9 @@ function precargar() {
         $.ajax({
             url: "/quotes/company/contact/id/" + company_id,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 $('select[name="client"]').empty();
-                $.each(data, function(key, value) {
+                $.each(data, function (key, value) {
                     if (key == contact_id) {
                         selected = 'selected';
                     } else {
@@ -4455,11 +4492,11 @@ function precargar() {
         $.ajax({
             url: "/quotes/company/price/id/" + company_id,
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
 
 
                 $('select[name="price_id"]').empty();
-                $.each(data, function(key, value) {
+                $.each(data, function (key, value) {
                     if (key == price_id) {
                         selected_price = 'selected';
                     } else {
@@ -4618,10 +4655,10 @@ function addSaleCharge($value) {
 
     var $template = $('#sale_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -4630,10 +4667,10 @@ function addSaleCharge($value) {
 function addFreightCharge($value) {
     var $template = $('#freight_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -4642,10 +4679,10 @@ function addFreightCharge($value) {
 function addOriginCharge($value) {
     var $template = $('#origin_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -4654,10 +4691,10 @@ function addOriginCharge($value) {
 function addDestinationCharge($value) {
     var $template = $('#destination_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -4666,10 +4703,10 @@ function addDestinationCharge($value) {
 function addInlandCharge($value) {
     var $template = $('#inland_charges_' + $value),
         $clone = $template
-        .clone()
-        .removeClass('hide')
-        .removeAttr('id')
-        .insertAfter($template)
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -4700,7 +4737,7 @@ function update_remark($id, $content, $v, $language) {
             'remarks': remarks,
             'language': $language,
         },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 swal(
                     'Updated!',
@@ -4757,7 +4794,7 @@ function changeType(type, id) {
         type: 'POST',
         url: '/v2/quotes/feature/pdf/update',
         data: { "value": type, "name": "show_type", "id": id },
-        success: function(data) {
+        success: function (data) {
             if (data.message == 'Ok') {
                 //$(this).attr('checked', true).val(0);
             }
@@ -4770,7 +4807,7 @@ function currencyRate(currency, currency_cfg, amount) {
         url: '/api/currency/' + currency,
         dataType: 'json',
         async: false,
-        success: function(json) {
+        success: function (json) {
             if (currency_cfg + json.alphacode == json.api_code) {
                 amount = parseFloat(amount) / json.rates;
             } else {
@@ -4788,7 +4825,7 @@ function currencyRateAlphacode(currency, currency_cfg, value) {
         url: '/api/currency/alphacode/' + currency,
         dataType: 'json',
         async: false,
-        success: function(json) {
+        success: function (json) {
             if (currency_cfg + json.alphacode == json.api_code) {
                 total_currency = value / json.rates;
             } else {
@@ -4835,19 +4872,19 @@ function notification(message, type) {
 
 
 
-$(document).on('change', '#origin_harbor', function(e) {
+$(document).on('change', '#origin_harbor', function (e) {
     var ids = $('#origin_harbor').val();
     $.ajax({
         type: 'GET',
         url: '/inlandD/getDistance/' + ids,
-        success: function(data) {
+        success: function (data) {
             $('select[name="originA"]').empty();
             if (data.message == 'Ok') {
 
                 $("#selectA").removeClass('hide');
                 $("#textA").addClass('hide');
 
-                $.each(data.data, function(key, value) {
+                $.each(data.data, function (key, value) {
                     $('select[name="originA"]').append('<option  value="' + key + '">' + value + '</option>');
                 });
             }
@@ -4868,17 +4905,17 @@ $(document).on('change', '#origin_harbor', function(e) {
 });
 
 
-$(document).on('change', '#destination_harbor', function(e) {
+$(document).on('change', '#destination_harbor', function (e) {
     var ids = $('#destination_harbor').val();
     $.ajax({
         type: 'GET',
         url: '/inlandD/getDistance/' + ids,
-        success: function(data) {
+        success: function (data) {
             $('select[name="destinationA"]').empty();
             if (data.message == 'Ok') {
                 $("#selectD").removeClass('hide');
                 $("#textD").addClass('hide');
-                $.each(data.data, function(key, value) {
+                $.each(data.data, function (key, value) {
                     $('select[name="destinationA"]').append('<option  value="' + key + '">' + value + '</option>');
                 });
             }
