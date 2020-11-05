@@ -74,6 +74,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
+use App\Direction;
 
 
 class QuoteV2Controller extends Controller
@@ -2713,6 +2714,12 @@ class QuoteV2Controller extends Controller
     public function search()
     {
 
+        //variables del modal contract
+        $group_containerC =GroupContainer::pluck('name', 'id');   
+        $carrierC  =Carrier::pluck('name', 'id');   
+        $directionC  =Direction::pluck('name', 'id');  
+        //Fin variables
+
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
@@ -2775,7 +2782,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown','group_containerC','carrierC','directionC'));
     }
 
     /**
@@ -7358,5 +7365,11 @@ class QuoteV2Controller extends Controller
         $quote->update();
 
         return response()->json(['message' => 'Ok']);
+    }
+
+    public function getGroupContainer($id)
+    {
+       $group_container  =Container::where('gp_container_id', $id)->get()->toJson();   
+       return $group_container;
     }
 }
