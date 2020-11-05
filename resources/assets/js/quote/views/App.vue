@@ -65,16 +65,12 @@ export default {
                 {
                     key: "origin",
                     label: "Origin",
-                    formatter: (value) => {
-                        return this.setPortList(value);
-                    },
+                    collapse: "Show origins",
                 },
                 {
                     key: "destiny",
                     label: "Destiny",
-                    formatter: (value) => {
-                        return this.setPortList(value);
-                    },
+                    collapse: "Show destinations",
                 },
                 {
                     key: "user_id",

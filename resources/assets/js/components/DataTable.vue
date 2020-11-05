@@ -316,7 +316,7 @@
                     <!-- end Checkbox column -->
 
                     <!-- Fields data -->
-                    <b-td v-for="(col, key) in fields" :key="key">
+                    <b-td v-for="(col, inKey) in fields" :key="inKey">
                         <div v-if="autoupdateDataTable">
                             <b-form-input
                                 v-if="col.type == 'text'"
@@ -347,6 +347,16 @@
                                 v-if="'formatter' in col"
                                 v-html="col.formatter(item[col.key])"
                             ></span>
+                            <div v-else-if="'collapse' in col">
+                                <b-button v-if="item[col.key].length>1" v-b-toggle="'collapse'+key+inKey" variant="primary">{{ col.collapse }}</b-button>
+                                <b-collapse v-if="item[col.key].length>1" :id="'collapse'+key+inKey">
+                                    <b-card>
+                                        <li v-for="address in item[col.key]" :key="address">{{ address }}</li>
+                                    </b-card>
+                                </b-collapse>
+                                <span v-else-if="item[col.key].length==1">{{ item[col.key][0] }}</span>
+                                <span v-else>--</span>
+                            </div>
                             <span v-else>{{ item[col.key] }}</span>
                         </div>
                     </b-td>
