@@ -34,7 +34,7 @@ class AutomaticRateResource extends JsonResource
             'remarks_spanish' => $this->remarks_spanish,
             'remarks_english' => $this->remarks_english,
             'remarks_portuguese' => $this->remarks_portuguese,
-            'schedule_type' => is_null($this->schedule_type) ? $this->schedule_type : ['id'=>$this->schedule_type,'name'=>ScheduleType::where('id',$this->schedule_type)->first()->name],
+            'schedule_type' => $this->setSchedule($this->schedule_type),
             'transit_time' => $this->transit_time,
             'via' => $this->via,
             'totals_currency' => $this->currency()->first()->alphacode,
@@ -79,5 +79,18 @@ class AutomaticRateResource extends JsonResource
         }
 
         return $data;
+    }
+
+    public function setSchedule($sctype)
+    {
+        if($sctype == 'Direct'){
+            return ['id'=>1,'name'=>ScheduleType::where('id',1)->first()->name];
+        }else if($sctype == 'Transfer'){
+            return ['id'=>2,'name'=>ScheduleType::where('id',2)->first()->name];
+        }else if($sctype == 1 || $sctype == 2){
+            return ['id'=>$sctype,'name'=>ScheduleType::where('id',$sctype)->first()->name];
+        }else if($sctype == null){
+            return $sctype;
+        }
     }
 }
