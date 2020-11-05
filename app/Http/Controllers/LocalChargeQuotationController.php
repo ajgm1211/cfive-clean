@@ -11,6 +11,7 @@ use App\Harbor;
 use App\Http\Requests\StoreLocalChargeQuote;
 use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
+use App\LocalChargeQuoteLcl;
 use App\LocalChargeQuoteTotal;
 use App\SaleTermCharge;
 use App\SaleTermCode;
@@ -292,10 +293,21 @@ class LocalChargeQuotationController extends Controller
      */
     public function storedCharges(Request $request)
     {
-        $local_charge_quotes = LocalChargeQuote::where([
-            'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
-            'port_id' => $request->port_id
-        ])->with('surcharge', 'calculation_type', 'currency')->get();
+
+        switch ($request->type) {
+            case 'FCL':
+                $local_charge_quotes = LocalChargeQuote::where([
+                    'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
+                    'port_id' => $request->port_id
+                ])->with('surcharge', 'calculation_type', 'currency')->get();
+                break;
+            case 'LCL':
+                $local_charge_quotes = LocalChargeQuoteLcl::where([
+                    'quote_id' => $request->quote_id, 'type_id' => $request->type_id,
+                    'port_id' => $request->port_id
+                ])->with('surcharge', 'calculation_type', 'currency')->get();
+                break;
+        }
 
         return $local_charge_quotes;
     }
@@ -382,9 +394,9 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $price = json_decode($local_charge->amount);
-                if(empty($price)){
+                if (empty($price)) {
                     $price[$index] = $request->data;
-                }else{
+                } else {
                     foreach ($price as $key => $amount) {
                         $price->$index = $request->data;
                     }
@@ -396,9 +408,9 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $profit = json_decode($local_charge->markups);
-                if(empty($profit)){
+                if (empty($profit)) {
                     $profit[$index] = $request->data;
-                }else{
+                } else {
                     foreach ($profit as $key => $markup) {
                         $profit->$index = $request->data;
                     }
@@ -428,7 +440,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function updateRemarks(Request $request, QuoteV2 $quote)
     {
-        
+
         $quote->update([
             'localcharge_remarks' => $request->data
         ]);
