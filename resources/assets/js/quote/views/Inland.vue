@@ -951,7 +951,7 @@ export default {
                         inlandAdd["rates_" + equip] = price_num += markup_num;
 
                         if (inlandAddCurrency == clientCurrency) {
-                            totals = price_num += markup_num;
+                            totals = price_num + markup_num;
                         } else {
                             let price_usd = Number;
                             let markup_usd = Number;
