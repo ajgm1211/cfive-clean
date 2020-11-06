@@ -2462,10 +2462,10 @@ class QuoteV2Controller extends Controller
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
 
-        if ($type == 1) {
-            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
-        } else {
+        if ($type != 1) {
             return redirect()->action('QuotationController@edit', $quote);
+        } else {
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
         }
     }
 

@@ -7,6 +7,7 @@ use App\Container;
 use App\Http\Traits\UtilTrait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
+use App\AutomaticInlandTotal;
 use App\QuoteV2;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -34,19 +35,15 @@ class PdfController extends Controller
 
         $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
 
-        $inlands = $quote->load('inland');
-
-        $inlands = $this->processInland($inlands->inland, $containers);
-
         $origin_charges = $this->localCharges($quote, 1);
-
+        
         $destination_charges = $this->localCharges($quote, 2);
-
+        
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -57,26 +54,62 @@ class PdfController extends Controller
 
     public function localCharges($quote, $type)
     {
-        $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
+        $localcharges = LocalChargeQuote::Quote($quote->id)->Type(1)->get();
+        
+        if(count($localcharges)>0){
+            $localcharges = $localcharges->groupBy([
 
-        $localcharges = $localcharges->groupBy([
+                function ($item) {
+                    return $item['port']['name'] . ', ' . $item['port']['code'];
+                },
+    
+            ]);
 
-            function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
-            },
+            foreach ($localcharges as $value) {
+                $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
+                foreach($inlands as $inland){
+                    $value['inland'] = $inland;
+                }
+                //$value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
+            }
+        }else{
 
-        ]);
+            $inlands = AutomaticInlandTotal::select('id','quote_id','port_id','totals as total','markups as profit','currency_id')->Quotation($quote->id)->Type($type)->get();
 
-        foreach ($localcharges as $value) {
-            $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
+            if(count($inlands)>0){
+                
+                $inlands = $inlands->groupBy([
+    
+                    function ($item) {
+                        return $item['port']['name'] . ', ' . $item['port']['code'];
+                    },
+        
+                ]);
+                    
+                $localcharges = $inlands;
+            }
         }
-
-        return $localcharges;
+        
+        return $localcharges;        
+        
     }
 
     public function localChargeTotals($quote, $type, $port)
     {
         $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
+
+        return $total;
+    }
+
+    public function InlandTotals($quote, $type, $port)
+    {
+        if($type == 1){
+            $type = 'Origin';
+        }else{
+            $type = 'Destination';
+        }
+
+        $total = AutomaticInlandTotal::Quotation($quote)->Port($port)->Type($type)->get();
 
         return $total;
     }
