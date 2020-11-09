@@ -427,10 +427,10 @@ class ContractsController extends Controller
         }
 
 
-
+/*
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
-        }
+        }*/
 
         //$request->session()->flash('message.nivel', 'success');
         //$request->session()->flash('message.title', 'Well done!');
