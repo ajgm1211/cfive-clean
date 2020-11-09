@@ -190,12 +190,12 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-lg-5 col-lg-1 col-form-label">
                                                             * Origin Port: <br>
-                                                            {{ Form::select('origin_port', $harbors, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('origin_port', $harborsR, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
                                       
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Destination Port: <br>
-                                                            {{ Form::select('destination_port', $harbors, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('destination_port', $harborsR, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
 
 
