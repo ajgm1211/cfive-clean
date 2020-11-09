@@ -8,6 +8,14 @@
 body {
     background: #f6f6f6;
 }
+
+.tooltip-inner{
+    background-color: #031B4E; 
+    color: #FFFFFF; 
+    border: 1px solid rgb(0, 85, 128); 
+    padding: 5px;
+    font-size: 11px;
+}
 .bg-manual {
 
 background-color: #969cc0;
@@ -1173,23 +1181,32 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-
+  <div class="row">
+                            <div class="col-lg-12">
+                                <a  data-toggle="modal" data-target="#createContractModal">
+                                
+                                    <span  style="color:blue;"> + Add Contract</span>
+                                 </a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_search"
-                                        id="quote_search">Search</button>
+                                        id="quote_search"><i class="flaticon-search-magnifier-interface-symbol"></i> &nbsp;Search</button>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide"
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create
+                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual" data-type="1">Create
                                         Manual</span></button>
                                 </center>
                             </div>
                         </div>
+
+                      
                     </div>
                 </div>
             </div>
@@ -1210,7 +1227,8 @@ background-color: #36A3F7;
 </div>
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
-    {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
+    {!! Form::open(['class' => 'form-group m-form__group full-width', 'id' => 'rateForm']) !!} 
+    <!-- {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!} -->
     <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
     <input type="hidden" name="form" value="{{ json_encode($form) }}"
@@ -1239,8 +1257,12 @@ background-color: #36A3F7;
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6" align='right'> <button type="submit"
-                                        class="btn m-btn--pill    btn-info">Create Quote</button></div>
+                                <div class="col-lg-6" align='right'> 
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)"><b>Create Quote</b></button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">
+                                        Create FCL Quote
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -1935,7 +1957,16 @@ background-color: #36A3F7;
         </div>
     </div>
 </div>
+
+
+
 @include('companies.partials.companiesModal')
+@include('quotesv2.partials.createContractModal')
+
+
+
+
+
 
 @endsection
 
@@ -1971,7 +2002,9 @@ precargar()
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript">
+
 </script>
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete"
     async defer></script>
@@ -2078,6 +2111,14 @@ function AbrirModal(action, id) {
             });
         });
     }
+    if (action == "addContract") {
+        var url = '{{ route("quotesv2.addContract") }}';
+        $('.modal-body').load(url, function() {
+            $('#createContractModal').modal({
+                show: true
+            });
+        });
+    }
 }
 $('#delivery_type').on('change', function() {
     var value = $(this).val();
@@ -2126,7 +2167,7 @@ $('#quoteType').on('change', function() {
             '</ul>' +
             '</span>' +
             '<span class="c5-select-multiple-container ' + clickOnID + '">' +
-            '<span class="c5-select-header">Types</span>' +
+           /*  '<span class="c5-select-header">Types</span>' +
             '<ul class="c5-select-list list-types-carriers">' +
             '<li class="c5-case"><label class="c5-label">CMA CGM Spot' +
             '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">' +
@@ -2137,7 +2178,7 @@ $('#quoteType').on('change', function() {
             '<li class="c5-case"><label class="c5-label">SAFMARINE Spot' +
             '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">' +
             '<span class="checkmark"></span></label></li>' +
-            '</ul>' +
+            '</ul>' + */
             '<span class="c5-select-header">Carriers</span>' +
             '<span class="c5-select-container-close">' +
             '<i class="fa fa-times" aria-hidden="true"></i>' +

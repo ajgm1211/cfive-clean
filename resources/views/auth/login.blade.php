@@ -120,13 +120,13 @@
       </div>
       <div class="m-stack__item m-stack__item--center">
         <div class="m-login__account">
-          <span class="m-login__account-msg">
+          <!-- <span class="m-login__account-msg">
             Don't have an account yet ?
           </span>
           &nbsp;&nbsp;
           <a href="#" id="m_login_signup" class="m-link m-link--focus m-login__account-link">
             Sign Up
-          </a>
+          </a> -->
 
           <div class="m-login__head">
             <span class="m-login__account-msg">

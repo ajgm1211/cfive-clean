@@ -191,11 +191,12 @@ class UsersController extends Controller
                 'required',
                 Rule::unique('users')->ignore($id),
             ],
-            'password' => 'sometimes|required',
+            'password' => 'sometimes|confirmed',
+            'password_confirmation' => 'required_with:password',
         ]);
 
     $requestForm = $request->all();
-    $user = User::find($id);
+    $user = User::findOrFail($id);
     $roles = $user->getRoleNames();
 
     if (!$roles->isEmpty()) {
@@ -214,7 +215,7 @@ class UsersController extends Controller
     if ($request->type == "data_entry") {
       $user->assignRole('data_entry');
     }
-
+    
     $user->update($requestForm);
 
     if ($request->ajax()) {
@@ -237,8 +238,8 @@ class UsersController extends Controller
 
   public function destroy($id)
   {
-   $user = User::find($id);
-    //$user->delete();
+    $user = User::find($id);
+    $user->delete();
 
     $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
     $cliente =  $client->users->getUsers(["email" => $user->email]);

@@ -421,7 +421,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Show quotes list
+     * Show quotes by ID
      * @param Request $request 
      * @return JSON
      */
@@ -985,6 +985,7 @@ class ApiController extends Controller
 
             $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
+            $routes['type'] = 'FCL';
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
@@ -1056,8 +1057,8 @@ class ApiController extends Controller
     public function processSearchByContract(Request $request, $code)
     {
         try {
-            $contract = Contract::where('code', $code)->first();
-            $contract_lcl = ContractLcl::where('code', $code)->first();
+            $contract = Contract::where('name', $code)->first();
+            $contract_lcl = ContractLcl::where('name', $code)->first();
 
             $response = $request->response;
             $convert = $request->convert;
