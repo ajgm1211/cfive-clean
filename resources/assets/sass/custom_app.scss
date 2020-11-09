@@ -1,6 +1,6 @@
 .table-responsive {
     overflow: initial !important;
-    overflow-x: initial !important;
+    overflow-x: scroll !important;
 }
 
 @import 'node_modules/bootstrap/scss/bootstrap';
@@ -1012,4 +1012,32 @@ input.multiselect__input:focus {
 
 .badge {
     font-size: 12px !important;
+}
+
+.md-field {
+    margin: -15px 0 -5px !important;
+}
+
+.md-field label {
+    font-size: 10px !important;
+}
+
+.md-field.md-has-value .md-input {
+    font-size: 12px !important;
+}
+
+.md-field.md-has-value label {
+    opacity: 0 !important;
+}
+
+.closeFilter {
+    display: none !important;
+}
+
+.openFilter {
+    display: block !important;
+}
+
+.btn-filter {
+    cursor: pointer;
 }

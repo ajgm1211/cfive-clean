@@ -31,9 +31,22 @@
                     </b-th>
 
                     <b-th v-for="(value, key) in fields" :key="key">
+                        <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
+                        
+                        <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label] ">
+                             <label>Select an Option</label>
+                            <md-select multiple>
+                                <md-option value="fight-club">Fight Club</md-option>
+                                <md-option value="godfather">Godfather</md-option>
+                                <md-option value="godfather-ii">Godfather II</md-option>
+                                <md-option value="godfather-iii">Godfather III</md-option>
+                                <md-option value="godfellas">Godfellas</md-option>
+                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
+                                <md-option value="scarface">Scarface</md-option>
+                            </md-select>
+                        </md-field>
                     </b-th>
-
                     <b-th>
                         <b-button
                             v-bind:id="'popover_all'"
@@ -504,8 +517,14 @@
 import Multiselect from "vue-multiselect";
 import paginate from "./paginate";
 
+
 export default {
     props: {
+        filter: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
         fields: Array,
         equipment: Object,
         inputFields: {
@@ -623,6 +642,8 @@ export default {
     components: {
         Multiselect,
         paginate,
+        
+        
     },
     data() {
         return {
@@ -644,6 +665,7 @@ export default {
             selected: [],
             allSelected: false,
             indeterminate: false,
+            filterIsOpen: false
         };
     },
     computed: {
@@ -661,6 +683,11 @@ export default {
     },
     methods: {
         /* Response the lists data*/
+        openFilter(filter) {
+            
+            this.filterIsOpen = !this.filterIsOpen;
+
+        },
         initialData() {
             let params = this.$route.query;
 
