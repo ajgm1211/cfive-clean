@@ -414,9 +414,9 @@
 
                     <b-td></b-td>
 
-                    <b-td v-if="Object.keys(equipment).length==0"></b-td>
+                    <b-td v-if="Object.keys(equipment).length==0 && Object.keys(portAddress).length == 0"></b-td>
 
-                    <b-td v-if="Object.keys(equipment).length==0"></b-td>
+                    <b-td v-if="Object.keys(equipment).length==0 && Object.keys(portAddress).length == 0"></b-td>
 
                     <b-td
                         ><span style="float: right; font-weight: bold">{{
