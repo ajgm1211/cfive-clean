@@ -1,25 +1,25 @@
 <?php
 
 namespace Tests\Feature;
-use App\SaleTermV3;
+use App\Rate;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-class SaleTemplateTest extends TestCase
+class OceanFreightTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function test_if_Sale_Template_is_stored()
+    public function test_if_ocean_freight_is_stored()
     {
 
         $this->withoutExceptionHandling();
-             
-        $SaleTemplate = factory(SaleTermV3::class)->create();
 
-        $this->seeInDatabase('sale_term_v3s', $SaleTemplate->toArray());
+        $OceanFreight = factory(Rate::class)->create();
+
+        $this->seeInDatabase('rates', $OceanFreight->toArray());
     }
 }
