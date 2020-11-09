@@ -295,8 +295,10 @@
                     component.initialFields.forEach(function (item){
                         component.fields.push(item);
                         component.form_fields[item.key] = component.initialFormFields[item.key];
-                        fixedKey = 'fixed_'.concat(item.key);
-                        component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];                        
+                        if(component.fixedFormFields){
+                            fixedKey = 'fixed_'.concat(item.key);
+                            component.extra_fields[fixedKey] = component.fixedFormFields[fixedKey];                        
+                        }
                     });
                     this.isLoaded = true;
                 }

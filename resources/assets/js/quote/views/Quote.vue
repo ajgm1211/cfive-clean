@@ -104,7 +104,14 @@
                             ></Inland>
                         </b-tab>
 
-                        <!--<b-tab title="Totals">Totales</b-tab>-->
+                        <b-tab title="Totals" @click="changeView('totals')">
+                            <Total v-if="totals"
+                            :currentQuoteData="currentData"
+                            :freights="freights"
+                            :datalists="datalists"
+                            ></Total>
+                        </b-tab>
+
                     </b-tabs>
                 </b-card>
                 <!-- End Tabs Section -->
@@ -123,6 +130,7 @@ import Quote from "./Quote";
 import Inland from "./Inland";
 import Ocean from "./Ocean";
 import Local from "./Local";
+import Total from "./Total";
 import FormInlineView from "../../components/views/FormInlineView.vue";
 
 export default {
@@ -134,6 +142,7 @@ export default {
         Inland,
         Local,
         FormInlineView,
+        Total,
     },
     data() {
         return {
@@ -142,6 +151,7 @@ export default {
             ocean: false,
             locals: false,
             inlands: false,
+            totals: false,
             tabs_loaded: false,
             form_fields: {
                 quote_id: {
@@ -382,6 +392,8 @@ export default {
                 component.locals = true;
             } else if(val == 'inlands'){
                 component.inlands = true;
+            } else if(val == 'totals'){
+                component.totals = true;
             }
         },
 
