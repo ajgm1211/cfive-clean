@@ -1309,3 +1309,10 @@ Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
     Route::get('delete/{prov_id}', ['uses' => 'ProvinceController@destroy', 'as' => 'delete-prov']);
 });
 Route::resource('provinces', 'ProvinceController')->middleware('auth');
+
+
+Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
+    Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
+    
+});
+
