@@ -21,9 +21,7 @@
 
                                 <tr>
 
-                                    <th class="unit"><b>{{__('pdf.charge')}}</b></th>
-
-                                    <th class="unit"><b>{{__('pdf.provider')}}</b></th>
+                                    <th class="unit" colspan="2"><b>{{__('pdf.charge')}}</b></th>
                                     
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
@@ -55,9 +53,7 @@
                                 
                                     <tr class="text-left color-table">
                                 
-                                        <td>{{@$rate->charge ?? '--'}}</td>
-                                
-                                        <td>{{@$rate->providers->name ?? '--'}}</td>
+                                        <td colspan="2">{{@$rate->charge ?? '--'}}</td>
                                 
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
