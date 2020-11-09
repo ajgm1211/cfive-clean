@@ -684,7 +684,7 @@ export default {
     methods: {
         /* Response the lists data*/
         openFilter(filter) {
-            
+
             this.filterIsOpen = !this.filterIsOpen;
 
         },
