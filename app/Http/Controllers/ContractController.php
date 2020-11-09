@@ -665,7 +665,7 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
-             $contract->save();
+        $contract->save();
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
@@ -687,7 +687,6 @@ class ContractController extends Controller
             $rates->fortynor = 0;
             $rates->fortyfive = 0;
 
-
             foreach ($container as $cod) {
 
                 $cont = 'C' . $cod->code;
@@ -700,7 +699,13 @@ class ContractController extends Controller
         $rates->carrier_id = $request->carrierR;
         $rates->currency_id = $request->currencyR;
         $rates->contract()->associate($contract);
-            $rates->save();
+        $rates->save();
+
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
+        }
+
+
         return response()->json([
             'data' => $rates->toJson(),
         ]);

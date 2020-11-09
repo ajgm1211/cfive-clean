@@ -117,7 +117,7 @@
                         <!--begin: Form Wizard Form-->
                         <div class="m-wizard__form">
 
-                            <form method="POST" action="{{ route('search-add.contract') }}"  class="m-form m-form--label-align-left- m-form--state-"  id="m_form">
+                            <form method="POST" action="{{ route('search-add.contract') }}"  enctype="multipart/form-data" class="m-form m-form--label-align-left- m-form--state-"  id="m_form">
                                 <!--begin: Form Body -->
                                 <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                                 <div class="m-portlet__body">
