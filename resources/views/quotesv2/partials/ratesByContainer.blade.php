@@ -302,8 +302,13 @@
                                                     @if($item->type_id==1  && $item->saleterm==0)
                                                         <?php
                                                             $rate_id=$item->automatic_rate_id;
-                                                            $origin_amounts = json_decode($item->amount,true);
-                                                            $origin_markups = json_decode($item->markups,true);
+                                                            if(!is_array($item->rate) && !is_array($item->markups)){
+                                                                $origin_amounts = json_decode($item->amount,true);
+                                                                $origin_markups = json_decode($item->markups,true);
+                                                            }else{
+                                                                $origin_amounts = json_decode($item->amount,true);
+                                                                $origin_markups = json_decode($item->markups,true);
+                                                            }
 
                                                             if(!Empty($origin_amounts)){
                                                                 foreach ($origin_amounts as $k => $amount_value) {
@@ -516,8 +521,13 @@
                                                     
                                                         @php
                                                             $rate_id=$item->automatic_rate_id;
-                                                            $destination_amounts = json_decode($item->amount,true);
-                                                            $destination_markups = json_decode($item->markups,true);
+                                                            if(!is_array($item->rate) && !is_array($item->markups)){
+                                                                $destination_amounts = json_decode($item->amount,true);
+                                                                $destination_markups = json_decode($item->markups,true);
+                                                            }else{
+                                                                $destination_amounts = $item->amount;
+                                                                $destination_markups = $item->markups;
+                                                            }
 
                                                             if(!Empty($destination_amounts)){
                                                                 foreach ($destination_amounts as $k => $amount_value) {
@@ -816,8 +826,13 @@
                                             @if(!$rate->inland->isEmpty())
                                                 @foreach($rate->inland as $inland)
                                                     <?php
-                                                        $inland_rates = json_decode($inland->rate,true);
-                                                        $inland_markups = json_decode($inland->markup,true);
+                                                        if(!is_array($inland->rate) && !is_array($inland->markup)){
+                                                            $inland_rates = json_decode($inland->rate,true);
+                                                            $inland_markups = json_decode($inland->markup,true);
+                                                        }else{
+                                                            $inland_rates = $inland->rate;
+                                                            $inland_markups = $inland->markup;
+                                                        }
 
                                                         if(!Empty($inland_rates)){
                                                                 foreach ($inland_rates as $k => $amount_value) {

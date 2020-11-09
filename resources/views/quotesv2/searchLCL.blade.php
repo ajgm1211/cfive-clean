@@ -1383,6 +1383,7 @@
                                         <div class="col-lg-12"><br><br></div>
                                     </div>
                                     @foreach($arreglo as $arr)
+
                                     <!-- Empieza tarjeta de cotifzacion -->
 
                                     <div class="card-p__quotes input-select{{$loop->iteration}}"
