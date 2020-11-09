@@ -167,6 +167,9 @@
                                                                             or
                                                                         </h3>
                                                                         <a href="#" class="btn btn-primary col-2" > Choose file </a>
+                                                                        <br>
+                                                                        <br>
+                                                                        <small>Only formats ('XLSX, XLS, CSV, PDF')</small>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -395,8 +398,16 @@
         url: '{{ route("request.fcl.storeMedia") }}',
         maxFilesize: 32, // MB
         maxFiles: 1,
-        acceptedFiles:'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv,.odt',
+        acceptedFiles:'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv',
         addRemoveLinks: true,
+        /*accept: function(file, done) {
+            console.log(file);
+            var extensions = ['text/csv','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.pdf','.xlsx','.xls','.csv','.odt'];
+            if(!extensions.includes(file.type)) {
+                toastr.error("Error! Files of this type are not accepted");
+            }
+            else { toastr.info("ok! ");}
+        },*/
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"
         },
