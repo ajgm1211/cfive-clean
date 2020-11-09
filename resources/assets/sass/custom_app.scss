@@ -144,10 +144,16 @@ tr,
 }
 
 .btn-bg {
-    background-color: #006bf9 !important;
     color: #fff;
     font-weight: bold;
     border: none !important;
+    background-color: #006bf9 !important;
+    transition: all 100ms ease-in-out;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;
+}
+
+.btn-bg:hover {
+    box-shadow: none !important;
 }
 
 .btn-bg:hover {
@@ -216,7 +222,6 @@ table tr th:focus {
     cursor: pointer;
     padding: 0.2em;
 }
-
 .input-check[type=checkbox] {
     display: none;
 }
@@ -422,7 +427,7 @@ i.mx-icon-calendar {
 }
 
 .multiselect__option {
-    font-size: 13px;
+    font-size: 12px;
     padding: 6px !important;
     min-height: 30px !important;
 }
@@ -447,8 +452,8 @@ i.mx-icon-calendar {
 }
 
 .multiselect__single {
-    color: #626e8b;
-    font-size: 14px !important;
+    color: #031b4e;
+    font-size: 12px !important;
 }
 
 .multiselect__content-wrapper {
@@ -462,6 +467,31 @@ i.mx-icon-calendar {
 
 .multiselect__content {
     display: block !important;
+}
+
+.multiselect:hover .multiselect__tags {
+    border-color: #006bf9 !important;
+}
+
+
+/* Datepicker */
+
+.q-input::placeholder,
+.text-muted {
+    color: #adadad !important;
+}
+
+.text-break {
+    color: #031b4e;
+    font-size: 12px !important;
+}
+
+.b-form-datepicker {
+    border: 2px solid #eee !important;
+}
+
+.b-form-datepicker:hover {
+    border-color: #006bf9 !important;
 }
 
 
@@ -478,6 +508,8 @@ i.mx-icon-calendar {
 }
 
 .card-tabs .card-header {
+    padding-left: 30px;
+    padding-right: 50px;
     border-width: 2px !important;
     background: transparent !important;
 }
@@ -558,7 +590,18 @@ i.mx-icon-calendar {
 }
 
 .reportrange-text {
+    height: 35px;
     border: 2px solid #eee !important;
+}
+
+.multiselect--disabled {
+    min-height: 35px !important;
+    .multiselect__select {
+        height: 35px;
+    }
+    .multiselect__tags {
+        background: #e9ecef;
+    }
 }
 
 .vue-daterange-picker {
@@ -636,7 +679,11 @@ input.multiselect__input:focus {
 
 .btn-adds {
     right: 60px;
-    position: fixed;
+    /* position: fixed; */
+}
+
+.input-h {
+    height: 35px;
 }
 
 .dropzone.dz-started .dz-message {
@@ -707,6 +754,12 @@ input.multiselect__input:focus {
 
 /* Quote */
 
+.quote-header {
+    width: 100%;
+    padding-top: 50px;
+    background-color: #ffffff;
+}
+
 .p-light {
     color: rgba(#000000, 0.5);
 }
@@ -717,6 +770,244 @@ input.multiselect__input:focus {
         margin-right: 10px;
         font-size: 18px;
     }
+}
+
+.quote-content-tab {
+    .tab-content {
+        background-color: #f8f8fc !important;
+    }
+}
+
+.quote-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.quote-card div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gmap {
+    border: 2px solid #eeeeee;
+    padding: 6px 15px;
+    display: block;
+    border-radius: 4px !important;
+}
+
+.gmap:hover,
+.gmap:focus {
+    border-color: #006BFA !important;
+}
+
+.warning-no-address {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quote-card div:nth-child(2) {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+@media only screen and (min-width: 426px) {
+    .quote-card {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.label-text {
+    color: #182026;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.q-label {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+/* .btn-pdf {
+    right: 15px;
+    position: absolute;
+} */
+
+.q-input {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: #071C4B !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    border: 2px solid #eee !important;
+}
+
+.form-control {
+    border: 2px solid #eee !important;
+}
+
+#id_exp_date__value_,
+#id_validity_start__value_,
+#id_validity_end__value_ {
+    border: none !important;
+}
+
+.q-width {
+    width: 50%;
+}
+
+.q-input:focus,
+.form-control:hover,
+.q-input:hover {
+    border-color: #006BFA !important;
+}
+
+.q-label:focus {
+    span.label-text {
+        color: #006BFA !important;
+    }
+}
+
+.q-textarea {
+    width: 100%;
+    height: 100%;
+    color: #071C4B;
+    min-height: 100px;
+    max-height: 100px;
+    border-radius: 5px;
+    padding-left: 15px;
+    border: 2px solid #e8e8e8 !important;
+}
+
+.q-textarea:focus {
+    outline: none;
+    border-color: #006BFA !important;
+}
+
+.btn-delete {
+    border: none;
+    color: #ff6464;
+    background: transparent;
+}
+
+.q-thead {
+    border-bottom: 2px solid #031b4e !important;
+    th {
+        padding: 0.75rem !important;
+        span {
+            font-size: 12px !important;
+        }
+    }
+}
+
+.q-title {
+    color: #031b4e;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.q-select {
+    width: 30% !important;
+}
+
+.q-total {
+    border-top: 1px solid #031b4e !important;
+}
+
+.modal-width {
+    width: 80% !important;
+}
+
+.q-card {
+    .card-body {
+        overflow: inherit !important;
+    }
+}
+
+.q-modal {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.q-modal-content {
+    width: 70%;
+    height: 50%;
+    padding: 25px;
+    position: relative;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.showModal {
+    display: flex !important;
+}
+
+.q-modal-close {
+    top: 10px;
+    right: 10px;
+    border: none;
+    color: #ff6464;
+    position: absolute;
+    background: transparent;
+}
+
+.multiselect__placeholder {
+    font-size: 12px;
+}
+
+
+/* Ocean Freight */
+
+.q-freight-card {
+    margin-bottom: 25px;
+    transition: all 300ms ease-in-out;
+}
+
+.q-freight-card:hover {
+    border-color: #031b4e !important;
+}
+
+.table-sm,
+.table-sm td {
+    padding: 0.75rem !important;
+}
+
+.custom-control-label {
+    span {
+        top: 7px;
+        left: 7px;
+        position: relative;
+    }
+}
+
+.hideFreight {
+    height: 0;
+    overflow: hidden;
+    transition: all 150ms ease-in-out;
+}
+
+.showFreight {
+    height: auto !important;
+}
+
+.turnButton {
+    transition: all 300ms ease-in-out;
+    transform: rotate(180deg) !important;
 }
 
 .badge {

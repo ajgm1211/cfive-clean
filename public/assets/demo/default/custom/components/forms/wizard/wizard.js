@@ -2,7 +2,7 @@
 var WizardDemo = function () {
   //== Base elements
   var wizardEl = $('#m_wizard');
-  var formEl = $('#m_form');
+  var formEl = $('.m_form');
   var validator;
   var wizard;
 

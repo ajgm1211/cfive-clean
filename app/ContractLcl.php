@@ -1825,6 +1825,13 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
 
+            $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
+
+            $data->setAttribute('via', $transit_time['via']);
+            $data->setAttribute('transit_time', $transit_time['transit_time']);
+            $data->setAttribute('service', $transit_time['service']);
+            $data->setAttribute('sheduleType', null);
+
             $routes = array();
             $routes['Rates']['type'] = 'LCL';
             $routes['Rates']['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
@@ -1862,7 +1869,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $totalQuote, $currency, $data->transit_time, $data->contract->comments);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $data->uom, $currency, $data->transit_time, $data->contract->comments);
                 break;
             default:
                 $detalle = $routes;

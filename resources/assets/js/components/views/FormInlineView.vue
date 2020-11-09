@@ -2,23 +2,27 @@
     <div>
         <!-- Inline Contract Form -->
         <form ref="form" @submit.stop.prevent="handleSubmit">
-            <div class="row">
+            <div class="row" style="padding: 0px 25px;">
                 <!-- Reference -->
                 <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
                     <!-- Text Field -->
-                    <div v-if="item.type == 'text'">
+                    <div v-if="item.type == 'text' && !item.hidden">
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
+                            :hidden="item.hidden"
                             class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                         >
                             <b-form-input
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :placeholder="item.placeholder"
                                 v-on:blur="onSubmit()"
                                 @change="cleanInput(key)"
+                                :disabled="item.disabled"
+                                class="input-h"
                             ></b-form-input>
                             <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
                         </b-form-group>
@@ -36,6 +40,7 @@
                         >
                             <b-textarea
                                 id="inline-form-input-name"
+                                :parentId="item.parentId"
                                 v-model="vdata[key]"
                                 class="mb-2 mr-sm-2 mb-sm-0 remarks"
                                 v-on:blur="onSubmit()"
@@ -49,19 +54,27 @@
                     </div>
                     <!-- End Textarea Field -->
 
+                    <!-- CKEditor -->
                     <div v-if="item.type == 'ckeditor'">
-                        <ckeditor
-                            id="inline-form-input-name"
-                            type="classic"
-                            v-model="vdata[key]"
-                            v-on:blur="onSubmit()"
-                            @change="cleanInput(key)"
-                        ></ckeditor>
-                        <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
-                        <span class="update-remark">
-                            <i class="fa fa-repeat" aria-hidden="true"></i>
-                        </span>
+                         <b-form-group
+                            :label="item.label"
+                        >
+                        <br>
+                            <ckeditor
+                                id="inline-form-input-name"
+                                :parentId="item.parentId"
+                                type="classic"
+                                v-model="vdata[key]"
+                                v-on:blur="onSubmit()"
+                                @change="cleanInput(key)"
+                            ></ckeditor>
+                            <span :id="'id_f_inline_'+key" class="invalid-feedback"></span>
+                            <span class="update-remark">
+                                <i class="fa fa-repeat" aria-hidden="true"></i>
+                            </span>
+                        </b-form-group>
                     </div>
+                    <!-- End CKEditor -->
 
                     <!-- Select Field -->
                     <div v-if="item.type == 'select'">
@@ -71,11 +84,21 @@
                             class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
+                            :disabled="item.disabled"
+                            :isLocker="item.isLocker"
+                            :selectLock="item.selectLock"
+                            :lockerTrack="item.lockerTrack"
+                            :hiding="item.hiding"
+                            :isHiding="item.isHiding"
+                            :showCondition="item.showCondition"
                         >
                             <multiselect
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :multiple="false"
-                                :options="datalists[item.options]"
+                                :options="getOptions(item.options)"
+                                :disabled="item.disabled"
+                                :all_options="item.all_options"
                                 :searchable="item.searchable"
                                 :close-on-select="true"
                                 :clear-on-select="true"
@@ -83,8 +106,9 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                @input="onSubmit()"
+                                @input="unlock(item,key,1),onSubmit()"
                                 @select="cleanInput(key)"
+                                class="input-h"
                             ></multiselect>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -106,6 +130,7 @@
                         >
                             <multiselect
                                 v-model="vdata[key]"
+                                :parentId="item.parentId"
                                 :multiple="true"
                                 :options="datalists[item.options]"
                                 :searchable="item.searchable"
@@ -117,6 +142,7 @@
                                 :placeholder="item.placeholder"
                                 @input="onSubmit()"
                                 @select="cleanInput(key)"
+                                class="input-h"
                             ></multiselect>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -132,12 +158,13 @@
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
+                            class="d-block input-h"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                         >
                             <date-range-picker
                                 :opens="'center'"
+                                :parentId="item.parentId"
                                 :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
                                 :singleDatePicker="false"
                                 :autoApply="true"
@@ -145,6 +172,7 @@
                                 v-model="vdata[key]"
                                 :linkedCalendars="true"
                                 @update="cleanInputSubmit(key)"
+                                class="input-h"
                             ></date-range-picker>
                             <span
                                 :id="'id_f_inline_'+key"
@@ -155,21 +183,46 @@
                     </div>
                     <!-- End DateRange Field -->
 
-                    <!-- Status Field-->
-                    <div v-if="item.type == 'status'">
-                        <div class="col-12 col-sm-3 col-lg-2">
-                            <b-form-group
+                    <div v-if="item.type == 'datepicker'">
+                        <b-form-group :label="item.label" class="d-block" style="border:none">
+                            <b-form-datepicker
                                 :id="'id_'+key"
+                                :parentId="item.parentId"
                                 :label="item.label"
-                                class="d-block"
                                 :invalid-feedback="key+' is required'"
                                 valid-feedback="key+' is done!'"
-                            >
-                                <span class="status-st" :class="vdata[key]"></span>
-                            </b-form-group>
-                        </div>
+                                v-model="vdata[key]"
+                                :locale="locale"
+                                :date-format-options="dateFormat"
+                                @input="cleanInputSubmit(key)"
+                                class="input-h"
+                                >
+                            ></b-form-datepicker>
+                        </b-form-group>
+                    </div>
+
+                    <!-- Status Field-->
+                    <div v-if="item.type == 'status'">
+                        <b-form-group
+                            :id="'id_'+key"
+                            :label="item.label"
+                            class="d-block input-h"
+                            :invalid-feedback="key+' is required'"
+                            valid-feedback="key+' is done!'"
+                        >
+                            <span class="status-st" :class="vdata[key]"></span>
+                        </b-form-group>
                     </div>
                     <!-- End Status Field -->
+
+                    <!-- Span field -->
+                    <div v-if="item.type == 'span'">
+                        <span 
+                            style="font-weight:bold;"
+                            v-html="vdata[key]">
+                        </span>
+                    </div>
+                    <!-- Span field end -->
                 </div>
             </div>
         </form>
@@ -204,15 +257,39 @@ export default {
             required: false,
             default: false,
         },
+        multi: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        
     },
     data() {
         return {
+             //Datepicker Options
+            locale: 'en-US',
+            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
             vdata: {},
         };
     },
     created() {
-        console.log(this.data);
+        let fields_keys = Object.keys(this.fields);
+        let component = this;
+
+        //console.log(this.data);
         this.vdata = this.data;
+
+        fields_keys.forEach(function (key) {
+            if(component.multi){
+                component.fields[key].parentId = component.$parent.id;
+            }
+            if(component.fields[key].isLocker){
+                component.unlock(component.fields[key],key)
+            }
+            /**if(component.fields[key].isHiding){
+                component.showHidden(component.fields[key],key)
+            }**/
+        });        
     },
     methods: {
         closeModal() {
@@ -220,7 +297,17 @@ export default {
         },
 
         getClass(item) {
-            if ("colClass" in item) return item.colClass;
+            if (item.label == "Carriers") {
+                return "col-lg-3";
+            }
+
+            if (item.label == "Direction" || item.label == "Equipment") {
+                return "col-lg-1";
+            }
+
+            if ("colClass" in item) {
+                return item.colClass;
+            }
 
             return "col-12 col-sm-3 col-lg-2";
         },
@@ -264,6 +351,7 @@ export default {
             let component = this;
             let fields_keys = Object.keys(this.fields);
 
+            data["keys"] = fields_keys;
             fields_keys.forEach(function (key) {
                 const item = component.fields[key];
 
@@ -271,16 +359,21 @@ export default {
                     case "text":
                     case "textarea":
                     case "ckeditor":
-                        if (component.vdata[key])
-                            data[key] = component.vdata[key];
+                        data[key] = component.vdata[key];
                         break;
                     case "select":
-                        if (component.vdata[key])
+                        if (component.vdata[key]){
                             data[key] = component.vdata[key].id;
+                        }else{
+                            data[key] = component.vdata[key]
+                        }
                         break;
                     case "multiselect":
-                        if (component.vdata[key].length)
+                        if (component.vdata[key].length){
                             data[key] = component.vdata[key].map((e) => e.id);
+                        }else{
+                            data[key] = component.vdata[key]
+                        }
                         break;
                     case "daterange":
                         if (
@@ -294,6 +387,10 @@ export default {
                                 component.vdata[key].endDate
                             ).format("YYYY/MM/DD");
                         }
+                        break;
+                    case "datepicker":
+                        if (component.vdata[key])
+                            data[key] = component.vdata[key];
                         break;
                 }
             });
@@ -357,6 +454,66 @@ export default {
                 }
             }
         },
+        
+        unlock(item,key,iterator=null) {
+            let component = this;
+            let fields_keys = Object.keys(this.fields);
+            let caller = item;
+            let callerKey = key;
+            let dlist = this.datalists;
+            
+            if(caller.isLocker){
+                fields_keys.forEach(function (key) {
+                    const lockedItem = component.fields[key];
+                    if (lockedItem.selectLock && callerKey==lockedItem.locking){
+                        const opts = dlist[lockedItem.all_options];
+                        const lockTracker = lockedItem.lock_tracker;
+                        const tracker = lockedItem.trackby;
+                        const validator = component.vdata[callerKey];
+                        if(iterator != null){
+                            component.vdata[key] = null;
+                        }
+                        if(validator != null){
+                            lockedItem.options = [];
+                            lockedItem.disabled = false;
+                            opts.forEach(function(opt) {
+                            if(opt[lockTracker] == validator.id){
+                                lockedItem.options.push({id:opt.id,name:opt[tracker]});
+                                }
+                            });
+                        } else {
+                            component.vdata[key] = "";
+                            lockedItem.disabled = true;
+                        }
+                    }   
+                });
+            } 
+        },
+
+        showHidden(item,key) {
+            let component = this;
+            let fields_keys = Object.keys(this.fields);
+            let caller = item;
+            let callerKey = key;
+
+            if(component.vdata[callerKey]==null || component.vdata[callerKey].name!=caller.showCondition){
+                console.log(caller.parentId,'not good')
+                /**if(caller.parentId == component.fields[caller.showCondition].parentId){
+                    component.fields[caller.hiding].hidden = true;
+                    component.vdata[caller.hiding] = null;               
+                }**/
+            }else if(component.vdata[callerKey].name==caller.showCondition){
+                console.log(caller.parentId,'is good')
+            }
+        },
+
+        getOptions(options){
+            if(typeof options=="string"){
+                return this.datalists[options]
+            } else {
+                return options
+            }
+        }
     },
     watch: {
         data: {

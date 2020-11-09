@@ -68,6 +68,11 @@ class User extends Authenticatable implements Auditable
         return $query->where('type', 'admin');
     }
 
+    public function worksAt()
+    {
+        return $this->hasOne('App\CompanyUser','id','company_user_id')->first();
+    }
+
     /**
      * Send the password reset notification.
      *
@@ -81,5 +86,12 @@ class User extends Authenticatable implements Auditable
     public function routeNotificationForSlack()
     {
         return 'https://hooks.slack.com/services/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';
+    }
+    public function setPasswordAttribute($password)
+    {   
+        if (!empty($password))
+        {
+            $this->attributes['password'] = bcrypt($password);
+        }
     }
 }
