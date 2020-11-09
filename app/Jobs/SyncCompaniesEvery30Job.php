@@ -1,7 +1,5 @@
-  <?php
-
+<?php
 namespace App\Jobs;
-
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
 use App\Company;
