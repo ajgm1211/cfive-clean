@@ -51,7 +51,7 @@ class AutomaticRateController extends Controller
             $freight = ChargeLclAir::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
-                'calculation_type_id' => '10',
+                'calculation_type_id' => '4',
                 'units' => 1.00,
                 'price_per_unit' => 1.00,
                 'minimum' => 1.00,
@@ -60,22 +60,7 @@ class AutomaticRateController extends Controller
                 'currency_id' => $rate->currency_id,
             ]);
         }
-
-        $originInland = AutomaticInlandTotal::create([
-            'quote_id' => $quote->id,
-            'port_id' => $rate->origin_port_id,
-            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-            'type' => 'Origin',
-        ]);
-
-        $destInland = AutomaticInlandTotal::create([
-            'quote_id' => $quote->id,
-            'port_id' => $rate->destination_port_id,
-            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-            'type' => 'Destination',
-        ]);
-
-                
+       
         return new AutomaticRateResource($rate);
     }
  
