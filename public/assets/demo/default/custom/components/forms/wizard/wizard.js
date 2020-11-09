@@ -196,6 +196,9 @@ var WizardDemo = function () {
               }
 
             });
+          },
+          error: function(request, status, error) {
+            alert(request.responseText);
           }
         });
       }

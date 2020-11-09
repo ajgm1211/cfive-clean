@@ -20,6 +20,7 @@ use App\Jobs\ProcessContractFile;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\Notifications\SlackNotification;
+use App\Rate;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\User;
@@ -654,6 +655,7 @@ class ContractController extends Controller
 
         $req = $request->group_containerC;
         $contract = new Contract();
+        $container = Container::get();
 
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
@@ -663,175 +665,45 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
-        $contract->save();
+             $contract->save();
+
+        $rates = new Rate();
+        $rates->origin_port = $request->origin_port;
+        $rates->destiny_port = $request->destination_port;
+        $arreglo = array();
+        if ($req == 1) {
+
+            $rates->twuenty = $request->C20DV;
+            $rates->forty = $request->C40DV;
+            $rates->fortyhc = $request->C40HC;
+            $rates->fortynor = $request->C40NOR;
+            $rates->fortyfive = $request->C45HC;
+
+        } else {
+
+            $rates->twuenty = 0;
+            $rates->forty = 0;
+            $rates->fortyhc = 0;
+            $rates->fortynor = 0;
+            $rates->fortyfive = 0;
+
+
+            foreach ($container as $cod) {
+
+                $cont = 'C' . $cod->code;
+                if ($cod->gp_container_id == $req) {
+                    $arreglo[$cont] = $request->{$cont};
+                }
+            }
+            $rates->containers = json_encode($arreglo);
+        }
+        $rates->carrier_id = $request->carrierR;
+        $rates->currency_id = $request->currencyR;
+        $rates->contract()->associate($contract);
+            $rates->save();
         return response()->json([
-            'data' => 'Contract created successfully!',
+            'data' => $rates->toJson(),
         ]);
-/*
-$details = $request->input('currency_id');
-$detailscharges = $request->input('localcurrency_id');
-$companies = $request->input('companies');
-$users = $request->input('users');
-
-// All IDS
-$carrierAllid = $this->allCarrierid();
-$countryAllid = $this->allCountryid();
-$portAllid = $this->allHarborid();
-
-// For Carrier in ContractCarrier Model
-foreach($request->carrierAr as $carrierFA){
-ContractCarrier::create([
-'carrier_id'    => $carrierFA,
-'contract_id'   => $contract->id
-]);
-}
-// For Each de los rates
-$contador = 1;
-$contadorRate = 1;
-
-// For each de los rates
-foreach($details as $key => $value)
-{
-
-$rateOrig  = $request->input('origin_id'.$contadorRate);
-$rateDest  = $request->input('destiny_id'.$contadorRate);
-
-foreach($rateOrig as $Rorig => $Origvalue)
-{
-foreach($rateDest as $Rdest => $Destvalue)
-{
-$sch = null;
-if($request->input('scheduleT.'.$key) != 'null'){
-$sch = $request->input('scheduleT.'.$key);
-}
-$rates = new Rate();
-$rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
-$rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
-$rates->carrier_id          = $request->input('carrier_id.'.$key);
-$rates->twuenty             = $request->input('twuenty.'.$key);
-$rates->forty               = $request->input('forty.'.$key);
-$rates->fortyhc             = $request->input('fortyhc.'.$key);
-$rates->fortynor            = $request->input('fortynor.'.$key);
-$rates->fortyfive           = $request->input('fortyfive.'.$key);
-$rates->currency_id         = $request->input('currency_id.'.$key);
-$rates->schedule_type_id    = $sch;
-$rates->transit_time        = $request->input('transitTi.'.$key);
-$rates->via                 = $request->input('via.'.$key);
-$rates->contract()->associate($contract);
-$rates->save();
-}
-}
-$contadorRate++;
-}
-// For Each de los localcharge
-
-foreach($detailscharges as $key2 => $value)
-{
-$calculation_type = $request->input('calculationtype'.$contador);
-if(!empty($calculation_type)){
-
-foreach($calculation_type as $ct => $ctype)
-{
-
-if(!empty($request->input('ammount.'.$key2))) {
-$localcharge = new LocalCharge();
-$localcharge->surcharge_id = $request->input('type.'.$key2);
-$localcharge->typedestiny_id = $request->input('changetype.'.$key2);
-$localcharge->calculationtype_id = $ctype;//$request->input('calculationtype.'.$key2);
-$localcharge->ammount = $request->input('ammount.'.$key2);
-$localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-$localcharge->contract()->associate($contract);
-$localcharge->save();
-
-$detailcarrier = $request->input('localcarrier_id'.$contador);
-$detailcarrier = $this->arrayAll($detailcarrier,$carrierAllid);     // Consultar el all en carrier
-
-foreach($detailcarrier as $c => $valueCarrier)
-{
-$detailcarrier = new LocalCharCarrier();
-$detailcarrier->carrier_id =  $valueCarrier;//$request->input('localcarrier_id'.$contador.'.'.$c);
-$detailcarrier->localcharge()->associate($localcharge);
-$detailcarrier->save();
-}
-
-$typeroute =  $request->input('typeroute'.$contador);
-if($typeroute == 'port'){
-$detailportOrig = $request->input('port_origlocal'.$contador);
-$detailportDest = $request->input('port_destlocal'.$contador);
-
-$detailportOrig = $this->arrayAll($detailportOrig,$portAllid);     // Consultar el all en origen
-$detailportDest = $this->arrayAll($detailportDest,$portAllid);      // Consultar el all en Destino
-
-foreach($detailportOrig as $orig => $valueOrig)
-{
-foreach($detailportDest as $dest => $valueDest)
-{
-$detailport = new LocalCharPort();
-$detailport->port_orig =$valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
-$detailport->port_dest = $valueDest;//$request->input('port_destlocal'.$contador.'.'.$dest);
-$detailport->localcharge()->associate($localcharge);
-$detailport->save();
-}
-
-}
-}elseif($typeroute == 'country'){
-
-$detailcountryOrig = $request->input('country_orig'.$contador);
-$detailcountryDest = $request->input('country_dest'.$contador);
-
-// ALL
-$detailcountryOrig = $this->arrayAll($detailcountryOrig,$countryAllid);     // Consultar el all en origen
-$detailcountryDest = $this->arrayAll($detailcountryDest,$countryAllid);      // Consultar el all en Destino
-
-foreach($detailcountryOrig as $origC => $originCounty)
-{
-foreach($detailcountryDest as $destC => $destinyCountry)
-{
-$detailcountry = new LocalCharCountry();
-$detailcountry->country_orig = $originCounty;//$request->input('country_orig'.$contador.'.'.$origC);
-$detailcountry->country_dest = $destinyCountry; //;$request->input('country_dest'.$contador.'.'.$destC);
-$detailcountry->localcharge()->associate($localcharge);
-$detailcountry->save();
-}
-}
-}
-
-}
-}
-}
-$contador++;
-}
-
-if(!empty($companies)){
-foreach($companies as $key3 => $value)
-{
-$contract_company_restriction = new ContractCompanyRestriction();
-$contract_company_restriction->company_id=$value;
-$contract_company_restriction->contract_id=$contract->id;
-$contract_company_restriction->save();
-}
-}
-
-if(!empty($users)){
-foreach($users as $key4 => $value)
-{
-$contract_client_restriction = new ContractUserRestriction();
-$contract_client_restriction->user_id=$value;
-$contract_client_restriction->contract_id=$contract->id;
-$contract_client_restriction->save();
-}
-}
-
-foreach ($request->input('document', []) as $file) {
-$contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
-}
-
-//$request->session()->flash('message.nivel', 'success');
-//$request->session()->flash('message.title', 'Well done!');
-//$request->session()->flash('message.content', 'You successfully add this contract.');
-return redirect()->route('contracts.edit', [setearRouteKey($contract->id)]);
-//return redirect()->action('ContractsController@index');
- */
     }
 
 }
