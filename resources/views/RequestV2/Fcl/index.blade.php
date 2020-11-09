@@ -395,6 +395,7 @@
         url: '{{ route("request.fcl.storeMedia") }}',
         maxFilesize: 32, // MB
         maxFiles: 1,
+        acceptedFiles:'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv,.odt',
         addRemoveLinks: true,
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"
