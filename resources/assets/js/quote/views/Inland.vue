@@ -106,11 +106,11 @@
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
-                        :actions="actions.automaticinlands"
+                        :actions="inlandActions"
                         :quoteEquip="quoteEquip"
                         :autoAdd="false"
                         :limitEquipment="true"
-                        :totalActions="actions.automaticinlands"
+                        :totalActions="inlandActions"
                         :paginated="false"
                         :autoupdateDataTable="true"
                         :multiList="true"
@@ -201,7 +201,8 @@
                         >
                             + Add Manually
                         </button>
-                        <button
+                        <button 
+                            v-if="currentQuoteData['type']=='FCL'"
                             class="btn btn-primary btn-bg"
                             @click="searchInlands"
                         >
@@ -239,6 +240,11 @@
                                         <span class="label-text"
                                             >{{ item }} + Profit</span
                                         >
+                                    </b-th>
+
+                                    <b-th
+                                        v-if="currentQuoteData['type']=='LCL'"
+                                        ><span class="label-text">Rate</span>
                                     </b-th>
 
                                     <b-th>
@@ -292,6 +298,15 @@
                                             label="name"
                                             track-by="name"
                                         ></multiselect>
+                                    </b-td>
+
+                                    <b-td
+                                        v-if="currentQuoteData['type']=='LCL'"
+                                        ><b-form-input
+                                            v-model="inlandAdd.total"
+                                            placeholder="Insert rate"
+                                            @blur="totalizeModalInlands"
+                                        ></b-form-input>
                                     </b-td>
 
                                     <b-td
@@ -373,6 +388,13 @@
                                     <b-td>
                                         <span>
                                             <b>Total</b>
+                                        </span>
+                                    </b-td>
+
+                                    <b-td
+                                        v-if="currentQuoteData['type'] == 'LCL'"
+                                        ><span>
+                                            <b>{{inlandModalTotalLcl}}</b>
                                         </span>
                                     </b-td>
 
@@ -517,10 +539,12 @@ export default {
             inlandFound: false,
             inlandAddRequested: false,
             inlandAdds: [],
+            inlandActions: {},
             modalWarning: "",
             modalSearchWarning: false,
             modalDistance: false,
             inlandModalTotals: {},
+            inlandModalTotalLcl: 0,
             client_currency: this.currentQuoteData.client_currency,
             /* Table headers */
             fields: [
@@ -577,6 +601,8 @@ export default {
         };
     },
     created() {
+        this.setLclFields();
+
         this.setPorts();
 
         this.setTotalsFields();
@@ -657,7 +683,7 @@ export default {
         setAddresses(newAddress = null) {
             let component = this;
 
-            component.actions.automaticinlands
+            component.inlandActions
                 .retrieveAddresses(
                     component.currentPort["id"],
                     component.$route
@@ -697,39 +723,63 @@ export default {
         setTotalsFields() {
             let component = this;
 
-            component.quoteEquip.forEach(function (eq) {
-                component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                    type: "text",
-                    placeholder: eq,
+            if(component.currentQuoteData['type']=='FCL'){
+                component.quoteEquip.forEach(function (eq) {
+                    component.totalsFields["Profits"]["profits_".concat(eq)] = {
+                        type: "text",
+                        placeholder: eq,
+                    };
+                    component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                        type: "span",
+                    };
+                });
+    
+                component.totalsFields["Profits"]["currency_id"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
                 };
-                component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                component.totalsFields["Totals"]["totals_currency"] = {
                     type: "span",
+                    label: "alphacode",
                 };
-            });
-
-            component.totalsFields["Profits"]["currency_id"] = {
-                searchable: true,
-                type: "select",
-                rules: "required",
-                trackby: "alphacode",
-                placeholder: "Select Currency",
-                options: "currency",
-                disabled: true,
-            };
-            component.totalsFields["Totals"]["totals_currency"] = {
-                type: "span",
-                label: "alphacode",
-            };
+            }else if(component.currentQuoteData['type']=='LCL'){
+                component.totalsFields["Profits"]["profit"] = {
+                        type: "text",
+                    };
+                component.totalsFields["Totals"]["lcl_totals"] = {
+                        type: "span",
+                    };
+                component.totalsFields["Profits"]["currency_id"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
+                };
+                component.totalsFields["Totals"]["totals_currency"] = {
+                    type: "span",
+                    label: "alphacode",
+                };
+            }
         },
 
         formFieldUpdated(containers_fields) {
-            let component = this;
-
-            component.containers_fields = containers_fields;
-            component.form_fields = {
-                ...this.vform_fields,
-                ...containers_fields,
-            };
+            if(this.currentQuoteData['type']=='FCL'){
+                let component = this;
+    
+                component.containers_fields = containers_fields;
+                component.form_fields = {
+                    ...this.vform_fields,
+                    ...containers_fields,
+                };
+            }
         },
 
         updateTable() {
@@ -794,7 +844,7 @@ export default {
                     ];
                 }
 
-                component.actions.automaticinlands
+                component.inlandActions
                     .createTotals(portAddressCombo, component.$route)
                     .then((response) => {
                         if (component.modalAddress != "") {
@@ -903,6 +953,7 @@ export default {
                     charge: "",
                     address: "",
                     type: "",
+                    total: "",
                     provider_id: {},
                     currency_id: {},
                     price: {},
@@ -943,32 +994,48 @@ export default {
                     let clientConversion =
                         component.currentQuoteData.client_currency["rates"];
 
-                    component.quoteEquip.forEach(function (equip) {
-                        let price_num = Number(inlandAdd.price["c" + equip]);
-                        let markup_num = Number(inlandAdd.markup["m" + equip]);
+                    if(component.currentQuoteData['type']=='FCL'){
+                        component.quoteEquip.forEach(function (equip) {
+                            let price_num = Number(inlandAdd.price["c" + equip]);
+                            let markup_num = Number(inlandAdd.markup["m" + equip]);
+                            let totals = Number;
+    
+                            inlandAdd["rates_" + equip] = price_num + markup_num;
+    
+                            if (inlandAddCurrency == clientCurrency) {
+                                totals = price_num + markup_num;
+                            } else {
+                                let price_usd = Number;
+                                let markup_usd = Number;
+                                let totals_usd = Number;
+    
+                                price_usd = price_num / inlandAddConversion;
+                                markup_usd = markup_num / inlandAddConversion;
+    
+                                totals_usd = price_usd + markup_usd;
+    
+                                totals = totals_usd * clientConversion;
+                            }
+    
+                            component.inlandModalTotals[
+                                "c" + equip
+                            ] = totals.toFixed(2);
+                        });
+                    }else if(component.currentQuoteData['type']=='LCL'){
+                        let price_num = Number(inlandAdd.total);
                         let totals = Number;
 
-                        inlandAdd["rates_" + equip] = price_num += markup_num;
-
                         if (inlandAddCurrency == clientCurrency) {
-                            totals = price_num += markup_num;
+                                totals = price_num;
                         } else {
                             let price_usd = Number;
-                            let markup_usd = Number;
-                            let totals_usd = Number;
 
                             price_usd = price_num / inlandAddConversion;
-                            markup_usd = markup_num / inlandAddConversion;
 
-                            totals_usd = price_usd + markup_usd;
-
-                            totals = totals_usd * clientConversion;
+                            totals = price_usd * clientConversion;
                         }
-
-                        component.inlandModalTotals[
-                            "c" + equip
-                        ] = totals.toFixed(2);
-                    });
+                        component.inlandModalTotalLcl = totals.toFixed(2);
+                    }
                 }
             });
         },
@@ -994,7 +1061,7 @@ export default {
                             inlandAdd["address"] = component.modalAddress;
                         }
 
-                        component.actions.automaticinlands
+                        component.inlandActions
                             .create(
                                 component.currentPort["id"],
                                 inlandAdd,
@@ -1046,7 +1113,7 @@ export default {
                     data["distance"] = 0;
                 }
 
-                component.actions.automaticinlands
+                component.inlandActions
                     .search(component.currentPort["id"], data, component.$route)
                     .then((response) => {
                         inlandSearch = response.data;
@@ -1079,11 +1146,76 @@ export default {
             this.inlandModalTotals = {};
             this.inlandFound = false;
             this.modalAddress = "";
+            this.inlandModalTotalLcl = 0;
         },
 
         clearAutocomplete() {
             this.modalAddress = "";
         },
+
+        setLclFields(){
+            if(this.currentQuoteData['type']=='FCL'){
+                this.inlandActions = this.actions.automaticinlands;
+            }else if(this.currentQuoteData['type']=='LCL'){
+                this.inlandActions = this.actions.automaticinlandslcl;
+                this.vform_fields = {
+                    charge: {
+                        label: "CHARGE",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select charge",
+                    },
+                    provider_id: {
+                        label: "PROVIDER",
+                        type: "select",
+                        searchable: true,
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "providers",
+                    },
+                    total:{
+                        label: "RATE",
+                        type: "text",
+                        rules: "required"
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                };
+                this.fields = [
+                    {
+                        key: "charge",
+                        label: "CHARGE",
+                        type: "text",
+                    },
+                    {
+                        key: "provider_id",
+                        label: "PROVIDER",
+                        type: "select",
+                        trackby: "name",
+                        options: "providers",
+                    },
+                    {
+                        key: "total",
+                        label: "RATE",
+                        type: "text",
+                    },
+                    {
+                        key: "currency_id",
+                        label: "CURRENCY",
+                        type: "select",
+                        trackby: "alphacode",
+                        options: "currency",
+                    },
+                ];
+            }
+        }
     },
 };
 </script>
