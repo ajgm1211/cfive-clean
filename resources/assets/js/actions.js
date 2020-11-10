@@ -360,7 +360,7 @@ export default {
             return api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, {})
         },
         delete(id) {
-            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy/`, {});
+            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy`, {});
         },
 
     },
