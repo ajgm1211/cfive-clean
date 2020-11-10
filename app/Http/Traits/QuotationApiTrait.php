@@ -15,7 +15,7 @@ trait QuotationApiTrait
         
         $localcharges = $this->mapLocalCharges($localcharges);
         
-        $localcharges = $localcharges->groupBy([
+        /*$localcharges = $localcharges->groupBy([
 
             function ($item) {
                 return $item['port']['display_name'];
@@ -23,7 +23,7 @@ trait QuotationApiTrait
 
         ]);
 
-        /*foreach ($localcharges as $value) {
+        foreach ($localcharges as $value) {
             $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
         }*/
 
