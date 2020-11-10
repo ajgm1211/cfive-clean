@@ -144,15 +144,41 @@ class AutomaticRateController extends Controller
 
     public function destroy(AutomaticRate $autorate)
     {
-        $autorate->delete();
+        $quote = $autorate->quotev2()->first();
+
+        $inlandAddressesOrig = $quote->inland_addresses()->where('port_id',$autorate->origin_port_id)->get();
+
+        $inlandAddressesDest = $quote->inland_addresses()->where('port_id',$autorate->destination_port_id)->get();
+
+        $inlandTotalsOrig = $quote->automatic_inland_totals()->where('port_id',$autorate->origin_port_id)->get();
+
+        $inlandTotalsDest = $quote->automatic_inland_totals()->where('port_id',$autorate->destination_port_id)->get();
+
+        if($inlandAddressesOrig){
+            foreach($inlandAddressesOrig as $address){
+                $address->delete();
+            }
+        }
         
-        $originInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->origin_port_id]])->first();
+        if($inlandAddressesDest){
+            foreach($inlandAddressesDest as $address){
+                $address->delete();
+            }
+        }
 
-        $originInland->delete();
+        if($inlandTotalsOrig){
+            foreach($inlandTotalsOrig as $total){
+                $total->delete();
+            }
+        }
+        
+        if($inlandTotalsDest){
+            foreach($inlandTotalsDest as $total){
+                $total->delete();
+            }
+        }
 
-        $destInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->destination_port_id]])->first();
-
-        $destInland->delete();
+        $autorate->delete();
 
         return response()->json(null, 204);
     }
