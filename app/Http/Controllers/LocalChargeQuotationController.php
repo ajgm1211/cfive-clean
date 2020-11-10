@@ -426,6 +426,14 @@ class LocalChargeQuotationController extends Controller
 
                 $total->totalize();
                 break;
+            case 6:
+                $index = $request->index;
+                $total = LocalChargeQuoteLcl::findOrFail($id);
+                $total->$index = $request->data;
+                $total->update();
+
+                $total->totalLcl($index);
+                break;
         }
 
         return response()->json(['success' => 'Ok']);
@@ -446,6 +454,53 @@ class LocalChargeQuotationController extends Controller
         ]);
 
         return response()->json(['success' => 'Ok']);
+    }
+
+    public function twoWaysStore(Request $request)
+    {
+        if ($request->quote_type == 'FCL') {
+            $this->storeCharge($request);
+        } else {
+            $this->storeChargeLcl($request);
+        }
+    }
+
+    /**
+     * store lcl's charge info
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeChargeLcl(Request $request)
+    {
+        $quote = QuoteV2::findOrFail($request->quote_id);
+
+        $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
+
+        ChargeLclAir::create([
+            'automatic_rate_id' => $rate->id,
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'surcharge_id' => $request->charges['surcharge']['id'],
+            'type_id' => $request->type_id,
+            'units' => $request->charges['units'],
+            'price_per_unit' => $request->charges['price'],
+            'markup' => $request->charges['profit'],
+        ]);
+
+        LocalChargeQuoteLcl::create([
+            'price' => $request->charges['price'],
+            'units' => $request->charges['units'],
+            'profit' => $request->charges['profit'],
+            'total' => ($request->charges['price'] * $request->charges['units']) + $request->charges['profit'],
+            'charge' => $request->charges['surcharge']['name'],
+            'surcharge_id' => $request->charges['surcharge']['id'],
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'port_id' => $request->port_id,
+            'quote_id' => $request->quote_id,
+            'type_id' => $request->type_id,
+        ]);
     }
 
     /**
