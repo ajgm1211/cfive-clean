@@ -252,6 +252,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',
