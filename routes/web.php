@@ -1084,7 +1084,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
     Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges');
     Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store');
-    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@storeCharge');
+    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@twoWaysStore');
     Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
