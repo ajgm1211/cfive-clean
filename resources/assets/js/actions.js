@@ -243,6 +243,9 @@ export default {
         retrieve(id) {
             return api.call('get', `/api/v2/sale_terms/${id}`, {});
         },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/sale_terms/destroyAll`, { ids: ids });
+        },
     },
     sale_charges: {
         list(params, callback, route) {
