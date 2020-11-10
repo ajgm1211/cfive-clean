@@ -28,7 +28,6 @@ class QuotationApiController extends Controller
 
     public function list(Request $request)
     {
-
         $type = $request->type;
         $status = $request->status;
         $integration = $request->integration;
