@@ -293,7 +293,7 @@
                                                 charge.id,
                                                 charge.charge,
                                                 'charge',
-                                                1
+                                                6
                                             )
                                         "
                                     ></b-form-input>
@@ -314,7 +314,7 @@
                                                 charge.id,
                                                 charge.calculation_type.id,
                                                 'calculation_type_id',
-                                                1
+                                                6
                                             )
                                         "
                                     ></multiselect>
@@ -329,7 +329,7 @@
                                                 charge.id,
                                                 charge.units,
                                                 'units',
-                                                1
+                                                6
                                             )
                                         "
                                     ></b-form-input>
@@ -344,7 +344,7 @@
                                                 charge.id,
                                                 charge.price,
                                                 'price',
-                                                1
+                                                6
                                             )
                                         "
                                     ></b-form-input>
@@ -359,7 +359,7 @@
                                                 charge.id,
                                                 charge.total,
                                                 'total',
-                                                1
+                                                6
                                             )
                                         "
                                     ></b-form-input>
@@ -381,7 +381,7 @@
                                                 charge.id,
                                                 charge.currency.id,
                                                 'currency_id',
-                                                1
+                                                6
                                             )
                                         "
                                     ></multiselect>
@@ -499,6 +499,18 @@
                                     >
                                 </b-th>
 
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">Units</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">Price</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">Profit</span>
+                                </b-th>
+
                                 <b-th>
                                     <span class="label-text">Currency</span>
                                 </b-th>
@@ -545,6 +557,27 @@
 
                                 <b-td>
                                     <multiselect
+                                        v-if="currentQuoteData.type == 'FCL'"
+                                        v-model="localcharge.calculation_type"
+                                        :options="datalists['calculationtypes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.calculation_type.id,
+                                                'calculation_type_id',
+                                                2
+                                            )
+                                        "
+                                    ></multiselect>
+                                    <multiselect
+                                        v-if="currentQuoteData.type == 'LCL'"
                                         v-model="localcharge.calculation_type"
                                         :options="datalists['calculationtypes']"
                                         :multiple="false"
@@ -635,6 +668,48 @@
                                         "
                                     ></b-form-input>
                                 </b-td>
+
+                                <b-form-input
+                                    v-if="currentQuoteData.type == 'LCL'"
+                                    v-model="localcharge.units"
+                                    class="q-input q-width"
+                                    v-on:blur="
+                                        onUpdate(
+                                            localcharge.id,
+                                            localcharge.units,
+                                            'units',
+                                            6
+                                        )
+                                    "
+                                ></b-form-input>
+
+                                <b-form-input
+                                    v-if="currentQuoteData.type == 'LCL'"
+                                    v-model="localcharge.rate"
+                                    class="q-input q-width"
+                                    v-on:blur="
+                                        onUpdate(
+                                            localcharge.id,
+                                            localcharge.rate,
+                                            'rate',
+                                            6
+                                        )
+                                    "
+                                ></b-form-input>
+
+                                <b-form-input
+                                    v-if="currentQuoteData.type == 'LCL'"
+                                    v-model="localcharge.markups"
+                                    class="q-input q-width"
+                                    v-on:blur="
+                                        onUpdate(
+                                            localcharge.id,
+                                            localcharge.markups,
+                                            'markups',
+                                            6
+                                        )
+                                    "
+                                ></b-form-input>
 
                                 <b-td>
                                     <multiselect
@@ -750,6 +825,30 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <b-td>
+                                    <b-form-input
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="input.units"
+                                        class="q-input q-width"
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td>
+                                    <b-form-input
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="input.price"
+                                        class="q-input q-width"
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td>
+                                    <b-form-input
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="input.profit"
+                                        class="q-input q-width"
+                                    ></b-form-input>
+                                </b-td>
+                                
                                 <b-td>
                                     <multiselect
                                         v-model="input.currency"
@@ -870,14 +969,26 @@ export default {
     methods: {
         add() {
             if (this.value != "") {
-                this.inputs.push({
-                    surcharge: "",
-                    calculation_type: "",
-                    sale_codes: "",
-                    price: {},
-                    markup: {},
-                    currency: "",
-                });
+                if (this.currentQuoteData.type == "FCL") {
+                    this.inputs.push({
+                        surcharge: "",
+                        calculation_type: "",
+                        sale_codes: "",
+                        price: {},
+                        markup: {},
+                        currency: "",
+                    });
+                } else {
+                    this.inputs.push({
+                        surcharge: "",
+                        calculation_type: "",
+                        sale_codes: "",
+                        units: 0,
+                        price: 0,
+                        profit: 0,
+                        currency: "",
+                    });
+                }
             } else {
                 this.alert(
                     "You must select a port before create a new charge",
@@ -1079,6 +1190,7 @@ export default {
                 quote_id: this.$route.params.id,
                 port_id: this.value.id,
                 type_id: this.value.type,
+                quote_type: this.currentQuoteData.type,
             };
             actions.localcharges
                 .createCharge(data)
@@ -1104,6 +1216,10 @@ export default {
                 .update(id, data, index, type)
                 .then((response) => {
                     this.getTotal();
+                    if (type == 6 && (index == "units" || index == "price")) {
+                        //Actualizando total solo si es LCL
+                        this.getStoredCharges();
+                    }
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
