@@ -22,8 +22,6 @@
 
                     <th class="unit"><b>{{__('pdf.detail')}}</b></th>
 
-                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-
                     @foreach ($equipmentHides as $key=>$hide)
                         @foreach ($containers as $c)
                             @if($c->code == $key)

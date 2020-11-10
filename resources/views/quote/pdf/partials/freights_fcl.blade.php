@@ -38,7 +38,12 @@
                             @endphp
                             @foreach($freight_charges as $rate)
                                 <?php
-                                    $total = json_decode($rate->total);
+                                    if(!is_array($rate->total)){
+                                        $total = json_decode($rate->total);
+                                    }else{
+                                        $total = $rate->total;
+                                    }
+                                    
                                     foreach ($containers as $c){
                                         ${'freight_'.$c->code} = 0;
                                         ${'inland_freight_'.$c->code} = 0;
@@ -57,7 +62,7 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{$hide}}>{{ @$total->${'c'.$c->code} }}&nbsp;{{$quote->pdf_option->grouped_freight_charges==1 ? $quote->pdf_option->freight_charges_currency:$rate->currency->alphacode}}</td>
+                                                <td {{$hide}}>{{ @$total->${'c'.$c->code} }}&nbsp;{{@$rate->currency->alphacode}}</td>
                                             @endif
                                         @endforeach
                                     @endforeach
