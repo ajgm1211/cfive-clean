@@ -381,6 +381,19 @@ export default {
             component.currentData['volume_units'] = 'm' + '3'.sup();
             component.currentData['weight_units'] = 'Kg'; 
             component.currentData['chargeable_units'] = 'm' + '3'.sup();
+
+            if(component.ocean){
+                component.ocean=false;
+                setTimeout(function() {
+                    component.ocean=true
+                },100);
+            }
+            if(component.inlands){
+                component.inlands=false;
+                setTimeout(function() {
+                    component.inlands=true
+                },100);
+            }
         },
 
         changeView(val){
@@ -409,19 +422,6 @@ export default {
                 .catch((data) => {
                     component.$refs.observer.setErrors(data.data.errors);
                 });
-            
-            if(component.ocean){
-                component.ocean=false;
-                setTimeout(function() {
-                    component.ocean=true
-                },100);
-            }
-            if(component.inlands){
-                component.inlands=false;
-                setTimeout(function() {
-                    component.inlands=true
-                },100);
-            }
         },
         
         setTermsField(){

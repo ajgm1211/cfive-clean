@@ -1048,7 +1048,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
-    Route::delete('api/quotes/automatic_rate/{autorate}/destroy/', 'AutomaticRateController@destroy');
+    Route::delete('api/quotes/automatic_rate/{autorate}/destroy', 'AutomaticRateController@destroy');
 
     /** Charge Routes**/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/charges', 'ChargeController@list')->middleware('check_company:quote');
