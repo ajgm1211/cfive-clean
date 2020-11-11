@@ -1035,6 +1035,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
 
+    /** Search V2 **/
+    Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
