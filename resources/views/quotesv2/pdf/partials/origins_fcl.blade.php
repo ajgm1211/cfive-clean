@@ -3,28 +3,49 @@
                     @if($sale_terms_origin->count()>0)
                         @foreach($sale_terms_origin as $origin=>$v)
                             @foreach($v as $value)
-                                <div>
-                                    <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
-                                    <br>
-                                </div>
 
+                                <!-- Section Title -->
+                                <div>
+
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
+
+                                </div>
+                                <!-- End Section Title -->
+
+                                <!-- Table -->
                                 <table border="0" cellspacing="1" cellpadding="1" >
+
+                                    <!-- Table Header -->
                                     <thead class="title-quote text-left header-table">
+
                                         <tr >
+
                                             <th class="unit"><b>{{__('pdf.charge')}}</b></th>
+
                                             <th class="unit"><b>{{__('pdf.detail')}}</b></th>
+
                                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+                                            
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
+
                                                         <th class="unit" {{$hide}}><b>{{$key}}</b></th>
+
                                                     @endif
                                                 @endforeach
                                             @endforeach
+
                                             <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+
                                         </tr>
+
                                     </thead>
+                                    <!-- End Table Header -->
+
+                                    <!-- Table Body -->
                                     <tbody>
+
                                         @php
                                             foreach ($containers as $c){
                                                 ${'sum_total_'.$c->code}=0;
@@ -32,6 +53,7 @@
                                                 ${'sale_term_'.$c->code} = 'sale_term_'.$c->code;
                                             }
                                         @endphp
+
                                         @foreach($value->charge as $item)
                                             @php
                                                 foreach ($containers as $c){
@@ -52,21 +74,32 @@
                                                 <td >{{@$item->currency->alphacode}}</td>
                                             </tr>
                                         @endforeach
+
                                         <tr>
                                             <td><b>{{__('pdf.total_origin')}}</b></td>
+
                                             <td></td>
+
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
+
                                                         <td {{ $hide }}><b>{{isDecimal(@${'sum_total_'.$c->code}, true)}}</b></td>
+
                                                     @endif
                                                 @endforeach
                                             @endforeach
-                                            <td><b>{{$currency_cfg->alphacode}}</b></td>                    
+
+                                            <td><b>{{$currency_cfg->alphacode}}</b></td>       
+
                                         </tr>
                                     </tbody>
+                                    <!-- End Table Body -->
+
                                 </table>
+                                <!-- End Table -->
                             @endforeach
                         @endforeach
                     @endif               
@@ -77,26 +110,44 @@
                 @if($quote->pdf_option->grouped_origin_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @forelse($origin_charges_grouped as $origin=>$detail)
                         @if($detail->charge_origin>=1 || $detail->inland_origin>=1)
-                            <div>
-                                <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
-                                <br>
-                            </div>
                             
+                            <!-- Section Title -->
+                            <div> 
+                                <p class="title"  style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
+
+                            </div>
+                            <!-- End Section Title -->
+
+                            <!-- Table -->
                             <table border="0" cellspacing="1" cellpadding="1" >
+
+                                <!-- Table Header -->
                                 <thead class="title-quote text-left header-table">
+
                                     <tr >
+
                                         <th class="unit" colspan="2"><b>{{__('pdf.charge')}}</b></th>
+
                                         <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
+
                                                     <th {{ $hide }}><b>{{ $key }}</b></th>
+
                                                 @endif
                                             @endforeach
                                         @endforeach
+
                                         <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+
                                     </tr>
+
                                 </thead>
+                                <!-- End Table Header -->
+
+                                <!-- Table Body -->
                                 <tbody>
                                     @php
                                         foreach ($containers as $c) {
@@ -144,50 +195,87 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
+
                                         <tr class="text-left color-table">
+
                                             <td colspan="2">{{__('pdf.total_origin')}}</td>
+
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier_id!='' ? $rate->carrier->name:'-'}}</td>
+                                            
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
+
                                                         <td {{ $hide }}>{{ @${'origin_'.$c->code}+@${'origin_inland_'.$c->code}+@${'sum_sale'.$c->code} }}</td>
+                                                    
                                                     @endif
                                                 @endforeach
                                             @endforeach
+
                                             @if($quote->pdf_option->grouped_origin_charges==1)
+
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+
                                             @else
+
                                                 <td >{{$currency_cfg->alphacode}}</td>
+
                                             @endif
+
                                         </tr>
+
                                     @endforeach
                                 </tbody>
+                                <!-- End Table Body -->
                             </table>
+                            <!-- End Table -->
+
                         @endif
                     @empty
                         @if($sale_terms_origin->count()>0)
                             @foreach($sale_terms_origin as $origin=>$v)
                                 @foreach($v as $value)
-                                <div>
-                                    <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
-                                    <br>
-                                </div>
 
+                                <!-- Section Title -->
+                                <div>
+
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
+
+                                    
+
+                                </div>
+                                <!-- End Section Title -->
+
+                                <!-- Table -->
                                 <table border="0" cellspacing="1" cellpadding="1" >
+
+                                    <!-- Table Header -->  
                                     <thead class="title-quote text-left header-table">
+
                                         <tr >
+
                                             <th class="unit" colspan="2"><b>{{__('pdf.charge')}}</b></th>
+
                                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
+
                                                         <th {{ $hide }}><b>{{ $key }}</b></th>
+
                                                     @endif
                                                 @endforeach
                                             @endforeach
+
                                             <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+
                                         </tr>
+
                                     </thead>
+                                    <!-- End Table Header -->
+
+                                    <!-- Table Body -->
                                     <tbody>
                                         
                                         @foreach ($containers as $c)
@@ -204,148 +292,236 @@
                                                 }
                                             @endphp
                                         @endforeach
-                                            <tr class="text-left color-table">
-                                                <td colspan="2">{{__('pdf.total_origin')}}</td>
-                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                                @foreach ($equipmentHides as $key=>$hide)
-                                                    @foreach ($containers as $c)
-                                                        @if($c->code == $key)
-                                                            <td {{ $hide }}>{{isDecimal(@${'sum_sale'.$c->code})}}</td>
-                                                        @endif
-                                                    @endforeach
+
+                                        <tr class="text-left color-table">
+
+                                            <td colspan="2">{{__('pdf.total_origin')}}</td>
+
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
+
+                                            @foreach ($equipmentHides as $key=>$hide)
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+
+                                                        <td {{ $hide }}>{{isDecimal(@${'sum_sale'.$c->code})}}</td>
+
+                                                    @endif
                                                 @endforeach
-                                                @if($quote->pdf_option->grouped_origin_charges==1)
-                                                    <td >{{$quote->pdf_option->origin_charges_currency}}</td>
-                                                @else
-                                                    <td >{{$currency_cfg->alphacode}}</td>
-                                                @endif
-                                            </tr>
+                                            @endforeach
+
+                                            @if($quote->pdf_option->grouped_origin_charges==1)
+
+                                                <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+
+                                            @else
+
+                                                <td >{{$currency_cfg->alphacode}}</td>
+
+                                            @endif
+
+                                        </tr>
+
                                     </tbody>
+                                    <!-- End Table Body -->
                                 </table>
+                                <!-- Table -->
+
                                 @endforeach
                             @endforeach
                         @endif        
                     @endforelse
+
                     <br>
+
                 @endif
                 
                 <!-- Origins detailed -->
                 @if($quote->pdf_option->grouped_origin_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @foreach($origin_charges_detailed as $carrier => $value)
                 
-                    @if($value->charge_origin>=1 || $value->inland_origin>=1)
-                        @foreach($value as $origin => $item)
-                            <div>
-                                <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
-                                <br>
-                            </div>
-                            <table border="0" cellspacing="1" cellpadding="1">
-                                <thead class="title-quote text-left header-table">
-                                    <tr >
-                                        <th class="unit"><b>{{__('pdf.charge')}}</b></th>
-                                        <th class="unit"><b>{{__('pdf.detail')}}</b></th>
-                                        <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-                                        @foreach ($equipmentHides as $key=>$hide)
-                                            @foreach ($containers as $c)
-                                                @if($c->code == $key)
-                                                    <th {{ $hide }}><b>{{ $key }}</b></th>
-                                                @endif
+                        @if($value->charge_origin>=1 || $value->inland_origin>=1)
+                            @foreach($value as $origin => $item)
+
+                                <!-- Section Title -->
+                                <div>
+
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
+
+                                    
+
+                                </div>
+                                <!-- End Section Title -->
+
+                                <!-- Table -->
+                                <table border="0" cellspacing="1" cellpadding="1">
+
+                                    <!-- Table Header -->
+                                    <thead class="title-quote text-left header-table">
+
+                                        <tr >
+                                            <th class="unit"><b>{{__('pdf.charge')}}</b></th>
+
+                                            <th class="unit"><b>{{__('pdf.detail')}}</b></th>
+
+                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
+
+                                            @foreach ($equipmentHides as $key=>$hide)
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+
+                                                        <th {{ $hide }}><b>{{ $key }}</b></th>
+
+                                                    @endif
+                                                @endforeach
                                             @endforeach
-                                        @endforeach
-                                        <th class="unit"><b>{{__('pdf.currency')}}</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        foreach($containers as $c){
-                                            ${'sum_origin_'.$c->code} = 0;
-                                            ${'total_c'.$c->code }= 'total_c'.$c->code;
-                                            ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
-                                            ${'total_inland'.$c->code} = 'total_inland'.$c->code;
-                                            ${'sum_inland_'.$c->code} = 0;
-                                            ${'inland_'.$c->code} = 0;                                  
-                                        }
-                                        $show_inland='hide';
-                                    ?>
-                                    @foreach($item as $rate)
-                                        @foreach($rate as $r)
-                                            @foreach($r->charge as $v)
-                                                @if($v->type_id==1)
-                                                    <?php
-                                                        foreach($containers as $c){
-                                                            ${'sum_origin_'.$c->code} += $v->${'total_c'.$c->code};
-                                                        }
-                                                    ?>
-                                                    <tr class="text-left color-table">
-                                                        <td>{{@$v->surcharge->name}}</td>
-                                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
-                                                        <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
-                                                        <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
-                                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        @foreach ($equipmentHides as $key=>$hide)
-                                                            @foreach ($containers as $c)
-                                                                @if($c->code == $key)
-                                                                    <!--<td {{ $hide }}>{{ $v->${'total_c'.$c->code} }}</td>-->
-                                                                    <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code } }}</td>
-                                                                @endif
+
+                                            <th class="unit"><b>{{__('pdf.currency')}}</b></th>
+
+                                        </tr>
+
+                                    </thead>
+                                    <!-- End Table Header -->
+
+                                    <!-- Table Body -->
+                                    <tbody>
+
+                                        <?php
+                                            foreach($containers as $c){
+                                                ${'sum_origin_'.$c->code} = 0;
+                                                ${'total_c'.$c->code }= 'total_c'.$c->code;
+                                                ${'sum_amount_markup_'.$c->code }= 'sum_amount_markup_'.$c->code;
+                                                ${'total_inland'.$c->code} = 'total_inland'.$c->code;
+                                                ${'sum_inland_'.$c->code} = 0;
+                                                ${'inland_'.$c->code} = 0;                                  
+                                            }
+                                            $show_inland='hide';
+                                        ?>
+                                        @foreach($item as $rate)
+                                            @foreach($rate as $r)
+                                                @foreach($r->charge as $v)
+                                                    @if($v->type_id==1)
+                                                        <?php
+                                                            foreach($containers as $c){
+                                                                ${'sum_origin_'.$c->code} += $v->${'total_c'.$c->code};
+                                                            }
+                                                        ?>
+                                                        <tr class="text-left color-table">
+
+                                                            <td>{{@$v->surcharge->name}}</td>
+
+                                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+
+                                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+
+                                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+
+                                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
+
+                                                            @foreach ($equipmentHides as $key=>$hide)
+                                                                @foreach ($containers as $c)
+                                                                    @if($c->code == $key)
+
+                                                                        <!--<td {{ $hide }}>{{ $v->${'total_c'.$c->code} }}</td>-->
+                                                                        <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code } }}</td>
+
+                                                                    @endif
+                                                                @endforeach
                                                             @endforeach
-                                                        @endforeach
-                                                        @if($quote->pdf_option->grouped_origin_charges==1)
-                                                            <td>{{$quote->pdf_option->origin_charges_currency}}</td>
-                                                        @else
-                                                            <td>{{@$v->currency->alphacode}}</td>
-                                                        @endif
-                                                    </tr>
-                                                @endif
-                                            @endforeach
-                                            
-                                            @if(!$r->inland->isEmpty())
-                                                @foreach($r->inland as $v)
-                                                    @if($v->type=='Origin')
-                                                        
+
+                                                            @if($quote->pdf_option->grouped_origin_charges==1)
+
+                                                                <td>{{$quote->pdf_option->origin_charges_currency}}</td>
+
+                                                            @else
+
+                                                                <td>{{@$v->currency->alphacode}}</td>
+
+                                                            @endif
+
+                                                        </tr>
+
+                                                    @endif
+                                                @endforeach
+                                                
+                                                @if(!$r->inland->isEmpty())
+                                                    @foreach($r->inland as $v)
+                                                        @if($v->type=='Origin')
+                                                            
                                                             <tr class="text-left color-table">
+
                                                                 <td>{{$v->provider}}</td>
+
                                                                 <td>-</td>
+
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
+
                                                                 @foreach ($equipmentHides as $key=>$hide)
                                                                     @foreach ($containers as $c)
                                                                         @if($c->code == $key)
                                                                             @php 
+
                                                                                 ${'sum_inland_'.$c->code} += $v->${'total_inland'.$c->code}; 
+
                                                                             @endphp
+
                                                                             <td {{ $hide }}>{{ isDecimal($v->${'total_inland'.$c->code}) }}</td>
+
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach
+
                                                                 <td>{{$currency_cfg->alphacode}}</td>
+
                                                             </tr>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                    <tr>
-                                        <td><b>{{__('pdf.total_local')}}</b></td>
-                                        <td></td>
-                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                        @foreach ($equipmentHides as $key=>$hide)
-                                            @foreach ($containers as $c)
-                                                @if($c->code == $key)
-                                                    <td {{ $hide }}><b>{{ isDecimal(@${'sum_origin_'.$c->code}+@${'sum_inland_'.$c->code}) }}</b></td>
+
+                                                        @endif
+                                                    @endforeach
                                                 @endif
                                             @endforeach
                                         @endforeach
-                                        @if($quote->pdf_option->grouped_origin_charges==1)
-                                            <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
-                                        @else
-                                            <td><b>{{$currency_cfg->alphacode}}</b></td>
-                                        @endif     
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br>
-                        @endforeach
+
+                                        <tr>
+
+                                            <td><b>{{__('pdf.total_local')}}</b></td>
+
+                                            <td></td>
+
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+
+                                            @foreach ($equipmentHides as $key=>$hide)
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+
+                                                        <td {{ $hide }}><b>{{ isDecimal(@${'sum_origin_'.$c->code}+@${'sum_inland_'.$c->code}) }}</b></td>
+
+                                                    @endif
+                                                @endforeach
+                                            @endforeach
+
+                                            @if($quote->pdf_option->grouped_origin_charges==1)
+
+                                                <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
+
+                                            @else
+
+                                                <td><b>{{$currency_cfg->alphacode}}</b></td>
+
+                                            @endif     
+
+                                        </tr>
+
+                                    </tbody>
+                                    <!-- End Table Body -->
+
+                                </table>
+                                <!-- End Table -->
+
+                                <br>
+
+                            @endforeach
                         @endif
                     @endforeach
+                    
                     <br>
+
                 @endif      

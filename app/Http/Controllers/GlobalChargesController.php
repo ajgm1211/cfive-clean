@@ -1102,7 +1102,7 @@ class GlobalChargesController extends Controller
 
     public function storeAdm(Request $request)
     {
-        //dd($request);
+        //dd($request->all());
         $company_user_id_selec = $request->input('company_user_id_selec');
         $carrier_id_selec = $request->input('carrier_id_selec');
         $reload_DT = $request->input('reload_DT');
