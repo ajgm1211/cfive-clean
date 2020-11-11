@@ -655,6 +655,9 @@ class QuoteV2 extends Model  implements HasMedia
         
         $new_quote = $this->replicate();
         $new_quote->quote_id = $newq_id;
+        if (empty($new_quote->status)) {
+            $new_quote->status = 'Draft';
+        }
         $new_quote->save();
 
         if($new_quote->type == 'FCL'){
