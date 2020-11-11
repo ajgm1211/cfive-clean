@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\AutomaticInlandResource;
+use App\Http\Resources\AutomaticInlandLclAirResource;
 use App\Http\Resources\AutomaticInlandTotalResource;
 use App\Http\Resources\InlandAddressResource;
 use App\InlandAddress;
@@ -12,17 +12,16 @@ use App\Container;
 use App\Currency;
 use App\Harbor;
 use App\AutomaticRate;
-use App\AutomaticInland;
+use App\AutomaticInlandLclAir;
 use App\AutomaticInlandTotal;
 use App\Http\Traits\SearchTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use GoogleMaps;
 
-class AutomaticInlandController extends Controller
+class AutomaticInlandLclController extends Controller
 {
-
-    use SearchTrait;
+    
 
     public function list(Request $request, QuoteV2 $quote,$combo)
     {   
@@ -38,62 +37,37 @@ class AutomaticInlandController extends Controller
             $total->totalize();
         }
         
-        $results = AutomaticInland::where([['port_id',$port_id],['inland_address_id',$address_id]])->filterByQuote($quote->id)->filter($request);
+        $results = AutomaticInlandLclAir::where([['port_id',$port_id],['inland_address_id',$address_id]])->filterByQuote($quote->id)->filter($request);
         
-        return AutomaticInlandResource::collection($results);
+        return AutomaticInlandLclAirResource::collection($results);
     }
 
     public function store(Request $request, QuoteV2 $quote, $port_id)
-    {        
+    {     
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$request->input('address')]])->first();
 
         if($inland_address == null){
             $inland_address = InlandAddress::create([
-                    'quote_id'=>$quote->id,
-                    'port_id'=>$port_id,
-                    'address'=>$request->input('address')
-                ]);
+                'quote_id'=>$quote->id,
+                'port_id'=>$port_id,
+                'address'=>$request->input('address')
+            ]);
         }
                 
-        $vdata = [
+        $vdata = $request->validate([
             'charge' => 'nullable|sometimes',
             'provider_id' => 'nullable',
             'currency_id' => 'required',
-        ];
+            'total' => 'sometimes|nullable'
+        ]);
         
-        $equip = $quote->getContainerCodes($quote->equipment);
-        $equip_array = explode(',',$equip);
-        array_splice($equip_array,-1,1);
-
         $type = $request->input('type');
 
         $autoDistance = $request->input('distance');
 
-        foreach($equip_array as $eq){
-            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric';
-        }
-        
-        $validate = $request->validate($vdata);
-        
-        $inland_rates = [];
-        $inland_markup = [];
-        
-        foreach($equip_array as $eq){
-            if(isset($validate['rates_'.$eq])){
-                $inland_rates['c'.$eq] = $validate['rates_'.$eq]; 
-            }else{
-                $inland_rates['c'.$eq] = 0.00;
-            }
-            $inland_markup['m'.$eq] = 0.00;
-        }
-        
-        $rates_json = json_encode($inland_rates);
-        $markups_json = json_encode($inland_markup);
-
         if($autoDistance != 0){
             $distance = $autoDistance;
         }else{
-
             if ($type == 'Destination') {
                 $origin = Harbor::where('id',$port_id)->first()->coordinates;
                 $destination = $inland_address->address;
@@ -127,20 +101,19 @@ class AutomaticInlandController extends Controller
             }           
         }
 
-        $inland = AutomaticInland::create([
+        $inland = AutomaticInlandLclAir::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
-            'provider'=> 'Inland',
-            'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
-            'charge' => $validate['charge'],
-            'currency_id' => $validate['currency_id']['id'],
+            'provider'=> 'old field',
+            'provider_id' => count($vdata['provider_id'])==0 ? null : $vdata['provider_id']['id'],
+            'currency_id' => $vdata['currency_id']['id'],
             'port_id' => $port_id,
+            'charge' => $vdata['charge'],
             'inland_address_id'=> $inland_address->id,
             'type' => $type,
             'distance' => $distance,
             'contract' => 1, 
-            'rate' => $rates_json,
-            'markup' => $markups_json,
+            'total' => $vdata['total'],
             'validity_start' => $quote->validity_start,
             'validity_end' => $quote->validity_end,
         ]);
@@ -214,40 +187,19 @@ class AutomaticInlandController extends Controller
         }
     }
 
-    public function update(Request $request, QuoteV2 $quote, AutomaticInland $autoinland)
+    public function update(Request $request, QuoteV2 $quote, AutomaticInlandLclAir $autoinland)
     {
         $form_keys = $request->input('keys');
         
         $data = [];
-
-        foreach($form_keys as $fkey){
-            if(strpos($fkey,'rates') !== false){
-                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
-            }
-        }
-
-        $rates = [];
-        
-        foreach($data as $key=>$value){
-            if($value==null){$value=0;}
-            
-            if(strpos($key,'rates') !== false){
-                $rates['c'.str_replace('rates_','',$key)] = $value;
-            }
-        }
         
         $data += $request->validate([
             'charge' => 'nullable',
             'provider_id'=>'nullable',
             'currency_id'=>'required',
-            ]);
-
-        if(count($rates) != 0){
-            $rates_json = json_encode($rates);
-            $data['rate'] = $rates_json;
-        }
-
-
+            'total' => 'numeric|sometimes|nullable'
+        ]);
+        
         foreach($data as $key=>$value){
             if(isset($autoinland->$key) || $autoinland->$key==null){
                 if($key=="currency_id" || ($key=='provider_id' && $data[$key]!=null)){
@@ -258,68 +210,7 @@ class AutomaticInlandController extends Controller
             }
         }
 
-        return new AutomaticInlandResource($autoinland);
-    }
-
-    public function searchInlands(Request $request, QuoteV2 $quote, $port_id)
-    {
-        $type = $request->input('type');
-
-        $user_currency = $quote->user()->first()->companyUser()->first()->currency()->first();
-
-        $autoDistance = $request->input('distance');
-
-        $inlandParams = [
-            'company_id_quote' => $quote->company_id, 
-            'destiny_port' => [$port_id],
-            'origin_port' => [$port_id], 
-            'company_user_id' => $quote->company_user_id,
-            'typeCurrency' => $user_currency->id
-        ];
-        
-        if($type=='Origin'){
-            $inlandParams['origin_address'] = $request->input('address');
-            $inlandParams['destination_address'] = null;
-        }else{
-            $inlandParams['origin_address'] = null;
-            $inlandParams['destination_address'] = $request->input('address');
-        }
-        
-        $dMarkup = collect([
-            "freight" => [
-              "markupFreightCurre" => 0,
-              "freighMarkup" => 0,
-              "freighPercentage" => 0,
-              "freighAmmount" => 0,
-            ],
-            "charges" => [
-              "markupLocalCurre" => 0,
-              "localMarkup" => 0,
-              "localPercentage" => 0,
-              "localAmmount" => 0,
-            ],
-            "inland" => [
-              "markupInlandCurre" => 0,
-              "inlandMarkup" => 0,
-              "inlandPercentage" => 0,
-              "inlandAmmount" => 0,
-            ]
-        ]);
-
-        $dEquipment = explode(",",str_replace(["\"","[","]"],"",$quote->equipment));
-
-        $containers = Container::get();
-
-        $dType = $type == 'Origin' ? 'origen' : 'destino';
-
-        $mode = strval(1);
-
-        $groupContainer = $quote->getContainerCodes($quote->equipment,true)->id;
-
-        $inlandArray = $this->inlands($inlandParams, $dMarkup, $dEquipment, $containers, $dType, $mode, $groupContainer, $autoDistance);
-        
-        return $inlandArray;
-
+        return new AutomaticInlandLclAirResource($autoinland);
     }
 
     public function updateTotals(Request $request, QuoteV2 $quote, $combo)
@@ -335,27 +226,14 @@ class AutomaticInlandController extends Controller
         $total = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$address_id]])->first();
 
         $data=[];
-           
-        foreach($form_keys as $fkey){
-            if(strpos($fkey,'profits') !== false){
-                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
-            }
-        }
-
-        $markups = [];
         
-        foreach($data as $key=>$value){
-            if($value==null){$value=0;}
-            if($key!='profits_currency'){
-                $markups['m'.str_replace('profits_','',$key)] = $value;
-            }
-        }
+        $data += $request->validate(['profit'=>'sometimes|numeric|nullable']);
+        
+        if($data['profit']==null){$data['profit']=0;}
 
-        if(count($markups) != 0){
-            $markups_json = json_encode($markups);
+        $markups_json = json_encode($data);
 
-            $total->update(['markups'=>$markups_json]);
-        }
+        $total->update(['markups'=>$markups_json]);
 
         $total->totalize();
     }
@@ -380,7 +258,7 @@ class AutomaticInlandController extends Controller
         return InlandAddressResource::collection($results);
     }
 
-    public function destroy(AutomaticInland $autoinland)
+    public function destroy(AutomaticInlandLclAir $autoinland)
     {      
         $port = $autoinland->port_id;
         
@@ -395,7 +273,7 @@ class AutomaticInlandController extends Controller
 
     public function destroyAll(Request $request)
     {   
-        DB::table('automatic_inlands')->whereIn('id', $request->input('ids'))->delete();
+        DB::table('automatic_inland_lcl_airs')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

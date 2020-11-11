@@ -80,4 +80,9 @@ class LocalChargeQuoteTotal extends Model
             'total' => $totals,
         ]);
     }
+
+    public function duplicate()
+    {
+        return $this->replicate();
+    }
 }
