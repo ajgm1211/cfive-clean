@@ -2437,7 +2437,7 @@ $(document).ready(function () {
 $("select[name='group_containerC']").on('change', function () {
 
     var valor = $(this).val();
-   
+
     if (valor) {
         $.ajax({
             url: "/v2/quotes/groupContainer/" + valor,
@@ -2446,12 +2446,12 @@ $("select[name='group_containerC']").on('change', function () {
                 var cont = 0;
                 var texto = "";
                 $.each(data, function (key, value) {
-                    
+
                     if (cont == 0) {
                         texto += "<div class='form-group m-form__group row'> ";
 
                     }
-                    texto += "<label class='col-xl-5 col-lg-2 col-form-label'> "+ value['code']  +"  <br><input name='C"+ value['code']  +"' value= '0' type='text' class='form-control'  >   </label>  ";
+                    texto += "<label class='col-xl-5 col-lg-2 col-form-label'> " + value['code'] + "  <br><input name='C" + value['code'] + "' value= '0' type='text' class='form-control'  >   </label>  ";
                     if (cont == 1) {
                         texto += " </div>";
                     }
@@ -4065,6 +4065,36 @@ $(document).on('click', '#savecompany', function () {
         )
 
     }
+
+});
+
+// Remover Surcharge 
+
+$(document).on('click', '.removeSurcharge', function() {
+    $(this).closest('div').remove();
+   /* $i = 1;
+    $('.closetr').each(function() {
+        var res = $(".port_orig", this).removeAttr('name').attr('name', 'port_orig' + $i + '[]');
+        var resDest = $(".port_dest", this).removeAttr('name').attr('name', 'port_dest' + $i + '[]');
+        var car = $(".carrier", this).removeAttr('name').attr('name', 'localcarrier' + $i + '[]');
+        $i++;
+    });*/
+});
+
+//Agregar Surcharge
+
+$(document).on('click', '#addSurcharge', function () {
+
+
+    var $template = $('#cloneSurcharge');
+    $myClone = $template.clone().removeClass('hide').removeAttr('id');
+
+    $myClone.find("#typeC").attr('name', 'type[]');
+    $myClone.find("#calculationC").attr('name', 'calculation[]');
+    $myClone.find("#currencyC").attr('name', 'currency[]');
+    $myClone.find("#amountC").attr('name', 'amount[]');
+    $myClone.find("select").select2();
+    $("#colSurcharge").append($myClone);
 
 });
 
