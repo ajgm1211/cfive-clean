@@ -24,7 +24,7 @@ return [
     "quote_id" => "Quotation ID",
     "date_issue" => "Date of issue",
     "validity" => "Validity",
-    "total_local" => "Total local charges",
+    "total_local" => "Total freight charges",
     "total" => "Total",
     "ocean_freight" => "Ocean Freight",
     "tt" => "TT",
@@ -51,4 +51,7 @@ return [
     "height" => "Height",
     "cargo_details" => "Cargo details",
     "payment_conditions" => "Payment conditions",
+    "inland" => "Inland",
+    "provider" => "Provider",
+    "distance" => "Distance",
 ];
