@@ -510,6 +510,17 @@ export default {
             return api.call('get', `/api/quote/local/data/${id}`, {})
         },
     },
+    localchargeslcl: {
+        create(data) {
+            return api.call('post', `/api/quote/localcharge/lcl/store`, data);
+        },
+        localcharges(params) {
+            return api.call('get', '/api/quote/localcharge/lcl', { params })
+        },
+        delete(id, type) {
+            return api.call('post', `/api/quote/localcharge/lcl/delete/${id}`, { type: type });
+        },
+    },
     providers: {
         list(params, callback, route) {
 
