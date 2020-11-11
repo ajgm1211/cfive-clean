@@ -34,7 +34,7 @@
                         <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
                         
-                        <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label] ">
+                        <md-field v-bind:class="[{ active: filterIsOpen }]">
                              <label>Select an Option</label>
                             <md-select multiple>
                                 <md-option value="fight-club">Fight Club</md-option>
@@ -685,7 +685,9 @@ export default {
         /* Response the lists data*/
         openFilter(filter) {
 
+            
             this.filterIsOpen = !this.filterIsOpen;
+            
 
         },
         initialData() {

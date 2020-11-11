@@ -1041,3 +1041,49 @@ input.multiselect__input:focus {
 .btn-filter {
     cursor: pointer;
 }
+
+
+/* Search */
+
+.search {
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03);
+}
+
+.search form {
+    position: relative;
+}
+
+.btn-link-blue {
+    color: #006BFA;
+    font-weight: 900;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.s-input .multiselect__tags {
+    border: none !important;
+    background: #F8F8F8;
+    border-radius: 4px;
+}
+
+.multiselect__input {
+    background: #F8F8F8;
+}
+
+.btn-search {
+    height: 55px;
+    width: 172px;
+    left: 4px;
+    top: 2233px;
+    border-radius: 27px;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 18px;
+    background: #006BFA;
+    border: none;
+    position: relative;
+    top: 25px;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+}
