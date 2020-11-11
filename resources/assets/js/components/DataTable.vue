@@ -34,8 +34,8 @@
                         <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
                         
-                        <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label] ">
-                             <label>Select an Option</label>
+                       <!-- <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label]" :id="value.label">
+                            <label>Select an Option</label>
                             <md-select multiple>
                                 <md-option value="fight-club">Fight Club</md-option>
                                 <md-option value="godfather">Godfather</md-option>
@@ -45,7 +45,18 @@
                                 <md-option value="pulp-fiction">Pulp Fiction</md-option>
                                 <md-option value="scarface">Scarface</md-option>
                             </md-select>
-                        </md-field>
+                        </md-field> -->
+
+                        <multiselect
+                            v-if="filterSet"
+                            class="closeFilter" 
+                            :class="[{ openFilter: filterIsOpen }, value.label]" 
+                            v-model="filtered"
+                            multiple
+                            :show-labels="false"
+                            :track-by="value.key"
+                            :options="filterOptions[value.key]"
+                        ></multiselect>
                     </b-th>
                     <b-th>
                         <b-button
@@ -665,7 +676,10 @@ export default {
             selected: [],
             allSelected: false,
             indeterminate: false,
-            filterIsOpen: false
+            filterIsOpen: false,
+            filterOptions: {},
+            filtered: {},
+            filterSet: false,
         };
     },
     computed: {
@@ -782,7 +796,10 @@ export default {
             } else {
                 this.data = records;
                 this.autoupdateTableData = records;
-                this.pageCount = Math.ceil(meta.total / meta.per_page);
+                this.pageCount = Math.ceil(meta.total / meta.per_page);4
+                if(this.filter){
+                    this.setFilters();
+                }
             }
         },
 
@@ -1217,6 +1234,20 @@ export default {
 
         addInsert() {
             this.autoAddRequested = !this.autoAddRequested;
+        },
+
+        setFilters(){
+            let component = this;
+
+            component.fields.forEach(function(field){
+                component.filterOptions[field.key] = [];
+                component.data.forEach(function(quote){
+                    if(!component.filterOptions[field.key].includes(quote[field.key])){
+                        component.filterOptions[field.key].push(quote[field.key]);
+                    }
+                })
+            })
+            component.filterSet = true;
         },
     },
     watch: {

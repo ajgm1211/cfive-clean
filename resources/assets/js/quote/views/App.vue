@@ -22,6 +22,7 @@
                         <DataTable
                             :fields="fields"
                             :actions="actions.quotes"
+                            :filter="true"
                             @onEdit="onEdit"
                         ></DataTable>
                     </b-card>
@@ -53,7 +54,7 @@ export default {
             activeOcean: false,
             actions: actions,
             fields: [
-                { key: "quote_id", label: "#" },
+                { key: "quote_id", label: "Quote ID" },
                 {
                     key: "company_id",
                     label: "Client",
