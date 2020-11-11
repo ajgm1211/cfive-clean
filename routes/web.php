@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::put('update', 'ApiIntegrationController@update')->name('api.update');
     Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
+    Route::get('status', 'ApiIntegrationController@status')->name('api.status');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
