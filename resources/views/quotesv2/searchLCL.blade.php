@@ -796,7 +796,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$quoteType,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
@@ -1383,6 +1383,7 @@
                                         <div class="col-lg-12"><br><br></div>
                                     </div>
                                     @foreach($arreglo as $arr)
+
                                     <!-- Empieza tarjeta de cotifzacion -->
 
                                     <div class="card-p__quotes input-select{{$loop->iteration}}"
@@ -1568,7 +1569,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1654,7 +1655,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1712,12 +1713,12 @@
 
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localfreight['montoMarkup'] /   $localfreight['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localfreight['monto']}} </span>
+                                                                    {{ $localfreight['montoMarkup']}} </span>
                                                             </div>
 
                                                             <div class="wth">
@@ -1772,7 +1773,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>

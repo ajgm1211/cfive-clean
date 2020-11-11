@@ -77,3 +77,15 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
     });
 });
+
+Route::group(['prefix' => 'v2'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('quotes', 'QuotationApiController@list');
+        Route::get('quotes/{id}', 'QuotationApiController@retrieve');
+    });
+});
+
+Route::group(['prefix' => 'request', 'middleware' => 'auth:api'], function () {
+    //Route::group(['prefix' => 'request'], function () {
+    Route::post('sendEmail', 'RequestFclV2Controller@sendEmailRequest');
+});

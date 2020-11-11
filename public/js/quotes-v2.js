@@ -921,7 +921,7 @@ $(document).on('click', '.store_sale_charge', function() {
     var currency_id = $(this).closest("tr").find(".currency_id").val();
     $.ajax({
         type: 'POST',
-        url: '/v2/quotes/store/sale/charge',
+        url: '/v2/quotes/sale/charge/store',
         data: {
             "sale_term_id": id,
             "charge": charge,
@@ -970,7 +970,7 @@ $(document).on('click', '.store_charge', function() {
 
     $.ajax({
         type: 'POST',
-        url: '/v2/quotes/store/charge',
+        url: '/v2/quotes/charge/store',
         data: {
             "automatic_rate_id": id,
             "surcharge_id": surcharge_id,
@@ -1192,8 +1192,8 @@ $(document).on('click', '#delete-quote-v2', function() {
 
         if (result.value) {
             $.ajax({
-                type: 'get',
-                url: '/v2/quotes/delete/' + id,
+                type: 'delete',
+                url: '/api/quote/' + id + '/destroy',
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -1209,6 +1209,20 @@ $(document).on('click', '#delete-quote-v2', function() {
     });
 });
 
+//Duplicar quote
+$(document).on('click', '#duplicate-quote-v2', function() {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    $.ajax({
+        type: 'post',
+        url: '/api/quotes/' + id + '/duplicate',
+        success: function(data) {
+            console.log(data.message);
+            location.reload();
+            //REFRESH TABLE?
+        }
+    });
+});
 
 $(document).on('click', '#delete-quote-show', function() {
     var id = $(this).attr('data-quote-show-id');
@@ -2757,11 +2771,20 @@ $(".quote_search").on("click", function() {
     });
 });
 
+function submitForm(type) {
+
+    $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+
+    $("#rateForm").submit();
+}
+
+$('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
+
 $(".quote_man").on("click", function() {
 
-
-
-    $('#FormQuote').attr('action', '/v2/quotes/store');
+    //$('#FormQuote').attr('action', '/api/quote/store');
+    var type = 1;
+    $('#FormQuote').attr('action', '/v2/quotes/store/' + type);
 
     if ($('#quoteType').val() == 2) {
 
@@ -2774,10 +2797,7 @@ $(".quote_man").on("click", function() {
         if ($("#total_volume_pkg_input").val() > 0) {
             $("#total_volume").val($("#total_volume_pkg_input").val());
         }
-
     }
-
-
 
     $(".quote_man").attr("type", "submit");
 });
