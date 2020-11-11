@@ -72,7 +72,25 @@ class LoginController extends Controller
             foreach ($cliente->users as $u) {
                 if ($u->type == "user") {
                     if ($u->user_id != $user->id) {
-                        $client->users->archiveUser($u->id);
+
+
+                        try{
+
+                            $client->users->archiveUser($u->id);
+                      
+                          } catch (\Intercom\Exception\IntercomException $e) {
+                            \Log::error("Ocurrio un  error intercom con el siguiente usuario".$u->email);
+                            return false;
+                          }
+
+
+
+
+
+
+
+
+                
                     }
                 }
             }

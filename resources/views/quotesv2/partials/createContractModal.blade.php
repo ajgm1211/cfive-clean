@@ -310,7 +310,7 @@
                                                             
                                                         <label class="col-lg-3 col-lg-2 col-form-label">
                                                             * Amount : <br>
-                                                            <input type="text" name="amountC[]" class="form-control m-input" placeholder="" id='amountC' value="0">
+                                                            <input type="text" name="amountC[]" class="form-control m-input amountC" placeholder="" value="0">
                                                         </label>    
                                                         <label class="col-lg-1 col-lg-2 col-form-label">
                                                             <span class="m-input-icon__icon m-input-icon__icon--right">

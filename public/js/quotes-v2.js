@@ -4089,10 +4089,10 @@ $(document).on('click', '#addSurcharge', function () {
     var $template = $('#cloneSurcharge');
     $myClone = $template.clone().removeClass('hide').removeAttr('id');
 
-    $myClone.find("#typeC").attr('name', 'type[]');
-    $myClone.find("#calculationC").attr('name', 'calculation[]');
-    $myClone.find("#currencyC").attr('name', 'currency[]');
-    $myClone.find("#amountC").attr('name', 'amount[]');
+    $myClone.find(".typeC").removeAttr('name').attr('name', 'type[]');
+    $myClone.find(".calculationC").attr('name', 'calculation[]');
+    $myClone.find(".currencyC").attr('name', 'currency[]');
+    $myClone.find(".amountC").attr('name', 'amount[]');
     $myClone.find("select").select2();
     $("#colSurcharge").append($myClone);
 
