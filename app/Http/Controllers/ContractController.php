@@ -17,6 +17,9 @@ use App\Http\Requests\UploadContractFile;
 use App\Http\Resources\ContractResource;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
+use App\LocalCharCarrier;
+use App\LocalCharge;
+use App\LocalCharPort;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\Notifications\SlackNotification;
@@ -701,13 +704,45 @@ class ContractController extends Controller
         $rates->contract()->associate($contract);
         $rates->save();
 
-        foreach ($request->input('document', []) as $file) {
-            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
+        // Surcharges
+
+        $calculation_type = $request->input('calculation');
+        $typeC = $request->input('type');
+        $currencyC = $request->input('currency');
+        $amountC = $request->input('amount');
+
+        foreach ($calculation_type as $ct => $ctype) {
+
+            if (!empty($request->input('amount'))) {
+                $localcharge = new LocalCharge();
+                $localcharge->surcharge_id = $typeC[$ct];
+                $localcharge->typedestiny_id = '3';
+                $localcharge->calculationtype_id = $ctype;
+                $localcharge->ammount = $amountC[$ct];
+                $localcharge->currency_id = $currencyC[$ct];
+                $localcharge->contract()->associate($contract);
+                $localcharge->save();
+
+                $detailcarrier = new LocalCharCarrier();
+                $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                $detailcarrier->localcharge()->associate($localcharge);
+                $detailcarrier->save();
+
+                $detailport = new LocalCharPort();
+                $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                $detailport->localcharge()->associate($localcharge);
+                $detailport->save();
+
+            }
         }
 
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
+        }
 
         return response()->json([
-            'data' => $rates->toJson(),
+            'data' => $localcharge->toJson(),
         ]);
     }
 
