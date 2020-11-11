@@ -12,6 +12,7 @@
     "/js/saleterms/codes.js": "/js/saleterms/codes.js",
     "/js/providers/index.js": "/js/providers/index.js",
     "/js/inlands/index.js": "/js/inlands/index.js",
+    "/js/search/index.js": "/js/search/index.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css"
 }

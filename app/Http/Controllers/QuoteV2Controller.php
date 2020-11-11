@@ -92,6 +92,10 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return Illuminate\View\View
      */
+    public function newSearch(Request $request){
+        return view('searchV2.index');
+    }
+
     public function index(Request $request)
     {
 
