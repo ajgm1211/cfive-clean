@@ -214,13 +214,14 @@ class TestController extends Controller
             foreach ($cliente->users as $u) {
                 if ($u->type == "user") {
                     if ($u->user_id != $user->id) {
-                        $client->users->archiveUser($u->id);
+                       // $client->users->archiveUser($u->id);
+                        echo $user->email."<BR>";
                     }
                 }
             }
         }
 
-        if ($cliente->total_count == 0) {
+        /*if ($cliente->total_count == 0) {
 
             if ($user->company_user_id != "") {
                 //setHashID();
@@ -243,6 +244,6 @@ class TestController extends Controller
                 ]);
             }
 
-        }
+        }*/
     }
 }

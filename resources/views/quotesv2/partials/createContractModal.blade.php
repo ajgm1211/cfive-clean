@@ -117,8 +117,9 @@
                         <!--begin: Form Wizard Form-->
                         <div class="m-wizard__form">
 
-                            <form class="m-form m-form--label-align-left- m-form--state-" id="m_form">
+                            <form method="POST" action="{{ route('search-add.contract') }}"  enctype="multipart/form-data" class="m-form m-form--label-align-left- m-form--state-"  id="m_form">
                                 <!--begin: Form Body -->
+                                <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                                 <div class="m-portlet__body">
                                     <!--begin: Form Wizard Step 1-->
                                     <div class="m-wizard__form-step m-wizard__form-step--current"
@@ -136,7 +137,7 @@
                                                             * Reference
                                                         </label>
                                                         <div class="col-xl-10 col-lg-9">
-                                                            <input type="text" name="reference"
+                                                            <input type="text" name="referenceC"
                                                                 class="form-control m-input" placeholder=""
                                                                 value="1-541-754-3010">
                                                         </div>
@@ -144,12 +145,12 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-lg-5 col-lg-1 col-form-label">
                                                             * Validity: <br>
-                                                            <input type="text" class="form-control" id="m_daterangepicker_1_modal" readonly="" placeholder="Select time">
+                                                            <input type="text" name="validityC" class="form-control" id="m_daterangepicker_1_modal" readonly="" placeholder="Select time">
                                                         </label>
                                       
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Carrier: <br>
-                                                            {{ Form::select('group_container', $carrierC, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('carrierC', $carrierC, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
 
 
@@ -157,12 +158,12 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Equipment: <br>
-                                                            {{ Form::select('group_container', $group_containerC, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('group_containerC', $group_containerC, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
                                                
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Direction: <br>
-                                                            {{ Form::select('group_container', $directionC, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('directionC', $directionC, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
 
 
@@ -189,12 +190,12 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-lg-5 col-lg-1 col-form-label">
                                                             * Origin Port: <br>
-                                                            {{ Form::select('origin_port', $harbors, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('origin_port', $harborsR, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
                                       
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Destination Port: <br>
-                                                            {{ Form::select('destination_port', $harbors, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('destination_port', $harborsR, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
 
 
@@ -202,12 +203,12 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-lg-5 col-lg-1 col-form-label">
                                                             * Carrier : <br>
-                                                            {{ Form::select('origin_port', $carrierC, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('carrierR', $carrierC, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
                                       
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Currency: <br>
-                                                            {{ Form::select('destination_port', $currencies, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('currencyR', $currencies, null, ['class' => 'm-select2-general ']) }}
                                                         </label>
 
 
@@ -340,39 +341,5 @@
         placeholder: "Select an option"
     });
 
-    var uploadedDocumentMap = {}
-  Dropzone.options.documentDropzone = {
-    url: '{{ route('contracts.storeMedia') }}',
-    maxFilesize: 2, // MB
-    addRemoveLinks: true,
-    headers: {
-    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-  },
-    success: function (file, response) {
-      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
-      uploadedDocumentMap[file.name] = response.name
-    },
-      removedfile: function (file) {
-        file.previewElement.remove()
-        var name = ''
-        if (typeof file.file_name !== 'undefined') {
-          name = file.file_name
-        } else {
-          name = uploadedDocumentMap[file.name]
-        }
-        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove()
-      },
-        init: function () {
-          @if(isset($project) && $project->document)
-          var files =
-              {!! json_encode($project->document) !!}
-          for (var i in files) {
-            var file = files[i]
-            this.options.addedfile.call(this, file)
-            file.previewElement.classList.add('dz-complete')
-            $('m_form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
-          }
-          @endif
-        }
-        }
+ 
 </script>

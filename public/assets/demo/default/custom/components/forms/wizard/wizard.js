@@ -179,10 +179,12 @@ var WizardDemo = function () {
 
         //== See: http://malsup.com/jquery/form/#ajaxSubmit
         formEl.ajaxSubmit({
-          success: function() {
+          success: function(data) {
             mApp.unprogress(btn);
             //mApp.unblock(formEl);
-
+		   $.each(data, function (key, value) {
+                        alert(value);
+                    });
             swal({
               "title": "", 
               "text": "The application has been successfully submitted!", 
@@ -190,10 +192,13 @@ var WizardDemo = function () {
               "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
             }).then(function(result) {
               if (result.value) {
-                  window.location.href = '/inlands';
+               //   window.location.href = '/inlands';
               }
 
             });
+          },
+          error: function(request, status, error) {
+            alert(request.responseText);
           }
         });
       }

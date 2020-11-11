@@ -2,37 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Contract;
-use App\Carrier;
-use App\GroupContainer;
-use App\Direction;
-use App\Container;
-use App\Harbor;
-use App\Currency;
-use App\Surcharge;
 use App\CalculationType;
-use App\TypeDestiny;
-use App\Country;
+use App\Carrier;
 use App\Company;
+use App\Container;
+use App\Contract;
 use App\ContractLcl;
+use App\Country;
+use App\Currency;
+use App\Direction;
+use App\GroupContainer;
+use App\Harbor;
 use App\Http\Requests\UploadContractFile;
-use App\User;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
-use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use App\Rate;
+use App\Surcharge;
+use App\TypeDestiny;
+use App\User;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
 {
     /**
-     * Render index view 
+     * Render index view
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -48,13 +48,11 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function list(Request $request)
-    {
+    function list(Request $request) {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
     }
-
 
     /**
      * Display the specified resource collection.
@@ -145,7 +143,6 @@ class ContractController extends Controller
         $all_harbor_row = Harbor::find(1485);
         $all_country_row = Country::find(250);
 
-
         $origin_harbors = $rates->pluck('port_origin')->push($all_harbor_row);
         $destiny_harbors = $rates->pluck('port_destiny')->push($all_harbor_row);
 
@@ -172,7 +169,6 @@ class ContractController extends Controller
         return response()->json(['data' => $data]);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -189,7 +185,7 @@ class ContractController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'carriers' => 'required'
+            'carriers' => 'required',
         ]);
 
         $contract = Contract::create([
@@ -203,7 +199,7 @@ class ContractController extends Controller
             'status' => 'publish',
             'gp_container_id' => $data['gp_container'],
             'remarks' => '',
-            'is_manual' => 1
+            'is_manual' => 1,
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);
@@ -212,7 +208,7 @@ class ContractController extends Controller
     }
 
     /**
-     * Render edit view 
+     * Render edit view
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -237,7 +233,7 @@ class ContractController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'carriers' => 'required'
+            'carriers' => 'required',
         ]);
 
         $status = $this->updateStatus($data['expire']);
@@ -282,7 +278,7 @@ class ContractController extends Controller
     {
         $data = $request->validate([
             'companies' => 'sometimes',
-            'users' => 'sometimes'
+            'users' => 'sometimes',
         ]);
 
         $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
@@ -290,7 +286,6 @@ class ContractController extends Controller
 
         return new ContractResource($contract);
     }
-
 
     /**
      * Update the specified resource of Contract Remarks.
@@ -302,7 +297,7 @@ class ContractController extends Controller
     public function updateRemarks(Request $request, Contract $contract)
     {
         $data = $request->validate([
-            'remarks' => 'sometimes'
+            'remarks' => 'sometimes',
         ]);
 
         $contract->update(['remarks' => @$data['remarks']]);
@@ -386,7 +381,7 @@ class ContractController extends Controller
                 'name' => substr($media->name, 14),
                 'size' => $media->size,
                 'type' => $media->mime_type,
-                'url' => $media->getFullUrl()
+                'url' => $media->getFullUrl(),
             ];
         });
 
@@ -414,14 +409,14 @@ class ContractController extends Controller
         $file->move($path, $name);
 
         $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
-            'ACL' => 'public-read'
+            'ACL' => 'public-read',
         ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
-            'name'          => $name,
+            'name' => $name,
             'original_name' => $file->getClientOriginalName(),
-            'url' => $media->getFullUrl()
+            'url' => $media->getFullUrl(),
         ]);
     }
 
@@ -441,8 +436,8 @@ class ContractController extends Controller
             $type = strtoupper($request->type);
 
             if ($request->code) {
-                $query =  Contract::where('code', $request->code);
-                $query_lcl =  ContractLcl::where('code', $request->code);
+                $query = Contract::where('code', $request->code);
+                $query_lcl = ContractLcl::where('code', $request->code);
             } else {
                 $query = Contract::where('code', $request->reference);
                 $query_lcl = ContractLcl::where('code', $request->reference);
@@ -490,7 +485,7 @@ class ContractController extends Controller
 
             NotificationsJob::dispatch('Request-' . $type, [
                 'user' => $user,
-                'ncontract' => $Ncontract->toArray()
+                'ncontract' => $Ncontract->toArray(),
             ]);
 
             $Ncontract->NotifyNewRequest($admins);
@@ -539,7 +534,7 @@ class ContractController extends Controller
     }
 
     /**
-     * store contract from API in DB 
+     * store contract from API in DB
      *
      * @param  mixed $request
      * @param  mixed $direction
@@ -561,7 +556,7 @@ class ContractController extends Controller
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
                     'direction_id' => $direction,
-                    'validity' =>  $request->valid_from,
+                    'validity' => $request->valid_from,
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
@@ -574,7 +569,7 @@ class ContractController extends Controller
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
                     'direction_id' => $direction,
-                    'validity' =>  $request->valid_from,
+                    'validity' => $request->valid_from,
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
@@ -654,4 +649,66 @@ class ContractController extends Controller
 
         return $direction;
     }
+
+    public function storeContractSearch(Request $request)
+    {
+
+        $req = $request->group_containerC;
+        $contract = new Contract();
+        $container = Container::get();
+
+        $contract->company_user_id = Auth::user()->company_user_id;
+        $contract->name = $request->referenceC;
+        $validation = explode('/', $request->validityC);
+        $contract->direction_id = $request->directionC;
+        $contract->validity = $validation[0];
+        $contract->expire = $validation[1];
+        $contract->status = 'publish';
+        $contract->gp_container_id = $request->group_containerC;
+        $contract->save();
+
+        $rates = new Rate();
+        $rates->origin_port = $request->origin_port;
+        $rates->destiny_port = $request->destination_port;
+        $arreglo = array();
+        if ($req == 1) {
+
+            $rates->twuenty = $request->C20DV;
+            $rates->forty = $request->C40DV;
+            $rates->fortyhc = $request->C40HC;
+            $rates->fortynor = $request->C40NOR;
+            $rates->fortyfive = $request->C45HC;
+
+        } else {
+
+            $rates->twuenty = 0;
+            $rates->forty = 0;
+            $rates->fortyhc = 0;
+            $rates->fortynor = 0;
+            $rates->fortyfive = 0;
+
+            foreach ($container as $cod) {
+
+                $cont = 'C' . $cod->code;
+                if ($cod->gp_container_id == $req) {
+                    $arreglo[$cont] = $request->{$cont};
+                }
+            }
+            $rates->containers = json_encode($arreglo);
+        }
+        $rates->carrier_id = $request->carrierR;
+        $rates->currency_id = $request->currencyR;
+        $rates->contract()->associate($contract);
+        $rates->save();
+
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
+        }
+
+
+        return response()->json([
+            'data' => $rates->toJson(),
+        ]);
+    }
+
 }
