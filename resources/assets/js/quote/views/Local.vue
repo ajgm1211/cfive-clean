@@ -41,6 +41,7 @@
                         @input="getCharges()"
                         class="q-select mr-3"
                         style="position: relative; top: 4px"
+                        v-if="currentQuoteData.type == 'FCL'"
                     ></multiselect>
 
                     <a
@@ -48,6 +49,7 @@
                         target="_blank"
                         class="btn btn-link mr-4"
                         id="show-btn"
+                        v-if="currentQuoteData.type == 'FCL'"
                     >
                         + Add Sale Template
                     </a>
@@ -60,7 +62,7 @@
                     </button>
                 </div>
                 <!-- End Agregar Charges -->
-                <div class="col-12 mt-5" v-if="currentQuoteData.type == 'FCL'">
+                <div class="col-12 mt-5">
                     <!-- DataTable -->
                     <b-table-simple
                         hover
@@ -85,6 +87,18 @@
                                     :key="key"
                                 >
                                     <span class="label-text">{{ item }}</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">units</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">rate</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">total</span>
                                 </b-th>
 
                                 <b-th>
@@ -116,6 +130,7 @@
                                 </b-td>
                                 <b-td>
                                     <multiselect
+                                        v-if="currentQuoteData.type == 'FCL'"
                                         v-model="charge.calculation_type"
                                         :options="datalists['calculationtypes']"
                                         :multiple="false"
@@ -131,6 +146,28 @@
                                                 charge.calculation_type.id,
                                                 'calculation_type_id',
                                                 1
+                                            )
+                                        "
+                                    ></multiselect>
+                                    <multiselect
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="charge.calculation_type"
+                                        :options="
+                                            datalists['calculationtypeslcl']
+                                        "
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.calculation_type.id,
+                                                'calculation_type_id',
+                                                6
                                             )
                                         "
                                     ></multiselect>
@@ -153,6 +190,52 @@
                                         "
                                     ></b-form-input>
                                 </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="charge.units"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.units,
+                                                'units',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="charge.price"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.price,
+                                                'price',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="charge.total"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.total,
+                                                'total',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
                                 <b-td>
                                     <multiselect
                                         v-model="charge.currency"
@@ -188,7 +271,31 @@
                                 </b-td>
                             </b-tr>
 
-                            <b-tr class="q-total">
+                            <b-tr
+                                class="q-total"
+                                v-if="currentQuoteData.type == 'LCL'"
+                            >
+                                <b-td colspan="3"></b-td>
+
+                                <b-td
+                                    ><span><b>Total</b></span></b-td
+                                >
+
+                                <b-td
+                                    ><span><b>150</b></span></b-td
+                                >
+
+                                <b-td
+                                    ><span><b>EUR</b></span></b-td
+                                >
+
+                                <b-td></b-td>
+                            </b-tr>
+
+                            <b-tr
+                                class="q-total"
+                                v-if="currentQuoteData.type == 'FCL'"
+                            >
                                 <b-td></b-td>
 
                                 <b-td>
@@ -231,185 +338,6 @@
                                         ></multiselect>
                                     </span>
                                 </b-td>
-
-                                <b-td></b-td>
-                            </b-tr>
-                        </b-tbody>
-                        <!-- End Body table -->
-                    </b-table-simple>
-                    <!-- End DataTable -->
-                </div>
-                <div class="col-12 mt-5" v-if="currentQuoteData.type == 'LCL'">
-                    <!-- DataTable -->
-                    <b-table-simple
-                        hover
-                        small
-                        responsive
-                        borderless
-                        :striped="false"
-                    >
-                        <!-- Header table -->
-                        <b-thead class="q-thead">
-                            <b-tr>
-                                <b-th>
-                                    <span class="label-text">charge</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">Detail</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">units</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">rate</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">total</span>
-                                </b-th>
-
-                                <b-th>
-                                    <span class="label-text">currency</span>
-                                </b-th>
-                            </b-tr>
-                        </b-thead>
-
-                        <!-- Body table -->
-                        <b-tbody>
-                            <b-tr
-                                class="q-tr"
-                                v-for="(charge, key) in this.charges"
-                                :key="key"
-                            >
-                                <b-td>
-                                    <b-form-input
-                                        v-model="charge.charge"
-                                        class="q-input"
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.charge,
-                                                'charge',
-                                                6
-                                            )
-                                        "
-                                    ></b-form-input>
-                                </b-td>
-                                <b-td>
-                                    <multiselect
-                                        v-model="charge.calculation_type"
-                                        :options="datalists['calculationtypes']"
-                                        :multiple="false"
-                                        :show-labels="false"
-                                        :close-on-select="true"
-                                        :preserve-search="true"
-                                        placeholder="Choose a calculation type"
-                                        label="name"
-                                        track-by="name"
-                                        @input="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.calculation_type.id,
-                                                'calculation_type_id',
-                                                6
-                                            )
-                                        "
-                                    ></multiselect>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input
-                                        v-model="charge.units"
-                                        class="q-input q-width"
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.units,
-                                                'units',
-                                                6
-                                            )
-                                        "
-                                    ></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input
-                                        v-model="charge.price"
-                                        class="q-input q-width"
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.price,
-                                                'price',
-                                                6
-                                            )
-                                        "
-                                    ></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <b-form-input
-                                        v-model="charge.total"
-                                        class="q-input q-width"
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.total,
-                                                'total',
-                                                6
-                                            )
-                                        "
-                                    ></b-form-input>
-                                </b-td>
-
-                                <b-td>
-                                    <multiselect
-                                        v-model="charge.currency"
-                                        :options="datalists['currency']"
-                                        :multiple="false"
-                                        :show-labels="false"
-                                        :close-on-select="true"
-                                        :preserve-search="true"
-                                        placeholder="Choose a currency"
-                                        label="alphacode"
-                                        track-by="alphacode"
-                                        @input="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.currency.id,
-                                                'currency_id',
-                                                6
-                                            )
-                                        "
-                                    ></multiselect>
-                                </b-td>
-                                <b-td>
-                                    <button type="button" class="btn-delete">
-                                        <i
-                                            class="fa fa-times"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </button>
-                                </b-td>
-                            </b-tr>
-
-                            <b-tr class="q-total">
-                                <b-td colspan="3"></b-td>
-
-                                <b-td
-                                    ><span><b>Total</b></span></b-td
-                                >
-
-                                <b-td
-                                    ><span><b>150</b></span></b-td
-                                >
-
-                                <b-td
-                                    ><span><b>EUR</b></span></b-td
-                                >
 
                                 <b-td></b-td>
                             </b-tr>
@@ -482,7 +410,7 @@
                                     <span class="label-text">Detail</span>
                                 </b-th>
 
-                                <b-th>
+                                <b-th v-if="currentQuoteData.type == 'FCL'">
                                     <span class="label-text">Show As</span>
                                 </b-th>
 
@@ -598,7 +526,7 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="localcharge.sale_codes"
                                         :options="datalists['sale_codes']"
@@ -622,6 +550,7 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
+                                        :disabled="true"
                                         placeholder="Choose a provider"
                                         label="name"
                                         track-by="name"
@@ -669,47 +598,50 @@
                                     ></b-form-input>
                                 </b-td>
 
-                                <b-form-input
-                                    v-if="currentQuoteData.type == 'LCL'"
-                                    v-model="localcharge.units"
-                                    class="q-input q-width"
-                                    v-on:blur="
-                                        onUpdate(
-                                            localcharge.id,
-                                            localcharge.units,
-                                            'units',
-                                            6
-                                        )
-                                    "
-                                ></b-form-input>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="localcharge.units"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.units,
+                                                'units',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
 
-                                <b-form-input
-                                    v-if="currentQuoteData.type == 'LCL'"
-                                    v-model="localcharge.rate"
-                                    class="q-input q-width"
-                                    v-on:blur="
-                                        onUpdate(
-                                            localcharge.id,
-                                            localcharge.rate,
-                                            'rate',
-                                            6
-                                        )
-                                    "
-                                ></b-form-input>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="localcharge.price_per_unit"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.price_per_unit,
+                                                'price',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
 
-                                <b-form-input
-                                    v-if="currentQuoteData.type == 'LCL'"
-                                    v-model="localcharge.markups"
-                                    class="q-input q-width"
-                                    v-on:blur="
-                                        onUpdate(
-                                            localcharge.id,
-                                            localcharge.markups,
-                                            'markups',
-                                            6
-                                        )
-                                    "
-                                ></b-form-input>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="localcharge.markup"
+                                        class="q-input q-width"
+                                        v-on:blur="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.markup,
+                                                'markups',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
 
                                 <b-td>
                                     <multiselect
@@ -781,7 +713,7 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="input.sale_codes"
                                         :options="datalists['sale_codes']"
@@ -825,30 +757,27 @@
                                     ></b-form-input>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-if="currentQuoteData.type == 'LCL'"
                                         v-model="input.units"
                                         class="q-input q-width"
                                     ></b-form-input>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-if="currentQuoteData.type == 'LCL'"
                                         v-model="input.price"
                                         class="q-input q-width"
                                     ></b-form-input>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-if="currentQuoteData.type == 'LCL'"
                                         v-model="input.profit"
                                         class="q-input q-width"
                                     ></b-form-input>
                                 </b-td>
-                                
+
                                 <b-td>
                                     <multiselect
                                         v-model="input.currency"
@@ -1115,17 +1044,32 @@ export default {
                 port_id: this.value.id,
                 type: this.value.type,
             };
-            actions.localcharges
-                .localcharges(data)
-                .then((response) => {
-                    self.localcharges = response.data.charges;
-                    self.port = response.data.port.display_name;
-                    self.code_port = response.data.port.country.code.toLowerCase();
-                    self.rate_id = response.data.automatic_rate.id;
-                })
-                .catch((data) => {
-                    //
-                });
+
+            if (this.currentQuoteData.type == "FCL") {
+                actions.localcharges
+                    .localcharges(data)
+                    .then((response) => {
+                        self.localcharges = response.data.charges;
+                        self.port = response.data.port.display_name;
+                        self.code_port = response.data.port.country.code.toLowerCase();
+                        self.rate_id = response.data.automatic_rate.id;
+                    })
+                    .catch((data) => {
+                        //
+                    });
+            } else {
+                actions.localchargeslcl
+                    .localcharges(data)
+                    .then((response) => {
+                        self.localcharges = response.data.charges;
+                        self.port = response.data.port.display_name;
+                        self.code_port = response.data.port.country.code.toLowerCase();
+                        self.rate_id = response.data.automatic_rate.id;
+                    })
+                    .catch((data) => {
+                        //
+                    });
+            }
         },
         getRemarks(id) {
             let self = this;
@@ -1139,15 +1083,27 @@ export default {
                 });
         },
         onDelete(id, type) {
-            actions.localcharges
-                .delete(id, type)
-                .then((response) => {
-                    this.alert("Record deleted successfully", "success");
-                    this.getTotal();
-                })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                });
+            if (this.currentQuoteData.type == "FCL") {
+                actions.localcharges
+                    .delete(id, type)
+                    .then((response) => {
+                        this.alert("Record deleted successfully", "success");
+                        this.getTotal();
+                    })
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
+            }else{
+                actions.localchargeslcl
+                    .delete(id, type)
+                    .then((response) => {
+                        this.alert("Record deleted successfully", "success");
+                        this.getTotal();
+                    })
+                    .catch((data) => {
+                        this.$refs.observer.setErrors(data.data.errors);
+                    });
+            }
 
             this.charges = this.charges.filter(function (item) {
                 return id != item.id;
@@ -1167,19 +1123,36 @@ export default {
                     port_id: this.value.id,
                     type_id: this.value.type,
                 };
-                actions.localcharges
-                    .create(data)
-                    .then((response) => {
-                        this.charges = response.data;
-                        this.getStoredCharges();
-                        this.getTotal();
-                        this.alert("Record saved successfully", "success");
-                        this.closeModal();
-                        this.selectedCharges = [];
-                    })
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                    });
+
+                if (this.currentQuoteData.type == "FCL") {
+                    actions.localcharges
+                        .create(data)
+                        .then((response) => {
+                            this.charges = response.data;
+                            this.getStoredCharges();
+                            this.getTotal();
+                            this.alert("Record saved successfully", "success");
+                            this.closeModal();
+                            this.selectedCharges = [];
+                        })
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                        });
+                } else {
+                    actions.localchargeslcl
+                        .create(data)
+                        .then((response) => {
+                            this.charges = response.data;
+                            this.getStoredCharges();
+                            this.getTotal();
+                            this.alert("Record saved successfully", "success");
+                            this.closeModal();
+                            this.selectedCharges = [];
+                        })
+                        .catch((data) => {
+                            this.$refs.observer.setErrors(data.data.errors);
+                        });
+                }
             } else {
                 this.alert("You must select a charge at least", "error");
             }

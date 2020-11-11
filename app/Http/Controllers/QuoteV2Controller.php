@@ -7130,7 +7130,8 @@ class QuoteV2Controller extends Controller
         //$request->session()->flash('message.content', 'Register completed successfully!');
         //return redirect()->route('quotes.index');
 
-        return redirect()->action('QuotationController@edit', $quote->id);
+        //return redirect()->action('QuotationController@edit', $quote->id);
+        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
     }
 
     public function unidadesTON($unidades)
