@@ -252,8 +252,7 @@ New \ Status Import  &nbsp;
     }
 
     $(function() {
-        $('#requesttable').DataTable({
-
+        var tabla = $('#requesttable').DataTable({
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
@@ -290,20 +289,19 @@ New \ Status Import  &nbsp;
                     });
                 });
             },
-            "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,
             "ordering": false,
-            "width": true,
-            "autoWidth": false,
-            "stateSave": true,
+            "info": true,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
-            "serverSide": true,
-            "paging": true
+            "dom": 'Bfrtip',
+            "paging": true,
+            "scrollX": true,
+            "stateSave": false, 
         });
-
     });
-
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
