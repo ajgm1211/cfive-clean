@@ -50,7 +50,7 @@
 <div class="row">
     <div class="col-md-4" class="" > 
         <label>Currency</label>
-        {{ Form::select('currency_id',[' '=>'Select an option',$currencies],$rate->currency_id,['class'=>'form-control m-select2-edit schedule_type']) }}
+        {{ Form::select('currency_id',$currencies,$rate->currency_id,['class'=>'form-control m-select2-edit schedule_type','placeholder'=>'Select an option']) }}
     </div>
 </div>
 <hr>
