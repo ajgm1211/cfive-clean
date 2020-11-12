@@ -46,6 +46,13 @@
         <input type="text" name="via" value="{{$rate->via}}" class="form-control via">
     </div>
 </div>
+<br>
+<div class="row">
+    <div class="col-md-4" class="" > 
+        <label>Currency</label>
+        {{ Form::select('currency_id',[' '=>'Select an option',$currencies],$rate->currency_id,['class'=>'form-control m-select2-edit schedule_type']) }}
+    </div>
+</div>
 <hr>
 <div class="form-group m-form__group">
     <button type="submit" class="btn btn-primary">Update</button>
