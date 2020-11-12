@@ -54,21 +54,23 @@ export default {
             activeOcean: false,
             actions: actions,
             fields: [
-                { key: "quote_id", label: "Quote ID" },
+                { key: "quote_id", label: "Quote ID", filterIsOpen: false, },
                 {
                     key: "company_id",
                     label: "Client",
                     formatter: (value) => {
                         return this.setClient(value);
                     },
+                    filterIsOpen: false,
                 },
-                { key: "type", label: "Type" },
+                { key: "type", label: "Type", filterIsOpen: false, },
                 {
                     key: "origin",
                     label: "Origin",
                     formatter: (value) => {
                         return this.setPortList(value);
                     },
+                    filterIsOpen: false,
                 },
                 {
                     key: "destiny",
@@ -76,6 +78,7 @@ export default {
                     formatter: (value) => {
                         return this.setPortList(value);
                     },
+                    filterIsOpen: false,
                 },
                 {
                     key: "user_id",
@@ -83,8 +86,9 @@ export default {
                     formatter: (value) => {
                         return value.name;
                     },
+                    filterIsOpen: false,
                 },
-                { key: "validity_start", label: "Created at" },
+                { key: "validity_start", label: "Created at", filterIsOpen: false,},
             ],
         };
     },
