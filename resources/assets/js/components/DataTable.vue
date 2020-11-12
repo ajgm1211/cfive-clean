@@ -31,7 +31,7 @@
                     </b-th>
 
                     <b-th v-for="(value, key) in fields" :key="key">
-                        <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
+                        <span v-if="filter" class="mr-1 btn-filter" @click="openFilter(value)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
                         
                        <!-- <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label]" :id="value.label">
@@ -49,12 +49,13 @@
 
                         <multiselect
                             v-if="filterSet"
-                            class="closeFilter" 
-                            :class="[{ openFilter: filterIsOpen }, value.label]" 
-                            v-model="filtered"
-                            multiple
+                            :id="key"
+                            :class="[{ openFilter: value.filterIsOpen, closeFilter: !value.filterIsOpen }, value.label]" 
+                            v-model="filtered[value.key]"
+                            :close-on-select="true"
+                            :clear-on-select="false"
+                            :multiple="true"
                             :show-labels="false"
-                            :track-by="value.key"
                             :options="filterOptions[value.key]"
                         ></multiselect>
                     </b-th>
@@ -676,7 +677,6 @@ export default {
             selected: [],
             allSelected: false,
             indeterminate: false,
-            filterIsOpen: false,
             filterOptions: {},
             filtered: {},
             filterSet: false,
@@ -699,8 +699,8 @@ export default {
         /* Response the lists data*/
         openFilter(filter) {
 
-            this.filterIsOpen = !this.filterIsOpen;
-
+            filter.filterIsOpen = !filter.filterIsOpen;
+            console.log(this.filtered)
         },
         initialData() {
             let params = this.$route.query;
@@ -1241,6 +1241,7 @@ export default {
 
             component.fields.forEach(function(field){
                 component.filterOptions[field.key] = [];
+                component.filtered[field.key] = [];
                 component.data.forEach(function(quote){
                     if(!component.filterOptions[field.key].includes(quote[field.key])){
                         component.filterOptions[field.key].push(quote[field.key]);
