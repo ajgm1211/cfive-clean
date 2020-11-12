@@ -571,14 +571,10 @@ class PdfV2Controller extends Controller
                     foreach ($item as $rate) {
                         foreach ($rate->charge_lcl_air as $v_freight) {
                             if ($v_freight->type_id == 3) {
-                                if ($freight_charges_grouped->count() > 1) {
-                                    $typeCurrency = $currency_cfg->alphacode;
+                                if ($quote->pdf_option->grouped_freight_charges == 1) {
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                                    } else {
-                                        $typeCurrency = @$rate->currency->alphacode;
-                                    }
+                                    $typeCurrency = @$rate->currency->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_freight->currency_id, $typeCurrency);
 
