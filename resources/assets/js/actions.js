@@ -520,6 +520,9 @@ export default {
         delete(id, type) {
             return api.call('post', `/api/quote/localcharge/lcl/delete/${id}`, { type: type });
         },
+        total(params) {
+            return api.call('get', '/api/quote/localcharge/lcl/total', { params })
+        },
     },
     providers: {
         list(params, callback, route) {

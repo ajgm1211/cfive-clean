@@ -252,7 +252,7 @@
                                                 charge.id,
                                                 charge.currency.id,
                                                 'currency_id',
-                                                1
+                                                6
                                             )
                                         "
                                     ></multiselect>
@@ -282,12 +282,34 @@
                                 >
 
                                 <b-td
-                                    ><span><b>150</b></span></b-td
+                                    ><span
+                                        ><b>{{ totals.total }}</b></span
+                                    ></b-td
                                 >
 
-                                <b-td
-                                    ><span><b>EUR</b></span></b-td
-                                >
+                                <b-td>
+                                    <multiselect
+                                        v-model="totals.currency"
+                                        :options="
+                                            datalists['filtered_currencies']
+                                        "
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Select a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                totals.id,
+                                                totals.currency.id,
+                                                'currency_id',
+                                                6
+                                            )
+                                        "
+                                    ></multiselect>
+                                </b-td>
 
                                 <b-td></b-td>
                             </b-tr>
@@ -1013,15 +1035,27 @@ export default {
                 quote_id: this.$route.params.id,
                 port_id: this.value.id,
             };
-            actions.localcharges
-                .total(data)
-                .then((response) => {
-                    this.totals = response.data;
-                    this.loaded = true;
-                })
-                .catch((data) => {
-                    //
-                });
+            if (this.currentQuoteData.type == "FCL") {
+                actions.localcharges
+                    .total(data)
+                    .then((response) => {
+                        this.totals = response.data;
+                        this.loaded = true;
+                    })
+                    .catch((data) => {
+                        //
+                    });
+            }else{
+                actions.localchargeslcl
+                    .total(data)
+                    .then((response) => {
+                        this.totals = response.data;
+                        this.loaded = true;
+                    })
+                    .catch((data) => {
+                        //
+                    });
+            }
         },
         getCarriers() {
             let self = this;
@@ -1093,7 +1127,7 @@ export default {
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
-            }else{
+            } else {
                 actions.localchargeslcl
                     .delete(id, type)
                     .then((response) => {
