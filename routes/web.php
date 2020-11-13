@@ -1097,6 +1097,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/localcharge/lcl', 'LocalChargeQuotationLclController@localcharges');
     Route::post('/api/quote/localcharge/lcl/store', 'LocalChargeQuotationLclController@store');
     Route::post('/api/quote/localcharge/lcl/delete/{id}', 'LocalChargeQuotationLclController@destroy');
+    Route::get('/api/quote/localcharge/lcl/total', 'LocalChargeQuotationLclController@getTotal');
 
     /** PDF */
     Route::get('/api/quote/pdf/{quote}', 'PdfController@quote')->middleware('check_company:quote');

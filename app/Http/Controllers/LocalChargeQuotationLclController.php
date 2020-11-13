@@ -12,6 +12,7 @@ use App\Http\Requests\StoreLocalChargeQuote;
 use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteLcl;
+use App\LocalChargeQuoteLclTotal;
 use App\LocalChargeQuoteTotal;
 use App\SaleTermCharge;
 use App\SaleTermCode;
@@ -114,7 +115,7 @@ class LocalChargeQuotationLclController extends Controller
 
             $charge = $localcharge['surcharge']['name'];
 
-            LocalChargeQuoteLcl::create([
+            $local_charge_lcl = LocalChargeQuoteLcl::create([
                 'price' => $localcharge['price_per_unit'],
                 'units' => $localcharge['units'],
                 'profit' => $localcharge['markup'],
@@ -127,6 +128,8 @@ class LocalChargeQuotationLclController extends Controller
                 'quote_id' => $request->quote_id,
                 'type_id' => $request->type_id,
             ]);
+
+            $local_charge_lcl->totalize();
         }
 
         return response()->json(['success' => 'Ok']);
@@ -142,7 +145,12 @@ class LocalChargeQuotationLclController extends Controller
     {
         switch ($request->type) {
             case 1:
-                LocalChargeQuoteLcl::destroy($id);
+
+                $local_charge_quote = LocalChargeQuoteLcl::findOrFail($id);
+
+                $local_charge_quote->delete();
+
+                $local_charge_quote->totalize();
                 break;
             case 2:
                 ChargeLclAir::destroy($id);
@@ -150,5 +158,19 @@ class LocalChargeQuotationLclController extends Controller
         }
 
         return response()->json(['success' => 'Ok']);
+    }
+
+    /**
+     * getTotal
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function getTotal(Request $request)
+    {
+
+        $total = LocalChargeQuoteLclTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
+
+        return $total;
     }
 }
