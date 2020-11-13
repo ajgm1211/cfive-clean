@@ -269,9 +269,9 @@ class AutomaticRate extends Model
             //adding autorate markups
             if ($this->markups != null) {
                 $markups = json_decode($this->markups, true);
-                $markups['total'] = $markups['per_unit'] * $total_units;
+                $markups['total'] = @$markups['per_unit'] * $total_units;
                 $totals_usd['total'] += $markups['total'];
-                $totals_usd['per_unit'] += $markups['per_unit'];
+                $totals_usd['per_unit'] += @$markups['per_unit'];
             } else {
                 $markups = [];
                 $markups['total'] = 0;

@@ -433,6 +433,7 @@ class LocalChargeQuotationController extends Controller
                 $total->update();
 
                 $total->totalLcl($index);
+                $total->totalize();
                 break;
         }
 
