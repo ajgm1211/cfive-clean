@@ -705,6 +705,7 @@ class QuoteV2 extends Model  implements HasMedia
 
         if ($size != 0 && $equip != "[]") {
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
+            $equip_array = $this->validateEquipment($equip_array);
             $full_equip = "";
 
             foreach ($equip_array as $eq) {
@@ -767,5 +768,37 @@ class QuoteV2 extends Model  implements HasMedia
         }
         
         return $value;
+    }
+
+    public function validateEquipment(Array $equipment){
+        
+        foreach($equipment as $index=>$eq){
+            if($eq == "20"){
+                $equipment[$index] = "1";
+            }else if($eq == "40"){
+                $equipment[$index] = "2";
+            }else if($eq == "40HC"){
+                $equipment[$index] = "3";
+            }else if($eq == "45"){
+                $equipment[$index] = "4";
+            }if($eq == "40NOR"){
+                $equipment[$index] = "5";
+            }else if($eq == "20RF"){
+                $equipment[$index] = "6";
+            }else if($eq == "40RF"){
+                $equipment[$index] = "7";
+            }else if($eq == "40HCRF"){
+                $equipment[$index] = "8";
+            }else if($eq == "20OT"){
+                $equipment[$index] = "9";
+            }else if($eq == "40OT"){
+                $equipment[$index] = "10";
+            }else if($eq == "20FR"){
+                $equipment[$index] = "11";
+            }else if($eq == "40FR"){
+                $equipment[$index] = "12";
+            }
+        }
+        return $equipment;
     }
 }
