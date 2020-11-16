@@ -1,47 +1,89 @@
 <template>
-    <div class="search">
+    <div class="search pt-5">
 
          <b-form ref="form">
 
-            <div class="row justify-content-between mr-0 ml-0">
+            <div class="row mr-0 ml-0">
 
-                <div class="col-4">FCL</div>
-                <div class="col-4">
-                    <b-button v-b-toggle.collapse-1 class="btn-link-blue">aditional services</b-button>
+                <div class="col-12 col-sm-1">
+                    <multiselect
+                        v-model="type"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :clear-on-select="true"
+                        :show-labels="false"
+                        :options="optionsType"
+                        class="s-input no-select-style"
+                    >
+                    </multiselect>
+                </div>
+                <div class="col-12 col-sm-2">
+                    <multiselect
+                        v-model="deliveryType"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :clear-on-select="true"
+                        :show-labels="false"
+                        :options="optionsDeliveryType"
+                        class="s-input no-select-style delivery-type"
+                    >
+                    </multiselect>
+                </div> 
+                <div class="col-12 col-sm-9">
+                    <b-button v-b-toggle.collapse-1 class="btn-aditonal-services">aditional services <b-icon icon="caret-down-fill" class="ml-1"></b-icon></b-button>
                 </div>
 
             </div>
 
             <div class="row mr-0 ml-0">
 
-                <div class="col-12 col-sm-2">import</div>
+                <div class="col-12 col-sm-1">
+
+                    <b-form-radio-group
+                        v-model="selected"
+                        :options="options"
+                        buttons
+                        button-variant="outline-primary"
+                        size="lg"
+                        name="direction"
+                        class="radio-direction"
+                    ></b-form-radio-group>
+
+                </div>
+
                 <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="valueOrigen"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsOrigen"
-                        placeholder="From" 
-                        class="s-input"
-                    >
-                    </multiselect>
+                    <label>
+                        <multiselect
+                            v-model="valueOrigen"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionsOrigen"
+                            placeholder="From" 
+                            class="s-input"
+                        >
+                        </multiselect>
+                        <img src="/images/port.svg" alt="port">
+                    </label>
                 </div>
                 <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="valueDestination"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsDestination"
-                        placeholder="To" 
-                        class="s-input"
-                    >
-                    </multiselect>
+                    <label>
+                        <multiselect
+                            v-model="valueDestination"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionsDestination"
+                            placeholder="To" 
+                            class="s-input"
+                        >
+                        </multiselect>
+                        <img src="/images/port.svg" alt="port">
+                    </label>
                 </div>
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-3">
                     <date-range-picker
                         :opens="'center'"
                         :locale-data="{
@@ -53,85 +95,126 @@
                         :timePicker="false"
                         v-model="date"
                         :linkedCalendars="true"
+                        class="s-input"
                     >
                     </date-range-picker>
                 </div>
                 <div class="col-12 col-sm-2">
-                    <multiselect
-                        v-model="container"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="container"
-                        placeholder="Select Containers" 
-                        class="s-input"
-                    >
-                    </multiselect>
+                    <label>
+                        <multiselect
+                            v-model="container"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionContainer"
+                            placeholder="Containers" 
+                            class="s-input"
+                        >
+                        </multiselect>
+                        <img src="/images/container.svg" alt="port">
+                    </label>
                 </div>
 
             </div>
 
             <b-collapse id="collapse-1" class="mt-2">
 
-                <h4>ADDITIONAL SERVICES</h4>
+                <h6 class="t-as mt-3 mb-3">ADDITIONAL SERVICES</h6>
             
                 <div class="row mr-0 ml-0">
 
-                <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="valueOrigen"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsOrigen"
-                        placeholder="From" 
-                        class="s-input"
-                    >
-                    </multiselect>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="valueDestination"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsDestination"
-                        placeholder="To" 
-                        class="s-input"
-                    >
-                    </multiselect>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="container"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="container"
-                        placeholder="Select Containers" 
-                        class="s-input"
-                    >
-                    </multiselect>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <multiselect
-                        v-model="container"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="container"
-                        placeholder="Select Containers" 
-                        class="s-input"
-                    >
-                    </multiselect>
+                    <div class="col-12 col-sm-3">
+                        <label>
+                            <multiselect
+                            v-model="company"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionCompany"
+                            placeholder="Company" 
+                            class="s-input"
+                            >
+                            </multiselect>
+                            <img src="/images/empresa.svg" alt="port">
+                        </label>
+                    </div>
+                
+                    <div class="col-12 col-sm-3">
+                        <label>
+                            <multiselect
+                            v-model="contact"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionContact"
+                            placeholder="Contact" 
+                            class="s-input"
+                            >
+                            </multiselect>
+                            <img src="/images/contacto.svg" alt="port">
+                        </label>
+                    </div>
+
+                    <div class="col-12 col-sm-3">
+                        <label>
+                            <multiselect
+                            v-model="pricelevel"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionPriceLevel"
+                            placeholder="Price Level" 
+                            class="s-input"
+                            >
+                            </multiselect>
+                            <img src="/images/pricelevel.svg" alt="port">
+                        </label>
+                    </div>
+
+                    <div class="col-12 col-sm-3">
+                        <label>
+                            <multiselect
+                            v-model="carriers"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionCarriers"
+                            placeholder="Carriers" 
+                            class="s-input"
+                            >
+                            </multiselect>
+                            <img src="/images/carrier.svg" alt="port">
+                        </label>
+                    </div>
+
                 </div>
 
-            </div>
+                <div class="row mr-0 ml-0 mt-5 d-flex justify-content-start">
+                    <b-form-checkbox
+                        id="originCharges"
+                        v-model="originCharges"
+                        name="originCharges"
+                        value="accepted"
+                        unchecked-value="not_accepted"
+                        class="mr-5"
+                    >
+                        Include origin charges
+                    </b-form-checkbox>
+                    <b-form-checkbox
+                        id="destinationCharges"
+                        v-model="destinationCharges"
+                        name="destinationCharges"
+                        value="accepted"
+                        unchecked-value="not_accepted"
+                    >
+                        Include destination charges
+                    </b-form-checkbox>
+                </div>
                 
             </b-collapse>
 
@@ -159,6 +242,10 @@ export default {
     data() {
         return {
             date: '',
+            type: 'FCL',
+            container: '',
+            selected: 'radio1',
+            deliveryType: 'PORT TO PORT',
             valueOrigen: [],
             valueDestination: [],
             optionsOrigen: [
@@ -177,7 +264,17 @@ export default {
                 { name: 'Laravel', language: 'PHP' },
                 { name: 'Phoenix', language: 'Elixir' }
             ],
-            container: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched']
+            options: [
+                { text: 'Import', value: 'import' },
+                { text: 'Export', value: 'export' }
+            ],
+            optionCompany: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionContact: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionPriceLevel: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionCarriers: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionContainer: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionsType: ['FCL', 'LCL', 'Air'],
+            optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR']
         }
     }
 }
