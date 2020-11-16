@@ -116,7 +116,7 @@ class LocalChargeQuotationLclController extends Controller
             $charge = $localcharge['surcharge']['name'];
 
             $local_charge_lcl = LocalChargeQuoteLcl::create([
-                'price' => $localcharge['price_per_unit'],
+                'price' => (((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'])/(float)$localcharge['units'],
                 'units' => $localcharge['units'],
                 'profit' => $localcharge['markup'],
                 'total' => ((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'],

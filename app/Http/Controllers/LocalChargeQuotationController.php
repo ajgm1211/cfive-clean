@@ -12,6 +12,7 @@ use App\Http\Requests\StoreLocalChargeQuote;
 use App\Http\Resources\SaleTermChargeResource;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteLcl;
+use App\LocalChargeQuoteLclTotal;
 use App\LocalChargeQuoteTotal;
 use App\SaleTermCharge;
 use App\SaleTermCode;
@@ -435,6 +436,14 @@ class LocalChargeQuotationController extends Controller
                 $total->totalLcl($index);
                 $total->totalize();
                 break;
+            case 7:
+                $index = $request->index;
+                $total = LocalChargeQuoteLclTotal::findOrFail($id);
+                $total->$index = $request->data;
+                $total->update();
+
+                $total->totalize();
+                break;
         }
 
         return response()->json(['success' => 'Ok']);
@@ -490,10 +499,10 @@ class LocalChargeQuotationController extends Controller
         ]);
 
         LocalChargeQuoteLcl::create([
-            'price' => $request->charges['price'],
+            'price' => (((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit']) / (float)$request->charges['units'],
             'units' => $request->charges['units'],
             'profit' => $request->charges['profit'],
-            'total' => ($request->charges['price'] * $request->charges['units']) + $request->charges['profit'],
+            'total' => ((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit'],
             'charge' => $request->charges['surcharge']['name'],
             'surcharge_id' => $request->charges['surcharge']['id'],
             'calculation_type_id' => $request->charges['calculation_type']['id'],

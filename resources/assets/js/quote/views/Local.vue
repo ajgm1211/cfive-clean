@@ -300,14 +300,7 @@
                                         placeholder="Select a currency"
                                         label="alphacode"
                                         track-by="alphacode"
-                                        @input="
-                                            onUpdate(
-                                                totals.id,
-                                                totals.currency.id,
-                                                'currency_id',
-                                                6
-                                            )
-                                        "
+                                        @input="onUpdate(totals.id,totals.currency.id,'currency_id',7)"
                                     ></multiselect>
                                 </b-td>
 
