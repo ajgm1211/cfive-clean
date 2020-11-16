@@ -1527,13 +1527,13 @@ trait QuoteV2Trait
                     $totalized = 0;
 
                     if (isset($array_amounts['c' . $c->code])) {
-                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                        ${$amount . '_' . $c->code} = $this->tofloat($array_amounts['c' . $c->code]);
                         ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
                         ${$total . '_' . $c->code} = ${$amount . '_' . $total . '_' . $c->code};
                     }
 
                     if (isset($array_markups['m' . $c->code])) {
-                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                        ${$markup . '_' . $c->code} = $this->tofloat($array_markups['m' . $c->code]);
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
 
