@@ -295,7 +295,7 @@ class Contract extends Model implements HasMedia, Auditable
         $general = new collection();
         $collectionRate = new Collection();
 
-        //$idCurrency = $company->currency_id;
+        $idCurrency = $company->currency_id;
         $company_user_id = $company->id;
 
         $equipment = array('1', '2', '3', '4', '5');
@@ -374,9 +374,9 @@ class Contract extends Model implements HasMedia, Auditable
             //$arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
             $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
 
-            /*$equipmentFilter = $arregloR['arregloEquipment'];
+            $equipmentFilter = $arregloR['arregloEquipment'];
 
-            $carrier_all = Carrier::where('name', 'ALL')->select('id')->first();
+            /*$carrier_all = Carrier::where('name', 'ALL')->select('id')->first();*/
 
             // ################### Calculos local  Charges #############################
 
@@ -392,18 +392,20 @@ class Contract extends Model implements HasMedia, Auditable
 
                 $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
-                // Condicion para enviar los terminos de venta o compra
+             /*   // Condicion para enviar los terminos de venta o compra
                 if (isset($local->surcharge->saleterm->name)) {
                     $terminos = $local->surcharge->saleterm->name;
                 } else {
                     $terminos = $local->surcharge->name;
-                }
+                }*/
+
+
 
                 foreach ($local->localcharcarriers as $localCarrier) {
                     if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
-                        $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
+                        $localParams = array('local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
-                        if ($chargesOrigin != null) {
+                       /* if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
                                 foreach ($containers as $cont) {
                                     $name_arreglo = 'array' . $cont->code;
@@ -412,9 +414,9 @@ class Contract extends Model implements HasMedia, Auditable
                                     }
                                 }
                             }
-                        }
+                        }*/
                         //Destiny
-                        if ($chargesDestination != null) {
+                        /*if ($chargesDestination != null) {
                             if ($local->typedestiny_id == '2') {
                                 foreach ($containers as $cont) {
 
@@ -425,10 +427,11 @@ class Contract extends Model implements HasMedia, Auditable
                                     }
                                 }
                             }
-                        }
+                        }*/
                         //Freight
-                        if ($chargesFreight != null) {
+                   
                             if ($local->typedestiny_id == '3') {
+                                
                                 $band = false;
                                 //Se ajusta el calculo para freight tomando en cuenta el rate currency
                                 $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
@@ -445,10 +448,10 @@ class Contract extends Model implements HasMedia, Auditable
                                     }
                                 }
                             }
-                        }
+                        
                     }
                 }
-            }*/
+            }
 
             $totalRates += $totalT;
             $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
