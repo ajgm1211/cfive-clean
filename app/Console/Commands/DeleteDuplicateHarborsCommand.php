@@ -2,12 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\GlobalCharCountryPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
+use App\GlobalCharPortCountry;
+use App\GlobalCharPortLcl;
 use App\Harbor;
 use App\LocalCharPort;
 use App\Rate;
 use App\RateLcl;
+use App\TransitTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -18,14 +22,14 @@ class DeleteDuplicateHarborsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:deleteDuplicateHarbors {duplicate} {original}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command to delete duplicate harbors from database, the first parameter is the duplicate ID and the second is the original ID';
 
     /**
      * Create a new command instance.
@@ -46,34 +50,25 @@ class DeleteDuplicateHarborsCommand extends Command
     {
         try {
 
-            $array = [2912, 1552, 1954, 805];
-            $duplicate = [2913, 2298, 2566, 2757];
+            $duplicate = $this->argument('duplicate');
+            $original = $this->argument('original');
 
-            foreach ($array as $item) {
-                foreach ($duplicate as $value) {
-                    LocalCharPort::where('port_orig',$value)->update(['port_orig'=>$item]);
-                    LocalCharPort::where('port_dest',$value)->update(['port_dest'=>$item]);
-                    GlobalCharge::where('port_orig',$value)->update(['port_orig'=>$item]);
-                    GlobalCharge::where('port_dest',$value)->update(['port_dest'=>$item]);
-                    GlobalCharPort::where('port_orig', $value)->update(['port_orig'=>$item]);
-                    Rate::where('origin_port', $value)->update(['origin_port'=>$item]);
-                    Rate::where('destiny_port', $value)->update(['destiny_port'=>$item]);
-                    RateLcl::where('origin_port', $value)->update(['origin_port'=>$item]);
-                    RateLcl::where('destiny_port', $value)->update(['destiny_port'=>$item]);
+            LocalCharPort::where('port_orig', $duplicate)->update(['port_orig' => $original]);
+            LocalCharPort::where('port_dest', $duplicate)->update(['port_dest' => $original]);
+            GlobalCharPort::where('port_orig', $duplicate)->update(['port_orig' => $original]);
+            GlobalCharPort::where('port_dest', $duplicate)->update(['port_dest' => $original]);
+            GlobalCharPortLcl::where('port_orig', $duplicate)->update(['port_orig' => $original]);
+            GlobalCharPortLcl::where('port_dest', $duplicate)->update(['port_dest' => $original]);
+            GlobalCharPortCountry::where('port_orig', $duplicate)->update(['port_orig' => $original]);
+            GlobalCharCountryPort::where('port_dest', $duplicate)->update(['port_dest' => $original]);
+            Rate::where('origin_port', $duplicate)->update(['origin_port' => $original]);
+            Rate::where('destiny_port', $duplicate)->update(['destiny_port' => $original]);
+            RateLcl::where('origin_port', $duplicate)->update(['origin_port' => $original]);
+            RateLcl::where('destiny_port', $duplicate)->update(['destiny_port' => $original]);
+            TransitTime::where('origin_id', $duplicate)->update(['origin_id' => $original]);
+            TransitTime::where('destination_id', $duplicate)->update(['destination_id' => $original]);
 
-                    Harbor::where('id',$value)->delete();
-                }
-            }
-
-            /*UPDATE global_char_port_countries set port_orig = 1721 where port_orig=2418;
-            UPDATE ebdb.localcharports set port_orig = 747 where port_orig = 2418;
-            UPDATE ebdb.localcharports set port_dest = 1721 where port_dest = 2418;
-            UPDATE ebdb.globalcharport set port_orig = 747 where port_orig = 2418;
-            UPDATE ebdb.globalcharport set port_dest = 1721 where port_dest = 2418;
-            UPDATE rates set origin_port = 1721 where origin_port=2418;
-            UPDATE rates set destiny_port = 1721 where destiny_port=2418;
-            UPDATE rates_lcl set origin_port = 1721 where origin_port=2418;
-            UPDATE rates_lcl set destiny_port = 1721 where destiny_port=2418;*/
+            Harbor::where('id', $duplicate)->delete();
 
         } catch (\Exception $e) {
             return $this->info($e->getMessage());
