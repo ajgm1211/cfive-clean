@@ -30,6 +30,7 @@ use App\Provider;
 use App\Country;
 use App\InlandDistance;
 use App\CalculationTypeLcl;
+use App\DestinationType;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
 use Illuminate\Support\Collection;
@@ -45,7 +46,9 @@ class QuotationController extends Controller
 
     public function list(Request $request)
     {
-        $results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
+        //$results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
+
+        $results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
     }
@@ -157,6 +160,10 @@ class QuotationController extends Controller
             return $ctype->only(['id','name']);
         });
 
+        $destination_types = DestinationType::get()->map(function ($desttype){
+            return $desttype->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -182,7 +189,8 @@ class QuotationController extends Controller
             'distances',
             'cargo_types',
             'calculationtypeslcl',
-            'filtered_currencies'
+            'filtered_currencies',
+            'destination_types'
         );
 
         return response()->json(['data'=>$data]);
@@ -323,7 +331,6 @@ class QuotationController extends Controller
                     'incoterm_id' => 'sometimes|nullable',
                     'payment_conditions' => 'sometimes|nullable',
                     'kind_of_cargo' => 'sometimes|nullable'
-
                 ]);
             } else if($request->input('cargo_type_id')!=null){
                 $data = $request->validate([
