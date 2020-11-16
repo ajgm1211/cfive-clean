@@ -17,7 +17,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class SyncCompaniesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     /**
      * Create a new job instance.
      *
@@ -27,7 +26,6 @@ class SyncCompaniesJob implements ShouldQueue
     {
         //
     }
-
     /**
      * Execute the job.
      *
@@ -46,25 +44,17 @@ class SyncCompaniesJob implements ShouldQueue
             $e->getMessage();
         }
     }
-
     public function setData($setting)
     {
         $data = new Connection();
-
         $page = 1;
-
         do {
-
             $uri =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
-
             $response = $data->getData($uri);
-
             $max_page = ceil($response['count'] / 100);
-
             foreach ($response['entidades'] as $item) {
                 $data = new Connection();
                 $invoice = $data->getInvoices($item['codigo']);
-
                 if ($invoice) {
                     Company::updateOrCreate([
                         'api_id' => $item['codigo']
@@ -77,10 +67,8 @@ class SyncCompaniesJob implements ShouldQueue
                     ]);
                 }
             }
-
             $page += 1;
         } while ($page <= $max_page);
-
         \Log::info('Syncronization with vForwarding completed successfully!');
     }
 }

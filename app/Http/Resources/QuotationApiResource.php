@@ -20,38 +20,42 @@ class QuotationApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        
+
         $data = [
             'id' => $this->id,
             'type' => $this->type,
             'quote_id' => $this->quote_id,
             'custom_quote_id' => $this->custom_quote_id,
-            'equipment' => $this->transformEquipmentSingle($this->equipment),
-            "valid_from"=> $this->validity_start,
-            "valid_until"=> $this->validity_end,
-            "date_issued"=> $this->date_issued,
-            "status"=> $this->status,
-            "incoterm"=> $this->incoterm->name ?? null,
-            "delivery"=> $this->delivery,
-            "cargo_type"=> $this->cargoType()->first()->name ?? null,
-            "total_quantity"=> $this->total_quantity,
-            "total_weight"=> $this->total_weight,
-            "total_volume"=> $this->total_volume,
-            "chargeable_weight"=> $this->chargeable_weight,
-            "kind_of_cargo"=> $this->kind_of_cargo,
-            "gdp"=> $this->gdp,
-            "risk_level"=> $this->risk_level,
-            "commodity"=> $this->commodity,
-            "company_name"=> $this->company->business_name ?? null,
-            "contact_name"=> $this->contact->full_name ?? null,
-            "spanish_remarks"=> $this->remarks_spanish,
-            "english_remarks"=> $this->remarks_english,
-            "portuguese_remarks"=> $this->remarks_portuguese,
-            "localcharge_remarks"=> $this->localcharge_remarks,
-            "spanish_terms_conditions"=> $this->terms_and_conditions,
-            "english_terms_conditions"=> $this->terms_english,
-            "portuguese_terms_conditions"=> $this->terms_portuguese,
-            "payment_conditions"=> $this->payment_conditions,
+            'equipment' => $this->transformEquipmentSingle($this->equipment) ?? null,
+            "valid_from" => $this->validity_start,
+            "valid_until" => $this->validity_end,
+            "date_issued" => $this->date_issued,
+            "status" => $this->status,
+            "incoterm" => $this->incoterm->name ?? null,
+            "delivery" => $this->delivery,
+            "cargo_type" => $this->cargoType()->first()->name ?? null,
+            "total_quantity" => $this->total_quantity,
+            "total_weight" => $this->total_weight,
+            "total_volume" => $this->total_volume,
+            "chargeable_weight" => $this->chargeable_weight,
+            "kind_of_cargo" => $this->kind_of_cargo,
+            "gdp" => $this->gdp,
+            "risk_level" => $this->risk_level,
+            "commodity" => $this->commodity,
+            "spanish_remarks" => $this->remarks_spanish,
+            "english_remarks" => $this->remarks_english,
+            "portuguese_remarks" => $this->remarks_portuguese,
+            "localcharge_remarks" => $this->localcharge_remarks,
+            "spanish_terms_conditions" => $this->terms_and_conditions,
+            "english_terms_conditions" => $this->terms_english,
+            "portuguese_terms_conditions" => $this->terms_portuguese,
+            "payment_conditions" => $this->payment_conditions,
+            "owner" => $this->company_user->name ?? null,
+            "created_by" => $this->user->fullname ?? null,
+            "created_at" => $this->created_at->toDateTimeString(),
+            "updated_at" => $this->updated_at->toDateTimeString(),
+            "company" => $this->company()->select('business_name', 'address', 'phone')->first() ?? null,
+            "contact" => $this->contact()->select('first_name', 'last_name', 'email', 'phone')->first() ?? null,
             'ocean_freight' => QuotationOceanFreightResource::collection($this->rates_v2()->SelectFields()->SelectCharge()->CarrierRelation()->get()),
             'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1)),
             'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2)),
@@ -59,7 +63,6 @@ class QuotationApiResource extends JsonResource
         ];
 
         return $data;
-        
     }
 
     public function transformEquipmentSingle($equipment)
@@ -93,8 +96,8 @@ class QuotationApiResource extends JsonResource
 
     public function localCharges($id, $type)
     {
-        $localcharges = LocalChargeQuote::select('id','price','profit','total','charge','currency_id','port_id','calculation_type_id')
-        ->Quote($id)->GetPort()->Type($type)->get();
+        $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id')
+            ->Quote($id)->GetPort()->Type($type)->get();
 
         return $localcharges;
     }

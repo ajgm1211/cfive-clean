@@ -31,9 +31,15 @@ class QuotationApiController extends Controller
         $type = $request->type;
         $status = $request->status;
         $integration = $request->integration;
+        $paginate = 100;
+
+        if ($request->paginate) {
+            $paginate = $request->paginate;
+        }
+
         $company_user_id = Auth::user()->company_user_id;
 
-        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->AuthUserCompany($company_user_id)->get();
+        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->AuthUserCompany($company_user_id)->paginate($paginate);
 
         //Update Integration Quote Status
         if ($integration) {
@@ -60,7 +66,7 @@ class QuotationApiController extends Controller
             ->AuthUserCompany($company_user_id)->findOrFail($id);
 
         $data = new QuotationApiResource($quote);
-        
+
         return $data;
     }
 

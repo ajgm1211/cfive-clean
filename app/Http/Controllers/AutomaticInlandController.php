@@ -130,7 +130,7 @@ class AutomaticInlandController extends Controller
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
-            'provider'=> 'old field',
+            'provider'=> 'Inland',
             'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],

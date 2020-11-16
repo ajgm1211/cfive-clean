@@ -54,4 +54,5 @@ return [
     "inland" => "Inland",
     "provider" => "Provider",
     "distance" => "Distance",
+    "ocean_freight" => "Ocean freight",
 ];
