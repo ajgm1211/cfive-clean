@@ -22,14 +22,14 @@ class DeleteDuplicateHarborsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:deleteDuplicateHarbors {duplicate} {original}';
+    protected $signature = 'command:deleteDuplicateHarbors {original} {duplicate}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command to delete duplicate harbors from database, the first parameter is the duplicate ID and the second is the original ID';
+    protected $description = 'Command to delete duplicate harbors from database, the first parameter is the original ID and the second one is the duplicate ID';
 
     /**
      * Create a new command instance.
@@ -50,8 +50,8 @@ class DeleteDuplicateHarborsCommand extends Command
     {
         try {
 
-            $duplicate = $this->argument('duplicate');
             $original = $this->argument('original');
+            $duplicate = $this->argument('duplicate');
 
             LocalCharPort::where('port_orig', $duplicate)->update(['port_orig' => $original]);
             LocalCharPort::where('port_dest', $duplicate)->update(['port_dest' => $original]);
