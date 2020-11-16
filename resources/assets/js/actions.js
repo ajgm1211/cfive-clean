@@ -243,6 +243,9 @@ export default {
         retrieve(id) {
             return api.call('get', `/api/v2/sale_terms/${id}`, {});
         },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/sale_terms/destroyAll`, { ids: ids });
+        },
     },
     sale_charges: {
         list(params, callback, route) {
@@ -357,7 +360,7 @@ export default {
             return api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, {})
         },
         delete(id) {
-            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy/`, {});
+            return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy`, {});
         },
 
     },

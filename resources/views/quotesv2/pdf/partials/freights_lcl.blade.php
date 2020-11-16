@@ -84,7 +84,7 @@
                                         <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                                         <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                                     @endif
-                                    <td >{{$currency_cfg->alphacode}}</td>
+                                    <td >{{@$rate->currency->alphacode}}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -389,5 +389,3 @@
                 </table>                
             @endif
         @endif
-
-        <br>
