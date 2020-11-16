@@ -2498,12 +2498,12 @@ class QuoteV2Controller extends Controller
             }
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
-                    $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'carrier_id' => $request->input('carrieManual'), 'rates' => $arregloNull, 'validity_start' => $since, 'validity_end' => $until, 'markups' => $arregloNull, 'currency_id' => $idCurrency, 'total' => $arregloNull, 'quote_id' => $quote->id]);
+                    $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'carrier_id' => $request->input('carrieManual'), 'rates' => $arregloNull, 'validity_start' => $since, 'validity_end' => $until, 'markups' => $arregloNull, 'currency_id' => $request->input('currency_id'), 'total' => $arregloNull, 'quote_id' => $quote->id]);
                     $rate = AutomaticRate::create($request->all());
                 }
             }
         } else if ($quote->type == 'AIR') {
-            $request->request->add(['contract' => '', 'origin_airport_id' => $request->input('origin_airport_id'), 'destination_airport_id' => $request->input('destination_airport_id'), 'airline_id' => $request->input('airline_id'), 'rates' => $arregloNull, 'markups' => $arregloNull, 'validity_start' => $since, 'validity_end' => $until, 'currency_id' => $idCurrency, 'total' => $arregloNull, 'quote_id' => $quote->id]);
+            $request->request->add(['contract' => '', 'origin_airport_id' => $request->input('origin_airport_id'), 'destination_airport_id' => $request->input('destination_airport_id'), 'airline_id' => $request->input('airline_id'), 'rates' => $arregloNull, 'markups' => $arregloNull, 'validity_start' => $since, 'validity_end' => $until, 'currency_id' => $request->input('currency_id'), 'total' => $arregloNull, 'quote_id' => $quote->id]);
             $rate = AutomaticRate::create($request->all());
         }
 
@@ -2544,8 +2544,9 @@ class QuoteV2Controller extends Controller
         $harbors = Harbor::pluck('display_name', 'id');
         $carriers = Carrier::pluck('name', 'id');
         $airlines = Airline::pluck('name', 'id');
+        $currencies = Currency::pluck('alphacode', 'id');
 
-        return view('quotesv2.partials.editRate', compact('rate', 'quote', 'harbors', 'carriers', 'airlines'));
+        return view('quotesv2.partials.editRate', compact('rate', 'quote', 'harbors', 'carriers', 'airlines', 'currencies'));
     }
 
     /**
@@ -2581,9 +2582,11 @@ class QuoteV2Controller extends Controller
         if ($request->airline_id) {
             $rate->airline_id = $request->airline_id;
         }
+
         $rate->transit_time = $request->transit_time;
         $rate->schedule_type = $request->schedule_type;
         $rate->via = $request->via;
+        $rate->currency_id = $request->currency_id;
         $rate->update();
 
         return redirect()->action('QuoteV2Controller@show', setearRouteKey($rate->quote_id));
