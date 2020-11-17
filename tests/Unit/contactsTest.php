@@ -1,43 +1,43 @@
 <?php
 
-namespace Tests\Unit;
+// namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Contact;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+// use Tests\TestCase;
+// use App\Contact;
+// use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ContacsTest extends TestCase
-{
-    use DatabaseTransactions;
+// class ContacsTest extends TestCase
+// {
+//     use DatabaseTransactions;
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testcontacts()
-    {
-        $contacts = factory(Contact::class)->create();
-        $this->seeInDatabase('contacts', $contacts->toArray());
-    }
+//     /**
+//      * A basic test example.
+//      *
+//      * @return void
+//      */
+//     public function testcontacts()
+//     {
+//         $contacts = factory(Contact::class)->create();
+//         $this->seeInDatabase('contacts', $contacts->toArray());
+//     }
 
 
-    public function testcontactsupdated()
-    {
-        $model = factory(Contact::class)->create();
+//     public function testcontactsupdated()
+//     {
+//         $model = factory(Contact::class)->create();
 
-        $contacts = Contact::find($model->id);
+//         $contacts = Contact::find($model->id);
 
-        $contacts->first_name = 'luisito';
+//         $contacts->first_name = 'luisito';
 
-        $contacts->update();
+//         $contacts->update();
 
-        // $model
+//         // $model
 
-        $this->seeInDatabase('contacts', [
-            'first_name' => 'luisito'
-        ]);
-    }
-}
+//         $this->seeInDatabase('contacts', [
+//             'first_name' => 'luisito'
+//         ]);
+//     }
+// }
