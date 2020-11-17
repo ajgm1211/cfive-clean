@@ -409,6 +409,7 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
+                                        :disabled="true"
                                         placeholder="Choose a provider"
                                         label="name"
                                         track-by="name"
