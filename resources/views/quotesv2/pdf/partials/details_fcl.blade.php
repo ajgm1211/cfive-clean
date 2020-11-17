@@ -77,7 +77,7 @@
                     
                     <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
                     
-                    <p style="line-height:10px;">{{@$user->phone}}</p>
+                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
                 
                 </div>
                 <!-- End Client -->
