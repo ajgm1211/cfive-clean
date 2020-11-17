@@ -14,6 +14,7 @@ use App\InlandType;
 use App\Harbor;
 use App\InlandPort;
 use App\Provider;
+use Illuminate\Support\Facades\DB;
 
 class InlandController extends Controller
 {
@@ -231,7 +232,7 @@ class InlandController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
+        DB::table('inlands')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

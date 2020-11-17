@@ -46,6 +46,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasOne('App\Company', 'id', 'company_id');
     }
 
+    public function company_user()
+    {
+        return $this->belongsTo('App\CompanyUser');
+    }
+
     public function contact()
     {
         return $this->belongsTo('App\Contact');
@@ -252,6 +257,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',
@@ -635,6 +641,16 @@ class QuoteV2 extends Model  implements HasMedia
         $this->hasMany('App\SaleTermV2');
     }
 
+    public function local_charges()
+    {
+        return $this->hasMany('App\LocalChargeQuote','quote_id','id');
+    }
+
+    public function local_charges_totals()
+    {
+        return $this->hasMany('App\LocalChargeQuoteTotal','quote_id','id');
+    }
+
     public function duplicate()
     {
         $company_user = Auth::user('web')->worksAt();
@@ -649,7 +665,9 @@ class QuoteV2 extends Model  implements HasMedia
         if($new_quote->type == 'FCL'){
             $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges',
+                'local_charges_totals'
             );
         }else if($new_quote->type == 'LCL'){
             $this->with(

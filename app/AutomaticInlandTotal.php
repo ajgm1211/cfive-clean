@@ -36,68 +36,114 @@ class AutomaticInlandTotal extends Model
     {
         $quote = $this->quotev2()->first();
 
-        $equip = $quote->getContainerCodes($quote->equipment);
-
-        $equip_array = explode(',',$equip);
-
-        array_splice($equip_array,-1,1);
-
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
-
+    
         $currency = $company_user->currency()->first();
 
         $this->currency_id = $currency->id;
 
-        $inlands = AutomaticInland::where([
-            ['quote_id',$this->quote_id],
-            ['port_id',$this->port_id],
-            ['type',$this->type],
-            ['inland_address_id',$this->inland_address_id]])->get();
+        if($quote->type=='FCL'){
 
-        $totals_usd = [];
-
-        foreach($equip_array as $eq){
-            $totals_usd['c'.$eq] = 0;
-        }
+            $equip = $quote->getContainerCodes($quote->equipment);
+    
+            $equip_array = explode(',',$equip);
+    
+            array_splice($equip_array,-1,1);
         
-        foreach($inlands as $inland){
-            $amount_array = json_decode($inland->rate);
-            $inland_currency = $inland->currency()->first();
-            foreach($amount_array as $key=>$value){
+            $inlands = AutomaticInland::where([
+                ['quote_id',$this->quote_id],
+                ['port_id',$this->port_id],
+                ['type',$this->type],
+                ['inland_address_id',$this->inland_address_id]])->get();
+    
+            $totals_usd = [];
+    
+            foreach($equip_array as $eq){
+                $totals_usd['c'.$eq] = 0;
+            }
+            
+            foreach($inlands as $inland){
+                $amount_array = json_decode($inland->rate);
+                $inland_currency = $inland->currency()->first();
+                foreach($amount_array as $key=>$value){
+                    if($inland_currency->alphacode != 'USD'){
+                        $inland_conversion = $inland_currency->rates;
+                        $value /= $inland_conversion;
+                        $value = round($value,2);
+                    }
+                    $totals_usd[$key] += $value;
+                }
+            }
+    
+            if($this->markups != null){
+                $markups = json_decode($this->markups);
+                foreach($markups as $mark=>$profit){
+                    $clear_key = str_replace('m','c',$mark);
+                    if($currency->alphacode != 'USD'){
+                        $conversion = $currency->rates;
+                        $conv_profit = $profit/$conversion;
+                        $totals_usd[$clear_key] += round($conv_profit,2);
+                    }else{
+                        $totals_usd[$clear_key] += $profit;
+                    }
+                }
+            }
+    
+            if($currency->alphacode != 'USD'){
+                $conversion = $currency->rates;
+                foreach($totals_usd as $cont=>$price){
+                    $conv_price = $price*$conversion;
+                    $totals_usd[$cont] = round($conv_price,2);
+                }
+            }
+    
+            $totals = json_encode($totals_usd);
+            
+            $this->update(['totals'=>$totals]);
+        }else if($quote->type=='LCL'){
+        
+            $inlands = AutomaticInlandLclAir::where([
+                ['quote_id',$this->quote_id],
+                ['port_id',$this->port_id],
+                ['type',$this->type],
+                ['inland_address_id',$this->inland_address_id]])->get();
+    
+            $totals_usd['lcl_totals'] = 0;
+
+            foreach($inlands as $inland){
+                $value = $inland->total;
+                $inland_currency = $inland->currency()->first();
                 if($inland_currency->alphacode != 'USD'){
                     $inland_conversion = $inland_currency->rates;
                     $value /= $inland_conversion;
                     $value = round($value,2);
                 }
-                $totals_usd[$key] += $value;
+                $totals_usd['lcl_totals'] += $value;
             }
-        }
-
-        if($this->markups != null){
-            $markups = json_decode($this->markups);
-            foreach($markups as $mark=>$profit){
-                $clear_key = str_replace('m','c',$mark);
-                if($currency->alphacode != 'USD'){
-                    $conversion = $currency->rates;
-                    $conv_profit = $profit/$conversion;
-                    $totals_usd[$clear_key] += round($conv_profit,2);
-                }else{
-                    $totals_usd[$clear_key] += $profit;
+    
+            if($this->markups != null){
+                $markups = json_decode($this->markups);
+                foreach($markups as $mark=>$profit){
+                    if($currency->alphacode != 'USD'){
+                        $conversion = $currency->rates;
+                        $conv_profit = $profit/$conversion;
+                        $totals_usd['lcl_totals'] += round($conv_profit,2);
+                    }else{
+                        $totals_usd['lcl_totals'] += $profit;
+                    }
                 }
             }
-        }
-
-        if($currency->alphacode != 'USD'){
-            $conversion = $currency->rates;
-            foreach($totals_usd as $cont=>$price){
-                $conv_price = $price*$conversion;
-                $totals_usd[$cont] = round($conv_price,2);
+    
+            if($currency->alphacode != 'USD'){
+                $conversion = $currency->rates;
+                $conv_price = $totals_usd['lcl_totals']*$conversion;
+                $totals_usd['lcl_totals'] = round($conv_price,2);
             }
+    
+            $totals = json_encode($totals_usd);
+            
+            $this->update(['totals'=>$totals]);
         }
-
-        $totals = json_encode($totals_usd);
-        
-        $this->update(['totals'=>$totals]);
     }
 
     public function scopeQuotation($query, $quote)
@@ -113,5 +159,19 @@ class AutomaticInlandTotal extends Model
     public function scopeType($query, $type)
     {
         return $query->where('type', $type);
+    }
+
+    public function getTotalAttribute($array)
+    {
+        $array = json_decode($array);
+
+        return $array;
+    }
+
+    public function scopeConditionalPort($q, $port)
+    {
+        return $q->when($port, function ($query, $port) {
+            return $query->where('port_id', $port);
+        });
     }
 }
