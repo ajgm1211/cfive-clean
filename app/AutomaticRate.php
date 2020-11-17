@@ -340,6 +340,8 @@ class AutomaticRate extends Model
                 'automatic_rate_id',
                 'amount as price',
                 'markups as profit',
+                'surcharge_id',
+                'calculation_type_id',
                 'currency_id'
             );
         }]);
