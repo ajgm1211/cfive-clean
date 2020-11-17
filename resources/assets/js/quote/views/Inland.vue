@@ -255,23 +255,25 @@
                                 </b-tr>
                             </b-thead>
 
-                            <b-tbody>
+                            <!-- Loader gif -->
+                            <b-tbody v-if="isBusy">
+                                <b-tr class="b-table-busy-slot">
+                                    <b-td :colspan="fields.length" role="cell" class="">
+                                        <div class="text-center text-primary my-2">
+                                            <b-spinner class="align-middle"></b-spinner>
+                                            <strong>Loading...</strong>
+                                        </div>
+                                    </b-td>
+                                </b-tr>
+                            </b-tbody>
+                            <!-- Loader gif -->
+
+                            <b-tbody v-else>
                                 <b-tr
                                     class="q-tr"
                                     v-for="(inlandAdd, key) in this.inlandAdds"
                                     :key="key"
                                 >
-                                    <b-td>
-                                        <b-form-checkbox
-                                            v-if="
-                                                inlandAdd.port ==
-                                                currentPort['id']
-                                            "
-                                            v-model="inlandAdd.selected"
-                                            :id="'id_' + inlandAdd.id"
-                                        ></b-form-checkbox>
-                                    </b-td>
-
                                     <b-td>
                                         <b-form-input
                                             v-if="
@@ -444,19 +446,11 @@
                         </div>
 
                         <div
-                            v-if="modalSelected"
-                            class="alert alert-warning"
-                            role="alert"
-                        >
-                            Select an Inland to add
-                        </div>
-
-                        <div
                             v-if="modalSuccess"
                             class="alert alert-success"
                             role="alert"
                         >
-                            Selected Inlands added successfully!
+                            Inlands added successfully!
                         </div>
                     </div>
                 </div>
@@ -513,6 +507,7 @@ export default {
             ids: [],
             imageFolder: "/images/flags/1x1/",
             loaded: false,
+            isBusy: false,
             options: [
                 "Select option",
                 "options",
@@ -1044,56 +1039,56 @@ export default {
             let component = this;
 
             component.inlandAdds.forEach(function (inlandAdd) {
-                if (inlandAdd.selected) {
-                    if (Object.keys(inlandAdd.currency_id).length == 0) {
-                        component.modalWarning = "Currency";
-                        setTimeout(() => {
-                            component.modalWarning = "";
-                        }, 3000);
-                    } else {
-                        inlandAdd["type"] = component.currentPort["type"];
-                        if (component.modalDistance) {
-                            inlandAdd["address"] =
-                                component.modalAddress.display_name;
-                            inlandAdd["distance"] =
-                                component.modalAddress.distance;
-                        } else {
-                            inlandAdd["address"] = component.modalAddress;
-                        }
-
-                        component.inlandActions
-                            .create(
-                                component.currentPort["id"],
-                                inlandAdd,
-                                component.$route
-                            )
-                            .then((response) => {
-                                component.inlandAddRequested = false;
-                                component.inlandAdds.splice(
-                                    component.inlandAdds.indexOf(inlandAdd)
-                                );
-                                component.totalizeModalInlands();
-                                component.modalSuccess = true;
-                                component.updateTable();
-                                setTimeout(function () {
-                                    component.$refs["addInland"].hide();
-                                    component.inlandAddRequested = false;
-                                    component.modalSuccess = false;
-                                }, 3000);
-                            })
-                            .catch((data) => {
-                                component.$refs.observer.setErrors(
-                                    data.data.errors
-                                );
-                            });
-                    }
-                } else {
-                    component.modalSelected = true;
-                    setTimeout(function () {
-                        component.modalSelected = false;
+                if (Object.keys(inlandAdd.currency_id).length == 0) {
+                    component.modalWarning = "Currency";
+                    setTimeout(() => {
+                        component.modalWarning = "";
                     }, 3000);
+                } else {
+                    inlandAdd["type"] = component.currentPort["type"];
+                    if (component.modalDistance) {
+                        inlandAdd["address"] =
+                            component.modalAddress.display_name;
+                        inlandAdd["distance"] =
+                            component.modalAddress.distance;
+                    } else {
+                        inlandAdd["address"] = component.modalAddress;
+                    }
+
+                    component.isBusy = true;
+
+                    component.inlandActions
+                        .create(
+                            component.currentPort["id"],
+                            inlandAdd,
+                            component.$route
+                        )
+                        .then((response) => {
+                            component.inlandAddRequested = false;
+                            component.inlandAdds.splice(
+                                component.inlandAdds.indexOf(inlandAdd)
+                            );
+                            component.totalizeModalInlands();
+                            component.modalSuccess = true;
+                            component.updateTable();
+                            component.isBusy = false;
+                            setTimeout(function () {
+                                component.$refs["addInland"].hide();
+                                component.inlandAddRequested = false;
+                                component.modalSuccess = false;
+                            }, 3000);
+                        })
+                        .catch((data) => {
+                            component.$refs.observer.setErrors(
+                                data.data.errors
+                            );
+                        });
                 }
             });
+
+            setTimeout(function () {
+                component.isBusy = false;
+            }, 3000);
         },
 
         setPlace(place) {

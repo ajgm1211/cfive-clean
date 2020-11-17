@@ -11,12 +11,10 @@
 
 @if($i>0)    
 
-    <br>
-
     <div class="clearfix">
 
-        <span class="title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b></span>
-
+        <p><span class="title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b></span></p>
+        
         @foreach($rates as $rate)
             @if(trim(strip_tags($rate->remarks)) !== '')
 

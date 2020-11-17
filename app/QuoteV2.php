@@ -29,7 +29,7 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true}',
+        'pdf_options' => '{"allIn": true, "showCarrier": true, "showTotals": false, "totalsCurrency": "USD"}',
         'language_id' => 1
     ];
 
@@ -44,6 +44,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function company()
     {
         return $this->hasOne('App\Company', 'id', 'company_id');
+    }
+
+    public function company_user()
+    {
+        return $this->belongsTo('App\CompanyUser');
     }
 
     public function contact()
@@ -252,6 +257,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',
@@ -661,23 +667,29 @@ class QuoteV2 extends Model  implements HasMedia
                 'rates_v2',
                 'inland_addresses',
                 'local_charges',
-                'local_charges_totals'
+                'local_charges_totals',
+                'pdf_option'
             );
         }else if($new_quote->type == 'LCL'){
-            $this->with(
+            $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges',
+                'local_charges_totals'
             );
         }
 
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
-            foreach ($relation as $relationRecord) {
-
-                $newRelationship = $relationRecord->duplicate($new_quote);
+            if(!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+               $relation->duplicate($new_quote);
+            }else{
+                foreach ($relation as $relationRecord) {
+                    $newRelationship = $relationRecord->duplicate($new_quote);
+                }
             }
-        }    
+        }
 
         return $new_quote;
     }
