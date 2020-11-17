@@ -203,7 +203,7 @@ class AutomaticRate extends Model
             }
 
             //adding ocean freight
-            if ($ocean_freight->amount != null) {
+            if(!empty($ocean_freight)){ 
                 $freight_amount = json_decode($ocean_freight->amount);
                 foreach ($freight_amount as $fr => $am) {
                     $totals_usd[$fr] += round($am, 2);
