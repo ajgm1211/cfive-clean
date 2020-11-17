@@ -6,6 +6,7 @@ use App\Airline;
 use App\Airport;
 use App\AutomaticInland;
 use App\AutomaticInlandTotal;
+use App\AutomaticRateTotal;
 use App\InlandAddress;
 use App\AutomaticInlandLclAir;
 use App\AutomaticRate;
@@ -2231,6 +2232,15 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->currency_id = $info_D->currency->id;
                     $oceanFreight->total = $rates;
                     $oceanFreight->save();
+
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->currency_id = $info_D->currency->id;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = null;
+                    $rateTotals->save();
+                    $rateTotals->totalize($info_D->currency->id);
 
                     $inlandD = $request->input('inlandD' . $rateO->rate_id);
                     $inlandO = $request->input('inlandO' . $rateO->rate_id);

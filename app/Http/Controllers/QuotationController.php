@@ -303,7 +303,11 @@ class QuotationController extends Controller
     {
         $autorates = $quote->rate()->get();
         foreach($autorates as $auto){
-            $auto->totalize($auto->currency_id);
+            $totals = $auto->totals()->first();
+            
+            if($totals){
+                $totals->totalize($auto->currency_id);
+            }
         }
         return view('quote.edit');
     }

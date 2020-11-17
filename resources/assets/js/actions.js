@@ -359,6 +359,10 @@ export default {
             let quote_id = route.params.id;
             return api.call('get', `/api/quotes/${quote_id}/automatic_rate/${id}`, {})
         },
+        retrieveTotals(id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_rate/totals/${id}`, {})
+        },
         delete(id) {
             return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy`, {});
         },
@@ -450,7 +454,7 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/update`, data)
         },
-        retrieve(combo, route) {
+        retrieveTotals(combo, route) {
             let quote_id = route.params.id;
             return api.call('get', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}`, {})
         },

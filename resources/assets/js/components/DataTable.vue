@@ -733,7 +733,7 @@ export default {
             if (this.totalActions) {
                 if (Object.keys(this.portAddress).length == 0) {
                     this.totalActions
-                        .retrieve(this.multiId, this.$route)
+                        .retrieveTotals(this.multiId, this.$route)
                         .then((response) => {
                             this.totalsData=response.data.data;
                             })
@@ -745,7 +745,7 @@ export default {
                         this.multiId + ";" + this.portAddress["id"],
                     ];
                     this.totalActions
-                        .retrieve(portAddressCombo, this.$route)
+                        .retrieveTotals(portAddressCombo, this.$route)
                         .then((response) => {
                             this.totalsData = response.data.data;
                         })
