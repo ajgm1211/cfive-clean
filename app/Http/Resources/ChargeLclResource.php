@@ -21,17 +21,17 @@ class ChargeLclResource extends JsonResource
             'surcharge_id' => is_null($this->surcharge_id) ? $this->surcharge_id : $this->surcharge()->first(), 
             'calculation_type_id' => $this->calculation_type()->first(),
             'units' => $this->units,
-            'minimum' => $this->minimum,
-            'price_per_unit' => $this->price_per_unit,
+            'minimum' => isDecimal($this->minimum,true),
+            'price_per_unit' => isDecimal($this->price_per_unit,true),
             'currency_id' => $this->currency()->first(),
-            'total' => $this->total,
+            'total' => isDecimal($this->total,true),
             'fixed_surcharge_id' => is_null($this->surcharge_id) ? $this->surcharge_id : $this->surcharge()->first()->name,
             'fixed_currency_id' => $this->currency()->first(),
             'fixed_calculation_type_id' => is_null($this->calculation_type) ? $this->calculation_type : $this->calculation_type()->first()->name,
             'fixed_units' => $this->units,
-            'fixed_minimum' => $this->minimum,
-            'fixed_price_per_unit' => $this->price_per_unit,
-            'fixed_total' => $this->total
+            'fixed_minimum' => isDecimal($this->minimum,true),
+            'fixed_price_per_unit' => isDecimal($this->price_per_unit,true),
+            'fixed_total' => isDecimal($this->total,true)
         ];
 
         return $data;

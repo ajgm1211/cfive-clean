@@ -207,7 +207,7 @@ class AutomaticRate extends Model
                 $freight_amount = json_decode($ocean_freight->amount);
                 foreach ($freight_amount as $fr => $am) {
                     $totals_usd[$fr] += round($am, 2);
-                    $totals_usd[$fr] = round($totals_usd[$fr], 2);
+                    $totals_usd[$fr] = isDecimal($totals_usd[$fr], true);
                 }
             }
 
@@ -270,12 +270,15 @@ class AutomaticRate extends Model
             if ($this->markups != null) {
                 $markups = json_decode($this->markups, true);
                 $markups['total'] = $markups['per_unit'] * $total_units;
+                $markups['total'] = isDecimal($markups['total'],true);
                 $totals_usd['total'] += $markups['total'];
+                $totals_usd['total'] = isDecimal($totals_usd['total'],true);
                 $totals_usd['per_unit'] += $markups['per_unit'];
+                $totals_usd['per_unit'] = isDecimal($totals_usd['per_unit'],true);
             } else {
                 $markups = [];
-                $markups['total'] = 0;
-                $markups['per_unit'] = 0;
+                $markups['total'] = isDecimal(0,true);
+                $markups['per_unit'] = isDecimal(0,true);
             }
 
             $markups_json = json_encode($markups);
@@ -337,6 +340,8 @@ class AutomaticRate extends Model
                 'automatic_rate_id',
                 'amount as price',
                 'markups as profit',
+                'surcharge_id',
+                'calculation_type_id',
                 'currency_id'
             );
         }]);

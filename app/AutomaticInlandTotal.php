@@ -86,7 +86,7 @@ class AutomaticInlandTotal extends Model
                 $conversion = $currency->rates;
                 foreach($totals_usd as $cont=>$price){
                     $conv_price = $price*$conversion;
-                    $totals_usd[$cont] = round($conv_price,2);
+                    $totals_usd[$cont] = isDecimal($conv_price,true);
                 }
             }
     
@@ -130,7 +130,7 @@ class AutomaticInlandTotal extends Model
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 $conv_price = $totals_usd['lcl_totals']*$conversion;
-                $totals_usd['lcl_totals'] = round($conv_price,2);
+                $totals_usd['lcl_totals'] = isDecimal($conv_price,true);
             }
     
             $totals = json_encode($totals_usd);
