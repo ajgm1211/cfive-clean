@@ -360,7 +360,7 @@ class AutomaticInlandController extends Controller
         $total->totalize();
     }
 
-    public function retrieve(QuoteV2 $quote, $combo)
+    public function retrieveTotals(QuoteV2 $quote, $combo)
     {   
         $combo_array = explode(';',$combo);
 
