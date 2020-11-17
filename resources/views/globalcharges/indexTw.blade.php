@@ -270,7 +270,7 @@ New \ Status Import  &nbsp;
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             initComplete: function () {
-                this.api().columns([1,2,3,4,5,6,7,8,9]).every(function () {
+                this.api().columns([1,2,3,4,5,6,7,8,9,10]).every(function () {
                     var column = this;
                     $('#requesttable .head .head_hide').html('');
 
@@ -290,17 +290,18 @@ New \ Status Import  &nbsp;
                     });
                 });
             },
-            "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,
             "ordering": false,
-            "width": true,
-            "autoWidth": false,
-            "stateSave": true,
+            "info": true,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
-            "serverSide": true,
-            "paging": true
-        });
+            "dom": 'Bfrtip',
+            "paging": true,
+            "scrollX": true,
+            "stateSave": false, 
+        }); 
 
     });
 
