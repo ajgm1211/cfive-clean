@@ -39,10 +39,10 @@ class ChargeResource extends JsonResource
             foreach($charges as $key=>$value){
                 if($this->surcharge_id == null){
                     $fr_key = 'freights_'.str_replace('c','',$key);
-                    $data[$fr_key] = $value;
+                    $data[$fr_key] = isDecimal($value,true);
                 } else {
                     $cont_key = 'rates_'.str_replace('c','',$key);
-                    $data[$cont_key] = $value;
+                    $data[$cont_key] = isDecimal($value,true);
                 }
             }
         }
