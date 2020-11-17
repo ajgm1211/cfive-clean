@@ -81,7 +81,11 @@
                         <label>Via</label>
                         <input type="text" name="via" value="" class="form-control">
                     </div>
-                </div>                
+                    <div class="col-md-4" class="" > 
+                        <label>Currency</label>
+                        {{ Form::select('currency_id',$currencies,null,['class'=>'form-control m-select2-edit schedule_type','placeholder'=>'Select an option']) }}
+                    </div>
+                </div>              
                 <hr>
                 <div class="form-group m-form__group">
                     <button type="submit" class="btn btn-primary">Save</button>
