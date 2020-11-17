@@ -46,6 +46,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasOne('App\Company', 'id', 'company_id');
     }
 
+    public function company_user()
+    {
+        return $this->belongsTo('App\CompanyUser');
+    }
+
     public function contact()
     {
         return $this->belongsTo('App\Contact');
@@ -252,6 +257,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',

@@ -81,8 +81,12 @@ class LocalChargeQuoteTotal extends Model
         ]);
     }
 
-    public function duplicate()
+    public function duplicate($quote)
     {
-        return $this->replicate();
+        $new_record = $this->replicate();
+        $new_record->quote_id = $quote->id;
+        $new_record->save();
+
+        return $new_record;
     }
 }

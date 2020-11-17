@@ -94,4 +94,9 @@ class User extends Authenticatable implements Auditable
             $this->attributes['password'] = bcrypt($password);
         }
     }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->lastname}";
+    }
 }
