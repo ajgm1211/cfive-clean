@@ -144,6 +144,7 @@
                                     <b-form-input
                                         v-model="charge.total['c' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
@@ -433,6 +434,7 @@
                                         placeholder
                                         v-model="localcharge.price['c' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
@@ -446,6 +448,7 @@
                                         placeholder
                                         v-model="localcharge.markup['m' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
@@ -562,11 +565,13 @@
                                     <b-form-input
                                         placeholder
                                         v-model="input.price['c' + item]"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
                                         v-model="input.markup['m' + item]"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -948,6 +953,15 @@ export default {
                 duration: 5000,
                 dismissible: true,
             });
+        },
+        isNumber: function(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();;
+            } else {
+                return true;
+            }
         },
     },
 };
