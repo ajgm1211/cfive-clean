@@ -20,8 +20,6 @@
 
                     <th class="unit"><b>{{__('pdf.detail')}}</b></th>
 
-                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-
                     @foreach ($equipmentHides as $key=>$hide)
                         @foreach ($containers as $c)
                             @if($c->code == $key)
@@ -46,7 +44,7 @@
                         <td>{!! is_int($key) ? $charge->charge:'<b>'.__('pdf.total').'</b>' !!}</td>
                         <td>{{ $charge->calculation_type['name'] }}</td>
                         @foreach ($charge->total as $total)
-                            <td>{!! is_int($key) ? $total:'<b>'.$total.'</b>' !!} {!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>
+                            <td>{!! is_int($key) ? isDecimal($total,true):'<b>'.isDecimal($total,true).'</b>' !!} {!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>
                         @endforeach
                         <!--<td>{!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>-->
                     </tr>
