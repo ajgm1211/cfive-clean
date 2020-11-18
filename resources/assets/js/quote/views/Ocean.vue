@@ -389,7 +389,6 @@ export default {
                 let id = this.$route.params.id;
 
                 component.$emit("freightAdded",id)
-
             }
         },
 
@@ -537,17 +536,15 @@ export default {
         },
 
         deleteFreight(id){
+            let quote_id = this.$route.params.id;
+            let component = this;
+
             actions.automaticrates
                 .delete(id)
                 .then( ( response ) => {
-                    this.setFreightData();
+                    this.$emit("freightAdded",quote_id)
                 })
-                    .catch(( data ) => {
-                });
-
-            let quote_id = this.$route.params.id;
-
-            this.$emit("freightAdded",quote_id)
+                .catch(( data ) => {});
         },
 
         updatePdfOptions(){
