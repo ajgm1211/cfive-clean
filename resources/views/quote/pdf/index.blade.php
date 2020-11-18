@@ -39,8 +39,6 @@
         @include('quote.pdf.partials.localcharge_remarks')
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
-        <!-- PAYMENTS CONDITIONS -->
-        @include('quote.pdf.partials.payments_conditions')
     </main>
 
 
