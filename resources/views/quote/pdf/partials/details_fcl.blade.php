@@ -3,42 +3,11 @@
                 <!-- Company -->
                 <div class="company" style="float: left; width: 350px; line-height: 10px;">
 
-                    <div style="visibility: hidden">
-
-                        @if($quote->pdf_option->show_logo==1)
-                            @if(isset($quote->company) && $quote->company->logo!='')
-
-                                <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
-                            
-                            @endif
-                        @endif
-
-                    </div>
-                   
-                    <p><b>{{__('pdf.from')}}: </b>{{@$quote->user->name}} {{@$quote->user->lastname}}</p>
-                   
-                    <p style="line-height:10px;">{{@$quote->user->email}}</p>
-                   
-                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                    
-                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-                    
-                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
-                   
-
-                </div>
-                <!-- End Company -->
-
-                <!-- Client -->
-                <div class="client" style="line-height: 10px; width:350px; float:right">
-
-                    <!-- Logo -->   
-                    @if($quote->pdf_option->show_logo==1)
-                        @if(isset($quote->company) && $quote->company->logo!='')
+                    <!-- Logo -->
+                    @if(isset($quote->company) && $quote->company->logo!='')
                 
-                            <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
+                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
                                         
-                        @endif
                     @endif
                     <!-- End Logo -->   
                 
@@ -77,7 +46,33 @@
                                     
                     <!-- Company Phone -->
                     <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
+                   
 
+                </div>
+                <!-- End Company -->
+
+                <!-- Client -->
+                <div class="client" style="line-height: 10px; width:350px; float:right">
+
+                    <div style="visibility: hidden">
+
+                        @if(isset($quote->company) && $quote->company->logo!='')
+
+                            <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
+                            
+                        @endif
+
+                    </div>
+                   
+                    <p><b>{{__('pdf.from')}}: </b>{{@$quote->user->name}} {{@$quote->user->lastname}}</p>
+                   
+                    <p style="line-height:10px;">{{@$quote->user->email}}</p>
+                   
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    
+                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+                    
+                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
                 
                 </div>
                 <!-- End Client -->
