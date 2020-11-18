@@ -6,45 +6,47 @@ use Illuminate\Database\Eloquent\Model;
 
 class Harbor extends Model
 {
-  protected $table    = "harbors";
-  protected $fillable = ['id', 'name', 'code','display_name','coordinates','country_id','varation'];
+    protected $table    = "harbors";
+    protected $fillable = ['id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation'];
 
-  public function globalcharge()
-  {
+    public function globalcharge()
+    {
 
-    return $this->hasOne('App\GlobalCharge');
-  }
+        return $this->hasOne('App\GlobalCharge');
+    }
 
-  public function rate()
-  {
+    public function rate()
+    {
 
-    return $this->hasOne('App\Rate');
-  }
-  public function globalcharport()
-  {
-    return $this->hasMany('App\GlobalCharPort');
-  }
+        return $this->hasOne('App\Rate');
+    }
+    public function globalcharport()
+    {
+        return $this->hasMany('App\GlobalCharPort');
+    }
 
-  public function terms(){
-    return hasMany('App\TermAndCondition');
-  }
+    public function terms()
+    {
+        return $this->hasMany('App\TermAndCondition');
+    }
 
-  public function termport(){
-    return hasMany('App\TermsPort');
-  }
+    public function termport()
+    {
+        return $this->hasMany('App\TermsPort');
+    }
 
-  public function country(){
-    return $this->belongsTo('App\Country');
-  }
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
+    }
 
-  public function getParentHarbor(){
-    return $this->belongsTo('App\Habor','harbor_parent');
-  }
+    public function getParentHarbor()
+    {
+        return $this->belongsTo('App\Habor', 'harbor_parent');
+    }
 
-  public function getIdCompleteAttribute()
-  {
-    return "{$this->id}-{$this->country_id}-{$this->harbor_parent}";
-
-  }
- 
+    public function getIdCompleteAttribute()
+    {
+        return "{$this->id}-{$this->country_id}-{$this->harbor_parent}";
+    }
 }
