@@ -1,7 +1,5 @@
-                <!-- Freight charges detailed -->
-                
-
-                @foreach($freight_charges_detailed as $origin => $value)
+            <!-- Freight charges detailed -->
+            @foreach($freight_charges_detailed as $origin => $value)
                 @foreach($value as $destination => $item)
                     
                     <!-- Section Title -->

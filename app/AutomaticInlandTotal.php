@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class AutomaticInlandTotal extends Model
 {
+    protected $appends = ['calculation_type' => 1];
+
     protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id'];
 
     public function quotev2()
@@ -23,6 +25,11 @@ class AutomaticInlandTotal extends Model
     public function inland_address()
     {
         return $this->hasOne('App\InlandAddress','id','inland_address_id');
+    }
+
+    public function port()
+	{
+		return $this->hasOne('App\Harbor','id','port_id');
     }
 
     public function totalize()
@@ -86,7 +93,7 @@ class AutomaticInlandTotal extends Model
                 $conversion = $currency->rates;
                 foreach($totals_usd as $cont=>$price){
                     $conv_price = $price*$conversion;
-                    $totals_usd[$cont] = round($conv_price,2);
+                    $totals_usd[$cont] = isDecimal($conv_price,true);
                 }
             }
     
@@ -130,12 +137,41 @@ class AutomaticInlandTotal extends Model
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 $conv_price = $totals_usd['lcl_totals']*$conversion;
-                $totals_usd['lcl_totals'] = round($conv_price,2);
+                $totals_usd['lcl_totals'] = isDecimal($conv_price,true);
             }
     
             $totals = json_encode($totals_usd);
             
             $this->update(['totals'=>$totals]);
         }
+    }
+
+    public function scopeQuotation($query, $quote)
+    {
+        return $query->where('quote_id', $quote);
+    }
+
+    public function scopePort($query, $port)
+    {
+        return $query->where('port_id', $port);
+    }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    public function getTotalAttribute($array)
+    {
+        $array = json_decode($array);
+
+        return $array;
+    }
+
+    public function scopeConditionalPort($q, $port)
+    {
+        return $q->when($port, function ($query, $port) {
+            return $query->where('port_id', $port);
+        });
     }
 }
