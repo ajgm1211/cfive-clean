@@ -27,5 +27,5 @@
             @endswitch
 
     </div>
+    <br>
 @endif
-<br>
