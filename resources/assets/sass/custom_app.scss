@@ -1064,8 +1064,9 @@ input.multiselect__input:focus {
 .search label img {
     top: 9px;
     left: 15px;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
+    z-index: 50;
     position: absolute;
 }
 
@@ -1095,8 +1096,8 @@ input.multiselect__input:focus {
 }
 
 .btn-search {
-    height: 55px;
-    width: 172px;
+    height: 50px;
+    width: 150px;
     left: 4px;
     top: 2233px;
     border-radius: 27px;
@@ -1115,7 +1116,7 @@ input.multiselect__input:focus {
     background: transparent;
 }
 
-.btn-aditonal-services {
+.btn.btn-secondary.btn-aditonal-services {
     float: right;
     color: #006BFA;
     font-size: 12px;
@@ -1172,15 +1173,24 @@ input.multiselect__input:focus {
 .result-action {
     a {
         color: #43B54E;
+        font-weight: 900;
+        font-size: 10px;
+        text-transform: uppercase;
     }
 }
 
-.rs-btn {
+.btn.btn-secondary.rs-btn {
+    border: none !important;
     color: #006BFA;
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: 900;
     letter-spacing: 1px;
     border: none !important;
     text-transform: uppercase;
+}
+
+.btn.btn-secondary.rs-btn:hover {
+    color: #071C4B !important;
 }
 
 /* Recent Search */
@@ -1246,6 +1256,8 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
+
+
 .form-control.reportrange-text {
     border: none !important;
     background: #f8f8f8;
@@ -1260,33 +1272,70 @@ input.multiselect__input:focus {
 .result-search {
     border-radius: 4px;
     background: #ffffff;
+    box-shadow: 0px 0px 15px 3px #eaeaea;
 }
 
 #detailed, #remarks {
-    background: #C4C4C4;
+    background: rgba(#C4C4C4, 0.09);
+    h5 {
+        font-size: 12px;
+        color: #051b4e;
+        text-transform: uppercase !important;
+    }
+    .card-body {
+        background: rgba(196, 196, 196, 0.09);
+    }
 }
 
 .result-search .origin, .result-search .destination {
     font-size: 10px;
     color: #dddddd;
+    display: flex;
+    flex-direction: column;
     text-transform: uppercase;
+    p {
+        color: #071C4B;
+    }
+
+    p, span {
+        font-weight: 900;
+    }
+
+    span {
+        margin-bottom: 5px;
+    }
+}
+
+.origin {
+    align-items: flex-start;
+}
+
+.destination {
+    align-items: flex-end;
 }
 
 .result-search .destination {
     b,p {
         float: right;
     }
-
-    p {
-        color: #071C4B;
-    }
 }
 
 .result-search .direction-form {
     display: flex;
+    position: relative;
+    img {
+        width: 30px;
+        top: -25px;
+        left: 85px;
+        color: #051b4e;
+        position: absolute;
+    }
 }
 
 .result-search .via .direction-form .line-route-direct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .circle {
         width: 15px;
         height: 15px;
@@ -1296,7 +1345,7 @@ input.multiselect__input:focus {
     }
 
     .line {
-        width: 80%;
+        width: 150px;
         height: 2px;
         background-color: #dddddd;
     }
@@ -1305,12 +1354,34 @@ input.multiselect__input:focus {
         border-color: #006BFA;
         background-color: #006BFA;
     }
+
+    .fill-circle-gray {
+        border-color: #dddddd;
+        background-color: #dddddd;
+    }
+
+    .line-blue {
+        background-color: #006BFA !important;
+    }
+    
+}
+
+.result-search .via .direction-form .route-indirect .line {
+    width: 64px !important;
 }
 
 .direction-desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     b, p {
+        font-size: 11px;
         text-align: center;
         color: #071C4B;
+    }
+    b {
+        text-transform: uppercase;
     }
 }
 
@@ -1318,4 +1389,37 @@ input.multiselect__input:focus {
     text-transform: uppercase;
     font-weight: 900;
     color: #071C4B;
+}
+
+.btn-add-quote {
+    b {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #dddddd !important;
+    }
+}
+
+.btn.btn-secondary.add-contract {
+    border: none !important;
+    color:  #006BFA;
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.btn.btn-secondary.btn-create-quote {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 12px;
+    background: #006BFA;
+    border: none;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+}
+
+.result-header b {
+    color: #dddddd;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
 }
