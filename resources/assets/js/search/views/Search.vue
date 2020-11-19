@@ -40,7 +40,7 @@
                 <div class="col-12 col-sm-1">
 
                     <b-form-radio-group
-                        v-model="selected"
+                        v-model="direction"
                         :options="options"
                         buttons
                         button-variant="outline-primary"
@@ -242,6 +242,7 @@ export default {
     data() {
         return {
             date: '',
+            direction: 'import',
             type: 'FCL',
             container: '',
             selected: 'radio1',
