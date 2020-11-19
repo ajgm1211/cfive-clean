@@ -123,7 +123,7 @@
                     <div class="client" style="float: right;">
 
                         <p class="color-title" ><b class="uppercase" style="">{{__('pdf.validity')}}: </b>{{ \Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
-                        <p class="color-title" ><b class="uppercase">{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
+                        <p class="color-title" ><b class="uppercase" {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
 
                     </div>
 
