@@ -72,7 +72,7 @@
                                    </div>
                                    <div class="direction-desc">
 
-                                       <b>Madrid españa</b>
+                                       <b>direct</b>
                                        <p><b>TT:</b> 45 Days</p>
 
                                    </div>
@@ -209,11 +209,11 @@
                                </div>
                                <div class="via d-flex flex-column justify-content-center align-items-center">
 
-                                   <div class="direction-form">
+                                   <div class="direction-form route-indirect">
 
-                                       <img src="/images/logo-ship-blue.svg" alt="bote">
+                                       <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
 
-                                       <div class="line-route-direct route-indirect">
+                                       <div class="line-route-direct">
                                            <div class="circle mr-2"></div>
                                            <div class="line"></div>
                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
@@ -224,7 +224,7 @@
                                    </div>
                                    <div class="direction-desc">
 
-                                       <b>direct</b>
+                                       <b>madrid españa</b>
                                        <p><b>TT:</b> 45 Days</p>
 
                                    </div>
@@ -250,8 +250,8 @@
 
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <b-button v-b-toggle.remarks class="rs-btn">remarks <b-icon icon="caret-down-fill"></b-icon></b-button>
-                                    <b-button v-b-toggle.detailed class="rs-btn">detailed cost <b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button v-b-toggle.remarks class="rs-btn"><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button v-b-toggle.detailed class="rs-btn"><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
                                 </div>
 
                             </div>
@@ -294,18 +294,18 @@
                                         <b-td>Per Container</b-td>
                                         <b-td></b-td>
                                         <b-td></b-td>
-                                        <b-td>USD 1.00</b-td>
-                                        <b-td>USD 1.00</b-td>
-                                        <b-td>USD 1.00</b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
                                     </b-tr>
                                     <b-tr>
                                         <b-td><b>Ocean Freight</b></b-td>
                                         <b-td>Per Container</b-td>
                                         <b-td></b-td>
                                         <b-td></b-td>
-                                        <b-td>USD 1.00</b-td>
-                                        <b-td>USD 1.00</b-td>
-                                        <b-td>USD 1.00</b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                        <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
                                     </b-tr>
                                      <b-tr>
                                         <b-td></b-td>
