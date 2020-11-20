@@ -32,8 +32,6 @@
                         @endforeach
                     @endforeach
 
-                    <!--<th class="unit"><b>{{__('pdf.currency')}}</b></th>-->
-
                 </tr>
 
             </thead>
@@ -43,21 +41,15 @@
             <tbody>
                 @foreach($value as $key => $charge)
                     <tr>
-                        <td>{!! is_int($key) ? $charge->charge:'<b>'.__('pdf.total').'</b>' !!}</td>
-                        <td>{{ $charge->calculation_type['name'] }}</td>
+                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
+                        <td>{{  $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
                         @foreach ($charge->total as $total)
-                            <td>{!! is_int($key) ? isDecimal($total,true):'<b>'.isDecimal($total,true).'</b>' !!} {!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>
+                            <td>{!!  $total !!} {!! $charge->currency->alphacode !!}</td>
                         @endforeach
-                        <!--<td>{!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>-->
                     </tr>
                 @endforeach
             </tbody>
             <!-- End Table Body -->
-
-            <tfoot>
-
-            </tfoot>
-
         </table>
         <!-- End Table -->
     @endforeach

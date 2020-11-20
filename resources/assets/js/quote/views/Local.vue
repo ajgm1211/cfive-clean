@@ -180,6 +180,7 @@
                                     <b-form-input
                                         v-model="charge.total['c' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
@@ -195,7 +196,8 @@
                                     <b-form-input
                                         v-model="charge.units"
                                         class="q-input q-width"
-                                        v-on:blur="
+                                        @keypress="isNumber($event)"
+                                        v-on:change="
                                             onUpdate(
                                                 charge.id,
                                                 charge.units,
@@ -210,7 +212,8 @@
                                     <b-form-input
                                         v-model="charge.price"
                                         class="q-input q-width"
-                                        v-on:blur="
+                                        @keypress="isNumber($event)"
+                                        v-on:change="
                                             onUpdate(
                                                 charge.id,
                                                 charge.price,
@@ -223,16 +226,9 @@
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="charge.total"
+                                        v-model="charge.price * charge.units"
                                         class="q-input q-width"
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.total,
-                                                'total',
-                                                6
-                                            )
-                                        "
+                                        disabled
                                     ></b-form-input>
                                 </b-td>
 
@@ -454,6 +450,10 @@
                                     <span class="label-text">Profit</span>
                                 </b-th>
 
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">Total</span>
+                                </b-th>
+
                                 <b-th>
                                     <span class="label-text">Currency</span>
                                 </b-th>
@@ -589,6 +589,7 @@
                                         placeholder
                                         v-model="localcharge.price['c' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
@@ -602,6 +603,7 @@
                                         placeholder
                                         v-model="localcharge.markup['m' + item]"
                                         class="q-input"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
@@ -617,12 +619,13 @@
                                     <b-form-input
                                         v-model="localcharge.units"
                                         class="q-input q-width"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.units,
                                                 'units',
-                                                6
+                                                8
                                             )
                                         "
                                     ></b-form-input>
@@ -632,12 +635,13 @@
                                     <b-form-input
                                         v-model="localcharge.price_per_unit"
                                         class="q-input q-width"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.price_per_unit,
-                                                'price',
-                                                6
+                                                'price_per_unit',
+                                                8
                                             )
                                         "
                                     ></b-form-input>
@@ -647,14 +651,23 @@
                                     <b-form-input
                                         v-model="localcharge.markup"
                                         class="q-input q-width"
+                                        @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.markup,
                                                 'markups',
-                                                6
+                                                8
                                             )
                                         "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        :value="setTotal(localcharge.units, localcharge.price_per_unit, localcharge.markup)"
+                                        class="q-input q-width"
+                                        disabled
                                     ></b-form-input>
                                 </b-td>
 
@@ -763,11 +776,13 @@
                                     <b-form-input
                                         placeholder
                                         v-model="input.price['c' + item]"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                     <b-form-input
                                         placeholder
                                         v-model="input.markup['m' + item]"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -1216,10 +1231,6 @@ export default {
                 .update(id, data, index, type)
                 .then((response) => {
                     this.getTotal();
-                    if (type == 6 && (index == "units" || index == "price")) {
-                        //Actualizando total solo si es LCL
-                        this.getStoredCharges();
-                    }
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
@@ -1245,6 +1256,18 @@ export default {
                 dismissible: true,
             });
         },
+        isNumber: function(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault();;
+            } else {
+                return true;
+            }
+        },
+        setTotal(units, price, markup){
+            return (parseFloat(units) * parseFloat(price)) + parseFloat(markup);
+        }
     },
 };
 </script>

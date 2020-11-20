@@ -49,7 +49,7 @@ class FclPdf
     {
         $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
 
-        $localcharges = $localcharges->groupBy([
+        /*$localcharges = $localcharges->groupBy([
 
             function ($item) {
                 return $item['port']['name'] . ', ' . $item['port']['code'];
@@ -59,9 +59,57 @@ class FclPdf
 
         foreach ($localcharges as $value) {
             $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
+        }*/
+
+        if (count($localcharges) > 0) {
+            $localcharges = $localcharges->groupBy([
+
+                function ($item) {
+                    return $item['port']['name'] . ', ' . $item['port']['code'];
+                },
+
+            ]);
+
+            foreach ($localcharges as $value) {
+                $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
+
+                foreach ($inlands as $inland) {
+                    $value->push($inland);
+                }
+            }
+        } else {
+
+            $inlands = $this->InlandTotals($quote->id, $type, null);
+
+            if (count($inlands) > 0) {
+
+                $inlands = $inlands->groupBy([
+
+                    function ($item) {
+                        return $item['port']['name'] . ', ' . $item['port']['code'];
+                    },
+
+                ]);
+
+                $localcharges = $inlands;
+            }
         }
 
         return $localcharges;
+    }
+
+    public function InlandTotals($quote, $type, $port)
+    {
+        if ($type == 1) {
+            $type = 'Origin';
+        } else {
+            $type = 'Destination';
+        }
+
+        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id')
+            ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
+
+        return $inlands;
     }
 
     public function localChargeTotals($quote, $type, $port)
