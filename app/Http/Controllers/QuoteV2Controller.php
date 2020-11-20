@@ -1595,8 +1595,6 @@ class QuoteV2Controller extends Controller
                 });
             })->get();
 
-            \Log::info($remarks_all);
-
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
                 $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
@@ -2462,10 +2460,10 @@ class QuoteV2Controller extends Controller
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
 
-        if ($type == 1) {
-            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
-        } else {
+        if ($type != 1) {
             return redirect()->action('QuotationController@edit', $quote);
+        } else {
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
         }
     }
 
