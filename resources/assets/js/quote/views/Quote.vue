@@ -104,6 +104,10 @@
                             ></Inland>
                         </b-tab>
 
+                        <b-tab title="mañana">
+                            <p>sdsadjsaid</p>
+                        </b-tab>
+
                         <b-tab title="Totals" @click="changeView('totals')">
                             <Total v-if="totals"
                             :currentQuoteData="currentData"
