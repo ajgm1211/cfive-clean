@@ -29,7 +29,7 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true}',
+        'pdf_options' => '{"allIn": true, "showCarrier": true, "showTotals": false, "totalsCurrency": "USD"}',
         'language_id' => 1
     ];
 
@@ -44,6 +44,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function company()
     {
         return $this->hasOne('App\Company', 'id', 'company_id');
+    }
+
+    public function company_user()
+    {
+        return $this->belongsTo('App\CompanyUser');
     }
 
     public function contact()
@@ -252,6 +257,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',
@@ -635,6 +641,16 @@ class QuoteV2 extends Model  implements HasMedia
         $this->hasMany('App\SaleTermV2');
     }
 
+    public function local_charges()
+    {
+        return $this->hasMany('App\LocalChargeQuote','quote_id','id');
+    }
+
+    public function local_charges_totals()
+    {
+        return $this->hasMany('App\LocalChargeQuoteTotal','quote_id','id');
+    }
+
     public function duplicate()
     {
         $company_user = Auth::user('web')->worksAt();
@@ -649,23 +665,31 @@ class QuoteV2 extends Model  implements HasMedia
         if($new_quote->type == 'FCL'){
             $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges',
+                'local_charges_totals',
+                'pdf_option'
             );
         }else if($new_quote->type == 'LCL'){
-            $this->with(
+            $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges',
+                'local_charges_totals'
             );
         }
 
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
-            foreach ($relation as $relationRecord) {
-
-                $newRelationship = $relationRecord->duplicate($new_quote);
+            if(!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+               $relation->duplicate($new_quote);
+            }else{
+                foreach ($relation as $relationRecord) {
+                    $newRelationship = $relationRecord->duplicate($new_quote);
+                }
             }
-        }    
+        }
 
         return $new_quote;
     }
@@ -693,6 +717,7 @@ class QuoteV2 extends Model  implements HasMedia
 
         if ($size != 0 && $equip != "[]") {
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
+            $equip_array = $this->validateEquipment($equip_array);
             $full_equip = "";
 
             foreach ($equip_array as $eq) {
@@ -755,5 +780,37 @@ class QuoteV2 extends Model  implements HasMedia
         }
         
         return $value;
+    }
+
+    public function validateEquipment(Array $equipment){
+        
+        foreach($equipment as $index=>$eq){
+            if($eq == "20"){
+                $equipment[$index] = "1";
+            }else if($eq == "40"){
+                $equipment[$index] = "2";
+            }else if($eq == "40HC"){
+                $equipment[$index] = "3";
+            }else if($eq == "45"){
+                $equipment[$index] = "4";
+            }if($eq == "40NOR"){
+                $equipment[$index] = "5";
+            }else if($eq == "20RF"){
+                $equipment[$index] = "6";
+            }else if($eq == "40RF"){
+                $equipment[$index] = "7";
+            }else if($eq == "40HCRF"){
+                $equipment[$index] = "8";
+            }else if($eq == "20OT"){
+                $equipment[$index] = "9";
+            }else if($eq == "40OT"){
+                $equipment[$index] = "10";
+            }else if($eq == "20FR"){
+                $equipment[$index] = "11";
+            }else if($eq == "40FR"){
+                $equipment[$index] = "12";
+            }
+        }
+        return $equipment;
     }
 }

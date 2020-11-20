@@ -481,7 +481,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             //------------------ CALCULATION TYPE -----------------------------------------------------
                             $calculationtype = null;
                             if(strnatcasecmp($calculation_type_exc,'PER_CONTAINER') == 0 ||
-                               strnatcasecmp($calculation_type_exc,'PER_TEU') == 0){
+                               strnatcasecmp($calculation_type_exc,'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc,'PER_BL') == 0){
                                 $calculationtype = CalculationType::where('options->name','=',$calculation_type_exc)
                                     ->whereHas('containersCalculation.container', function ($query) use($groupContainer_id){
                                         $query->whereHas('groupContainer', function ($queryTw) use($groupContainer_id){

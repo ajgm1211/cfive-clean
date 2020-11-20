@@ -104,6 +104,23 @@
                                                 <span></span>
                                             </div>
                                             <div class="m-wizard__step-label">
+                                                Surcharges
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="m-wizard__step" data-wizard-target="#m_wizard_form_step_4">
+                                        <div class="m-wizard__step-info">
+                                            <a href="#" class="m-wizard__step-number">
+                                                <span>
+                                                    <span>
+                                                        4
+                                                    </span>
+                                                </span>
+                                            </a>
+                                            <div class="m-wizard__step-line">
+                                                <span></span>
+                                            </div>
+                                            <div class="m-wizard__step-label">
                                                 Add Files
                                             </div>
                                         </div>
@@ -231,6 +248,94 @@
                                                 <div class="m-form__section m-form__section--first">
                                                     <div class="m-form__heading">
                                                         <h3 class="m-form__heading-title">
+                                                        Surcharges
+                                                        </h3>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-lg-12">
+                                                            <div class="col-lg-4 m--align-left">
+
+                                                                <button type="button" id='addSurcharge' class="btn btn-secondary btn-sm">
+                                                                    <i class="la  la-plus-circle"></i>
+                                                                    &nbsp;&nbsp; Add Surcharge
+                                                                </button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-lg-12" id="colSurcharge">
+                                                            <!--<div class="form-group m-form__group row">
+                                                                <label class="col-lg-2 col-lg-2 col-form-label">
+                                                                    * Type : <br>
+                                                                    {{ Form::select('type[]', $surchargesS, null, ['class' => 'm-select2-general ']) }}
+                                                                </label>
+                                                                <label class="col-lg-3 col-lg-1 col-form-label">
+                                                                    * Calculation Type : <br>
+                                                                    {{ Form::select('calculation[]', $calculationTypeS, null, ['class' => 'm-select2-general ']) }}
+                                                                </label>
+                                              
+                                                                <label class="col-lg-2 col-lg-2 col-form-label">
+                                                                    * Currency : <br>
+                                                                    {{ Form::select('currency[]', $currencies, null, ['class' => 'm-select2-general ']) }}
+                                                                </label>
+                                                                
+                                                                    
+                                                                <label class="col-lg-3 col-lg-2 col-form-label">
+                                                                    * Amount : <br>
+                                                                    <input type="text" name="amount[]" class="form-control m-input" placeholder="" value="0">
+                                                                </label>                                                         
+                                                            </div>-->
+
+                                                        
+                                                        </div>
+                                                    </div>
+
+                                                            <!--Clone Row -->
+                                                    <div class="form-group m-form__group row hide "  id="cloneSurcharge">
+                                                        <label class="col-lg-2 col-lg-2 col-form-label">
+                                                            * Type : <br>
+                                                            {{ Form::select('typeC[]', $surchargesS, null, ['class' => 'typeC  form-control' ]) }}
+                                                        </label>
+                                                        <label class="col-lg-3 col-lg-1 col-form-label">
+                                                            * Calculation Type : <br>
+                                                            {{ Form::select('calculationC[]', $calculationTypeS, null, ['class' => 'calculationC form-control ']) }}
+                                                        </label>
+                                      
+                                                        <label class="col-lg-2 col-lg-2 col-form-label">
+                                                            * Currency : <br>
+                                                            {{ Form::select('currencyC[]', $currencies, null, ['class' => 'currencyC form-control ']) }}
+                                                        </label>
+                                                        
+                                                            
+                                                        <label class="col-lg-3 col-lg-2 col-form-label">
+                                                            * Amount : <br>
+                                                            <input type="text" name="amountC[]" class="form-control m-input amountC" placeholder="" value="0">
+                                                        </label>    
+                                                        <label class="col-lg-1 col-lg-2 col-form-label">
+                                                            <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                                <span>
+                                                                    <a  class="removeSurcharge" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Delete Row" aria-describedby="tooltip964649"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;"></i></a>
+                                                                </span>
+                                                            </span>
+                                                          
+                                                        </label>                                                         
+                                                    </div>
+                                                         <!-- END Clone Row -->
+                                          
+                                                </div>
+                                           
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Form Wizard Step 3-->
+                                    <!--begin: Form Wizard Step 4-->
+                                    <div class="m-wizard__form-step" id="m_wizard_form_step_4">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <div class="m-form__section m-form__section--first">
+                                                    <div class="m-form__heading">
+                                                        <h3 class="m-form__heading-title">
                                                            Add Files
                                                         </h3>
                                                     </div>
@@ -271,9 +376,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--end: Form Wizard Step 3-->
-                                    <!--begin: Form Wizard Step 4-->
-                        
                                     <!--end: Form Wizard Step 4-->
                                 </div>
                                 <!--end: Form Body -->
