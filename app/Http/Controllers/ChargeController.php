@@ -34,7 +34,7 @@ class ChargeController extends Controller
         array_splice($equip_array,-1,1);
 
         foreach($equip_array as $eq){
-            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric';
+            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
         }
 
         $validate = $request->validate($vdata);
@@ -77,7 +77,7 @@ class ChargeController extends Controller
 
         foreach($form_keys as $fkey){
             if(strpos($fkey,'freights') !== false || strpos($fkey,'rates') !== false){
-                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
+                $data += $request->validate([$fkey=>'sometimes|numeric|nullable|not_regex:/[0-9]*,[0-9]*/']);
             }
         }
 
