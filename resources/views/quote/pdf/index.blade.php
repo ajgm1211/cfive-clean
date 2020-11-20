@@ -19,6 +19,10 @@
         @include('quote.pdf.partials.header')
         <!-- DETAILS -->
         @include('quote.pdf.partials.details_fcl')
+        <!-- TOTALS -->
+        @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
+            @include('quote.pdf.partials.totals')
+        @endif
         <!-- FREIGHTS -->
         @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
             @include('quote.pdf.partials.freights_fcl')

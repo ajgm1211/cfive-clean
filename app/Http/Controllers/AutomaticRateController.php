@@ -82,6 +82,8 @@ class AutomaticRateController extends Controller
             $totals = AutomaticRateTotal::create([
                 'quote_id' => $quote->id,
                 'currency_id' => $currency->id,
+                'origin_port_id' => $rate->origin_port_id,
+                'destination_port_id' => $rate->destination_port_id,
                 'automatic_rate_id' => $rate->id,
                 'totals' => null,
                 'markups' => null                    
@@ -158,9 +160,8 @@ class AutomaticRateController extends Controller
         }
             
         if(count($markups) != 0){
-            $markups_json = json_encode($markups);
 
-            $totals->update(['markups'=>$markups_json]);
+            $totals->update(['markups'=>$markups]);
 
             $totals->totalize($request->input('profits_currency'));
         }
