@@ -2236,6 +2236,8 @@ class QuoteV2Controller extends Controller
                     $rateTotals = new AutomaticRateTotal();
                     $rateTotals->quote_id = $quote->id;
                     $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
                     $rateTotals->markups = null;

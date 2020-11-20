@@ -37,8 +37,6 @@ class AutomaticRateResource extends JsonResource
             'schedule_type' => $this->setSchedule($this->schedule_type),
             'transit_time' => $this->transit_time,
             'via' => $this->via,
-            'totals_currency' => $this->currency()->first()->alphacode,
-            'profits_currency' => $this->currency()->first()
         ];
 
         return $this->addContainers($data);

@@ -5,16 +5,19 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use App\Http\Traits\UtilTrait;
 
 class AutomaticRateTotal extends Model
 {
+    use UtilTrait;
+
     protected $casts = [
         'markups' => 'json',
         'total' => 'json'
     ];
 
     protected $fillable = [
-        'id', 'quote_id', 'markups', 'currency_id', 'totals', 'automatic_rate_id'];
+        'id', 'quote_id', 'markups', 'currency_id', 'totals', 'automatic_rate_id','origin_port_id', 'destination_port_id'];
 
     public function quote()
     {
@@ -29,6 +32,21 @@ class AutomaticRateTotal extends Model
     public function rate()
     {
         return $this->belongsTo('App\AutomaticRate', 'automatic_rate_id');
+    }
+
+    public function origin_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'origin_port_id');
+    }
+
+    public function destination_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'destination_port_id');
+    }
+
+    public function scopeGetQuote($query, $id)
+    {
+        return $query->where('quote_id', $id);
     }
 
     public function totalize($new_currency_id)
@@ -52,6 +70,8 @@ class AutomaticRateTotal extends Model
             $this->update(['currency_id' => $new_currency_id]);
 
             $currency = $this->currency()->first();
+            
+            $usd = Currency::where('alphacode','USD')->first();
 
             $totals_usd = [];
 
@@ -75,19 +95,17 @@ class AutomaticRateTotal extends Model
 
             //converting to autorate currency
             if ($currency->alphacode != 'USD') {
-                $conversion = $currency->rates;
-                foreach ($totals_usd as $cont => $price) {
-                    $conv_price = $price * $conversion;
-                    $totals_usd[$cont] = round($conv_price, 2);
-                }
+                $totals_rate = $this->convertToCurrency($usd,$currency,$totals_usd);
+            }else{
+                $totals_rate = $totals_usd;
             }
 
             //adding autorate markups
             if ($this->markups != null) {
-                $markups = json_decode($this->markups);
+                $markups = $this->markups;
                 foreach ($markups as $mark => $profit) {
                     $clear_key = str_replace('m', 'c', $mark);
-                    $totals_usd[$clear_key] += $profit;
+                    $totals_rate[$clear_key] += $profit;
                 }
             }
 
@@ -95,12 +113,12 @@ class AutomaticRateTotal extends Model
             if ($ocean_freight->amount != null) {
                 $freight_amount = json_decode($ocean_freight->amount);
                 foreach ($freight_amount as $fr => $am) {
-                    $totals_usd[$fr] += round($am, 2);
-                    $totals_usd[$fr] = isDecimal($totals_usd[$fr], true);
+                    $totals_rate[$fr] += round($am, 2);
+                    $totals_rate[$fr] = isDecimal($totals_rate[$fr], true);
                 }
             }
 
-            $totals = json_encode($totals_usd);
+            $totals = json_encode($totals_rate);
 
             $this->update(['totals' => $totals]);
 
