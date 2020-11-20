@@ -21,6 +21,38 @@ use App\Surcharge;
 
 class LocalChargeQuotationLclController extends Controller
 {
+
+    /**
+     * get harbors
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function harbors(QuoteV2 $quote)
+    {
+        $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
+            $value['type'] = 1;
+            $value['quote_id'] = $quote->id;
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id' => $value->id])->count();
+            return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
+        });
+
+        $destination_ports = $quote->destination_harbor->map(function ($value) use ($quote) {
+            $value['type'] = 2;
+            $value['quote_id'] = $quote->id;
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id' => $value->id])->count();
+            return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
+        });
+
+        $harbors = $origin_ports->merge($destination_ports)->unique();
+
+        $harbors = $harbors->sortByDesc('charges');
+
+        $collection = $harbors->values()->all();
+
+        return $collection;
+    }
+
     /**
      * get previous stored local charges
      *
@@ -116,7 +148,7 @@ class LocalChargeQuotationLclController extends Controller
             $charge = $localcharge['surcharge']['name'];
 
             $local_charge_lcl = LocalChargeQuoteLcl::create([
-                'price' => (((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'])/(float)$localcharge['units'],
+                'price' => (((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup']) / (float)$localcharge['units'],
                 'units' => $localcharge['units'],
                 'profit' => $localcharge['markup'],
                 'total' => ((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'],
