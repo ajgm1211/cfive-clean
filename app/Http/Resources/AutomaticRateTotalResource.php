@@ -34,7 +34,7 @@ class AutomaticRateTotalResource extends JsonResource
 
         if($quote->type=='FCL'){
             if($this->markups!=null){
-                $profits = json_decode($data['markups']);
+                $profits = $data['markups'];
                 foreach($profits as $code=>$profit){
                     $prof_key = str_replace('m','',$code);
                     $data['profits_'.$prof_key] = $profit;

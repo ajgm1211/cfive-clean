@@ -25,6 +25,11 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\InlandAddress','id','inland_address_id');
     }
 
+    public function get_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
     public function totalize()
     {
         $quote = $this->quotev2()->first();
@@ -137,5 +142,10 @@ class AutomaticInlandTotal extends Model
             
             $this->update(['totals'=>$totals]);
         }
+    }
+
+    public function scopeGetQuote($query, $id)
+    {
+        return $query->where('quote_id', $id);
     }
 }
