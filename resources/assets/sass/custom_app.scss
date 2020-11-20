@@ -52,7 +52,6 @@ tr,
 }
 
 
-
 /*** genetal styles ***/
 
 .m-body {
@@ -1121,12 +1120,13 @@ input.multiselect__input:focus {
     color: #006BFA;
     font-size: 12px;
     font-weight: 900;
+    letter-spacing: 1px;
     border: none !important;
     text-transform: uppercase;
-    
 }
 
-.t-as, .t-recent {
+.t-as,
+.t-recent {
     color: #B1B1B1;
     font-weight: 900;
     font-size: 14px;
@@ -1193,7 +1193,9 @@ input.multiselect__input:focus {
     color: #071C4B !important;
 }
 
+
 /* Recent Search */
+
 .recent-search {
     display: flex;
     border-radius: 4px;
@@ -1212,7 +1214,7 @@ input.multiselect__input:focus {
     padding: 10px 0px;
     border-radius: 4px;
     text-align: center;
-    background:  #006BFA;
+    background: #006BFA;
     text-transform: uppercase;
 }
 
@@ -1256,8 +1258,6 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
-
-
 .form-control.reportrange-text {
     border: none !important;
     background: #f8f8f8;
@@ -1268,14 +1268,18 @@ input.multiselect__input:focus {
     padding-top: 6px;
     font-size: 30px;
 }
+
+
 /* Search Result */
+
 .result-search {
     border-radius: 4px;
     background: #ffffff;
     box-shadow: 0px 0px 15px 3px #eaeaea;
 }
 
-#detailed, #remarks {
+#detailed,
+#remarks {
     background: rgba(#C4C4C4, 0.09);
     h5 {
         font-size: 12px;
@@ -1287,7 +1291,8 @@ input.multiselect__input:focus {
     }
 }
 
-.result-search .origin, .result-search .destination {
+.result-search .origin,
+.result-search .destination {
     font-size: 10px;
     color: #dddddd;
     display: flex;
@@ -1296,11 +1301,10 @@ input.multiselect__input:focus {
     p {
         color: #071C4B;
     }
-
-    p, span {
+    p,
+    span {
         font-weight: 900;
     }
-
     span {
         margin-bottom: 5px;
     }
@@ -1315,7 +1319,8 @@ input.multiselect__input:focus {
 }
 
 .result-search .destination {
-    b,p {
+    b,
+    p {
         float: right;
     }
 }
@@ -1343,31 +1348,26 @@ input.multiselect__input:focus {
         border: 2px solid #dddddd;
         background-color: transparent;
     }
-
     .line {
         width: 150px;
         height: 2px;
         background-color: #dddddd;
     }
-
     .fill-circle {
         border-color: #006BFA;
         background-color: #006BFA;
     }
-
     .fill-circle-gray {
         border-color: #dddddd;
         background-color: #dddddd;
     }
-
     .line-blue {
         background-color: #006BFA !important;
     }
-    
 }
 
-.result-search .via .direction-form .route-indirect .line {
-    width: 64px !important;
+.result-search .via .direction-form.route-indirect .line {
+    width: 61px !important;
 }
 
 .direction-desc {
@@ -1375,7 +1375,8 @@ input.multiselect__input:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    b, p {
+    b,
+    p {
         font-size: 11px;
         text-align: center;
         color: #071C4B;
@@ -1401,7 +1402,7 @@ input.multiselect__input:focus {
 
 .btn.btn-secondary.add-contract {
     border: none !important;
-    color:  #006BFA;
+    color: #006BFA;
     font-weight: 900;
     font-size: 12px;
     text-transform: uppercase;
@@ -1410,11 +1411,11 @@ input.multiselect__input:focus {
 .btn.btn-secondary.btn-create-quote {
     color: #ffffff;
     font-weight: 900;
-    font-size: 12px;
-    background: #006BFA;
-    border: none;
+    background: #006BFA !important;
+    border-radius: 4px !important;
+    border: none !important;
     position: relative;
-    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;
 }
 
 .result-header b {
@@ -1422,4 +1423,12 @@ input.multiselect__input:focus {
     font-size: 14px;
     font-weight: 900;
     text-transform: uppercase;
+}
+
+.profit {
+    color: #051b4e;
+    margin: 0px 5px;
+    padding: 2px !important;
+    border-radius: 4px;
+    background: #F0F0F0;
 }
