@@ -909,10 +909,13 @@ export default {
                                 search["inlandDetails"][equip]["markup"];
                             newInlandAdd["rates_" + equip] =
                                 search["inlandDetails"][equip]["montoInlandT"];
+                            newInlandAdd.markup["markups_" + equip] =
+                                search["inlandDetails"][equip]["markup"];
                         }else{
                             newInlandAdd.price["c" + equip] = 0;
                             newInlandAdd.markup["m" + equip] = 0;
                             newInlandAdd["rates_" + equip] = 0;
+                            newInlandAdd["markups_" + equip] = 0;
                         }
                     });
                     component.datalists.currency.forEach(function (curr) {
@@ -961,6 +964,7 @@ export default {
                     newInlandAdd.price["c" + equip] = "";
                     newInlandAdd.markup["m" + equip] = "";
                     newInlandAdd["rates_" + equip] = "";
+                    newInlandAdd["markups_" + equip] = "";
                 });
 
                 component.inlandAdds.push(newInlandAdd);
@@ -991,23 +995,17 @@ export default {
 
                     if(component.currentQuoteData['type']=='FCL'){
                         component.quoteEquip.forEach(function (equip) {
-                            let price_num = Number(inlandAdd.price["c" + equip]);
+                            let rates_num = Number(inlandAdd.price["c" + equip]);
                             let markup_num = Number(inlandAdd.markup["m" + equip]);
                             let totals = Number;
     
-                            inlandAdd["rates_" + equip] = price_num + markup_num;
+                            inlandAdd["rates_" + equip] = rates_num;
+                            inlandAdd["markups_" + equip] = markup_num;
     
-                            if (inlandAddCurrency == clientCurrency) {
-                                totals = price_num + markup_num;
-                            } else {
-                                let price_usd = Number;
-                                let markup_usd = Number;
+                            if (inlandAddCurrency != clientCurrency) {
                                 let totals_usd = Number;
     
-                                price_usd = price_num / inlandAddConversion;
-                                markup_usd = markup_num / inlandAddConversion;
-    
-                                totals_usd = price_usd + markup_usd;
+                                totals_usd = (rates_num / inlandAddConversion) + (markup_num /inlandAddConversion);
     
                                 totals = totals_usd * clientConversion;
                             }
@@ -1017,15 +1015,15 @@ export default {
                             ] = totals.toFixed(2);
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
-                        let price_num = Number(inlandAdd.total);
+                        let rates_num = Number(inlandAdd.total);
                         let totals = Number;
 
                         if (inlandAddCurrency == clientCurrency) {
-                                totals = price_num;
+                                totals = rates_num;
                         } else {
                             let price_usd = Number;
 
-                            price_usd = price_num / inlandAddConversion;
+                            price_usd = rates_num / inlandAddConversion;
 
                             totals = price_usd * clientConversion;
                         }
