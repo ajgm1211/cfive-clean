@@ -125,6 +125,7 @@
                     >
                         <!-- Text Input -->
                         <div v-if="item.type == 'text'">
+
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -215,7 +216,7 @@
                                 style="margin-top: -4px"
                             ></span>
                         </div>
-                        <div v-if="item.type == 'multiselect_data' && refresh">
+                        <div v-if="item.type == 'multiselect_data' && refresh" class="multiselect-height">
                             <multiselect
                                 v-model="item.values"
                                 :multiple="true"
