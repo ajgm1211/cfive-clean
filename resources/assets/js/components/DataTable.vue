@@ -30,7 +30,7 @@
                         </b-form-checkbox>
                     </b-th>
 
-                    <b-th v-for="(value, key) in fields" :key="key">
+                    <!--<b-th v-for="(value, key) in fields" :key="key">
                         <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
                         
@@ -46,6 +46,9 @@
                                 <md-option value="scarface">Scarface</md-option>
                             </md-select>
                         </md-field>
+                    </b-th>-->
+                    <b-th v-for="(value, key) in fields" :key="key">
+                        {{ value.label }}
                     </b-th>
                     <b-th>
                         <b-button
