@@ -882,7 +882,10 @@ class ExcelController extends Controller
 
                     $montos = array();
                     $montos2 = array();
+                    $montosAllIn = array();
+                    $montosAllInTot = array();
                     foreach ($containers as $cont) {
+                        $name_rate = 'rate' . $cont->code;
 
                         $var = 'array' . $cont->code;
                         $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
@@ -894,15 +897,23 @@ class ExcelController extends Controller
                             $jsonContainer = json_decode($data->{$options->field_rate});
                             if (isset($jsonContainer->{'C' . $cont->code})) {
                                 $rateMount = $jsonContainer->{'C' . $cont->code};
+                                $$name_rate = $rateMount;
+                                $montosAllIn = array($cont->code =>$$name_rate);
                             } else {
                                 $rateMount = 0;
+                                $$name_rate = $rateMount;
+                                $montosAllIn = array($cont->code =>$$name_rate);
                             }
                         } else {
                             $rateMount = $data->{$options->field_rate};
+                            $$name_rate = $rateMount;
+                            $montosAllIn = array($cont->code =>$$name_rate);
                         }
 
                         $montos2 = array($cont->code => $rateMount);
                         $montos = array_merge($montos, $montos2);
+                        $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
+                    
                     }
                     $arrayFirstPartAmount = array(
                         'Contract' => $data->contract->name,
@@ -929,6 +940,7 @@ class ExcelController extends Controller
                         $contractId = $data->contract->id;
                         $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
 
+
                         for ($i = 0; $i < count($data1); $i++) {
                             //'country_orig' =>  $data1[$i]->country_orig,
                             //  'country_dest' =>   $data1[$i]->country_dest,
@@ -946,15 +958,21 @@ class ExcelController extends Controller
                             );
 
                             $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+                            $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
 
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
+                                $name_rate = 'rate' . $cont->code;
                                 if (in_array($calculationID->id, $$name_arreglo)) {
                                     $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
+                                    $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
+                                    $$name_rate  = number_format($$name_rate  + ( $monto / $currency_rate ), 2, '.', '');  
+                                    $montosAllInTot[$cont->code] = $$name_rate;
                                     $montosLocal2 = array($cont->code => $monto);
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 } else {
                                     $montosLocal2 = array($cont->code => '0');
+                                   
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 }
                             }
@@ -971,6 +989,30 @@ class ExcelController extends Controller
                             $a++;
                         }
                     }
+
+                    // MONTOS ALL IN 
+
+
+                    $arrayFirstPartAmountAllIn = array(
+                        'Contract' => $data->contract->name,
+                        'Reference' => $data->contract->id,
+                        'Carrier' => $data->carrier->name,
+                        'Direction' => $data->contract->direction->name,
+                        'Origin' => ucwords(strtolower($data->port_origin->name)),
+                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
+                        'Charge' => 'freight - ALL IN',
+                    );
+                    $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
+                    $arraySecondPartAmountAllIn = array(
+                        'Currency' => $data->currency->alphacode,
+                        'From' => $data->contract->validity,
+                        'Until' => $data->contract->expire,
+
+                    );
+                    $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
+                    $sheet->row($a, $arrayCompleteAmountAllIn);
+                    $a++;
+                    // Fin montos All In
 
                     $sheet->setBorder('A1:I' . $i, 'thin');
                     $sheet->cells('C' . $i, function ($cells) {
@@ -1008,4 +1050,5 @@ class ExcelController extends Controller
             return $monto;
         }
     }
+
 }
