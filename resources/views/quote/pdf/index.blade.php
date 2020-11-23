@@ -33,12 +33,8 @@
         @include('quote.pdf.partials.remarks')
         <!-- ORIGIN -->
         @include('quote.pdf.partials.origins_fcl')
-        <!-- INLANDS ORIGIN-->
-        @include('quote.pdf.partials.inlands_fcl_origin')
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
-        <!-- INLANDS DESTINY-->
-        @include('quote.pdf.partials.inlands_fcl_destination')
         <!-- LOCALCHARGE REMARKS -->
         @include('quote.pdf.partials.localcharge_remarks')
         <!-- TERMS -->

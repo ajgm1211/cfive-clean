@@ -19,6 +19,7 @@
                     <DataTable 
                         :fields="fields"
                         :actions="actions.contracts"
+                        :filter="true"
                         @onEdit="onEdit"
                         ></DataTable>
                 </b-card>
