@@ -156,7 +156,8 @@
                                                         <div class="col-xl-10 col-lg-9">
                                                             <input type="text" name="referenceC"
                                                                 class="form-control m-input" placeholder=""
-                                                                value="1-541-754-3010">
+                                                                value="1-541-754-3010"
+                                                                required>
                                                         </div>
                                                     </div>
                                                     <div class="form-group m-form__group row">
@@ -175,7 +176,7 @@
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
                                                             * Equipment: <br>
-                                                            {{ Form::select('group_containerC', $group_containerC, null, ['class' => 'm-select2-general ']) }}
+                                                            {{ Form::select('group_containerC', $group_containerC, null, ['class' => 'm-select2-general ','required']) }}
                                                         </label>
                                                
                                                         <label class="col-xl-5 col-lg-2 col-form-label">
@@ -310,7 +311,7 @@
                                                             
                                                         <label class="col-lg-3 col-lg-2 col-form-label">
                                                             * Amount : <br>
-                                                            <input type="text" name="amountC[]" class="form-control m-input amountC" placeholder="" value="0">
+                                                            <input type="number" name="amountC[]" class="form-control m-input amountC" placeholder="" value="0" required>
                                                         </label>    
                                                         <label class="col-lg-1 col-lg-2 col-form-label">
                                                             <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -349,7 +350,7 @@
                                                                     <!--begin::Preview-->
                                                                     <div class="m-demo">
                                                                       <div class="m-demo__preview">
-                                                                        <div class="col-lg-8 ">
+                                                                        <div class="col-lg-12 ">
                                                                           <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
                                                                             <div class="m-dropzone__msg dz-message needsclick">
                                                                               <h3 class="m-dropzone__msg-title">
@@ -361,8 +362,6 @@
                                                                             </div>
                                                                           </div>
                                                                         </div>
-                                            
-                                            
                                                                       </div>
                                                                     </div>
                                                                   </div>
