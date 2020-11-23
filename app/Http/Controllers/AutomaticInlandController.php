@@ -71,6 +71,7 @@ class AutomaticInlandController extends Controller
 
         foreach($equip_array as $eq){
             $vdata['rates_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
+            $vdata['markups_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
         }
         
         $validate = $request->validate($vdata);
@@ -84,7 +85,11 @@ class AutomaticInlandController extends Controller
             }else{
                 $inland_rates['c'.$eq] = 0.00;
             }
-            $inland_markup['m'.$eq] = 0.00;
+            if(isset($validate['markups_'.$eq])){
+                $inland_markup['m'.$eq] = $validate['markups_'.$eq]; 
+            }else{
+                $inland_markup['m'.$eq] = 0.00;
+            }
         }
         
         $rates_json = json_encode($inland_rates);
@@ -148,13 +153,15 @@ class AutomaticInlandController extends Controller
         $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
 
         if($totals == null){
+            
             $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
 
             $totals = AutomaticInlandTotal::create([
                 'quote_id' => $quote->id,
                 'port_id' => $port_id,
                 'inland_address' => $inland_address->id,
-                'currency_id' => $user_currency
+                'currency_id' => $user_currency,
+                'markups' => $markups_json
             ]);
         }
         
