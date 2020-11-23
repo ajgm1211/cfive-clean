@@ -14,17 +14,21 @@ use App\Currency;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\FclPdf;
+use App\LclPdf;
 
 class PdfController extends Controller
 {
-
-    use UtilTrait;
-
     public function quote(QuoteV2 $quote)
     {
         switch ($quote->type) {
             case "FCL":
-                return $this->generateFclPdf($quote);
+                $pdf = new FclPdf();
+                return $pdf->generate($quote);
+                break;
+            case "LCL":
+                $pdf = new LclPdf();
+                return $pdf->generate($quote);
                 break;
         }
     }
@@ -381,6 +385,8 @@ class PdfController extends Controller
                 }
             }
         }
+        
+        dd($totalsArrayOutput);
 
         return $totalsArrayOutput;
     }
