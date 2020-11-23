@@ -385,6 +385,8 @@ class PdfController extends Controller
                 }
             }
         }
+        
+        dd($totalsArrayOutput);
 
         return $totalsArrayOutput;
     }
