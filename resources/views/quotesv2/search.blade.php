@@ -1182,12 +1182,12 @@ background-color: #36A3F7;
                             </div>
                         </div>
   <div class="row">
-                            <div class="col-lg-12">
+                            <!--<div class="col-lg-12">
                                 <a  data-toggle="modal" data-target="#createContractModal">
                                 
                                     <span  style="color:blue;"> + Add Contract</span>
                                  </a>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
