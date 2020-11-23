@@ -1181,7 +1181,14 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-
+  <div class="row">
+                            <div class="col-lg-12">
+                                <a  data-toggle="modal" data-target="#createContractModal">
+                                
+                                    <span  style="color:blue;"> + Add Contract</span>
+                                 </a>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
@@ -1198,6 +1205,8 @@ background-color: #36A3F7;
                                 </center>
                             </div>
                         </div>
+
+                      
                     </div>
                 </div>
             </div>
@@ -1948,7 +1957,16 @@ background-color: #36A3F7;
         </div>
     </div>
 </div>
+
+
+
 @include('companies.partials.companiesModal')
+@include('quotesv2.partials.createContractModal')
+
+
+
+
+
 
 @endsection
 
@@ -1984,7 +2002,9 @@ precargar()
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript">
+
 </script>
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete"
     async defer></script>
@@ -2091,6 +2111,14 @@ function AbrirModal(action, id) {
             });
         });
     }
+    if (action == "addContract") {
+        var url = '{{ route("quotesv2.addContract") }}';
+        $('.modal-body').load(url, function() {
+            $('#createContractModal').modal({
+                show: true
+            });
+        });
+    }
 }
 $('#delivery_type').on('change', function() {
     var value = $(this).val();
@@ -2139,7 +2167,7 @@ $('#quoteType').on('change', function() {
             '</ul>' +
             '</span>' +
             '<span class="c5-select-multiple-container ' + clickOnID + '">' +
-            '<span class="c5-select-header">Types</span>' +
+           /*  '<span class="c5-select-header">Types</span>' +
             '<ul class="c5-select-list list-types-carriers">' +
             '<li class="c5-case"><label class="c5-label">CMA CGM Spot' +
             '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">' +
@@ -2150,7 +2178,7 @@ $('#quoteType').on('change', function() {
             '<li class="c5-case"><label class="c5-label">SAFMARINE Spot' +
             '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">' +
             '<span class="checkmark"></span></label></li>' +
-            '</ul>' +
+            '</ul>' + */
             '<span class="c5-select-header">Carriers</span>' +
             '<span class="c5-select-container-close">' +
             '<i class="fa fa-times" aria-hidden="true"></i>' +
@@ -2394,6 +2422,42 @@ $('#mySelect2').select2({
     return data.text;
   }
 });
+
+var uploadedDocumentMap = {}
+  Dropzone.options.documentDropzone = {
+    url: '{{ route('contracts.storeMedia') }}',
+    maxFilesize: 2, // MB
+    addRemoveLinks: true,
+    headers: {
+    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+  },
+    success: function (file, response) {
+      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
+      uploadedDocumentMap[file.name] = response.name
+    },
+      removedfile: function (file) {
+        file.previewElement.remove()
+        var name = ''
+        if (typeof file.file_name !== 'undefined') {
+          name = file.file_name
+        } else {
+          name = uploadedDocumentMap[file.name]
+        }
+        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove()
+      },
+        init: function () {
+          @if(isset($project) && $project->document)
+          var files =
+              {!! json_encode($project->document) !!}
+          for (var i in files) {
+            var file = files[i]
+            this.options.addedfile.call(this, file)
+            file.previewElement.classList.add('dz-complete')
+            $('m_form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
+          }
+          @endif
+        }
+        }
 </script>
 
 @stop
