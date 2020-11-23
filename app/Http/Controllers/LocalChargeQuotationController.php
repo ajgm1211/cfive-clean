@@ -16,6 +16,7 @@ use App\SaleTermCharge;
 use App\SaleTermCode;
 use App\SaleTermV3;
 use App\Surcharge;
+use App\Container;
 
 class LocalChargeQuotationController extends Controller
 {
@@ -30,18 +31,20 @@ class LocalChargeQuotationController extends Controller
         $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
             $value['type'] = 1;
             $value['quote_id'] = $quote->id;
-            return $value->only(['id', 'display_name', 'type', 'quote_id']);
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id'=> $value->id])->count();
+            return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
         });
 
         $destination_ports = $quote->destination_harbor->map(function ($value) use ($quote) {
             $value['type'] = 2;
             $value['quote_id'] = $quote->id;
-            return $value->only(['id', 'display_name', 'type', 'quote_id']);
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id'=> $value->id])->count();
+            return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
         });
 
         $harbors = $origin_ports->merge($destination_ports)->unique();
 
-        $harbors = $harbors->sortBy('display_name');
+        $harbors = $harbors->sortByDesc('charges');
 
         $collection = $harbors->values()->all();
 
@@ -205,7 +208,6 @@ class LocalChargeQuotationController extends Controller
                 ])->first();
 
                 if ($previous_charge) {
-
                     $previous_charge->groupingCharges($localcharge);
                     $previous_charge->sumarize();
                     $previous_charge->totalize();
@@ -367,7 +369,11 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
 
                 $local_charge = LocalChargeQuote::findOrFail($id);
-                $local_charge->$index = $request->data;
+                if (strpos($index, 'total') !== false) {
+                    $local_charge->$index = floatvalue($request->data);
+                } else {
+                    $local_charge->$index = $request->data;
+                }
                 $local_charge->update();
 
                 $local_charge->totalize();
@@ -382,9 +388,9 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $price = json_decode($local_charge->amount);
-                if(empty($price)){
+                if (empty($price)) {
                     $price[$index] = $request->data;
-                }else{
+                } else {
                     foreach ($price as $key => $amount) {
                         $price->$index = $request->data;
                     }
@@ -396,9 +402,9 @@ class LocalChargeQuotationController extends Controller
                 $index = $request->index;
                 $local_charge = Charge::findOrFail($id);
                 $profit = json_decode($local_charge->markups);
-                if(empty($profit)){
+                if (empty($profit)) {
                     $profit[$index] = $request->data;
-                }else{
+                } else {
                     foreach ($profit as $key => $markup) {
                         $profit->$index = $request->data;
                     }
@@ -428,7 +434,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function updateRemarks(Request $request, QuoteV2 $quote)
     {
-        
+
         $quote->update([
             'localcharge_remarks' => $request->data
         ]);
@@ -457,8 +463,8 @@ class LocalChargeQuotationController extends Controller
             'currency_id' => $request->charges['currency']['id'],
             'surcharge_id' => $request->charges['surcharge']['id'],
             'type_id' => $request->type_id,
-            'amount' => json_encode($request->charges['price']),
-            'markups' => json_encode($request->charges['markup'])
+            'amount' => $this->removeCommas($request->charges['price']),
+            'markups' => $this->removeCommas($request->charges['markup'])
         ]);
 
         $localcharge = $request->charges;
@@ -516,5 +522,24 @@ class LocalChargeQuotationController extends Controller
         }
 
         return response()->json(['success' => 'Ok']);
+    }
+
+    public function removeCommas($array)
+    {
+        $containers = Container::all();
+
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount) {
+                foreach ($containers as $container) {
+                    if ($k == 'c' . $container->code) {
+                        $array['c' . $container->code] = floatvalue($amount);
+                    } else if ($k == 'm' . $container->code) {
+                        $array['m' . $container->code] = floatvalue($amount);
+                    }
+                }
+            }
+        }
+
+        return json_encode($array);
     }
 }
