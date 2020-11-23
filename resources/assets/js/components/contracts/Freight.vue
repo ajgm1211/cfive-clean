@@ -183,7 +183,6 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select Carrier Port",
                     options: "carriers"
                 },
                 currency: {
