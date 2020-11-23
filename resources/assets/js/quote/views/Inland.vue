@@ -223,8 +223,6 @@
                             <!-- Header table -->
                             <b-thead class="q-thead">
                                 <b-tr>
-                                    <b-th></b-th>
-
                                     <b-th>
                                         <span class="label-text">Charge</span>
                                     </b-th>
@@ -383,8 +381,6 @@
                                 </b-tr>
 
                                 <b-tr class="q-total">
-                                    <b-td></b-td>
-
                                     <b-td></b-td>
 
                                     <b-td>
@@ -721,8 +717,7 @@ export default {
             if(component.currentQuoteData['type']=='FCL'){
                 component.quoteEquip.forEach(function (eq) {
                     component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                        type: "text",
-                        placeholder: eq,
+                        type: "span",
                     };
                     component.totalsFields["Totals"]["totals_".concat(eq)] = {
                         type: "span",
@@ -745,6 +740,7 @@ export default {
             }else if(component.currentQuoteData['type']=='LCL'){
                 component.totalsFields["Profits"]["profit"] = {
                         type: "text",
+                        disabled: true,
                     };
                 component.totalsFields["Totals"]["lcl_totals"] = {
                         type: "span",
@@ -1008,6 +1004,8 @@ export default {
                                 totals_usd = (rates_num / inlandAddConversion) + (markup_num /inlandAddConversion);
     
                                 totals = totals_usd * clientConversion;
+                            } else {
+                                totals = rates_num + markup_num;
                             }
     
                             component.inlandModalTotals[
