@@ -290,17 +290,18 @@ New \ Status Import  &nbsp;
                     });
                 });
             },
-            "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,
             "ordering": false,
-            "width": true,
-            "autoWidth": false,
-            "stateSave": true,
+            "info": true,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
-            "serverSide": true,
-            "paging": true
-        });
+            "dom": 'Bfrtip',
+            "paging": true,
+            "scrollX": true,
+            "stateSave": false, 
+        }); 
 
     });
 
