@@ -660,6 +660,18 @@ class ContractController extends Controller
         $contract = new Contract();
         $container = Container::get();
 
+        $data = $request->validate([
+            'referenceC'       => 'required',
+            'group_containerC' => 'required',
+            'C20DV'            => 'sometimes|required',
+            'C40DV'            => 'sometimes|required',
+            'C40HC'            => 'sometimes|required',
+            'C40NOR'           => 'sometimes|required',
+            'C45HC'            => 'sometimes|required',
+            'amountC'          => 'sometimes|required',
+            'document'         => 'required',
+        ]);
+
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);
