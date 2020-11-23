@@ -496,6 +496,17 @@ i.mx-icon-calendar {
     border-color: #006bf9 !important;
 }
 
+.vue-daterange-picker.s-input .reportrange-text {
+    border: none !important;
+    background: #f8f8f8;
+    min-height: 50px;
+}
+
+.vue-daterange-picker.s-input .reportrange-text i {
+    padding-top: 6px;
+    font-size: 30px;
+}
+
 
 /*** --- Tabs --- ***/
 
@@ -533,7 +544,6 @@ i.mx-icon-calendar {
     white-space: nowrap;
     font-size: 12px;
     margin-bottom: 0px !important;
-    padding-top: 12px !important;
     padding-left: 3px;
 }
 
@@ -543,6 +553,9 @@ i.mx-icon-calendar {
     left: 11px;
 }
 
+#id_carriers .multiselect__tags, .multiselect-height .multiselect__tags {
+    height: 35px !important;
+}
 
 /*** Validations ***/
 
@@ -1257,18 +1270,6 @@ input.multiselect__input:focus {
     border-color: #006BFA;
     background-color: #006BFA;
 }
-
-.form-control.reportrange-text {
-    border: none !important;
-    background: #f8f8f8;
-    min-height: 50px;
-}
-
-.form-control.reportrange-text i {
-    padding-top: 6px;
-    font-size: 30px;
-}
-
 
 /* Search Result */
 
