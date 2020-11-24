@@ -292,6 +292,13 @@ class AutomaticRate extends Model
         });
     }
 
+    public function scopeGetChargeLcl($query, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use ($type) {
+            $query->where('type_id', $type);
+        });
+    }
+
     public function scopeGetQuote($query, $id)
     {
         return $query->where('quote_id', $id);
