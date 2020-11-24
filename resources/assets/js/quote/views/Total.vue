@@ -7,7 +7,7 @@
             <div v-else >
                 <!-- Show Totals Checkbox-->
                 <div class="card" style="width:100%">
-                    <div class="card-body row">
+                    <div class="card-body row" style="overflow: inherit;">
                     <div class="col-12 col-sm-2 d-flex mt-5 mb-3">
                     <b-form-checkbox v-model="showTotals" @input="updatePdfOptions()">
                         <span>Show Totals</span>
