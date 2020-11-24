@@ -112,33 +112,33 @@
                                                     
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-12 col-form-label">
-                                                            <p><b>Reference:</b></p>
+                                                            <p><b>Reference: *</b></p>
                                                             <input type="text" name="referenceC"
-                                                                class="form-control m-input mt-1" placeholder="">
+                                                                class="form-control m-input mt-1" placeholder="" required>
                                                         </label>
                                                     </div>
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-12 col-lg-6 col-form-label">
                                                             <p><b>Validity:</b></p>
-                                                            <input type="text" name="validityC" class="form-control mt-1" id="m_daterangepicker_1_modal" readonly="" placeholder="Select time">
+                                                            <input type="text" name="validityC" class="form-control mt-1" id="m_daterangepicker_1_modal" readonly="" placeholder="Select date">
                                                         </label>
                                       
                                                         <label class="col-12 col-lg-6 col-form-label">
-                                                            <p><b>Carrier:</b></p>
-                                                            {{ Form::select('carrierC', $carrierC, null, ['class' => 'mt-1 m-select2-general ', 'placeholder' => 'Select port']) }}
+                                                            <p><b>Carrier: *</b></p>
+                                                            {{ Form::select('carrierC', $carrierC, null, ['class' => 'mt-1 m-select2-general ', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
 
 
                                                     </div>
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-12 col-lg-6 col-form-label">
-                                                            <p><b>Equipment:</b></p>
-                                                            {{ Form::select('group_containerC', $group_containerC, null, ['class' => 'm-select2-general mt-1']) }}
+                                                            <p><b>Equipment: *</b></p>
+                                                            {{ Form::select('group_containerC', $group_containerC, null, ['class' => 'm-select2-general mt-1', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                                
                                                         <label class="col-12 col-lg-6 col-form-label">
-                                                            <p><b>Direction:</b></p>
-                                                            {{ Form::select('directionC', $directionC, null, ['class' => 'm-select2-general mt-1', 'placeholder' => 'Select port']) }}
+                                                            <p><b>Direction: *</b></p>
+                                                            {{ Form::select('directionC', $directionC, null, ['class' => 'm-select2-general mt-1', 'required']) }}
                                                         </label>
 
 
@@ -159,26 +159,26 @@
                                                 <div class="m-form__section m-form__section--first">
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-12 col-sm-6 col-form-label">
-                                                            <p><b>Origin Port:</b></p>
-                                                            {{ Form::select('origin_port', $harborsR, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option']) }}
+                                                            <p><b>Origin Port: *</b></p>
+                                                            {{ Form::select('origin_port', $harborsR, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                       
                                                         <label class="col-12 col-sm-6 col-form-label">
-                                                            <p><b>Destination Port:</b></p>
-                                                            {{ Form::select('destination_port', $harborsR, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option']) }}
+                                                            <p><b>Destination Port: *</b></p>
+                                                            {{ Form::select('destination_port', $harborsR, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
 
 
                                                     </div>
                                                     <div class="form-group m-form__group row">
                                                         <label class="col-12 col-sm-6 col-form-label">
-                                                            <p><b>Carrier:</b></p>
-                                                            {{ Form::select('carrierR', $carrierC, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option']) }}
+                                                            <p><b>Carrier: *</b></p>
+                                                            {{ Form::select('carrierR', $carrierC, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                       
                                                         <label class="col-12 col-sm-6 col-form-label">
-                                                            <p><b>Currency:</b></p>
-                                                            {{ Form::select('currencyR', $currencies, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option']) }}
+                                                            <p><b>Currency: *</b></p>
+                                                            {{ Form::select('currencyR', $currencies, null, ['class' => 'm-select2-general mt-2', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                                     </div>
                                                     <div id='containerDinamic'>
@@ -238,21 +238,21 @@
                                                             <!--Clone Row -->
                                                     <div class="form-group m-form__group row hide "  id="cloneSurcharge">
                                                         <label class="col-lg-3 col-form-label">
-                                                            Type : <br>
-                                                            {{ Form::select('typeC[]', $surchargesS, null, ['class' => 'typeC  form-control', 'placeholder' => 'Select an option']) }}
+                                                            Type: <br>
+                                                            {{ Form::select('typeC[]', $surchargesS, null, ['class' => 'typeC  form-control', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                                         <label class="col-lg-3 col-lg-1 col-form-label">
-                                                            Calculation Type : <br>
-                                                            {{ Form::select('calculationC[]', $calculationTypeS, null, ['class' => 'calculationC form-control ', 'placeholder' => 'Select an option']) }}
+                                                            Calculation Type: <br>
+                                                            {{ Form::select('calculationC[]', $calculationTypeS, null, ['class' => 'calculationC form-control ', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>
                                       
                                                         <label class="col-lg-3 col-lg-2 col-form-label">
-                                                            Currency : <br>
-                                                            {{ Form::select('currencyC[]', $currencies, null, ['class' => 'currencyC form-control ', 'placeholder' => 'Select an option']) }}
+                                                            Currency: <br>
+                                                            {{ Form::select('currencyC[]', $currencies, null, ['class' => 'currencyC form-control ', 'placeholder' => 'Select an option', 'required']) }}
                                                         </label>                                                            
                                                         <label class="col-lg-2 col-lg-2 col-form-label">
-                                                            Amount : <br>
-                                                            <input type="text" name="amountC[]" class="form-control m-input amountC" placeholder="" value="0">
+                                                            Amount: <br>
+                                                            <input type="text" name="amountC[]" class="form-control m-input amountC" placeholder="" value="" required>
                                                         </label>    
                                                         <label class="col-lg-1 col-form-label d-flex align-items-center">
                                                             <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -298,8 +298,6 @@
                                                                             </div>
                                                                           </div>
                                                                         </div>
-                                            
-                                            
                                                                       </div>
                                                                     </div>
                                                                   </div>
