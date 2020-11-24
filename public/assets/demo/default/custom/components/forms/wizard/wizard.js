@@ -192,13 +192,18 @@ var WizardDemo = function() {
                             "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
                         }).then(function(result) {
                             if (result.value) {
-                                //   window.location.href = '/inlands';
+                                window.location.href = '/v2/quotes/search';
                             }
 
                         });
                     },
                     error: function(request, status, error) {
-                        alert(request.responseText);
+                        swal({
+                            "title": "",
+                            "text": request.responseText,
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
+                        })
                     }
                 });
             }
