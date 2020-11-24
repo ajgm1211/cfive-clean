@@ -7,6 +7,7 @@ use App\Carrier;
 use App\Company;
 use App\Container;
 use App\Contract;
+use App\ContractCarrier;
 use App\ContractLcl;
 use App\Country;
 use App\Currency;
@@ -669,6 +670,8 @@ class ContractController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
         $contract->save();
+
+        $contract->ContractCarrierSyncSingle($request->carrierC);
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
