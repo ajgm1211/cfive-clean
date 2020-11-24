@@ -2451,7 +2451,7 @@ $("select[name='group_containerC']").on('change', function() {
                         texto += "<div class='form-group m-form__group row'> ";
 
                     }
-                    texto += "<label class='col-12 col-sm-6 col-form-label'> " + value['code'] + "  <br><input name='C" + value['code'] + "' value= '0' type='text' class='form-control'  >   </label>  ";
+                    texto += "<label class='col-12 col-sm-6 col-form-label'> <p><b> " + value['code'] + "  </b></p><input name='C" + value['code'] + "' value= '0' type='number' class='form-control' required >   </label>  ";
                     if (cont == 1) {
                         texto += " </div>";
                     }
