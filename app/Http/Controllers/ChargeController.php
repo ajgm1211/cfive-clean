@@ -117,11 +117,11 @@ class ChargeController extends Controller
         $totals = $autorate->totals()->first();
 
         if(isset($data['fixed_currency'])){
+            $autorate->update(['currency_id'=>$data['fixed_currency']]);
             $charge->update(['currency_id'=>$data['fixed_currency']]);
-            $totals->totalize($request->input('fixed_currency'));
-        } else {
-            $totals->totalize($autorate->currency_id);
         }  
+        
+        $totals->totalize($autorate->currency_id);
 
         return new ChargeResource($charge);
         

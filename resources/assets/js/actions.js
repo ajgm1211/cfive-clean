@@ -473,6 +473,53 @@ export default {
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
         }
     },
+    automaticinlandslcl: {
+        list(combo, params, callback, route) {
+
+            let quote_id = route.params.id;
+
+            api.call('get', `/api/quotes/${quote_id}/port/${combo}/automatic_inlands_lcl`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands_lcl/store`, data);
+        },
+        update(autoinland_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${autoinland_id}/update`, data)
+        },
+        createTotals(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/totals/${combo}/store`, {})
+        },
+        updateTotals(combo, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/totals/${combo}/update`, data)
+        },
+        retrieveTotals(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland_lcl/totals/${combo}`, {})
+        },
+        retrieveAddresses(port_id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quotes/${quote_id}/automatic_inland_lcl/addresses/${port_id}`, {})
+        },
+        delete(id) {
+            return api.call('delete', `/api/quotes/automatic_inland_lcl/${id}/destroy/`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/quotes/automatic_inland_lcl/destroyAll`, { ids: ids });
+        },
+        search(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands_lcl/search`, data);
+        }
+    },
     localcharges: {
         create(data) {
             return api.call('post', `/api/quote/localcharge/store`, data);
