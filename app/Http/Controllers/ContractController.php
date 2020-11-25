@@ -7,6 +7,7 @@ use App\Carrier;
 use App\Company;
 use App\Container;
 use App\Contract;
+use App\ContractCarrier;
 use App\ContractLcl;
 use App\Country;
 use App\Currency;
@@ -51,7 +52,8 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
@@ -660,6 +662,18 @@ class ContractController extends Controller
         $contract = new Contract();
         $container = Container::get();
 
+        $data = $request->validate([
+            'referenceC'       => 'required',
+            'group_containerC' => 'required',
+            'C20DV'            => 'sometimes|required',
+            'C40DV'            => 'sometimes|required',
+            'C40HC'            => 'sometimes|required',
+            'C40NOR'           => 'sometimes|required',
+            'C45HC'            => 'sometimes|required',
+            'amountC'          => 'sometimes|required',
+            'document'         => 'required',
+        ]);
+
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);
@@ -669,6 +683,8 @@ class ContractController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
         $contract->save();
+
+        $contract->ContractCarrierSyncSingle($request->carrierC);
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
@@ -681,7 +697,6 @@ class ContractController extends Controller
             $rates->fortyhc = $request->C40HC;
             $rates->fortynor = $request->C40NOR;
             $rates->fortyfive = $request->C45HC;
-
         } else {
 
             $rates->twuenty = 0;
@@ -711,29 +726,30 @@ class ContractController extends Controller
         $currencyC = $request->input('currency');
         $amountC = $request->input('amount');
 
-        foreach ($calculation_type as $ct => $ctype) {
+        if (count($calculation_type) > 0) {
+            foreach ($calculation_type as $ct => $ctype) {
 
-            if (!empty($request->input('amount'))) {
-                $localcharge = new LocalCharge();
-                $localcharge->surcharge_id = $typeC[$ct];
-                $localcharge->typedestiny_id = '3';
-                $localcharge->calculationtype_id = $ctype;
-                $localcharge->ammount = $amountC[$ct];
-                $localcharge->currency_id = $currencyC[$ct];
-                $localcharge->contract()->associate($contract);
-                $localcharge->save();
+                if (!empty($request->input('amount'))) {
+                    $localcharge = new LocalCharge();
+                    $localcharge->surcharge_id = $typeC[$ct];
+                    $localcharge->typedestiny_id = '3';
+                    $localcharge->calculationtype_id = $ctype;
+                    $localcharge->ammount = $amountC[$ct];
+                    $localcharge->currency_id = $currencyC[$ct];
+                    $localcharge->contract()->associate($contract);
+                    $localcharge->save();
 
-                $detailcarrier = new LocalCharCarrier();
-                $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
-                $detailcarrier->localcharge()->associate($localcharge);
-                $detailcarrier->save();
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
 
-                $detailport = new LocalCharPort();
-                $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
-                $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
-                $detailport->localcharge()->associate($localcharge);
-                $detailport->save();
-
+                    $detailport = new LocalCharPort();
+                    $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                    $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                    $detailport->localcharge()->associate($localcharge);
+                    $detailport->save();
+                }
             }
         }
 
@@ -742,8 +758,8 @@ class ContractController extends Controller
         }
 
         return response()->json([
-            'data' => $localcharge->toJson(),
+            //'data' => $localcharge->toJson(),
+            'data' => 'Success',
         ]);
     }
-
 }
