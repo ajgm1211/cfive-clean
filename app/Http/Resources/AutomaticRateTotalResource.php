@@ -50,21 +50,23 @@ class AutomaticRateTotalResource extends JsonResource
                 }
         }else if($quote->type=='LCL'){
             if($this->markups!=null){
-                $profits = json_decode($data['markups']);
+                $profits = $data['markups'];
                 foreach($profits as $code=>$profit){
-                    $data['profit'] = $profit;
+                    $data['profits_'.$code] = $profit;
                 }
             }else{
-                $data['profit'] = 0;
+                $data['profits_per_unit'] = 0;
+                $data['profits_total'] = 0;
             }
             
             if($this->totals!=null){
                 $totals = json_decode($data['totals']);
                 foreach($totals as $code=>$total){
-                    $data['lcl_totals'] = $total;
+                    $data['totals_'.$code] = $total;
                 }
             }else{
-                $data['lcl_totals'] = 0;
+                $data['totals_per_unit'] = 0;
+                $data['totals_total'] = 0;
             }
         }
 

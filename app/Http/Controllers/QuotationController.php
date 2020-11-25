@@ -46,7 +46,9 @@ class QuotationController extends Controller
 
     public function list(Request $request)
     {
-        $results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
+        $results = QuoteV2::filterByCurrentCompany()->filter($request);
+
+        //$results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
     }
