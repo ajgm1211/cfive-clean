@@ -171,6 +171,23 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
+     * Sync Contract Carriers Single
+     *
+     * @param  Array  $carrier
+     * @return void
+     */
+    public function ContractCarrierSyncSingle($carrier_id)
+    {
+
+        DB::table('contracts_carriers')->where('contract_id', '=', $this->id)->delete();
+
+        ContractCarrier::create([
+            'carrier_id'    => $carrier_id,
+            'contract_id'   => $this->id
+        ]);
+    }
+
+    /**
      * Store file in storage
      *
      * @param  blob  $file
@@ -392,7 +409,7 @@ class Contract extends Model implements HasMedia, Auditable
 
                 $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
-             /*   // Condicion para enviar los terminos de venta o compra
+                /*   // Condicion para enviar los terminos de venta o compra
                 if (isset($local->surcharge->saleterm->name)) {
                     $terminos = $local->surcharge->saleterm->name;
                 } else {
@@ -405,7 +422,7 @@ class Contract extends Model implements HasMedia, Auditable
                     if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
                         $localParams = array('local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
-                       /* if ($chargesOrigin != null) {
+                        /* if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
                                 foreach ($containers as $cont) {
                                     $name_arreglo = 'array' . $cont->code;
@@ -429,26 +446,25 @@ class Contract extends Model implements HasMedia, Auditable
                             }
                         }*/
                         //Freight
-                   
-                            if ($local->typedestiny_id == '3') {
-                                
-                                $band = false;
-                                //Se ajusta el calculo para freight tomando en cuenta el rate currency
-                                $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
-                                $localParams['typeCurrency'] = $data->currency->alphacode;
-                                $localParams['idCurrency'] = $data->currency->id;
-                                //Fin Variables
 
-                                foreach ($containers as $cont) {
+                        if ($local->typedestiny_id == '3') {
 
-                                    $name_arreglo = 'array' . $cont->code;
+                            $band = false;
+                            //Se ajusta el calculo para freight tomando en cuenta el rate currency
+                            $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                            $localParams['typeCurrency'] = $data->currency->alphacode;
+                            $localParams['idCurrency'] = $data->currency->id;
+                            //Fin Variables
 
-                                    if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                        $collectionFreight->push($this->processLocalCharge($cont, $local, $localParams, $rateMount_Freight, $totalesCont));
-                                    }
+                            foreach ($containers as $cont) {
+
+                                $name_arreglo = 'array' . $cont->code;
+
+                                if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                                    $collectionFreight->push($this->processLocalCharge($cont, $local, $localParams, $rateMount_Freight, $totalesCont));
                                 }
                             }
-                        
+                        }
                     }
                 }
             }
