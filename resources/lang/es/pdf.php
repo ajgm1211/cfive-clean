@@ -57,4 +57,5 @@ return [
     "distance" => "Distancia",
     "ocean_freight" => "Flete Marítimo",
     "minimum" => "Mínimo",
+    "totals" => "Totales",
 ];

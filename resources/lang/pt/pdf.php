@@ -57,4 +57,5 @@ return [
     "distance" => "Distância",
     "ocean_freight" => "Ocean freight",
     "minimum" => "Mínimo",
+    "totals" => "Totais",
 ];

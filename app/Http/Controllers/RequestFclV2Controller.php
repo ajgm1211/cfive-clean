@@ -367,7 +367,6 @@ class RequestFclV2Controller extends Controller
         return view('RequestV2.Fcl.Body-Modals.edit',compact('requests','status_arr'));
     }
 
-
     public function UpdateStatusRequest(){
         $id     = $_REQUEST['id'];
         $status = $_REQUEST['status'];
