@@ -6958,6 +6958,17 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
 
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->currency_id = $rateO->idCurrency;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = null;
+                    $rateTotals->save();
+                    $rateTotals->totalize($rateO->idCurrency);
+
                     //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
                     //  $inlandO =  $request->input('inlandO'.$rateO->rate_id);
 
