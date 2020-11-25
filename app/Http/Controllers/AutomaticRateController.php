@@ -8,7 +8,9 @@ use App\QuoteV2;
 use App\Charge;
 use App\ChargeLclAir;
 use App\AutomaticInlandTotal;
+use App\AutomaticRateTotal;
 use App\Http\Resources\AutomaticRateResource;
+use App\Http\Resources\AutomaticRateTotalResource;
 use Illuminate\Support\Facades\Auth;
 
 class AutomaticRateController extends Controller
@@ -28,6 +30,8 @@ class AutomaticRateController extends Controller
             'POD' => 'required',
             'carrier'=> 'required'
         ]);
+        
+        $currency = $quote->company_user()->first()->currency()->first();
 
         $rate = AutomaticRate::create([
             'quote_id' => $quote->id,
@@ -36,7 +40,7 @@ class AutomaticRateController extends Controller
             'validity_end' => $quote->validity_end,
             'origin_port_id' => $data['POL'],
             'destination_port_id' => $data['POD'],
-            'currency_id' => '149',
+            'currency_id' => $currency->id,
             'carrier_id' => $data['carrier'],
         ]);
         
@@ -60,8 +64,33 @@ class AutomaticRateController extends Controller
                 'currency_id' => $rate->currency_id,
             ]);
         }
+
+        $this->storeTotals($quote,$rate);
        
         return new AutomaticRateResource($rate);
+    }
+
+    public function storeTotals(QuoteV2 $quote, AutomaticRate $rate){
+        
+        $totals = $rate->totals()->first();
+
+        $currency = $rate->currency()->first();
+        
+        if($totals){
+            $totals->totalize($currency->id);
+        }else{
+            $totals = AutomaticRateTotal::create([
+                'quote_id' => $quote->id,
+                'currency_id' => $currency->id,
+                'origin_port_id' => $rate->origin_port_id,
+                'destination_port_id' => $rate->destination_port_id,
+                'automatic_rate_id' => $rate->id,
+                'totals' => null,
+                'markups' => null                    
+            ]);
+
+            $totals->totalize($currency->id);
+        }
     }
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
@@ -107,6 +136,8 @@ class AutomaticRateController extends Controller
     {
         $form_keys = $request->input('keys');
 
+        $totals = $autorate->totals()->first();
+
         $data = [];
            
         foreach($form_keys as $fkey){
@@ -129,17 +160,23 @@ class AutomaticRateController extends Controller
         }
             
         if(count($markups) != 0){
-            $markups_json = json_encode($markups);
 
-            $autorate->update(['markups'=>$markups_json]);
+            $totals->update(['markups'=>$markups]);
 
-            $autorate->totalize($request->input('profits_currency'));
+            $totals->totalize($request->input('profits_currency'));
         }
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)
     {
         return new AutomaticRateResource($autorate);
+    }
+
+    public function retrieveTotals(QuoteV2 $quote, AutomaticRate $autorate)
+    {
+        $totals = $autorate->totals()->first();
+
+        return new AutomaticRateTotalResource($totals);
     }
 
     public function destroy(AutomaticRate $autorate)
@@ -154,18 +191,6 @@ class AutomaticRateController extends Controller
 
         $inlandTotalsDest = $quote->automatic_inland_totals()->where('port_id',$autorate->destination_port_id)->get();
 
-        if($inlandAddressesOrig){
-            foreach($inlandAddressesOrig as $address){
-                $address->delete();
-            }
-        }
-        
-        if($inlandAddressesDest){
-            foreach($inlandAddressesDest as $address){
-                $address->delete();
-            }
-        }
-
         if($inlandTotalsOrig){
             foreach($inlandTotalsOrig as $total){
                 $total->delete();
@@ -177,6 +202,23 @@ class AutomaticRateController extends Controller
                 $total->delete();
             }
         }
+
+        if($inlandAddressesOrig){
+            foreach($inlandAddressesOrig as $address){
+                $address->delete();
+
+            }
+        }
+        
+        if($inlandAddressesDest){
+            foreach($inlandAddressesDest as $address){
+                $address->delete();
+            }
+        }
+
+        $totals = $autorate->totals();
+
+        $totals->delete();
 
         $autorate->delete();
 

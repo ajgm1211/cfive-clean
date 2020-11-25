@@ -28,8 +28,8 @@ class AutomaticInlandLclAirResource extends JsonResource
             'validity_end' => $this->validity_end,
             'distance' => $this->distance,
             'currency_id' => $this->currency,
-            'total' => $this->total,
-            'markup' => $this->markup,
+            'total' => isDecimal($this->total),
+            'markup' => isDecimal($this->markup),
         ];
 
         return $data;

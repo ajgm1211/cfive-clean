@@ -128,4 +128,25 @@ trait UtilTrait
         }
         return $rateC;
     }
+
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, Array $amounts)
+    {    
+        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+            $conversion = $toCurrency->rates;
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price * $conversion;
+                $amounts[$container] = $convertedPrice;
+            }
+            if($toCurrency->alphacode=='USD'){
+                return $amounts;
+            }else{
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price / $conversion;
+                    $amounts[$container] = $convertedPrice;
+                }
+            }
+        }
+
+        return $amounts;
+    }
 }

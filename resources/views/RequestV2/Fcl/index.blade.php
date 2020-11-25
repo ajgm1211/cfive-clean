@@ -167,6 +167,9 @@
                                                                             or
                                                                         </h3>
                                                                         <a href="#" class="btn btn-primary col-2" > Choose file </a>
+                                                                        <br>
+                                                                        <br>
+                                                                        <small>Only formats ('XLSX, XLS, CSV, PDF')</small>
                                                                     </div>
                                                                 </div>
                                                             </div>
