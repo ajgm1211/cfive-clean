@@ -176,7 +176,7 @@ class AutomaticRateTotal extends Model
 
             //adding autorate markups
             if ($this->markups != null) {
-                $markups = json_decode($this->markups, true);
+                $markups = $this->markups;
                 $markups['total'] = $markups['per_unit'] * $total_units;
                 $markups['total'] = isDecimal($markups['total'],true);
                 $totals_usd['total'] += $markups['total'];
@@ -189,10 +189,9 @@ class AutomaticRateTotal extends Model
                 $markups['per_unit'] = isDecimal(0,true);
             }
 
-            $markups_json = json_encode($markups);
             $totals = json_encode($totals_usd);
 
-            $this->update(['totals' => $totals, 'markups' => $markups_json]);
+            $this->update(['totals' => $totals, 'markups' => $markups]);
         }
     }
 }
