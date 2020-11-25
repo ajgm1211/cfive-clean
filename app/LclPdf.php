@@ -29,7 +29,7 @@ class LclPdf
         $freight_charges = $this->freightCharges($freight_charges);
 
         $origin_charges = $this->localCharges($quote, 1);
-
+        
         $destination_charges = $this->localCharges($quote, 2);
 
         $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
@@ -45,7 +45,7 @@ class LclPdf
     {
         $localcharges = LocalChargeQuoteLcl::Quote($quote->id)->Type($type)->get();
 
-        $localcharges = $localcharges->groupBy([
+        /*$localcharges = $localcharges->groupBy([
 
             function ($item) {
                 return $item['port']['name'] . ', ' . $item['port']['code'];
@@ -55,9 +55,9 @@ class LclPdf
 
         foreach ($localcharges as $value) {
             $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
-        }
+        }*/
 
-        /*if (count($localcharges) > 0) {
+        if (count($localcharges) > 0) {
             $localcharges = $localcharges->groupBy([
 
                 function ($item) {
@@ -65,7 +65,7 @@ class LclPdf
                 },
 
             ]);
-
+            
             foreach ($localcharges as $value) {
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
 
@@ -86,10 +86,11 @@ class LclPdf
                     },
 
                 ]);
-
+                
                 $localcharges = $inlands;
+                
             }
-        }*/
+        }
 
         return $localcharges;
     }
@@ -102,7 +103,7 @@ class LclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id')
+        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
         return $inlands;

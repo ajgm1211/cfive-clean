@@ -53,7 +53,7 @@ class ChargeLclController extends Controller
             'markup' => 1.00,
         ]);
 
-        $totals = $rate->totals()->first();
+        $totals = $autorate->totals()->first();
 
         $totals->totalize($autorate->currency_id);
 
@@ -114,12 +114,11 @@ class ChargeLclController extends Controller
 
         $totals = $autorate->totals()->first();
         
-        if(isset($data['fixed_currency'])){
-            $charge->update(['currency_id'=>$data['fixed_currency']]);
-            $totals->totalize($request->input('fixed_currency'));
-        } else {
-            $totals->totalize($autorate->currency_id);
+        if(isset($data['fixed_currency_id'])){
+            $autorate->update(['currency_id'=>$data['fixed_currency_id']]);
         }  
+        
+        $totals->totalize($autorate->currency_id);
 
         return new ChargeLclResource($charge);
         

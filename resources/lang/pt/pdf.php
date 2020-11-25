@@ -58,4 +58,5 @@ return [
     "ocean_freight" => "Ocean freight",
     "minimum" => "Mínimo",
     "totals" => "Totais",
+    "price" => "Preço",
 ];
