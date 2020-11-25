@@ -60,7 +60,7 @@ class LocalChargeQuoteLcl extends Model
             $currency = $local_charge_quote_total->currency->alphacode;
             $currency_id = $local_charge_quote_total->currency_id;
         }
-        
+
         foreach ($charges as $charge) {
             if ($charge->total != null) {
                 $exchange = ratesCurrencyFunction($charge->currency_id, $currency);
@@ -80,5 +80,29 @@ class LocalChargeQuoteLcl extends Model
             'currency_id' => $currency_id,
             'type_id' => $this->type_id,
         ]);
+    }
+
+    /**
+     * scopeQuote
+     *
+     * @param  mixed $query
+     * @param  mixed $id
+     * @return void
+     */
+    public function scopeQuote($query, $id)
+    {
+        return $query->where('quote_id', $id);
+    }
+
+    /**
+     * scopeType
+     *
+     * @param  mixed $query
+     * @param  mixed $type
+     * @return void
+     */
+    public function scopeType($query, $type)
+    {
+        return $query->where('type_id', $type);
     }
 }

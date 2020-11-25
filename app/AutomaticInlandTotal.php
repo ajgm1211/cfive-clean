@@ -32,6 +32,11 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\Harbor', 'id', 'port_id');
     }
 
+    public function port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
     public function totalize()
     {
         $quote = $this->quotev2()->first();

@@ -58,4 +58,5 @@ return [
     "ocean_freight" => "Flete Marítimo",
     "minimum" => "Mínimo",
     "totals" => "Totales",
+    "price" => "Precio",
 ];

@@ -47,7 +47,7 @@
                 <td >{{@$rate->origin_port->name.', '.@$rate->origin_port->code}}</td>
                 <td >{{@$rate->destination_port->name.', '.@$rate->destination_port->code}}</td>
                 <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
-                <td >{{@$total_freight.' '.@$rate->currency->alphacode}}</td>
+                <td >{{isDecimal(@$total_freight, true).' '.@$rate->currency->alphacode}}</td>
                 @if($service)
                     <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                     <td>{{$rate->via!='' ? $rate->via:'-'}}</td>

@@ -79,46 +79,56 @@
 
         </div>
 
-        @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
+        @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='' || $quote->validity_end != '')
 
-            <div style="margin-top: 25px;"  class="incoterm"> 
+                <div style="margin-top: 25px; height: 50px" class="incoterm" >
 
-                @if($quote->incoterm_id!='')
-
-                    <p><span><b>Incoterm:</b> </span>{{$quote->incoterm->name}}</p>
-                    
-                @endif
-
-                <p>
-                    @if($quote->kind_of_cargo!='')
-                    
-                        <span><b>{{__('pdf.kind_cargo')}}:</b></span> {{$quote->kind_of_cargo}} 
+                    <div style="float: left">
+                        @if($quote->incoterm_id!='')
+                            
+                            <p><span><b>Incoterm:</b> </span>{{@$quote->incoterm->name}}</p>
                         
-                    @endif 
+                        @endif
                     
-                    @if($quote->commodity!='')
-                    
-                        | <span><b>{{__('pdf.commodity')}}:</b></span> {{$quote->commodity}}
-                        
-                    @endif 
-                    
-                    @if($quote->risk_level!='')
-                    
-                        | <span><b>{{__('pdf.risk_level')}}:</b></span> {{$quote->risk_level}}
-                        
-                    @endif 
-                    
-                    @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) 
-                    
-                        <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> 
-                    
-                    @endif
-                    
-                    </p>
+                        <p>
+                            
+                            @if($quote->kind_of_cargo!='')
 
-            </div>
+                                <span><b>{{__('pdf.kind_of_cargo')}}:</b></span> {{$quote->kind_of_cargo}} 
 
-        @endif   
+                            @endif 
+                            
+                            @if($quote->commodity!='')
+                            
+                                | <span><b>{{__('pdf.commodity')}}:</b></span> {{$quote->commodity}}
+                            
+                            @endif 
+                            
+                            @if($quote->risk_level!='')
+                            
+                                | <span><b>{{__('pdf.risk_level')}}:</b></span> {{$quote->risk_level}}
+                            
+                            @endif  
+                            
+                            @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1)
+
+                                <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> 
+                            
+                            @endif
+                        </p>
+
+                    </div>
+
+                    <div class="client" style="float: right;">
+
+                        <p class="color-title" ><b class="uppercase" style="">{{__('pdf.validity')}}: </b>{{ \Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                        <p class="color-title" ><b class="uppercase" {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
+
+                    </div>
+
+                </div>
+
+            @endif 
 
         <br>
 
