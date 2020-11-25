@@ -46,7 +46,7 @@ class AutomaticInlandResource extends JsonResource
             }
             foreach ($totals as $code => $total) {
                 $total_key = str_replace('c', '', $code);
-                $data['rates_' . $total_key] = $total;
+                $data['rates_' . $total_key] = isDecimal($total,true);
             }
         }
 

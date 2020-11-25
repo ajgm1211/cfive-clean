@@ -27,9 +27,9 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\InlandAddress','id','inland_address_id');
     }
 
-    public function port()
-	{
-		return $this->hasOne('App\Harbor','id','port_id');
+    public function get_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
     }
 
     public function totalize()
@@ -56,10 +56,12 @@ class AutomaticInlandTotal extends Model
                 ['type',$this->type],
                 ['inland_address_id',$this->inland_address_id]])->get();
     
+            $markups_usd = [];
             $totals_usd = [];
     
             foreach($equip_array as $eq){
                 $totals_usd['c'.$eq] = 0;
+                $markups_usd['m'.$eq] = 0;
             }
             
             foreach($inlands as $inland){
@@ -73,9 +75,21 @@ class AutomaticInlandTotal extends Model
                     }
                     $totals_usd[$key] += $value;
                 }
+                if($inland->markup){
+                    $markup_array = json_decode($inland->markup);
+                    foreach($markup_array as $key=>$value){
+                        if($inland_currency->alphacode != 'USD'){
+                            $inland_conversion = $inland_currency->rates;
+                            $value /= $inland_conversion;
+                            $value = round($value,2);
+                        }
+                        $markups_usd[$key] += $value;
+                        $totals_usd['c'.str_replace('m','',$key)] += $value;
+                    }
+                }
             }
     
-            if($this->markups != null){
+            /**if($this->markups != null){
                 $markups = json_decode($this->markups);
                 foreach($markups as $mark=>$profit){
                     $clear_key = str_replace('m','c',$mark);
@@ -87,19 +101,20 @@ class AutomaticInlandTotal extends Model
                         $totals_usd[$clear_key] += $profit;
                     }
                 }
-            }
+            }**/
     
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 foreach($totals_usd as $cont=>$price){
                     $conv_price = $price*$conversion;
-                    $totals_usd[$cont] = round($conv_price,2);
+                    $totals_usd[$cont] = isDecimal($conv_price,true);
                 }
             }
     
             $totals = json_encode($totals_usd);
+            $markups = json_encode($markups_usd);
             
-            $this->update(['totals'=>$totals]);
+            $this->update(['totals'=>$totals,'markups'=>$markups]);
         }else if($quote->type=='LCL'){
         
             $inlands = AutomaticInlandLclAir::where([
@@ -137,7 +152,7 @@ class AutomaticInlandTotal extends Model
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 $conv_price = $totals_usd['lcl_totals']*$conversion;
-                $totals_usd['lcl_totals'] = round($conv_price,2);
+                $totals_usd['lcl_totals'] = isDecimal($conv_price,true);
             }
     
             $totals = json_encode($totals_usd);
