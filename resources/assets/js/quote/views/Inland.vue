@@ -1148,6 +1148,7 @@ export default {
             if(this.currentQuoteData['type']=='FCL'){
                 this.inlandActions = this.actions.automaticinlands;
             }else if(this.currentQuoteData['type']=='LCL'){
+                console.log('hey');
                 this.inlandActions = this.actions.automaticinlandslcl;
                 this.vform_fields = {
                     charge: {
