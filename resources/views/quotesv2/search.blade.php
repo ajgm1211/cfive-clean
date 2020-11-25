@@ -649,6 +649,23 @@ background-color: #36A3F7;
 .hida {
     display: none;
 }
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--done .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: #0072fc;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--current .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: rgba(0, 114, 252, 0.70);
+}
+
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span {
+    width: 3rem;
+    height: 3rem;
+}
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span > span {
+    font-size: 16px;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__progress .progress .progress-bar:after {
+    background-color: #0172fc;
+}
 /* estilos */
 </style>
 @endsection
@@ -1181,14 +1198,6 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-  <div class="row">
-                            <div class="col-lg-12">
-                                <a  data-toggle="modal" data-target="#createContractModal">
-                                
-                                    <span  style="color:blue;"> + Add Contract</span>
-                                 </a>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
@@ -1200,8 +1209,7 @@ background-color: #36A3F7;
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual" data-type="1">Create
-                                        Manual</span></button>
+                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1">+ Add Contract</span></button>
                                 </center>
                             </div>
                         </div>

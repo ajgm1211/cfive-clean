@@ -73,7 +73,7 @@ Route::group(['prefix' => 'v1'], function () {
         //Airports
         Route::get('airports', 'ApiController@airports');
         //Rates
-        Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
+        Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}/{carrierUrl?}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
         Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
     });
 });

@@ -272,7 +272,7 @@ trait SearchTraitApi
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name,'monto'=>$monto);
+        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => (string)$montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name, 'monto' => $monto);
         return $arreglo;
     }
 
