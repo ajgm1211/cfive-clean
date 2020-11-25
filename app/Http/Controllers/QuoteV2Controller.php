@@ -6836,7 +6836,7 @@ class QuoteV2Controller extends Controller
                 if ($form->company_id_quote != "0" && $form->company_id_quote != null) {
                     $payments = $this->getCompanyPayments($form->company_id_quote);
                     $fcompany_id = $form->company_id_quote;
-                    $fcontact_id = $form->contact_id;
+                    $fcontact_id = @$form->contact_id;
                 }
             }
 
