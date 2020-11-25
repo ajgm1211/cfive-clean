@@ -32,7 +32,7 @@ class LclPdf
 
         $destination_charges = $this->localCharges($quote, 2);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service]);
+        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
 

@@ -24,6 +24,31 @@ class LocalChargeQuoteLclTotal extends Model
         return $this->belongsTo('App\QuoteV2', 'quote_id');
     }
 
+    public function get_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
+    public function get_type()
+    {
+        return $this->hasOne('App\TypeDestiny', 'id', 'type_id');
+    }
+
+    public function scopeQuotation($query, $quote)
+    {
+        return $query->where('quote_id', $quote);
+    }
+
+    public function scopePort($query, $port)
+    {
+        return $query->where('port_id', $port);
+    }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type_id', $type);
+    }
+
     public function totalize()
     {
         $charges = LocalChargeQuoteLcl::where(['quote_id' => $this->quote_id, 'type_id' => $this->type_id, 'port_id' =>  $this->port_id])->get();
