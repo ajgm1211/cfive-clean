@@ -536,6 +536,41 @@ trait SearchTrait
 
     }
 
+    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
+    {
+        
+        if ($localPercentage != 0) {
+
+            // Monto original
+            $markupO = ($montoOrig * $localPercentage) / 100;
+            $montoOrig += $markupO;
+            $montoOrig = number_format($montoOrig, 2, '.', '');
+
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
+        } else { // oki
+          
+            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
+
+
+                $markupOrig = $localMarkup * $valor;
+
+         
+          
+            $monto = $monto / $rateFreight;
+            $markup = trim($localMarkup);
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
+        }
+
+        return $arraymarkup;
+    }
+
     public function inlandMarkup($inlandPercentage, $inlandAmmount, $inlandMarkup, $monto, $typeCurrency, $markupInlandCurre)
     {
 
