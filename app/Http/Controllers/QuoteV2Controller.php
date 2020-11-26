@@ -3271,7 +3271,7 @@ class QuoteV2Controller extends Controller
                 //ACACAMBIOS
 
                 $rateFreight = $this->getRatesCurrency($data->currency->id, $idCurrency);
-            
+
                 // Rates
                 $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers,  $rateFreight);
 
