@@ -17,6 +17,7 @@ use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesEvery30Job;
 use App\Visualtrans;
 use App\Vforwarding;
+use Illuminate\Support\Facades\DB;
 
 class ApiIntegrationController extends Controller
 {
@@ -42,16 +43,36 @@ class ApiIntegrationController extends Controller
         $api = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
 
         if (!empty($api)) {
-            $api->enable = $request->enable;
-            $api->update();
+            DB::table('api_integration_settings')->update(['status'=> $request->enable]);
+            DB::table('api_integrations')->update(['status'=> $request->enable]);
         } else {
             $api = new ApiIntegrationSetting();
             $api->company_user_id = $request->company_user_id;
-            $api->enable = $request->enable;
+            $api->status = $request->enable;
             $api->save();
         }
 
         return response()->json(['data' => $api]);
+    }
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function status(Request $request)
+    {
+        $apiU = ApiIntegration::where('id', $request->id)->first();
+
+        if (!empty($apiU)) {
+            $apiU->status = $request->status;
+            $apiU->update();
+        } else {
+            $apiU = new ApiIntegration();
+            $apiU->status = $request->status;
+            $apiU->save();
+        }
+
+        return response()->json(['data' => $apiU]);
     }
 
     /**
@@ -72,8 +93,10 @@ class ApiIntegrationController extends Controller
      */
     public function store(StoreApiIntegration $request)
     {
-        ApiIntegration::create($request->all());
-
+        $ap = new ApiIntegration ($request->all());
+        $ap->status=0;
+        $ap->save();
+        
         $request->session()->flash('message.content', 'Record saved successfully');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
