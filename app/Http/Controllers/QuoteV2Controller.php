@@ -3273,7 +3273,7 @@ class QuoteV2Controller extends Controller
                 $rateFreight = $this->getRatesCurrency($data->currency->id, $idCurrency);
             
                 // Rates
-                $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers, 1);
+                $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers,  $rateFreight);
 
                 $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSum']);
                 //dd($arregloRateSum);
