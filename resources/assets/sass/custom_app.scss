@@ -3,6 +3,10 @@
     overflow-x: scroll !important;
 }
 
+.sc-table.table-sm tr:nth-child(odd) {
+    background-color: transparent !important;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 a,
@@ -50,7 +54,6 @@ tr,
 .tab-pane .card-body::-webkit-scrollbar-thumb:hover {
     background: #006bf9;
 }
-
 
 
 /*** genetal styles ***/
@@ -1121,12 +1124,13 @@ input.multiselect__input:focus {
     color: #006BFA;
     font-size: 12px;
     font-weight: 900;
+    letter-spacing: 1px;
     border: none !important;
     text-transform: uppercase;
-    
 }
 
-.t-as, .t-recent {
+.t-as,
+.t-recent {
     color: #B1B1B1;
     font-weight: 900;
     font-size: 14px;
@@ -1144,6 +1148,7 @@ input.multiselect__input:focus {
 }
 
 .radio-direction .active {
+    color: #ffffff;
     background: #DDDDDD !important;
 }
 
@@ -1170,6 +1175,10 @@ input.multiselect__input:focus {
     border-radius: 0px 4px 4px 0px !important;
 }
 
+.radio-direction .btn.btn-outline-primary {
+    color: #333333 !important;
+}
+
 .result-action {
     a {
         color: #43B54E;
@@ -1193,7 +1202,9 @@ input.multiselect__input:focus {
     color: #071C4B !important;
 }
 
+
 /* Recent Search */
+
 .recent-search {
     display: flex;
     border-radius: 4px;
@@ -1212,7 +1223,7 @@ input.multiselect__input:focus {
     padding: 10px 0px;
     border-radius: 4px;
     text-align: center;
-    background:  #006BFA;
+    background: #006BFA;
     text-transform: uppercase;
 }
 
@@ -1256,26 +1267,28 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
-
-
-.form-control.reportrange-text {
+.vue-daterange-picker.s-input .reportrange-text {
     border: none !important;
     background: #f8f8f8;
     min-height: 50px;
 }
 
-.form-control.reportrange-text i {
+.vue-daterange-picker.s-input .reportrange-text i {
     padding-top: 6px;
     font-size: 30px;
 }
+
+
 /* Search Result */
+
 .result-search {
     border-radius: 4px;
     background: #ffffff;
     box-shadow: 0px 0px 15px 3px #eaeaea;
 }
 
-#detailed, #remarks {
+#detailed,
+#remarks {
     background: rgba(#C4C4C4, 0.09);
     h5 {
         font-size: 12px;
@@ -1287,7 +1300,8 @@ input.multiselect__input:focus {
     }
 }
 
-.result-search .origin, .result-search .destination {
+.result-search .origin,
+.result-search .destination {
     font-size: 10px;
     color: #dddddd;
     display: flex;
@@ -1296,11 +1310,10 @@ input.multiselect__input:focus {
     p {
         color: #071C4B;
     }
-
-    p, span {
+    p,
+    span {
         font-weight: 900;
     }
-
     span {
         margin-bottom: 5px;
     }
@@ -1315,7 +1328,8 @@ input.multiselect__input:focus {
 }
 
 .result-search .destination {
-    b,p {
+    b,
+    p {
         float: right;
     }
 }
@@ -1343,31 +1357,26 @@ input.multiselect__input:focus {
         border: 2px solid #dddddd;
         background-color: transparent;
     }
-
     .line {
         width: 150px;
         height: 2px;
         background-color: #dddddd;
     }
-
     .fill-circle {
         border-color: #006BFA;
         background-color: #006BFA;
     }
-
     .fill-circle-gray {
         border-color: #dddddd;
         background-color: #dddddd;
     }
-
     .line-blue {
         background-color: #006BFA !important;
     }
-    
 }
 
-.result-search .via .direction-form .route-indirect .line {
-    width: 64px !important;
+.result-search .via .direction-form.route-indirect .line {
+    width: 61px !important;
 }
 
 .direction-desc {
@@ -1375,7 +1384,8 @@ input.multiselect__input:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    b, p {
+    b,
+    p {
         font-size: 11px;
         text-align: center;
         color: #071C4B;
@@ -1401,20 +1411,24 @@ input.multiselect__input:focus {
 
 .btn.btn-secondary.add-contract {
     border: none !important;
-    color:  #006BFA;
+    color: #006BFA;
     font-weight: 900;
     font-size: 12px;
     text-transform: uppercase;
 }
-
+#add-contract {
+    label {
+        width: 100%;
+    }
+}
 .btn.btn-secondary.btn-create-quote {
     color: #ffffff;
     font-weight: 900;
-    font-size: 12px;
-    background: #006BFA;
-    border: none;
+    background: #006BFA !important;
+    border-radius: 4px !important;
+    border: none !important;
     position: relative;
-    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;
 }
 
 .result-header b {
@@ -1422,4 +1436,79 @@ input.multiselect__input:focus {
     font-size: 14px;
     font-weight: 900;
     text-transform: uppercase;
+}
+
+.profit {
+    color: #051b4e;
+    margin: 0px 5px;
+    padding: 2px !important;
+    border-radius: 4px;
+    background: #F0F0F0;
+}
+
+.type-style .btn-outline-primary {
+    display: flex;
+    align-items: center;
+}
+
+.as-checkbox .custom-control-label::before, .as-checkbox .custom-control-label::after {
+    top: -2px;
+}
+
+#sticky-header-results {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 25px 0px;
+    z-index: 100;
+    position: fixed;
+    display: none;
+    background-color: white;
+    transform: translateY(-200px);
+    transition: all 300ms ease-in-out;
+    box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03);
+}
+
+.activeSticky {
+    display: block !important;
+    transform: translateY(0px) !important;
+}
+
+.type-mode, .delivery-type {
+    position: absolute;
+    top: 6px;
+}
+
+.delivery-type {
+    right: -38px;
+}
+
+.type-mode {
+    right: 23px;
+}
+
+.btn-add-quote .active {
+    color: #ffffff;
+    background: #006afa !important;
+    border-color:  #006afa !important;
+}
+
+.btn-add-quote .btn-secondary:hover {
+    color: #ffffff;
+    background: #006afa !important;
+    border-color:  #006afa !important;
+}
+
+.card-amount p {
+    font-size: 16px;
+}
+
+.footer-add-contract-modal  {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 15px 0px;
+    border-top: 1px solid #eeeeee;
+    border-radius: 0px 0px 4px 4px;
+    background-color: white;
 }
