@@ -269,9 +269,10 @@ trait SearchTrait
                 }
             }
         }
+     
 
         $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum ,'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
-        //dd($arregloG);
+        
         return $arregloG;
 
     }
@@ -283,11 +284,11 @@ trait SearchTrait
         $arregloRateSave['rateSum'] = array();
         $arregloRateSave['markups'] = array();
         $arregloRate = array();
-
-        $markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
+      
+        $markup = $this->freightMarkupsTrait($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers,$rateFreight);
 
         $tot_F = $markup['monto' . $containers] / $rateC;
-        $tot_R = $markup['monto' . $containers] / $rateFreight;
+        $tot_R = $markup['monto' . $containers] ;
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
@@ -507,9 +508,9 @@ trait SearchTrait
         return $collectionMarkup;
     }
 
-    public function freightMarkups($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type)
+    public function freightMarkupsTrait($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type,$rateFreight)
     {
-        dd($monto);
+        
         if ($freighPercentage != 0) {
             $freighPercentage = intval($freighPercentage);
             $markup = ($monto * $freighPercentage) / 100;
@@ -519,9 +520,15 @@ trait SearchTrait
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $markup, "typemarkup" . $type => "$typeCurrency ($freighPercentage%)", "monto" . $type => $monto, 'montoMarkupO' => $markup);
         } else {
 
+            
             $markup = trim($freighAmmount);
-            $monto += $freighMarkup;
+           
+           if($freighMarkup != 0)
+               $monto += $freighMarkup * $rateFreight;
+            else
+               $monto += $freighMarkup ;
             $monto = number_format($monto, 2, '.', '');
+            
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $freighMarkup, "typemarkup" . $type => $typeCurrency, "monto" . $type => $monto, 'montoMarkupO' => $markup);
         }
 
