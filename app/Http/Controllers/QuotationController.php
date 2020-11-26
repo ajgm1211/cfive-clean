@@ -309,6 +309,22 @@ class QuotationController extends Controller
                 $totals->totalize($auto->currency_id);
             }
         }
+
+        if($quote->pdf_options==null){            
+            $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
+            $currency_id = $company->companyUser->currency_id;
+            $currency = Currency::find($currency_id);
+    
+            $pdfOptions = [
+                "allIn" =>true, 
+                "showCarrier"=>true, 
+                "showTotals"=>false, 
+                "totalsCurrency" =>$currency];
+            
+            $quote->pdf_options = $pdfOptions;
+            $quote->save();
+        }
+
         return view('quote.edit');
     }
 
