@@ -3421,11 +3421,13 @@ class QuoteV2Controller extends Controller
                                            
                                             $monto = number_format($monto, 2, '.', '');
                                             $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                            $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                            $markupGe = $this->localMarkupsTrait($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id,$rateMount_Freight);
                                             $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
+                                            //dd($markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                           
                                             $band = true;
                                         }
                                     }
@@ -3570,10 +3572,12 @@ class QuoteV2Controller extends Controller
                                                 $arregloFreightG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
                                                 $arregloFreightG = array_merge($arregloFreightG, $markupGe);
                                                 $collectionFreight->push($arregloFreightG);
-                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'] / $rateMount_Freight;
+                                                
                                                 $band = true;
                                             }
                                         }
+                                        
                                         if ($band) {
                                             if (in_array($global->calculationtype_id, $arrayContainers)) {
                                                 $valores = $this->asociarPerCont($global->calculationtype_id);
@@ -3903,7 +3907,7 @@ class QuoteV2Controller extends Controller
 
     public function localMarkupsFCL($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency)
     {
-
+       
         if ($localPercentage != 0) {
 
             // Monto original
