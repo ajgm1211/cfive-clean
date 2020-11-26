@@ -149,20 +149,22 @@
                         </p>
 
                     </div>
-                @if(@$quote->company->business_name=='')
 
-                    <div style="float: left">
-                        
-                        <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                    @if(@$quote->company->business_name=='')
+                        <!-- only cliente -->
+                        <div style="float: left">
+                            
+                            <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
 
-                    </div>
-                @else
-                    <div style="float: right">
+                        </div>
+                    @else
+                        <!-- cliente -->
+                        <div style="float: right">
 
-                        <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                            <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
 
-                    </div>
-                @endif
+                        </div>
+                    @endif
                 </div>
 
             @endif
