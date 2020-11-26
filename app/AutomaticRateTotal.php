@@ -121,6 +121,7 @@ class AutomaticRateTotal extends Model
             $totals = json_encode($totals_rate);
 
             $this->update(['totals' => $totals]);
+            $rate->update(['total' => $totals]);
 
         } else if ($quote->type == 'LCL') {
 
@@ -192,6 +193,7 @@ class AutomaticRateTotal extends Model
             $totals = json_encode($totals_usd);
 
             $this->update(['totals' => $totals, 'markups' => $markups]);
+            $rate->update(['total' => $totals]);
         }
     }
 }
