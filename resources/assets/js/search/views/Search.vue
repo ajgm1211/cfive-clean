@@ -5,38 +5,49 @@
 
             <div class="row mr-0 ml-0">
 
-                <div class="col-12 col-sm-1">
-                    <multiselect
-                        v-model="type"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsType"
-                        class="s-input no-select-style"
-                    >
-                    </multiselect>
+                <div class="col-12 col-sm-3 d-flex">
+
+                        <div style="width: 18% !important; position:relative">
+                            <multiselect
+                                v-model="type"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="true"
+                                :show-labels="false"
+                                :options="optionsType"
+                                placeholder=""
+                                class="s-input no-select-style"
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
+                        </div>
+
+                        <div style="width: 36% !important; position:relative ">
+                            <multiselect
+                                v-model="deliveryType"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="true"
+                                :show-labels="false"
+                                :options="optionsDeliveryType"
+                                placeholder=""
+                                class="s-input no-select-style "
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                        </div>
+
+
                 </div>
-                <div class="col-12 col-sm-2">
-                    <multiselect
-                        v-model="deliveryType"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsDeliveryType"
-                        class="s-input no-select-style delivery-type"
-                    >
-                    </multiselect>
-                </div> 
                 <div class="col-12 col-sm-9">
-                    <b-button v-b-toggle.collapse-1 class="btn-aditonal-services">aditional services <b-icon icon="caret-down-fill" class="ml-1"></b-icon></b-button>
+                    <b-button v-b-toggle.collapse-1 class="btn-aditonal-services">additional services <b-icon icon="caret-down-fill" class="ml-1"></b-icon></b-button>
                 </div>
 
             </div>
 
             <div class="row mr-0 ml-0">
 
+                <!-- Import / Export -->
                 <div class="col-12 col-sm-1">
 
                     <b-form-radio-group
@@ -46,11 +57,12 @@
                         button-variant="outline-primary"
                         size="lg"
                         name="direction"
-                        class="radio-direction"
+                        class="radio-direction type-style"
                     ></b-form-radio-group>
 
                 </div>
 
+                <!-- Origin / Origin Port -->
                 <div class="col-12 col-sm-3">
                     <label>
                         <multiselect
@@ -67,6 +79,8 @@
                         <img src="/images/port.svg" alt="port">
                     </label>
                 </div>
+
+                <!-- Destination / Destination Port -->
                 <div class="col-12 col-sm-3">
                     <label>
                         <multiselect
@@ -83,6 +97,8 @@
                         <img src="/images/port.svg" alt="port">
                     </label>
                 </div>
+                
+                <!-- Date -->
                 <div class="col-12 col-sm-3">
                     <date-range-picker
                         :opens="'center'"
@@ -99,6 +115,8 @@
                     >
                     </date-range-picker>
                 </div>
+
+                <!-- Container -->
                 <div class="col-12 col-sm-2">
                     <label>
                         <multiselect
@@ -118,9 +136,53 @@
 
             </div>
 
+            <div v-if="ptdActive || dtpActive || dtdActive" class="row mr-0 ml-0">
+
+                <div class="col-12 col-sm-1"></div>
+
+                <div v-if="ptdActive" class="col-12 col-sm-3"></div>
+
+                <!-- Origin / Origin Port -->
+                <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3">
+                    <label>
+                        <multiselect
+                            v-model="valueOrigen"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionsOrigen"
+                            placeholder="From" 
+                            class="s-input"
+                        >
+                        </multiselect>
+                        <img src="/images/port.svg" alt="port">
+                    </label>
+                </div>
+
+                <!-- Origin / Destination City -->
+                <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3">
+                    <label>
+                        <multiselect
+                            v-model="valueOrigen"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="optionsOrigen"
+                            placeholder="To" 
+                            class="s-input"
+                        >
+                        </multiselect>
+                        <img src="/images/port.svg" alt="port">
+                    </label>
+                </div>
+
+            </div>
+
             <b-collapse id="collapse-1" class="mt-2">
 
-                <h6 class="t-as mt-3 mb-3">ADDITIONAL SERVICES</h6>
+                <h6 class="t-as mt-3 mb-3 ml-4">ADDITIONAL SERVICES</h6>
             
                 <div class="row mr-0 ml-0">
 
@@ -194,14 +256,14 @@
 
                 </div>
 
-                <div class="row mr-0 ml-0 mt-5 d-flex justify-content-start">
+                <div class="row mr-0 ml-4 mt-5 d-flex justify-content-start">
                     <b-form-checkbox
                         id="originCharges"
                         v-model="originCharges"
                         name="originCharges"
                         value="accepted"
                         unchecked-value="not_accepted"
-                        class="mr-5"
+                        class="mr-5 as-checkbox"
                     >
                         Include origin charges
                     </b-form-checkbox>
@@ -211,6 +273,7 @@
                         name="destinationCharges"
                         value="accepted"
                         unchecked-value="not_accepted"
+                        class="as-checkbox"
                     >
                         Include destination charges
                     </b-form-checkbox>
@@ -219,7 +282,7 @@
             </b-collapse>
 
             <div class="row justify-content-center mr-0 ml-0">
-                <div class="col-2"><button class="btn-search">SEARCH</button></div>
+                <div class="col-2 d-flex justify-content-center"><button class="btn-search">SEARCH</button></div>
             </div>
 
         </b-form>
@@ -242,6 +305,9 @@ export default {
     data() {
         return {
             date: '',
+            ptdActive: false,
+            dtpActive: false,
+            dtdActive: false,
             direction: 'import',
             type: 'FCL',
             container: '',
@@ -274,8 +340,39 @@ export default {
             optionPriceLevel: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
             optionCarriers: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
             optionContainer: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionsType: ['FCL', 'LCL', 'Air'],
+            optionsType: ['FCL', 'LCL', 'AIR'],
             optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR']
+        }
+    },
+    watch: {
+        deliveryType: function() {
+            if ( this.deliveryType == "PORT TO PORT" ) {
+
+                this.ptdActive = false; this.dtpActive = false; this.dtdActive = false; 
+                return;
+
+            } else if (this.deliveryType == "PORT TO DOOR") {
+
+                this.dtpActive = false; this.dtdActive = false; 
+
+                this.ptdActive = !this.ptdActive;
+                return;
+
+            } else if (this.deliveryType == "DOOR TO PORT") {
+
+                this.ptdActive = false; this.dtdActive = false; 
+
+                this.dtpActive = !this.dtpActive;
+                return;
+
+            } else if (this.deliveryType == "DOOR TO DOOR") {
+
+                this.ptdActive = false; this.dtpActive = false; 
+               
+                this.dtdActive = !this.dtdActive;
+                return;
+
+            }
         }
     }
 }
