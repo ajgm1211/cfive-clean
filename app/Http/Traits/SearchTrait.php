@@ -271,13 +271,14 @@ trait SearchTrait
         }
 
         $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum ,'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
+        //dd($arregloG);
         return $arregloG;
 
     }
 
     public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers,$rateFreight  = 1)
     {
-
+     
         $arregloRateSave['rate'] = array();
         $arregloRateSave['rateSum'] = array();
         $arregloRateSave['markups'] = array();
@@ -508,7 +509,7 @@ trait SearchTrait
 
     public function freightMarkups($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type)
     {
-
+        dd($monto);
         if ($freighPercentage != 0) {
             $freighPercentage = intval($freighPercentage);
             $markup = ($monto * $freighPercentage) / 100;
