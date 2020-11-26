@@ -51,6 +51,35 @@
                 </div>
                 <!-- End Company -->
 
+                <!--only Client -->
+            @if(@$quote->company->business_name=='')
+                <div div style="line-height: 10px; width:350px" class="incoterm" >
+
+                    <div style="visibility: hidden">
+
+                            @if(isset($quote->company) && $quote->company->logo!='')
+
+                                <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
+                                
+                            @endif
+
+                        </div>
+
+                        <p><b>{{__('pdf.from')}}: </b>{{@$quote->user->name}} {{@$quote->user->lastname}}</p>
+
+                        <p style="line-height:10px;">{{@$quote->user->email}}</p>
+
+                        <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+
+                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+
+                        <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+
+                </div>
+                    <!-- End only Client -->
+            @else
+
+
                 <!-- Client -->
                 <div class="client" style="line-height: 10px; width:350px; float:right">
 
@@ -75,6 +104,7 @@
                     <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
                 
                 </div>
+                @endif
                 <!-- End Client -->
 
             </div>
@@ -119,13 +149,20 @@
                         </p>
 
                     </div>
+                @if(@$quote->company->business_name=='')
 
+                    <div style="float: left">
+                        
+                        <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+
+                    </div>
+                @else
                     <div style="float: right">
 
                         <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
 
                     </div>
-
+                @endif
                 </div>
 
             @endif
