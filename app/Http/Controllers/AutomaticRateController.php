@@ -152,9 +152,9 @@ class AutomaticRateController extends Controller
             if($value==null){$value=0;}
             if($key!='profits_currency'){
                 if($quote->type == 'FCL'){
-                    $markups['m'.str_replace('profits_','',$key)] = $value;
+                    $markups['m'.str_replace('profits_','',$key)] = isDecimal($value,true);
                 }else if($quote->type == 'LCL'){
-                    $markups[str_replace('profits_','',$key)] = $value;
+                    $markups[str_replace('profits_','',$key)] = isDecimal($value,true);
                 }
             }
         }
@@ -162,6 +162,7 @@ class AutomaticRateController extends Controller
         if(count($markups) != 0){
 
             $totals->update(['markups'=>$markups]);
+            $autorate->update(['markups'=>$markups]);
 
             $totals->totalize($request->input('profits_currency'));
         }

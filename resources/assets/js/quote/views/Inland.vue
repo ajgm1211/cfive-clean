@@ -324,7 +324,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                         <b-form-input
                                             v-if="
@@ -337,7 +337,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                     </b-td>
 
@@ -971,6 +971,11 @@ export default {
             const index = this.inlandAdds.indexOf(this.inlandAdds[id]);
 
             this.inlandAdds.splice(index, 1);
+
+            this.inlandModalTotals = {},
+            this.inlandModalTotalLcl = 0,
+
+            this.totalizeModalInlands();
         },
 
         totalizeModalInlands() {
@@ -1010,7 +1015,7 @@ export default {
     
                             component.inlandModalTotals[
                                 "c" + equip
-                            ] = totals.toFixed(2);
+                            ] = totals;
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
                         let rates_num = Number(inlandAdd.total);
@@ -1025,10 +1030,11 @@ export default {
 
                             totals = price_usd * clientConversion;
                         }
-                        component.inlandModalTotalLcl = totals.toFixed(2);
+                        component.inlandModalTotalLcl = totals;
                     }
                 }
             });
+            component.setDecimals();
         },
 
         addInland() {
@@ -1148,7 +1154,6 @@ export default {
             if(this.currentQuoteData['type']=='FCL'){
                 this.inlandActions = this.actions.automaticinlands;
             }else if(this.currentQuoteData['type']=='LCL'){
-                console.log('hey');
                 this.inlandActions = this.actions.automaticinlandslcl;
                 this.vform_fields = {
                     charge: {
@@ -1207,7 +1212,56 @@ export default {
                     },
                 ];
             }
-        }
+        },
+
+        setDecimals(){
+            let component = this;
+
+            component.inlandAdds.forEach(function (inlandAdd) {
+                if(component.currentQuoteData['type']=='FCL'){
+                    component.quoteEquip.forEach(function (equip) {
+                        if(inlandAdd.price["c" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.price["c" + equip] = Number(inlandAdd.price["c" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.price["c" + equip] = Math.trunc(Number(inlandAdd.price["c" + equip]));
+                            }
+                        }
+                        if(inlandAdd.markup["m" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.markup["m" + equip] = Number(inlandAdd.markup["m" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.markup["m" + equip] = Math.trunc(Number(inlandAdd.markup["m" + equip]));
+                            }
+                        }
+                    });                    
+                }else if(component.currentQuoteData['type']=='LCL'){
+                    if (inlandAdd.total) {
+                        if(component.currentQuoteData['decimals'] == 1){
+                            inlandAdd.total = Number(inlandAdd.total).toFixed(2);
+                        }else if(component.currentQuoteData['decimals']==0){
+                            inlandAdd.total = Math.trunc(Number(inlandAdd.total));
+                        }
+                    }
+                }
+            });
+            component.quoteEquip.forEach(function (equip) {
+                if(Object.keys(component.inlandModalTotals).length != 0){
+                    if(component.currentQuoteData['decimals'] == 1){
+                        component.inlandModalTotals["c" + equip] = Number(component.inlandModalTotals["c" + equip]).toFixed(2);
+                    }else if(component.currentQuoteData['decimals']==0){
+                        component.inlandModalTotals["c" + equip] = Math.trunc(Number(component.inlandModalTotals["c" + equip]));
+                    }
+                }
+            });
+            if(component.inlandModalTotalLcl!=0){
+                if(component.currentQuoteData['decimals'] == 1){
+                    component.inlandModalTotalLcl = component.inlandModalTotalLcl.toFixed(2);
+                }else if(component.currentQuoteData['decimals'] == 0){
+                    component.inlandModalTotalLcl = Math.trunc(component.inlandModalTotalLcl);
+                }
+            }
+        },
     },
 };
 </script>
