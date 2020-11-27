@@ -29,7 +29,7 @@ return [
     "ocean_freight" => "Ocean Freight",
     "tt" => "TT",
     "via" => "Via",
-    "carrier" => "Empresa de transporte",
+    "carrier" => "Empresa",
     "airline" => "AerolíneaCompanhia aérea",
     "per_container" => "Per Container",
     "total_estimated" => "Custo total estimado",
