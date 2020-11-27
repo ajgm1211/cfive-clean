@@ -30,6 +30,7 @@ use App\Provider;
 use App\Country;
 use App\InlandDistance;
 use App\CalculationTypeLcl;
+use App\AutomaticRateTotal;
 use App\DestinationType;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
@@ -418,12 +419,27 @@ class QuotationController extends Controller
 
     public function validateOldQuote($quote){
 
-        $rateTotals = $quote->automatic_rate_totals()->get();
+        $rates = $quote->rates_v2()->get();
         $inlandTotals = $quote->automatic_inland_totals()->get();
 
-        if($rateTotals){
-            foreach($rateTotals as $total){                
-                $total->totalize($total->currency_id);
+        if($rates->count()!=0){
+            foreach($rates as $rate){
+                $rateTotals = $rate->totals()->first();
+                if($rateTotals){
+                    $rateTotals->totalize($rateTotals->currency_id);
+                }else{
+                    $total = AutomaticRateTotal::create([
+                        'quote_id' => $quote->id,
+                        'currency_id' => $rate->currency_id,
+                        'origin_port_id' => $rate->origin_port_id,
+                        'destination_port_id' => $rate->destination_port_id,
+                        'automatic_rate_id' => $rate->id,
+                        'totals' => null,
+                        'markups' => null                    
+                    ]);
+
+                    $total->totalize($total->currency_id);
+                }
             }
         }
 
