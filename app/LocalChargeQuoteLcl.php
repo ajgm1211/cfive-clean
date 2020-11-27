@@ -21,7 +21,7 @@ class LocalChargeQuoteLcl extends Model
 
     public function calculation_type()
     {
-        return $this->belongsTo('App\CalculationType');
+        return $this->belongsTo('App\CalculationTypeLcl', 'calculation_type_id');
     }
 
     public function currency()
@@ -41,6 +41,13 @@ class LocalChargeQuoteLcl extends Model
 
             $this->update(['total' => $total]);
         }
+    }
+
+    public function scopeGetPort($q)
+    {
+        return $q->with(['port' => function ($query) {
+            $query->select('id', 'display_name');
+        }]);
     }
 
     public function totalize()

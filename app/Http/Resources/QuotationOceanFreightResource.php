@@ -26,7 +26,7 @@ class QuotationOceanFreightResource extends JsonResource
             'transit_time' => $this->transit_time ?? null,
             'via' => $this->via ?? null,
             'carrier' => $this->carrier,
-            'charges' => QuotationOceanFreightChargeResource::collection($this->charge),
+            'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
         ];
     }
 }
