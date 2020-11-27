@@ -554,17 +554,28 @@ class ApiController extends Controller
 
         return $airports;
     }
+    public function getCarrier($carrierUrl)
+    {
+        if($carrierUrl == "all"){
+            $carriers = Carrier::all()->pluck('id')->toArray();
 
-    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+        }else{
+            $carriers = Carrier::where('name' , $carrierUrl)->pluck('id')->toArray();
+        }
+    
+
+        return $carriers;
+    }
+    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all' ,$api_company_id = 0)
     {
         try {
-            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0);
+            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
 
-    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $api_company_id = 0)
+    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl ,$api_company_id = 0)
     {
         $portOrig = Harbor::where('code', $code_origin)->firstOrFail();
         $portDest = Harbor::where('code', $code_destination)->firstOrFail();
@@ -581,6 +592,7 @@ class ApiController extends Controller
         $containers = Container::get();
         $companies = Company::where('api_id', '=', $api_company_id)->first();
         $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+        $arregloCarrier = $this->getCarrier($carrierUrl);
 
         $chargesOrigin = 'true';
         $chargesDestination = 'true';
@@ -629,7 +641,7 @@ class ApiController extends Controller
 
         if ($validateEquipment['count'] < 2) {
             if ($companies_id != null || $companies_id != 0) {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id) {
                     $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                         $a->where('user_id', '=', $user_id);
                     })->orDoesntHave('contract_user_restriction');
@@ -645,7 +657,7 @@ class ApiController extends Controller
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
             } else {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
@@ -1064,9 +1076,21 @@ class ApiController extends Controller
             $convert = $request->convert;
 
             if ($contract != null) {
-                return $contract->processSearchByIdFcl($response, $convert);
+                if($contract->status == 'incomplete' || $contract->status == 'draft'){
+                    return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
+                }else if($contract->status == 'expired'){
+                    return response()->json(['message' => 'The requested contract expired'], 200);
+                }else{
+                    return $contract->processSearchByIdFcl($response, $convert);
+                }
             } elseif ($contract_lcl != null) {
-                return $contract_lcl->processSearchByIdLcl($response, $convert);
+                if($contract_lcl->status == 'incomplete' || $contract_lcl->status == 'draft'){
+                    return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
+                }else if($contract_lcl->status == 'expired'){
+                    return response()->json(['message' => 'The requested contract expired'], 200);
+                }else{
+                    return $contract_lcl->processSearchByIdLcl($response, $convert);
+                }
             } else {
                 return response()->json(['message' => 'The requested contract does not exist'], 200);
             }
