@@ -6,8 +6,6 @@
 
             <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.destination_charges')}} - {{$port}}</b></p>
 
-            <br>
-
         </div>
         <!-- End Section Title -->
 

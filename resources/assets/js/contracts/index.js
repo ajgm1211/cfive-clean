@@ -9,6 +9,10 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import VueCkeditor from 'vue-ckeditor5';
+import VueMaterial from 'vue-material';
+import { MdButton, MdContent, MdTabs } from 'vue-material/dist/components';
+import 'vue-material/dist/vue-material.min.css';
+import 'vue-material/dist/theme/default.css';
 
 /* Config files */
 import App from '../components/contracts/App'; // Main Component
@@ -21,6 +25,10 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 Vue.use(VueRouter)
+Vue.use(MdButton)
+Vue.use(MdContent)
+Vue.use(MdTabs)
+Vue.use(VueMaterial)
 
 const options = {
     editors: {

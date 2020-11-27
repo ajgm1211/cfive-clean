@@ -18,6 +18,16 @@ class LocalChargeQuoteTotal extends Model
         return $this->belongsTo('App\Currency');
     }
 
+    public function get_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
+    public function get_type()
+    {
+        return $this->hasOne('App\TypeDestiny', 'id', 'type_id');
+    }
+
     public function quote()
     {
         return $this->belongsTo('App\QuoteV2', 'quote_id');

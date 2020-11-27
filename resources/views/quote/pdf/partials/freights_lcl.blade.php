@@ -5,7 +5,7 @@
 
                 <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}}</p>
 
-                <br>
+                
 
             </div>
 
@@ -102,9 +102,9 @@
                        
                         <div>
                         
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</p>
+                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</b></p>
                         
-                            <br>
+                            
                        
                         </div>
                        
@@ -264,9 +264,8 @@
 
                 <div>
 
-                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.freight_charges')}}</p>
+                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
 
-                    <br>
 
                 </div>
 
