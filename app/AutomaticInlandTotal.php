@@ -40,8 +40,6 @@ class AutomaticInlandTotal extends Model
     
         $currency = $company_user->currency()->first();
 
-        $this->currency_id = $currency->id;
-
         if($quote->type=='FCL'){
 
             $equip = $quote->getContainerCodes($quote->equipment);
@@ -60,8 +58,8 @@ class AutomaticInlandTotal extends Model
             $totals_usd = [];
     
             foreach($equip_array as $eq){
-                $totals_usd['c'.$eq] = 0;
-                $markups_usd['m'.$eq] = 0;
+                $totals_usd['c'.$eq] = isDecimal(0,true);
+                $markups_usd['m'.$eq] = isDecimal(0,true);
             }
             
             foreach($inlands as $inland){
@@ -71,9 +69,8 @@ class AutomaticInlandTotal extends Model
                     if($inland_currency->alphacode != 'USD'){
                         $inland_conversion = $inland_currency->rates;
                         $value /= $inland_conversion;
-                        $value = round($value,2);
                     }
-                    $totals_usd[$key] += $value;
+                    $totals_usd[$key] += isDecimal($value,true);
                 }
                 if($inland->markup){
                     $markup_array = json_decode($inland->markup);
@@ -81,9 +78,8 @@ class AutomaticInlandTotal extends Model
                         if($inland_currency->alphacode != 'USD'){
                             $inland_conversion = $inland_currency->rates;
                             $value /= $inland_conversion;
-                            $value = round($value,2);
                         }
-                        $markups_usd[$key] += $value;
+                        $markups_usd[$key] += isDecimal($value,true);
                         $totals_usd['c'.str_replace('m','',$key)] += $value;
                     }
                 }
@@ -102,12 +98,18 @@ class AutomaticInlandTotal extends Model
                     }
                 }
             }**/
-    
+                        
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 foreach($totals_usd as $cont=>$price){
                     $conv_price = $price*$conversion;
                     $totals_usd[$cont] = isDecimal($conv_price,true);
+                }
+                if($markups_usd){
+                    foreach($markups_usd as $contM=>$priceM){
+                        $conv_mprice = $priceM*$conversion;
+                        $markups_usd[$contM] = isDecimal($conv_mprice,true);
+                    }
                 }
             }
     
@@ -131,9 +133,8 @@ class AutomaticInlandTotal extends Model
                 if($inland_currency->alphacode != 'USD'){
                     $inland_conversion = $inland_currency->rates;
                     $value /= $inland_conversion;
-                    $value = round($value,2);
                 }
-                $totals_usd['lcl_totals'] += $value;
+                $totals_usd['lcl_totals'] += isDecimal($value,true);
             }
     
             if($this->markups != null){
@@ -142,13 +143,13 @@ class AutomaticInlandTotal extends Model
                     if($currency->alphacode != 'USD'){
                         $conversion = $currency->rates;
                         $conv_profit = $profit/$conversion;
-                        $totals_usd['lcl_totals'] += round($conv_profit,2);
+                        $totals_usd['lcl_totals'] += $conv_profit;
                     }else{
-                        $totals_usd['lcl_totals'] += $profit;
+                        $totals_usd['lcl_totals'] += isDecimal($profit,true);
                     }
                 }
             }
-    
+
             if($currency->alphacode != 'USD'){
                 $conversion = $currency->rates;
                 $conv_price = $totals_usd['lcl_totals']*$conversion;
