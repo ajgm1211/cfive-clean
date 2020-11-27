@@ -56,4 +56,5 @@ return [
     "provider" => "Proveedor",
     "distance" => "Distancia",
     "ocean_freight" => "Flete Marítimo",
+    "totals" => "Totales",
 ];

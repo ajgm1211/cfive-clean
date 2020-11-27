@@ -109,6 +109,8 @@
                             :currentQuoteData="currentData"
                             :freights="freights"
                             :datalists="datalists"
+                            :actions="actions"
+                            @freightAdded="setInitialData"
                             ></Total>
                         </b-tab>-->
 
@@ -392,6 +394,12 @@ export default {
                 component.inlands=false;
                 setTimeout(function() {
                     component.inlands=true
+                },100);
+            }
+            if(component.totals){
+                component.totals=false;
+                setTimeout(function() {
+                    component.totals=true
                 },100);
             }
         },

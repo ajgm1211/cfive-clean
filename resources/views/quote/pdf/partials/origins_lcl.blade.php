@@ -8,8 +8,7 @@
 
                     <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
 
-                    <br>
-
+                    
                 </div>
 
                 <table border="0" cellspacing="1" cellpadding="1" >
@@ -105,9 +104,9 @@
 
                                 <div>
 
-                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
 
-                                    <br>
+                                    
 
                                 </div>
 
@@ -161,9 +160,9 @@
 
                         <div>
                            
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
                            
-                            <br>
+                            
                        
                         </div>
                         
@@ -214,9 +213,9 @@
 
                         <div>
         
-                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$origin}}</b></p>
                             
-                            <br>
+                            
                         
                         </div>
 
