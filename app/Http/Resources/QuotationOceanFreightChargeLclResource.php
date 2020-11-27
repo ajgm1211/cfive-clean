@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuotationLocalChargeResource extends JsonResource
+class QuotationOceanFreightChargeLclResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +16,12 @@ class QuotationLocalChargeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'charge' => $this->charge,
+            'charge' => $this->surcharge->name ?? 'Ocean Freight',
             'calculation_type' => $this->calculation_type->name ?? null,
-            'port' => $this->port->display_name ?? null,
             'price' => $this->price,
-            'profit' => $this->profit ?? null,
-            'total' => $this->total,
-            'units' => $this->units ?? null,
-            'currency' => $this->currency->alphacode ?? null,
+            'minimum' => $this->minimum ?? null,
+            'profit' => $this->profit,
+            'currency' => $this->currency->alphacode
         ];
-
     }
 }

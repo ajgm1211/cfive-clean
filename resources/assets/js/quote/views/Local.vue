@@ -296,7 +296,14 @@
                                         placeholder="Select a currency"
                                         label="alphacode"
                                         track-by="alphacode"
-                                        @input="onUpdate(totals.id,totals.currency.id,'currency_id',7)"
+                                        @input="
+                                            onUpdate(
+                                                totals.id,
+                                                totals.currency.id,
+                                                'currency_id',
+                                                7
+                                            )
+                                        "
                                     ></multiselect>
                                 </b-td>
 
@@ -522,7 +529,9 @@
                                     <multiselect
                                         v-if="currentQuoteData.type == 'LCL'"
                                         v-model="localcharge.calculation_type"
-                                        :options="datalists['calculationtypes']"
+                                        :options="
+                                            datalists['calculationtypeslcl']
+                                        "
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -665,7 +674,13 @@
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        :value="setTotal(localcharge.units, localcharge.price_per_unit, localcharge.markup)"
+                                        :value="
+                                            setTotal(
+                                                localcharge.units,
+                                                localcharge.price_per_unit,
+                                                localcharge.markup
+                                            )
+                                        "
                                         class="q-input q-width"
                                         disabled
                                     ></b-form-input>
@@ -727,10 +742,24 @@
                                     ></multiselect>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="input.calculation_type"
                                         :options="datalists['calculationtypes']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a calculation type"
+                                        label="name"
+                                        track-by="name"
+                                    ></multiselect>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <multiselect
+                                        v-model="input.calculation_type"
+                                        :options="datalists['calculationtypeslcl']"
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -805,6 +834,14 @@
                                     <b-form-input
                                         v-model="input.profit"
                                         class="q-input q-width"
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="input.total"
+                                        class="q-input q-width"
+                                        disabled
                                     ></b-form-input>
                                 </b-td>
 
@@ -1053,7 +1090,7 @@ export default {
                     .catch((data) => {
                         //
                     });
-            }else{
+            } else {
                 actions.localchargeslcl
                     .total(data)
                     .then((response) => {
@@ -1256,18 +1293,22 @@ export default {
                 dismissible: true,
             });
         },
-        isNumber: function(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                evt.preventDefault();;
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
             } else {
                 return true;
             }
         },
-        setTotal(units, price, markup){
-            return (parseFloat(units) * parseFloat(price)) + parseFloat(markup);
-        }
+        setTotal(units, price, markup) {
+            return parseFloat(units) * parseFloat(price) + parseFloat(markup);
+        },
     },
 };
 </script>
