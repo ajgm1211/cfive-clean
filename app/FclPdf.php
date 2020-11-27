@@ -36,13 +36,11 @@ class FclPdf
 
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
-        $freight_totals = $this->freightTotals($quote);
-
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
         $quote_totals = $this->quoteTotals($quote,$containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals, 'freight_totals' => $freight_totals]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -102,13 +100,6 @@ class FclPdf
         }
 
         return $localcharges;
-    }
-
-    public function freightTotals($quote)
-    {
-        $frTotals = AutomaticRateTotal::GetQuote($quote->id)->get();
-
-        return $frTotals;
     }
 
     public function InlandTotals($quote, $type, $port)
@@ -234,7 +225,11 @@ class FclPdf
 
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
+                    
+                    $currencyInput = $item->currency;
 
+                    $currencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+                    
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
                         ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
@@ -261,7 +256,7 @@ class FclPdf
                 }
             }
         }
-
+        
         return $freight_charges_grouped;
     }
 
