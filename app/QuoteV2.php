@@ -29,7 +29,6 @@ class QuoteV2 extends Model  implements HasMedia
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true, "showTotals": false, "totalsCurrency": "USD"}',
         'language_id' => 1
     ];
 
@@ -619,6 +618,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function automatic_inland_totals()
     {
         return $this->hasMany('App\AutomaticInlandTotal','quote_id','id');
+    }
+
+    public function automatic_rate_totals()
+    {
+        return $this->hasMany('App\AutomaticRateTotal','quote_id','id');
     }
 
     public function integration_quote_statuses()
