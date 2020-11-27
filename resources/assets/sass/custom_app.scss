@@ -144,7 +144,7 @@ tr,
 }
 
 .btn-bg {
-    color: #fff;
+    color: #fff !important;
     font-weight: bold;
     border: none !important;
     background-color: #006bf9 !important;
@@ -494,6 +494,17 @@ i.mx-icon-calendar {
     border-color: #006bf9 !important;
 }
 
+.vue-daterange-picker.s-input .reportrange-text {
+    border: none !important;
+    background: #f8f8f8;
+    min-height: 50px;
+}
+
+.vue-daterange-picker.s-input .reportrange-text i {
+    padding-top: 6px;
+    font-size: 30px;
+}
+
 
 /*** --- Tabs --- ***/
 
@@ -540,6 +551,9 @@ i.mx-icon-calendar {
     left: 11px;
 }
 
+#id_carriers .multiselect__tags, .multiselect-height .multiselect__tags {
+    height: 35px !important;
+}
 
 /*** Validations ***/
 
@@ -675,6 +689,10 @@ input.multiselect__input:focus {
 
 .tab-pane .card-body {
     overflow-x: scroll;
+}
+
+.no-scroll .card-body{
+    overflow: inherit;
 }
 
 .btn-adds {
