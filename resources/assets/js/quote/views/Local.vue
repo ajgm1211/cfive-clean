@@ -435,7 +435,7 @@
                                         v-model="localcharge.price['c' + item]"
                                         class="q-input"
                                         @keypress="isNumber($event)"
-                                        v-on:blur="
+                                        v-on:change="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.price['c' + item],
@@ -449,7 +449,7 @@
                                         v-model="localcharge.markup['m' + item]"
                                         class="q-input"
                                         @keypress="isNumber($event)"
-                                        v-on:blur="
+                                        v-on:change="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.markup['m' + item],
