@@ -301,29 +301,7 @@ class QuotationController extends Controller
 
     public function edit (Request $request, QuoteV2 $quote)
     {
-        $autorates = $quote->rate()->get();
-        foreach($autorates as $auto){
-            $totals = $auto->totals()->first();
-            
-            if($totals){
-                $totals->totalize($auto->currency_id);
-            }
-        }
-
-        if($quote->pdf_options==null){            
-            $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
-            $currency_id = $company->companyUser->currency_id;
-            $currency = Currency::find($currency_id);
-    
-            $pdfOptions = [
-                "allIn" =>true, 
-                "showCarrier"=>true, 
-                "showTotals"=>false, 
-                "totalsCurrency" =>$currency];
-            
-            $quote->pdf_options = $pdfOptions;
-            $quote->save();
-        }
+        $this->validateOldQuote($quote);
 
         return view('quote.edit');
     }
@@ -436,5 +414,39 @@ class QuotationController extends Controller
         $quote = QuoteV2::firstOrFail($quote_id);
 
         return redirect()->action('QuotationController@edit', $quote);
+    }
+
+    public function validateOldQuote($quote){
+
+        $rateTotals = $quote->automatic_rate_totals()->get();
+        $inlandTotals = $quote->automatic_inland_totals()->get();
+
+        if($rateTotals){
+            foreach($rateTotals as $total){                
+                $total->totalize($total->currency_id);
+            }
+        }
+
+        if($inlandTotals){
+            foreach($inlandTotals as $total){
+                $total->totalize();
+            }
+        }
+
+        if($quote->pdf_options==null){            
+            $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
+            $currency_id = $company->companyUser->currency_id;
+            $currency = Currency::find($currency_id);
+    
+            $pdfOptions = [
+                "allIn" =>true, 
+                "showCarrier"=>true, 
+                "showTotals"=>false, 
+                "totalsCurrency" =>$currency];
+            
+            $quote->pdf_options = $pdfOptions;
+            $quote->save();
+        }
+
     }
 }
