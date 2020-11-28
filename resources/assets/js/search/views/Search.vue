@@ -7,7 +7,7 @@
 
                 <div class="col-12 col-sm-3 d-flex">
 
-                        <div style="width: 18% !important; position:relative">
+                        <div style="width: 85px !important; position:relative">
                             <multiselect
                                 v-model="type"
                                 :multiple="false"
@@ -22,7 +22,7 @@
                             <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
                         </div>
 
-                        <div style="width: 36% !important; position:relative ">
+                        <div style="width: 160px !important; position:relative ">
                             <multiselect
                                 v-model="deliveryType"
                                 :multiple="false"
