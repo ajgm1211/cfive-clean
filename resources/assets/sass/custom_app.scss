@@ -1275,7 +1275,7 @@ input.multiselect__input:focus {
 
 .vue-daterange-picker.s-input .reportrange-text i {
     padding-top: 6px;
-    font-size: 30px;
+    font-size: 25px;
 }
 
 
@@ -1416,11 +1416,13 @@ input.multiselect__input:focus {
     font-size: 12px;
     text-transform: uppercase;
 }
+
 #add-contract {
     label {
         width: 100%;
     }
 }
+
 .btn.btn-secondary.btn-create-quote {
     color: #ffffff;
     font-weight: 900;
@@ -1451,7 +1453,8 @@ input.multiselect__input:focus {
     align-items: center;
 }
 
-.as-checkbox .custom-control-label::before, .as-checkbox .custom-control-label::after {
+.as-checkbox .custom-control-label::before,
+.as-checkbox .custom-control-label::after {
     top: -2px;
 }
 
@@ -1474,7 +1477,8 @@ input.multiselect__input:focus {
     transform: translateY(0px) !important;
 }
 
-.type-mode, .delivery-type {
+.type-mode,
+.delivery-type {
     position: absolute;
     top: 6px;
 }
@@ -1490,20 +1494,20 @@ input.multiselect__input:focus {
 .btn-add-quote .active {
     color: #ffffff;
     background: #006afa !important;
-    border-color:  #006afa !important;
+    border-color: #006afa !important;
 }
 
 .btn-add-quote .btn-secondary:hover {
     color: #ffffff;
     background: #006afa !important;
-    border-color:  #006afa !important;
+    border-color: #006afa !important;
 }
 
 .card-amount p {
     font-size: 16px;
 }
 
-.footer-add-contract-modal  {
+.footer-add-contract-modal {
     display: flex;
     justify-content: flex-end;
     width: 100%;
