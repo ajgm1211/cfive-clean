@@ -547,27 +547,44 @@
                         <div class="col-12">
                             <label>
                                 <b-form-input
+                                    v-model="reference"
+                                    placeholder="Reference"
                                 ></b-form-input>
+                                <span style="color: red"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please fill in this field.</span>
                             </label>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label>
-                                <multiselect
-                                    v-model="valueOrigen"
+                                 <date-range-picker
+                                    :opens="'center'"
+                                    :locale-data="{
+                                        firstDay: 1,
+                                        format: 'yyyy/mm/dd',
+                                    }"
+                                    :singleDatePicker="false"
+                                    :autoApply="true"
+                                    :timePicker="false"
+                                    v-model="date"
+                                    :linkedCalendars="true"
+                                    class="s-input"
+                                >
+                                </date-range-picker>
+                                <span style="color: red"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please enter a Date.</span>
+                            </label>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <label>
+                               <multiselect
+                                    v-model="carrier"
                                     :multiple="false"
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsEquipment"
-                                    placeholder="From"
+                                    :options="optionsCarrier"
+                                    placeholder="Carrier"
                                 >
-                        </multiselect>
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
+                                </multiselect>
+                                <span style="color: red"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please select a Carrier.</span>
                             </label>
                         </div>
                         <div class="col-12 col-sm-6">
@@ -581,13 +598,23 @@
                                     :options="optionsEquipment"
                                     placeholder="Equipment"
                                 >
-                        </multiselect>
+                                </multiselect>
+                                <span style="color: red"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please select a Equipment.</span>
                             </label>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label>
-                                <b-form-input
-                                ></b-form-input>
+                                <multiselect
+                                    v-model="direction"
+                                    :multiple="false"
+                                    :close-on-select="true"
+                                    :clear-on-select="true"
+                                    :show-labels="false"
+                                    :options="optionsDirection"
+                                    placeholder="Direction"
+                                >
+                                </multiselect>
+                                <span style="color: red"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please select a Direction.</span>
                             </label>
                         </div>
                     </div>
@@ -701,7 +728,7 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 export default {
     components: {
         Multiselect,
-        DateRangePicker,
+        DateRangePicker
     },
     data() {
         return {
@@ -714,14 +741,20 @@ export default {
             stepThree: false,
             stepFour: false,
             valueEq: '', 
+            carrier: '', 
+            reference: '',
+            direction: '',
+            optionsDirection: ['Import', 'Export', 'Both'],
             optionsEquipment: ['DRY', 'REEFER', 'OPEN TOP', 'FLAT RACK'],
-            items: []
+            optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
+            items: [],
         }
     },
     methods: {
 
         nextStep() {
             if ( this.stepOne ) {
+
                 this.stepOne = false; this.stepTwo = !this.stepTwo; 
                 return
             } else if ( this.stepTwo ) {
@@ -751,21 +784,25 @@ export default {
         valueEq: function() {
 
             if (this.valueEq == 'DRY') {
+                this.items.splice({});
                 this.items.push({name: 'C20DV', placeholder: '20DV'}, { name: 'C40DV', placeholder: '40DV' }, { name: 'C40HC', placeholder: '40HC' }, { name: 'C45HC', placeholder: '45HC' }, { name: 'C40NOR', placeholder: '40NOR' }); 
                 return
             }
 
             if (this.valueEq == 'REEFER') {
+                this.items.splice({});
                 this.items.push({name: 'C20RF', placeholder: '20RF'}, { name: 'C40RF', placeholder: '40RF' }, { name: 'C40HCRF', placeholder: '40HCRF' }); 
                 return
             }
 
             if (this.valueEq == 'OPEN TOP') {
+                this.items.splice({});
                 this.items.push({name: 'C20OT', placeholder: '20OT'}, { name: 'C40OT', placeholder: '40OT' }); 
                 return
             }
 
             if (this.valueEq == 'FLAT RACK') {
+                this.items.splice({});
                 this.items.push({name: 'C20FR', placeholder: '20FR'}, { name: 'C40FR', placeholder: '40FR' }); 
                 return
             }
