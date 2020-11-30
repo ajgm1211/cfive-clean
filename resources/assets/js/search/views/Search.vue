@@ -102,18 +102,14 @@
                 <div class="col-12 col-sm-3">
                     <date-range-picker
                         :opens="'center'"
-                        :locale-data="{
-                            firstDay: 1,
-                            format: 'yyyy/mm/dd',
-                        }"
+                        :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
                         :singleDatePicker="false"
                         :autoApply="true"
                         :timePicker="false"
                         v-model="date"
                         :linkedCalendars="true"
                         class="s-input"
-                    >
-                    </date-range-picker>
+                    ></date-range-picker>
                 </div>
 
                 <!-- Container -->

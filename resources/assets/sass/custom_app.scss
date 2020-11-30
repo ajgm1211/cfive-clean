@@ -25,6 +25,8 @@ textarea,
 td,
 th,
 tr,
+legend,
+div
 .h6 {
     font-family: "Sailec" !important;
 }
@@ -1511,8 +1513,84 @@ input.multiselect__input:focus {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    padding: 15px 0px;
+    padding: 25px 0px;
     border-top: 1px solid #eeeeee;
     border-radius: 0px 0px 4px 4px;
     background-color: white;
+}
+
+input.input-modal {
+    border: none !important;
+    padding: 20px 0px 20px 45px !important;
+}
+
+#add-contract___BV_modal_body_ {
+    padding: 0px !important;
+}
+
+.add-contract-form {
+    padding: 0px;
+    padding-top: 25px;
+}
+
+.add-contract-form fieldset {
+    padding: 0px 60px;
+}
+
+.add-contract-form fieldset label {
+    position: relative;
+}
+
+.add-contract-form fieldset label img {
+    top: 7px;
+    left: 10px;
+    position: absolute;
+}
+
+.add-contract-form .form-control.reportrange-text {
+    border: none !important;
+}
+
+.input-modal .multiselect__tags .multiselect__placeholder {
+    font-weight: 500;
+    padding-top: 0px !important;
+}
+
+.input-modal .multiselect__tags {
+    border: none !important;
+    padding: 11px 0px 11px 45px !important;
+}
+
+.add-contract-step {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background-color: #ffffff;
+    border-radius: 100px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.add-contract-form-steps .step-add-contract:nth-child(1)::before,
+.add-contract-form-steps .step-add-contract:nth-child(2)::before,
+.add-contract-form-steps .step-add-contract:nth-child(3)::before {
+    content: '';
+    width: 50%;
+    height: 6px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    position: absolute;
+    right: -50px;
+    top: 22px;
+}
+
+.stepComplete .add-contract-step {
+    color: #ffffff !important;
+    background-color:  #006afa !important;
+}
+.stepComplete::before {
+    background-color:  #006afa !important;
 }
