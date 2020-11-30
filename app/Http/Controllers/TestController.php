@@ -190,13 +190,15 @@ class TestController extends Controller
         /*$user = User::find(1);
         dd($user);*/
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
-        \DB::table('users')->chunkById(100, function ($users) use($client) {
+      /*  \DB::table('users')->chunkById(100, function ($users) use($client) {
                 foreach ($users as $user) {
                     
                     $this->intercom($client, $user);
                 }
-            });
+            });*/
 
+       $user = User::where('email','araceli@acrosslogistics.com')->first();
+          $this->intercom($client, $user);
         echo "Finalizado";
 
     }
@@ -209,18 +211,21 @@ class TestController extends Controller
         }catch(Exception $e){
                 echo  $user->email;
         }
-        
+       dd($cliente->total_count );
         if ($cliente->total_count > 1) {
+            echo "Mas de uno " . $user->email."<BR>";
             foreach ($cliente->users as $u) {
                 if ($u->type == "user") {
                     if ($u->user_id != $user->id) {
-                        $client->users->archiveUser($u->id);
+                    
+                        //$client->users->archiveUser($u->id);
+                        echo "Diferente id " . $user->email."<BR>";
                     }
                 }
             }
         }
 
-        if ($cliente->total_count == 0) {
+        /*if ($cliente->total_count == 0) {
 
             if ($user->company_user_id != "") {
                 //setHashID();
@@ -243,6 +248,6 @@ class TestController extends Controller
                 ]);
             }
 
-        }
+        }*/
     }
 }

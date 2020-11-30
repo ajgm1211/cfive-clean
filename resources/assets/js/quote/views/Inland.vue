@@ -223,8 +223,6 @@
                             <!-- Header table -->
                             <b-thead class="q-thead">
                                 <b-tr>
-                                    <b-th></b-th>
-
                                     <b-th>
                                         <span class="label-text">Charge</span>
                                     </b-th>
@@ -255,23 +253,25 @@
                                 </b-tr>
                             </b-thead>
 
-                            <b-tbody>
+                            <!-- Loader gif -->
+                            <b-tbody v-if="isBusy">
+                                <b-tr class="b-table-busy-slot">
+                                    <b-td :colspan="fields.length" role="cell" class="">
+                                        <div class="text-center text-primary my-2">
+                                            <b-spinner class="align-middle"></b-spinner>
+                                            <strong>Loading...</strong>
+                                        </div>
+                                    </b-td>
+                                </b-tr>
+                            </b-tbody>
+                            <!-- Loader gif -->
+
+                            <b-tbody v-else>
                                 <b-tr
                                     class="q-tr"
                                     v-for="(inlandAdd, key) in this.inlandAdds"
                                     :key="key"
                                 >
-                                    <b-td>
-                                        <b-form-checkbox
-                                            v-if="
-                                                inlandAdd.port ==
-                                                currentPort['id']
-                                            "
-                                            v-model="inlandAdd.selected"
-                                            :id="'id_' + inlandAdd.id"
-                                        ></b-form-checkbox>
-                                    </b-td>
-
                                     <b-td>
                                         <b-form-input
                                             v-if="
@@ -324,7 +324,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                         <b-form-input
                                             v-if="
@@ -337,7 +337,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                     </b-td>
 
@@ -381,8 +381,6 @@
                                 </b-tr>
 
                                 <b-tr class="q-total">
-                                    <b-td></b-td>
-
                                     <b-td></b-td>
 
                                     <b-td>
@@ -444,19 +442,11 @@
                         </div>
 
                         <div
-                            v-if="modalSelected"
-                            class="alert alert-warning"
-                            role="alert"
-                        >
-                            Select an Inland to add
-                        </div>
-
-                        <div
                             v-if="modalSuccess"
                             class="alert alert-success"
                             role="alert"
                         >
-                            Selected Inlands added successfully!
+                            Inlands added successfully!
                         </div>
                     </div>
                 </div>
@@ -513,6 +503,7 @@ export default {
             ids: [],
             imageFolder: "/images/flags/1x1/",
             loaded: false,
+            isBusy: false,
             options: [
                 "Select option",
                 "options",
@@ -726,8 +717,7 @@ export default {
             if(component.currentQuoteData['type']=='FCL'){
                 component.quoteEquip.forEach(function (eq) {
                     component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                        type: "text",
-                        placeholder: eq,
+                        type: "span",
                     };
                     component.totalsFields["Totals"]["totals_".concat(eq)] = {
                         type: "span",
@@ -750,6 +740,7 @@ export default {
             }else if(component.currentQuoteData['type']=='LCL'){
                 component.totalsFields["Profits"]["profit"] = {
                         type: "text",
+                        disabled: true,
                     };
                 component.totalsFields["Totals"]["lcl_totals"] = {
                         type: "span",
@@ -914,10 +905,13 @@ export default {
                                 search["inlandDetails"][equip]["markup"];
                             newInlandAdd["rates_" + equip] =
                                 search["inlandDetails"][equip]["montoInlandT"];
+                            newInlandAdd.markup["markups_" + equip] =
+                                search["inlandDetails"][equip]["markup"];
                         }else{
                             newInlandAdd.price["c" + equip] = 0;
                             newInlandAdd.markup["m" + equip] = 0;
                             newInlandAdd["rates_" + equip] = 0;
+                            newInlandAdd["markups_" + equip] = 0;
                         }
                     });
                     component.datalists.currency.forEach(function (curr) {
@@ -966,6 +960,7 @@ export default {
                     newInlandAdd.price["c" + equip] = "";
                     newInlandAdd.markup["m" + equip] = "";
                     newInlandAdd["rates_" + equip] = "";
+                    newInlandAdd["markups_" + equip] = "";
                 });
 
                 component.inlandAdds.push(newInlandAdd);
@@ -976,6 +971,11 @@ export default {
             const index = this.inlandAdds.indexOf(this.inlandAdds[id]);
 
             this.inlandAdds.splice(index, 1);
+
+            this.inlandModalTotals = {},
+            this.inlandModalTotalLcl = 0,
+
+            this.totalizeModalInlands();
         },
 
         totalizeModalInlands() {
@@ -996,104 +996,101 @@ export default {
 
                     if(component.currentQuoteData['type']=='FCL'){
                         component.quoteEquip.forEach(function (equip) {
-                            let price_num = Number(inlandAdd.price["c" + equip]);
+                            let rates_num = Number(inlandAdd.price["c" + equip]);
                             let markup_num = Number(inlandAdd.markup["m" + equip]);
                             let totals = Number;
     
-                            inlandAdd["rates_" + equip] = price_num + markup_num;
+                            inlandAdd["rates_" + equip] = rates_num;
+                            inlandAdd["markups_" + equip] = markup_num;
     
-                            if (inlandAddCurrency == clientCurrency) {
-                                totals = price_num + markup_num;
-                            } else {
-                                let price_usd = Number;
-                                let markup_usd = Number;
+                            if (inlandAddCurrency != clientCurrency) {
                                 let totals_usd = Number;
     
-                                price_usd = price_num / inlandAddConversion;
-                                markup_usd = markup_num / inlandAddConversion;
-    
-                                totals_usd = price_usd + markup_usd;
+                                totals_usd = (rates_num / inlandAddConversion) + (markup_num /inlandAddConversion);
     
                                 totals = totals_usd * clientConversion;
+                            } else {
+                                totals = rates_num + markup_num;
                             }
     
                             component.inlandModalTotals[
                                 "c" + equip
-                            ] = totals.toFixed(2);
+                            ] = totals;
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
-                        let price_num = Number(inlandAdd.total);
+                        let rates_num = Number(inlandAdd.total);
                         let totals = Number;
 
                         if (inlandAddCurrency == clientCurrency) {
-                                totals = price_num;
+                                totals = rates_num;
                         } else {
                             let price_usd = Number;
 
-                            price_usd = price_num / inlandAddConversion;
+                            price_usd = rates_num / inlandAddConversion;
 
                             totals = price_usd * clientConversion;
                         }
-                        component.inlandModalTotalLcl = totals.toFixed(2);
+                        component.inlandModalTotalLcl = totals;
                     }
                 }
             });
+            component.setDecimals();
         },
 
         addInland() {
             let component = this;
 
             component.inlandAdds.forEach(function (inlandAdd) {
-                if (inlandAdd.selected) {
-                    if (Object.keys(inlandAdd.currency_id).length == 0) {
-                        component.modalWarning = "Currency";
-                        setTimeout(() => {
-                            component.modalWarning = "";
-                        }, 3000);
-                    } else {
-                        inlandAdd["type"] = component.currentPort["type"];
-                        if (component.modalDistance) {
-                            inlandAdd["address"] =
-                                component.modalAddress.display_name;
-                            inlandAdd["distance"] =
-                                component.modalAddress.distance;
-                        } else {
-                            inlandAdd["address"] = component.modalAddress;
-                        }
-
-                        component.inlandActions
-                            .create(
-                                component.currentPort["id"],
-                                inlandAdd,
-                                component.$route
-                            )
-                            .then((response) => {
-                                component.inlandAddRequested = false;
-                                component.inlandAdds.splice(
-                                    component.inlandAdds.indexOf(inlandAdd)
-                                );
-                                component.totalizeModalInlands();
-                                component.modalSuccess = true;
-                                component.updateTable();
-                                setTimeout(function () {
-                                    component.$refs["addInland"].hide();
-                                    component.inlandAddRequested = false;
-                                    component.modalSuccess = false;
-                                }, 3000);
-                            })
-                            .catch((data) => {
-                                component.$refs.observer.setErrors(
-                                    data.data.errors
-                                );
-                            });
-                    }
-                } else {
-                    component.modalSelected = true;
-                    setTimeout(function () {
-                        component.modalSelected = false;
+                if (Object.keys(inlandAdd.currency_id).length == 0) {
+                    component.modalWarning = "Currency";
+                    setTimeout(() => {
+                        component.modalWarning = "";
                     }, 3000);
+                } else {
+                    inlandAdd["type"] = component.currentPort["type"];
+                    if (component.modalDistance) {
+                        inlandAdd["address"] =
+                            component.modalAddress.display_name;
+                        inlandAdd["distance"] =
+                            component.modalAddress.distance;
+                    } else {
+                        inlandAdd["address"] = component.modalAddress;
+                    }
+
+                    component.isBusy = true;
+
+                    component.inlandActions
+                        .create(
+                            component.currentPort["id"],
+                            inlandAdd,
+                            component.$route
+                        )
+                        .then((response) => {
+                            component.inlandAddRequested = false;
+                            component.inlandAdds.splice(
+                                component.inlandAdds.indexOf(inlandAdd)
+                            );
+                            component.totalizeModalInlands();
+                            component.modalSuccess = true;
+                            component.updateTable();
+                            component.isBusy = false;
+                            setTimeout(function () {
+                                component.$refs["addInland"].hide();
+                                component.inlandAddRequested = false;
+                                component.modalSuccess = false;
+                            }, 3000);
+                        })
+                        .catch((data) => {
+                            component.$refs.observer.setErrors(
+                                data.data.errors
+                            );
+                        });
                 }
             });
+
+            setTimeout(function () {
+                component.isBusy = false;
+            }, 3000);
         },
 
         setPlace(place) {
@@ -1215,7 +1212,56 @@ export default {
                     },
                 ];
             }
-        }
+        },
+
+        setDecimals(){
+            let component = this;
+
+            component.inlandAdds.forEach(function (inlandAdd) {
+                if(component.currentQuoteData['type']=='FCL'){
+                    component.quoteEquip.forEach(function (equip) {
+                        if(inlandAdd.price["c" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.price["c" + equip] = Number(inlandAdd.price["c" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.price["c" + equip] = Math.trunc(Number(inlandAdd.price["c" + equip]));
+                            }
+                        }
+                        if(inlandAdd.markup["m" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.markup["m" + equip] = Number(inlandAdd.markup["m" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.markup["m" + equip] = Math.trunc(Number(inlandAdd.markup["m" + equip]));
+                            }
+                        }
+                    });                    
+                }else if(component.currentQuoteData['type']=='LCL'){
+                    if (inlandAdd.total) {
+                        if(component.currentQuoteData['decimals'] == 1){
+                            inlandAdd.total = Number(inlandAdd.total).toFixed(2);
+                        }else if(component.currentQuoteData['decimals']==0){
+                            inlandAdd.total = Math.trunc(Number(inlandAdd.total));
+                        }
+                    }
+                }
+            });
+            component.quoteEquip.forEach(function (equip) {
+                if(Object.keys(component.inlandModalTotals).length != 0){
+                    if(component.currentQuoteData['decimals'] == 1){
+                        component.inlandModalTotals["c" + equip] = Number(component.inlandModalTotals["c" + equip]).toFixed(2);
+                    }else if(component.currentQuoteData['decimals']==0){
+                        component.inlandModalTotals["c" + equip] = Math.trunc(Number(component.inlandModalTotals["c" + equip]));
+                    }
+                }
+            });
+            if(component.inlandModalTotalLcl!=0){
+                if(component.currentQuoteData['decimals'] == 1){
+                    component.inlandModalTotalLcl = component.inlandModalTotalLcl.toFixed(2);
+                }else if(component.currentQuoteData['decimals'] == 0){
+                    component.inlandModalTotalLcl = Math.trunc(component.inlandModalTotalLcl);
+                }
+            }
+        },
     },
 };
 </script>
