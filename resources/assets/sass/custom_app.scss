@@ -1150,8 +1150,8 @@ input.multiselect__input:focus {
 }
 
 .radio-direction .active {
-    color: #ffffff;
-    background: #DDDDDD !important;
+    color: #ffffff !important;
+    background:  #071C4B !important;
 }
 
 .radio-direction label span {
@@ -1178,7 +1178,7 @@ input.multiselect__input:focus {
 }
 
 .radio-direction .btn.btn-outline-primary {
-    color: #333333 !important;
+    color: #333333;
 }
 
 .result-action {
@@ -1521,7 +1521,14 @@ input.multiselect__input:focus {
 
 input.input-modal {
     border: none !important;
-    padding: 20px 0px 20px 45px !important;
+    padding: 20px 0px 20px 45px;
+}
+
+.surcharge-input {
+    padding: 20px 3px 20px 10px !important;
+    .multiselect__tags {
+        padding: 20px 3px 20px 10px !important;
+    }
 }
 
 #add-contract___BV_modal_body_ {
@@ -1579,7 +1586,7 @@ input.input-modal {
 .add-contract-form-steps .step-add-contract:nth-child(3)::before {
     content: '';
     width: 50%;
-    height: 6px;
+    height: 4px;
     border-radius: 20px;
     background-color: #ffffff;
     position: absolute;

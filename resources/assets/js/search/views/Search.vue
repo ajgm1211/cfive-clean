@@ -152,7 +152,7 @@
                             class="s-input"
                         >
                         </multiselect>
-                        <img src="/images/port.svg" alt="port">
+                        <img src="/images/city.svg" alt="port">
                     </label>
                 </div>
 
@@ -170,7 +170,7 @@
                             class="s-input"
                         >
                         </multiselect>
-                        <img src="/images/port.svg" alt="port">
+                        <img src="/images/city.svg" alt="port">
                     </label>
                 </div>
 

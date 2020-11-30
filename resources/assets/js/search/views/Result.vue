@@ -586,12 +586,14 @@
                                     :singleDatePicker="false"
                                     :autoApply="true"
                                     :timePicker="false"
-                                    v-model="vdata"
+                                    v-model="dateRange"
                                     :linkedCalendars="true"
+                                    @update="updateValues"
+                                    @toggle="checkOpen"
                                     class="input-h"
-                                ></date-range-picker>
-                                
-                            </label>
+                                >
+                                </date-range-picker>
+                           </label>
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <label>
@@ -715,10 +717,13 @@
                         <div v-for="(item, index) in items" class="col-12 col-sm-6">
                             <label>
                                 <b-form-input
-                                :name="item.name"
-                                :placeholder="item.placeholder"
-                                class="input-modal mb-3"
+                                    :name="item.name"
+                                    :placeholder="item.placeholder"
+                                    class="input-modal mb-3"
+                                    v-model="equipType"
+                                    required
                                 ></b-form-input>
+                                <img src="/images/ordenar.svg" alt="ordenar" width="25px" height="25px">
                             </label>
                         </div>
                     </div>
@@ -729,34 +734,73 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
-                            </label>
+
+                           <b-buttom v-on:click="addSurchager"><b-icon icon="plus-circle-fill"></b-icon> ADD SURCHARGE</b-buttom>
+
                         </div>
-                        <div class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                ></b-form-input>
-                            </label>
+
+                        <div id="surcharges-list" class="col-12">
+
+                            <div class="row">
+                                <div class="col-12 col-sm-3">
+                                    <label>
+                                        <multiselect
+                                            v-model="typeContract"
+                                            :multiple="false"
+                                            :close-on-select="true"
+                                            :clear-on-select="true"
+                                            :show-labels="false"
+                                            :options="optionsTypeContract"
+                                            placeholder="Type"
+                                            class="input-modal surcharge-input"
+                                            >
+                                        </multiselect>
+                                    </label>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>
+                                        <multiselect
+                                                v-model="calculationType"
+                                                :multiple="false"
+                                                :close-on-select="true"
+                                                :clear-on-select="true"
+                                                :show-labels="false"
+                                                :options="optionsCalculationType"
+                                                placeholder="Calculation Type"
+                                                class="input-modal surcharge-input"
+                                            >
+                                        </multiselect>
+                                </label>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>
+                                        <multiselect
+                                            v-model="currencySurcharge"
+                                            :multiple="false"
+                                            :close-on-select="true"
+                                            :clear-on-select="true"
+                                            :show-labels="false"
+                                            :options="optionsCurrency"
+                                            placeholder="Currency"
+                                            class="input-modal surcharge-input"
+                                            >
+                                        </multiselect>
+                                </label>
+                                </div>
+                                <div class="col-12 col-sm-2">
+                                    <label>
+                                        <b-form-input
+                                            v-model="amount"
+                                            placeholder="Amount"
+                                            class="input-modal surcharge-input"
+                                        ></b-form-input>
+                                    </label>
+                                </div>
+                                <div class="col-1">
+                                    <b-icon icon="dash-circle"></b-icon>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     
@@ -910,9 +954,11 @@
 				    </vue-dropzone>
                 </fieldset>
 
+                <h5 v-if="invalidInput">Please Complete all the fields</h5>
+
                 <div class="footer-add-contract-modal pl-4 pr-4">   
                     <b-button v-if="stepTwo || stepThree || stepFour" v-on:click="backStep" variant="link" style="color: red" class="mr-3">Back</b-button>
-                    <b-button v-on:click="nextStep" v-if="!stepFour" class="btn-create-quote">Continue</b-button>
+                    <b-button v-on:click="nextStep" v-if="!stepFour" class="btn-create-quote">Save & Continue</b-button>
                     <b-button v-if="stepFour" class="btn-create-quote">Created Contract</b-button>
                 </div>
             </form> 
@@ -943,18 +989,24 @@ export default {
             stepTwo: false,
             stepThree: false,
             stepFour: false,
+            invalidInput: false,
             valueEq: '', 
+            amount: '', 
             currency: '', 
             origin: '', 
             destination: '', 
             carrier: '', 
             reference: '',
             direction: '',
+            typeContract: '',
+            calculationType: '',
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
             optionsEquipment: ['DRY', 'REEFER', 'OPEN TOP', 'FLAT RACK'],
             optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
+            optionsTypeContract: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
+            optionsCalculationType: ['Calculation 1', 'Calculation 2', 'Calculation 3', 'Calculation 4'],
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -962,9 +1014,16 @@ export default {
             isCompleteFour: false,
 
             //Datepicker Options
-            locale: 'en-US',
-            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
-            vdata: {},
+            dateRange: '2020/20/20 - 2020/20/20',
+            format: 'mm/dd/yyyy',
+            separator: ' - ',
+            applyLabel: 'Apply',
+            cancelLabel: 'Cancel',
+            weekLabel: 'W',
+            customRangeLabel: 'Custom Range',
+            daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            firstDay: 0
             /* dropzoneOptions: {
                 url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`, 
                 url: `/api/v2/contracts/storeMedia`, 
@@ -978,6 +1037,11 @@ export default {
     },
     methods: {
 
+        addSurchager() {
+
+        },
+
+        //FILES OPTIONS Modal
         setFiles(data){
 				let file = {};
 				let url = '';
@@ -1006,14 +1070,34 @@ export default {
         nextStep() {
             if ( this.stepOne ) {
 
+                if (this.reference == '' || this.carrier == '' || this.valueEq == '' || this.direction == '' || this.vdata == '') {
+                    this.invalidInput = true;
+                    return
+                }
+                
+                this.invalidInput = false;
                 this.stepOne = false; this.stepTwo = !this.stepTwo; 
                 this.isCompleteTwo = !this.isCompleteTwo;
                 return
             } else if ( this.stepTwo ) {
+
+                if (this.origin == '' || this.destination == '' || this.carrier == '' || this.currency == '' || this.equipType == '') {
+                    this.invalidInput = true;
+                    return
+                }
+
+                this.invalidInput = false;
                 this.stepTwo = false; this.stepThree = !this.stepThree;
                 this.isCompleteThree = !this.isCompleteThree;
                 return
             } else if ( this.stepThree ) {
+
+                if (this.typeContract == '' || this.calculationType == '' || this.currencySurcharge == '' || this.amount == '' ) {
+                    this.invalidInput = true;
+                    return
+                }
+
+                this.invalidInput = false;
                 this.stepThree = false; this.stepFour = !this.stepFour;
                 this.isCompleteFour = !this.isCompleteFour;
                 return
@@ -1022,14 +1106,17 @@ export default {
 
         backStep() {
             if ( this.stepFour ) {
+                this.invalidInput = false;
                 this.stepFour = false; this.stepThree = !this.stepThree;
                 this.isCompleteFour = !this.isCompleteFour;
                 return
             } else if ( this.stepThree ) {
+                this.invalidInput = false;
                 this.stepThree = false; this.stepTwo = !this.stepTwo;
                 this.isCompleteThree = !this.isCompleteThree;
                 return
             } else if ( this.stepTwo ) {
+                this.invalidInput = false;
                 this.stepTwo =  false; this.stepOne = !this.stepOne;
                 this.isCompleteTwo = !this.isCompleteTwo;
                 return
