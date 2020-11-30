@@ -12,7 +12,7 @@
 <script src="{{ asset('/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js')}}" type="text/javascript"></script>
 <script src="{{ asset('/assets/demo/default/custom/components/forms/validation/form-controls.js')}}" type="text/javascript"></script>
 
-<script src="{{ asset('/assets/demo/default/custom/components/forms/wizard/wizard.min.js')}}" type="text/javascript"></script>
+<script src="{{ asset('/assets/demo/default/custom/components/forms/wizard/wizard.js')}}" type="text/javascript"></script>
 <script src="{{ asset('js/jqueryui-editable.min.js')}}" type="text/javascript"></script>
 
 
