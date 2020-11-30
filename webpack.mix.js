@@ -25,4 +25,5 @@ mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/quote/index.js', 'public/js/quote')
     .js('resources/assets/js/quoteLCL/index.js', 'public/js/quoteLCL')
     .js('resources/assets/js/providers/index.js', 'public/js/providers')
+    .js('resources/assets/js/search/index.js', 'public/js/search')
     .sass('resources/assets/sass/app.scss', 'public/css');
