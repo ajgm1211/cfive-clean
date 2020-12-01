@@ -33,19 +33,6 @@
                     <b-th v-for="(value, key) in fields" :key="key">
                         <span v-if="filter==true" class="mr-1 btn-filter" v-on:click="openFilter(value.label)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
-                        
-                        <md-field v-bind:class="[{ active: filterIsOpen }]">
-                             <label>Select an Option</label>
-                            <md-select multiple>
-                                <md-option value="fight-club">Fight Club</md-option>
-                                <md-option value="godfather">Godfather</md-option>
-                                <md-option value="godfather-ii">Godfather II</md-option>
-                                <md-option value="godfather-iii">Godfather III</md-option>
-                                <md-option value="godfellas">Godfellas</md-option>
-                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
-                                <md-option value="scarface">Scarface</md-option>
-                            </md-select>
-                        </md-field>
                     </b-th>
                     <b-th>
                         <b-button

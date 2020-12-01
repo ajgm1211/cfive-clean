@@ -1524,12 +1524,7 @@ input.input-modal {
     padding: 20px 0px 20px 45px;
 }
 
-.surcharge-input {
-    padding: 20px 3px 20px 10px !important;
-    .multiselect__tags {
-        padding: 20px 3px 20px 10px !important;
-    }
-}
+
 
 #add-contract___BV_modal_body_ {
     padding: 0px !important;
@@ -1554,6 +1549,14 @@ input.input-modal {
     position: absolute;
 }
 
+.add-contract-form fieldset .form-control.reportrange-text {
+    padding: 9px 10px 9px 10px;
+    height: 40px;
+    i {
+        font-size: 25px;
+    }
+}
+
 .add-contract-form .form-control.reportrange-text {
     border: none !important;
 }
@@ -1566,6 +1569,38 @@ input.input-modal {
 .input-modal .multiselect__tags {
     border: none !important;
     padding: 11px 0px 11px 45px !important;
+}
+
+.surcharge-input .multiselect__tags {
+    padding: 11px 3px 11px 11px !important;
+}
+input.surcharge-input {
+    padding: 20px 3px 20px 11px !important;
+}
+
+.data-surcharges {
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    p {
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 0px !important;
+    }
+}
+
+.data-surcharges span {
+    font-size: 16px;
+    cursor: pointer;
+    color: red !important;
+}
+
+.surcharge-content .btn-add-surch {
+    font-size: 16px;
+    cursor: pointer;
+    color: green !important;
 }
 
 .add-contract-step {
@@ -1600,4 +1635,13 @@ input.input-modal {
 }
 .stepComplete::before {
     background-color:  #006afa !important;
+}
+
+.invalid-data {
+    font-size: 18px;
+    color: #e74c3c !important;
+}
+
+.s-input .form-control.reportrange-text i {
+    display: none !important;
 }
