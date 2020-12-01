@@ -110,6 +110,15 @@ class ContractLcl extends Model implements HasMedia, Auditable
         ])->toMediaCollection('document', 'LclRequest');*/
     }
 
+    public function unidadesTON($unidades)
+    {
+
+        if ($unidades < 1) {
+            return 1;
+        } else {
+            return $unidades;
+        }
+    }
     /**
      * processSearchByIdLcl
      *
@@ -200,6 +209,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $array_ocean_freight = array();
             $totalChargeOrig = 0;
             $totalChargeDest = 0;
+            $totalW = 1000;
 
             if ($total_weight != null) {
 
@@ -358,6 +368,8 @@ class ContractLcl extends Model implements HasMedia, Auditable
                                 if ($local->typedestiny_id == '3') {
                                     $subtotal_local = $local->ammount;
                                     $totalAmmount = $local->ammount / $rateMount;
+
+                             
 
                                     // MARKUP
                                     $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
@@ -544,12 +556,14 @@ class ContractLcl extends Model implements HasMedia, Auditable
                                 }
                             }*/
                             if ($chargesFreight != null) {
+                                
                                 if ($local->typedestiny_id == '3') {
 
                                     $subtotal_local = $totalW * $local->ammount;
                                     $totalAmmount = ($totalW * $local->ammount) / $rateMount;
                                     $mont = $local->ammount;
                                     $unidades = $this->unidadesTON($totalW);
+                                   // $unidades = 1;
                                     if ($subtotal_local < $local->minimum) {
                                         $subtotal_local = $local->minimum;
                                         $totalAmmount = $subtotal_local / $rateMount;
