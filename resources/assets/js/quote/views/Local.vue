@@ -212,7 +212,9 @@
                                     <span v-if="loaded">
                                         <multiselect
                                             v-model="totals.currency"
-                                            :options="datalists['filtered_currencies']"
+                                            :options="
+                                                datalists['filtered_currencies']
+                                            "
                                             :multiple="false"
                                             :show-labels="false"
                                             :close-on-select="true"
@@ -618,6 +620,18 @@
                     <!-- End DataTable -->
                 </div>
 
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div
+                            v-if="modalWarning != ''"
+                            class="alert alert-danger"
+                            role="alert"
+                        >
+                            {{ modalWarning + " cannot be empty" }}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-12 d-flex justify-content-end mb-5 mt-3">
                     <button class="btn btn-link mr-2" @click="add()">
                         + Add New
@@ -681,7 +695,9 @@ export default {
             code_port: "",
             rate_id: "",
             sale_code: "",
+            modalWarning: "",
             remarks: null,
+            errors: null,
             loaded: false,
             remark_field: {
                 localcharge_remarks: {
@@ -905,6 +921,7 @@ export default {
                 port_id: this.value.id,
                 type_id: this.value.type,
             };
+
             actions.localcharges
                 .createCharge(data)
                 .then((response) => {
@@ -915,8 +932,12 @@ export default {
                     this.closeModal();
                     this.alert("Record saved successfully", "success");
                 })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
+                .catch((e) => {
+                    let errors_key = Object.keys(e.data.errors);
+                    let component = this;
+                    errors_key.forEach(function (key) {
+                        component.alert(e.data.errors[key][0], "error");
+                    });
                 });
         },
         onRemove(index) {
@@ -954,11 +975,15 @@ export default {
                 dismissible: true,
             });
         },
-        isNumber: function(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-                evt.preventDefault();;
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
             } else {
                 return true;
             }
