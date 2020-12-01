@@ -565,9 +565,16 @@
 
             <form action="/action_page.php" class="add-contract-form">
 
+                
+
                 <fieldset v-if="stepOne">
 
                     <div class="row">
+
+                        <div v-if="invalidInput" class="col-12 mt-3 mb-3">
+                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.</h5>
+                        </div>
+
                         <div class="col-12 mb-3">
                             <label>
                                 <b-form-input
@@ -580,18 +587,15 @@
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <label>
-                                <date-range-picker
-                                    :opens="'center'"
-                                    :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
-                                    :singleDatePicker="false"
-                                    :autoApply="true"
-                                    :timePicker="false"
-                                    v-model="dateRange"
-                                    :linkedCalendars="true"
-                                    @update="updateValues"
-                                    @toggle="checkOpen"
-                                    class="input-h"
-                                >
+                                <date-range-picker 
+                                        :startDate="startDate" 
+                                        :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
+                                        :endDate="endDate" 
+                                        v-model="dateRange"
+                                        :singleDatePicker="false"
+                                        :opens="opens"       
+                                        class="input-h"
+                                    >
                                 </date-range-picker>
                            </label>
                         </div>
@@ -647,6 +651,10 @@
                 </fieldset>
     
                 <fieldset v-if="stepTwo">
+
+                        <div v-if="invalidInput" class="col-12 mt-3 mb-3">
+                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.</h5>
+                        </div>
 
                     <div class="row">
                         <div class="col-12 col-sm-6 mb-3">
@@ -733,15 +741,13 @@
                 <fieldset v-if="stepThree">
 
                     <div class="row">
-                        <div class="col-12">
 
-                           <b-buttom v-on:click="addSurchager"><b-icon icon="plus-circle-fill"></b-icon> ADD SURCHARGE</b-buttom>
-
+                        <div v-if="invalidSurcharger" class="col-12 mb-3">
+                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Complete all the fileds</h5>
                         </div>
-
                         <div id="surcharges-list" class="col-12">
 
-                            <div class="row">
+                            <div class="row surcharge-content">
                                 <div class="col-12 col-sm-3">
                                     <label>
                                         <multiselect
@@ -796,10 +802,22 @@
                                         ></b-form-input>
                                     </label>
                                 </div>
-                                <div class="col-1">
-                                    <b-icon icon="dash-circle"></b-icon>
+                                <div class="col-1 d-flex justify-content-center align-items-center">
+                                    <span v-on:click="addSurcharger" class="btn-add-surch"><b-icon icon="check-circle"></b-icon></span>
                                 </div>
                             </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+
+                            <div class="col-12 col-sm-3"><p>{{ item.type }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.calculation }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.currency }}</p></div>
+                            <div class="col-12 col-sm-2"><p>{{ item.amount }}</p></div>
+                            <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
 
                         </div>
                     </div>
@@ -954,8 +972,6 @@
 				    </vue-dropzone>
                 </fieldset>
 
-                <h5 v-if="invalidInput">Please Complete all the fields</h5>
-
                 <div class="footer-add-contract-modal pl-4 pr-4">   
                     <b-button v-if="stepTwo || stepThree || stepFour" v-on:click="backStep" variant="link" style="color: red" class="mr-3">Back</b-button>
                     <b-button v-on:click="nextStep" v-if="!stepFour" class="btn-create-quote">Save & Continue</b-button>
@@ -968,11 +984,12 @@
 </template>
 
 <script>
+import vue2Dropzone from 'vue2-dropzone';
 import Multiselect from "vue-multiselect";
+import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
-import vue2Dropzone from 'vue2-dropzone';
-import 'vue2-dropzone/dist/vue2Dropzone.min.css';
+
 export default {
     components: {
         Multiselect,
@@ -990,9 +1007,11 @@ export default {
             stepThree: false,
             stepFour: false,
             invalidInput: false,
+            invalidSurcharger: false,
             valueEq: '', 
             amount: '', 
-            currency: '', 
+            currency: 'USD', 
+            currencySurcharge: 'USD', 
             origin: '', 
             destination: '', 
             carrier: '', 
@@ -1000,6 +1019,7 @@ export default {
             direction: '',
             typeContract: '',
             calculationType: '',
+            dataSurcharger: [],
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
@@ -1014,16 +1034,10 @@ export default {
             isCompleteFour: false,
 
             //Datepicker Options
-            dateRange: '2020/20/20 - 2020/20/20',
-            format: 'mm/dd/yyyy',
-            separator: ' - ',
-            applyLabel: 'Apply',
-            cancelLabel: 'Cancel',
-            weekLabel: 'W',
-            customRangeLabel: 'Custom Range',
-            daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            firstDay: 0
+            dateRange: '2017-09-05',
+            startDate: '2017-09-05',
+            endDate: '2017-09-15',
+            opens: "center",//which way the picker opens, default "center", can be "left"/"right"
             /* dropzoneOptions: {
                 url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`, 
                 url: `/api/v2/contracts/storeMedia`, 
@@ -1037,8 +1051,30 @@ export default {
     },
     methods: {
 
-        addSurchager() {
+        deleteSurcharger(index){
+            this.dataSurcharger.splice(index, 1);
+            console.log(this.dataSurcharger);
+        },
 
+        addSurcharger() {
+
+            if(this.typeContract == "" || this.calculationType == "" || this.currencySurcharge == "" ) {
+                this.invalidSurcharger = true;
+                return
+            }
+
+            this.invalidSurcharger = false;
+
+            var surcharge = {
+                type: this.typeContract,
+                calculation: this.calculationType,
+                currency: this.currencySurcharge,
+                amount: this.amount
+            };
+
+            this.dataSurcharger.push(surcharge);
+            
+            this.typeContract = ""; this.calculationType = ""; this.currencySurcharge = ""; this.amount = "";
         },
 
         //FILES OPTIONS Modal
@@ -1091,11 +1127,6 @@ export default {
                 this.isCompleteThree = !this.isCompleteThree;
                 return
             } else if ( this.stepThree ) {
-
-                if (this.typeContract == '' || this.calculationType == '' || this.currencySurcharge == '' || this.amount == '' ) {
-                    this.invalidInput = true;
-                    return
-                }
 
                 this.invalidInput = false;
                 this.stepThree = false; this.stepFour = !this.stepFour;
