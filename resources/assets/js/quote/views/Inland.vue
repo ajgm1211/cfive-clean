@@ -275,6 +275,7 @@
                                     <b-td v-if="inlandFound">
                                         <b-form-checkbox
                                             v-model="inlandAdd.selected"
+                                            @input="totalizeModalInlands"
                                         ></b-form-checkbox>
                                     </b-td>
                                     <b-td>
@@ -988,8 +989,8 @@ export default {
 
             this.inlandAdds.splice(index, 1);
 
-            this.inlandModalTotals = {},
-            this.inlandModalTotalLcl = 0,
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
 
             this.totalizeModalInlands();
         },
@@ -997,12 +998,15 @@ export default {
         totalizeModalInlands() {
             let component = this;
 
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
+
             component.inlandAdds.forEach(function (inlandAdd) {
                 let modalInlandCurrency = inlandAdd.currency_id;
 
                 if (modalInlandCurrency["alphacode"] == undefined) {
                     return;
-                } else {
+                } else if (inlandAdd.selected){
                     let inlandAddCurrency = modalInlandCurrency["alphacode"];
                     let inlandAddConversion = modalInlandCurrency["rates"];
                     let clientCurrency =
@@ -1028,10 +1032,16 @@ export default {
                             } else {
                                 totals = rates_num + markup_num;
                             }
-    
-                            component.inlandModalTotals[
+
+                            if(component.inlandModalTotals["c" + equip] == undefined ){
+                              component.inlandModalTotals[
                                 "c" + equip
-                            ] = totals;
+                            ] = totals;  
+                            }else{
+                                component.inlandModalTotals[
+                                    "c" + equip
+                                ] += totals;
+                            }
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
                         let rates_num = Number(inlandAdd.total);
@@ -1046,7 +1056,7 @@ export default {
 
                             totals = price_usd * clientConversion;
                         }
-                        component.inlandModalTotalLcl = totals;
+                        component.inlandModalTotalLcl += totals;
                     }
                 }
             });
