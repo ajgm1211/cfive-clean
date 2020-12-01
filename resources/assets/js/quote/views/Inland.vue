@@ -210,9 +210,9 @@
                         </button>
                     </div>
                 </div>
+                <!-- DataTable -->
                 <div class="row">
                     <div class="col-12 mt-5">
-                        <!-- DataTable -->
                         <b-table-simple
                             v-if="inlandAddRequested"
                             hover
@@ -272,6 +272,12 @@
                                     v-for="(inlandAdd, key) in this.inlandAdds"
                                     :key="key"
                                 >
+                                    <b-td v-if="inlandFound">
+                                        <b-form-checkbox
+                                            v-model="inlandAdd.selected"
+                                            @input="totalizeModalInlands"
+                                        ></b-form-checkbox>
+                                    </b-td>
                                     <b-td>
                                         <b-form-input
                                             v-if="
@@ -383,6 +389,8 @@
                                 <b-tr class="q-total">
                                     <b-td></b-td>
 
+                                    <b-td v-if="inlandFound"></b-td>
+
                                     <b-td>
                                         <span>
                                             <b>Total</b>
@@ -431,6 +439,14 @@
                             role="alert"
                         >
                             {{ modalWarning + " cannot be empty" }}
+                        </div>
+
+                        <div
+                            v-if="modalSelectWarning"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            Select an Inland to add
                         </div>
 
                         <div
@@ -533,6 +549,7 @@ export default {
             inlandActions: {},
             modalWarning: "",
             modalSearchWarning: false,
+            modalSelectWarning: false,
             modalDistance: false,
             inlandModalTotals: {},
             inlandModalTotalLcl: 0,
@@ -952,7 +969,7 @@ export default {
                     currency_id: {},
                     price: {},
                     markup: {},
-                    selected: false,
+                    selected: true,
                     distance: 0,
                 };
 
@@ -972,8 +989,8 @@ export default {
 
             this.inlandAdds.splice(index, 1);
 
-            this.inlandModalTotals = {},
-            this.inlandModalTotalLcl = 0,
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
 
             this.totalizeModalInlands();
         },
@@ -981,12 +998,15 @@ export default {
         totalizeModalInlands() {
             let component = this;
 
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
+
             component.inlandAdds.forEach(function (inlandAdd) {
                 let modalInlandCurrency = inlandAdd.currency_id;
 
                 if (modalInlandCurrency["alphacode"] == undefined) {
                     return;
-                } else {
+                } else if (inlandAdd.selected){
                     let inlandAddCurrency = modalInlandCurrency["alphacode"];
                     let inlandAddConversion = modalInlandCurrency["rates"];
                     let clientCurrency =
@@ -1012,10 +1032,16 @@ export default {
                             } else {
                                 totals = rates_num + markup_num;
                             }
-    
-                            component.inlandModalTotals[
+
+                            if(component.inlandModalTotals["c" + equip] == undefined ){
+                              component.inlandModalTotals[
                                 "c" + equip
-                            ] = totals;
+                            ] = totals;  
+                            }else{
+                                component.inlandModalTotals[
+                                    "c" + equip
+                                ] += totals;
+                            }
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
                         let rates_num = Number(inlandAdd.total);
@@ -1030,7 +1056,7 @@ export default {
 
                             totals = price_usd * clientConversion;
                         }
-                        component.inlandModalTotalLcl = totals;
+                        component.inlandModalTotalLcl += totals;
                     }
                 }
             });
@@ -1039,13 +1065,27 @@ export default {
 
         addInland() {
             let component = this;
+            let noSelection = true;
+
+            component.inlandAdds.forEach(function (inlandAdd) {
+                if(inlandAdd.selected){
+                    noSelection = false;
+                }
+            });
 
             component.inlandAdds.forEach(function (inlandAdd) {
                 if (Object.keys(inlandAdd.currency_id).length == 0) {
                     component.modalWarning = "Currency";
                     setTimeout(() => {
                         component.modalWarning = "";
-                    }, 3000);
+                    }, 1500);
+                } else if (inlandAdd.selected == false){
+                    if(noSelection){
+                        component.modalSelectWarning = true;
+                        setTimeout(() => {
+                            component.modalSelectWarning = false;
+                        }, 1500);
+                    }
                 } else {
                     inlandAdd["type"] = component.currentPort["type"];
                     if (component.modalDistance) {
@@ -1078,7 +1118,7 @@ export default {
                                 component.$refs["addInland"].hide();
                                 component.inlandAddRequested = false;
                                 component.modalSuccess = false;
-                            }, 3000);
+                            }, 1500);
                         })
                         .catch((data) => {
                             component.$refs.observer.setErrors(
