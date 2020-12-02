@@ -171,6 +171,10 @@ var WizardDemo = function() {
 
         btn.on('click', function(e) {
             e.preventDefault();
+            if ($('#existsFile').val() != 1) {
+                e.preventDefault();
+                notification('You must select a file!', 'error');
+            } else {
 
             if (validator.form()) {
                 //== See: src\js\framework\base\app.js
@@ -197,16 +201,17 @@ var WizardDemo = function() {
 
                         });
                     },
-                    error: function(request, status, error) {
-                        swal({
-                            "title": "",
-                            "text": request.responseText,
-                            "type": "error",
-                            "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
-                        })
-                    }
+                    // error: function(request, status, error) {
+                    //     swal({
+                    //         "title": "",
+                    //         "text": request.responseText,
+                    //         "type": "error",
+                    //         "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
+                    //     })
+                    // }
                 });
             }
+        }
         });
     }
 
@@ -226,3 +231,32 @@ var WizardDemo = function() {
 jQuery(document).ready(function() {
     WizardDemo.init();
 });
+function notification(message, type) {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "0",
+        "hideDuration": "0",
+        "timeOut": "0",
+        "extendedTimeOut": "0",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    switch (type) {
+        case "error":
+            toastr.error(message, 'ERROR');
+            break;
+        case "success":
+            toastr.success(message, 'SUCCESS');
+            break;
+        default:
+            toastr.info(message, '');
+    }
+}
