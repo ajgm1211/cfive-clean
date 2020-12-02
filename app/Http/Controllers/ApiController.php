@@ -560,7 +560,7 @@ class ApiController extends Controller
             $carriers = Carrier::all()->pluck('id')->toArray();
 
         }else{
-            $carriers = Carrier::where('name' , $carrierUrl)->pluck('id')->toArray();
+            $carriers = Carrier::where('name' , $carrierUrl)->orWhere('uncode' , $carrierUrl)->pluck('id')->toArray();
         }
     
 
