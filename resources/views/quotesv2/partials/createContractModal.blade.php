@@ -298,7 +298,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                         <input type="hidden" id="existsFile" name="existsFile" value="">
                                     </div>
+                                   
                                     <!--end: Form Wizard Step 4-->
                                 </div>
                                 <!--end: Form Body -->
