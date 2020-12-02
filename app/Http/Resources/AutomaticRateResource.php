@@ -39,43 +39,6 @@ class AutomaticRateResource extends JsonResource
             'via' => $this->via,
         ];
 
-        return $this->addContainers($data);
-    }
-
-    public function addContainers($data)
-    {   
-        $quote = $this->quotev2()->first();
-
-        if($quote->type == 'FCL'){
-            if($this->markups!=null){
-                $profits = json_decode($data['markups']);
-                foreach($profits as $code=>$profit){
-                    $prof_key = str_replace('m','',$code);
-                    $data['profits_'.$prof_key] = isDecimal($profit,true);
-                }
-            }
-            if($this->total!=null){
-                $totals = json_decode($data['total']);
-                foreach($totals as $code=>$total){
-                    $total_key = str_replace('c','',$code);
-                    $data['totals_'.$total_key] = isDecimal($total,true);
-                }
-            }
-        }else if($quote->type == "LCL"){
-            if($this->markups!=null){
-                $profits = json_decode($data['markups']);
-                foreach($profits as $code=>$profit){
-                    $data['profits_'.$code] = isDecimal($profit,true);
-                }
-            }
-            if($this->total!=null){
-                $totals = json_decode($data['total']);
-                foreach($totals as $code=>$total){
-                    $data['totals_'.$code] = isDecimal($total,true);
-                }
-            }
-        }
-
         return $data;
     }
 

@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLocalChargeLclQuote extends FormRequest
 {
-    /**
+/**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return \Auth::check();
     }
 
     /**
@@ -24,6 +24,7 @@ class StoreLocalChargeLclQuote extends FormRequest
     public function rules()
     {
         return [
+            'charges.surcharge' => 'required',
             'charges.price' => 'required',
             'charges.units' => 'required',
             'charges.calculation_type' => 'required',
@@ -32,6 +33,23 @@ class StoreLocalChargeLclQuote extends FormRequest
             'port_id' => 'required',
             'quote_id' => 'required',
             'type_id' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'charges.surcharge.required'  => 'Charge is required',
+            'charges.price.required'  => 'You must enter rates',
+            'charges.units.required'  => 'Units are required',
+            'charges.calculation_type.required'  => 'Detail is required',
+            'charges.carrier.required'  => 'Provider is required',
+            'charges.currency.required'  => 'Currency is required',
         ];
     }
 }

@@ -94,11 +94,7 @@ class AutomaticRateTotal extends Model
             }
 
             //converting to autorate currency
-            if ($currency->alphacode != 'USD') {
-                $totals_rate = $this->convertToCurrency($usd,$currency,$totals_usd);
-            }else{
-                $totals_rate = $totals_usd;
-            }
+            $totals_rate = $this->convertToCurrency($usd,$currency,$totals_usd);
 
             //adding autorate markups
             if ($this->markups != null) {
@@ -118,9 +114,10 @@ class AutomaticRateTotal extends Model
                 }
             }
 
-            $totals = json_encode($totals_rate);
+            $totals_json = json_encode($totals_rate);
 
-            $this->update(['totals' => $totals]);
+            $this->update(['totals' => $totals_json]);
+            $rate->update(['total' => $totals_json]);
 
         } else if ($quote->type == 'LCL') {
 
@@ -192,6 +189,7 @@ class AutomaticRateTotal extends Model
             $totals = json_encode($totals_usd);
 
             $this->update(['totals' => $totals, 'markups' => $markups]);
+            $rate->update(['total' => $totals]);
         }
     }
 }
