@@ -54,7 +54,7 @@
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         <input type="checkbox" name="enable" id="enable_api"
-                                            {{@$api->enable==1 ? 'checked':''}}>
+                                            {{@$api->status==1 ? 'checked':''}}>
                                         <span></span>
                                     </label>
                                 </span>
@@ -116,6 +116,14 @@
                                             <td>{{$item->partner->name}}</td>
                                             <td>{{$item->module}}</td>
                                             <td>
+                                                <span class="m-switch m-switch--icon">
+                                                    <label>
+                                                        <input name="api_id" type="hidden" value="{{$item->id}}" class="api_id"/>
+                                                        <input type="checkbox" name="status" id="status_api"
+                                                            {{$item->status==1 ? 'checked':''}}>
+                                                        <span></span>
+                                                    </label>
+                                                </span>&nbsp;
                                                 <input name="api_id" type="hidden" value="{{$item->id}}" class="api_id"/>
                                                 <a href="#" class="open_edit_modal" data-toggle="modal"
                                                 data-target="#EditIntegrationModal"><i class="fa fa-edit"></i></a> 

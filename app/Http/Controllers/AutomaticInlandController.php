@@ -265,6 +265,10 @@ class AutomaticInlandController extends Controller
             }
         }
 
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$autoinland->port_id],['inland_address_id',$autoinland->inland_address_id]])->first();
+
+        $totals->totalize();
+        
         return new AutomaticInlandResource($autoinland);
     }
 
@@ -352,9 +356,9 @@ class AutomaticInlandController extends Controller
         $markups = [];
         
         foreach($data as $key=>$value){
-            if($value==null){$value=0;}
+            if($value==null){$value=isDecimal(0,true);}
             if($key!='profits_currency'){
-                $markups['m'.str_replace('profits_','',$key)] = $value;
+                $markups['m'.str_replace('profits_','',$key)] = isDecimal($value,true);
             }
         }
 

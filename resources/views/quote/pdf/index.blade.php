@@ -25,6 +25,10 @@
         @endif
         <!-- ORIGIN -->
         @include('quote.pdf.partials.origins_fcl')
+        <!-- LOCALCHARGE REMARKS -->
+        @if($destination_charges->count()==0)
+            @include('quote.pdf.partials.localcharge_remarks')
+        @endif
         <!-- FREIGHTS -->
         @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
             @include('quote.pdf.partials.freights_fcl')
@@ -36,7 +40,9 @@
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
         <!-- LOCALCHARGE REMARKS -->
-        @include('quote.pdf.partials.localcharge_remarks')
+        @if($destination_charges->count()>0)
+            @include('quote.pdf.partials.localcharge_remarks')
+        @endif
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
     </main>

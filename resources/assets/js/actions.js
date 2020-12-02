@@ -568,6 +568,9 @@ export default {
         create(data) {
             return api.call('post', `/api/quote/localcharge/lcl/store`, data);
         },
+        createCharge(data) {
+            return api.call('post', `/api/quote/charge/lcl/store`, data);
+        },
         localcharges(params) {
             return api.call('get', '/api/quote/localcharge/lcl', { params })
         },
