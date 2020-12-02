@@ -2808,9 +2808,13 @@ $(".quote_search").on("click", function() {
     });
 });
 
-function submitForm(type) {
+function submitForm(type, quote) {
 
-    $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+    if (quote == 'FCL') {
+        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+    } else {
+        $('#rateForm').attr('action', '/v2/quotes/storeLCL/' + type);
+    }
 
     $("#rateForm").submit();
 }

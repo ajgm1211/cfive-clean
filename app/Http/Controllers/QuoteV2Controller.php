@@ -6844,7 +6844,7 @@ class QuoteV2Controller extends Controller
 
     // Store  LCL AUTOMATIC
 
-    public function storeLCL(Request $request)
+    public function storeLCL(Request $request, $type)
     {
         if (!empty($request->input('form'))) {
             $form = json_decode($request->input('form'));
@@ -7176,7 +7176,12 @@ class QuoteV2Controller extends Controller
         //return redirect()->route('quotes.index');
 
         //return redirect()->action('QuotationController@edit', $quote->id);
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        //return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        if ($type != 1) {
+            return redirect()->action('QuotationController@edit', $quote);
+        } else {
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        }
     }
 
     public function unidadesTON($unidades)
