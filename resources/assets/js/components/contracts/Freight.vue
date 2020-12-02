@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-card>
+        <b-card class="no-scroll">
             <div class="row">
                 <div class="col-6">
                     <b-card-title>Ocean Freight</b-card-title>
@@ -183,7 +183,6 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select Carrier Port",
                     options: "carriers"
                 },
                 currency: {
