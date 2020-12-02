@@ -55,6 +55,7 @@ use App\RateLcl;
 use App\RemarkCountry;
 use App\RemarkHarbor;
 use App\SaleTermV2;
+use App\FreightMarkup;
 
 //LCL
 use App\Schedule;
@@ -2220,6 +2221,22 @@ class QuoteV2Controller extends Controller
                         $service = null;
                     }
 
+                    if($quote->price_id){
+                        $priceLevelMarkups = FreightMarkup::where([['price_id',$quote->price_id],['fixed_markup','!=','0']])->first();
+    
+                        $input = Currency::where('id',$priceLevelMarkups->currency)->first();
+
+                        $output = Currency::where('id',$info_D->currency->id)->first();
+
+                        $priceLevelMarkupsArray = [];
+
+                        foreach($rateO->markups as $key=>$value){
+                            $priceLevelMarkupsArray[$key] = $value;
+                        }
+    
+                        $priceLevelMarkupsConverted = $this->convertToCurrency($input,$output,$priceLevelMarkupsArray);
+                    }
+
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT,'schedule_type'=>$service]);
 
                     $rate = AutomaticRate::create($request->all());
@@ -2242,7 +2259,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->destination_port_id = $rate->destination_port_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
-                    $rateTotals->markups = null;
+                    $rateTotals->markups = $priceLevelMarkupsConverted;
                     $rateTotals->save();
                     $rateTotals->totalize($info_D->currency->id);
 
