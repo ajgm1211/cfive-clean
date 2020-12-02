@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::put('update', 'ApiIntegrationController@update')->name('api.update');
     Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
+    Route::get('status', 'ApiIntegrationController@status')->name('api.status');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
@@ -1104,7 +1105,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
     Route::get('/api/quote/localcharge', 'LocalChargeQuotationController@localcharges');
     Route::post('/api/quote/localcharge/store', 'LocalChargeQuotationController@store');
-    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@twoWaysStore');
+    Route::post('/api/quote/charge/store', 'LocalChargeQuotationController@storeCharge');
     Route::post('/api/quote/localcharge/store/salecharge', 'LocalChargeQuotationController@storeChargeSaleTerm');
     Route::get('/api/quote/get/localcharge', 'LocalChargeQuotationController@storedCharges');
     Route::post('/api/quote/localcharge/delete/{id}', 'LocalChargeQuotationController@destroy');
@@ -1118,6 +1119,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/quote/localcharge/lcl/store', 'LocalChargeQuotationLclController@store');
     Route::post('/api/quote/localcharge/lcl/delete/{id}', 'LocalChargeQuotationLclController@destroy');
     Route::get('/api/quote/localcharge/lcl/total', 'LocalChargeQuotationLclController@getTotal');
+    Route::post('/api/quote/charge/lcl/store', 'LocalChargeQuotationLclController@storeCharge');
 
     /** PDF */
     Route::get('/api/quote/pdf/{quote}', 'PdfController@quote')->middleware('check_company:quote');

@@ -219,7 +219,11 @@ class FclPdf
 
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
+                    
+                    $currencyInput = $item->currency;
 
+                    $currencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+                    
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
                         ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
@@ -246,7 +250,7 @@ class FclPdf
                 }
             }
         }
-
+        
         return $freight_charges_grouped;
     }
 

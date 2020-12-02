@@ -599,7 +599,7 @@
                                         v-model="localcharge.price['c' + item]"
                                         class="q-input"
                                         @keypress="isNumber($event)"
-                                        v-on:blur="
+                                        v-on:change="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.price['c' + item],
@@ -613,7 +613,7 @@
                                         v-model="localcharge.markup['m' + item]"
                                         class="q-input"
                                         @keypress="isNumber($event)"
-                                        v-on:blur="
+                                        v-on:change="
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.markup['m' + item],
@@ -759,7 +759,9 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <multiselect
                                         v-model="input.calculation_type"
-                                        :options="datalists['calculationtypeslcl']"
+                                        :options="
+                                            datalists['calculationtypeslcl']
+                                        "
                                         :multiple="false"
                                         :show-labels="false"
                                         :close-on-select="true"
@@ -887,6 +889,18 @@
                     <!-- End DataTable -->
                 </div>
 
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div
+                            v-if="modalWarning != ''"
+                            class="alert alert-danger"
+                            role="alert"
+                        >
+                            {{ modalWarning + " cannot be empty" }}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-12 d-flex justify-content-end mb-5 mt-3">
                     <button class="btn btn-link mr-2" @click="add()">
                         + Add New
@@ -950,7 +964,9 @@ export default {
             code_port: "",
             rate_id: "",
             sale_code: "",
+            modalWarning: "",
             remarks: null,
+            errors: null,
             loaded: false,
             remark_field: {
                 localcharge_remarks: {
@@ -1244,19 +1260,44 @@ export default {
                 type_id: this.value.type,
                 quote_type: this.currentQuoteData.type,
             };
-            actions.localcharges
-                .createCharge(data)
-                .then((response) => {
-                    this.getLocalCharges();
-                    this.onRemove(counter);
-                    this.getStoredCharges();
-                    this.getTotal();
-                    this.closeModal();
-                    this.alert("Record saved successfully", "success");
-                })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                });
+
+            if (data.quote_type == "FCL") {
+                actions.localcharges
+                    .createCharge(data)
+                    .then((response) => {
+                        this.getLocalCharges();
+                        this.onRemove(counter);
+                        this.getStoredCharges();
+                        this.getTotal();
+                        this.closeModal();
+                        this.alert("Record saved successfully", "success");
+                    })
+                    .catch((e) => {
+                        let errors_key = Object.keys(e.data.errors);
+                        let component = this;
+                        errors_key.forEach(function (key) {
+                            component.alert(e.data.errors[key][0], "error");
+                        });
+                    });
+            } else {
+                actions.localchargeslcl
+                    .createCharge(data)
+                    .then((response) => {
+                        this.getLocalCharges();
+                        this.onRemove(counter);
+                        this.getStoredCharges();
+                        this.getTotal();
+                        this.closeModal();
+                        this.alert("Record saved successfully", "success");
+                    })
+                    .catch((e) => {
+                        let errors_key = Object.keys(e.data.errors);
+                        let component = this;
+                        errors_key.forEach(function (key) {
+                            component.alert(e.data.errors[key][0], "error");
+                        });
+                    });
+            }
         },
         onRemove(index) {
             this.inputs.splice(index, 1);

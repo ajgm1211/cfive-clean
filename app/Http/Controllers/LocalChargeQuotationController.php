@@ -204,7 +204,7 @@ class LocalChargeQuotationController extends Controller
                 $previous_charge = LocalChargeQuote::where([
                     'charge' => $charge,
                     'port_id' => $request->port_id,
-                    'calculation_type_id' => $localcharge['calculation_type_id'],
+                    //'calculation_type_id' => $localcharge['calculation_type_id'],
                     'currency_id' => $localcharge['currency_id'],
                     'quote_id' => $request->quote_id,
                     'type_id' => $request->type_id
@@ -479,53 +479,6 @@ class LocalChargeQuotationController extends Controller
         return response()->json(['success' => 'Ok']);
     }
 
-    public function twoWaysStore(Request $request)
-    {
-        if ($request->quote_type == 'FCL') {
-            $this->storeCharge($request);
-        } else {
-            $this->storeChargeLcl($request);
-        }
-    }
-
-    /**
-     * store lcl's charge info
-     *
-     * @param  mixed $request
-     * @return void
-     */
-    public function storeChargeLcl(StoreLocalChargeLclQuote $request)
-    {
-        $quote = QuoteV2::findOrFail($request->quote_id);
-
-        $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
-
-        ChargeLclAir::create([
-            'automatic_rate_id' => $rate->id,
-            'calculation_type_id' => $request->charges['calculation_type']['id'],
-            'currency_id' => $request->charges['currency']['id'],
-            'surcharge_id' => $request->charges['surcharge']['id'],
-            'type_id' => $request->type_id,
-            'units' => $request->charges['units'],
-            'price_per_unit' => $request->charges['price'],
-            'markup' => $request->charges['profit'],
-        ]);
-
-        LocalChargeQuoteLcl::create([
-            'price' => (((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit']) / (float)$request->charges['units'],
-            'units' => $request->charges['units'],
-            'profit' => $request->charges['profit'],
-            'total' => ((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit'],
-            'charge' => $request->charges['surcharge']['name'],
-            'surcharge_id' => $request->charges['surcharge']['id'],
-            'calculation_type_id' => $request->charges['calculation_type']['id'],
-            'currency_id' => $request->charges['currency']['id'],
-            'port_id' => $request->port_id,
-            'quote_id' => $request->quote_id,
-            'type_id' => $request->type_id,
-        ]);
-    }
-
     /**
      * store charge's info
      *
@@ -534,7 +487,6 @@ class LocalChargeQuotationController extends Controller
      */
     public function storeCharge(StoreLocalChargeQuote $request)
     {
-
         $request->validated();
 
         $quote = QuoteV2::findOrFail($request->quote_id);
@@ -561,14 +513,13 @@ class LocalChargeQuotationController extends Controller
             $previous_charge = LocalChargeQuote::where([
                 'charge' => $charge,
                 'port_id' => $request->port_id,
-                'calculation_type_id' => $localcharge['calculation_type']['id'],
+                //'calculation_type_id' => $localcharge['calculation_type']['id'],
                 'currency_id' => $localcharge['currency']['id'],
                 'quote_id' => $request->quote_id,
                 'type_id' => $request->type_id
             ])->first();
 
             if ($previous_charge) {
-
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->sumarize();
                 $previous_charge->totalize();

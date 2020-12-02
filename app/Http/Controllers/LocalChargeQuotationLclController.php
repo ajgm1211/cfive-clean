@@ -8,16 +8,10 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
-use App\Http\Requests\StoreLocalChargeQuote;
-use App\Http\Resources\SaleTermChargeResource;
+use App\Http\Requests\StoreLocalChargeLclQuote;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteLcl;
 use App\LocalChargeQuoteLclTotal;
-use App\LocalChargeQuoteTotal;
-use App\SaleTermCharge;
-use App\SaleTermCode;
-use App\SaleTermV3;
-use App\Surcharge;
 
 class LocalChargeQuotationLclController extends Controller
 {
@@ -204,5 +198,45 @@ class LocalChargeQuotationLclController extends Controller
         $total = LocalChargeQuoteLclTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
 
         return $total;
+    }
+
+        /**
+     * store lcl's charge info
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function storeCharge(StoreLocalChargeLclQuote $request)
+    {
+        $request->validated();
+        
+        $quote = QuoteV2::findOrFail($request->quote_id);
+
+        $rate = $quote->getRate($request->type_id, $request->port_id, $request->charges['carrier']['id']);
+
+        ChargeLclAir::create([
+            'automatic_rate_id' => $rate->id,
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'surcharge_id' => $request->charges['surcharge']['id'],
+            'type_id' => $request->type_id,
+            'units' => $request->charges['units'],
+            'price_per_unit' => $request->charges['price'],
+            'markup' => $request->charges['profit'],
+        ]);
+
+        LocalChargeQuoteLcl::create([
+            'price' => (((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit']) / (float)$request->charges['units'],
+            'units' => $request->charges['units'],
+            'profit' => $request->charges['profit'],
+            'total' => ((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit'],
+            'charge' => $request->charges['surcharge']['name'],
+            'surcharge_id' => $request->charges['surcharge']['id'],
+            'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'currency_id' => $request->charges['currency']['id'],
+            'port_id' => $request->port_id,
+            'quote_id' => $request->quote_id,
+            'type_id' => $request->type_id,
+        ]);
     }
 }

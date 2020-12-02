@@ -97,7 +97,7 @@
                                 <a href="{{url('/api/quotes')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-coins"></i>
                                     <span class="m-menu__link-text">
-                                        FCL Quote
+                                        List of Quotes
                                         <span class="m-menu__link-badge">
                                             <span class="m-badge m-badge--brand m-badge--wide">
                                                 new
