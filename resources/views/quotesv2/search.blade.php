@@ -2440,8 +2440,9 @@ var uploadedDocumentMap = {}
     'X-CSRF-TOKEN': "{{ csrf_token() }}"
   },
     success: function (file, response) {
-      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
+      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">');
       uploadedDocumentMap[file.name] = response.name
+      $('#m_form').find('input[name="existsFile"]').val(1);
     },
       removedfile: function (file) {
         file.previewElement.remove()
@@ -2451,7 +2452,9 @@ var uploadedDocumentMap = {}
         } else {
           name = uploadedDocumentMap[file.name]
         }
-        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove()
+        $
+        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove();
+        $('#m_form').find('input[name="existsFile"]').val('');
       },
         init: function () {
           @if(isset($project) && $project->document)
