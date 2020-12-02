@@ -110,6 +110,15 @@ class ContractLcl extends Model implements HasMedia, Auditable
         ])->toMediaCollection('document', 'LclRequest');*/
     }
 
+    public function unidadesTON($unidades)
+    {
+
+        if ($unidades < 1) {
+            return 1;
+        } else {
+            return $unidades;
+        }
+    }
     /**
      * processSearchByIdLcl
      *
@@ -200,6 +209,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $array_ocean_freight = array();
             $totalChargeOrig = 0;
             $totalChargeDest = 0;
+            $totalW = 1000;
 
             if ($total_weight != null) {
 
@@ -298,7 +308,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $arrayPerPallet = array('15'); //  per pallet
 
             // Local charges
-            /*$localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
+            $localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
                 $q->whereIn('carrier_id', $carrier);
             })->with('localcharportslcl.portOrig', 'localcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
 
@@ -323,7 +333,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
 
-                            if ($chargesOrigin != null) {
+                           /* if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
                                     $subtotal_local = $local->ammount;
                                     $totalAmmount = $local->ammount / $rateMount;
@@ -353,11 +363,13 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDest);
                                 }
-                            }
+                            }*/
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
                                     $subtotal_local = $local->ammount;
                                     $totalAmmount = $local->ammount / $rateMount;
+
+                             
 
                                     // MARKUP
                                     $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
@@ -390,7 +402,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
 
-                            if ($chargesOrigin != null) {
+                            /*if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
 
                                     $subtotal_local = $ton_weight * $local->ammount;
@@ -446,7 +458,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDest);
                                 }
-                            }
+                            }*/
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
                                     $subtotal_local = $ton_weight * $local->ammount;
@@ -488,7 +500,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                                 $totalW = ceil($totalW);
                             }
 
-                            if ($chargesOrigin != null) {
+                            /*if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
                                     $subtotal_local = $totalW * $local->ammount;
                                     $totalAmmount = ($totalW * $local->ammount) / $rateMount;
@@ -542,15 +554,16 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDest);
                                 }
-                            }
-
+                            }*/
                             if ($chargesFreight != null) {
+                                
                                 if ($local->typedestiny_id == '3') {
 
                                     $subtotal_local = $totalW * $local->ammount;
                                     $totalAmmount = ($totalW * $local->ammount) / $rateMount;
                                     $mont = $local->ammount;
                                     $unidades = $this->unidadesTON($totalW);
+                                   // $unidades = 1;
                                     if ($subtotal_local < $local->minimum) {
                                         $subtotal_local = $local->minimum;
                                         $totalAmmount = $subtotal_local / $rateMount;
@@ -581,7 +594,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
 
-                            if ($chargesOrigin != null) {
+                           /* if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
                                     if ($local->calculationtypelcl_id == '7' || $local->calculationtypelcl_id == '13') {
 
@@ -678,7 +691,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                                     //$arregloDest = array_merge($arregloDest, $markupTONM3);
                                     $dataDest[] = $arregloDest;
                                 }
-                            }
+                            }*/
 
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
@@ -739,7 +752,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
 
-                            if ($chargesOrigin != null) {
+                            /*if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
                                     $subtotal_local = $totalW * $local->ammount;
                                     $totalAmmount = ($totalW * $local->ammount) / $rateMount;
@@ -790,7 +803,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDestKg);
                                 }
-                            }
+                            }*/
 
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
@@ -830,7 +843,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
                             $package_cantidad = $package_pallet['package']['cantidad'];
-                            if ($chargesOrigin != null && $package_cantidad != 0) {
+                           /* if ($chargesOrigin != null && $package_cantidad != 0) {
                                 if ($local->typedestiny_id == '1') {
 
                                     $subtotal_local = $package_cantidad * $local->ammount;
@@ -883,7 +896,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDestPack);
                                 }
-                            }
+                            }*/
 
                             if ($chargesFreight != null && $package_cantidad != 0) {
                                 if ($local->typedestiny_id == '3') {
@@ -923,7 +936,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
                             $pallet_cantidad = $package_pallet['pallet']['cantidad'];
-                            if ($chargesOrigin != null && $pallet_cantidad != 0) {
+                          /*  if ($chargesOrigin != null && $pallet_cantidad != 0) {
                                 if ($local->typedestiny_id == '1') {
 
                                     $subtotal_local = $pallet_cantidad * $local->ammount;
@@ -975,7 +988,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
                                     $collectionDest->push($arregloDestPallet);
                                 }
-                            }
+                            }*/
 
                             if ($chargesFreight != null && $pallet_cantidad != 0) {
                                 if ($local->typedestiny_id == '3') {
@@ -1008,7 +1021,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                         }
                     }
                 }
-            } */ // Fin del calculo de los local charges
+            }  // Fin del calculo de los local charges
 
             //############ Global Charges   ####################
 
@@ -1824,6 +1837,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $totalDestiny = number_format($totalDestiny, 2, '.', '');
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
+            $totales = array('freight' => $totalFreight );
 
             $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
 
@@ -1856,7 +1870,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
             $routes['Rates']['total'] = $totalQuote;
             $routes['Rates']['currency'] = $typeCurrency;
 
-            $detail = $this->compactResponse($routes, $data, $typeCurrency, $totalQuoteSin, $response);
+            $detail = $this->compactResponse($routes, $data, $typeCurrency, $totalQuoteSin, $response,$totales);
 
             $general->push($detail);
         }
@@ -1864,12 +1878,12 @@ class ContractLcl extends Model implements HasMedia, Auditable
         return response()->json($general);
     }
 
-    public function compactResponse($routes, $data, $currency, $totalQuote, $response)
+    public function compactResponse($routes, $data, $currency, $totalQuote, $response,$totales)
     {
 
         switch ($response) {
             case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $data->minimum, (float) $data->uom, $currency, $data->transit_time, $data->contract->comments);
+                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via, (int) $totales['freight'], (float) $data->uom, $currency, $data->transit_time, $data->contract->comments);
                 break;
             default:
                 $detalle = $routes;
