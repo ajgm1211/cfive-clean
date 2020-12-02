@@ -201,7 +201,7 @@ class LocalChargeQuotationController extends Controller
                 $previous_charge = LocalChargeQuote::where([
                     'charge' => $charge,
                     'port_id' => $request->port_id,
-                    'calculation_type_id' => $localcharge['calculation_type_id'],
+                    //'calculation_type_id' => $localcharge['calculation_type_id'],
                     'currency_id' => $localcharge['currency_id'],
                     'quote_id' => $request->quote_id,
                     'type_id' => $request->type_id
@@ -477,14 +477,13 @@ class LocalChargeQuotationController extends Controller
             $previous_charge = LocalChargeQuote::where([
                 'charge' => $charge,
                 'port_id' => $request->port_id,
-                'calculation_type_id' => $localcharge['calculation_type']['id'],
+                //'calculation_type_id' => $localcharge['calculation_type']['id'],
                 'currency_id' => $localcharge['currency']['id'],
                 'quote_id' => $request->quote_id,
                 'type_id' => $request->type_id
             ])->first();
 
             if ($previous_charge) {
-
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->sumarize();
                 $previous_charge->totalize();

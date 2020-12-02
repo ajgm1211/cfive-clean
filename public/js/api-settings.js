@@ -25,6 +25,34 @@ $(document).on('change', '#enable_api', function() {
     });
 });
 
+$(document).on('change', '#status_api', function() {
+    var id = $(this).closest("td").find(".api_id").val();
+    var value = 0;
+    if ($(this).prop("checked") == true) {
+        value = 1;
+        $('#api-table').removeClass('hide');
+    } else {
+        $('#api-table').addClass('hide');
+    }
+    $.ajax({
+        type: 'GET',
+        url: '/api/status',
+        data: {
+            'status': value,
+            'company_user_id': $('#company_user_id').val(),
+            'id' : id,  
+        },
+        success: function(data) {
+            $('#api_integration_setting_id').val(data.data.id);
+            /*swal(
+                'Updated!',
+                'Api enabled successfully',
+                'success'
+            )*/
+        }
+    });
+});
+
 $(document).on('click', '.delete-api-integration', function() {
     var id = $(this).closest("td").find(".api_id").val();
     var theElement = $(this);

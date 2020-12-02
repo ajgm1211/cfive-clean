@@ -684,7 +684,7 @@ class ContractController extends Controller
         $contract->gp_container_id = $request->group_containerC;
         $contract->save();
 
-        $contract->ContractCarrierSyncSingle($request->carrierC);
+        $contract->ContractCarrierSyncSingle($request->carrierR);
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
