@@ -19,6 +19,7 @@ use App\SaleTermCode;
 use App\SaleTermV3;
 use App\Surcharge;
 use App\Container;
+use App\Http\Requests\StoreLocalChargeLclQuote;
 
 class LocalChargeQuotationController extends Controller
 {
@@ -493,7 +494,7 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function storeChargeLcl(Request $request)
+    public function storeChargeLcl(StoreLocalChargeLclQuote $request)
     {
         $quote = QuoteV2::findOrFail($request->quote_id);
 
