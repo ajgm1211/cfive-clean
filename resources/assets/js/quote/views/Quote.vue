@@ -104,13 +104,15 @@
                             ></Inland>
                         </b-tab>
 
-                        <b-tab title="Totals" @click="changeView('totals')">
+                        <!--<b-tab title="Totals" @click="changeView('totals')">
                             <Total v-if="totals"
                             :currentQuoteData="currentData"
                             :freights="freights"
                             :datalists="datalists"
+                            :actions="actions"
+                            @freightAdded="setInitialData"
                             ></Total>
-                        </b-tab>
+                        </b-tab>-->
 
                     </b-tabs>
                 </b-card>
@@ -392,6 +394,12 @@ export default {
                 component.inlands=false;
                 setTimeout(function() {
                     component.inlands=true
+                },100);
+            }
+            if(component.totals){
+                component.totals=false;
+                setTimeout(function() {
+                    component.totals=true
                 },100);
             }
         },

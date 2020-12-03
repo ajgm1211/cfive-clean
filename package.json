@@ -28,6 +28,7 @@
     "pusher-js": "^4.2.2",
     "vue-browser-geolocation": "^1.8.0",
     "vue-ckeditor5": "^0.5.0",
+    "vue-material": "^1.0.0-beta-15",
     "vue-multiselect": "^2.1.6",
     "vue-nav-tabs": "^0.5.7",
     "vue-router": "^3.1.6",

@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::put('update', 'ApiIntegrationController@update')->name('api.update');
     Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
+    Route::get('status', 'ApiIntegrationController@status')->name('api.status');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
@@ -193,6 +194,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
     Route::post('Store-duplicated-FromRq/contract-fcl/{id}', 'ContractsController@duplicatedContractFromRequestStore')->name('contract.duplicated.from.request.store');
     Route::get('duplicatedOC/contract-fcl/{id}/{request_id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth', 'role:administrator|data_entry']);
+    
+    
 });
 
 Route::prefix('Requests')->group(function () {
@@ -608,6 +611,9 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('update/chargeable/{id}', 'QuoteV2Controller@updateChargeable')->name('quotes-v2.update.chargeable');
     //Cost page
     Route::get('cost/page/{quote_id}', 'ExcelController@costPageQuote')->name('quotes-v2.cost.page');
+    // add Contract
+    Route::get('addContractV2', 'QuoteV2Controller@addContractWithModal')->name('quotesv2.addContract'); // with modal
+    Route::get('groupContainer/{group_id}', 'QuoteV2Controller@getGroupContainer')->name('quotesv2.getGroupContainer');
 });
 
 //Settings
@@ -1030,6 +1036,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
 
+    /** Search V2 **/
+    Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
@@ -1048,6 +1057,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
+    Route::get('api/quotes/{quote}/automatic_rate/totals/{autorate}', 'AutomaticRateController@retrieveTotals')->middleware('check_company:quote');
     Route::delete('api/quotes/automatic_rate/{autorate}/destroy', 'AutomaticRateController@destroy');
 
     /** Charge Routes**/
@@ -1071,7 +1081,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inland/{autoinland}/update', 'AutomaticInlandController@update');
     Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
     Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
-    Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieve');
+    Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieveTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/update', 'AutomaticInlandController@updateTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');
@@ -1181,6 +1191,9 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
 
     /** API Contracts Remarks EndPoints **/
     Route::post('{contract}/storeMedia', 'ContractController@storeMedia')->middleware('check_company:contract');
+
+    /** Add Contract Search blade  */
+    Route::post('storeSearch', 'ContractController@storeContractSearch')->name('search-add.contract');
     /** End Contract **/
 });
 
@@ -1315,3 +1328,10 @@ Route::group(['prefix' => 'provinces', 'middleware' => ['auth']], function () {
     Route::get('delete/{prov_id}', ['uses' => 'ProvinceController@destroy', 'as' => 'delete-prov']);
 });
 Route::resource('provinces', 'ProvinceController')->middleware('auth');
+
+
+Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
+    Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
+    
+});
+
