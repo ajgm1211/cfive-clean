@@ -172,7 +172,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         //Guard if
         if (count($rates) == 0) {
-            return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
+            return response()->json(['message' => 'No freight rates were found for this trade route'], 200);
         }
 
         foreach ($rates as $data) {
