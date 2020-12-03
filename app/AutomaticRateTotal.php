@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use App\Http\Traits\UtilTrait;
+use App\Http\Traits\QuoteV2Trait;
 
 class AutomaticRateTotal extends Model
 {
-    use UtilTrait;
+    use QuoteV2Trait;
 
     protected $casts = [
         'markups' => 'json',
