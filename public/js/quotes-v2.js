@@ -2742,10 +2742,10 @@ $(document).ready(function() {
     $("select[name='company_id_quote']").on('change', function() {
         var company_id = $(this).val();
         $("#contact_id").val('');
-        if ($("#m_select2_2_modal").val() != '0')
+        /*if ($("#m_select2_2_modal").val() != '0')
             $("#contact_id").prop('required', true);
         else
-            $("#contact_id").removeAttr('required');
+            $("#contact_id").removeAttr('required');*/
 
         $('#select2-contact_id-container').text('Please an option');
         if (company_id) {

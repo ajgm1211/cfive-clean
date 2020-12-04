@@ -1100,6 +1100,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     /** Local charges routes */
     Route::get('/api/quote/local/data/{quote}', 'LocalChargeQuotationController@harbors');
+    Route::get('/api/quote/localcharge/providers', 'LocalChargeQuotationController@providers');
     Route::get('/api/quote/localcharge/carriers/{quote}', 'LocalChargeQuotationController@carriers');
     Route::get('/api/quote/localcharge/saleterm', 'LocalChargeQuotationController@saleterms');
     Route::get('/api/quote/local/sale/charge/{id}', 'LocalChargeQuotationController@salecharges');
