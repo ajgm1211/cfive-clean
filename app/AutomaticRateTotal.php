@@ -49,7 +49,7 @@ class AutomaticRateTotal extends Model
         return $query->where('quote_id', $id);
     }
 
-    public function totalize($new_currency_id)
+    public function totalize($newCurrencyId)
     {
         //getting all data needed to calculate totals
         $quote = $this->quote()->first();
@@ -59,71 +59,67 @@ class AutomaticRateTotal extends Model
         if ($quote->type == 'FCL') {
             $equip = $quote->getContainerCodes($quote->equipment);
 
-            $equip_array = explode(',', $equip);
+            $equipArray = explode(',', $equip);
 
-            array_splice($equip_array, -1, 1);
+            array_splice($equipArray, -1, 1);
 
             $charges = $rate->charge()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
 
-            $ocean_freight = $rate->charge()->where('surcharge_id', null)->first();
+            $oceanFreight = $rate->charge()->where('surcharge_id', null)->first();
 
-            $this->update(['currency_id' => $new_currency_id]);
+            $this->update(['currency_id' => $newCurrencyId]);
 
             $currency = $this->currency()->first();
             
-            $usd = Currency::where('alphacode','USD')->first();
+            $totals = [];
 
-            $totals_usd = [];
-
-            foreach ($equip_array as $eq) {
-                $totals_usd['c' . $eq] = 0;
+            foreach ($equipArray as $eq) {
+                $totals['c' . $eq] = 0;
             }
 
             // adding all charges together
             foreach ($charges as $charge) {
-                $amount_array = json_decode($charge->amount);
-                $charge_currency = $charge->currency()->first();
-                foreach ($amount_array as $key => $value) {
-                    if ($charge_currency->alphacode != 'USD') {
-                        $charge_conversion = $charge_currency->rates;
-                        $value /= $charge_conversion;
-                        $value = round($value, 2);
-                    }
-                    $totals_usd[$key] += $value;
+                $amountObject = json_decode($charge->amount);
+                $chargeCurrency = $charge->currency()->first();
+                foreach($amountObject as $key=>$value){
+                    $amountArray[$key] = $value;
+                }
+                $amountArray = $this->convertToCurrency($chargeCurrency,$currency,$amountArray);
+                foreach($amountArray as $key=>$value){
+                    $totals[$key] += isDecimal($value,true);
                 }
             }
-
-            //converting to autorate currency
-            $totals_rate = $this->convertToCurrency($usd,$currency,$totals_usd);
 
             //adding autorate markups
             if ($this->markups != null) {
                 $markups = $this->markups;
                 foreach ($markups as $mark => $profit) {
-                    $clear_key = str_replace('m', 'c', $mark);
-                    $totals_rate[$clear_key] += $profit;
+                    $markups[$mark] = isDecimal($profit,true);
+                    $totals[str_replace('m', 'c', $mark)] += isDecimal($profit,true);
                 }
+            }else{
+                $markups = null;
             }
-
+            
             //adding ocean freight
-            if ($ocean_freight->amount != null) {
-                $freight_amount = json_decode($ocean_freight->amount);
+            if ($oceanFreight->amount != null) {
+                $freight_amount = json_decode($oceanFreight->amount);
                 foreach ($freight_amount as $fr => $am) {
-                    $totals_rate[$fr] += round($am, 2);
-                    $totals_rate[$fr] = isDecimal($totals_rate[$fr], true);
+                    $totals[$fr] += round($am, 2);
+                    $totals[$fr] = isDecimal($totals[$fr], true);
                 }
             }
 
-            $totals_json = json_encode($totals_rate);
+            $totalsJson = json_encode($totals);
 
-            $this->update(['totals' => $totals_json]);
-            $rate->update(['total' => $totals_json]);
+            $this->update(['totals' => $totalsJson,'markups' => $markups]);
+            $rate->update(['total' => $totalsJson]);
 
         } else if ($quote->type == 'LCL') {
 
             $charges = $rate->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
 
-            $ocean_freight = $rate->charge_lcl_air()->where('surcharge_id', null)->first();
+            $oceanFreight = $rate->charge_lcl_air()->where('surcharge_id', null)->first();
 
             $this->update(['currency_id' => $new_currency_id]);
 
@@ -163,9 +159,9 @@ class AutomaticRateTotal extends Model
             }
 
             //adding ocean freight
-            $freight_amount_per_unit = $ocean_freight->price_per_unit;
-            $freight_amount = $ocean_freight->total;
-            $total_units = $ocean_freight->units;
+            $freight_amount_per_unit = $oceanFreight->price_per_unit;
+            $freight_amount = $oceanFreight->total;
+            $total_units = $oceanFreight->units;
             $totals_usd['total'] += $freight_amount;
             $totals_usd['per_unit'] += $freight_amount_per_unit;
             $totals_usd['total'] = round($totals_usd['total'], 2);
