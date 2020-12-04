@@ -4511,7 +4511,11 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if($weight < 1)
+                        $weightP = 1;
+                    else
+                        $weightP = $weight ;
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
 
@@ -4551,7 +4555,11 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if($weight < 1)
+                        $weightP = 1;
+                    else
+                        $weightP = $weight ;
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
                 // MARKUPS
