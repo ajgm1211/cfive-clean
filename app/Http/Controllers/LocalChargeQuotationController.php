@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\QuoteV2;
 use App\AutomaticRate;
+use App\Carrier;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Harbor;
@@ -17,6 +18,7 @@ use App\SaleTermCode;
 use App\SaleTermV3;
 use App\Surcharge;
 use App\Container;
+use App\Provider;
 
 class LocalChargeQuotationController extends Controller
 {
@@ -31,14 +33,14 @@ class LocalChargeQuotationController extends Controller
         $origin_ports = $quote->origin_harbor->map(function ($value) use ($quote) {
             $value['type'] = 1;
             $value['quote_id'] = $quote->id;
-            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id'=> $value->id])->count();
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id' => $value->id])->count();
             return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
         });
 
         $destination_ports = $quote->destination_harbor->map(function ($value) use ($quote) {
             $value['type'] = 2;
             $value['quote_id'] = $quote->id;
-            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id'=> $value->id])->count();
+            $value['charges'] = LocalChargeQuote::where(['quote_id' => $quote->id, 'port_id' => $value->id])->count();
             return $value->only(['id', 'display_name', 'type', 'quote_id', 'charges']);
         });
 
@@ -52,6 +54,34 @@ class LocalChargeQuotationController extends Controller
     }
 
     /**
+     * get providers
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function providers()
+    {
+        $carriers = Carrier::all();
+        $providers = Provider::all();
+        
+        $carriers = $carriers->map(function ($value) {
+            return $value->only(['id', 'name']);
+        });
+
+        $providers = $providers->map(function ($value) {
+            return $value->only(['id', 'name']);
+        });
+
+        $data = $carriers->merge($providers)->unique();
+
+        $data = $data->sortByDesc('charges');
+
+        $collection = $data->values()->all();
+
+        return $collection;
+    }
+
+    /**
      * carriers
      *
      * @param  mixed $request
@@ -59,10 +89,25 @@ class LocalChargeQuotationController extends Controller
      */
     public function carriers(QuoteV2 $quote)
     {
+        $providers = Provider::all();
 
-        $carriers = $quote->carrier->unique('id')->values();
+        $carriers = $quote->carrier->map(function ($value) {
+            return $value->only(['id', 'name']);
+        });
 
-        return $carriers;
+        $carriers = $carriers->unique('id')->values();
+
+        $providers = $providers->map(function ($value) {
+            return $value->only(['id', 'name']);
+        });
+
+        $data = $carriers->merge($providers)->unique();
+
+        $data = $data->sortByDesc('charges');
+
+        $collection = $data->values()->all();
+
+        return $collection;
     }
 
     /**
@@ -218,6 +263,7 @@ class LocalChargeQuotationController extends Controller
                         'charge' => $charge,
                         'surcharge_id' => $localcharge['surcharge_id'],
                         'calculation_type_id' => $localcharge['calculation_type_id'],
+                        'provider_name' => $localcharge['provider_name'],
                         'currency_id' => $localcharge['currency_id'],
                         'port_id' => $request->port_id,
                         'quote_id' => $request->quote_id,
@@ -234,6 +280,7 @@ class LocalChargeQuotationController extends Controller
                     'charge' => $charge,
                     'surcharge_id' => $localcharge['surcharge_id'],
                     'calculation_type_id' => $localcharge['calculation_type_id'],
+                    'provider_name' => $localcharge['provider_name'],
                     'currency_id' => $localcharge['currency_id'],
                     'port_id' => $request->port_id,
                     'quote_id' => $request->quote_id,
@@ -259,7 +306,7 @@ class LocalChargeQuotationController extends Controller
         LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
 
         $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
-
+        
         foreach ($sale_charges as $sale_charge) {
 
             $local_charge = LocalChargeQuote::create([
@@ -464,7 +511,8 @@ class LocalChargeQuotationController extends Controller
             'surcharge_id' => $request->charges['surcharge']['id'],
             'type_id' => $request->type_id,
             'amount' => $this->removeCommas($request->charges['price']),
-            'markups' => $this->removeCommas($request->charges['markup'])
+            'markups' => $this->removeCommas($request->charges['markup']),
+            'provider_name' => $request->charges['carrier']['name'],
         ]);
 
         $localcharge = $request->charges;
@@ -494,6 +542,7 @@ class LocalChargeQuotationController extends Controller
                     'charge' => $charge,
                     'surcharge_id' => $localcharge['surcharge']['id'],
                     'calculation_type_id' => $localcharge['calculation_type']['id'],
+                    'provider_name' => $localcharge['carrier']['name'],
                     'currency_id' => $localcharge['currency']['id'],
                     'port_id' => $request->port_id,
                     'quote_id' => $request->quote_id,
@@ -510,6 +559,7 @@ class LocalChargeQuotationController extends Controller
                 'charge' => $charge,
                 'surcharge_id' => $localcharge['surcharge']['id'],
                 'calculation_type_id' => $localcharge['calculation_type']['id'],
+                'provider_name' => $localcharge['carrier']['name'],
                 'currency_id' => $localcharge['currency']['id'],
                 'port_id' => $request->port_id,
                 'quote_id' => $request->quote_id,
