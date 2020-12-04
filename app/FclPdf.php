@@ -4,7 +4,7 @@ namespace App;
 
 use App\AutomaticRate;
 use App\Container;
-use App\Http\Traits\UtilTrait;
+use App\Http\Traits\QuoteV2Trait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\AutomaticRateTotal;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class FclPdf
 {
-    use UtilTrait;
+    use QuoteV2Trait;
 
     public function generate($quote)
     {
@@ -159,6 +159,14 @@ class FclPdf
 
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                    $quote = $item->quote()->first();
+
+                    $inlandInputCurrency = $item->currency()->first();
+                    $inlandOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+
+                    $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
+                    $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
 
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;

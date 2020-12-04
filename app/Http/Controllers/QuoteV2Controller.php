@@ -55,6 +55,7 @@ use App\RateLcl;
 use App\RemarkCountry;
 use App\RemarkHarbor;
 use App\SaleTermV2;
+use App\FreightMarkup;
 
 //LCL
 use App\Schedule;
@@ -2218,6 +2219,28 @@ class QuoteV2Controller extends Controller
                         $service = null;
                     }
 
+                    if($quote->price_id){
+                        $priceLevelMarkups = FreightMarkup::where([['price_id',$quote->price_id],['fixed_markup','!=','0']])->orWhere([['price_id',$quote->price_id],['percent_markup','!=','0']])->first();
+                        
+                            $input = Currency::where('id',$priceLevelMarkups->currency)->first();
+    
+                            $output = Currency::where('id',$info_D->currency->id)->first();
+    
+                            $priceLevelMarkupsArray = [];
+    
+                            foreach($rateO->markups as $key=>$value){
+                                $priceLevelMarkupsArray[$key] = $value;
+                            }
+                        if($priceLevelMarkups->fixed_markup!=0){
+                            $priceLevelMarkupsFinal = $this->convertToCurrency($input,$output,$priceLevelMarkupsArray);
+                        }else{
+                            $priceLevelMarkupsFinal = [];
+                            foreach($priceLevelMarkupsArray as $key=>$price){
+                                $priceLevelMarkupsFinal[$key] = isDecimal($price,true);
+                            }   
+                        }
+                    }
+
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT,'schedule_type'=>$service]);
 
                     $rate = AutomaticRate::create($request->all());
@@ -2240,7 +2263,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->destination_port_id = $rate->destination_port_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
-                    $rateTotals->markups = null;
+                    $rateTotals->markups = $priceLevelMarkupsFinal;
                     $rateTotals->save();
                     $rateTotals->totalize($info_D->currency->id);
 
@@ -2740,6 +2763,21 @@ class QuoteV2Controller extends Controller
         }
         return $rateC;
     }
+
+    public function getRatesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->first();
+        $changeCurrency = Currency::where('id', '=', $typeCurrency)->first();
+        $inDolar = $rates->rates;
+       
+        $inChange = $changeCurrency->rates;
+
+        $rateC = $inDolar / $inChange;
+       
+        return $rateC;
+    }
+
+
 
     public function search()
     {
@@ -3295,9 +3333,13 @@ class QuoteV2Controller extends Controller
                 $arregloDestinyG = array();
 
                 $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
-                $rateFreight = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
+
+                //ACACAMBIOS
+
+                $rateFreight = $this->getRatesCurrency($data->currency->id, $idCurrency);
+
                 // Rates
-                $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers, $rateFreight);
+                $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers,  $rateFreight);
 
                 $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSum']);
                 //dd($arregloRateSum);
@@ -3426,10 +3468,13 @@ class QuoteV2Controller extends Controller
                                 if ($local->typedestiny_id == '3') {
                                     $band = false;
                                     //Se ajusta el calculo para freight tomando en cuenta el rate currency
-                                    $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                                    //$rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                                    $rateMount_Freight = $this->getRatesCurrency($local->currency->id, $data->currency->id);
                                     $localParams['typeCurrency'] = $data->currency->alphacode;
                                     $localParams['idCurrency'] = $data->currency->id;
                                     //Fin Variables
+
+                                   // dd($rateMount_Freight);
 
                                     foreach ($containers as $cont) {
 
@@ -3439,13 +3484,16 @@ class QuoteV2Controller extends Controller
                                             $montoOrig = $local->ammount;
                                             $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
                                             $monto = $local->ammount / $rateMount_Freight;
+                                           
                                             $monto = number_format($monto, 2, '.', '');
                                             $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                            $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                            $markupGe = $this->localMarkupsTrait($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id,$rateMount_Freight);
                                             $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
+                                            //dd($markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                           
                                             $band = true;
                                         }
                                     }
@@ -3570,7 +3618,8 @@ class QuoteV2Controller extends Controller
                                 if ($chargesFreight != null) {
                                     if ($global->typedestiny_id == '3') {
 
-                                        $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        //$rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        $rateMount_Freight = $this->getRatesCurrency($global->currency->id, $data->currency->id);
                                         $globalParams['typeCurrency'] = $data->currency->alphacode;
                                         $globalParams['idCurrency'] = $data->currency->id;
                                         //Fin Variables
@@ -3589,10 +3638,12 @@ class QuoteV2Controller extends Controller
                                                 $arregloFreightG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
                                                 $arregloFreightG = array_merge($arregloFreightG, $markupGe);
                                                 $collectionFreight->push($arregloFreightG);
-                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'] / $rateMount_Freight;
+                                                
                                                 $band = true;
                                             }
                                         }
+                                        
                                         if ($band) {
                                             if (in_array($global->calculationtype_id, $arrayContainers)) {
                                                 $valores = $this->asociarPerCont($global->calculationtype_id);
@@ -3716,27 +3767,32 @@ class QuoteV2Controller extends Controller
                     $typeCurrency = $data->currency->alphacode;
                     $idCurrency = $data->currency->id;
 
-                    $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    //$rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    $rateTot = $this->getRatesCurrency($data->currency->id, $idCurrency);
                 } else {
-                    $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    //$rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    $rateTot = $this->getRatesCurrency($data->currency->id, $idCurrency);
                 }
-
+                
                 foreach ($containers as $cont) {
 
+                   // dd($totalesCont['40HC']['tot_40HC_F'] + $arregloRateSum['c40HC'] );
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
-
+                   // dd($totalesCont2,$totalesCont['40HC']['tot_40HC_F']);
                     $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
 
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                     $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] / $rateTot;
+                 
                     // dd($totalesCont[$cont->code]['tot_' . $cont->code . '_F']);
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
+                //dd($totalesCont);
 
                 //Contrato Futuro
                 $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
@@ -3917,7 +3973,7 @@ class QuoteV2Controller extends Controller
 
     public function localMarkupsFCL($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency)
     {
-
+       
         if ($localPercentage != 0) {
 
             // Monto original
