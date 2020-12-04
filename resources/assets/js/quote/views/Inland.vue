@@ -655,56 +655,26 @@ export default {
         setPorts() {
             let component = this;
 
-            component.freights.forEach(function (freight) {
-                component.datalists.harbors.forEach(function (harbor) {
-                    let portMatch = false;
-
-                    if (freight.origin_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Origin",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
-                    }
-                    if (freight.destination_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Destination",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
+            component.inlandActions
+                .harbors(component.$route)
+                .then((response) => {
+                    response.data.forEach(function(port){
+                        port.flag = component.imageFolder
+                                .concat(port.code.slice(0, 2).toLowerCase())
+                                .concat(".svg");
+                        component.port_options.push(port)
+                    })
+                    if (component.currentPort == "") {
+                        component.currentPort = component.port_options[0];
                     }
 
-                    if (portMatch) {
-                        let inOptions = false;
+                    component.currentAddress = [];
 
-                        component.port_options.forEach(function (opt) {
-                            if (harbor_opt["name"] == opt.name) {
-                                inOptions = true;
-                            }
-                        });
-
-                        if (!inOptions) {
-                            component.port_options.push(harbor_opt);
-                        }
-                    }
-                });
+                    component.loaded = true;
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
             });
-
-            if (component.currentPort == "") {
-                component.currentPort = component.port_options[0];
-            }
-
-            component.currentAddress = [];
-
-            component.loaded = true;
         },
 
         setAddresses(newAddress = null) {
