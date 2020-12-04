@@ -149,6 +149,7 @@ class LocalChargeQuotationLclController extends Controller
                 'charge' => $charge,
                 'surcharge_id' => $localcharge['surcharge_id'],
                 'calculation_type_id' => $localcharge['calculation_type_id'],
+                'provider_name' => $localcharge['provider_name'],
                 'currency_id' => $localcharge['currency_id'],
                 'port_id' => $request->port_id,
                 'quote_id' => $request->quote_id,
@@ -217,6 +218,7 @@ class LocalChargeQuotationLclController extends Controller
         ChargeLclAir::create([
             'automatic_rate_id' => $rate->id,
             'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'provider_name' => $request->charges['carrier']['name'],
             'currency_id' => $request->charges['currency']['id'],
             'surcharge_id' => $request->charges['surcharge']['id'],
             'type_id' => $request->type_id,
@@ -233,6 +235,7 @@ class LocalChargeQuotationLclController extends Controller
             'charge' => $request->charges['surcharge']['name'],
             'surcharge_id' => $request->charges['surcharge']['id'],
             'calculation_type_id' => $request->charges['calculation_type']['id'],
+            'provider_name' => $request->charges['carrier']['name'],
             'currency_id' => $request->charges['currency']['id'],
             'port_id' => $request->port_id,
             'quote_id' => $request->quote_id,
