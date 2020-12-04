@@ -471,6 +471,10 @@ export default {
         search(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
+        },
+        harbors(route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inlands/harbors`, {});
         }
     },
     automaticinlandslcl: {
