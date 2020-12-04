@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LocalChargeQuoteLcl extends Model
 {
-    protected $fillable = ['charge', 'calculation_type_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id'];
+    protected $fillable = ['charge', 'calculation_type_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name'];
 
     public function quotev2()
     {
