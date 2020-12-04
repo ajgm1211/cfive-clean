@@ -407,6 +407,7 @@
                                         v-model="
                                             localcharge.automatic_rate.carrier
                                         "
+                                        v-if="localcharge.provider_name == null"
                                         :options="carriers"
                                         :multiple="false"
                                         :show-labels="false"
@@ -426,6 +427,12 @@
                                             )
                                         "
                                     ></multiselect>
+                                    <b-form-input
+                                        v-if="localcharge.provider_name != null"
+                                        v-model="localcharge.provider_name"
+                                        class="q-input"
+                                        :disabled="true"
+                                    ></b-form-input>
                                 </b-td>
 
                                 <b-td
