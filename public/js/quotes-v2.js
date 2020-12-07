@@ -4007,9 +4007,12 @@ $(document).on('click', '#savecompany', function() {
     var $element = $('#addContactModal');
 
     var $buss = $('.business_name_input').val();
+    var $phone = $('.phone_input').val();
+    var $email = $('.email_input').val();
+    var $tax_number = $('.tax_number_input').val();
 
 
-    if ($buss != '') {
+    if ($buss != '' && $phone != '' && $email != '' && $tax_number != '') {
         $.ajax({
             type: 'POST',
             url: '/companies',
@@ -4018,7 +4021,7 @@ $(document).on('click', '#savecompany', function() {
                 'phone': $('.phone_input').val(),
                 'address': $('.address_input').val(),
                 'email': $('.email_input').val(),
-
+                'tax_number':$('.tax_number_input').val(),
             },
             success: function(data) {
                 $.ajax({
@@ -4060,7 +4063,7 @@ $(document).on('click', '#savecompany', function() {
     } else {
         swal(
             'Sorry!',
-            'business name is empty',
+            'All fields are required',
             'warning'
         )
 
