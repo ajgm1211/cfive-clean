@@ -1744,4 +1744,26 @@ trait QuoteV2Trait
 
         return false;
     }
+
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, Array $amounts)
+    {    
+        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+            $inputConversion = $fromCurrency->rates;
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $inputConversion;
+                $amounts[$container] = isDecimal($convertedPrice,true);
+            }
+            if($toCurrency->alphacode=='USD'){
+                return $amounts;
+            }else{
+                $outputConversion = $toCurrency->rates;
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice,true);
+                }
+            }
+        }
+
+        return $amounts;
+    }
 }
