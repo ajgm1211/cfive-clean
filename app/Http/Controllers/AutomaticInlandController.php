@@ -70,7 +70,8 @@ class AutomaticInlandController extends Controller
         $autoDistance = $request->input('distance');
 
         foreach($equip_array as $eq){
-            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric';
+            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
+            $vdata['markups_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
         }
         
         $validate = $request->validate($vdata);
@@ -84,7 +85,11 @@ class AutomaticInlandController extends Controller
             }else{
                 $inland_rates['c'.$eq] = 0.00;
             }
-            $inland_markup['m'.$eq] = 0.00;
+            if(isset($validate['markups_'.$eq])){
+                $inland_markup['m'.$eq] = $validate['markups_'.$eq]; 
+            }else{
+                $inland_markup['m'.$eq] = 0.00;
+            }
         }
         
         $rates_json = json_encode($inland_rates);
@@ -130,7 +135,7 @@ class AutomaticInlandController extends Controller
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
-            'provider'=> 'old field',
+            'provider'=> 'Inland',
             'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
@@ -148,6 +153,7 @@ class AutomaticInlandController extends Controller
         $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
 
         if($totals == null){
+            
             $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
 
             $totals = AutomaticInlandTotal::create([
@@ -222,7 +228,7 @@ class AutomaticInlandController extends Controller
 
         foreach($form_keys as $fkey){
             if(strpos($fkey,'rates') !== false){
-                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
+                $data += $request->validate([$fkey=>'sometimes|numeric|nullable|not_regex:/[0-9]*,[0-9]*/']);
             }
         }
 
@@ -258,6 +264,10 @@ class AutomaticInlandController extends Controller
             }
         }
 
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$autoinland->port_id],['inland_address_id',$autoinland->inland_address_id]])->first();
+
+        $totals->totalize();
+        
         return new AutomaticInlandResource($autoinland);
     }
 
@@ -345,9 +355,9 @@ class AutomaticInlandController extends Controller
         $markups = [];
         
         foreach($data as $key=>$value){
-            if($value==null){$value=0;}
+            if($value==null){$value=isDecimal(0,true);}
             if($key!='profits_currency'){
-                $markups['m'.str_replace('profits_','',$key)] = $value;
+                $markups['m'.str_replace('profits_','',$key)] = isDecimal($value,true);
             }
         }
 
@@ -360,7 +370,7 @@ class AutomaticInlandController extends Controller
         $total->totalize();
     }
 
-    public function retrieve(QuoteV2 $quote, $combo)
+    public function retrieveTotals(QuoteV2 $quote, $combo)
     {   
         $combo_array = explode(';',$combo);
 

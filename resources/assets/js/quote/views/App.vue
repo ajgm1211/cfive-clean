@@ -71,6 +71,7 @@ export default {
                         return this.setPortList(value);
                     },
                     filterIsOpen: false,
+                    collapse: "Show origins",
                 },
                 {
                     key: "destiny",
@@ -79,6 +80,7 @@ export default {
                         return this.setPortList(value);
                     },
                     filterIsOpen: false,
+                    collapse: "Show destinations",
                 },
                 {
                     key: "user_id",
