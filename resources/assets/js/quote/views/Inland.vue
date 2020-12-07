@@ -314,6 +314,11 @@
                                             placeholder="Insert rate"
                                             @blur="totalizeModalInlands"
                                         ></b-form-input>
+                                        <b-form-input
+                                            v-model="inlandAdd.profit"
+                                            placeholder="Insert profit"
+                                            @blur="totalizeModalInlands"
+                                        ></b-form-input>
                                     </b-td>
 
                                     <b-td
@@ -957,6 +962,7 @@ export default {
                     address: "",
                     type: "",
                     total: "",
+                    profit: "",
                     provider_id: {},
                     currency_id: {},
                     price: {},
@@ -1037,14 +1043,15 @@ export default {
                         });
                     }else if(component.currentQuoteData['type']=='LCL'){
                         let rates_num = Number(inlandAdd.total);
+                        let profit_num = Number(inlandAdd.profit);
                         let totals = Number;
 
                         if (inlandAddCurrency == clientCurrency) {
-                                totals = rates_num;
+                                totals = rates_num + profit_num;
                         } else {
                             let price_usd = Number;
 
-                            price_usd = rates_num / inlandAddConversion;
+                            price_usd = (rates_num + profit_num) / inlandAddConversion;
 
                             totals = price_usd * clientConversion;
                         }
