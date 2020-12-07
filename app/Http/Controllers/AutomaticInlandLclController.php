@@ -22,7 +22,6 @@ use GoogleMaps;
 class AutomaticInlandLclController extends Controller
 {
     
-
     public function list(Request $request, QuoteV2 $quote,$combo)
     {   
         $combo_array = explode(';',$combo);
@@ -58,7 +57,8 @@ class AutomaticInlandLclController extends Controller
             'charge' => 'nullable|sometimes',
             'provider_id' => 'nullable',
             'currency_id' => 'required',
-            'total' => 'sometimes|nullable'
+            'total' => 'sometimes|nullable',
+            'profit' => 'sometimes|nullable'
         ]);
         
         $type = $request->input('type');
@@ -104,7 +104,7 @@ class AutomaticInlandLclController extends Controller
         $inland = AutomaticInlandLclAir::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
-            'provider'=> 'old field',
+            'provider'=> 'Inland',
             'provider_id' => count($vdata['provider_id'])==0 ? null : $vdata['provider_id']['id'],
             'currency_id' => $vdata['currency_id']['id'],
             'port_id' => $port_id,
@@ -114,6 +114,7 @@ class AutomaticInlandLclController extends Controller
             'distance' => $distance,
             'contract' => 1, 
             'total' => $vdata['total'],
+            'markup' => $vdata['profit'],
             'validity_start' => $quote->validity_start,
             'validity_end' => $quote->validity_end,
         ]);
@@ -209,6 +210,10 @@ class AutomaticInlandLclController extends Controller
                 }
             }
         }
+
+        $totals = $autoinland->inland_address()->first()->inland_totals()->first();
+
+        $totals->totalize();
 
         return new AutomaticInlandLclAirResource($autoinland);
     }

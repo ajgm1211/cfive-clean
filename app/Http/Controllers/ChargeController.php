@@ -106,7 +106,7 @@ class ChargeController extends Controller
 
         foreach($data as $key=>$value){
             if(isset($charge->$key) || $charge->$key==null){
-                if(strpos($key,'_id')!==false){
+                if(strpos($key,'_id')!==false && $value['id']!=null){
                     $charge->update([$key=>$value['id']]);
                 }else{
                     $charge->update([$key=>$value]);
