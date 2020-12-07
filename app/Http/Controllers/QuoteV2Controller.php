@@ -2139,7 +2139,6 @@ class QuoteV2Controller extends Controller
             if ($typeText == 'LCL' || $typeText == 'AIR') {
                 $input = Input::all();
                 $quantity = array_values(array_filter($input['quantity']));
-                //dd($input);
                 $type_cargo = array_values(array_filter($input['type_load_cargo']));
                 $height = array_values(array_filter($input['height']));
                 $width = array_values(array_filter($input['width']));
@@ -2220,7 +2219,13 @@ class QuoteV2Controller extends Controller
                     }
 
                     if($quote->price_id){
-                        $priceLevelMarkups = FreightMarkup::where([['price_id',$quote->price_id],['fixed_markup','!=','0']])->orWhere([['price_id',$quote->price_id],['percent_markup','!=','0']])->first();
+                        $priceLevelMarkups = FreightMarkup::where([
+                            ['price_id',$quote->price_id],
+                            ['fixed_markup','!=','0'],
+                            ['price_type_id',1]])->orWhere([
+                                ['price_id',$quote->price_id],
+                                ['percent_markup','!=','0'],
+                                ['price_type_id',1]])->first();
                         
                             $input = Currency::where('id',$priceLevelMarkups->currency)->first();
     
@@ -2853,8 +2858,6 @@ class QuoteV2Controller extends Controller
         $destA['ocultarDestA'] = 'hide';
         $destA['ocultarDestComb'] = '';
 
-        //dd($origen);
-
         return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown', 'group_containerC', 'carrierC', 'directionC', 'harborsR','surchargesS','calculationTypeS'));
     }
 
@@ -2917,8 +2920,6 @@ class QuoteV2Controller extends Controller
         }
 
         $address = $request->input('origin_address') . " " . $request->input('destination_address');
-
-        //dd($request->all());
 
         //resquest completo del form
         $form = $request->all();
@@ -3342,7 +3343,6 @@ class QuoteV2Controller extends Controller
                 $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers,  $rateFreight);
 
                 $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSum']);
-                //dd($arregloRateSum);
                 $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
                 $arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
                 $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
@@ -3474,8 +3474,6 @@ class QuoteV2Controller extends Controller
                                     $localParams['idCurrency'] = $data->currency->id;
                                     //Fin Variables
 
-                                   // dd($rateMount_Freight);
-
                                     foreach ($containers as $cont) {
 
                                         $name_arreglo = 'array' . $cont->code;
@@ -3490,7 +3488,6 @@ class QuoteV2Controller extends Controller
                                             $markupGe = $this->localMarkupsTrait($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id,$rateMount_Freight);
                                             $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
-                                            //dd($markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
                                            
@@ -3671,7 +3668,6 @@ class QuoteV2Controller extends Controller
                 }
 
                 if (!empty($collectionOrigin)) {
-                    //dd($collectionOrigin);
                     $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
                 }
 
@@ -3776,9 +3772,7 @@ class QuoteV2Controller extends Controller
                 
                 foreach ($containers as $cont) {
 
-                   // dd($totalesCont['40HC']['tot_40HC_F'] + $arregloRateSum['c40HC'] );
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
-                   // dd($totalesCont2,$totalesCont['40HC']['tot_40HC_F']);
                     $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
 
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
@@ -3786,13 +3780,11 @@ class QuoteV2Controller extends Controller
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] / $rateTot;
                  
-                    // dd($totalesCont[$cont->code]['tot_' . $cont->code . '_F']);
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
                     $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                 }
-                //dd($totalesCont);
 
                 //Contrato Futuro
                 $contratoFuturo = $this->contratoFuturo($data->contract->validity, $dateSince, $data->contract->expire, $dateUntil);
@@ -3801,7 +3793,6 @@ class QuoteV2Controller extends Controller
                 // INLANDS
 
                 $data->setAttribute('inlandDestiny', $inlandDestiny->where('port_id', $data->destiny_port));
-                //   dd($inlandDestiny);
                 $data->setAttribute('inlandOrigin', $inlandOrigin->where('port_id', $data->origin_port));
                 $data->setAttribute('typeCurrency', $typeCurrency);
 
@@ -4277,8 +4268,6 @@ class QuoteV2Controller extends Controller
         // Traer cantidad total de paquetes y pallet segun sea el caso
         $package_pallet = $this->totalPalletPackage($request->input('total_quantity'), $request->input('cargo_type'), $request->input('type_load_cargo'), $request->input('quantity'));
 
-        //dd($package_pallet);
-
         $incoterm = Incoterm::pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
@@ -4514,8 +4503,6 @@ class QuoteV2Controller extends Controller
         })->get();
 
         foreach ($arreglo as $data) {
-
-            //dd($arreglo);
 
             $tt = $data->transit_time;
             $va = $data->via;
@@ -6950,7 +6937,6 @@ class QuoteV2Controller extends Controller
             $cargo_type_id = $form->cargo_type;
             $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
-            //dd($input);
             $type_cargo = array_values(array_filter($form->type_load_cargo));
             $height = array_values(array_filter($form->height));
             $width = array_values(array_filter($form->width));
@@ -6999,6 +6985,30 @@ class QuoteV2Controller extends Controller
 
                     $rate = AutomaticRate::create($request->all());
 
+                    if($quote->price_id){
+                        $priceLevelMarkups = FreightMarkup::where([
+                            ['price_id',$quote->price_id],
+                            ['fixed_markup','!=','0'],
+                            ['price_type_id',2]])->orWhere([
+                                ['price_id',$quote->price_id],
+                                ['percent_markup','!=','0'],
+                                ['price_type_id',2]])->first();
+                        
+                        $input = Currency::where('id',$priceLevelMarkups->currency)->first();
+
+                        $output = Currency::where('id',$info_D->currency->id)->first();
+
+                        if($priceLevelMarkups->fixed_markup!=0){
+                            $priceLevelMarkupsAmount = Array($priceLevelMarkups->fixed_markup);
+                            $priceLevelMarkupsFinal = $this->convertToCurrency($input,$output,$priceLevelMarkupsAmount);
+                            $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0],true);
+                        }else{
+                            $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
+                            $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal/100);
+                            $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal,true);
+                        }
+                    }
+
                     $oceanFreight = new ChargeLclAir();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
@@ -7007,7 +7017,7 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->units = $rateO->cantidad;
                     $oceanFreight->price_per_unit = $rateO->price;
                     $oceanFreight->total = $rateO->subtotal;
-                    $oceanFreight->markup = $rateO->markup;
+                    $oceanFreight->markup = $priceLevelMarkupsFinal;
                     $oceanFreight->currency_id = $rateO->idCurrency;
                     $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
@@ -7137,7 +7147,6 @@ class QuoteV2Controller extends Controller
                 }
 
                 // CHARGES DESTINY
-                //dd($info_D->localDest);
                 foreach ($info_D->localDest as $localdestiny) {
 
                     foreach ($localdestiny as $localD) {
@@ -7290,7 +7299,6 @@ class QuoteV2Controller extends Controller
         $nameFile = str_replace([' '], '_', $now . '_quotes');
         Excel::create($nameFile, function ($excel) use ($nameFile, $quotes) {
             $excel->sheet('Quotes', function ($sheet) use ($quotes) {
-                //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
                     $cells->setFontColor('#ffffff');
