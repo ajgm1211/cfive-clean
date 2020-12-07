@@ -19,6 +19,10 @@
         @include('quote.pdf.partials.header')
         <!-- DETAILS -->
         @include('quote.pdf.partials.details_fcl')
+        <!-- TOTALS -->
+        @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
+            @include('quote.pdf.partials.totals')
+        @endif
         <!-- FREIGHTS -->
         @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
             @include('quote.pdf.partials.freights_fcl')
@@ -29,12 +33,8 @@
         @include('quote.pdf.partials.remarks')
         <!-- ORIGIN -->
         @include('quote.pdf.partials.origins_fcl')
-        <!-- INLANDS ORIGIN-->
-        @include('quote.pdf.partials.inlands_fcl_origin')
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
-        <!-- INLANDS DESTINY-->
-        @include('quote.pdf.partials.inlands_fcl_destination')
         <!-- LOCALCHARGE REMARKS -->
         @include('quote.pdf.partials.localcharge_remarks')
         <!-- TERMS -->
