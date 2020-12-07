@@ -72,6 +72,7 @@ class QuotationResource extends JsonResource
             'client_currency' => $this->user()->first()->companyUser()->first()->currency()->first(),
             'origin' => $origin_array ?? '--',
             'destiny' => $destiny_array ?? '--',
+            'decimals' => $this->company_user()->first()->decimals,
         ];
     }
 }

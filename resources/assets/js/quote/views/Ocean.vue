@@ -241,7 +241,7 @@ export default {
                     trackby: "name",
                     placeholder: "Select service",
                     colClass: "col-lg-2",
-                    options: "schedule_types",
+                    options: "destination_types",
                 },
                 via: {
                     label: "VIA",
@@ -299,6 +299,7 @@ export default {
             currentChargeData: {},
             modalFreight: {},
             ids_selected: [],
+            pdfOptions: {},
             showCarrier: true,
             allIn: true,
 
@@ -319,9 +320,9 @@ export default {
     },
     created() {
         if(typeof this.currentQuoteData.pdf_options == "string"){
-            var pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
+            this.pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
         }else{
-            var pdfOptions = this.currentQuoteData.pdf_options;
+            this.pdfOptions = this.currentQuoteData.pdf_options;
         }
 
         this.setTableFields();
@@ -332,14 +333,14 @@ export default {
         
         this.setFreightData();
 
-        this.allIn = pdfOptions['allIn'];
+        this.allIn = this.pdfOptions['allIn'];
 
-        this.showCarrier = pdfOptions['showCarrier'];
+        this.showCarrier = this.pdfOptions['showCarrier'];
     },
     watch: {
         quoteLanguage: function(newVal,oldVal) {this.setRemarksField(newVal);},
 
-        freights: function() {this.setFreightData();},
+        freights: function() {this.setFreightData();}
     },
     methods: {
         showModal(modal) {
@@ -389,7 +390,6 @@ export default {
                 let id = this.$route.params.id;
 
                 component.$emit("freightAdded",id)
-
             }
         },
 
@@ -537,17 +537,15 @@ export default {
         },
 
         deleteFreight(id){
+            let quote_id = this.$route.params.id;
+            let component = this;
+
             actions.automaticrates
                 .delete(id)
                 .then( ( response ) => {
-                    this.setFreightData();
+                    this.$emit("freightAdded",quote_id)
                 })
-                    .catch(( data ) => {
-                });
-
-            let quote_id = this.$route.params.id;
-
-            this.$emit("freightAdded",quote_id)
+                .catch(( data ) => {});
         },
 
         updatePdfOptions(){
@@ -556,6 +554,8 @@ export default {
                 {
                     "allIn" : this.allIn,
                     "showCarrier" : this.showCarrier,
+                    "showTotals": this.pdfOptions['showTotals'],
+                    "totalsCurrency": this.pdfOptions['totalsCurrency'],
                 }
             };
             

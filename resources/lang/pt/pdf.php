@@ -55,4 +55,6 @@ return [
     "inland" => "Frete terrestre",
     "provider" => "Fornecedor",
     "distance" => "Distância",
+    "ocean_freight" => "Ocean freight",
+    "totals" => "Totais",
 ];
