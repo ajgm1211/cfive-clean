@@ -108,11 +108,11 @@ class AutomaticInlandTotal extends Model
 
             foreach($inlands as $inland){
                 $inlandCharges[0] = $inland->total;
-                $inland_currency = $inland->currency()->first();
+                $inlandCurrency = $inland->currency()->first();
                 if($inland->markup){
                     $inlandCharges[1] = $inland->markup;
                 }
-                $inlandCharges = $this->convertToCurrency($inland_currency,$currency,$inlandCharges);
+                $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
                 $full = $inlandCharges[0] + $inlandCharges[1];
                 $totals['lcl_totals'] += isDecimal($full,true);
                 $markups['profit'] += isDecimal($inlandCharges[1],true);
