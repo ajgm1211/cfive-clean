@@ -30,6 +30,7 @@ use App\Provider;
 use App\Country;
 use App\InlandDistance;
 use App\CalculationTypeLcl;
+use App\AutomaticRateTotal;
 use App\DestinationType;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
@@ -46,9 +47,9 @@ class QuotationController extends Controller
 
     public function list(Request $request)
     {
-        //$results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
+        $results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
 
-        $results = QuoteV2::filterByCurrentCompany()->filter($request);
+        //$results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
     }
@@ -301,10 +302,8 @@ class QuotationController extends Controller
 
     public function edit (Request $request, QuoteV2 $quote)
     {
-        $autorates = $quote->rate()->get();
-        foreach($autorates as $auto){
-            $auto->totalize($auto->currency_id);
-        }
+        $this->validateOldQuote($quote);
+
         return view('quote.edit');
     }
 
@@ -416,5 +415,54 @@ class QuotationController extends Controller
         $quote = QuoteV2::firstOrFail($quote_id);
 
         return redirect()->action('QuotationController@edit', $quote);
+    }
+
+    public function validateOldQuote($quote){
+
+        $rates = $quote->rates_v2()->get();
+        $inlandTotals = $quote->automatic_inland_totals()->get();
+
+        if($rates->count()!=0){
+            foreach($rates as $rate){
+                $rateTotals = $rate->totals()->first();
+                if($rateTotals){
+                    $rateTotals->totalize($rateTotals->currency_id);
+                }else{
+                    $total = AutomaticRateTotal::create([
+                        'quote_id' => $quote->id,
+                        'currency_id' => $rate->currency_id,
+                        'origin_port_id' => $rate->origin_port_id,
+                        'destination_port_id' => $rate->destination_port_id,
+                        'automatic_rate_id' => $rate->id,
+                        'totals' => null,
+                        'markups' => null                    
+                    ]);
+
+                    $total->totalize($total->currency_id);
+                }
+            }
+        }
+
+        if($inlandTotals){
+            foreach($inlandTotals as $total){
+                $total->totalize();
+            }
+        }
+
+        if($quote->pdf_options==null){            
+            $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
+            $currency_id = $company->companyUser->currency_id;
+            $currency = Currency::find($currency_id);
+    
+            $pdfOptions = [
+                "allIn" =>true, 
+                "showCarrier"=>true, 
+                "showTotals"=>false, 
+                "totalsCurrency" =>$currency];
+            
+            $quote->pdf_options = $pdfOptions;
+            $quote->save();
+        }
+
     }
 }
