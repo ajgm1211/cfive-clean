@@ -15,6 +15,7 @@
 
 
     <main>
+    
         <!-- HEADER -->
         @include('quote.pdf.partials.header')
         <!-- DETAILS -->
