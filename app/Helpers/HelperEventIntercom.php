@@ -35,25 +35,60 @@ class Intercom
 
     }
 
-    // EVENTOS RATES
-    /*
-    public static function event_selectRate()
+    // EVENTOS PDF
+
+    public static function event_pdfFcl()
     {
         $obj = self::$client;
 
         if (self::isExist(\Auth::user()->email)) {
             $obj->events->create([
-                "event_name" => "SELECT RATE",
+                "event_name" => "PDF FCL",
                 "created_at" => strtotime("now"),
                 "email" => \Auth::user()->email,
                 "metadata" => [
                     "order_date" => strtotime("now"),
                 ],
             ]);
-
         }
+    }
+
+    public static function event_pdfLcl()
+    {
+        $obj = self::$client;
+
+        if (self::isExist(\Auth::user()->email)) {
+            $obj->events->create([
+                "event_name" => "PDF LCL",
+                "created_at" => strtotime("now"),
+                "email" => \Auth::user()->email,
+                "metadata" => [
+                    "order_date" => strtotime("now"),
+                ],
+            ]);
+        }
+    }
+
+    // EVENTOS RATES
+    /*
+    public static function event_selectRate()
+    {
+    $obj = self::$client;
+
+    if (self::isExist(\Auth::user()->email)) {
+    $obj->events->create([
+    "event_name" => "SELECT RATE",
+    "created_at" => strtotime("now"),
+    "email" => \Auth::user()->email,
+    "metadata" => [
+    "order_date" => strtotime("now"),
+    ],
+    ]);
+
+    }
 
     }*/
+
     public static function event_searchRate()
     {
         $obj = self::$client;
@@ -134,20 +169,20 @@ class Intercom
         }
     }
 
-   /* public static function event_quoteManualAir()
+    /* public static function event_quoteManualAir()
     {
-        $obj = self::$client;
+    $obj = self::$client;
 
-        if (self::isExist(\Auth::user()->email)) {
-            $obj->events->create([
-                "event_name" => "QUOTE MANUAL AIR",
-                "created_at" => strtotime("now"),
-                "email" => \Auth::user()->email,
-                "metadata" => [
-                    "order_date" => strtotime("now"),
-                ],
-            ]);
-        }
+    if (self::isExist(\Auth::user()->email)) {
+    $obj->events->create([
+    "event_name" => "QUOTE MANUAL AIR",
+    "created_at" => strtotime("now"),
+    "email" => \Auth::user()->email,
+    "metadata" => [
+    "order_date" => strtotime("now"),
+    ],
+    ]);
+    }
     }*/
     // EVENTOS CONTRACTS
     /*
