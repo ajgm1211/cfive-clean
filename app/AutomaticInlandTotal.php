@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use App\Http\Traits\QuoteV2Trait;
 
 class AutomaticInlandTotal extends Model
 {
+    use QuoteV2Trait;
+
     protected $appends = ['calculation_type' => 1];
 
     protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id'];
@@ -54,67 +57,41 @@ class AutomaticInlandTotal extends Model
                 ['type',$this->type],
                 ['inland_address_id',$this->inland_address_id]])->get();
     
-            $markups_usd = [];
-            $totals_usd = [];
+            $markups = [];
+            $totals = [];
     
             foreach($equip_array as $eq){
-                $totals_usd['c'.$eq] = isDecimal(0,true);
-                $markups_usd['m'.$eq] = isDecimal(0,true);
+                $totals['c'.$eq] = isDecimal(0,true);
+                $markups['m'.$eq] = isDecimal(0,true);
             }
             
             foreach($inlands as $inland){
-                $amount_array = json_decode($inland->rate);
+                $amount_object = json_decode($inland->rate);
+                $amount_array = [];
+                foreach($amount_object as $key=>$value){
+                    $amount_array[$key] = $value;
+                }
                 $inland_currency = $inland->currency()->first();
+                $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
                 foreach($amount_array as $key=>$value){
-                    if($inland_currency->alphacode != 'USD'){
-                        $inland_conversion = $inland_currency->rates;
-                        $value /= $inland_conversion;
-                    }
-                    $totals_usd[$key] += isDecimal($value,true);
+                    $totals[$key] += isDecimal($value,true);
                 }
                 if($inland->markup){
-                    $markup_array = json_decode($inland->markup);
+                    $markup_object = json_decode($inland->markup);
+                    $markup_array = [];
+                    foreach($markup_object as $key=>$value){
+                        $markup_array[$key] = $value;
+                    }
+                    $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
                     foreach($markup_array as $key=>$value){
-                        if($inland_currency->alphacode != 'USD'){
-                            $inland_conversion = $inland_currency->rates;
-                            $value /= $inland_conversion;
-                        }
-                        $markups_usd[$key] += isDecimal($value,true);
-                        $totals_usd['c'.str_replace('m','',$key)] += $value;
+                        $markups[$key] += isDecimal($value,true);
+                        $totals['c'.str_replace('m','',$key)] += $value;
                     }
                 }
             }
     
-            /**if($this->markups != null){
-                $markups = json_decode($this->markups);
-                foreach($markups as $mark=>$profit){
-                    $clear_key = str_replace('m','c',$mark);
-                    if($currency->alphacode != 'USD'){
-                        $conversion = $currency->rates;
-                        $conv_profit = $profit/$conversion;
-                        $totals_usd[$clear_key] += round($conv_profit,2);
-                    }else{
-                        $totals_usd[$clear_key] += $profit;
-                    }
-                }
-            }**/
-                        
-            if($currency->alphacode != 'USD'){
-                $conversion = $currency->rates;
-                foreach($totals_usd as $cont=>$price){
-                    $conv_price = $price*$conversion;
-                    $totals_usd[$cont] = isDecimal($conv_price,true);
-                }
-                if($markups_usd){
-                    foreach($markups_usd as $contM=>$priceM){
-                        $conv_mprice = $priceM*$conversion;
-                        $markups_usd[$contM] = isDecimal($conv_mprice,true);
-                    }
-                }
-            }
-    
-            $totals = json_encode($totals_usd);
-            $markups = json_encode($markups_usd);
+            $totals = json_encode($totals);
+            $markups = json_encode($markups);
             
             $this->update(['totals'=>$totals,'markups'=>$markups]);
         }else if($quote->type=='LCL'){
@@ -125,40 +102,27 @@ class AutomaticInlandTotal extends Model
                 ['type',$this->type],
                 ['inland_address_id',$this->inland_address_id]])->get();
     
-            $totals_usd['lcl_totals'] = 0;
+            $totals['lcl_totals'] = 0;
+            $markups['profit'] = 0;
+            $inlandCharges = [];
 
             foreach($inlands as $inland){
-                $value = $inland->total;
-                $inland_currency = $inland->currency()->first();
-                if($inland_currency->alphacode != 'USD'){
-                    $inland_conversion = $inland_currency->rates;
-                    $value /= $inland_conversion;
+                $inlandCharges[0] = $inland->total;
+                $inlandCurrency = $inland->currency()->first();
+                if($inland->markup){
+                    $inlandCharges[1] = $inland->markup;
                 }
-                $totals_usd['lcl_totals'] += isDecimal($value,true);
+                $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                $full = $inlandCharges[0] + $inlandCharges[1];
+                $totals['lcl_totals'] += isDecimal($full,true);
+                $markups['profit'] += isDecimal($inlandCharges[1],true);
             }
     
-            if($this->markups != null){
-                $markups = json_decode($this->markups);
-                foreach($markups as $mark=>$profit){
-                    if($currency->alphacode != 'USD'){
-                        $conversion = $currency->rates;
-                        $conv_profit = $profit/$conversion;
-                        $totals_usd['lcl_totals'] += $conv_profit;
-                    }else{
-                        $totals_usd['lcl_totals'] += isDecimal($profit,true);
-                    }
-                }
-            }
-
-            if($currency->alphacode != 'USD'){
-                $conversion = $currency->rates;
-                $conv_price = $totals_usd['lcl_totals']*$conversion;
-                $totals_usd['lcl_totals'] = isDecimal($conv_price,true);
-            }
-    
-            $totals = json_encode($totals_usd);
+            $totalsPrice = json_encode($totals);
+            $totalsMarkup = json_encode($markups);
             
-            $this->update(['totals'=>$totals]);
+            $this->update(['totals'=>$totalsPrice]);
+            $this->update(['markups'=>$totalsMarkup]);
         }
     }
 
