@@ -15,6 +15,7 @@
 
 
     <main>
+    
         <!-- HEADER -->
         @include('quote.pdf.partials.header')
         <!-- DETAILS -->
@@ -22,12 +23,6 @@
         <!-- TOTALS -->
         @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
             @include('quote.pdf.partials.totals')
-        @endif
-        <!-- ORIGIN -->
-        @include('quote.pdf.partials.origins_fcl')
-        <!-- LOCALCHARGE REMARKS -->
-        @if($destination_charges->count()==0)
-            @include('quote.pdf.partials.localcharge_remarks')
         @endif
         <!-- FREIGHTS -->
         @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
