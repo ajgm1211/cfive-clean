@@ -31,16 +31,12 @@
         @endif
         <!-- REMARKS -->
         @include('quote.pdf.partials.remarks')
-        <!-- ORIGIN -->
-        @include('quote.pdf.partials.origins_fcl')
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
         <!-- LOCALCHARGE REMARKS -->
         @include('quote.pdf.partials.localcharge_remarks')
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
-        <!-- PAYMENTS CONDITIONS -->
-        @include('quote.pdf.partials.payments_conditions')
     </main>
 
 
