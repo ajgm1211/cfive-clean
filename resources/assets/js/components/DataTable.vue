@@ -29,11 +29,9 @@
                         >
                         </b-form-checkbox>
                     </b-th>
-
                     <b-th v-for="(value, key) in fields" :key="key">
                         {{ value.label }}
                     </b-th>
-
                     <b-th>
                         <b-button
                             v-bind:id="'popover_all'"
@@ -109,6 +107,7 @@
                     >
                         <!-- Text Input -->
                         <div v-if="item.type == 'text'">
+
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -199,7 +198,7 @@
                                 style="margin-top: -4px"
                             ></span>
                         </div>
-                        <div v-if="item.type == 'multiselect_data' && refresh">
+                        <div v-if="item.type == 'multiselect_data' && refresh" class="multiselect-height">
                             <multiselect
                                 v-model="item.values"
                                 :multiple="true"
@@ -514,8 +513,14 @@
 import Multiselect from "vue-multiselect";
 import paginate from "./paginate";
 
+
 export default {
     props: {
+        filter: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
         fields: Array,
         equipment: Object,
         inputFields: {
@@ -633,6 +638,8 @@ export default {
     components: {
         Multiselect,
         paginate,
+        
+        
     },
     data() {
         return {
@@ -654,6 +661,7 @@ export default {
             selected: [],
             allSelected: false,
             indeterminate: false,
+            filterIsOpen: false
         };
     },
     computed: {
@@ -671,6 +679,13 @@ export default {
     },
     methods: {
         /* Response the lists data*/
+        openFilter(filter) {
+
+            
+            this.filterIsOpen = !this.filterIsOpen;
+            
+
+        },
         initialData() {
             let params = this.$route.query;
 
@@ -733,7 +748,7 @@ export default {
             if (this.totalActions) {
                 if (Object.keys(this.portAddress).length == 0) {
                     this.totalActions
-                        .retrieve(this.multiId, this.$route)
+                        .retrieveTotals(this.multiId, this.$route)
                         .then((response) => {
                             this.totalsData=response.data.data;
                             })
@@ -745,7 +760,7 @@ export default {
                         this.multiId + ";" + this.portAddress["id"],
                     ];
                     this.totalActions
-                        .retrieve(portAddressCombo, this.$route)
+                        .retrieveTotals(portAddressCombo, this.$route)
                         .then((response) => {
                             this.totalsData = response.data.data;
                         })
