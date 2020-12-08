@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Airline;
 use App\Airport;
 use App\AutomaticInland;
+use App\AutomaticRateTotal;
+use App\InlandAddress;
 use App\AutomaticInlandLclAir;
 use App\AutomaticInlandTotal;
 use App\AutomaticRate;
@@ -36,7 +38,6 @@ use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
 use App\Inland;
-use App\InlandAddress;
 use App\InlandDistance;
 use App\Jobs\UpdatePdf;
 use App\LocalCharge;
@@ -93,6 +94,10 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return Illuminate\View\View
      */
+    public function newSearch(Request $request){
+        return view('searchV2.index');
+    }
+
     public function index(Request $request)
     {
 
@@ -1594,8 +1599,6 @@ class QuoteV2Controller extends Controller
                 });
             })->get();
 
-            \Log::info($remarks_all);
-
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
                 $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
@@ -2229,6 +2232,17 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->currency_id = $info_D->currency->id;
                     $oceanFreight->total = $rates;
                     $oceanFreight->save();
+
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->currency_id = $info_D->currency->id;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = null;
+                    $rateTotals->save();
+                    $rateTotals->totalize($info_D->currency->id);
 
                     $inlandD = $request->input('inlandD' . $rateO->rate_id);
                     $inlandO = $request->input('inlandO' . $rateO->rate_id);
@@ -4497,7 +4511,11 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if($weight < 1)
+                        $weightP = 1;
+                    else
+                        $weightP = $weight ;
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
 
@@ -4537,7 +4555,11 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if($weight < 1)
+                        $weightP = 1;
+                    else
+                        $weightP = $weight ;
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
                 // MARKUPS
@@ -6941,6 +6963,17 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->currency_id = $rateO->idCurrency;
                     $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
+
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->currency_id = $rateO->idCurrency;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = null;
+                    $rateTotals->save();
+                    $rateTotals->totalize($rateO->idCurrency);
 
                     //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
                     //  $inlandO =  $request->input('inlandO'.$rateO->rate_id);

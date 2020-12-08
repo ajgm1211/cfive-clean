@@ -104,7 +104,7 @@
                             ></Inland>
                         </b-tab>
 
-                        <b-tab title="Totals" @click="changeView('totals')">
+                        <!--<b-tab title="Totals" @click="changeView('totals')">
                             <Total v-if="totals"
                             :currentQuoteData="currentData"
                             :freights="freights"
@@ -112,7 +112,7 @@
                             :actions="actions"
                             @freightAdded="setInitialData"
                             ></Total>
-                        </b-tab>
+                        </b-tab>-->
 
                     </b-tabs>
                 </b-card>

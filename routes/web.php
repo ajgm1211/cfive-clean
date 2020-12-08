@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::put('update', 'ApiIntegrationController@update')->name('api.update');
     Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
+    Route::get('status', 'ApiIntegrationController@status')->name('api.status');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
@@ -1035,6 +1036,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /** End Inlands routes view **/
 
+    /** Search V2 **/
+    Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
@@ -1053,6 +1057,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_rate/store', 'AutomaticRateController@store')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/update', 'AutomaticRateController@update')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/totals/update', 'AutomaticRateController@updateTotals');
+    Route::get('api/quotes/{quote}/automatic_rate/totals/{autorate}', 'AutomaticRateController@retrieveTotals')->middleware('check_company:quote');
     Route::delete('api/quotes/automatic_rate/{autorate}/destroy', 'AutomaticRateController@destroy');
 
     /** Charge Routes**/
@@ -1076,7 +1081,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inland/{autoinland}/update', 'AutomaticInlandController@update');
     Route::delete('api/quotes/automatic_inland/{autoinland}/destroy/', 'AutomaticInlandController@destroy');
     Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
-    Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieve');
+    Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieveTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/update', 'AutomaticInlandController@updateTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');

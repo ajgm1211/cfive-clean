@@ -4,9 +4,11 @@
         <div v-if="freights.length == 0">
             <h4>Nothing to totalize. Start by adding a new freight at the Ocean Freight Tab</h4>
         </div>
-            <div v-else class="row">
+            <div v-else >
                 <!-- Show Totals Checkbox-->
-                <div class="col-12 d-flex mt-5 mb-3">
+                <div class="card" style="width:100%">
+                    <div class="card-body row" style="overflow: inherit;">
+                    <div class="col-12 col-sm-2 d-flex mt-5 mb-3">
                     <b-form-checkbox v-model="showTotals" @input="updatePdfOptions()">
                         <span>Show Totals</span>
                     </b-form-checkbox>
@@ -14,7 +16,7 @@
                 <!-- Show Totals Checkbox End-->
 
                 <!-- Currency Multiselect-->
-                <div class="col-12 d-flex mt-5 mb-3">
+                <div class="col-12 col-sm-4 d-flex mt-5 mb-3">
                     <span>Show Totals in:</span>
                     <multiselect 
                         v-model="totalsCurrency" 
@@ -30,6 +32,9 @@
                         @input="updatePdfOptions()">
                     </multiselect>
                 </div>
+                </div>
+                </div>
+                
                 <!-- Currency Multiselect End-->
             </div>
     </div>  

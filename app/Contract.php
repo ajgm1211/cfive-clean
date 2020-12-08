@@ -171,6 +171,23 @@ class Contract extends Model implements HasMedia, Auditable
     }
 
     /**
+     * Sync Contract Carriers Single
+     *
+     * @param  Array  $carrier
+     * @return void
+     */
+    public function ContractCarrierSyncSingle($carrier_id)
+    {
+
+        DB::table('contracts_carriers')->where('contract_id', '=', $this->id)->delete();
+
+        ContractCarrier::create([
+            'carrier_id'    => $carrier_id,
+            'contract_id'   => $this->id
+        ]);
+    }
+
+    /**
      * Store file in storage
      *
      * @param  blob  $file
@@ -276,17 +293,11 @@ class Contract extends Model implements HasMedia, Auditable
     public function processSearchByIdFcl($response = false, $convert = false)
     {
         $company_user_id = \Auth::user()->company_user_id;
-        $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
         $company = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
 
-        /*$chargesOrigin = 'true';
-        $chargesDestination = 'true';
-        $chargesFreight = 'true';*/
         $markup = null;
-        $remarks = "";
-        //$remarksGeneral = "";
 
         $equipment = array();
         $totalesCont = array();
@@ -296,7 +307,6 @@ class Contract extends Model implements HasMedia, Auditable
         $collectionRate = new Collection();
 
         $idCurrency = $company->currency_id;
-        $company_user_id = $company->id;
 
         $equipment = array('1', '2', '3', '4', '5');
 
@@ -311,10 +321,10 @@ class Contract extends Model implements HasMedia, Auditable
                 $query->select('id', 'name', 'uncode', 'image', 'image as url');
             }])->get();
         }
-
+        
         //Guard if
         if (count($rates) == 0) {
-            return response()->json(['message' => 'No freight rates were found for this trade route', 'state' => 'CONVERSION_PENDING'], 200);
+            return response()->json(['message' => 'No freight rates were found for this trade route'], 200);
         }
 
         foreach ($rates as $data) {
@@ -390,9 +400,9 @@ class Contract extends Model implements HasMedia, Auditable
 
             foreach ($localChar as $local) {
 
-                $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
+                //$rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
-             /*   // Condicion para enviar los terminos de venta o compra
+                /*   // Condicion para enviar los terminos de venta o compra
                 if (isset($local->surcharge->saleterm->name)) {
                     $terminos = $local->surcharge->saleterm->name;
                 } else {
@@ -405,7 +415,7 @@ class Contract extends Model implements HasMedia, Auditable
                     if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
                         $localParams = array('local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                         //Origin
-                       /* if ($chargesOrigin != null) {
+                        /* if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
                                 foreach ($containers as $cont) {
                                     $name_arreglo = 'array' . $cont->code;
@@ -429,26 +439,25 @@ class Contract extends Model implements HasMedia, Auditable
                             }
                         }*/
                         //Freight
-                   
-                            if ($local->typedestiny_id == '3') {
-                                
-                                $band = false;
-                                //Se ajusta el calculo para freight tomando en cuenta el rate currency
-                                $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
-                                $localParams['typeCurrency'] = $data->currency->alphacode;
-                                $localParams['idCurrency'] = $data->currency->id;
-                                //Fin Variables
 
-                                foreach ($containers as $cont) {
+                        if ($local->typedestiny_id == '3') {
 
-                                    $name_arreglo = 'array' . $cont->code;
+                            $band = false;
+                            //Se ajusta el calculo para freight tomando en cuenta el rate currency
+                            $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                            $localParams['typeCurrency'] = $data->currency->alphacode;
+                            $localParams['idCurrency'] = $data->currency->id;
+                            //Fin Variables
 
-                                    if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                        $collectionFreight->push($this->processLocalCharge($cont, $local, $localParams, $rateMount_Freight, $totalesCont));
-                                    }
+                            foreach ($containers as $cont) {
+
+                                $name_arreglo = 'array' . $cont->code;
+
+                                if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                                    $collectionFreight->push($this->processLocalCharge($cont, $local, $localParams, $rateMount_Freight, $totalesCont));
                                 }
                             }
-                        
+                        }
                     }
                 }
             }
@@ -518,7 +527,7 @@ class Contract extends Model implements HasMedia, Auditable
 
             //remarks
 
-            if ($data->contract->remarks != "") {
+            /*if ($data->contract->remarks != "") {
                 $remarks = $data->contract->remarks . "<br>";
             }
 
@@ -543,9 +552,9 @@ class Contract extends Model implements HasMedia, Auditable
                 $routes['origin_charges'] = $collectionOrigin;
             }
 
-            $routes['remarks'] = $remarks;
+            $routes['remarks'] = $remarks;*/
 
-            $detail = $this->compactResponse($containers, $equipment, $routes, $data, $typeCurrency, $response);
+            $detail = $this->compactResponse($containers, $equipment, $data, $typeCurrency);
 
             $general->push($detail);
         }
@@ -553,48 +562,18 @@ class Contract extends Model implements HasMedia, Auditable
         return response()->json($general);
     }
 
-    public function compactResponse($containers, $equipment, $routes, $data, $currency, $response)
+    public function compactResponse($containers, $equipment, $data, $currency)
     {
 
-        switch ($response) {
-            case 'compact':
-                $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via);
-                foreach ($containers as $cont) {
-                    foreach ($equipment as $eq) {
-                        if ($eq == $cont->id) {
-                            array_push($detalle, (float) $data['total' . $cont->code]);
-                        }
-                    }
+        $detalle = array($data->port_origin->code, $data->port_destiny->code, $data->via);
+        foreach ($containers as $cont) {
+            foreach ($equipment as $eq) {
+                if ($eq == $cont->id) {
+                    array_push($detalle, (float) $data['total' . $cont->code]);
                 }
-                array_push($detalle, $currency, $data->transit_time ? $data->transit_time : 0, $data->contract->remarks);
-                break;
-            default:
-                $detalle['Rates'] = $routes;
-
-                //Totals
-                foreach ($containers as $cont) {
-                    foreach ($equipment as $eq) {
-                        if ($eq == $cont->id) {
-                            $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
-                        }
-                    }
-                }
-
-                $detalle['Rates']['currency'] = $currency;
-                //Schedules
-                $detalle['Rates']['schedule']['transit_time'] = $data->transit_time;
-                $detalle['Rates']['schedule']['via'] = $data->via;
-
-                //Set carrier
-                $detalle['Rates']['carrier'] = $data->carrier;
-                //Set contract details
-                $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-                $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-                $detalle['Rates']['contract']['number'] =   $data->contract->number;
-                $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-                $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
-                break;
+            }
         }
+        array_push($detalle, $currency, $data->transit_time ? $data->transit_time : 0, $data->contract->remarks);
 
         return $detalle;
     }
