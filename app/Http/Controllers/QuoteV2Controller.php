@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Airline;
 use App\Airport;
 use App\AutomaticInland;
-use App\AutomaticRateTotal;
-use App\InlandAddress;
 use App\AutomaticInlandLclAir;
 use App\AutomaticInlandTotal;
 use App\AutomaticRate;
+use App\AutomaticRateTotal;
 use App\CalculationType;
 use App\CalculationTypeLcl;
 use App\Carrier;
@@ -38,6 +37,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
 use App\Inland;
+use App\InlandAddress;
 use App\InlandDistance;
 use App\Jobs\UpdatePdf;
 use App\LocalCharge;
@@ -65,6 +65,7 @@ use App\TermAndConditionV2;
 use App\TermsPort;
 use App\User;
 use App\ViewQuoteV2;
+use EventIntercom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
@@ -94,7 +95,8 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return Illuminate\View\View
      */
-    public function newSearch(Request $request){
+    public function newSearch(Request $request)
+    {
         return view('searchV2.index');
     }
 
@@ -1983,10 +1985,10 @@ class QuoteV2Controller extends Controller
             $cargo_type_id = $request->input('cargo_type');
             $quote->cargo_type_id = $cargo_type_id;
             $pdfOptions = [
-                "allIn" =>true, 
-                "showCarrier"=>true, 
-                "showTotals"=>false, 
-                "totalsCurrency" =>$currency];
+                "allIn" => true,
+                "showCarrier" => true,
+                "showTotals" => false,
+                "totalsCurrency" => $currency];
             $quote->pdf_options = $pdfOptions;
             $quote->save();
 
@@ -2008,11 +2010,20 @@ class QuoteV2Controller extends Controller
                 $typeText = "FCL";
                 $equipment = stripslashes(json_encode($request->input('equipment')));
                 $delivery_type = $request->input('delivery_type');
+
+                // EVENT INTERCOM
+                $event = new EventIntercom();
+                $event->event_quoteManualFcl();
+
             }
             if ($request->input('type') == '2') {
                 $typeText = "LCL";
                 $equipment = $arregloNull;
                 $delivery_type = $request->input('delivery_type');
+                // EVENT INTERCOM
+                $event = new EventIntercom();
+                $event->event_quoteManualLcl();
+
             }
             if ($request->input('type') == '3') {
                 $typeText = "AIR";
@@ -2049,10 +2060,10 @@ class QuoteV2Controller extends Controller
             $cargo_type_id = $request->input('cargo_type');
             $quote->cargo_type_id = $cargo_type_id;
             $pdfOptions = [
-                "allIn" =>true, 
-                "showCarrier"=>true, 
-                "showTotals"=>false, 
-                "totalsCurrency" =>$currency];
+                "allIn" => true,
+                "showCarrier" => true,
+                "showTotals" => false,
+                "totalsCurrency" => $currency];
             $quote->pdf_options = $pdfOptions;
             $quote->save();
             $modo = $request->input('mode');
@@ -2218,7 +2229,7 @@ class QuoteV2Controller extends Controller
                         $service = null;
                     }
 
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT,'schedule_type'=>$service]);
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT, 'schedule_type' => $service]);
 
                     $rate = AutomaticRate::create($request->all());
 
@@ -2482,6 +2493,10 @@ class QuoteV2Controller extends Controller
                     $chargeFreight->save();
                 }
             }
+
+            // EVENTO INTERCOM
+            $event = new EventIntercom();
+            $event->event_quoteAutomaticFcl();
 
             // Terminos Automatica
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
@@ -2751,11 +2766,10 @@ class QuoteV2Controller extends Controller
         $carrierC = Carrier::pluck('name', 'id');
         $directionC = Direction::pluck('name', 'id');
         $harborsR = Harbor::get()->pluck('display_name', 'id');
-        $surchargesS = Surcharge::where('company_user_id',$company_user_id)->get()->pluck('name', 'id');
+        $surchargesS = Surcharge::where('company_user_id', $company_user_id)->get()->pluck('name', 'id');
         $calculationTypeS = CalculationType::get()->pluck('name', 'id');
         //Fin variables
 
-        
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
         $group_contain = GroupContainer::pluck('name', 'id');
@@ -2817,7 +2831,7 @@ class QuoteV2Controller extends Controller
 
         //dd($origen);
 
-        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown', 'group_containerC', 'carrierC', 'directionC', 'harborsR','surchargesS','calculationTypeS'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS'));
     }
 
     /**
@@ -2835,7 +2849,7 @@ class QuoteV2Controller extends Controller
         $carrierC = Carrier::pluck('name', 'id');
         $directionC = Direction::pluck('name', 'id');
         $harborsR = Harbor::get()->pluck('display_name', 'id');
-        $surchargesS = Surcharge::where('company_user_id',$company_user_id)->get()->pluck('name', 'id');
+        $surchargesS = Surcharge::where('company_user_id', $company_user_id)->get()->pluck('name', 'id');
         $calculationTypeS = CalculationType::get()->pluck('name', 'id');
         //Fin variables
 
@@ -3795,7 +3809,11 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown','group_containerC','group_containerC','carrierC','directionC','harborsR','surchargesS','calculationTypeS')); //aqui
+        // EVENTO INTERCOM
+        $event = new EventIntercom();
+        $event->event_searchRate();
+
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
@@ -4511,10 +4529,12 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    if($weight < 1)
+                    if ($weight < 1) {
                         $weightP = 1;
-                    else
-                        $weightP = $weight ;
+                    } else {
+                        $weightP = $weight;
+                    }
+
                     $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
@@ -4555,10 +4575,12 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    if($weight < 1)
+                    if ($weight < 1) {
                         $weightP = 1;
-                    else
-                        $weightP = $weight ;
+                    } else {
+                        $weightP = $weight;
+                    }
+
                     $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
@@ -6896,7 +6918,7 @@ class QuoteV2Controller extends Controller
             $quantity = array_values(array_filter($form->quantity));
 
             $language = $company->companyUser->language()->first();
-            if($language != null){
+            if ($language != null) {
                 $quote->language_id = $language->id;
             }
             $cargo_type_id = $form->cargo_type;
@@ -7170,6 +7192,9 @@ class QuoteV2Controller extends Controller
                     }
                 }
             }
+
+            $event = new EventIntercom();
+            $event->event_quoteAutomaticLcl();
 
             $quoteEdit = QuoteV2::find($quote->id);
             $quoteEdit->terms_english = $terminos_english;
