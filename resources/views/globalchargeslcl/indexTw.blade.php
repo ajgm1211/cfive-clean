@@ -258,41 +258,15 @@
             "searching": true,
             "ordering": false,
             "info": true,
-            "autoWidth": true,
-            "deferLoading": 57,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
             "dom": 'Bfrtip',
             "paging": true,
             "scrollX": true,
-            "stateSave": true,
-
-            buttons: [
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                }
-            ]
-        });
-        tabla.columns().search( '' ).draw();
+            "stateSave": false, 
+        });      
     });  
-
-
- 
-
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
