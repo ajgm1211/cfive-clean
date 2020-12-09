@@ -50,6 +50,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::put('update', 'ApiIntegrationController@update')->name('api.update');
     Route::get('delete/{id}', 'ApiIntegrationController@destroy')->name('api.delete');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
+    Route::get('status', 'ApiIntegrationController@status')->name('api.status');
     //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
@@ -1085,6 +1086,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/search', 'AutomaticInlandController@searchInlands');
+    Route::post('api/quotes/{quote}/automatic_inlands/harbors', 'AutomaticInlandController@harbors');
     /**LCL **/
     Route::get('api/quotes/{quote}/port/{combo}/automatic_inlands_lcl', 'AutomaticInlandLclController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/store', 'AutomaticInlandLclController@store')->middleware('check_company:quote');
