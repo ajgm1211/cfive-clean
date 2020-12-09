@@ -131,6 +131,8 @@ class AutomaticInlandLclController extends Controller
                 'currency_id' => $user_currency
             ]);
         }
+
+        dd($totals);
         
         $totals->totalize();
     }
@@ -261,6 +263,65 @@ class AutomaticInlandLclController extends Controller
         $results = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id]])->get();
 
         return InlandAddressResource::collection($results);
+    }
+
+    public function harbors(QuoteV2 $quote)
+    {
+        $rates = $quote->rates_v2()->get();
+
+        $origin_ports = [];
+        $destination_ports = [];
+
+        foreach($rates as $rate){
+            $origin = $rate->origin_port()->first();
+            $destination = $rate->destination_port()->first();
+            
+            if($origin->count()!=0){
+                array_push($origin_ports,$origin);
+            }
+            if($destination->count()!=0){
+                array_push($destination_ports,$destination);
+            }
+        }
+        
+        $ports_sorted = [];
+        
+        if(count($origin_ports!=0)){
+            foreach($origin_ports as $port){
+                $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
+                $clearPort = [
+                    "name"=>$port->display_name,
+                    "id"=>$port->id,
+                    "type"=>"Origin",
+                    "code"=>$port->code
+                ];
+                if(count($inlands)!=0){
+                    array_unshift($ports_sorted,$clearPort);
+                }else{
+                    array_push($ports_sorted,$clearPort);
+                }
+            }
+        }
+        
+        if(count($destination_ports!=0)){
+            foreach($destination_ports as $port){
+                $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
+                $clearPort = [
+                    "name"=>$port->display_name,
+                    "id"=>$port->id,
+                    "type"=>"Destination",
+                    "code"=>$port->code
+                ];
+                if(count($inlands)!=0){
+                    array_unshift($ports_sorted,$clearPort);
+                }else{
+                    array_push($ports_sorted,$clearPort);
+                }
+            }
+        }
+
+
+        return $ports_sorted;
     }
 
     public function destroy(AutomaticInlandLclAir $autoinland)
