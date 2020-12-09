@@ -12108,6 +12108,10 @@ CONTENTS:
   max-width: 50px !important;
 }
 
+.error {
+  color: red !important;
+}
+
 .desktop {
   display: block;
 }
