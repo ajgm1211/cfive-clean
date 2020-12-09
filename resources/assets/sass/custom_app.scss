@@ -1035,3 +1035,11 @@ input.multiselect__input:focus {
 .multiselect__tag {
     margin-bottom: 0px !important;
 }
+
+.openFilter {
+    display: inline-block;
+}
+
+.closeFilter {
+    display: none;
+}

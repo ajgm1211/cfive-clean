@@ -51,11 +51,14 @@
                             :id="key"
                             :class="[{ openFilter: value.filterIsOpen, closeFilter: !value.filterIsOpen }, value.label]" 
                             v-model="filtered[value.key]"
+                            :track-by="value.filterTrackBy"
+                            :label="value.trackLabel"
                             :close-on-select="true"
                             :clear-on-select="false"
                             :multiple="true"
                             :show-labels="false"
                             :options="filterOptions[value.key]"
+                            @input="filterTable"
                         ></multiselect>
                     </b-th>
                     <b-th>
@@ -690,6 +693,7 @@ export default {
             filterOptions: {},
             filtered: {},
             filterSet: false,
+            fullListData: {},
         };
     },
     computed: {
@@ -710,7 +714,7 @@ export default {
         openFilter(filter) {
 
             filter.filterIsOpen = !filter.filterIsOpen;
-            console.log(this.filtered)
+
         },
         initialData() {
             let params = this.$route.query;
@@ -795,6 +799,18 @@ export default {
                         });
                 }
             }
+
+            if(this.filter && Object.keys(this.filterOptions).length==0){
+                let filterParams = {no_pagination: 1};
+
+                this.actions.list(
+                    filterParams,
+                    (err, data) => {
+                        this.setFilters(data.data)
+                    },
+                    this.$route
+                );
+            }
         },
 
         /* Set the data into datatable */
@@ -806,10 +822,7 @@ export default {
             } else {
                 this.data = records;
                 this.autoupdateTableData = records;
-                this.pageCount = Math.ceil(meta.total / meta.per_page);4
-                if(this.filter){
-                    this.setFilters();
-                }
+                this.pageCount = Math.ceil(meta.total / meta.per_page);
             }
         },
 
@@ -1246,19 +1259,70 @@ export default {
             this.autoAddRequested = !this.autoAddRequested;
         },
 
-        setFilters(){
+        setFilters(data){
             let component = this;
+
+            component.fullListData = data;
 
             component.fields.forEach(function(field){
                 component.filterOptions[field.key] = [];
-                component.filtered[field.key] = [];
-                component.data.forEach(function(quote){
-                    if(!component.filterOptions[field.key].includes(quote[field.key])){
-                        component.filterOptions[field.key].push(quote[field.key]);
+                data.forEach(function(listElement){
+                    if(typeof listElement[field.key] == "object" && listElement[field.key] != null){
+                        if(Array.isArray(listElement[field.key]) && listElement[field.key].length != 0){
+                            listElement[field.key].forEach(function(address){
+                                if(!component.filterOptions[field.key].includes(address)){
+                                    component.filterOptions[field.key].push(address);
+                                }
+                            })
+                        }else if(!Array.isArray(listElement[field.key])){
+                            if(Object.keys(component.filterOptions[field.key]).length==0){
+                                component.filterOptions[field.key].push(listElement[field.key]);
+                            }else{
+                                component.filterOptions[field.key].forEach(function(added){
+                                    if(added.id != listElement[field.key].id){
+                                        component.filterOptions[field.key].push(listElement[field.key]);
+                                    }
+                                })
+                            }
+                        }
+                    }else if(typeof listElement[field.key] == "string"){
+                        if(!component.filterOptions[field.key].includes(listElement[field.key])){
+                            component.filterOptions[field.key].push(listElement[field.key]);
+                        }
                     }
                 })
             })
             component.filterSet = true;
+        },
+
+        filterTable(){
+            let component = this;
+            var filteredList = Array;
+
+            Object.keys(component.filtered).forEach(function (filterKey){
+                component.filtered[filterKey].forEach(function (filterValue){
+                    component.fullListData.forEach(function (listElement){
+                        if(typeof listElement[filterKey] == "object"){
+                            if(Array.isArray(listElement[filterKey])){
+                                listElement[filterKey].forEach(function (value){
+                                    if(filterValue == value){
+                                        filteredList.push(listElement);
+                                    }
+                                });
+                            }else{
+                                if(filterValue.id == listElement[filterKey].id){
+                                    filteredList.push(listElement);
+                                }
+                            }
+                        }else if(typeof listElement[filterKey] == "object"){
+                            if(filterValue == listElement[filterKey]){
+                                filteredList.push(listElement);
+                            }
+                        }
+                    });
+                });
+            });
+            console.log(filteredList);
         },
     },
     watch: {
