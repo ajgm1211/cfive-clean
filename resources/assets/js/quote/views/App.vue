@@ -67,18 +67,12 @@ export default {
                 {
                     key: "origin",
                     label: "Origin",
-                    formatter: (value) => {
-                        return this.setPortList(value);
-                    },
                     filterIsOpen: false,
                     collapse: "Show origins",
                 },
                 {
                     key: "destiny",
                     label: "Destiny",
-                    formatter: (value) => {
-                        return this.setPortList(value);
-                    },
                     filterIsOpen: false,
                     collapse: "Show destinations",
                 },
@@ -89,6 +83,8 @@ export default {
                         return value.name;
                     },
                     filterIsOpen: false,
+                    filterTrackBy: "name",
+                    trackLabel: "name"
                 },
                 { key: "validity_start", label: "Created at", filterIsOpen: false,},
             ],
