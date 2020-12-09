@@ -18,7 +18,7 @@ class AutomaticInland extends Model
 
     public function quote()
     {
-        return $this->belongsTo('App\QuoteV2', 'id', 'quote_id');
+        return $this->belongsTo('App\QuoteV2', 'quote_id', 'id');
     }
 
     public function rate()
