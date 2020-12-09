@@ -6707,11 +6707,10 @@ class QuoteV2Controller extends Controller
             $data->setAttribute('service', $transit_time['service']);
             $data->setAttribute('sheduleType', null);*/
 
-            $data->setAttribute('sheduleType', null);
             $data->setAttribute('via', $va);
             $data->setAttribute('transit_time', $tt);
             if ($tt != '' && $tt != null) {
-                $data->setAttribute('service', 'Transfer');
+                $data->setAttribute('service', 'Transhipment');
             } else {
                 $data->setAttribute('service', 'Direct');
             }
@@ -6989,7 +6988,7 @@ class QuoteV2Controller extends Controller
 
                     $arregloNull = array();
                     $remarks = $info_D->remarks . "<br>";
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->service, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
 
                     $rate = AutomaticRate::create($request->all());
 
@@ -7010,11 +7009,15 @@ class QuoteV2Controller extends Controller
                             $priceLevelMarkupsAmount = Array($priceLevelMarkups->fixed_markup);
                             $priceLevelMarkupsFinal = $this->convertToCurrency($input,$output,$priceLevelMarkupsAmount);
                             $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0],true);
-                        }else{
+                        }else if($priceLevelMarkups->percent_markup!=0){
                             $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
                             $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal/100);
                             $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal,true);
+                        }else{
+                            $priceLevelMarkupsFinal = 0;
                         }
+                    }else{
+                        $priceLevelMarkupsFinal = 0;
                     }
 
                     $oceanFreight = new ChargeLclAir();
