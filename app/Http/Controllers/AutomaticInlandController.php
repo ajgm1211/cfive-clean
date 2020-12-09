@@ -160,8 +160,7 @@ class AutomaticInlandController extends Controller
                 'quote_id' => $quote->id,
                 'port_id' => $port_id,
                 'inland_address' => $inland_address->id,
-                'currency_id' => $user_currency,
-                'markups' => $markups_json
+                'currency_id' => $user_currency
             ]);
         }
         
