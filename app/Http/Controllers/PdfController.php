@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\AutomaticRate;
-use App\Container;
-use App\Http\Traits\UtilTrait;
-use App\LocalChargeQuote;
-use App\LocalChargeQuoteTotal;
 use App\AutomaticInlandTotal;
+use App\AutomaticRate;
 use App\AutomaticRateTotal;
-use App\QuoteV2;
+use App\Container;
 use App\Currency;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use App\FclPdf;
 use App\LclPdf;
+use App\LocalChargeQuote;
+use App\LocalChargeQuoteTotal;
+use App\QuoteV2;
+use EventIntercom;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class PdfController extends Controller
 {
@@ -25,10 +24,16 @@ class PdfController extends Controller
             case "FCL":
                 $pdf = new FclPdf();
                 return $pdf->generate($quote);
+                // EVENTO INTERCOM
+                $event = new EventIntercom();
+                $event->event_pdfFcl();
                 break;
             case "LCL":
                 $pdf = new LclPdf();
                 return $pdf->generate($quote);
+                // EVENTO INTERCOM
+                $event = new EventIntercom();
+                $event->event_pdfLcl();
                 break;
         }
     }
@@ -53,7 +58,7 @@ class PdfController extends Controller
 
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-        $quote_totals = $this->quoteTotals($quote,$containers);
+        $quote_totals = $this->quoteTotals($quote, $containers);
 
         $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
@@ -178,9 +183,9 @@ class PdfController extends Controller
                 if ($amounts->type_id == 3) {
 
                     /*if (@$quote->pdf_option->grouped_freight_charges == 1) {
-                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                     } else {
-                        $typeCurrency = $item->currency->alphacode;
+                    $typeCurrency = $item->currency->alphacode;
                     }*/
 
                     $typeCurrency = $item->currency->alphacode;
@@ -219,7 +224,7 @@ class PdfController extends Controller
                 }
             }
         }
-        
+
         return $freight_charges_grouped;
 
     }
@@ -263,9 +268,9 @@ class PdfController extends Controller
                             if ($amounts->type_id == 3) {
 
                                 /*if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency = $rate->currency->alphacode;
+                                $typeCurrency = $rate->currency->alphacode;
                                 }*/
 
                                 $typeCurrency = $rate->currency->alphacode;
@@ -312,16 +317,16 @@ class PdfController extends Controller
         return $freight_charges_grouped;
     }
 
-    public function quoteTotals($quote,$containers)
+    public function quoteTotals($quote, $containers)
     {
-        
+
         $freightTotals = AutomaticRateTotal::GetQuote($quote->id)->get();
-        
-        $totalsArrayOutput = Array();
+
+        $totalsArrayOutput = array();
 
         $routePrefix = 'route_';
         $routeId = 1;
-        foreach($freightTotals as $frTotal){
+        foreach ($freightTotals as $frTotal) {
             $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name;
             $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name;
             $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name;
@@ -335,49 +340,48 @@ class PdfController extends Controller
 
         $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
 
+        foreach ($totals as $total) {
 
-        foreach ($totals as $total){
-
-            if(is_a($total, 'App\AutomaticRateTotal')){
-                $totalsArrayInput = json_decode($total->totals,true);
+            if (is_a($total, 'App\AutomaticRateTotal')) {
+                $totalsArrayInput = json_decode($total->totals, true);
                 $portArray['origin'] = $total->origin_port()->first()->display_name;
                 $portArray['destination'] = $total->destination_port()->first()->display_name;
-            }else if(is_a($total, 'App\AutomaticInlandTotal')){
-                $totalsArrayInput = json_decode($total->totals,true);
-                if($total->type == 'Origin'){
+            } else if (is_a($total, 'App\AutomaticInlandTotal')) {
+                $totalsArrayInput = json_decode($total->totals, true);
+                if ($total->type == 'Origin') {
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
-                }else if($total->type == 'Destination'){
+                } else if ($total->type == 'Destination') {
                     $portArray['origin'] = null;
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
-            }else if(is_a($total, 'App\LocalChargeQuoteTotal')){
+            } else if (is_a($total, 'App\LocalChargeQuoteTotal')) {
                 $totalsArrayInput = $total->total;
-                if($total->get_type()->first()->description == 'origin'){
+                if ($total->get_type()->first()->description == 'origin') {
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
-                }else if($total->get_type()->first()->description == 'destiny'){
+                } else if ($total->get_type()->first()->description == 'destiny') {
                     $portArray['origin'] = null;
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
             }
 
             $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
-            
-            $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
 
-            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+            $totalsCurrencyInput = Currency::where('id', $total->currency_id)->first();
 
-            $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            $totalsCurrencyOutput = Currency::where('id', $quote->pdf_options['totalsCurrency']['id'])->first();
 
-            foreach($totalsArrayOutput as $key=>$route){
-                if($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']){
+            $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput, $totalsCurrencyOutput, $totalsArrayInput);
+
+            foreach ($totalsArrayOutput as $key => $route) {
+                if ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) {
                     foreach ($containers as $c) {
                         if (isset($totalsArrayInput['c' . $c->code])) {
                             $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
                             if (isset($totalsArrayOutput[$key]['c' . $c->code])) {
                                 $totalsArrayOutput[$key]['c' . $c->code] += $dmCalc;
-                            }else{
+                            } else {
                                 $totalsArrayOutput[$key]['c' . $c->code] = $dmCalc;
                             }
                         }
@@ -385,17 +389,16 @@ class PdfController extends Controller
                 }
             }
         }
-        
+
         dd($totalsArrayOutput);
 
         return $totalsArrayOutput;
     }
 
-
     /**
      * Mostrar/Ocultar contenedores en la vista
-     * @param array $equipmentForm 
-     * @param integer $tipo 
+     * @param array $equipmentForm
+     * @param integer $tipo
      * @return type
      */
     public function hideContainerV2($equipmentForm, $tipo, $container)
