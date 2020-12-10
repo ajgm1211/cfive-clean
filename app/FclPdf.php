@@ -165,8 +165,12 @@ class FclPdf
                     $inlandInputCurrency = $item->currency()->first();
                     $inlandOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
 
-                    $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
-                    $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
+                    if($array_amounts){
+                        $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
+                    }
+                    if($array_markups){
+                        $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
+                    }
 
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
@@ -485,7 +489,9 @@ class FclPdf
 
             $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
 
-            $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            if($totalsArrayInput){
+                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            }
 
             foreach($totalsArrayOutput as $key=>$route){
                 if($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']){
