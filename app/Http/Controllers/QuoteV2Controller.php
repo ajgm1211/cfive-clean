@@ -2255,6 +2255,8 @@ class QuoteV2Controller extends Controller
                                 $priceLevelMarkupsFinal[$key] = isDecimal($price, true);
                             }
                         }
+                    }else{
+                        $priceLevelMarkupsFinal = null;
                     }
 
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT, 'schedule_type' => $service]);
