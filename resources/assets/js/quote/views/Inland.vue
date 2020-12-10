@@ -151,8 +151,8 @@
             centered
             hide-footer
             title="Inland Charges"
-            @close="unsetModal"
-            @hidden="unsetModal"
+            @close="unsetModal(modalOpen=false)"
+            @hidden="unsetModal(modalOpen=false)"
         >
             <div class="container">
                 <div class="row align-items-center justify-content-between">
@@ -170,12 +170,13 @@
                         </multiselect>
                     </div>
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" v-if="modalAddressBar">
                         <label> ADDRESS </label>
                         <gmap-autocomplete
                             v-if="!modalDistance"
                             @place_changed="setPlace"
                             @input="clearAutocomplete"
+                            :value="autocompleteValue"
                             class="form-input form-control"
                             placeholder="Start typing an address"
                         >
@@ -508,7 +509,6 @@ export default {
     },
     watch: {
         currentPort: function (newVal, oldVal) {
-            this.updateTable();
             this.setAddresses();
         },
 
@@ -552,10 +552,13 @@ export default {
             inlandAddRequested: false,
             inlandAdds: [],
             inlandActions: {},
+            autocompleteValue: null,
             modalWarning: "",
             modalSearchWarning: false,
             modalSelectWarning: false,
             modalDistance: false,
+            modalOpen: false,
+            modalAddressBar: true,
             inlandModalTotals: {},
             inlandModalTotalLcl: 0,
             client_currency: this.currentQuoteData.client_currency,
@@ -630,67 +633,53 @@ export default {
             component.modalDistance = false;
 
             component.$refs["addInland"].show();
-            component.datalists.distances.forEach(function (distance) {
-                if (component.currentPort.id == distance.harbor_id) {
-                    component.modalDistance = true;
-                    component.distance_options.push(distance);
+            component.modalOpen = true;
+            if((component.currentAddress != undefined &&
+                    Object.keys(component.currentAddress).length != 0)){
+                component.datalists.distances.forEach(function (distance) {
+                    if (component.currentPort.id == distance.harbor_id) {
+                        component.modalDistance = true;
+                        component.distance_options.push(distance);
+                    }
+                    if(distance["display_name"]==component.currentAddress["address"]){
+                        component.modalAddress = distance;
+                    }
+                });
+
+                if(!component.modalDistance){
+                    component.autocompleteValue = component.currentAddress["address"];
+                    component.modalAddress = component.currentAddress["address"];
                 }
-            });
+            }else{
+                component.modalAddress = null;
+                component.autocompleteValue = null
+            }
+
         },
 
         setPorts() {
             let component = this;
 
-            component.freights.forEach(function (freight) {
-                component.datalists.harbors.forEach(function (harbor) {
-                    let portMatch = false;
-
-                    if (freight.origin_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Origin",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
-                    }
-                    if (freight.destination_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Destination",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
+            component.inlandActions
+                .harbors(component.$route)
+                .then((response) => {
+                    response.data.forEach(function(port){
+                        port.flag = component.imageFolder
+                                .concat(port.code.slice(0, 2).toLowerCase())
+                                .concat(".svg");
+                        component.port_options.push(port)
+                    })
+                    if (component.currentPort == "") {
+                        component.currentPort = component.port_options[0];
                     }
 
-                    if (portMatch) {
-                        let inOptions = false;
+                    component.currentAddress = [];
 
-                        component.port_options.forEach(function (opt) {
-                            if (harbor_opt["name"] == opt.name) {
-                                inOptions = true;
-                            }
-                        });
-
-                        if (!inOptions) {
-                            component.port_options.push(harbor_opt);
-                        }
-                    }
-                });
+                    component.loaded = true;
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
             });
-
-            if (component.currentPort == "") {
-                component.currentPort = component.port_options[0];
-            }
-
-            component.currentAddress = [];
-
-            component.loaded = true;
         },
 
         setAddresses(newAddress = null) {
@@ -712,6 +701,9 @@ export default {
                                 component.setModalTable();
                             }
                         });
+                    }
+                    if(component.modalOpen){
+                        component.changeModalAddress();
                     }
                 })
                 .catch((data) => {
@@ -1185,6 +1177,7 @@ export default {
         },
 
         unsetModal() {
+            this.modalOpen = false;
             this.inlandAdds = [];
             this.inlandAddRequested = false;
             this.inlandModalTotals = {};
@@ -1309,6 +1302,38 @@ export default {
                 }
             }
         },
+
+        changeModalAddress(){
+            let component = this;
+            
+            component.modalAddressBar = false;
+            component.modalDistance = false;
+
+            if((component.currentAddress != undefined &&
+                Object.keys(component.currentAddress).length != 0)){
+                component.datalists.distances.forEach(function (distance) {
+                    if (component.currentPort.id == distance.harbor_id) {
+                        component.modalDistance = true;
+                        component.distance_options.push(distance);
+                    }
+                    if(distance["display_name"]==component.currentAddress["address"]){
+                        component.modalAddress = distance;
+                    }
+                });
+                
+                if(!component.modalDistance){
+                    component.autocompleteValue = component.currentAddress["address"]
+                    component.modalAddress = component.currentAddress["address"];
+                }
+            }else{
+                component.autocompleteValue = null;
+                component.modalAddress = null;
+            }            
+            
+            setTimeout(() => {
+                component.modalAddressBar = true;                
+            }, 100);
+        }
     },
 };
 </script>
