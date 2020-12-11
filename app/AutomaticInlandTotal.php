@@ -35,6 +35,11 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\Harbor', 'id', 'port_id');
     }
 
+    public function port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
     public function totalize()
     {
         $quote = $this->quotev2()->first();
@@ -111,6 +116,8 @@ class AutomaticInlandTotal extends Model
                 $inlandCurrency = $inland->currency()->first();
                 if($inland->markup){
                     $inlandCharges[1] = $inland->markup;
+                }else{
+                    $inlandCharges[1] = 0;
                 }
                 $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
                 $full = $inlandCharges[0] + $inlandCharges[1];

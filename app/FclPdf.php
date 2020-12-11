@@ -222,12 +222,6 @@ class FclPdf
             foreach ($item->charge as $amounts) {
                 if ($amounts->type_id == 3) {
 
-                    /*if (@$quote->pdf_option->grouped_freight_charges == 1) {
-                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                    } else {
-                        $typeCurrency = $item->currency->alphacode;
-                    }*/
-
                     $typeCurrency = $item->currency->alphacode;
 
                     $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);

@@ -56,5 +56,7 @@ return [
     "provider" => "Provider",
     "distance" => "Distance",
     "ocean_freight" => "Ocean freight",
+    "minimum" => "Minimum",
     "totals" => "Totals",
+    "price" => "Price",
 ];
