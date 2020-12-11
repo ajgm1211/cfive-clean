@@ -82,11 +82,11 @@ class AutomaticRateTotal extends Model
                 $amountObject = json_decode($charge->amount);
                 $chargeCurrency = $charge->currency()->first();
                 foreach($amountObject as $key=>$value){
-                    $amountArray[$key] = $value;
+                    @$amountArray[$key] = $value;
                 }
                 $amountArray = $this->convertToCurrency($chargeCurrency,$currency,$amountArray);
                 foreach($amountArray as $key=>$value){
-                    $totals[$key] += isDecimal($value,true);
+                    @$totals[$key] += isDecimal($value,true);
                 }
             }
 
@@ -94,7 +94,7 @@ class AutomaticRateTotal extends Model
             if ($this->markups != null) {
                 $markups = $this->markups;
                 foreach ($markups as $mark => $profit) {
-                    $markups[$mark] = isDecimal($profit,true);
+                    @$markups[$mark] = isDecimal($profit,true);
                     $totals[str_replace('m', 'c', $mark)] += isDecimal($profit,true);
                 }
             }else{
@@ -105,8 +105,8 @@ class AutomaticRateTotal extends Model
             if ($oceanFreight->amount != null) {
                 $freight_amount = json_decode($oceanFreight->amount);
                 foreach ($freight_amount as $fr => $am) {
-                    $totals[$fr] += round($am, 2);
-                    $totals[$fr] = isDecimal($totals[$fr], true);
+                    @$totals[$fr] += round($am, 2);
+                    @$totals[$fr] = isDecimal($totals[$fr], true);
                 }
             }
 
@@ -140,7 +140,7 @@ class AutomaticRateTotal extends Model
                 $partials['per_unit'] = $charge->price_per_unit;
                 $partials = $this->convertToCurrency($chargeCurrency,$currency,$partials);
                 foreach($partials as $key=>$amount){
-                    $totals[$key] += $amount;
+                    @$totals[$key] += $amount;
                 }
                 if($charge->markup){
                     $chargeUnits = $charge->units;
@@ -149,7 +149,7 @@ class AutomaticRateTotal extends Model
                     $partialMarkups['total'] = $partialMarkups['per_unit'] * $chargeUnits;
                     $partialMarkups = $this->convertToCurrency($chargeCurrency,$currency,$partialMarkups);
                     foreach($partialMarkups as $key=>$amount){
-                        $markups[$key] += $amount;
+                        @$markups[$key] += $amount;
                     }
                 }
             }
