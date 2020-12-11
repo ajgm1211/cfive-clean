@@ -7047,7 +7047,7 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->units = $rateO->cantidad;
                     $oceanFreight->price_per_unit = $rateO->price;
                     $oceanFreight->total = $rateO->subtotal;
-                    $oceanFreight->markup = $priceLevelMarkupsFinal;
+                    $oceanFreight->markup = $priceLevelMarkupsFinal ?? 0;
                     $oceanFreight->currency_id = $rateO->idCurrency;
                     $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
