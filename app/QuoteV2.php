@@ -120,6 +120,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasMany('App\AutomaticInland', 'quote_id', 'id');
     }
 
+    public function inland_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir', 'quote_id', 'id');
+    }
+
     public function charge()
     {
         return $this->hasManyThrough('App\Charge', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
