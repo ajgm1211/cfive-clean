@@ -1192,7 +1192,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
 
     /** API Contracts Restrictions EndPoints **/
     Route::post('{contract}/restrictions', 'ContractController@updateRestrictions')->middleware('check_company:contract');
-    /** End Contract
+    /** End Contract **/
 
     /** API Contracts Remarks EndPoints **/
     Route::post('{contract}/remarks', 'ContractController@updateRemarks')->middleware('check_company:contract');
