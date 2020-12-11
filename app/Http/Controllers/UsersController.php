@@ -60,7 +60,7 @@ class UsersController extends Controller
       }
 
       $user = new User($request->all());
-      $user->password = bcrypt($request->password);
+      $user->password = $request->password;
       $user->save();
       if ($request->type == "subuser") {
         $user->assignRole('subuser');
