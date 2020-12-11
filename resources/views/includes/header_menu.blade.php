@@ -86,6 +86,19 @@
                                 </a>
                             </li>
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{url('/api/search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                    <span class="m-menu__link-text">
+                                        Search 
+                                        <span class="m-menu__link-badge">
+                                            <span class="m-badge m-badge--brand m-badge--wide">
+                                                new
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-list-1"></i>
                                     <span class="m-menu__link-text">
