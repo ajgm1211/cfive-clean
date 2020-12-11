@@ -20,8 +20,9 @@ class QuotationLocalChargeResource extends JsonResource
             'calculation_type' => $this->calculation_type->name ?? null,
             'port' => $this->port->display_name ?? null,
             'price' => $this->price,
-            'profit' => $this->profit,
+            'profit' => $this->profit ?? null,
             'total' => $this->total,
+            'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
         ];
 
