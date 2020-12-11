@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SaleTermV3 extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = ['id', 'name', 'company_user_id', 'type_id', 'port_id', 'group_container_id'];
 

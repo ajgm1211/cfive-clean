@@ -109,7 +109,7 @@
                         </ul>
                     </div>
                 </li> 
-
+                @role('administrator|company')
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -150,7 +150,7 @@
                     </div>
                 </li>
 
-                @role('administrator|company')
+                
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
