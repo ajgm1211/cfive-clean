@@ -37,7 +37,7 @@ class FclPdf
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
-        
+
         $quote_totals = $this->quoteTotals($quote,$containers);
 
         $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
@@ -66,33 +66,6 @@ class FclPdf
         }*/
 
         if (count($localcharges) > 0) {
-
-            //CURRENCY CONVERSION
-
-            if($quote->pdf_options['showTotals']){
-                foreach($localcharges as $localcharge){
-                    $localChargeInputCurrency = $localcharge->currency()->first();
-                    $localChargeOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-                    $localcharge->currency_id = $localChargeOutputCurrency->id;
-    
-                    if($localcharge->price){
-                        $localChargePriceArray = $localcharge->price;
-                        $localChargePriceArray = $this->convertToCurrency($localChargeInputCurrency,$localChargeOutputCurrency,$localChargePriceArray);
-                        $localcharge->price = $localChargePriceArray;
-                    }
-                    if($localcharge->profit){
-                        $localChargeProfitArray = $localcharge->profit;
-                        $localChargeProfitArray = $this->convertToCurrency($localChargeInputCurrency,$localChargeOutputCurrency,$localChargeProfitArray);
-                        $localcharge->profit = $localChargeProfitArray;
-                    }
-                    if($localcharge->total){
-                        $localChargeTotalArray = $localcharge->total;
-                        $localChargeTotalArray = $this->convertToCurrency($localChargeInputCurrency,$localChargeOutputCurrency,$localChargeTotalArray);
-                        $localcharge->total = $localChargeTotalArray;
-                    }
-                    
-                }
-            }
             $localcharges = $localcharges->groupBy([
 
                 function ($item) {
@@ -188,17 +161,15 @@ class FclPdf
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                     $quote = $item->quote()->first();
-                    
-                    if($quote->pdf_options['showTotals']){
-                        $inlandInputCurrency = $item->currency()->first();
-                        $inlandOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-    
-                        if($array_amounts){
-                            $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
-                        }
-                        if($array_markups){
-                            $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
-                        }
+
+                    $inlandInputCurrency = $item->currency()->first();
+                    $inlandOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+
+                    if($array_amounts){
+                        $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
+                    }
+                    if($array_markups){
+                        $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
                     }
 
                     foreach ($containers as $c) {
@@ -267,6 +238,10 @@ class FclPdf
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
                     
+                    $currencyInput = $item->currency;
+
+                    $currencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+                    
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
                         ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
@@ -275,13 +250,13 @@ class FclPdf
 
                         if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                             ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
-                            ${$total . $c->code} = ${$sum . $c->code};
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                         } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
                             ${$sum . $c->code} = $array_amounts['c' . $c->code];
-                            ${$total . $c->code} = ${$sum . $c->code};
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                         } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                             ${$sum . $c->code} = $array_markups['m' . $c->code];
-                            ${$total . $c->code} = ${$sum . $c->code};
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                         }
 
                         if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
@@ -294,31 +269,6 @@ class FclPdf
             }
         }
         
-        //CURRENCY CONVERSION
-
-        if($quote->pdf_options['showTotals']){
-            foreach($freight_charges_grouped as $fr){
-                if($fr->total){
-                    $freightTotals = json_decode($fr->total);
-                    $freightTotalsArray = [];
-                    foreach($freightTotals as $key => $frTotal){
-                        $freightTotalsArray[$key] = $frTotal;
-                    }
-                    
-                    $freightInputCurrency = $fr->currency()->first();
-                    $freightOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-        
-                    if($freightTotalsArray){
-                        $freightTotalsArray = $this->convertToCurrency($freightInputCurrency,$freightOutputCurrency,$freightTotalsArray);
-                    }
-                    
-                    $fr->currency = $freightOutputCurrency;
-                    $fr->currency_id = $freightOutputCurrency->id;
-                    $fr->total = json_encode($freightTotalsArray);
-                }
-            }
-        }
-
         return $freight_charges_grouped;
     }
 
@@ -375,18 +325,6 @@ class FclPdf
 
                                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                                 $array_markups = $this->processOldContainers($array_markups, 'markups');
-                    
-                                if($quote->pdf_options['showTotals']){
-                                    $chargeInputCurrency = $amounts->currency()->first();
-                                    $chargeOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-                
-                                    if($array_amounts){
-                                        $array_amounts = $this->convertToCurrency($chargeInputCurrency,$chargeOutputCurrency,$array_amounts);
-                                    }
-                                    if($array_markups){
-                                        $array_markups = $this->convertToCurrency($chargeInputCurrency,$chargeOutputCurrency,$array_markups);
-                                    }
-                                }
 
                                 foreach ($containers as $c) {
                                     ${$sum . $c->code} = 0;
@@ -396,13 +334,13 @@ class FclPdf
 
                                     if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
-                                        ${$total . $c->code} = ${$sum . $c->code};
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                                     } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
                                         ${$sum . $c->code} = $array_amounts['c' . $c->code];
-                                        ${$total . $c->code} = ${$sum . $c->code};
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                                     } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$sum . $c->code} = $array_markups['m' . $c->code];
-                                        ${$total . $c->code} = ${$sum . $c->code};
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
                                     }
 
                                     if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
@@ -412,52 +350,13 @@ class FclPdf
                                     }
                                 }
                             }
-                            //CURRENCY CONVERSION
-
-                            if($quote->pdf_options['showTotals']){
-
-                                $chargeInputCurrency = $amounts->currency()->first();
-                                $chargeOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-
-                                if($amounts->amount){
-                                    $chargeRates = json_decode($amounts->amount);
-                                    $chargeRatesArray = [];
-                                    foreach($chargeRates as $key => $chRate){
-                                        $chargeRatesArray[$key] = $chRate;
-                                    }
-                                    $chargeRatesArray = $this->convertToCurrency($chargeInputCurrency,$chargeOutputCurrency,$chargeRatesArray);
-                                    $amounts->amount = json_encode($chargeRatesArray);
-                                }
-
-                                if($amounts->markups){
-                                    $chargeMarkups = json_decode($amounts->markups);
-                                    $chargeMarkupsArray = [];
-                                    foreach($chargeMarkups as $key => $chMarkup){
-                                        $chargeMarkupsArray[$key] = $chMarkup;
-                                    }
-                                    $chargeMarkupsArray = $this->convertToCurrency($chargeInputCurrency,$chargeOutputCurrency,$chargeMarkupsArray);
-                                    $amounts->markups = json_encode($chargeMarkupsArray);
-                                }
-
-                                if($amounts->total){
-                                    $chargeTotals = json_decode($amounts->total);
-                                    $chargeTotalsArray = [];
-                                    foreach($chargeTotals as $key => $chTotal){
-                                        $chargeTotalsArray[$key] = $chTotal;
-                                    }   
-                                    $chargeTotalsArray = $this->convertToCurrency($chargeInputCurrency,$chargeOutputCurrency,$chargeTotalsArray);
-                                    $amounts->total = json_encode($chargeTotalsArray);
-                                }                 
-                                                                
-                                $amounts->currency_id = $chargeOutputCurrency->id;
-                                
-                            }
                         }
                     }
                 }
             }
             $freight->charge_freight = $charge_freight;
         }
+
         return $freight_charges_grouped;
     }
 
