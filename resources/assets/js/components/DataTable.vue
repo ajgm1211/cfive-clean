@@ -540,6 +540,7 @@
 
 <script>
 import Multiselect from "vue-multiselect";
+//import { filter } from 'vue/types/umd';
 import paginate from "./paginate";
 
 
@@ -1270,19 +1271,37 @@ export default {
                     if(typeof listElement[field.key] == "object" && listElement[field.key] != null){
                         if(Array.isArray(listElement[field.key]) && listElement[field.key].length != 0){
                             listElement[field.key].forEach(function(address){
-                                if(!component.filterOptions[field.key].includes(address)){
-                                    component.filterOptions[field.key].push(address);
+                                if(typeof address == "string"){
+                                    if(!component.filterOptions[field.key].includes(address)){
+                                        component.filterOptions[field.key].push(address);
+                                    }
+                                }else if(typeof address == "object"){
+                                    var objectAdded = false;
+
+                                    component.filterOptions[field.key].forEach(function(added){
+                                        if(added.id == address.id){
+                                            objectAdded = true;
+                                        }
+                                    });
+                                    if(!objectAdded){
+                                        component.filterOptions[field.key].push(address);
+                                    }
                                 }
                             })
                         }else if(!Array.isArray(listElement[field.key])){
                             if(Object.keys(component.filterOptions[field.key]).length==0){
                                 component.filterOptions[field.key].push(listElement[field.key]);
                             }else{
+                                var objectAdded = false;
+
                                 component.filterOptions[field.key].forEach(function(added){
-                                    if(added.id != listElement[field.key].id){
-                                        component.filterOptions[field.key].push(listElement[field.key]);
+                                    if(added.id == listElement[field.key].id){
+                                        objectAdded = true;
                                     }
-                                })
+                                });
+                                if(!objectAdded){
+                                    component.filterOptions[field.key].push(listElement[field.key]);
+                                }
                             }
                         }
                     }else if(typeof listElement[field.key] == "string"){
@@ -1297,32 +1316,124 @@ export default {
 
         filterTable(){
             let component = this;
-            var filteredList = Array;
+            let filteredList = [];
+            let purgeIndex = [];
+
+            component.data = component.fullListData;
 
             Object.keys(component.filtered).forEach(function (filterKey){
-                component.filtered[filterKey].forEach(function (filterValue){
-                    component.fullListData.forEach(function (listElement){
-                        if(typeof listElement[filterKey] == "object"){
-                            if(Array.isArray(listElement[filterKey])){
-                                listElement[filterKey].forEach(function (value){
-                                    if(filterValue == value){
+                component.fullListData.forEach(function (listElement){
+                    if(typeof listElement[filterKey] == "object"){
+                        if(Array.isArray(listElement[filterKey])){
+                            listElement[filterKey].forEach(function (filteredArray){
+                                if(typeof filteredArray == "string"){
+                                    if(component.filtered[filterKey].includes(filteredArray) && !filteredList.includes(listElement)){
                                         filteredList.push(listElement);
                                     }
-                                });
-                            }else{
-                                if(filterValue.id == listElement[filterKey].id){
+                                }else if(typeof filteredArray == "object"){
+                                    component.filtered[filterKey].forEach(function (arrayObject){
+                                        if(arrayObject.id == filteredArray.id && !filteredList.includes(listElement)){
+                                            filteredList.push(listElement);
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            component.filtered[filterKey].forEach(function (filteredObject){
+                                if(filteredObject.id == listElement[filterKey].id && !filteredList.includes(listElement)){
                                     filteredList.push(listElement);
                                 }
-                            }
-                        }else if(typeof listElement[filterKey] == "object"){
-                            if(filterValue == listElement[filterKey]){
+                            });
+                        }
+                    }else if(typeof listElement[filterKey] == "string"){
+                        component.filtered[filterKey].forEach(function (filteredString){
+                            if(filteredString == listElement[filterKey] && !filteredList.includes(listElement)){
                                 filteredList.push(listElement);
+                            }
+                        });
+                    }
+                });
+            });
+
+            /**console.log('unpurged');
+            filteredList.forEach(function (element){
+                console.log(element.id);
+            });**/
+
+            Object.keys(component.filtered).forEach(function (filterKey){
+                if(component.filtered[filterKey].length != 0){
+
+                    filteredList.forEach(function (filteredElement){
+                        if(!Array.isArray(filteredElement[filterKey])){
+                            if(typeof filteredElement[filterKey] == "string"){
+
+                                var stringMatch = false;
+
+                                component.filtered[filterKey].forEach(function (filteredStringPurge){
+                                    if(filteredElement[filterKey] == filteredStringPurge){
+                                        stringMatch = true;
+                                    }
+                                });
+                                if(!stringMatch){
+                                    purgeIndex.push(filteredList.indexOf(filteredElement));
+                                }                               
+                            }else if(typeof filteredElement[filterKey] == "object"){
+                                
+                                var objectMatch = false;
+    
+                                component.filtered[filterKey].forEach(function (filteredObjectPurge){
+                                    if(filteredElement[filterKey].id == filteredObjectPurge.id){
+                                        objectMatch = true;
+                                    }
+                                });
+                                if(!objectMatch){
+                                    purgeIndex.push(filteredList.indexOf(filteredElement));
+                                }
+                            }
+                        }else{
+                            let arrayMatch = false;
+                            
+                            filteredElement[filterKey].forEach(function(filteredArrayPurge){
+                                if(typeof filteredArrayPurge == "string"){
+                                    if(component.filtered[filterKey].includes(filteredArrayPurge)){
+                                        arrayMatch = true;
+                                    }
+                                }else if(typeof filteredArrayPurge == "object"){
+                                    component.filtered[filterKey].forEach(function (filtering){
+                                        if(filtering.id == filteredArrayPurge.id){
+                                            arrayMatch = true;
+                                        }
+                                    });
+                                }
+                            });
+                            if(!arrayMatch){
+                                purgeIndex.push(filteredList.indexOf(filteredElement));
                             }
                         }
                     });
-                });
+                }
             });
-            console.log(filteredList);
+
+            _.pullAt(filteredList,purgeIndex);
+            
+            /**console.log('purged');
+            filteredList.forEach(function (element){
+                console.log(element.id);
+            });**/
+
+            if(Object.keys(component.filtered).length != 0){
+                var filterKeyMatch = false;
+                Object.keys(component.filtered).forEach(function (key){
+                    if(component.filtered[key].length != 0){
+                        filterKeyMatch = true;
+                    }
+                });
+                if(filterKeyMatch){
+                    component.data = filteredList;
+                }else{
+                    component.getData();
+                }
+            }
         },
     },
     watch: {
