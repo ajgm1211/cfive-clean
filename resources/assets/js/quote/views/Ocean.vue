@@ -422,7 +422,6 @@ export default {
             }else{
                 component.totalsFields["Profits"]["profits_per_unit"] = {
                     type: "text",
-                    disabled: true
                 };
                 component.totalsFields["Profits"]["profits_total"] = {
                     type: "text",

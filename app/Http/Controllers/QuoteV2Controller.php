@@ -7031,15 +7031,19 @@ class QuoteV2Controller extends Controller
                             $priceLevelMarkupsAmount = array($priceLevelMarkups->fixed_markup);
                             $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsAmount);
                             $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0], true);
+                            $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
                         } else if ($priceLevelMarkups->percent_markup != 0) {
                             $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
                             $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal / 100);
                             $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal, true);
+                            $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
                         } else {
                             $priceLevelMarkupsFinal = 0;
+                            $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                         }
                     } else {
                         $priceLevelMarkupsFinal = 0;
+                        $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                     }
 
                     $oceanFreight = new ChargeLclAir();
@@ -7062,7 +7066,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->destination_port_id = $rate->destination_port_id;
                     $rateTotals->currency_id = $rateO->idCurrency;
                     $rateTotals->totals = null;
-                    $rateTotals->markups = null;
+                    $rateTotals->markups = $priceLevelMarkupsFinalArray;
                     $rateTotals->save();
                     $rateTotals->totalize($rateO->idCurrency);
 
