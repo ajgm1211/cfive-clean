@@ -539,8 +539,11 @@ i.mx-icon-calendar {
     white-space: nowrap;
     font-size: 12px;
     margin-bottom: 0px !important;
-    padding-top: 12px !important;
     padding-left: 3px;
+}
+
+.search .multiselect__input, .search .multiselect__single {
+    margin-bottom: 0px;
 }
 
 .select-all {
@@ -1078,7 +1081,9 @@ input.multiselect__input:focus {
 .search label .multiselect__tags {
     min-height: 50px !important;
     height: auto !important;
-    padding: 4px 40px 5px 70px !important;
+    padding: 4px 7px 5px 50px !important;
+    display: flex;
+    align-items: center;
 }
 
 .delivery-type {
