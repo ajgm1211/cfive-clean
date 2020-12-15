@@ -711,10 +711,11 @@ export default {
             if(component.currentQuoteData['type']=='FCL'){
                 component.quoteEquip.forEach(function (eq) {
                     component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                        type: "span",
+                        type: "text",
+                        disabled: true,
                     };
                     component.totalsFields["Totals"]["totals_".concat(eq)] = {
-                        type: "span",
+                        type: "text",
                     };
                 });
     
