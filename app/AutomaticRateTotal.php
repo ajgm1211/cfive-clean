@@ -112,7 +112,7 @@ class AutomaticRateTotal extends Model
 
             $totalsJson = json_encode($totals);
 
-            $this->update(['totals' => $totalsJson,'markups' => $markups]);
+            $this->update(['totals' => $totalsJson, 'markups' => $markups]);
             $rate->update(['total' => $totalsJson]);
 
         } else if ($quote->type == 'LCL') {
@@ -129,8 +129,8 @@ class AutomaticRateTotal extends Model
             $totals['total'] = 0;
             $totals['per_unit'] = 0;
             $markups = [];
-            $markups['total'] = 0;
             $markups['per_unit'] = 0;
+            $markups['total'] = 0;
 
             // adding all charges together
             foreach ($charges as $charge) {
@@ -142,7 +142,7 @@ class AutomaticRateTotal extends Model
                 foreach($partials as $key=>$amount){
                     @$totals[$key] += $amount;
                 }
-                if($charge->markup){
+                /**if($charge->markup){
                     $chargeUnits = $charge->units;
                     $partialMarkups = [];
                     $partialMarkups['per_unit'] = $charge->markup;
@@ -151,7 +151,7 @@ class AutomaticRateTotal extends Model
                     foreach($partialMarkups as $key=>$amount){
                         @$markups[$key] += $amount;
                     }
-                }
+                }**/
             }
 
             //adding ocean freight
@@ -162,12 +162,22 @@ class AutomaticRateTotal extends Model
             $totals['per_unit'] += $freightPerUnit;
             $totals['total'] = isDecimal($totals['total'], true);
             $totals['per_unit'] = isDecimal($totals['per_unit'], true);
-            if($oceanFreight->markup){
+            /**if($oceanFreight->markup){
                 $freightMarkup = $oceanFreight->markup;
                 $markups['per_unit'] += isDecimal($freightMarkup,true);
                 $markups['total'] += isDecimal($markups['per_unit'] * $freightUnits,true);
                 $totals['total'] += $markups['total'];
                 $totals['per_unit'] += $markups['per_unit'];
+            }**/
+
+            //adding markups
+            if($this->markups){
+                foreach($this->markups as $key=>$mark){
+                    $markups[$key] = isDecimal($mark,true);
+                }
+                $markups['total'] = $markups['per_unit'] * $freightUnits;
+                $totals['per_unit'] += $markups['per_unit'];
+                $totals['total'] += $markups['total'];
             }
 
             $totals = json_encode($totals);
