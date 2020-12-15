@@ -131,8 +131,6 @@ class AutomaticInlandLclController extends Controller
                 'currency_id' => $user_currency
             ]);
         }
-
-        dd($totals);
         
         $totals->totalize();
     }
