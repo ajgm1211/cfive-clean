@@ -29,6 +29,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use App\Jobs\ProcessLogo;
 use App\Http\Requests\StoreSettings;
+use App\PdfTemplate;
 
 class SettingController extends Controller
 {
@@ -73,8 +74,9 @@ class SettingController extends Controller
         }
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
+        $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny','color_pdf'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny','color_pdf'));
     }
 
    
@@ -132,6 +134,7 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
 
             if ($footer_image != "") {
@@ -171,6 +174,7 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
