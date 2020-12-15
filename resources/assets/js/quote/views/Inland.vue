@@ -634,27 +634,7 @@ export default {
 
             component.$refs["addInland"].show();
             component.modalOpen = true;
-            if((component.currentAddress != undefined &&
-                    Object.keys(component.currentAddress).length != 0)){
-                component.datalists.distances.forEach(function (distance) {
-                    if (component.currentPort.id == distance.harbor_id) {
-                        component.modalDistance = true;
-                        component.distance_options.push(distance);
-                    }
-                    if(distance["display_name"]==component.currentAddress["address"]){
-                        component.modalAddress = distance;
-                    }
-                });
-
-                if(!component.modalDistance){
-                    component.autocompleteValue = component.currentAddress["address"];
-                    component.modalAddress = component.currentAddress["address"];
-                }
-            }else{
-                component.modalAddress = null;
-                component.autocompleteValue = null
-            }
-
+            component.changeModalAddress();
         },
 
         setPorts() {
@@ -731,10 +711,11 @@ export default {
             if(component.currentQuoteData['type']=='FCL'){
                 component.quoteEquip.forEach(function (eq) {
                     component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                        type: "span",
+                        type: "text",
+                        disabled: true,
                     };
                     component.totalsFields["Totals"]["totals_".concat(eq)] = {
-                        type: "span",
+                        type: "text",
                     };
                 });
     
@@ -1309,31 +1290,33 @@ export default {
             component.modalAddressBar = false;
             component.modalDistance = false;
 
-            if((component.currentAddress != undefined &&
-                Object.keys(component.currentAddress).length != 0)){
-                component.datalists.distances.forEach(function (distance) {
-                    if (component.currentPort.id == distance.harbor_id) {
-                        component.modalDistance = true;
-                        component.distance_options.push(distance);
-                    }
-                    if(distance["display_name"]==component.currentAddress["address"]){
+            component.datalists.distances.forEach(function (distance) {
+                if (component.currentPort.id == distance.harbor_id) {
+                    component.modalDistance = true;
+                    component.distance_options.push(distance);
+                }
+                if(component.currentAddress != undefined){
+                    if(distance["display_name"] == component.currentAddress["address"]){
                         component.modalAddress = distance;
                     }
-                });
-                
-                if(!component.modalDistance){
+                }
+            });
+            
+            if(!component.modalDistance){
+                if(component.currentAddress != undefined &&
+                Object.keys(component.currentAddress).length != 0){
                     component.autocompleteValue = component.currentAddress["address"]
                     component.modalAddress = component.currentAddress["address"];
-                }
-            }else{
-                component.autocompleteValue = null;
-                component.modalAddress = null;
-            }            
-            
+                }else{
+                    component.autocompleteValue = null;
+                    component.modalAddress = null;
+                }            
+            }
+        
             setTimeout(() => {
                 component.modalAddressBar = true;                
             }, 100);
-        }
+        },
     },
 };
 </script>
