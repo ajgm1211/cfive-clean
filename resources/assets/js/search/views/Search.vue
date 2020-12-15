@@ -120,7 +120,7 @@
                     <label>
                         <multiselect
                             v-model="container"
-                            :multiple="false"
+                            :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
@@ -309,36 +309,26 @@ export default {
             dtdActive: false,
             direction: 'import',
             type: 'FCL',
-            container: '',
+            company: '',
+            carriers: '',
+            contact: '',
+            pricelevel: '',
+            container: [],
             selected: 'radio1',
             deliveryType: 'PORT TO PORT',
             valueOrigen: [],
             valueDestination: [],
-            optionsOrigen: [
-                { name: 'Vue.js', language: 'JavaScript' },
-                { name: 'Adonis', language: 'JavaScript' },
-                { name: 'Rails', language: 'Ruby' },
-                { name: 'Sinatra', language: 'Ruby' },
-                { name: 'Laravel', language: 'PHP' },
-                { name: 'Phoenix', language: 'Elixir' }
-            ],
-            optionsDestination: [
-                { name: 'Vue.js', language: 'JavaScript' },
-                { name: 'Adonis', language: 'JavaScript' },
-                { name: 'Rails', language: 'Ruby' },
-                { name: 'Sinatra', language: 'Ruby' },
-                { name: 'Laravel', language: 'PHP' },
-                { name: 'Phoenix', language: 'Elixir' }
-            ],
+            optionsOrigen: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
+            optionsDestination: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
             options: [
                 { text: 'Import', value: 'import' },
                 { text: 'Export', value: 'export' }
             ],
-            optionCompany: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionContact: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionPriceLevel: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionCarriers: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionContainer: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionCompany: ['Select option', 'Cargofive', 'Altius', 'Lantia', 'FreightBros'],
+            optionContact: ['Select option', 'Genesis', 'Ruben', 'Sebastian', 'Julio'],
+            optionPriceLevel: ['Select option', 'Precio 1', 'Precio 2', 'Precio 3', 'Precio 4'],
+            optionCarriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
+            optionContainer: ['Select option', '20DV', '40DV', '40CH', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'],
             optionsType: ['FCL', 'LCL', 'AIR'],
             optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR']
         }

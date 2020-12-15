@@ -38,7 +38,7 @@
                    <div class="row">
 
                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
+                        <img src="/images/maersk.png" alt="logo" width="160px">
                        </div>
 
                        <div class="row col-12 col-sm-8">
@@ -198,7 +198,7 @@
                    <div class="row">
 
                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
+                        <img src="/images/maersk.png" alt="logo" width="160px">
                        </div>
 
                        <div class="row col-12 col-sm-8">
@@ -360,7 +360,7 @@
                    <div class="row">
 
                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
+                        <img src="/images/maersk.png" alt="logo" width="160px">
                        </div>
 
                        <div class="row col-12 col-sm-8">
