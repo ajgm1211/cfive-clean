@@ -446,10 +446,6 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autoinland_id}/update`, data)
         },
-        createTotals(combo, route) {
-            let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/store`, {})
-        },
         updateTotals(combo, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/update`, data)
@@ -500,10 +496,6 @@ export default {
         update(autoinland_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${autoinland_id}/update`, data)
-        },
-        createTotals(combo, route) {
-            let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/totals/${combo}/store`, {})
         },
         updateTotals(combo, data, route) {
             let quote_id = route.params.id;
