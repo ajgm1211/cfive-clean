@@ -11,7 +11,7 @@ class SaleTermCodeController extends Controller
 {
     function list(Request $request)
     {
-        $results = SaleTermCode::filterByCurrentCompany()->filter($request);
+        $results = SaleTermCode::filterByCurrentCompany()->orderBy('name','asc')->filter($request);
         return SaleTermCodeResource::collection($results);
     }
 
