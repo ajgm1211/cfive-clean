@@ -160,18 +160,6 @@ class FclPdf
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
 
-                    $quote = $item->quote()->first();
-
-                    $inlandInputCurrency = $item->currency()->first();
-                    $inlandOutputCurrency = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-
-                    if($array_amounts){
-                        $array_amounts = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_amounts);
-                    }
-                    if($array_markups){
-                        $array_markups = $this->convertToCurrency($inlandInputCurrency,$inlandOutputCurrency,$array_markups);
-                    }
-
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
                         ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
