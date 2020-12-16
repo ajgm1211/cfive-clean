@@ -65,29 +65,24 @@
 
                 <div
                     class="col-12 col-lg-4 d-flex justify-content-end align-items-center"
-                >
+                >                 
+                    <a 
+                        v-if="
+                        loaded &&
+                        currentAddress != undefined 
+                        "
+                        href="#" 
+                        class="btn btn-link btn-delete" 
+                        id="show-btn" 
+                        @click="deleteInland()"
+                        >Delete Inland</a
+                    >
                     <a
                         href="#"
                         class="btn btn-primary btn-bg"
                         id="show-btn"
                         @click="showModal"
                         >+ Add Inland</a
-                    >
-                </div>
-
-                <div
-                    v-if="
-                        loaded &&
-                        currentAddress != undefined 
-                    "
-                    class="col-12 col-lg-4 d-flex justify-content-end align-items-center"
-                >
-                    <a 
-                        href="#" 
-                        class="btn btn-link btn-delete" 
-                        id="show-btn" 
-                        @click="deleteInland()"
-                        >Delete Inland</a
                     >
                 </div>
 
