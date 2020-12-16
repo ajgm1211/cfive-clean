@@ -34,9 +34,11 @@ class AutomaticInlandLclController extends Controller
 
         if($total!=null){
             $total->totalize();
+            $results = AutomaticInlandLclAir::where('inland_totals_id',$total->id)->filterByQuote($quote->id)->filter($request);
+        }else{
+            return null;
         }
         
-        $results = AutomaticInlandLclAir::where([['port_id',$port_id],['inland_address_id',$address_id]])->filterByQuote($quote->id)->filter($request);
         
         return AutomaticInlandLclAirResource::collection($results);
     }
@@ -101,25 +103,7 @@ class AutomaticInlandLclController extends Controller
             }           
         }
 
-        $inland = AutomaticInlandLclAir::create([
-            'quote_id' => $quote->id,
-            'automatic_rate_id' => $quote->rates_v2()->first()->id,
-            'provider'=> 'Inland',
-            'provider_id' => count($vdata['provider_id'])==0 ? null : $vdata['provider_id']['id'],
-            'currency_id' => $vdata['currency_id']['id'],
-            'port_id' => $port_id,
-            'charge' => $vdata['charge'],
-            'inland_address_id'=> $inland_address->id,
-            'type' => $type,
-            'distance' => $distance,
-            'contract' => 1, 
-            'total' => $vdata['total'],
-            'markup' => $vdata['profit'],
-            'validity_start' => $quote->validity_start,
-            'validity_end' => $quote->validity_end,
-        ]);
-
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
+        $totals = $inland_address->inland_totals()->first();
 
         if($totals == null){
             $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
@@ -131,6 +115,24 @@ class AutomaticInlandLclController extends Controller
                 'currency_id' => $user_currency
             ]);
         }
+
+        $inland = AutomaticInlandLclAir::create([
+            'quote_id' => $quote->id,
+            'automatic_rate_id' => $quote->rates_v2()->first()->id,
+            'provider'=> 'Inland',
+            'provider_id' => count($vdata['provider_id'])==0 ? null : $vdata['provider_id']['id'],
+            'currency_id' => $vdata['currency_id']['id'],
+            'port_id' => $port_id,
+            'charge' => $vdata['charge'],
+            'inland_totals_id'=> $totals->id,
+            'type' => $type,
+            'distance' => $distance,
+            'contract' => 1, 
+            'total' => $vdata['total'],
+            'markup' => $vdata['profit'],
+            'validity_start' => $quote->validity_start,
+            'validity_end' => $quote->validity_end,
+        ]);
         
         $totals->totalize();
     }
@@ -171,7 +173,7 @@ class AutomaticInlandLclController extends Controller
 
         $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
 
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
+        $totals = $inland_address->inland_totals()->first();
 
         if($totals == null){
             $totals = AutomaticInlandTotal::create([
@@ -340,5 +342,20 @@ class AutomaticInlandLclController extends Controller
         DB::table('automatic_inland_lcl_airs')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function deleteFull(QuoteV2 $quote, $combo)
+    {
+        $combo_array = explode(';',$combo);
+        
+        $address = $combo_array[0];
+
+        $port_id = $combo_array[1];
+        
+        $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
+
+        $inland_address->delete();
+
+        return response()->json(null, 204); 
     }
 }

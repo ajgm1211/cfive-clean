@@ -30,6 +30,16 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\InlandAddress','id','inland_address_id');
     }
 
+    public function inlands()
+    {
+        return $this->hasMany('App\AutomaticInland','inland_totals_id','id');
+    }
+
+    public function inlands_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir','inland_totals_id','id');
+    }
+
     public function get_port()
     {
         return $this->hasOne('App\Harbor', 'id', 'port_id');
@@ -56,11 +66,7 @@ class AutomaticInlandTotal extends Model
     
             array_splice($equip_array,-1,1);
         
-            $inlands = AutomaticInland::where([
-                ['quote_id',$this->quote_id],
-                ['port_id',$this->port_id],
-                ['type',$this->type],
-                ['inland_address_id',$this->inland_address_id]])->get();
+            $inlands = $this->inlands()->get();
     
             $markups = [];
             $totals = [];
@@ -101,11 +107,7 @@ class AutomaticInlandTotal extends Model
             $this->update(['totals'=>$totals,'markups'=>$markups]);
         }else if($quote->type=='LCL'){
         
-            $inlands = AutomaticInlandLclAir::where([
-                ['quote_id',$this->quote_id],
-                ['port_id',$this->port_id],
-                ['type',$this->type],
-                ['inland_address_id',$this->inland_address_id]])->get();
+            $inlands = $this->inlands_lcl()->get();
     
             $totals['lcl_totals'] = 0;
             $markups['profit'] = 0;

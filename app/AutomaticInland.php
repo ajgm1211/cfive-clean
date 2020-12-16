@@ -14,7 +14,8 @@ class AutomaticInland extends Model
         'rate' => 'array',
     ];
 
-    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_address_id'];
+    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 
+        'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_totals_id'];
 
     public function quote()
     {
