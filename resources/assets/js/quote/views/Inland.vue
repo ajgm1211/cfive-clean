@@ -235,6 +235,9 @@
                             <!-- Header table -->
                             <b-thead class="q-thead">
                                 <b-tr>
+                                    <b-th v-if="inlandFound">
+                                    </b-th>
+
                                     <b-th>
                                         <span class="label-text">Charge</span>
                                     </b-th>
