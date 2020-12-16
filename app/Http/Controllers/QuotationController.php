@@ -421,6 +421,31 @@ class QuotationController extends Controller
         $inlandTotals = $quote->automatic_inland_totals()->get();
         $inlandAddress = $quote->automatic_inland_address()->get();
 
+        if(count($rates) != 0){
+            foreach($rates as $rate){
+                $rateTotal = $rate->totals()->first();
+                if(!$rateTotal){
+                    $currency = $rate->currency()->first();
+                    
+                    $newRateTotal = AutomaticRateTotal::create([
+                        'quote_id' => $quote->id,
+                        'currency_id' => $currency->id,
+                        'origin_port_id' => $rate->origin_port_id,
+                        'destination_port_id' => $rate->destination_port_id,
+                        'automatic_rate_id' => $rate->id,
+                        'totals' => null,
+                        'markups' => null                    
+                    ]);
+
+                    $newRateTotal->totalize($currency->id);
+                }else{
+                    $currency = $rate->currency()->first();
+
+                    $newRateTotal->totalize($currency->id);
+                }
+            }
+        }
+
         if(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
