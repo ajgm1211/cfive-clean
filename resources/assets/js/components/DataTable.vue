@@ -30,7 +30,36 @@
                         </b-form-checkbox>
                     </b-th>
                     <b-th v-for="(value, key) in fields" :key="key">
+                        <span v-if="filter" class="mr-1 btn-filter" @click="openFilter(value)"><b-icon icon="funnel-fill"></b-icon></span>
                         {{ value.label }}
+                        
+                       <!-- <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label]" :id="value.label">
+                            <label>Select an Option</label>
+                            <md-select multiple>
+                                <md-option value="fight-club">Fight Club</md-option>
+                                <md-option value="godfather">Godfather</md-option>
+                                <md-option value="godfather-ii">Godfather II</md-option>
+                                <md-option value="godfather-iii">Godfather III</md-option>
+                                <md-option value="godfellas">Godfellas</md-option>
+                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
+                                <md-option value="scarface">Scarface</md-option>
+                            </md-select>
+                        </md-field> -->
+
+                        <multiselect
+                            v-if="filterSet"
+                            :id="key"
+                            :class="[{ openFilter: value.filterIsOpen, closeFilter: !value.filterIsOpen }, value.label]" 
+                            v-model="filtered[value.key]"
+                            :track-by="value.filterTrackBy"
+                            :label="value.trackLabel"
+                            :close-on-select="true"
+                            :clear-on-select="false"
+                            :multiple="true"
+                            :show-labels="false"
+                            :options="filterOptions[value.key]"
+                            @input="filterTable"
+                        ></multiselect>
                     </b-th>
                     <b-th>
                         <b-button
@@ -511,6 +540,7 @@
 
 <script>
 import Multiselect from "vue-multiselect";
+//import { filter } from 'vue/types/umd';
 import paginate from "./paginate";
 
 
@@ -661,7 +691,10 @@ export default {
             selected: [],
             allSelected: false,
             indeterminate: false,
-            filterIsOpen: false
+            filterOptions: {},
+            filtered: {},
+            filterSet: false,
+            fullListData: {},
         };
     },
     computed: {
@@ -681,9 +714,7 @@ export default {
         /* Response the lists data*/
         openFilter(filter) {
 
-            
-            this.filterIsOpen = !this.filterIsOpen;
-            
+            filter.filterIsOpen = !filter.filterIsOpen;
 
         },
         initialData() {
@@ -768,6 +799,18 @@ export default {
                             this.$refs.observer.setErrors(data.data.errors);
                         });
                 }
+            }
+
+            if(this.filter && Object.keys(this.filterOptions).length==0){
+                let filterParams = {no_pagination: 1};
+
+                this.actions.list(
+                    filterParams,
+                    (err, data) => {
+                        this.setFilters(data.data)
+                    },
+                    this.$route
+                );
             }
         },
 
@@ -1215,6 +1258,182 @@ export default {
 
         addInsert() {
             this.autoAddRequested = !this.autoAddRequested;
+        },
+
+        setFilters(data){
+            let component = this;
+
+            component.fullListData = data;
+
+            component.fields.forEach(function(field){
+                component.filterOptions[field.key] = [];
+                data.forEach(function(listElement){
+                    if(typeof listElement[field.key] == "object" && listElement[field.key] != null){
+                        if(Array.isArray(listElement[field.key]) && listElement[field.key].length != 0){
+                            listElement[field.key].forEach(function(address){
+                                if(typeof address == "string"){
+                                    if(!component.filterOptions[field.key].includes(address)){
+                                        component.filterOptions[field.key].push(address);
+                                    }
+                                }else if(typeof address == "object"){
+                                    var objectAdded = false;
+
+                                    component.filterOptions[field.key].forEach(function(added){
+                                        if(added.id == address.id){
+                                            objectAdded = true;
+                                        }
+                                    });
+                                    if(!objectAdded){
+                                        component.filterOptions[field.key].push(address);
+                                    }
+                                }
+                            })
+                        }else if(!Array.isArray(listElement[field.key])){
+                            if(Object.keys(component.filterOptions[field.key]).length==0){
+                                component.filterOptions[field.key].push(listElement[field.key]);
+                            }else{
+                                var objectAdded = false;
+
+                                component.filterOptions[field.key].forEach(function(added){
+                                    if(added.id == listElement[field.key].id){
+                                        objectAdded = true;
+                                    }
+                                });
+                                if(!objectAdded){
+                                    component.filterOptions[field.key].push(listElement[field.key]);
+                                }
+                            }
+                        }
+                    }else if(typeof listElement[field.key] == "string"){
+                        if(!component.filterOptions[field.key].includes(listElement[field.key])){
+                            component.filterOptions[field.key].push(listElement[field.key]);
+                        }
+                    }
+                })
+            })
+            component.filterSet = true;
+        },
+
+        filterTable(){
+            let component = this;
+            let filteredList = [];
+            let purgeIndex = [];
+
+            component.data = component.fullListData;
+
+            Object.keys(component.filtered).forEach(function (filterKey){
+                component.fullListData.forEach(function (listElement){
+                    if(typeof listElement[filterKey] == "object"){
+                        if(Array.isArray(listElement[filterKey])){
+                            listElement[filterKey].forEach(function (filteredArray){
+                                if(typeof filteredArray == "string"){
+                                    if(component.filtered[filterKey].includes(filteredArray) && !filteredList.includes(listElement)){
+                                        filteredList.push(listElement);
+                                    }
+                                }else if(typeof filteredArray == "object"){
+                                    component.filtered[filterKey].forEach(function (arrayObject){
+                                        if(arrayObject.id == filteredArray.id && !filteredList.includes(listElement)){
+                                            filteredList.push(listElement);
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            component.filtered[filterKey].forEach(function (filteredObject){
+                                if(filteredObject.id == listElement[filterKey].id && !filteredList.includes(listElement)){
+                                    filteredList.push(listElement);
+                                }
+                            });
+                        }
+                    }else if(typeof listElement[filterKey] == "string"){
+                        component.filtered[filterKey].forEach(function (filteredString){
+                            if(filteredString == listElement[filterKey] && !filteredList.includes(listElement)){
+                                filteredList.push(listElement);
+                            }
+                        });
+                    }
+                });
+            });
+
+            /**console.log('unpurged');
+            filteredList.forEach(function (element){
+                console.log(element.id);
+            });**/
+
+            Object.keys(component.filtered).forEach(function (filterKey){
+                if(component.filtered[filterKey].length != 0){
+
+                    filteredList.forEach(function (filteredElement){
+                        if(!Array.isArray(filteredElement[filterKey])){
+                            if(typeof filteredElement[filterKey] == "string"){
+
+                                var stringMatch = false;
+
+                                component.filtered[filterKey].forEach(function (filteredStringPurge){
+                                    if(filteredElement[filterKey] == filteredStringPurge){
+                                        stringMatch = true;
+                                    }
+                                });
+                                if(!stringMatch){
+                                    purgeIndex.push(filteredList.indexOf(filteredElement));
+                                }                               
+                            }else if(typeof filteredElement[filterKey] == "object"){
+                                
+                                var objectMatch = false;
+    
+                                component.filtered[filterKey].forEach(function (filteredObjectPurge){
+                                    if(filteredElement[filterKey].id == filteredObjectPurge.id){
+                                        objectMatch = true;
+                                    }
+                                });
+                                if(!objectMatch){
+                                    purgeIndex.push(filteredList.indexOf(filteredElement));
+                                }
+                            }
+                        }else{
+                            let arrayMatch = false;
+                            
+                            filteredElement[filterKey].forEach(function(filteredArrayPurge){
+                                if(typeof filteredArrayPurge == "string"){
+                                    if(component.filtered[filterKey].includes(filteredArrayPurge)){
+                                        arrayMatch = true;
+                                    }
+                                }else if(typeof filteredArrayPurge == "object"){
+                                    component.filtered[filterKey].forEach(function (filtering){
+                                        if(filtering.id == filteredArrayPurge.id){
+                                            arrayMatch = true;
+                                        }
+                                    });
+                                }
+                            });
+                            if(!arrayMatch){
+                                purgeIndex.push(filteredList.indexOf(filteredElement));
+                            }
+                        }
+                    });
+                }
+            });
+
+            _.pullAt(filteredList,purgeIndex);
+            
+            /**console.log('purged');
+            filteredList.forEach(function (element){
+                console.log(element.id);
+            });**/
+
+            if(Object.keys(component.filtered).length != 0){
+                var filterKeyMatch = false;
+                Object.keys(component.filtered).forEach(function (key){
+                    if(component.filtered[key].length != 0){
+                        filterKeyMatch = true;
+                    }
+                });
+                if(filterKeyMatch){
+                    component.data = filteredList;
+                }else{
+                    component.getData();
+                }
+            }
         },
     },
     watch: {
