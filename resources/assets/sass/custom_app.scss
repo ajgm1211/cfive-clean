@@ -3,6 +3,10 @@
     overflow-x: initial !important;
 }
 
+.sc-table.table-sm tr:nth-child(odd) {
+    background-color: transparent !important;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 a,
@@ -21,7 +25,8 @@ textarea,
 td,
 th,
 tr,
-.h6 {
+legend,
+div .h6 {
     font-family: "Sailec" !important;
 }
 
@@ -551,9 +556,11 @@ i.mx-icon-calendar {
     left: 11px;
 }
 
-#id_carriers .multiselect__tags, .multiselect-height .multiselect__tags {
+#id_carriers .multiselect__tags,
+.multiselect-height .multiselect__tags {
     height: 35px !important;
 }
+
 
 /*** Validations ***/
 
@@ -691,7 +698,7 @@ input.multiselect__input:focus {
     overflow-x: scroll;
 }
 
-.no-scroll .card-body{
+.no-scroll .card-body {
     overflow: inherit;
 }
 
@@ -1034,4 +1041,630 @@ input.multiselect__input:focus {
 
 .multiselect__tag {
     margin-bottom: 0px !important;
+}
+
+.md-field {
+    margin: -15px 0 -5px !important;
+}
+
+.md-field label {
+    font-size: 10px !important;
+}
+
+.md-field.md-has-value .md-input {
+    font-size: 12px !important;
+}
+
+.md-field.md-has-value label {
+    opacity: 0 !important;
+}
+
+.closeFilter {
+    display: none !important;
+}
+
+.openFilter {
+    display: block !important;
+}
+
+.btn-filter {
+    cursor: pointer;
+}
+
+
+/* Search */
+
+.search {
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03);
+}
+
+.search form {
+    position: relative;
+}
+
+.search label {
+    position: relative;
+    width: 100% !important;
+}
+
+.search label img {
+    top: 9px;
+    left: 15px;
+    width: 25px;
+    height: 25px;
+    z-index: 50;
+    position: absolute;
+}
+
+.search label .multiselect__tags {
+    min-height: 50px !important;
+    height: auto !important;
+    padding: 4px 40px 5px 70px !important;
+}
+
+.delivery-type {
+    width: 80% !important;
+}
+
+.s-input {
+    height: 50px;
+    width: 100% !important;
+}
+
+.s-input .multiselect__tags {
+    border: none !important;
+    background: #F8F8F8;
+    border-radius: 4px;
+}
+
+.multiselect__input {
+    background: #F8F8F8;
+}
+
+.btn-search {
+    height: 50px;
+    width: 150px;
+    left: 4px;
+    top: 2233px;
+    border-radius: 27px;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 18px;
+    background: #006BFA;
+    border: none;
+    position: relative;
+    top: 25px;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+}
+
+.no-select-style .multiselect__tags {
+    border: none;
+    background: transparent;
+}
+
+.btn.btn-secondary.btn-aditonal-services {
+    float: right;
+    color: #006BFA;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border: none !important;
+    text-transform: uppercase;
+}
+
+.t-as,
+.t-recent {
+    color: #B1B1B1;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.t-recent b {
+    color: #071C4B;
+}
+
+.radio-direction {
+    width: 65px;
+    height: 50px;
+}
+
+.radio-direction .active {
+    color: #ffffff !important;
+    background: #071C4B !important;
+}
+
+.radio-direction label span {
+    font-size: 12px;
+}
+
+.radio-direction label:hover {
+    color: #333333;
+    background: #DDDDDD !important;
+}
+
+.radio-direction label {
+    color: #333333;
+    background: #F8F8F8;
+    border: none !important;
+}
+
+.radio-direction label:nth-child(1) {
+    border-radius: 4px 0px 0px 4px !important;
+}
+
+.radio-direction label:nth-child(2) {
+    border-radius: 0px 4px 4px 0px !important;
+}
+
+.radio-direction .btn.btn-outline-primary {
+    color: #333333;
+}
+
+.result-action {
+    a {
+        color: #43B54E;
+        font-weight: 900;
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+}
+
+.btn.btn-secondary.rs-btn {
+    border: none !important;
+    color: #006BFA;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border: none !important;
+    text-transform: uppercase;
+}
+
+.btn.btn-secondary.rs-btn:hover {
+    color: #071C4B !important;
+}
+
+
+/* Recent Search */
+
+.recent-search {
+    display: flex;
+    border-radius: 4px;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    background: #ffffff;
+}
+
+.recent-search a {
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 10px 0px;
+    border-radius: 4px;
+    text-align: center;
+    background: #006BFA;
+    text-transform: uppercase;
+}
+
+.recent-search a:hover {
+    text-decoration: none;
+    background: rgba(#006BFA, 0.8);
+}
+
+.recent-search p {
+    font-size: 18px;
+    color: #071C4B;
+}
+
+.recent-search span {
+    color: #006BFA;
+}
+
+.recent-search .direction-spot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.recent-search .direction-spot .circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    border: 2px solid #dddddd;
+    background-color: transparent;
+}
+
+.recent-search .direction-spot .line {
+    width: 2px;
+    height: 15px;
+    background-color: #dddddd;
+}
+
+.recent-search .direction-spot .fill-circle {
+    border-color: #006BFA;
+    background-color: #006BFA;
+}
+
+.vue-daterange-picker.s-input .reportrange-text {
+    border: none !important;
+    background: #f8f8f8;
+    min-height: 50px;
+}
+
+.vue-daterange-picker.s-input .reportrange-text i {
+    padding-top: 6px;
+    font-size: 25px;
+}
+
+
+/* Search Result */
+
+.result-search {
+    border-radius: 4px;
+    background: #ffffff;
+    box-shadow: 0px 0px 15px 3px #eaeaea;
+}
+
+#detailed,
+#remarks {
+    background: rgba(#C4C4C4, 0.09);
+    h5 {
+        font-size: 12px;
+        color: #051b4e;
+        text-transform: uppercase !important;
+    }
+    .card-body {
+        background: rgba(196, 196, 196, 0.09);
+    }
+}
+
+.result-search .origin,
+.result-search .destination {
+    font-size: 10px;
+    color: #dddddd;
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+    p {
+        color: #071C4B;
+    }
+    p,
+    span {
+        font-weight: 900;
+    }
+    span {
+        margin-bottom: 5px;
+    }
+}
+
+.origin {
+    align-items: flex-start;
+}
+
+.destination {
+    align-items: flex-end;
+}
+
+.result-search .destination {
+    b,
+    p {
+        float: right;
+    }
+}
+
+.result-search .direction-form {
+    display: flex;
+    position: relative;
+    img {
+        width: 30px;
+        top: -25px;
+        left: 85px;
+        color: #051b4e;
+        position: absolute;
+    }
+}
+
+.result-search .via .direction-form .line-route-direct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .circle {
+        width: 15px;
+        height: 15px;
+        border-radius: 50px;
+        border: 2px solid #dddddd;
+        background-color: transparent;
+    }
+    .line {
+        width: 150px;
+        height: 2px;
+        background-color: #dddddd;
+    }
+    .fill-circle {
+        border-color: #006BFA;
+        background-color: #006BFA;
+    }
+    .fill-circle-gray {
+        border-color: #dddddd;
+        background-color: #dddddd;
+    }
+    .line-blue {
+        background-color: #006BFA !important;
+    }
+}
+
+.result-search .via .direction-form.route-indirect .line {
+    width: 61px !important;
+}
+
+.direction-desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    b,
+    p {
+        font-size: 11px;
+        text-align: center;
+        color: #071C4B;
+    }
+    b {
+        text-transform: uppercase;
+    }
+}
+
+.result-search h6 {
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #071C4B;
+}
+
+.btn-add-quote {
+    b {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #dddddd !important;
+    }
+}
+
+.btn.btn-secondary.add-contract {
+    border: none !important;
+    color: #006BFA;
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+#add-contract {
+    label {
+        width: 100%;
+    }
+}
+
+.btn.btn-secondary.btn-create-quote {
+    color: #ffffff;
+    font-weight: 900;
+    background: #006BFA !important;
+    border-radius: 4px !important;
+    border: none !important;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;
+}
+
+.result-header b {
+    color: #dddddd;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.profit {
+    color: #051b4e;
+    margin: 0px 5px;
+    padding: 2px !important;
+    border-radius: 4px;
+    background: #F0F0F0;
+}
+
+.type-style .btn-outline-primary {
+    display: flex;
+    align-items: center;
+}
+
+.as-checkbox .custom-control-label::before,
+.as-checkbox .custom-control-label::after {
+    top: -2px;
+}
+
+#sticky-header-results {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 25px 0px;
+    z-index: 100;
+    position: fixed;
+    display: none;
+    background-color: white;
+    transform: translateY(-200px);
+    transition: all 300ms ease-in-out;
+    box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03);
+}
+
+.activeSticky {
+    display: block !important;
+    transform: translateY(0px) !important;
+}
+
+.type-mode,
+.delivery-type {
+    position: absolute;
+    top: 6px;
+}
+
+.delivery-type {
+    right: -38px;
+}
+
+.type-mode {
+    right: 23px;
+}
+
+.btn-add-quote .active {
+    color: #ffffff;
+    background: #006afa !important;
+    border-color: #006afa !important;
+}
+
+.btn-add-quote .btn-secondary:hover {
+    color: #ffffff;
+    background: #006afa !important;
+    border-color: #006afa !important;
+}
+
+.card-amount p {
+    font-size: 16px;
+}
+
+.footer-add-contract-modal {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 25px 0px;
+    border-top: 1px solid #eeeeee;
+    border-radius: 0px 0px 4px 4px;
+    background-color: white;
+}
+
+input.input-modal {
+    border: none !important;
+    padding: 20px 0px 20px 45px;
+}
+
+#add-contract___BV_modal_body_ {
+    padding: 0px !important;
+}
+
+.add-contract-form {
+    padding: 0px;
+    padding-top: 25px;
+}
+
+.add-contract-form fieldset {
+    padding: 0px 60px;
+}
+
+.add-contract-form fieldset label {
+    position: relative;
+}
+
+.add-contract-form fieldset label img {
+    top: 7px;
+    left: 10px;
+    position: absolute;
+}
+
+.add-contract-form fieldset .form-control.reportrange-text {
+    padding: 9px 10px 9px 10px;
+    height: 40px;
+    i {
+        font-size: 25px;
+    }
+}
+
+.add-contract-form .form-control.reportrange-text {
+    border: none !important;
+}
+
+.input-modal .multiselect__tags .multiselect__placeholder {
+    font-weight: 500;
+    padding-top: 0px !important;
+}
+
+.input-modal .multiselect__tags {
+    border: none !important;
+    padding: 11px 0px 11px 45px !important;
+}
+
+.surcharge-input .multiselect__tags {
+    padding: 11px 3px 11px 11px !important;
+}
+
+input.surcharge-input {
+    padding: 20px 3px 20px 11px !important;
+}
+
+.data-surcharges {
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    p {
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 0px !important;
+    }
+}
+
+.data-surcharges span {
+    font-size: 16px;
+    cursor: pointer;
+    color: red !important;
+}
+
+.surcharge-content .btn-add-surch {
+    font-size: 16px;
+    cursor: pointer;
+    color: green !important;
+}
+
+.add-contract-step {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background-color: #ffffff;
+    border-radius: 100px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.add-contract-form-steps .step-add-contract:nth-child(1)::before,
+.add-contract-form-steps .step-add-contract:nth-child(2)::before,
+.add-contract-form-steps .step-add-contract:nth-child(3)::before {
+    content: '';
+    width: 50%;
+    height: 4px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    position: absolute;
+    right: -50px;
+    top: 22px;
+}
+
+.stepComplete .add-contract-step {
+    color: #ffffff !important;
+    background-color: #006afa !important;
+}
+
+.stepComplete::before {
+    background-color: #006afa !important;
+}
+
+.invalid-data {
+    font-size: 18px;
+    color: #e74c3c !important;
+}
+
+.s-input .form-control.reportrange-text i {
+    display: none !important;
 }
