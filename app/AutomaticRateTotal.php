@@ -155,9 +155,9 @@ class AutomaticRateTotal extends Model
             }
 
             //adding ocean freight
-            $freightUnits = $oceanFreight ->units;
-            $freightPerUnit = $oceanFreight->price_per_unit;
-            $freightAmount = $oceanFreight->total;
+            $freightUnits = @$oceanFreight ->units;
+            $freightPerUnit = @$oceanFreight->price_per_unit;
+            $freightAmount = @$oceanFreight->total;
             $totals['total'] += $freightAmount;
             $totals['per_unit'] += $freightPerUnit;
             $totals['total'] = isDecimal($totals['total'], true);
