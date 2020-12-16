@@ -188,22 +188,6 @@ class AutomaticRateController extends Controller
 
         $inlandAddressesDest = $quote->inland_addresses()->where('port_id',$autorate->destination_port_id)->get();
 
-        $inlandTotalsOrig = $quote->automatic_inland_totals()->where('port_id',$autorate->origin_port_id)->get();
-
-        $inlandTotalsDest = $quote->automatic_inland_totals()->where('port_id',$autorate->destination_port_id)->get();
-
-        if($inlandTotalsOrig){
-            foreach($inlandTotalsOrig as $total){
-                $total->delete();
-            }
-        }
-        
-        if($inlandTotalsDest){
-            foreach($inlandTotalsDest as $total){
-                $total->delete();
-            }
-        }
-
         if($inlandAddressesOrig){
             foreach($inlandAddressesOrig as $address){
                 $address->delete();

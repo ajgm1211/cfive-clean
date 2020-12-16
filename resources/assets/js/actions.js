@@ -475,7 +475,11 @@ export default {
         harbors(route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inlands/harbors`, {});
-        }
+        },
+        deleteFull(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${combo}/delete_full`, {})
+        },
     },
     automaticinlandslcl: {
         list(combo, params, callback, route) {
@@ -526,7 +530,11 @@ export default {
         harbors(route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inlands_lcl/harbors`, {});
-        }
+        },
+        deleteFull(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${combo}/delete_full`, {})
+        },
     },
     localcharges: {
         create(data) {
