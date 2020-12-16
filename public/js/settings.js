@@ -1,40 +1,40 @@
 //binds to onchange event of your input field
-$(document).on('change', '#logo', function (e) {
-    if(this.files[0].size>1000000){
+$(document).on('change', '#logo', function(e) {
+    if (this.files[0].size > 1000000) {
         $("#logo-error").removeClass('hide');
         $("#default-currency-submit").prop("disabled", true);
-    }else{
+    } else {
         $("#logo-error").addClass('hide');
         $("#default-currency-submit").prop("disabled", false);
     }
 });
 $('#email_from').blur(function() {
     var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-    if ($('#email_from').val()!='' && !testEmail.test($('#email_from').val())){
+    if ($('#email_from').val() != '' && !testEmail.test($('#email_from').val())) {
         $('#email_from_error').removeClass('hide');
-    }else{
+    } else {
         $('#email_from_error').addClass('hide');
     }
 });
 //Guardar settings
-$(document).on('click', '#default-currency-submit', function () {
+$(document).on('click', '#default-currency-submit', function() {
     var id = $('#company_id').val();
     var form = $('#default-currency');
     var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
     var email_from_format = '';
-    
-    if ($('#email_from').val()!='' && testEmail.test($('#email_from').val())){
+
+    if ($('#email_from').val() != '' && testEmail.test($('#email_from').val())) {
         var email_from_format = $('#email_from').val();
     }
-    
-    if($('#company_id').val()!=''&&$('#name').val()!=''&&$('#phone').val()&&$('#address').val()) {
+
+    if ($('#company_id').val() != '' && $('#name').val() != '' && $('#phone').val() && $('#address').val()) {
         swal({
             title: 'Are you sure?',
             text: "Please confirm!",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, I am sure!'
-        }).then(function (result) {
+        }).then(function(result) {
             if (result.value) {
 
                 // Create an FormData object
@@ -55,7 +55,7 @@ $(document).on('click', '#default-currency-submit', function () {
                     data: data,
                     processData: false,
                     contentType: false,
-                    success: function (data) {
+                    success: function(data) {
                         if (data.message == 'Ok') {
                             swal(
                                 'Done!',
@@ -71,7 +71,7 @@ $(document).on('click', '#default-currency-submit', function () {
             }
 
         });
-    }else{
+    } else {
         swal({
             title: 'There are empty fields',
             text: "",
@@ -82,24 +82,24 @@ $(document).on('click', '#default-currency-submit', function () {
 });
 
 //Mostrar/Ocultar opciones pdf
-$(document).on('change', '#pdf_footer', function () {
+$(document).on('change', '#pdf_footer', function() {
     var value = $(this).val();
-    if(value=='Text'){
+    if (value == 'Text') {
         $('#footer_text').removeClass('hide');
         $('#footer_image').addClass('hide');
-    }else{
+    } else {
         $('#footer_image').removeClass('hide');
         $('#footer_text').addClass('hide');
     }
 });
 
 //Mostrar/Ocultar opciones firma email
-$(document).on('change', '#signature_type', function () {
+$(document).on('change', '#signature_type', function() {
     var value = $(this).val();
-    if(value=='text'){
+    if (value == 'text') {
         $('#signature_text').removeClass('hide');
         $('#signature_image').addClass('hide');
-    }else{
+    } else {
         $('#signature_image').removeClass('hide');
         $('#signature_text').addClass('hide');
     }
@@ -113,6 +113,9 @@ $('#pdf_language').select2({
     placeholder: "Select an option"
 });
 $('#pdf_footer').select2({
+    placeholder: "Select an option"
+});
+$('#pdf_template').select2({
     placeholder: "Select an option"
 });
 $('#signature_type').select2({
