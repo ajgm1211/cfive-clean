@@ -52,11 +52,11 @@ class AutomaticInlandLclAir extends Model
     {
         return (new AutomaticInlandFilter($request, $builder))->filter();
     }
-
-    public function inland_address()
-    {
-        return $this->hasOne('App\InlandAddress','id','inland_address_id');
-    }
+	
+	public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
 
     public function scopeSelectFields($query)
     {

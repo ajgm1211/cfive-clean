@@ -213,7 +213,7 @@ class AutomaticInlandLclController extends Controller
             }
         }
 
-        $totals = $autoinland->inland_address()->first()->inland_totals()->first();
+        $totals = $autoinland->inland_totals()->first();
 
         $totals->totalize();
 
