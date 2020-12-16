@@ -2237,23 +2237,27 @@ class QuoteV2Controller extends Controller
                             ['price_id', $quote->price_id],
                             ['percent_markup', '!=', '0'],
                             ['price_type_id', 1]])->first();
-
-                        $input = Currency::where('id', $priceLevelMarkups->currency)->first();
-
-                        $output = Currency::where('id', $info_D->currency->id)->first();
-
-                        $priceLevelMarkupsArray = [];
-
-                        foreach ($rateO->markups as $key => $value) {
-                            $priceLevelMarkupsArray[$key] = $value;
-                        }
-                        if ($priceLevelMarkups->fixed_markup != 0) {
-                            $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsArray);
-                        } else {
-                            $priceLevelMarkupsFinal = [];
-                            foreach ($priceLevelMarkupsArray as $key => $price) {
-                                $priceLevelMarkupsFinal[$key] = isDecimal($price, true);
+                        
+                        if($priceLevelMarkups){
+                            $input = Currency::where('id', $priceLevelMarkups->currency)->first();
+    
+                            $output = Currency::where('id', $info_D->currency->id)->first();
+    
+                            $priceLevelMarkupsArray = [];
+    
+                            foreach ($rateO->markups as $key => $value) {
+                                $priceLevelMarkupsArray[$key] = $value;
                             }
+                            if ($priceLevelMarkups->fixed_markup != 0) {
+                                $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsArray);
+                            } else {
+                                $priceLevelMarkupsFinal = [];
+                                foreach ($priceLevelMarkupsArray as $key => $price) {
+                                    $priceLevelMarkupsFinal[$key] = isDecimal($price, true);
+                                }
+                            }
+                        }else{
+                            $priceLevelMarkupsFinal = null;
                         }
                     }else{
                         $priceLevelMarkupsFinal = null;
@@ -7023,22 +7027,28 @@ class QuoteV2Controller extends Controller
                             ['price_id', $quote->price_id],
                             ['percent_markup', '!=', '0'],
                             ['price_type_id', 2]])->first();
+                        
+                        if($priceLevelMarkups){
 
-                        $input = Currency::where('id', $priceLevelMarkups->currency)->first();
-
-                        $output = Currency::where('id', $info_D->currency->id)->first();
-
-                        if ($priceLevelMarkups->fixed_markup != 0) {
-                            $priceLevelMarkupsAmount = array($priceLevelMarkups->fixed_markup);
-                            $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsAmount);
-                            $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0], true);
-                            $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
-                        } else if ($priceLevelMarkups->percent_markup != 0) {
-                            $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
-                            $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal / 100);
-                            $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal, true);
-                            $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
-                        } else {
+                            $input = Currency::where('id', $priceLevelMarkups->currency)->first();
+    
+                            $output = Currency::where('id', $info_D->currency->id)->first();
+    
+                            if ($priceLevelMarkups->fixed_markup != 0) {
+                                $priceLevelMarkupsAmount = array($priceLevelMarkups->fixed_markup);
+                                $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsAmount);
+                                $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0], true);
+                                $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
+                            } else if ($priceLevelMarkups->percent_markup != 0) {
+                                $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
+                                $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal / 100);
+                                $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal, true);
+                                $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
+                            } else {
+                                $priceLevelMarkupsFinal = 0;
+                                $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
+                            }
+                        }else{
                             $priceLevelMarkupsFinal = 0;
                             $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                         }
