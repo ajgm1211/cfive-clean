@@ -181,7 +181,7 @@ class AutomaticRate extends Model
             );
         } else if ($quote->type == 'LCL') {
             $this->load(
-                'charge_lcl_airs'
+                'charge_lcl_air'
             );
         }
 
