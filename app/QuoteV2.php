@@ -625,6 +625,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasMany('App\AutomaticInlandTotal','quote_id','id');
     }
 
+    public function automatic_inland_address()
+    {
+        return $this->hasMany('App\InlandAddress','quote_id','id');
+    }
+
     public function automatic_rate_totals()
     {
         return $this->hasMany('App\AutomaticRateTotal','quote_id','id');

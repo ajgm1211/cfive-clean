@@ -65,7 +65,18 @@
 
                 <div
                     class="col-12 col-lg-4 d-flex justify-content-end align-items-center"
-                >
+                >                 
+                    <a 
+                        v-if="
+                        loaded &&
+                        currentAddress != undefined 
+                        "
+                        href="#" 
+                        class="btn btn-link btn-delete" 
+                        id="show-btn" 
+                        @click="deleteInland()"
+                        >Delete Inland</a
+                    >
                     <a
                         href="#"
                         class="btn btn-primary btn-bg"
@@ -224,6 +235,9 @@
                             <!-- Header table -->
                             <b-thead class="q-thead">
                                 <b-tr>
+                                    <b-th v-if="inlandFound">
+                                    </b-th>
+
                                     <b-th>
                                         <span class="label-text">Charge</span>
                                     </b-th>
@@ -639,15 +653,26 @@ export default {
 
         setPorts() {
             let component = this;
-
+            
             component.inlandActions
                 .harbors(component.$route)
                 .then((response) => {
                     response.data.forEach(function(port){
+                        var portMatch = false;
+
                         port.flag = component.imageFolder
                                 .concat(port.code.slice(0, 2).toLowerCase())
                                 .concat(".svg");
-                        component.port_options.push(port)
+                        
+                        component.port_options.forEach(function (opt){
+                            if(opt.id == port.id){
+                                portMatch = true;
+                            }
+                        });
+                        
+                        if(!portMatch){
+                            component.port_options.push(port)
+                        }
                     })
                     if (component.currentPort == "") {
                         component.currentPort = component.port_options[0];
@@ -1316,6 +1341,30 @@ export default {
             setTimeout(() => {
                 component.modalAddressBar = true;                
             }, 100);
+        },
+
+        deleteInland(){
+            let component = this;
+
+            if (
+                (component.currentAddress != undefined &&
+                    Object.keys(this.currentAddress).length != 0) 
+            ) {
+                var portAddressCombo = [
+                    component.currentAddress["address"] +
+                    ";" +
+                    component.currentPort["id"]
+                ];
+            
+            component.inlandActions
+                .deleteFull(portAddressCombo, component.$route)
+                .then((response) => {
+                    component.setAddresses();                        
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
         },
     },
 };
