@@ -653,15 +653,26 @@ export default {
 
         setPorts() {
             let component = this;
-
+            
             component.inlandActions
                 .harbors(component.$route)
                 .then((response) => {
                     response.data.forEach(function(port){
+                        var portMatch = false;
+
                         port.flag = component.imageFolder
                                 .concat(port.code.slice(0, 2).toLowerCase())
                                 .concat(".svg");
-                        component.port_options.push(port)
+                        
+                        component.port_options.forEach(function (opt){
+                            if(opt.id == port.id){
+                                portMatch = true;
+                            }
+                        });
+                        
+                        if(!portMatch){
+                            component.port_options.push(port)
+                        }
                     })
                     if (component.currentPort == "") {
                         component.currentPort = component.port_options[0];
