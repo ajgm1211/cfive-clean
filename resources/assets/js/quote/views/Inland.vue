@@ -209,14 +209,14 @@
                     <div class="col-lg-6 d-flex mt-3 justify-content-end">
                         <button
                             class="btn btn-link mr-2"
-                            @click="setNewAddress"
+                            @click="validateModalAddress('manual')"
                         >
                             + Add Manually
                         </button>
                         <button 
                             v-if="currentQuoteData['type']=='FCL'"
                             class="btn btn-primary btn-bg"
-                            @click="searchInlands"
+                            @click="validateModalAddress('search')"
                         >
                             Search
                         </button>
@@ -637,9 +637,6 @@ export default {
 
         this.setTotalsFields();
     },
-    mounted() {
-        this.createInlandTotals(this.currentAddress["address"]);
-    },
     methods: {
         showModal() {
             let component = this;
@@ -802,77 +799,21 @@ export default {
             }, 100);
         },
 
-        setNewAddress() {
+        validateModalAddress(type) {
             let component = this;
-            let addressMatch = false;
 
-            if (component.modalAddress != "") {
-                component.address_options.forEach(function (address) {
-                    if (component.modalAddress == address["address"]) {
-                        component.currentAddress = address;
-                    } else {
-                        addressMatch = true;
-                    }
-                });
-
-                if (addressMatch || component.address_options.length == 0) {
-                    component.createInlandTotals(component.modalAddress);
-                    addressMatch = false;
-                } else if (!component.inlandFound) {
+            if(!["",null].includes(component.modalAddress)) {
+                component.autocompleteValue = component.modalAddress;
+                if(type == "manual"){
                     component.setModalTable();
+                }else if(type == "search"){
+                    component.searchInlands();
                 }
             } else {
                 component.modalWarning = "Address";
                 setTimeout(() => {
                     component.modalWarning = "";
-                }, 3000);
-            }
-        },
-
-        createInlandTotals(totalAddress) {
-            let component = this;
-
-            if (
-                (component.currentAddress != undefined &&
-                    Object.keys(this.currentAddress).length != 0) ||
-                totalAddress == component.modalAddress
-            ) {
-                if (this.modalDistance) {
-                    var portAddressCombo = [
-                        totalAddress["display_name"] +
-                        ";" +
-                        component.currentPort["type"] +
-                        ";" +
-                        component.currentPort["id"],
-                    ];
-                } else {
-                    var portAddressCombo = [
-                        totalAddress +
-                        ";" +
-                        component.currentPort["type"] +
-                        ";" +
-                        component.currentPort["id"],
-                    ];
-                }
-
-                component.inlandActions
-                    .createTotals(portAddressCombo, component.$route)
-                    .then((response) => {
-                        if (component.modalAddress != "") {
-                            if (this.modalDistance) {
-                                component.setAddresses(
-                                    component.modalAddress["display_name"]
-                                );
-                            } else {
-                                component.setAddresses(component.modalAddress);
-                            }
-                        } else {
-                            component.updateTable();
-                        }
-                    })
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                    });
+                }, 1500);
             }
         },
 
@@ -1104,38 +1045,41 @@ export default {
 
                     component.isBusy = true;
 
-                    component.inlandActions
-                        .create(
-                            component.currentPort["id"],
-                            inlandAdd,
-                            component.$route
-                        )
-                        .then((response) => {
-                            component.inlandAddRequested = false;
-                            component.inlandAdds.splice(
-                                component.inlandAdds.indexOf(inlandAdd)
-                            );
-                            component.totalizeModalInlands();
-                            component.modalSuccess = true;
-                            component.updateTable();
-                            component.isBusy = false;
-                            setTimeout(function () {
-                                component.$refs["addInland"].hide();
+                    setTimeout(function (){
+                        component.inlandActions
+                            .create(
+                                component.currentPort["id"],
+                                inlandAdd,
+                                component.$route
+                            )
+                            .then((response) => {
                                 component.inlandAddRequested = false;
-                                component.modalSuccess = false;
-                            }, 1500);
-                        })
-                        .catch((data) => {
-                            component.$refs.observer.setErrors(
-                                data.data.errors
-                            );
-                        });
+                                component.inlandAdds.splice(
+                                    component.inlandAdds.indexOf(inlandAdd)
+                                );
+                                component.totalizeModalInlands();
+                                component.modalSuccess = true;
+                                component.updateTable();
+                                component.isBusy = false;
+                                setTimeout(function () {
+                                    component.$refs["addInland"].hide();
+                                    component.inlandAddRequested = false;
+                                    component.modalSuccess = false;
+                                    component.setAddresses();
+                                }, 1500);
+                            })
+                            .catch((data) => {
+                                component.$refs.observer.setErrors(
+                                    data.data.errors
+                                );
+                            });
+                    }, (component.inlandAdds.indexOf(inlandAdd) + 1) * 1000);
                 }
             });
 
             setTimeout(function () {
                 component.isBusy = false;
-            }, 3000);
+            }, 2000);
         },
 
         setPlace(place) {
@@ -1143,43 +1087,37 @@ export default {
         },
 
         searchInlands() {
-            if (this.modalAddress != "") {
-                let data = {};
-                let inlandSearch = {};
-                let component = this;
 
-                data["address"] = component.modalAddress;
-                if (component.modalDistance) {
-                    data["distance"] = component.modalAddress.distance;
-                } else {
-                    data["distance"] = 0;
-                }
+            let data = {};
+            let inlandSearch = {};
+            let component = this;
 
-                component.inlandActions
-                    .search(component.currentPort["id"], data, component.$route)
-                    .then((response) => {
-                        inlandSearch = response.data;
-                        if (inlandSearch.length == 0) {
-                            component.modalSearchWarning = true;
-                            setTimeout(() => {
-                                component.modalSearchWarning = false;
-                            }, 3000);
-                            component.inlandFound = false;
-                        } else {
-                            component.setModalTable(inlandSearch);
-                            component.createInlandTotals(component.modalAddress);
-                            component.inlandFound = true;
-                        }
-                    })
-                    .catch((data) => {
-                        component.$refs.observer.setErrors(data.data.errors);
-                    });
+            data["address"] = component.modalAddress;
+            if (component.modalDistance) {
+                data["distance"] = component.modalAddress.distance;
             } else {
-                this.modalWarning = "Address";
-                setTimeout(() => {
-                    this.modalWarning = "";
-                }, 3000);
+                data["distance"] = 0;
             }
+
+            component.inlandActions
+                .search(component.currentPort["id"], data, component.$route)
+                .then((response) => {
+                    inlandSearch = response.data;
+                    if (inlandSearch.length == 0) {
+                        component.modalSearchWarning = true;
+                        setTimeout(() => {
+                            component.modalSearchWarning = false;
+                        }, 3000);
+                        component.inlandFound = false;
+                    } else {
+                        component.setModalTable(inlandSearch);
+                        component.inlandFound = true;
+                    }
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
+                });
+            
         },
 
         unsetModal() {

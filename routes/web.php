@@ -1083,7 +1083,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/automatic_inland/destroyAll', 'AutomaticInlandController@destroyAll');
     Route::get('api/quotes/{quote}/automatic_inland/totals/{combo}', 'AutomaticInlandController@retrieveTotals');
     Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/update', 'AutomaticInlandController@updateTotals');
-    Route::post('api/quotes/{quote}/automatic_inland/totals/{combo}/store', 'AutomaticInlandController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland/addresses/{port_id}', 'AutomaticInlandController@retrieveAddresses');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/search', 'AutomaticInlandController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands/harbors', 'AutomaticInlandController@harbors');
@@ -1096,7 +1095,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/automatic_inland_lcl/destroyAll', 'AutomaticInlandLclController@destroyAll');
     Route::get('api/quotes/{quote}/automatic_inland_lcl/totals/{combo}', 'AutomaticInlandLclController@retrieve');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/totals/{combo}/update', 'AutomaticInlandLclController@updateTotals');
-    Route::post('api/quotes/{quote}/automatic_inland_lcl/totals/{combo}/store', 'AutomaticInlandLclController@storeTotals');
     Route::get('api/quotes/{quote}/automatic_inland_lcl/addresses/{port_id}', 'AutomaticInlandLclController@retrieveAddresses');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/search', 'AutomaticInlandLclController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
