@@ -12,7 +12,7 @@ class AutomaticInlandLclAir extends Model
 {
 	protected $fillable = [
 		'quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','units','price_per_unit','markup','total','currency_id',
-		'provider_id','inland_address_id','charge'];
+		'provider_id','inland_totals_id','charge'];
 
 	public function quote()
 	{

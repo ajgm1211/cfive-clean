@@ -77,6 +77,22 @@
 
                 <div
                     v-if="
+                        loaded &&
+                        currentAddress != undefined 
+                    "
+                    class="col-12 col-lg-4 d-flex justify-content-end align-items-center"
+                >
+                    <a 
+                        href="#" 
+                        class="btn btn-link btn-delete" 
+                        id="show-btn" 
+                        @click="deleteInland()"
+                        >Delete Inland</a
+                    >
+                </div>
+
+                <div
+                    v-if="
                         currentAddress == undefined ||
                         currentAddress.length == 0
                     "
@@ -1316,6 +1332,30 @@ export default {
             setTimeout(() => {
                 component.modalAddressBar = true;                
             }, 100);
+        },
+
+        deleteInland(){
+            let component = this;
+
+            if (
+                (component.currentAddress != undefined &&
+                    Object.keys(this.currentAddress).length != 0) 
+            ) {
+                var portAddressCombo = [
+                    component.currentAddress["address"] +
+                    ";" +
+                    component.currentPort["id"]
+                ];
+            
+            component.inlandActions
+                .deleteFull(portAddressCombo, component.$route)
+                .then((response) => {
+                    component.setAddresses();                        
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
         },
     },
 };

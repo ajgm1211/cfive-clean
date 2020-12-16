@@ -419,31 +419,36 @@ class QuotationController extends Controller
 
         $rates = $quote->rates_v2()->get();
         $inlandTotals = $quote->automatic_inland_totals()->get();
+        $inlandAddress = $quote->automatic_inland_address()->get();
 
-        if($rates->count()!=0){
-            foreach($rates as $rate){
-                $rateTotals = $rate->totals()->first();
-                if($rateTotals){
-                    $rateTotals->totalize($rateTotals->currency_id);
-                }else{
-                    $total = AutomaticRateTotal::create([
-                        'quote_id' => $quote->id,
-                        'currency_id' => $rate->currency_id,
-                        'origin_port_id' => $rate->origin_port_id,
-                        'destination_port_id' => $rate->destination_port_id,
-                        'automatic_rate_id' => $rate->id,
-                        'totals' => null,
-                        'markups' => null                    
-                    ]);
-
-                    $total->totalize($total->currency_id);
-                }
-            }
-        }
-
-        if($inlandTotals){
+        if(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
+                if($quote->type == 'FCL'){
+                    $inlands = $total->inlands()->get();
+                    if(count($inlands)!=0){
+                        foreach($inlands as $inland){
+                            if($inland->port_id == $total->port_id){
+                                $inland->inland_totals_id = $total->id;
+                                $inland->save();
+                            }
+                        }
+                    }else{
+                        $total->inland_address()->first()->delete();
+                    }
+                }else if($quote->type == 'LCL'){
+                    $inlands_lcl = $total->inlands_lcl()->get();
+                    if(count($inlands_lcl)!=0){
+                        foreach($inlands_lcl as $inland_lcl){
+                            if($inland_lcl->port_id == $total->port_id){
+                                $inland_lcl->inland_totals_id = $total->id;
+                                $inland_lcl->save();
+                            }
+                        }
+                    }else{
+                        $total->inland_address()->first()->delete();
+                    }
+                }                
             }
         }
 
