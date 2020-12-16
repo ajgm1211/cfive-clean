@@ -15,37 +15,19 @@
 
 
     <main>
-    
-        <!-- HEADER -->
-        @include('quote.pdf.partials.header')
-        <!-- DETAILS -->
-        @include('quote.pdf.partials.details_fcl')
-        <!-- TOTALS -->
-        @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
-            @include('quote.pdf.partials.totals')
-        @endif
-        <!-- ORIGIN -->
-        @include('quote.pdf.partials.origins_fcl')
-        <!-- LOCALCHARGE REMARKS -->
-        @if($destination_charges->count()==0)
-            @include('quote.pdf.partials.localcharge_remarks')
-        @endif
-        <!-- FREIGHTS -->
-        @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
-            @include('quote.pdf.partials.freights_fcl')
-        @else
-            @include('quote.pdf.partials.detail_freights_fcl')
-        @endif
-        <!-- REMARKS -->
-        @include('quote.pdf.partials.remarks')
-        <!-- DESTINY -->
-        @include('quote.pdf.partials.destinations_fcl')
-        <!-- LOCALCHARGE REMARKS -->
-        @if($destination_charges->count()>0)
-            @include('quote.pdf.partials.localcharge_remarks')
-        @endif
-        <!-- TERMS -->
-        @include('quote.pdf.partials.terms')
+        @switch(@$user->companyUser->pdf_template_id)
+            @case(1)
+                @include('quote.pdf.templates.FCL.freight')
+            @break
+
+            @case(2)
+                @include('quote.pdf.templates.FCL.origin')
+            @break
+
+            @default
+                @include('quote.pdf.templates.FCL.freight')
+
+        @endswitch
     </main>
 
 
