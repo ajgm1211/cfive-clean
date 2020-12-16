@@ -12,7 +12,7 @@ class AutomaticInlandLclAir extends Model
 {
 	protected $fillable = [
 		'quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','units','price_per_unit','markup','total','currency_id',
-		'provider_id','inland_address_id','charge'];
+		'provider_id','inland_totals_id','charge'];
 
 	public function quote()
 	{
@@ -52,11 +52,11 @@ class AutomaticInlandLclAir extends Model
     {
         return (new AutomaticInlandFilter($request, $builder))->filter();
     }
-
-    public function inland_address()
-    {
-        return $this->hasOne('App\InlandAddress','id','inland_address_id');
-    }
+	
+	public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
 
     public function scopeSelectFields($query)
     {
