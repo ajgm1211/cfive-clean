@@ -441,7 +441,7 @@ class QuotationController extends Controller
                 }else{
                     $currency = $rate->currency()->first();
 
-                    $newRateTotal->totalize($currency->id);
+                    $rateTotal->totalize($currency->id);
                 }
             }
         }
