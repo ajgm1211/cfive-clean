@@ -42,6 +42,11 @@ class AutomaticInland extends Model
         return $this->hasOne('App\Provider', 'id', 'provider_id');
     }
 
+    public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
+
     public function country_code()
     {
         return $this->hasManyThrough('App\Country', 'App\Harbor', 'country_id', 'id');
