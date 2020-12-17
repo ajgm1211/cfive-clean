@@ -686,7 +686,7 @@ export default {
 
         setAddresses(newAddress = null) {
             let component = this;
-
+            
             component.inlandActions
                 .retrieveAddresses(
                     component.currentPort["id"],
@@ -698,9 +698,8 @@ export default {
                         component.currentAddress = component.address_options[0];
                     } else {
                         component.address_options.forEach(function (address) {
-                            if (address["address"] == newAddress && !component.inlandFound) {
+                            if (address["address"] == newAddress) {
                                 component.currentAddress = address;
-                                component.setModalTable();
                             }
                         });
                     }
@@ -1013,6 +1012,8 @@ export default {
             let component = this;
             let noSelection = true;
 
+            component.autocompleteValue = component.modalAddress;
+
             component.inlandAdds.forEach(function (inlandAdd) {
                 if(inlandAdd.selected){
                     noSelection = false;
@@ -1065,7 +1066,11 @@ export default {
                                     component.$refs["addInland"].hide();
                                     component.inlandAddRequested = false;
                                     component.modalSuccess = false;
-                                    component.setAddresses();
+                                    if(component.modalDistance){
+                                        component.setAddresses(component.modalAddress['display_name']);
+                                    }else{
+                                        component.setAddresses(component.autocompleteValue);
+                                    }
                                 }, 1500);
                             })
                             .catch((data) => {
@@ -1087,7 +1092,6 @@ export default {
         },
 
         searchInlands() {
-
             let data = {};
             let inlandSearch = {};
             let component = this;

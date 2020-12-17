@@ -5,6 +5,7 @@ namespace App;
 use App\AutomaticRate;
 use App\Container;
 use App\Http\Traits\UtilTrait;
+use App\Http\Traits\QuoteV2Trait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 class LclPdf
 {
 
-    use UtilTrait;
+    use QuoteV2Trait;
 
     public function generate($quote)
     {
@@ -32,7 +33,9 @@ class LclPdf
         
         $destination_charges = $this->localCharges($quote, 2);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges]);
+        $quote_totals = $this->quoteTotals($quote);
+
+        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -183,5 +186,87 @@ class LclPdf
         }
 
         return $freight_charges_grouped;
+    }
+
+    public function quoteTotals($quote)
+    {
+        
+        $freightTotals = $quote->automatic_rate_totals()->get();
+        
+        $totalsArrayOutput = Array();
+
+        $routePrefix = 'route_';
+        $routeId = 1;
+        foreach($freightTotals as $frTotal){
+            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
+            $routeId++;
+        }
+
+        $inlandTotals = $quote->automatic_inland_totals()->get();
+
+        //$localChargeTotals = LocalChargeQuoteLclTotal::Quotation($quote->id)->get();
+
+        $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
+
+        foreach ($totals as $total){
+
+            if(is_a($total, 'App\AutomaticRateTotal')){
+                $totalsArrayInput = json_decode($total->totals,true);
+                $portArray['origin'] = $total->origin_port()->first()->display_name;
+                $portArray['destination'] = $total->destination_port()->first()->display_name;
+            }else if(is_a($total, 'App\AutomaticInlandTotal')){
+                $totalsArrayInput = json_decode($total->totals,true);
+                if($total->type == 'Origin'){
+                    $portArray['origin'] = $total->get_port()->first()->display_name;
+                    $portArray['destination'] = null;
+                }else if($total->type == 'Destination'){
+                    $portArray['origin'] = null;
+                    $portArray['destination'] = $total->get_port()->first()->display_name;
+                }
+            //COMPLETAR LOCAL CHARGES ACA
+            }/**else if(is_a($total, 'App\LocalChargeQuoteTotal')){
+                $totalsArrayInput = $total->total;
+                if($total->get_type()->first()->description == 'origin'){
+                    $portArray['origin'] = $total->get_port()->first()->display_name;
+                    $portArray['destination'] = null;
+                }else if($total->get_type()->first()->description == 'destiny'){
+                    $portArray['origin'] = null;
+                    $portArray['destination'] = $total->get_port()->first()->display_name;
+                }
+            }**/
+            
+            $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
+
+            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
+
+            if($totalsArrayInput){
+                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            }
+
+            foreach($totalsArrayOutput as $key=>$route){
+                if($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']){
+                    if (isset($totalsArrayInput['total'])) {
+                        $dmCalc = isDecimal($totalsArrayInput['total'], true);
+                        if (isset($totalsArrayOutput[$key]['total'])) {
+                            $totalsArrayOutput[$key]['total'] += $dmCalc;
+                        }else{
+                            $totalsArrayOutput[$key]['total'] = $dmCalc;
+                        }
+                    }else if (isset($totalsArrayInput['lcl_totals'])) {
+                        $dmCalc = isDecimal($totalsArrayInput['lcl_totals'], true);
+                        if (isset($totalsArrayOutput[$key]['total'])) {
+                            $totalsArrayOutput[$key]['total'] += $dmCalc;
+                        }else{
+                            $totalsArrayOutput[$key]['total'] = $dmCalc;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $totalsArrayOutput;
     }
 }
