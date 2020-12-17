@@ -4,7 +4,7 @@
         @include('quote.pdf.partials.details_fcl')
         <!-- TOTALS -->
         @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
-            @include('quote.pdf.partials.totals')
+            @include('quote.pdf.partials.totals_fcl')
         @endif
         <!-- FREIGHTS -->
         @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
