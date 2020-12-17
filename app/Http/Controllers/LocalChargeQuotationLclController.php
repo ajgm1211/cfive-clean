@@ -227,7 +227,7 @@ class LocalChargeQuotationLclController extends Controller
             'markup' => $request->charges['profit'],
         ]);
 
-        LocalChargeQuoteLcl::create([
+        $local_charge_lcl = LocalChargeQuoteLcl::create([
             'price' => (((float)$request->charges['price'] * (float)$request->charges['units']) + (float)$request->charges['profit']) / (float)$request->charges['units'],
             'units' => $request->charges['units'],
             'profit' => $request->charges['profit'],
@@ -241,5 +241,7 @@ class LocalChargeQuotationLclController extends Controller
             'quote_id' => $request->quote_id,
             'type_id' => $request->type_id,
         ]);
+
+        $local_charge_lcl->totalize();
     }
 }
