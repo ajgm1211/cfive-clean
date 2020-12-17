@@ -195,7 +195,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.units"
-                                        class="q-input q-width"
+                                        class="q-input"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -211,7 +211,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.price"
-                                        class="q-input q-width"
+                                        class="q-input"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -227,7 +227,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.price * charge.units"
-                                        class="q-input q-width"
+                                        class="q-input"
                                         disabled
                                     ></b-form-input>
                                 </b-td>
@@ -634,7 +634,8 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.units"
-                                        class="q-input q-width"
+                                        class="q-input"
+                                        style="width:80px;"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
@@ -650,7 +651,8 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.price_per_unit"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
@@ -666,7 +668,8 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.markup"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
@@ -688,7 +691,8 @@
                                                 localcharge.markup
                                             )
                                         "
-                                        class="q-input q-width"
+                                        class="q-input"
+                                        style="width:80px;"
                                         disabled
                                     ></b-form-input>
                                 </b-td>
@@ -828,28 +832,32 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.units"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.price"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.profit"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.total"
-                                        class="q-input q-width"
+                                        style="width:80px;"
+                                        class="q-input"
                                         disabled
                                     ></b-form-input>
                                 </b-td>
