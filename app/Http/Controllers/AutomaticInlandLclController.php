@@ -111,6 +111,7 @@ class AutomaticInlandLclController extends Controller
             $totals = AutomaticInlandTotal::create([
                 'quote_id' => $quote->id,
                 'port_id' => $port_id,
+                'type' => $type,
                 'inland_address_id' => $inland_address->id,
                 'currency_id' => $user_currency
             ]);
