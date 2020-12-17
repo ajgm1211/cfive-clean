@@ -252,7 +252,7 @@
                     </div>
                 </li>
 
-                @endrole
+                
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('inlands.index', 'inland.edit', 'inlandD.find', 'UploadFile.index', 'provinces.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -278,6 +278,7 @@
                                     </span>
                                 </a>
                             </li>
+                            
                             @hasrole('administrator')
 
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
@@ -318,6 +319,7 @@
                         </ul>
                     </div>
                 </li>
+                @endrole
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('settings.index', 'termsv2.list', 'remarks.list', 'oauth.tokens', 'api.settings', 'users.home', 'prices.index', 'prices.add', 'UserConfiguration.index', 'templates.index', 'dashboard.index', 'ContainerCalculation.index', 'transit_time.index', 'settings.companies',  'search.list', 'impersonate.revert') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
