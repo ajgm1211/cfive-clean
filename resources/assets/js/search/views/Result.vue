@@ -1,11 +1,25 @@
 <template>
     <div class="pr-5 pl-5">
 
-        <div class="row mt-5 mb-3">
+        <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center">
-                <h2 class="mr-2 t-recent">results found: <b>10</b></h2>
-                <div>
-                    <b>filter by</b>
+                <h2 class="mr-5 t-recent">results found: <b>10</b></h2>
+                <div class="d-flex filter-search">
+                    <b>filter by:</b>
+                    <div style="width: 160px !important; position:relative; top: -3px ">
+                            <multiselect
+                                v-model="filterBy"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"
+                                :options="optionsFilter"
+                                placeholder="Select Filter"
+                                class="s-input no-select-style "
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                        </div>
                 </div>
             </div>
 
@@ -1020,6 +1034,7 @@ export default {
             typeContract: '',
             calculationType: '',
             dataSurcharger: [],
+            filterBy: 'LOWEST PRICE',
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
@@ -1027,6 +1042,7 @@ export default {
             optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
             optionsTypeContract: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
             optionsCalculationType: ['Calculation 1', 'Calculation 2', 'Calculation 3', 'Calculation 4'],
+            optionsFilter: ['LOWEST PRICE', 'HIGH PRICE', 'LAST DATE', 'OLD DATE'],
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
