@@ -207,7 +207,7 @@ class LclPdf
 
         $inlandTotals = $quote->automatic_inland_totals()->get();
 
-        //$localChargeTotals = LocalChargeQuoteLclTotal::Quotation($quote->id)->get();
+        $localChargeTotals = LocalChargeQuoteLclTotal::Quotation($quote->id)->get();
 
         $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
 
