@@ -1087,7 +1087,8 @@ input.multiselect__input:focus {
 }
 
 .delivery-type {
-    width: 80% !important;
+    width: 25% !important;
+    right: 16px;
 }
 
 .s-input {
@@ -1219,6 +1220,12 @@ input.multiselect__input:focus {
     align-items: center;
     justify-items: center;
     background: #ffffff;
+    position: relative;
+    transition: all 300ms ease-in-out;
+}
+
+.recent-search:hover {
+    box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.04);
 }
 
 .recent-search a {
@@ -1255,6 +1262,10 @@ input.multiselect__input:focus {
     justify-content: center;
 }
 
+.recent-search b {
+    color: #006BFA;
+}
+
 .recent-search .direction-spot .circle {
     width: 12px;
     height: 12px;
@@ -1274,6 +1285,18 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
+.filter-search b {
+    text-transform: uppercase;
+}
+
+.filter-search .multiselect__single {
+    background: #f8f8fc;
+}
+
+.filter-search .multiselect.s-input {
+    min-height: 25px !important;
+}
+
 .vue-daterange-picker.s-input .reportrange-text {
     border: none !important;
     background: #f8f8f8;
@@ -1283,6 +1306,13 @@ input.multiselect__input:focus {
 .vue-daterange-picker.s-input .reportrange-text i {
     padding-top: 6px;
     font-size: 25px;
+}
+
+.recent-search img {
+    left: 22px;
+    top: 10px;
+    width: 34px;
+    position: absolute;
 }
 
 
@@ -1490,10 +1520,6 @@ input.multiselect__input:focus {
     top: 6px;
 }
 
-.delivery-type {
-    right: -38px;
-}
-
 .type-mode {
     right: 23px;
 }
@@ -1649,4 +1675,19 @@ input.surcharge-input {
 
 .s-input .form-control.reportrange-text i {
     display: none !important;
+}
+
+.input-search-form {
+    padding-left: 5px;
+    padding-right: inherit;
+}
+.input-search-form .form-control.reportrange-text {
+    padding: 16px 50px;
+}
+.origen-search {
+    padding-left: 30px !important;
+}
+
+.containers-search {
+    padding-right: 15px !important;
 }
