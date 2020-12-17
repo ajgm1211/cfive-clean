@@ -53,6 +53,7 @@ class SyncCompaniesJob implements ShouldQueue
             $response = $data->getData($uri);
             $max_page = ceil($response['count'] / 100);
             foreach ($response['entidades'] as $item) {
+                sleep(1);
                 $data = new Connection();
                 $invoice = $data->getInvoices($item['codigo']);
                 if ($invoice) {
