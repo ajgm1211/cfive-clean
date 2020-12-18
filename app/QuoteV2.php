@@ -664,6 +664,16 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return $this->hasMany('App\LocalChargeQuoteTotal','quote_id','id');
     }
+    
+    public function local_charges_lcl()
+    {
+        return $this->hasMany('App\LocalChargeQuoteLcl','quote_id','id');
+    }
+
+    public function local_charges_lcl_totals()
+    {
+        return $this->hasMany('App\LocalChargeQuoteLclTotal','quote_id','id');
+    }
 
     public function duplicate()
     {
@@ -689,8 +699,8 @@ class QuoteV2 extends Model  implements HasMedia
             $this->load(
                 'rates_v2',
                 'inland_addresses',
-                'local_charges',
-                'local_charges_totals',
+                'local_charges_lcl',
+                'local_charges_lcl_totals',
                 'automatic_rate_totals'
             );
         }
