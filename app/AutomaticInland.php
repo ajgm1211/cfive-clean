@@ -14,11 +14,12 @@ class AutomaticInland extends Model
         'rate' => 'array',
     ];
 
-    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_address_id'];
+    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 
+        'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_totals_id'];
 
     public function quote()
     {
-        return $this->belongsTo('App\QuoteV2', 'id', 'quote_id');
+        return $this->belongsTo('App\QuoteV2', 'quote_id', 'id');
     }
 
     public function rate()
@@ -40,6 +41,11 @@ class AutomaticInland extends Model
     {
         return $this->hasOne('App\Provider', 'id', 'provider_id');
     }
+
+    public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
 
     public function country_code()
     {

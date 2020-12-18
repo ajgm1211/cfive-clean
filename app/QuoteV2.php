@@ -120,6 +120,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $this->hasMany('App\AutomaticInland', 'quote_id', 'id');
     }
 
+    public function inland_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir', 'quote_id', 'id');
+    }
+
     public function charge()
     {
         return $this->hasManyThrough('App\Charge', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
@@ -618,6 +623,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function automatic_inland_totals()
     {
         return $this->hasMany('App\AutomaticInlandTotal','quote_id','id');
+    }
+
+    public function automatic_inland_address()
+    {
+        return $this->hasMany('App\InlandAddress','quote_id','id');
     }
 
     public function automatic_rate_totals()

@@ -12,7 +12,7 @@ class AutomaticInlandLclAir extends Model
 {
 	protected $fillable = [
 		'quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','units','price_per_unit','markup','total','currency_id',
-		'provider_id','inland_address_id','charge'];
+		'provider_id','inland_totals_id','charge'];
 
 	public function quote()
 	{
@@ -42,7 +42,7 @@ class AutomaticInlandLclAir extends Model
 	public function provider()
 	{
 		return $this->hasOne('App\Provider','id','provider_id');
-	}
+    }
 	
 	public function scopeFilterByQuote($query,$quote_id){
         return $query->where( 'quote_id', '=', $quote_id );
@@ -52,9 +52,26 @@ class AutomaticInlandLclAir extends Model
     {
         return (new AutomaticInlandFilter($request, $builder))->filter();
     }
+	
+	public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
 
-    public function inland_address()
+    public function scopeSelectFields($query)
     {
-        return $this->hasOne('App\InlandAddress','id','inland_address_id');
+        return $query->select('id', 'provider_id', 'inland_address_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'units', 'price_per_unit as price', 'markup as profit', 'total', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+    }
+
+    public function scopeGetPortRelation($query)
+    {
+        $query->with(['port' => function ($q) {
+            $q->select('id', 'display_name');
+        }]);
+    }
+
+    public function providers()
+    {
+        return $this->hasOne('App\Provider', 'id', 'provider_id');
     }
 }

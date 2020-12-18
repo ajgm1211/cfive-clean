@@ -156,6 +156,13 @@ class AutomaticRate extends Model
         });
     }
 
+    public function scopeGetChargeLcl($query, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use ($type) {
+            $query->where('type_id', $type);
+        });
+    }
+
     public function scopeGetQuote($query, $id)
     {
         return $query->where('quote_id', $id);
@@ -174,7 +181,7 @@ class AutomaticRate extends Model
             );
         } else if ($quote->type == 'LCL') {
             $this->load(
-                'charge_lcl_airs'
+                'charge_lcl_air'
             );
         }
 
@@ -206,6 +213,40 @@ class AutomaticRate extends Model
                 'currency_id'
             );
         }]);
+    }
+
+    public function scopeSelectChargeApi($q, $type)
+    {
+        if($type == 'FCL'){
+            return $q->with(['charge' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'amount as price',
+                    'markups as profit',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }else{
+            return $q->with(['charge_lcl_air' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'price_per_unit as price',
+                    'units',
+                    'minimum',
+                    'markup as profit',
+                    'total',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }
     }
 
     public function scopeSelectFields($query)

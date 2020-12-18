@@ -3,15 +3,14 @@
 namespace App\Http\Traits;
 
 use App\CalculationType;
+use App\Container;
 use App\Currency;
 use App\Harbor;
 use App\Inland;
 use App\Price;
 use App\RemarkHarbor;
-use App\User;
-use App\Container;
-use App\GlobalCharge;
 use App\TransitTime;
+use App\User;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
 
@@ -245,7 +244,7 @@ trait SearchTraitApi
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
 
-        $arrayDetail = array('type' => $containers, 'price'  => $amount, 'currency'  => $data->currency->alphacode);
+        $arrayDetail = array('type' => $containers, 'price' => $amount, 'currency' => $data->currency->alphacode);
 
         // Arreglos para guardar los rates
         $array_save = array('c' . $containers => $amount);
@@ -272,7 +271,7 @@ trait SearchTraitApi
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => (string)$montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name,'monto'=>$monto);
+        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => (string) $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name, 'monto' => $monto);
         return $arreglo;
     }
 
@@ -539,7 +538,6 @@ trait SearchTraitApi
                 $remarkAI .= "<br>" . $remAll->remark->import;
             }
 
-
             foreach ($remarks_origin as $remOrig) {
 
                 $rems .= "<br>";
@@ -548,7 +546,6 @@ trait SearchTraitApi
 
                 $remarkOI .= "<br>" . $remOrig->remark->import;
             }
-
 
             foreach ($remarks_destination as $remDest) {
                 $rems .= "<br>";
@@ -591,7 +588,6 @@ trait SearchTraitApi
 
                     $options = json_decode($cont->options);
 
-
                     if ($val == $cont->id) {
                         //               dd($options);
 
@@ -626,21 +622,18 @@ trait SearchTraitApi
         return $carrier;
     }
 
-
     public function contratoFuturo($date1, $date2)
     {
-
-
 
         $date1 = new \DateTime($date1);
         $date2 = new \DateTime($date2);
         $diff = $date1->diff($date2);
 
-        if ($diff->invert  == "0")
+        if ($diff->invert == "0") {
             $contratoFuturo = true;
-        else
+        } else {
             $contratoFuturo = false;
-
+        }
 
         return $contratoFuturo;
     }
@@ -651,7 +644,7 @@ trait SearchTraitApi
         $transitArray = array();
         if ($status != 'api') {
 
-            $transit  = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
+            $transit = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
 
             if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
@@ -659,14 +652,14 @@ trait SearchTraitApi
                 $transitArray['service'] = $transit->service->name;
             } else {
                 $transitArray['via'] = "";
-                $transitArray['transit_time'] =  "";
-                $transitArray['service'] =  "";
+                $transitArray['transit_time'] = "";
+                $transitArray['service'] = "";
             }
         } else {
 
             $transitArray['via'] = "";
-            $transitArray['transit_time'] =  "";
-            $transitArray['service'] =  "";
+            $transitArray['transit_time'] = "";
+            $transitArray['service'] = "";
         }
         return $transitArray;
     }

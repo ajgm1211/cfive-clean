@@ -1527,13 +1527,13 @@ trait QuoteV2Trait
                     $totalized = 0;
 
                     if (isset($array_amounts['c' . $c->code])) {
-                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                        ${$amount . '_' . $c->code} = $this->tofloat($array_amounts['c' . $c->code]);
                         ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
                         ${$total . '_' . $c->code} = ${$amount . '_' . $total . '_' . $c->code};
                     }
 
                     if (isset($array_markups['m' . $c->code])) {
-                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                        ${$markup . '_' . $c->code} = $this->tofloat($array_markups['m' . $c->code]);
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
 
@@ -1743,5 +1743,27 @@ trait QuoteV2Trait
         }
 
         return false;
+    }
+
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, Array $amounts)
+    {    
+        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+            $inputConversion = $fromCurrency->rates;
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $inputConversion;
+                $amounts[$container] = isDecimal($convertedPrice,true);
+            }
+            if($toCurrency->alphacode=='USD'){
+                return $amounts;
+            }else{
+                $outputConversion = $toCurrency->rates;
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice,true);
+                }
+            }
+        }
+
+        return $amounts;
     }
 }
