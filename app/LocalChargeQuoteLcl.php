@@ -112,4 +112,13 @@ class LocalChargeQuoteLcl extends Model
     {
         return $query->where('type_id', $type);
     }
+
+    public function duplicate($quote)
+    {
+        $new_record = $this->replicate();
+        $new_record->quote_id = $quote->id;
+        $new_record->save();
+
+        return $new_record;
+    }
 }
