@@ -4,7 +4,7 @@ namespace App;
 
 use App\AutomaticRate;
 use App\Container;
-use App\Http\Traits\UtilTrait;
+use App\Http\Traits\QuoteV2Trait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\AutomaticRateTotal;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class FclPdf
 {
-    use UtilTrait;
+    use QuoteV2Trait;
 
     public function generate($quote)
     {
@@ -210,12 +210,6 @@ class FclPdf
             foreach ($item->charge as $amounts) {
                 if ($amounts->type_id == 3) {
 
-                    /*if (@$quote->pdf_option->grouped_freight_charges == 1) {
-                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                    } else {
-                        $typeCurrency = $item->currency->alphacode;
-                    }*/
-
                     $typeCurrency = $item->currency->alphacode;
 
                     $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
@@ -225,10 +219,6 @@ class FclPdf
 
                     $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                     $array_markups = $this->processOldContainers($array_markups, 'markups');
-                    
-                    $currencyInput = $item->currency;
-
-                    $currencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
                     
                     foreach ($containers as $c) {
                         ${$sum . $c->code} = 0;
@@ -431,10 +421,10 @@ class FclPdf
         $routePrefix = 'route_';
         $routeId = 1;
         foreach($freightTotals as $frTotal){
-            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name;
-            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name;
-            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name;
-            $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'];
+            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
             $routeId++;
         }
 
@@ -477,7 +467,9 @@ class FclPdf
 
             $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
 
-            $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            if($totalsArrayInput){
+                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+            }
 
             foreach($totalsArrayOutput as $key=>$route){
                 if($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']){

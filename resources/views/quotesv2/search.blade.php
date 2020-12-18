@@ -673,10 +673,8 @@ background-color: #36A3F7;
 @section('title', 'Quotes')
 @section('content')
 <br>
-
+{!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 <div class="padding">
-    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
-
     <div class="col-lg-12">
         @if ($errors->any())
         <div class="alert alert-danger">
@@ -1209,22 +1207,30 @@ background-color: #36A3F7;
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1">+ Add Contract</span></button>
+                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1"><i class="fa fa-plus"></i> Add Contract</span></button>
                                 </center>
                             </div>
                         </div>
-
-                      
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {!! Form::close() !!}
-
-
 </div>
+
+<div class="padding">
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-lg-12" align='right'>
+                    <button type="button" class="btn btn-link quote_man"><i class="fa fa-plus"></i> Create Quote Manually</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{!! Form::close() !!}
 
 
 
@@ -1266,8 +1272,8 @@ background-color: #36A3F7;
                                     </div>
                                 </div>
                                 <div class="col-lg-6" align='right'> 
-                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)"><b>Create Quote</b></button>
-                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')" title="New Feature">
                                         Create FCL Quote
                                     </button>
                                 </div>

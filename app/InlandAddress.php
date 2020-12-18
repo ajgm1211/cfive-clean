@@ -11,12 +11,7 @@ class InlandAddress extends Model
 
     public function inland_totals()
     {
-        return $this->hasMany('App\AutomaticInlandTotal','inland_address_id');
-    }
-
-    public function inlands()
-    {
-        return $this->hasMany('App\AutomaticInland','inland_address_id');
+        return $this->hasOne('App\AutomaticInlandTotal','inland_address_id');
     }
     
     public function duplicate($quote)
@@ -27,13 +22,11 @@ class InlandAddress extends Model
 
         if($quote->type == 'FCL'){
             $this->load(
-                'inland_totals',
-                'inlands'
+                'inland_totals'
             );
         }else if($quote->type == 'LCL'){
             $this->load(
-                'inland_totals',
-                'inland_lcl_airs'
+                'inland_totals'
             );
         }
 
