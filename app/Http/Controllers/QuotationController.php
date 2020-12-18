@@ -402,7 +402,11 @@ class QuotationController extends Controller
 
     public function destroyAll(Request $request)
     {   
-        DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
+        $toDestroy = QuoteV2::whereIn('id', $request->input('ids'))->get();
+        
+        foreach($toDestroy as $td){
+            $this->destroy($td);
+        }
 
         return response()->json(null, 204);
     }
