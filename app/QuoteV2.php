@@ -682,6 +682,7 @@ class QuoteV2 extends Model  implements HasMedia
                 'inland_addresses',
                 'local_charges',
                 'local_charges_totals',
+                'automatic_rate_totals',
                 'pdf_option'
             );
         }else if($new_quote->type == 'LCL'){
@@ -689,7 +690,8 @@ class QuoteV2 extends Model  implements HasMedia
                 'rates_v2',
                 'inland_addresses',
                 'local_charges',
-                'local_charges_totals'
+                'local_charges_totals',
+                'automatic_rate_totals'
             );
         }
 
