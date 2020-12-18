@@ -446,10 +446,6 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${autoinland_id}/update`, data)
         },
-        createTotals(combo, route) {
-            let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/store`, {})
-        },
         updateTotals(combo, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/totals/${combo}/update`, data)
@@ -471,7 +467,15 @@ export default {
         search(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands/search`, data);
-        }
+        },
+        harbors(route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inlands/harbors`, {});
+        },
+        deleteFull(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${combo}/delete_full`, {})
+        },
     },
     automaticinlandslcl: {
         list(combo, params, callback, route) {
@@ -492,10 +496,6 @@ export default {
         update(autoinland_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${autoinland_id}/update`, data)
-        },
-        createTotals(combo, route) {
-            let quote_id = route.params.id;
-            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/totals/${combo}/store`, {})
         },
         updateTotals(combo, data, route) {
             let quote_id = route.params.id;
@@ -518,7 +518,15 @@ export default {
         search(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/port/${port_id}/automatic_inlands_lcl/search`, data);
-        }
+        },
+        harbors(route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inlands_lcl/harbors`, {});
+        },
+        deleteFull(combo, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${combo}/delete_full`, {})
+        },
     },
     localcharges: {
         create(data) {
@@ -562,6 +570,23 @@ export default {
         },
         harbors(id) {
             return api.call('get', `/api/quote/local/data/${id}`, {})
+        },
+    },
+    localchargeslcl: {
+        create(data) {
+            return api.call('post', `/api/quote/localcharge/lcl/store`, data);
+        },
+        createCharge(data) {
+            return api.call('post', `/api/quote/charge/lcl/store`, data);
+        },
+        localcharges(params) {
+            return api.call('get', '/api/quote/localcharge/lcl', { params })
+        },
+        delete(id, type) {
+            return api.call('post', `/api/quote/localcharge/lcl/delete/${id}`, { type: type });
+        },
+        total(params) {
+            return api.call('get', '/api/quote/localcharge/lcl/total', { params })
         },
     },
     providers: {
