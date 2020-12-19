@@ -8,6 +8,7 @@ use App\ContainerCalculation;
 use App\Contract;
 use App\ContractRateApi;
 use App\ContractRateFclApi;
+use App\Harbor;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
 use App\LocalCharge;
@@ -85,6 +86,17 @@ class SaveFclRatesByContractJob implements ShouldQueue
 
                         $typeCurrency =  $data->currency->alphacode;
 
+                        $carrier[] = $data->carrier_id;
+                        $orig_port = array($data->origin_port);
+                        $dest_port = array($data->destiny_port);
+
+                        $country_orig = Harbor::find($data->origin_port);
+                        $country_dest = Harbor::find($data->destiny_port);
+
+                        $origin_country = array($country_orig->country_id);
+                        $destiny_country = array($country_dest->country_id);
+
+
                         foreach ($containers as $cont) {
                             $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
                             $totalesCont = array_merge($totalesContainer, $totalesCont);
@@ -135,16 +147,27 @@ class SaveFclRatesByContractJob implements ShouldQueue
 
                         $equipmentFilter = $arregloR['arregloEquipment'];
 
-                        /*$carrier_all = Carrier::where('name', 'ALL')->select('id')->first();*/
+                        // id de los port  ALL
+                        array_push($orig_port, 1485);
+                        array_push($dest_port, 1485);
+                        // id de los carrier ALL
+                        $carrier_all = 26;
+                        array_push($carrier, $carrier_all);
+                        // Id de los paises
+                        array_push($origin_country, 250);
+                        array_push($destiny_country, 250);
 
                         // ################### Calculos local  Charges #############################
 
                         $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
                             $q->whereIn('carrier_id', $carrier);
-                        })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'surcharge.saleterm')
-                            ->with(['currency' => function ($q) {
-                                $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
-                            }])->get();
+                        })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
+                            $query->whereHas('localcharports', function ($q) use ($orig_port, $dest_port) {
+                                $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+                            })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
+                                $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+                            });
+                        })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
 
 
                         foreach ($localChar as $local) {
@@ -159,7 +182,7 @@ class SaveFclRatesByContractJob implements ShouldQueue
                             }*/
 
                             foreach ($local->localcharcarriers as $localCarrier) {
-                                if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
+                                if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all) {
                                     $localParams = array('local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                                     //Origin
                                     /* if ($chargesOrigin != null) {
@@ -271,7 +294,7 @@ class SaveFclRatesByContractJob implements ShouldQueue
                             $$name_tot += ${$sum_freight . $cont->code};
                             $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
                         }
-
+                        
                         $this->compactResponse($containers, $equipment, $data, $typeCurrency);
                     }
                 }
