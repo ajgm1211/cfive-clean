@@ -1078,16 +1078,12 @@ class ApiController extends Controller
             if ($contract != null) {
                 if($contract->status == 'incomplete' || $contract->status == 'draft'){
                     return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
-                }else if($contract->status == 'expired'){
-                    return response()->json(['message' => 'The requested contract expired'], 200);
                 }else{
                     return $contract->processSearchByIdFcl($response, $convert);
                 }
             } elseif ($contract_lcl != null) {
                 if($contract_lcl->status == 'incomplete' || $contract_lcl->status == 'draft'){
                     return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
-                }else if($contract_lcl->status == 'expired'){
-                    return response()->json(['message' => 'The requested contract expired'], 200);
                 }else{
                     return $contract_lcl->processSearchByIdLcl($response, $convert);
                 }
