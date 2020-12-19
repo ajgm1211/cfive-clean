@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
         $schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SyncCompaniesEvery30Job)->everyThirtyMinutes()->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SaveFclRatesByContractJob)->hourly()->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
