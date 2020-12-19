@@ -297,11 +297,11 @@ class Contract extends Model implements HasMedia, Auditable
         if(count($rates)==0){
             return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
         }
-        $rates = $this->compactResponse($rates);
+        $rates = $this->transformToArray($rates);
         return $rates;
     }
 
-    public function compactResponse($rates)
+    public function transformToArray($rates)
     {
         $equipment = array('1', '2', '3', '4', '5');
         $containers = Container::all();
