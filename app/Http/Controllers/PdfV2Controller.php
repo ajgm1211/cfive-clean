@@ -91,9 +91,11 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
+        //$pdf->loadHTML($view);
         $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
 
         return $pdf->stream('quote-' . $idQuote . '-' . date('Ymd') . '.pdf');
+
     }
 
     /**
@@ -236,13 +238,19 @@ class PdfV2Controller extends Controller
         foreach ($rates_lcl_air as $item) {
 
             foreach ($item->charge_lcl_air as $value) {
-
-                if ($quote->pdf_option->grouped_total_currency == 1) {
+                
+                if ($quote->pdf_option->grouped_total_currency == 1 && count($rates_lcl_air)==1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
-                }
 
+                    $typeCurrency =  $currency_cfg->alphacode;
+
+                    if($value->type_id == 3){
+                        $typeCurrency =  $item->currency->alphacode; //OJO CON ESTO
+                    }
+                    
+                }
+                
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                 if ($value->type_id == 3) {
@@ -259,6 +267,7 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
+            
             if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -499,10 +508,10 @@ class PdfV2Controller extends Controller
                                 $total_freight_40nor = 0;
                                 $total_freight_45 = 0;
                                 //dd($quote->pdf_option->destination_charges_currency);
-                                if ($quote->pdf_option->grouped_freight_charges == 1) {
+                                if ($quote->pdf_option->grouped_freight_charges == 1 && count($freight_charges_detailed) == 1) {
                                     $typeCurrency =  $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency = @$value->currency->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                 $array_amounts = json_decode($amounts->amount, true);
@@ -562,14 +571,11 @@ class PdfV2Controller extends Controller
                     foreach ($item as $rate) {
                         foreach ($rate->charge_lcl_air as $v_freight) {
                             if ($v_freight->type_id == 3) {
-                                if ($freight_charges_grouped->count() > 1) {
-                                    $typeCurrency = $currency_cfg->alphacode;
+                                
+                                if ($quote->pdf_option->grouped_freight_charges == 1 && count($freight_charges_grouped) == 1) {
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                                    } else {
-                                        $typeCurrency = $currency_cfg->alphacode;
-                                    }
+                                    $typeCurrency = @$rate->currency->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_freight->currency_id, $typeCurrency);
 
@@ -587,7 +593,7 @@ class PdfV2Controller extends Controller
                 }
             }
         }
-
+        
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'freight_currency' => $freight_currency]);
 
         $pdf = \App::make('dompdf.wrapper');

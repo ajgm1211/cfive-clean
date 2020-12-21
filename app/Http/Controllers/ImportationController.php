@@ -1420,11 +1420,15 @@ class ImportationController extends Controller
         }
 
         $failrate = FailRate::find($id);
-        $failrate->forceDelete();
-        $request->session()->flash('message.content', 'Updated Rate' );
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
+            if(is_null($failrate)){
+                return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
+        }else{
+            $failrate->forceDelete();
+            $request->session()->flash('message.content', 'Updated Rate' );
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
+        }
     }
     public function UpdateRatesD(Request $request, $id){
         //dd($request->all());
@@ -2020,12 +2024,15 @@ class ImportationController extends Controller
                 ]);
             }
         }
-        $failSurcharge->forceDelete();
-        $request->session()->flash('message.content', 'Surcharge Updated' );
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
-
+        if(is_null($failSurcharge)){
+            return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
+        }else{
+            $failSurcharge->forceDelete();
+            $request->session()->flash('message.content', 'Surcharge Updated' );
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$request->nameTab]);
+        }
     }
 
     public function UpdateSurchargersD(Request $request, $id){
@@ -3243,7 +3250,7 @@ class ImportationController extends Controller
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        chmod($path, 0777);
+        //chmod($path, 0777);
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
@@ -3259,9 +3266,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $account = AccountFcl::find(145);
-        $json_account = json_decode($account->data,true);
-        dd($json_account,isset($json_account['final_columns']),Auth::user()->email);
+        $surchargersFined = PrvSurchargers::get_single_surcharger('isps');
+        dd($surchargersFined);
     }
 
 }

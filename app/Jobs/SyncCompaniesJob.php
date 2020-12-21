@@ -5,6 +5,8 @@ namespace App\Jobs;
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
 use App\Company;
+use App\Connection;
+use App\Visualtrans;
 use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -15,23 +17,15 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class SyncCompaniesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    protected $response;
-    protected $user;
-    protected  $partner;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($response, $user, $partner)
+    public function __construct()
     {
-        $this->response = $response;
-        $this->user = $user;
-        $this->partner = $partner;
+        //
     }
-
     /**
      * Execute the job.
      *
@@ -39,82 +33,43 @@ class SyncCompaniesJob implements ShouldQueue
      */
     public function handle()
     {
-        switch($this->partner->name){
-            case 'vForwarding':
-                $i = 0;
-                
-                foreach ($this->response['ent_m'] as $item) {
-                    if ($item['es_emp']) {
-        
-                        $exist_com = Company::where('api_id', $item['id'])->get();
-        
-                        if ($exist_com->count() == 0) {
-                            $company = new Company();
-                            $company->business_name = $item['nom_com'];
-                            $company->phone = $item['tlf'];
-                            $company->address = $item['address'];
-                            $company->email = $item['eml'];
-                            $company->tax_number = $item['cif'];
-                            $company->company_user_id = $this->user->company_user_id;
-                            $company->owner = $this->user->id;
-                            $company->api_id = $item['id'];
-                            $company->api_status = 'created';
-                            $company->save();
-        
-                            /*$contacts = $this->getContacts($item->id);
-                        
-                        foreach($contacts->ent_rel_m as $v){
-                            $exist_cont = Contact::where('api_id',$item->ent_rel)->count();
-        
-                            if($exist_cont==0){
-                                $contact = new Contact();
-                                $contact->first_name = $v->name;
-                                $contact->phone = $item->tlf;
-                                $contact->email = $item->eml;
-                                $contact->position = $v->dsc;
-                                $contact->company_id = $v->ent_rel;
-                                $contact->api_id = $v->ent_rel;
-                                $contact->save();
-                            }
-                        }*/
-                        }
-                    }
-        
-                    $i++;
-                }
-                $company_user = $this->user->company_user_id;
-                $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) use($company_user) {
-                    $query->where('company_user_id', $company_user);
-                })->first();
-                $setting->status = 0;
-                $setting->save();
-            break;
+        try {
 
-            case 'Visualtrans':
-                $i = 0;
+            $integrations = ApiIntegration::where(['module' => 'Companies', 'status' => 1])->with('partner')->get();
 
-                foreach ($this->response['entidades'] as $item) {
-                    //if ($item->es_emp) {
-        
-                        $exist_com = Company::where('api_id', $item['codigo'])->get();
-        
-                        if ($exist_com->count() == 0) {
-                            $company = new Company();
-                            $company->business_name = $item['nombre-fiscal'];
-                            $company->tax_number = $item['cif-nif'];
-                            $company->company_user_id = $this->user->company_user_id;
-                            $company->owner = $this->user->id;
-                            $company->api_id = $item['codigo'];
-                            $company->api_status = 'created';
-                            $company->save();
-
-                        }
-                    //}
-        
-                    $i++;
-                }
-
-            break;
+            foreach ($integrations as $setting) {
+                $this->setData($setting);
+            }
+        } catch (\Exception $e) {
+            $e->getMessage();
         }
+    }
+    public function setData($setting)
+    {
+        $data = new Connection();
+        $page = 1;
+        do {
+            $uri =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
+            $response = $data->getData($uri);
+            $max_page = ceil($response['count'] / 100);
+            foreach ($response['entidades'] as $item) {
+                sleep(1);
+                $data = new Connection();
+                $invoice = $data->getInvoices($item['codigo']);
+                if ($invoice) {
+                    Company::updateOrCreate([
+                        'api_id' => $item['codigo']
+                    ], [
+                        'business_name' => $item['nombre-fiscal'],
+                        'tax_number' => $item['cif-nif'],
+                        'company_user_id' => $setting->company_user_id,
+                        'api_id' => $item['codigo'],
+                        'api_status' => 'created',
+                    ]);
+                }
+            }
+            $page += 1;
+        } while ($page <= $max_page);
+        \Log::info('Syncronization with vForwarding completed successfully!');
     }
 }

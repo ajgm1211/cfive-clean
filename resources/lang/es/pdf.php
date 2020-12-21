@@ -1,7 +1,7 @@
 <?php
 
 return [
-    "freight_charges" => "Gastos de flete",
+    "freight_charges" => "Flete Marítimo",
     "origin_charges" => "Gastos en origen",
     "destination_charges" => "Gastos en destino",
     "currency" => "Moneda",
@@ -17,12 +17,13 @@ return [
     "pol" => "Puerto embarque",
     "type" => "Tipo",
     "service" => "Servicio",
-    "remarks" => "Observaciones",
+    "remarks" => "Observaciones Flete",
+    "localcharge_remarks" => "Observaciones Gastos Locales",
     "terms" => "Términos y Condiciones",
     "from" => "De",
     "to" => "Para",
-    "quote_id" => "ID Cotización",
-    "date_issue" => "Fecha de creación",
+    "quote_id" => "Referencia",
+    "date_issue" => "Fecha",
     "validity" => "Validez",
     "total_local" => "Total gastos locales",
     "total" => "Total",
@@ -52,4 +53,11 @@ return [
     "height" => "Alto",
     "cargo_details" => "Detalles de la carga",
     "payment_conditions" => "Condiciones de pago",
+    "inland" => "Flete terrestre",
+    "provider" => "Proveedor",
+    "distance" => "Distancia",
+    "ocean_freight" => "Flete Marítimo",
+    "minimum" => "Mínimo",
+    "totals" => "Totales",
+    "price" => "Precio",
 ];

@@ -390,7 +390,10 @@
             );
         }
     }); 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
     $('#button-submit').on('click',function(){
         var carrier =$('select#carrierM').val();
         if(carrier == 0){
@@ -409,6 +412,10 @@
         if(date_star == date_end){
             swal(
                 "Error",
+<<<<<<< HEAD
+=======
+                "Error, Please select the date!", "error",
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
                 "Error, Please select the Date!", "error",
                 true,
             );

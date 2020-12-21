@@ -182,6 +182,10 @@ trait QuoteV2Trait
             $query->where('type_id', 3);
         })->with('charge')->where('quote_id', $quote->id)->get();
 
+        $freight_charges_ng = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 3);
+        })->with('charge')->where('quote_id', $quote->id)->get();
+
         /* Fin consulta de charges */
 
         $origin_harbor = Harbor::where('id', $quote->origin_harbor_id)->first();
@@ -301,7 +305,9 @@ trait QuoteV2Trait
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $company_user->currency->alphacode, $containers);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote' => $quote, 'containers' => $containers, 'rates' => $rates, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges_detailed' => $destination_charges_detailed, 'origin_charges_grouped' => $origin_charges_grouped, 'origin_charges_detailed' => $origin_charges_detailed, 'destination_charges_grouped' => $destination_charges_grouped, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'freight_charges' => $freight_charges]);
+        $freight_charges_not_grouped = $this->processFreightChargesNotGrouped($freight_charges_ng, $quote, $company_user->currency->alphacode, $containers);
+
+        $view = \View::make('quotesv2.pdf.index', ['quote' => $quote, 'freight_charges_not_grouped' => $freight_charges_not_grouped, 'containers' => $containers, 'rates' => $rates, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges_detailed' => $destination_charges_detailed, 'origin_charges_grouped' => $origin_charges_grouped, 'origin_charges_detailed' => $origin_charges_detailed, 'destination_charges_grouped' => $destination_charges_grouped, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'freight_charges' => $freight_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -390,8 +396,13 @@ trait QuoteV2Trait
 
                 $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
 
-                $array_amounts = json_decode($item->rate, true);
-                $array_markups = json_decode($item->markup, true);
+                if(!is_array($item->rate) && !is_array($item->markup)){
+                    $array_amounts = json_decode($item->rate, true);
+                    $array_markups = json_decode($item->markup, true);
+                }else{
+                    $array_amounts = $item->rate;
+                    $array_markups = $item->markup;
+                }
 
                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -648,8 +659,13 @@ trait QuoteV2Trait
 
                             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
-                            $array_amounts = json_decode($value->rate, true);
-                            $array_markups = json_decode($value->markup, true);
+                            if(!is_array($value->rate) && !is_array($value->markup)){
+                                $array_amounts = json_decode($value->rate, true);
+                                $array_markups = json_decode($value->markup, true);
+                            }else{
+                                $array_amounts = $value->rate;
+                                $array_markups = $value->markup;
+                            }
 
                             $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                             $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -817,8 +833,16 @@ trait QuoteV2Trait
 
                                 $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
 
-                                $array_amounts = json_decode($inland_value->rate, true);
-                                $array_markups = json_decode($inland_value->markup, true);
+                                //$array_amounts = json_decode($inland_value->rate, true);
+                                //$array_markups = json_decode($inland_value->markup, true);
+
+                                if(!is_array($inland_value->rate) && !is_array($inland_value->markup)){
+                                    $array_amounts = json_decode($inland_value->rate, true);
+                                    $array_markups = json_decode($inland_value->markup, true);
+                                }else{
+                                    $array_amounts = $inland_value->rate;
+                                    $array_markups = $inland_value->markup;
+                                }
 
                                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -956,6 +980,72 @@ trait QuoteV2Trait
                 }
             }
             $freight->charge_freight = $charge_freight;
+        }
+
+        return $freight_charges_grouped;
+    }
+
+    public function processFreightChargesNotGrouped($freight_charges, $quote, $currency_cfg, $containers)
+    {
+
+        $freight_charges_grouped = collect($freight_charges);
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+        $charge_freight = 0;
+
+        foreach ($freight_charges_grouped as $item) {
+            
+            foreach ($containers as $c) {
+                ${$total . $amount . $c->code} = 0;
+                ${$total . $amount . $markup . $c->code} = 0;
+                ${$sum . $amount . $markup . $c->code} = 0;
+            }
+
+            foreach ($item->charge as $amounts) {
+                if ($amounts->type_id == 3) {
+
+                    if ($quote->pdf_option->grouped_freight_charges == 1) {
+                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                    } else {
+                        $typeCurrency = $item->currency->alphacode;
+                    }
+
+                    $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
+                    $array_amounts = json_decode($amounts->amount, true);
+                    $array_markups = json_decode($amounts->markups, true);
+
+                    $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                    $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                    foreach ($containers as $c) {
+                        ${$sum . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                        ${$total . $c->code} = 0;
+                        ${$total . $sum . $c->code} = $total . $sum . $c->code;
+
+                        if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        }
+
+                        if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                            $charge_freight++;
+                            $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                            $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code}, true);
+                        }
+                    }
+                }
+            }            
         }
 
         return $freight_charges_grouped;
@@ -1437,13 +1527,13 @@ trait QuoteV2Trait
                     $totalized = 0;
 
                     if (isset($array_amounts['c' . $c->code])) {
-                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                        ${$amount . '_' . $c->code} = $this->tofloat($array_amounts['c' . $c->code]);
                         ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
                         ${$total . '_' . $c->code} = ${$amount . '_' . $total . '_' . $c->code};
                     }
 
                     if (isset($array_markups['m' . $c->code])) {
-                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                        ${$markup . '_' . $c->code} = $this->tofloat($array_markups['m' . $c->code]);
                         ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
                     }
 
@@ -1463,6 +1553,10 @@ trait QuoteV2Trait
             foreach ($rate->charge_lcl_air as $charge_lcl) {
 
                 $typeCurrency =  @$company_user->currency->alphacode;
+
+                if($charge_lcl->type_id == 3){
+                    $typeCurrency = $rate->currency->alphacode;
+                }
 
                 $currency_rate = $this->ratesCurrency($charge_lcl->currency_id, $typeCurrency);
 
@@ -1493,8 +1587,14 @@ trait QuoteV2Trait
             foreach ($rate->inland as $inland) {
                 $typeCurrency =  $company_user->currency->alphacode;
                 $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
-                $array_amounts = json_decode($inland->rate, true);
-                $array_markups = json_decode($inland->markup, true);
+                
+                if(!is_array($inland->rate) && !is_array($inland->markup)){
+                    $array_amounts = json_decode($inland->rate, true);
+                    $array_markups = json_decode($inland->markup, true);
+                }else{
+                    $array_amounts = $inland->rate;
+                    $array_markups = $inland->markup;
+                }
 
                 $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
                 $array_markups = $this->processOldContainers($array_markups, 'markups');
@@ -1643,5 +1743,27 @@ trait QuoteV2Trait
         }
 
         return false;
+    }
+
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, Array $amounts)
+    {    
+        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+            $inputConversion = $fromCurrency->rates;
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $inputConversion;
+                $amounts[$container] = isDecimal($convertedPrice,true);
+            }
+            if($toCurrency->alphacode=='USD'){
+                return $amounts;
+            }else{
+                $outputConversion = $toCurrency->rates;
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice,true);
+                }
+            }
+        }
+
+        return $amounts;
     }
 }
