@@ -11,38 +11,28 @@ class InlandAddress extends Model
 
     public function inland_totals()
     {
-        return $this->hasOne('App\AutomaticInlandTotal','inland_address_id');
+        return $this->hasMany('App\AutomaticInlandTotal','inland_address_id');
     }
     
     public function duplicate($quote)
     {
-        $new_inland_address = $this->replicate();
-        $new_inland_address->quote_id = $quote->id;
-        $new_inland_address->save(); 
+        $newInlandAddress = $this->replicate();
+        $newInlandAddress->quote_id = $quote->id;
+        $newInlandAddress->save(); 
 
-        if($quote->type == 'FCL'){
-            $this->load(
-                'inland_totals'
-            );
-        }else if($quote->type == 'LCL'){
-            $this->load(
-                'inland_totals'
-            );
-        }
-
+        $this->load(
+            'inland_totals'
+        );
+        
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
             foreach ($relation as $relationRecord) {
-
-                $newRelationship = $relationRecord->replicate();
-                $newRelationship->inland_address_id = $new_inland_address->id;
-                $newRelationship->quote_id = $quote->id;
-                $newRelationship->save();
+                $newRelationship = $relationRecord->duplicate($quote,$newInlandAddress);
             }
         }    
 
-        return $new_inland_address;
+        return $newInlandAddress;
     }
 
 }
