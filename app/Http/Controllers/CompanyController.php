@@ -654,10 +654,10 @@ public function LoadDatatable($id)
             $company->delete();
 
             if ($request->ajax()) {
-                return response()->json('Company deleted successfully!', 200);
+                return response()->json(['message' =>  'Company deleted successfully!']);
             }
 
-            return response()->json(['message' => 'Ok']);
+            // return response()->json(['message' => 'Ok']);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([

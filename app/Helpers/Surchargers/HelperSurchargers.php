@@ -74,7 +74,7 @@ class HelperSurchargers {
         $resp = false;
         $find = false;
         $posible_array = [];
-        $surchargersFineds = Surcharge::where('variation->type','like','%'.strtolower($name).'%')
+        $surchargersFineds = Surcharge::where('variation->type','like','%'.trim(strtolower($name)).'%')
             ->where('company_user_id',null)
             ->get();
 

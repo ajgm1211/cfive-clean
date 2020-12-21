@@ -182,7 +182,7 @@
                                                                     <td colspan="4" class="tds"></td>
                                                                     <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
                                                                     <td class="tds"><input type="hidden" value="{{$total_freight}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total sub_total">{{$total_freight}}</span></b></td>
-                                                                    <td class="tds"><b><span class="td-a"> {{$company_user->currency->alphacode}}</span></b></td>
+                                                                    <td class="tds"><b><span class="td-a"> {{$rate->currency->alphacode}}</span></b></td>
                                                                 </tr>
                                                                 @endif
                                                             </div>
