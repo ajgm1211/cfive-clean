@@ -625,7 +625,7 @@ $(document).on('click', '#delete-contact', function() {
                 type: 'get',
                 url: '/contacts/delete/' + id,
                 success: function(data) {
-                    if (data.message == 'Ok') {
+                    if (data.message == 'Contact deleted successfully!') {
                         swal(
                             'Deleted!',
                             'Your file has been deleted.',
@@ -678,7 +678,7 @@ $(document).on('click', '#delete-company', function() {
                                     type: 'get',
                                     url: '/companies/destroy/' + id,
                                     success: function(data) {
-                                        if (data === 'Company deleted successfully!') {
+                                        if (data.message === 'Company deleted successfully!') {
                                             swal(
                                                 'Deleted!',
                                                 'The company has been deleted.',
@@ -703,7 +703,7 @@ $(document).on('click', '#delete-company', function() {
                             type: 'get',
                             url: '/companies/destroy/' + id,
                             success: function(data) {
-                                if (data === 'Company deleted successfully!') {
+                                if (data.message === 'Company deleted successfully!'    ) {
                                     swal(
                                         'Deleted!',
                                         'The company has been deleted.',

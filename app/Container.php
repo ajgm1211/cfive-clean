@@ -16,5 +16,5 @@ class Container extends Model
     public function containersCalculationType(){
         return $this->hasMany('App\ContainerCalculation','container_id');
     }
-	
+    
 }

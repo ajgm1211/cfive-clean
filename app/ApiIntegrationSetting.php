@@ -10,7 +10,8 @@ class ApiIntegrationSetting extends Model
         'company_user_id',
         'api_key',
         'api_integration_id',
-        'enable'
+        'enable',
+        'status'
     ];
 
     public function api_integration(){

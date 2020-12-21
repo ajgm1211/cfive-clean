@@ -921,7 +921,7 @@ $(document).on('click', '.store_sale_charge', function() {
     var currency_id = $(this).closest("tr").find(".currency_id").val();
     $.ajax({
         type: 'POST',
-        url: '/v2/quotes/store/sale/charge',
+        url: '/v2/quotes/sale/charge/store',
         data: {
             "sale_term_id": id,
             "charge": charge,
@@ -970,7 +970,7 @@ $(document).on('click', '.store_charge', function() {
 
     $.ajax({
         type: 'POST',
-        url: '/v2/quotes/store/charge',
+        url: '/v2/quotes/charge/store',
         data: {
             "automatic_rate_id": id,
             "surcharge_id": surcharge_id,
@@ -1192,8 +1192,8 @@ $(document).on('click', '#delete-quote-v2', function() {
 
         if (result.value) {
             $.ajax({
-                type: 'get',
-                url: '/v2/quotes/delete/' + id,
+                type: 'delete',
+                url: '/api/quote/' + id + '/destroy',
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -1209,6 +1209,20 @@ $(document).on('click', '#delete-quote-v2', function() {
     });
 });
 
+//Duplicar quote
+$(document).on('click', '#duplicate-quote-v2', function() {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    $.ajax({
+        type: 'post',
+        url: '/api/quotes/' + id + '/duplicate',
+        success: function(data) {
+            console.log(data.message);
+            location.reload();
+            //REFRESH TABLE?
+        }
+    });
+});
 
 $(document).on('click', '#delete-quote-show', function() {
     var id = $(this).attr('data-quote-show-id');
@@ -2418,6 +2432,43 @@ $(document).ready(function() {
     });
 });
 
+// dinamic 
+
+$("select[name='group_containerC']").on('change', function() {
+
+    var valor = $(this).val();
+
+    if (valor) {
+        $.ajax({
+            url: "/v2/quotes/groupContainer/" + valor,
+            dataType: 'json',
+            success: function(data) {
+                var cont = 0;
+                var texto = "";
+                $.each(data, function(key, value) {
+
+                    if (cont == 0) {
+                        texto += "<div class='form-group m-form__group row'> ";
+
+                    }
+                    texto += "<label class='col-12 col-sm-6 col-form-label'> <p><b> " + value['code'] + "  </b></p><input name='C" + value['code'] + "' value= '0' type='number' class='form-control' required >   </label>  ";
+                    if (cont == 1) {
+                        texto += " </div>";
+                    }
+                    cont++;
+                    if (cont == 2) {
+                        cont = 0;
+                    }
+                });
+                $("#containerDinamic").html(texto);
+            }
+        });
+    }
+});
+
+
+
+
 /** Search **/
 
 $(document).on('change', '#quoteType', function(e) {
@@ -2691,10 +2742,10 @@ $(document).ready(function() {
     $("select[name='company_id_quote']").on('change', function() {
         var company_id = $(this).val();
         $("#contact_id").val('');
-        if ($("#m_select2_2_modal").val() != '0')
+        /*if ($("#m_select2_2_modal").val() != '0')
             $("#contact_id").prop('required', true);
         else
-            $("#contact_id").removeAttr('required');
+            $("#contact_id").removeAttr('required');*/
 
         $('#select2-contact_id-container').text('Please an option');
         if (company_id) {
@@ -2757,11 +2808,24 @@ $(".quote_search").on("click", function() {
     });
 });
 
+function submitForm(type, quote) {
+
+    if (quote == 'FCL') {
+        $('#rateForm').attr('action', '/v2/quotes/store/' + type);
+    } else {
+        $('#rateForm').attr('action', '/v2/quotes/storeLCL/' + type);
+    }
+
+    $("#rateForm").submit();
+}
+
+$('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
+
 $(".quote_man").on("click", function() {
 
-
-
-    $('#FormQuote').attr('action', '/v2/quotes/store');
+    //$('#FormQuote').attr('action', '/api/quote/store');
+    var type = 1;
+    $('#FormQuote').attr('action', '/v2/quotes/store/' + type);
 
     if ($('#quoteType').val() == 2) {
 
@@ -2774,10 +2838,7 @@ $(".quote_man").on("click", function() {
         if ($("#total_volume_pkg_input").val() > 0) {
             $("#total_volume").val($("#total_volume_pkg_input").val());
         }
-
     }
-
-
 
     $(".quote_man").attr("type", "submit");
 });
@@ -3950,9 +4011,12 @@ $(document).on('click', '#savecompany', function() {
     var $element = $('#addContactModal');
 
     var $buss = $('.business_name_input').val();
+    var $phone = $('.phone_input').val();
+    var $email = $('.email_input').val();
+    var $tax_number = $('.tax_number_input').val();
 
 
-    if ($buss != '') {
+    if ($buss != '' && $phone != '' && $email != '' && $tax_number != '') {
         $.ajax({
             type: 'POST',
             url: '/companies',
@@ -3961,7 +4025,7 @@ $(document).on('click', '#savecompany', function() {
                 'phone': $('.phone_input').val(),
                 'address': $('.address_input').val(),
                 'email': $('.email_input').val(),
-
+                'tax_number':$('.tax_number_input').val(),
             },
             success: function(data) {
                 $.ajax({
@@ -4003,11 +4067,41 @@ $(document).on('click', '#savecompany', function() {
     } else {
         swal(
             'Sorry!',
-            'business name is empty',
+            'All fields are required',
             'warning'
         )
 
     }
+
+});
+
+// Remover Surcharge 
+
+$(document).on('click', '.removeSurcharge', function() {
+    $(this).closest('div').remove();
+    /* $i = 1;
+     $('.closetr').each(function() {
+         var res = $(".port_orig", this).removeAttr('name').attr('name', 'port_orig' + $i + '[]');
+         var resDest = $(".port_dest", this).removeAttr('name').attr('name', 'port_dest' + $i + '[]');
+         var car = $(".carrier", this).removeAttr('name').attr('name', 'localcarrier' + $i + '[]');
+         $i++;
+     });*/
+});
+
+//Agregar Surcharge
+
+$(document).on('click', '#addSurcharge', function() {
+
+
+    var $template = $('#cloneSurcharge');
+    $myClone = $template.clone().removeClass('hide').removeAttr('id');
+
+    $myClone.find(".typeC").removeAttr('name').attr('name', 'type[]');
+    $myClone.find(".calculationC").attr('name', 'calculation[]');
+    $myClone.find(".currencyC").attr('name', 'currency[]');
+    $myClone.find(".amountC").attr('name', 'amount[]');
+    $myClone.find("select").select2();
+    $("#colSurcharge").append($myClone);
 
 });
 
