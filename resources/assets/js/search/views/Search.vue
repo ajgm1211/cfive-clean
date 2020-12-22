@@ -3,34 +3,38 @@
 
          <b-form ref="form">
 
+
+             <!-- Type / Delivery type / Additional Services -->
             <div class="row mr-0 ml-0">
 
-                <div class="col-12 col-sm-3 d-flex">
+                <div class="col-12 col-sm-6 col-lg-3 d-flex">
 
+                        <!-- Type (FCL LCL AIR)-->
                         <div style="width: 85px !important; position:relative">
                             <multiselect
                                 v-model="type"
                                 :multiple="false"
                                 :close-on-select="true"
-                                :clear-on-select="true"
+                                :clear-on-select="false"
                                 :show-labels="false"
                                 :options="optionsType"
-                                placeholder=""
+                                placeholder="Select"
                                 class="s-input no-select-style"
                             >
                             </multiselect>
                             <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
                         </div>
 
+                        <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
                         <div style="width: 160px !important; position:relative ">
                             <multiselect
                                 v-model="deliveryType"
                                 :multiple="false"
                                 :close-on-select="true"
-                                :clear-on-select="true"
+                                :clear-on-select="false"
                                 :show-labels="false"
                                 :options="optionsDeliveryType"
-                                placeholder=""
+                                placeholder="Select"
                                 class="s-input no-select-style "
                             >
                             </multiselect>
@@ -39,12 +43,15 @@
 
 
                 </div>
-                <div class="col-12 col-sm-9">
+
+                <!-- Button Additional services -->
+                <div class="col-12 col-sm-6 col-lg-9">
                     <b-button v-b-toggle.collapse-1 class="btn-aditonal-services">additional services <b-icon icon="caret-down-fill" class="ml-1"></b-icon></b-button>
                 </div>
 
             </div>
 
+            <!-- Ipunts Serch -->
             <div class="row mr-0 ml-0">
 
                 <!-- Import / Export -->
@@ -62,8 +69,8 @@
 
                 </div>
 
-                <!-- Origin / Origin Port -->
-                <div class="col-12 col-sm-3">
+                <!-- Origin Port -->
+                <div class="col-12 col-sm-3 origen-search input-search-form">
                     <label>
                         <multiselect
                             v-model="valueOrigen"
@@ -71,7 +78,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsOrigen"
+                            :options="optionsOrigenPort"
                             placeholder="From" 
                             class="s-input"
                         >
@@ -80,8 +87,8 @@
                     </label>
                 </div>
 
-                <!-- Destination / Destination Port -->
-                <div class="col-12 col-sm-3">
+                <!-- Destination Port -->
+                <div class="col-12 col-sm-3 input-search-form">
                     <label>
                         <multiselect
                             v-model="valueDestination"
@@ -89,7 +96,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsDestination"
+                            :options="optionsDestinationPort"
                             placeholder="To" 
                             class="s-input"
                         >
@@ -98,29 +105,29 @@
                     </label>
                 </div>
                 
-                <!-- Date -->
-                <div class="col-12 col-sm-3">
+                <!-- Date Picker-->
+                <div class="col-12 col-sm-3 input-search-form">
                     <label>
                         <date-range-picker
-                            :opens="'center'"
-                            :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
-                            :singleDatePicker="false"
-                            :autoApply="true"
-                            :timePicker="false"
-                            v-model="date"
-                            :linkedCalendars="true"
-                            class="s-input"
-                        ></date-range-picker>
+                                :opens="'center'"
+                                :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
+                                :singleDatePicker="false"
+                                :autoApply="true"
+                                :timePicker="false"
+                                v-model="dateRange"
+                                :linkedCalendars="true"
+                                class="s-input"
+                            ></date-range-picker>
                         <img src="/images/calendario.svg" alt="calendario">
                     </label>
                 </div>
 
-                <!-- Container -->
-                <div class="col-12 col-sm-2">
+                <!-- Containers -->
+                <div class="col-12 col-sm-2 input-search-form containers-search" style="padding-left: 5px;">
                     <label>
                         <multiselect
                             v-model="container"
-                            :multiple="false"
+                            :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
@@ -135,22 +142,23 @@
 
             </div>
 
+            <!-- Input From and To PORT -->
             <div v-if="ptdActive || dtpActive || dtdActive" class="row mr-0 ml-0">
 
                 <div class="col-12 col-sm-1"></div>
 
-                <div v-if="ptdActive" class="col-12 col-sm-3"></div>
+                <div v-if="ptdActive" class="col-12 col-sm-3" style="padding-left: 30px; padding-right: inherit"></div>
 
-                <!-- Origin / Origin Port -->
-                <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3">
+                <!-- Origin City -->
+                <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3 origen-search input-search-form">
                     <label>
                         <multiselect
-                            v-model="valueOrigen"
+                            v-model="origenPort"
                             :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsOrigen"
+                            :options="optionsOrigenPort"
                             placeholder="From" 
                             class="s-input"
                         >
@@ -159,16 +167,16 @@
                     </label>
                 </div>
 
-                <!-- Origin / Destination City -->
-                <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3">
+                <!-- Destination City -->
+                <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3 input-search-form">
                     <label>
                         <multiselect
-                            v-model="valueOrigen"
+                            v-model="destinationPort"
                             :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsOrigen"
+                            :options="optionsDestinationPort"
                             placeholder="To" 
                             class="s-input"
                         >
@@ -281,7 +289,7 @@
             </b-collapse>
 
             <div class="row justify-content-center mr-0 ml-0">
-                <div class="col-2 d-flex justify-content-center"><button class="btn-search">SEARCH</button></div>
+                <div class="col-2 d-flex justify-content-center"><button class="btn-search" >SEARCH</button></div>
             </div>
 
         </b-form>
@@ -303,44 +311,45 @@ export default {
     },
     data() {
         return {
-            date: '',
+            date: '20asd 52',
             ptdActive: false,
             dtpActive: false,
             dtdActive: false,
             direction: 'import',
             type: 'FCL',
-            container: '',
+            company: '',
+            carriers: '',
+            contact: '',
+            pricelevel: '',
+            container: [],
             selected: 'radio1',
             deliveryType: 'PORT TO PORT',
             valueOrigen: [],
             valueDestination: [],
-            optionsOrigen: [
-                { name: 'Vue.js', language: 'JavaScript' },
-                { name: 'Adonis', language: 'JavaScript' },
-                { name: 'Rails', language: 'Ruby' },
-                { name: 'Sinatra', language: 'Ruby' },
-                { name: 'Laravel', language: 'PHP' },
-                { name: 'Phoenix', language: 'Elixir' }
-            ],
-            optionsDestination: [
-                { name: 'Vue.js', language: 'JavaScript' },
-                { name: 'Adonis', language: 'JavaScript' },
-                { name: 'Rails', language: 'Ruby' },
-                { name: 'Sinatra', language: 'Ruby' },
-                { name: 'Laravel', language: 'PHP' },
-                { name: 'Phoenix', language: 'Elixir' }
-            ],
+            origenPort: [],
+            destinationPort: [],
+            optionsOrigenPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
+            optionsDestinationPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
+            optionsDestination: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
             options: [
                 { text: 'Import', value: 'import' },
                 { text: 'Export', value: 'export' }
             ],
-            optionCompany: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionContact: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionPriceLevel: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionCarriers: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
-            optionContainer: ['Select option', 'options', 'selected', 'mulitple', 'label', 'searchable', 'clearOnSelect', 'hideSelected', 'maxHeight', 'allowEmpty', 'showLabels', 'onChange', 'touched'],
+            optionCompany: ['Select option', 'Cargofive', 'Altius', 'Lantia', 'FreightBros'],
+            optionContact: ['Select option', 'Genesis', 'Ruben', 'Sebastian', 'Julio'],
+            optionPriceLevel: ['Select option', 'Precio 1', 'Precio 2', 'Precio 3', 'Precio 4'],
+            optionCarriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
+            optionContainer: ['Select option', '20DV', '40DV', '40CH', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'],
             optionsType: ['FCL', 'LCL', 'AIR'],
-            optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR']
+            optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR'],
+
+            //DATEPICKER
+            locale: 'en-US',
+            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
+            dateRange: {
+                startDate: '2020-12-26',
+                endDate: '2020-12-28',
+            },
         }
     },
     watch: {
@@ -373,6 +382,7 @@ export default {
 
             }
         }
+    
     }
 }
 </script>
