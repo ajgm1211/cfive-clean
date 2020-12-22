@@ -567,6 +567,7 @@ class ContractController extends Controller
                     'type' => $type,
                     'gp_container_id' => 1,
                     'code' => $request->reference,
+                    'is_api' => 1,
                 ]);
                 break;
             case 'LCL':

@@ -184,6 +184,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'ExcelFiles' => [
+            'driver' => 'local',
+            'root' => storage_path('excel/exports'),
+            'url' => 'storage',
+            'visibility' => 'public',
+        ],
+
         'image' => [
             'driver' => 'local',
             'root' => public_path(),
