@@ -207,7 +207,7 @@ class LclPdf
 
         $inlandTotals = $quote->automatic_inland_totals()->get();
 
-        //$localChargeTotals = LocalChargeQuoteLclTotal::Quotation($quote->id)->get();
+        $localChargeTotals = LocalChargeQuoteLclTotal::Quotation($quote->id)->get();
 
         $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
 
@@ -226,9 +226,8 @@ class LclPdf
                     $portArray['origin'] = null;
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
-            //COMPLETAR LOCAL CHARGES ACA
-            }/**else if(is_a($total, 'App\LocalChargeQuoteTotal')){
-                $totalsArrayInput = $total->total;
+            }else if(is_a($total, 'App\LocalChargeQuoteLclTotal')){
+                $totalsArrayInput = Array('total'=>$total->total);
                 if($total->get_type()->first()->description == 'origin'){
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
@@ -236,7 +235,7 @@ class LclPdf
                     $portArray['origin'] = null;
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
-            }**/
+            }
             
             $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
 
