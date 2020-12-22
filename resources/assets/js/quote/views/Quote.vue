@@ -160,7 +160,7 @@ export default {
                     label: "QUOTE ID",
                     type: "text",
                     rules: "required",
-                    disabled: true,
+                    disabled: false,
                     placeholder: "Quote ID",
                     colClass: "col-lg-3",
                 },
