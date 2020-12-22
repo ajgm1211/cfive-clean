@@ -580,6 +580,7 @@ class ContractController extends Controller
                     'status' => 'incomplete',
                     'type' => $type,
                     'code' => $request->reference,
+                    'is_api' => 1,
                 ]);
                 break;
         }
