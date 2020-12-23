@@ -484,6 +484,14 @@
                         >
                             Inlands added successfully!
                         </div>
+
+                        <div
+                            v-if="searchAdded"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            All Inlands for this port added
+                        </div>
                     </div>
                 </div>
 
@@ -575,6 +583,7 @@ export default {
             modalAddressBar: true,
             inlandModalTotals: {},
             inlandModalTotalLcl: 0,
+            searchAdded: false,
             client_currency: this.currentQuoteData.client_currency,
             /* Table headers */
             fields: [
@@ -825,7 +834,15 @@ export default {
             component.inlandAddRequested = true;
             if (inlandSearch != null) {
                 inlandSearch.forEach(function (search) {
-                    if (component.ids.length != 0) {
+                    var alreadyAdded = false;
+                    component.inlandAdds.forEach(function(add){
+                        if(search["providerName"] == add["charge"]){
+                            alreadyAdded = true;
+                        }
+                    });
+
+                    if(!alreadyAdded || component.inlandAdds.length == 0){
+                        if (component.ids.length != 0) {
                         highest = component.ids.sort(function (a, b) {
                             return b - a;
                         });
@@ -888,6 +905,12 @@ export default {
                     component.inlandAdds.push(newInlandAdd);
 
                     component.totalizeModalInlands();
+                    }else if(alreadyAdded){
+                        component.searchAdded = true;
+                        setTimeout(() => {
+                            component.searchAdded = false;
+                        }, 2000);
+                    }
                 });
             } else {
                 if (component.ids.length != 0) {
@@ -1111,7 +1134,7 @@ export default {
                         component.modalSearchWarning = true;
                         setTimeout(() => {
                             component.modalSearchWarning = false;
-                        }, 3000);
+                        }, 1500);
                         component.inlandFound = false;
                     } else {
                         component.setModalTable(inlandSearch);
