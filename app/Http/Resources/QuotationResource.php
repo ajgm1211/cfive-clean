@@ -36,6 +36,7 @@ class QuotationResource extends JsonResource
         return [
             'id' => $this->id,
             'quote_id' => $this->quote_id,
+            'custom_quote_id' => $this->custom_quote_id,
             'delivery_type' => is_null($this->delivery_type) ? $this->delivery_type : $this->delivery_type()->first(),
             'company_id' => $this->company,
             'contact_id' => is_null($this->contact_id) ? $this->contact_id : ['id' => $this->contact_id, 'company_id' => $this->company_id, 'name' => $this->contact()->first()->getFullName()],
