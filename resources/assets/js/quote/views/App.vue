@@ -53,7 +53,7 @@ export default {
             activeOcean: false,
             actions: actions,
             fields: [
-                { key: "quote_id", label: "#" },
+                { key: "custom_quote_id", label: "#" },
                 {
                     key: "company_id",
                     label: "Client",
