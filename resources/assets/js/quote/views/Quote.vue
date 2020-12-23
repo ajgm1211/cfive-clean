@@ -156,7 +156,7 @@ export default {
             totals: false,
             tabs_loaded: false,
             form_fields: {
-                quote_id: {
+                custom_quote_id: {
                     label: "QUOTE ID",
                     type: "text",
                     rules: "required",
