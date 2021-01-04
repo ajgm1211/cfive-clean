@@ -63,7 +63,7 @@
                             class="alert alert-success"
                             role="alert"
                         >
-                            Your request is being processed. It will be sent to your email address
+                            Your file is being processed. It will be sent to your email address
                         </div>
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                     setTimeout(function () {
                         component.modalSuccess = false;
                         component.$bvModal.hide(modal);
-                    }, 2000);
+                    }, 3000);
                 }
             },
 
