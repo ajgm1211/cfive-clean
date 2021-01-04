@@ -88,7 +88,7 @@
         data() {
             return {
                 isBusy:true, // Loader
-                modalSucces: false,
+                modalSuccess: false,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 fdata2: { validity: { startDate: null, endDate: null } },
