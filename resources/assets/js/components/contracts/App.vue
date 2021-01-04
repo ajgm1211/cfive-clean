@@ -57,7 +57,7 @@
             </FormView>
 
             <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-12">
                         <div
                             v-if="modalSuccess"
                             class="alert alert-success"
@@ -210,13 +210,15 @@
             },
 
             closeModal(modal, exporting = false){
+                let component = this;
+                
                 if(exporting == false){
-                    this.$bvModal.hide(modal);
+                    component.$bvModal.hide(modal);
                 }else{
-                    this.modalSuccess = true;
+                    component.modalSuccess = true;
                     setTimeout(function () {
-                        this.$bvModal.hide(modal);
-                        this.modalSuccess = false;
+                        component.modalSuccess = false;
+                        component.$bvModal.hide(modal);
                     }, 2000);
                 }
             },
