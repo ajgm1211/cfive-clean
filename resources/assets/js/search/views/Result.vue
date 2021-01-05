@@ -6,7 +6,7 @@
                 <h2 class="mr-5 t-recent">results found: <b>10</b></h2>
                 <div class="d-flex filter-search">
                     <b>filter by:</b>
-                    <div style="width: 160px !important; position:relative; top: -3px ">
+                    <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
                             <multiselect
                                 v-model="filterBy"
                                 :multiple="false"
@@ -19,7 +19,7 @@
                             >
                             </multiselect>
                             <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -142,7 +142,7 @@
                    
                         <b-collapse id="detailed1" class="pt-5 pb-5 pl-5 pr-5 col-12">
                         
-                                <h5><b>freight</b></h5>
+                                <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -193,7 +193,7 @@
                         </b-collapse>
                         <b-collapse id="remarks1" class="pt-5 pb-5 pl-5 pr-5 col-12">
 
-                                <h5><b>remarks</b></h5>
+                                <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
                                     <p>esos son los remarks</p>
@@ -304,7 +304,7 @@
                    
                         <b-collapse id="detailed2" class="pt-5 pb-5 pl-5 pr-5 col-12">
                         
-                                <h5><b>freight</b></h5>
+                                <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -355,7 +355,7 @@
                         </b-collapse>
                         <b-collapse id="remarks2" class="pt-5 pb-5 pl-5 pr-5 col-12">
 
-                                <h5><b>remarks</b></h5>
+                                <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
                                     <p>esos son los remarks</p>
@@ -464,7 +464,7 @@
                    
                         <b-collapse id="detailed3" class="pt-5 pb-5 pl-5 pr-5 col-12">
                         
-                                <h5><b>freight</b></h5>
+                                <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -515,7 +515,7 @@
                         </b-collapse>
                         <b-collapse id="remarks3" class="pt-5 pb-5 pl-5 pr-5 col-12">
 
-                                <h5><b>remarks</b></h5>
+                                <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
                                     <p>esos son los remarks</p>
@@ -530,6 +530,7 @@
 
         </div>
 
+        <!-- STICKY HEADER -->
         <div id="sticky-header-results" v-bind:class="{ activeSticky: isActive }">
             <div class="container-fluid">
                 <div class="row result-header">
@@ -551,8 +552,10 @@
             </div>
         </div>
 
+        <!-- MODAL ADD CONTRACT -->
         <b-modal  id="add-contract" size="lg" centered title="Created Contract" ref="my-modal" hide-footer>
 
+            <!-- STEPS -->
             <div class="row add-contract-form-steps pt-5 pb-5">
 
                 <div class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteOne }">
@@ -579,8 +582,7 @@
 
             <form action="/action_page.php" class="add-contract-form">
 
-                
-
+                <!-- CONTRACT -->
                 <fieldset v-if="stepOne">
 
                     <div class="row">
@@ -664,6 +666,7 @@
                     </div>
                 </fieldset>
     
+                <!-- OCEAN FREIGHT -->
                 <fieldset v-if="stepTwo">
 
                         <div v-if="invalidInput" class="col-12 mt-3 mb-3">
@@ -752,6 +755,7 @@
                     
                 </fieldset>
 
+                <!-- SURCHARGES -->
                 <fieldset v-if="stepThree">
 
                     <div class="row">
@@ -838,6 +842,7 @@
                     
                 </fieldset>
 
+                <!-- FILES -->
                 <fieldset v-if="stepFour">
                     <vue-dropzone
                         ref="myVueDropzone"
