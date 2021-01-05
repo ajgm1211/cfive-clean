@@ -68,6 +68,8 @@ class UpdatePdf implements ShouldQueue
                     break;
                 }
 
+                \Log::info('Generando pdf');
+                
         ProcessPdfApi::dispatch($quote)->onQueue('default');
         // $quote = QuoteV2::find($this->id);
         //  
