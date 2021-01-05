@@ -1102,6 +1102,15 @@ input.multiselect__input:focus {
     border-radius: 4px;
 }
 
+.s-input-form {
+    border: none !important;
+    background: #F8F8F8;
+    border-radius: 4px;
+    height: 50px;
+    padding: 4px 7px 5px 50px !important;
+    width: 100% !important;
+}
+
 .multiselect__input {
     background: #F8F8F8;
 }
@@ -1690,4 +1699,8 @@ input.surcharge-input {
 
 .containers-search {
     padding-right: 15px !important;
+}
+
+.font-tabs .nav-item a {
+    font-size: 12px;
 }
