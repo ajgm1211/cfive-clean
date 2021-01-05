@@ -116,6 +116,7 @@
                             >
                                 <b-td>
                                     <b-form-input
+                                        v-if="currentQuoteData.type == 'FCL'"
                                         v-model="charge.charge"
                                         class="q-input"
                                         v-on:blur="
@@ -124,6 +125,21 @@
                                                 charge.charge,
                                                 'charge',
                                                 1
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+                                <b-td>
+                                    <b-form-input
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="charge.charge"
+                                        class="q-input"
+                                        v-on:blur="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.charge,
+                                                'charge',
+                                                9
                                             )
                                         "
                                     ></b-form-input>
