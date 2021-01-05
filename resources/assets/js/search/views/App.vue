@@ -3,9 +3,9 @@
         
         <Search></Search>
 
-        <Recent></Recent>
+        <Recent v-if="false" ></Recent>
 
-        <Result></Result>
+        <Result v-if="true"></Result>
 
     </div>
 </template>
@@ -18,7 +18,7 @@ import Result from './Result';
 export default {
     components: {
         Search,
-        /*Recent,*/
+        Recent,
         Result
     }
 }
