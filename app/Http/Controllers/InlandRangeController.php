@@ -118,7 +118,16 @@ class InlandRangeController extends Controller
 
         $validator = Validator::make($request->all(), $vdata);
 
-        $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('lower'))->where('upper', '>=', $request->input('lower'))->whereHas('inland', function (Builder $query) use ($company_id) {
+        $lower=$request->input('lower');
+        if(is_null($lower)){
+            $lower=0;
+        }
+
+        $upper=$request->input('upper');
+        if(is_null($upper)){
+            $upper=0;
+        }
+        $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $lower)->where('upper', '>=', $lower)->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
 
@@ -128,7 +137,7 @@ class InlandRangeController extends Controller
 
         $validated_lower = $query_lower->get()->count() > 0;
 
-        $query_upper = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $request->input('upper'))->where('upper', '>=', $request->input('upper'))->whereHas('inland', function (Builder $query) use ($company_id) {
+        $query_upper = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $upper)->where('upper', '>=', $upper)->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
 

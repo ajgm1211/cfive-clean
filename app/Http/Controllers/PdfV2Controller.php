@@ -2,65 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Airline;
-use App\AutomaticInland;
 use App\AutomaticInlandLclAir;
 use App\AutomaticRate;
-use App\CalculationType;
-use App\CalculationTypeLcl;
-use App\Carrier;
 use App\Charge;
 use App\ChargeLclAir;
-use App\Company;
 use App\CompanyUser;
 use App\Contact;
-use App\Container;
-use App\Contract;
-use App\Country;
 use App\Currency;
 use App\EmailSetting;
-use App\EmailTemplate;
-use App\Exports\QuotesExport;
-use App\GlobalCharCarrier;
-use App\GlobalCharge;
-use App\GlobalCharPort;
 use App\Harbor;
 use App\Http\Traits\QuoteV2Trait;
-use App\Incoterm;
 use App\Inland;
-use App\Jobs\SendQuotes;
-use App\LocalCharCarrier;
-use App\LocalCharge;
-use App\LocalCharPort;
-use App\PackageLoad;
 use App\PackageLoadV2;
 use App\PdfOption;
-use App\Price;
-use App\Quote;
 use App\QuoteV2;
 use App\Rate;
-use App\Repositories\Schedules;
 use App\SaleTermV2;
-use App\SaleTermV2Charge;
-use App\ScheduleType;
-use App\SendQuote;
-use App\Surcharge;
-use App\TermAndConditionV2;
-use App\TermsAndCondition;
-use App\TermsPort;
 use App\User;
-use App\ViewQuoteV2;
-use EventIntercom;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class PdfV2Controller extends Controller
 {
@@ -89,9 +49,11 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
-        $pdf->loadHTML($view)->save('pdf/temp_'.$idQ.'.pdf');
+        //$pdf->loadHTML($view);
+        $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
 
-        return $pdf->stream('quote-'.$idQuote.'-'.date('Ymd').'.pdf');
+        return $pdf->stream('quote-' . $idQuote . '-' . date('Ymd') . '.pdf');
+
     }
 
     /**
@@ -157,7 +119,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['port']['name'].', '.$item['port']['code'];
+                return $item['port']['name'] . ', ' . $item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -182,7 +144,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['port']['name'].', '.$item['port']['code'];
+                return $item['port']['name'] . ', ' . $item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -231,10 +193,17 @@ class PdfV2Controller extends Controller
 
         foreach ($rates_lcl_air as $item) {
             foreach ($item->charge_lcl_air as $value) {
-                if ($quote->pdf_option->grouped_total_currency == 1) {
+
+                if ($quote->pdf_option->grouped_total_currency == 1 && count($rates_lcl_air) == 1) {
                     $typeCurrency = $quote->pdf_option->total_in_currency;
                 } else {
+
                     $typeCurrency = $currency_cfg->alphacode;
+
+                    if ($value->type_id == 3) {
+                        $typeCurrency = $item->currency->alphacode; //OJO CON ESTO
+                    }
+
                 }
 
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
@@ -253,7 +222,8 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (! $item->automaticInlandLclAir->isEmpty()) {
+
+            if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
                         $typeCurrency = $quote->pdf_option->origin_charges_currency;
@@ -275,7 +245,7 @@ class PdfV2Controller extends Controller
 
         $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use ($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped) {
             if (in_array($item->origin_port_id, $origin_ports)) {
-                if (! $item->charge->whereIn('type_id', 1)->isEmpty()) {
+                if (!$item->charge->whereIn('type_id', 1)->isEmpty()) {
                     $item->charge_lcl_air->map(function ($value, $key) use ($sale_terms_origin_grouped, $item) {
                         if ($value->type_id == 1) {
                             $value->total_origin = 0;
@@ -342,7 +312,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -374,7 +344,7 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -404,7 +374,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -434,7 +404,7 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -462,10 +432,10 @@ class PdfV2Controller extends Controller
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -489,10 +459,10 @@ class PdfV2Controller extends Controller
                                 $total_freight_40nor = 0;
                                 $total_freight_45 = 0;
                                 //dd($quote->pdf_option->destination_charges_currency);
-                                if ($quote->pdf_option->grouped_freight_charges == 1) {
+                                if ($quote->pdf_option->grouped_freight_charges == 1 && count($freight_charges_detailed) == 1) {
                                     $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    $typeCurrency = $currency_cfg->alphacode;
+                                    $typeCurrency = @$value->currency->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
                                 $array_amounts = json_decode($amounts->amount, true);
@@ -535,10 +505,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -552,14 +522,11 @@ class PdfV2Controller extends Controller
                     foreach ($item as $rate) {
                         foreach ($rate->charge_lcl_air as $v_freight) {
                             if ($v_freight->type_id == 3) {
-                                if ($freight_charges_grouped->count() > 1) {
-                                    $typeCurrency = $currency_cfg->alphacode;
+
+                                if ($quote->pdf_option->grouped_freight_charges == 1 && count($freight_charges_grouped) == 1) {
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                 } else {
-                                    if ($quote->pdf_option->grouped_freight_charges == 1) {
-                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                                    } else {
-                                        $typeCurrency = $currency_cfg->alphacode;
-                                    }
+                                    $typeCurrency = @$rate->currency->alphacode;
                                 }
                                 $currency_rate = $this->ratesCurrency($v_freight->currency_id, $typeCurrency);
 
@@ -581,9 +548,9 @@ class PdfV2Controller extends Controller
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination, 'sale_terms_origin_grouped' => $sale_terms_origin_grouped, 'sale_terms_destination_grouped' => $sale_terms_destination_grouped, 'freight_currency' => $freight_currency]);
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
-        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
+        return $pdf->stream('quote-' . $quote->quote_id . '-' . date('Ymd') . '.pdf');
     }
 
     /**
@@ -646,7 +613,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_origin = $sale_terms_origin->groupBy([
                 function ($item) {
-                    return $item['airport']['name'].', '.$item['airport']['code'];
+                    return $item['airport']['name'] . ', ' . $item['airport']['code'];
                 },
             ], $preserveKeys = true);
 
@@ -671,7 +638,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_destination = $sale_terms_destination->groupBy([
                 function ($item) {
-                    return $item['airport']['name'].', '.$item['airport']['code'];
+                    return $item['airport']['name'] . ', ' . $item['airport']['code'];
                 },
             ], $preserveKeys = true);
 
@@ -738,7 +705,7 @@ class PdfV2Controller extends Controller
                         $value->total_destination = number_format((($value->units * $value->price_per_unit) + $value->markup) / $currency_rate, 2, '.', '');
                     }
                 }
-                if (! $item->automaticInlandLclAir->isEmpty()) {
+                if (!$item->automaticInlandLclAir->isEmpty()) {
                     foreach ($item->automaticInlandLclAir as $inland) {
                         if ($quote->pdf_option->grouped_origin_charges == 1) {
                             $typeCurrency = $quote->pdf_option->origin_charges_currency;
@@ -760,7 +727,7 @@ class PdfV2Controller extends Controller
 
             $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use ($origin_airports, $destination_airports, $sale_terms_origin_grouped, $sale_terms_destination_grouped) {
                 if (in_array($item->origin_airport_id, $origin_airports)) {
-                    if (! $item->charge->whereIn('type_id', 1)->isEmpty()) {
+                    if (!$item->charge->whereIn('type_id', 1)->isEmpty()) {
                         $item->charge_lcl_air->map(function ($value, $key) use ($sale_terms_origin_grouped, $item) {
                             if ($value->type_id == 1) {
                                 $value->total_origin = 0;
@@ -827,7 +794,7 @@ class PdfV2Controller extends Controller
             $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -857,7 +824,7 @@ class PdfV2Controller extends Controller
                                     $v_origin_g->total_origin = number_format((($v_origin_g->units * $v_origin_g->price_per_unit) + $v_origin_g->markup) / $currency_rate, 2, '.', '');
                                 }
                             }
-                            if (! $rate->automaticInlandLclAir->isEmpty()) {
+                            if (!$rate->automaticInlandLclAir->isEmpty()) {
                                 foreach ($rate->automaticInlandLclAir as $inland) {
                                     if ($inland->type == 'Origin') {
                                         if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -887,7 +854,7 @@ class PdfV2Controller extends Controller
             $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -917,7 +884,7 @@ class PdfV2Controller extends Controller
                                     $v_destination_g->total_destination = number_format((($v_destination_g->units * $v_destination_g->price_per_unit) + $v_destination_g->markup) / $currency_rate, 2, '.', '');
                                 }
                             }
-                            if (! $rate->automaticInlandLclAir->isEmpty()) {
+                            if (!$rate->automaticInlandLclAir->isEmpty()) {
                                 foreach ($rate->automaticInlandLclAir as $inland) {
                                     if ($inland->type == 'Destination') {
                                         if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -945,10 +912,10 @@ class PdfV2Controller extends Controller
 
             $freight_charges_detailed = $freight_charges_detailed->groupBy([
                 function ($item) {
-                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
                 },
                 function ($item) {
-                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -1018,10 +985,10 @@ class PdfV2Controller extends Controller
             $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
                 function ($item) {
-                    return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                    return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
                 },
                 function ($item) {
-                    return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                    return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
                 },
                 function ($item) {
                     return $item['airline']['name'];
@@ -1061,9 +1028,9 @@ class PdfV2Controller extends Controller
             $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote' => $quote, 'rates' => $rates_lcl_air, 'origin_harbor' => $origin_harbor, 'destination_harbor' => $destination_harbor, 'user' => $user, 'currency_cfg' => $currency_cfg, 'charges_type' => $type, 'equipmentHides' => $equipmentHides, 'freight_charges_grouped' => $freight_charges_grouped, 'destination_charges' => $destination_charges, 'origin_charges_grouped' => $origin_charges_grouped, 'destination_charges_grouped' => $destination_charges_grouped, 'freight_charges_detailed' => $freight_charges_detailed, 'package_loads' => $package_loads, 'sale_terms_origin' => $sale_terms_origin, 'sale_terms_destination' => $sale_terms_destination]);
 
             $pdf = \App::make('dompdf.wrapper');
-            $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+            $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
-            return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
+            return $pdf->stream('quote-' . $quote->quote_id . '-' . date('Ymd') . '.pdf');
         } catch (Exception $e) {
             //dd($e->getMessage());
 
@@ -1111,7 +1078,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
+                    $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
         }
@@ -1122,7 +1089,7 @@ class PdfV2Controller extends Controller
         $idQuote = $pdfarray['idQuote'];
         $idQ = $pdfarray['idQ'];
 
-        $pdf->loadHTML($view)->save('pdf/temp_'.$idQ.'.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $idQ . '.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
@@ -1188,7 +1155,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
+                    $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;
@@ -1230,7 +1197,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['port']['name'].', '.$item['port']['code'];
+                return $item['port']['name'] . ', ' . $item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1255,7 +1222,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['port']['name'].', '.$item['port']['code'];
+                return $item['port']['name'] . ', ' . $item['port']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1317,7 +1284,7 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (! $item->automaticInlandLclAir->isEmpty()) {
+            if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
                         $typeCurrency = $quote->pdf_option->origin_charges_currency;
@@ -1344,7 +1311,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1376,7 +1343,7 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -1406,7 +1373,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1436,7 +1403,7 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -1464,10 +1431,10 @@ class PdfV2Controller extends Controller
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1537,10 +1504,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
             },
             function ($item) {
-                return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1587,7 +1554,7 @@ class PdfV2Controller extends Controller
         //$event->event_quoteEmail();
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
         $subject = $request->subject;
         $body = $request->body;
@@ -1647,7 +1614,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = Auth::user()->name.' '.Auth::user()->lastname;
+                    $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;
@@ -1689,7 +1656,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_origin = $sale_terms_origin->groupBy([
             function ($item) {
-                return $item['airport']['name'].', '.$item['airport']['code'];
+                return $item['airport']['name'] . ', ' . $item['airport']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1714,7 +1681,7 @@ class PdfV2Controller extends Controller
 
         $sale_terms_destination = $sale_terms_destination->groupBy([
             function ($item) {
-                return $item['airport']['name'].', '.$item['airport']['code'];
+                return $item['airport']['name'] . ', ' . $item['airport']['code'];
             },
         ], $preserveKeys = true);
 
@@ -1776,7 +1743,7 @@ class PdfV2Controller extends Controller
                     }
                 }
             }
-            if (! $item->automaticInlandLclAir->isEmpty()) {
+            if (!$item->automaticInlandLclAir->isEmpty()) {
                 foreach ($item->automaticInlandLclAir as $inland) {
                     if ($quote->pdf_option->grouped_origin_charges == 1) {
                         $typeCurrency = $quote->pdf_option->origin_charges_currency;
@@ -1803,7 +1770,7 @@ class PdfV2Controller extends Controller
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1835,7 +1802,7 @@ class PdfV2Controller extends Controller
                             }
                         }
 
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $inland) {
                                 if ($inland->type == 'Origin') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -1865,7 +1832,7 @@ class PdfV2Controller extends Controller
         $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1895,7 +1862,7 @@ class PdfV2Controller extends Controller
                                 $v_destination->total_destination = number_format((($v_destination->units * $v_destination->price_per_unit) + $v_destination->markup) / $currency_rate, 2, '.', '');
                             }
                         }
-                        if (! $rate->automaticInlandLclAir->isEmpty()) {
+                        if (!$rate->automaticInlandLclAir->isEmpty()) {
                             foreach ($rate->automaticInlandLclAir as $v_destination_inland) {
                                 if ($v_destination_inland->type == 'Destination') {
                                     if ($quote->pdf_option->grouped_origin_charges == 1) {
@@ -1923,10 +1890,10 @@ class PdfV2Controller extends Controller
 
         $freight_charges_detailed = $freight_charges_detailed->groupBy([
             function ($item) {
-                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
             },
             function ($item) {
-                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -1996,10 +1963,10 @@ class PdfV2Controller extends Controller
         $freight_charges_grouped = $freight_charges_grouped->groupBy([
 
             function ($item) {
-                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+                return $item['origin_airport']['name'] . ', ' . $item['origin_airport']['code'];
             },
             function ($item) {
-                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+                return $item['destination_airport']['name'] . ', ' . $item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
@@ -2046,7 +2013,7 @@ class PdfV2Controller extends Controller
         //$event->event_quoteEmail();
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
         $subject = $request->subject;
         $body = $request->body;

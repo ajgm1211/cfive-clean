@@ -5,7 +5,6 @@ namespace App\Http\Traits;
 use App\CalculationType;
 use App\Container;
 use App\Currency;
-use App\GlobalCharge;
 use App\Harbor;
 use App\Inland;
 use App\Price;
@@ -80,7 +79,7 @@ trait SearchTraitApi
                                 $rateI = $this->ratesCurrency($details->currency->id, $typeCurrency);
 
                                 foreach ($contain as $cont) {
-                                    $km = 'km'.$cont->code;
+                                    $km = 'km' . $cont->code;
                                     $$km = true;
                                     $options = json_decode($cont->options);
                                     if (@$options->field_rate != 'containers') {
@@ -113,9 +112,9 @@ trait SearchTraitApi
                                 $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id, $typeCurrency);
 
                                 foreach ($contain as $cont) {
-                                    $km = 'km'.$cont->code;
+                                    $km = 'km' . $cont->code;
                                     $options = json_decode($cont->options);
-                                    $texto20 = 'Inland '.$cont->code.' x 1';
+                                    $texto20 = 'Inland ' . $cont->code . ' x 1';
 
                                     if (isset($options->field_inland)) {
                                         if ($$km && in_array($cont->id, $equipment)) {
@@ -166,7 +165,7 @@ trait SearchTraitApi
         $arrayTeu = CalculationType::where('options->isteu', true)->pluck('id')->toArray();
         $codeArray = Container::where('code', 'like', '20%')->pluck('code')->toArray();
 
-        if (! in_array($code, $codeArray)) {
+        if (!in_array($code, $codeArray)) {
             if (in_array($calculation_type, $arrayTeu)) {
                 $monto = $monto * 2;
 
@@ -194,8 +193,8 @@ trait SearchTraitApi
                     $options = json_decode($cont->options);
                     if (@$options->field_rate == 'containers') {
                         $jsonContainer = json_decode($data->{$options->field_rate});
-                        if (isset($jsonContainer->{'C'.$cont->code})) {
-                            $rateMount = $jsonContainer->{'C'.$cont->code};
+                        if (isset($jsonContainer->{'C' . $cont->code})) {
+                            $rateMount = $jsonContainer->{'C' . $cont->code};
                         } else {
                             $rateMount = 0;
                         }
@@ -235,10 +234,10 @@ trait SearchTraitApi
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
 
-        $arrayDetail = ['type' => $containers, 'price'  => $amount, 'currency'  => $data->currency->alphacode];
+        $arrayDetail = array('type' => $containers, 'price' => $amount, 'currency' => $data->currency->alphacode);
 
         // Arreglos para guardar los rates
-        $array_save = ['c'.$containers => $amount];
+        $array_save = ['c' . $containers => $amount];
 
         $arregloRateSave['rate'] = array_merge($array_save, $arregloRateSave['rate']);
         // Markups
@@ -261,8 +260,7 @@ trait SearchTraitApi
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = ['type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name];
-
+        $arreglo = array('type' => $type, 'surcharge_name' => $local->surcharge->name, 'surcharge_options' => $local->surcharge->options, 'price' => (string) $montoOrig, 'currency' => $local->currency->alphacode, 'currency_id' => $local->currency->id, 'calculation_type' => $local->calculationtype->name, 'monto' => $monto);
         return $arreglo;
     }
 
@@ -432,12 +430,12 @@ trait SearchTraitApi
             $markup = number_format($markup, 2, '.', '');
             $monto += $markup;
             number_format($monto, 2, '.', '');
-            $arraymarkup = ['markup'.$type => $markup, 'markupConvert'.$type => $markup, 'typemarkup'.$type => "$typeCurrency ($freighPercentage%)", 'monto'.$type => $monto, 'montoMarkupO' => $markup];
+            $arraymarkup = ['markup' . $type => $markup, 'markupConvert' . $type => $markup, 'typemarkup' . $type => "$typeCurrency ($freighPercentage%)", 'monto' . $type => $monto, 'montoMarkupO' => $markup];
         } else {
             $markup = trim($freighAmmount);
             $monto += $freighMarkup;
             $monto = number_format($monto, 2, '.', '');
-            $arraymarkup = ['markup'.$type => $markup, 'markupConvert'.$type => $freighMarkup, 'typemarkup'.$type => $typeCurrency, 'monto'.$type => $monto, 'montoMarkupO' => $markup];
+            $arraymarkup = ['markup' . $type => $markup, 'markupConvert' . $type => $freighMarkup, 'typemarkup' . $type => $typeCurrency, 'monto' . $type => $monto, 'montoMarkupO' => $markup];
         }
 
         return $arraymarkup;
@@ -515,27 +513,27 @@ trait SearchTraitApi
             foreach ($remarks_all as $remAll) {
                 $rems .= '<br>';
 
-                $remarkAE .= '<br>'.$remAll->remark->export;
+                $remarkAE .= '<br>' . $remAll->remark->export;
 
-                $remarkAI .= '<br>'.$remAll->remark->import;
+                $remarkAI .= '<br>' . $remAll->remark->import;
             }
 
             foreach ($remarks_origin as $remOrig) {
                 $rems .= '<br>';
 
-                $remarkOE .= '<br>'.$remOrig->remark->export;
+                $remarkOE .= '<br>' . $remOrig->remark->export;
 
-                $remarkOI .= '<br>'.$remOrig->remark->import;
+                $remarkOI .= '<br>' . $remOrig->remark->import;
             }
 
             foreach ($remarks_destination as $remDest) {
                 $rems .= '<br>';
 
-                $remarkDE .= '<br>'.$remDest->remark->export;
+                $remarkDE .= '<br>' . $remDest->remark->export;
 
-                $remarkDI .= '<br>'.$remDest->remark->import;
+                $remarkDI .= '<br>' . $remDest->remark->import;
             }
-            $rems = $remarkOE.' '.$remarkOI.' '.$remarkDE.' '.$remarkDI.' '.$remarkAE.' '.$remarkAI;
+            $rems = $remarkOE . ' ' . $remarkOI . ' ' . $remarkDE . ' ' . $remarkDI . ' ' . $remarkAE . ' ' . $remarkAI;
         }
 
         return trim($rems);
@@ -607,7 +605,7 @@ trait SearchTraitApi
         $date2 = new \DateTime($date2);
         $diff = $date1->diff($date2);
 
-        if ($diff->invert == '0') {
+        if ($diff->invert == "0") {
             $contratoFuturo = true;
         } else {
             $contratoFuturo = false;
@@ -622,19 +620,20 @@ trait SearchTraitApi
         if ($status != 'api') {
             $transit = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
 
-            if (! empty($transit)) {
+            if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
                 $transitArray['service'] = $transit->service->name;
             } else {
-                $transitArray['via'] = '';
-                $transitArray['transit_time'] = '';
-                $transitArray['service'] = '';
+                $transitArray['via'] = "";
+                $transitArray['transit_time'] = "";
+                $transitArray['service'] = "";
             }
         } else {
-            $transitArray['via'] = '';
-            $transitArray['transit_time'] = '';
-            $transitArray['service'] = '';
+
+            $transitArray['via'] = "";
+            $transitArray['transit_time'] = "";
+            $transitArray['service'] = "";
         }
 
         return $transitArray;
@@ -655,7 +654,7 @@ trait SearchTraitApi
         }
 
         foreach ($container as $cont) {
-            $hidden = 'hidden'.$cont->code;
+            $hidden = 'hidden' . $cont->code;
             $$hidden = 'hidden';
             foreach ($equipmentForm as $val) {
                 if ($val == '20') {
@@ -732,7 +731,7 @@ trait SearchTraitApi
         $monto = number_format($monto, 2, '.', '');
         $arregloOriginG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
 
-        $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] += $monto;
+        $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $monto;
 
         return $arregloOriginG;
     }

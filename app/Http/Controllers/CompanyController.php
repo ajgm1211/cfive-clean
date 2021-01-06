@@ -9,20 +9,15 @@ use App\Contact;
 use App\GroupUserCompany;
 use App\Http\Requests\StoreCompany;
 use App\Http\Traits\EntityTrait;
-use App\Jobs\ProcessLogo;
 use App\Price;
-use App\QuoteV2;
 use App\Repositories\CompanyRepositoryInterface;
 use App\User;
 use App\ViewQuoteV2;
-use DebugBar\DebugBar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Facades\Image;
 use Yajra\DataTables\Facades\DataTables;
 
 class CompanyController extends Controller
@@ -110,13 +105,13 @@ class CompanyController extends Controller
 
         return DataTables::of($colletions)->addColumn('action', function ($colletion) {
             return
-                '<a href="companies/'.$colletion['idSet'].'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                '<a href="companies/' . $colletion['idSet'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
                     <i class="la la-eye"></i>
                 </a>
-                <button onclick="AbrirModal(\'edit\','.$colletion['id'].')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                <button onclick="AbrirModal(\'edit\',' . $colletion['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
                     <i class="la la-edit"></i>
                 </button>
-                <button id="delete-company" data-company-id="'.$colletion['id'].'" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
+                <button id="delete-company" data-company-id="' . $colletion['id'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                     <i class="la la-eraser"></i>
                 </button>';
         })->make(true);
@@ -211,11 +206,11 @@ class CompanyController extends Controller
             $explode_dest = explode('| ', $destination);
 
             foreach ($explode_orig as $item) {
-                $origin_li .= '<li>'.$item.'</li>';
+                $origin_li .= '<li>' . $item . '</li>';
             }
 
             foreach ($explode_dest as $item) {
-                $destination_li .= '<li>'.$item.'</li>';
+                $destination_li .= '<li>' . $item . '</li>';
             }
 
             if ($quote->business_name != '') {
@@ -242,7 +237,7 @@ class CompanyController extends Controller
                     'user' => $quote->owner,
                     'created' => $quote->created_at,
                     'origin' => $origin_li,
-                    'destination' =>  $destination_li,
+                    'destination' => $destination_li,
                     'type' => $quote->type,
                 ];
                 $colletions->push($data);
@@ -258,9 +253,9 @@ class CompanyController extends Controller
                                       See origins
                                       </button>
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                      <small>'.$origin_li.'</small>
+                                      <small>' . $origin_li . '</small>
                                       </div>',
-                    'destination' =>  $destination_li,
+                    'destination' => $destination_li,
                     'type' => $quote->type,
                 ];
                 $colletions->push($data);
@@ -277,7 +272,7 @@ class CompanyController extends Controller
                                       See destinations
                                       </button>
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                      <small>'.$destination_li.'</small>
+                                      <small>' . $destination_li . '</small>
                                       </div>',
                     'type' => $quote->type,
                 ];
@@ -294,13 +289,13 @@ class CompanyController extends Controller
                                       See origins
                                       </button>
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                      <small>'.$origin_li.'</small>
+                                      <small>' . $origin_li . '</small>
                                       </div>',
                     'destination' => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       See destinations
                                       </button>
                                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
-                                      <small>'.$destination_li.'</small>
+                                      <small>' . $destination_li . '</small>
                                       </div>',
                     'type' => $quote->type,
                 ];
@@ -321,28 +316,28 @@ class CompanyController extends Controller
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/show/' . $colletion['idSet'] . '">
           <span>
           <i class="la la-edit"></i>
           &nbsp;
           Edit
           </span>
           </a>
-          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/'.$colletion['idSet'].'">
+          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
           <span>
           <i class="la la-file"></i>
           &nbsp;
           PDF
           </span>
           </a>
-          <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+          <a href="/v2/quotes/duplicate/' . $colletion['idSet'] . '" class="dropdown-item" >
           <span>
           <i class="la la-plus"></i>
           &nbsp;
           Duplicate
           </span>
           </a>
-          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="'.$colletion['idSet'].'" >
+          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . $colletion['idSet'] . '" >
           <span>
           <i class="la la-eraser"></i>
           &nbsp;
@@ -440,7 +435,7 @@ class CompanyController extends Controller
         }
 
         if ($file != '') {
-            $filepath_tmp = 'Logos/Clients/'.$file->getClientOriginalName();
+            $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
         }
 
         $request->request->add(['company_user_id' => Auth::user()->company_user_id, 'owner' => Auth::user()->id, 'options' => $options, 'logo' => $filepath_tmp]);
@@ -582,7 +577,7 @@ class CompanyController extends Controller
         $filepath = $company->logo;
 
         if ($file != '') {
-            $filepath = 'Logos/Clients/'.$id.'/'.$file->getClientOriginalName();
+            $filepath = 'Logos/Clients/' . $id . '/' . $file->getClientOriginalName();
         }
 
         $request->request->add(['options' => $options, 'logo' => $filepath]);
@@ -641,14 +636,12 @@ class CompanyController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            
+
             $company = Company::findOrFail($id);
             $company->delete();
 
-
-
             if ($request->ajax()) {
-                return response()->json(['message' =>  'Company deleted successfully!']);
+                return response()->json(['message' => 'Company deleted successfully!']);
             }
             // return response()->json(['message' => 'Ok']);
         } catch (\Exception $e) {
@@ -875,9 +868,9 @@ class CompanyController extends Controller
     public function saveLogo($company, $file)
     {
         $update_company_url = Company::findOrFail($company->id);
-        $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+        $update_company_url->logo = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
         $update_company_url->update();
-        $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+        $filepath = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
         $name = $file->getClientOriginalName();
         \Storage::disk('logos')->put($name, file_get_contents($file), 'public');
         $s3 = \Storage::disk('s3_upload');
@@ -929,7 +922,7 @@ class CompanyController extends Controller
             return \Response::json([]);
         }
 
-        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->where('business_name', 'like', '%'.$term.'%')->get();
+        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->where('business_name', 'like', '%' . $term . '%')->get();
 
         $formatted_companies = [];
         foreach ($companies as $company) {

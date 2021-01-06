@@ -13,6 +13,7 @@ class ApiIntegration extends Model
         'module',
         'partner_id',
         'url',
+        'status'
     ];
 
     protected $modules = ['Contacts', 'Companies'];

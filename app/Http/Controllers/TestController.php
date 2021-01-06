@@ -100,7 +100,7 @@ class TestController extends Controller
             $autoImp = AutoImportation::whereHas('carriersAutoImportation', function ($query) use ($request_cont) {
                 $query->whereIn('carrier_id', $request_cont->Requestcarriers->pluck('carrier_id'));
             })->where('status', 1)->first();
-            if (! empty($autoImp)) {
+            if (!empty($autoImp)) {
                 try {
                     if (env('APP_ENV') == 'local') {
                         $client = new Client(['base_uri' => 'http://contractsai/']);
@@ -111,10 +111,10 @@ class TestController extends Controller
                     }
                     //$response = $client->get('login?email=admin@example.com&password=secret');
                     //$response = $client->request('GET','ConverterFile/CFIndex', [
-                    $response = $client->request('GET', 'ConverterFile/CFDispatchJob/'.$req_id, [
+                    $response = $client->request('GET', 'ConverterFile/CFDispatchJob/' . $req_id, [
                         'headers' => [
                             //'Authorization' => $auth->api_key,
-                            'Authorization' => 'Bearer '.$user_adm_rq->api_token,
+                            'Authorization' => 'Bearer ' . $user_adm_rq->api_token,
                             'Accept' => 'application/json',
                         ],
                     ]);
@@ -123,7 +123,7 @@ class TestController extends Controller
                     //return $dataGen;
                 } catch (RequestException $e) {
                     //Enviar correo falla de conexion
-                    $message = 'connection failure, Request Id: '.$req_id.' I qualify for Auto-Import ENV: '.env('APP_ENV');
+                    $message = 'connection failure, Request Id: ' . $req_id . ' I qualify for Auto-Import ENV: ' . env('APP_ENV');
                     dd($message);
                     foreach ($admins as $userNotifique) {
                         SendEmailAutoImporJob::dispatch($userNotifique->email, $message);
@@ -134,9 +134,9 @@ class TestController extends Controller
             $autoImp = AutoImportation::whereHas('carriersAutoImportation', function ($query) use ($request_cont) {
                 $query->whereIn('carrier_id', $request_cont->Requestcarriers->pluck('carrier_id'));
             })->where('status', 1)->first();
-            if (! empty($autoImp)) {
+            if (!empty($autoImp)) {
                 //Enviar correo
-                $message = 'There is more than one carrier and one of them are listed in the Auto Import. Request Id: '.$req_id;
+                $message = 'There is more than one carrier and one of them are listed in the Auto Import. Request Id: ' . $req_id;
                 dd($message);
                 foreach ($admins as $userNotifique) {
                     SendEmailAutoImporJob::dispatch($userNotifique->email, $message);
@@ -191,11 +191,16 @@ class TestController extends Controller
         /*$user = User::find(1);
         dd($user);*/
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
-        \DB::table('users')->chunkById(100, function ($users) use ($client) {
-            foreach ($users as $user) {
-                $this->intercom($client, $user);
-            }
-        });
+        /*  \DB::table('users')->chunkById(100, function ($users) use($client) {
+        foreach ($users as $user) {
+
+        $this->intercom($client, $user);
+        }
+        });*/
+
+        $user = User::where('email', 'araceli@acrosslogistics.com')->first();
+        $this->intercom($client, $user);
+        echo "Finalizado";
 
         echo 'Finalizado';
     }
@@ -205,39 +210,44 @@ class TestController extends Controller
         try {
             $cliente = $client->users->getUsers(['email' => $user->email]);
         } catch (Exception $e) {
-            echo  $user->email;
+            echo $user->email;
         }
-
+        dd($cliente->total_count);
         if ($cliente->total_count > 1) {
+            echo "Mas de uno " . $user->email . "<BR>";
             foreach ($cliente->users as $u) {
                 if ($u->type == 'user') {
                     if ($u->user_id != $user->id) {
-                        $client->users->archiveUser($u->id);
+
+                        //$client->users->archiveUser($u->id);
+                        echo "Diferente id " . $user->email . "<BR>";
                     }
                 }
             }
         }
 
-        if ($cliente->total_count == 0) {
-            if ($user->company_user_id != '') {
-                //setHashID();
+        /*if ($cliente->total_count == 0) {
 
-                $client->users->create([
-                    'email' => $user->email,
-                    'companies' => [
-                        [
-                            'name' => $user->companyUser->name,
-                            'company_id' => $user->company_user_id,
-                        ],
-                    ],
-                ]);
-            } else {
-                $client->users->create([
-                    'email' => $user->email,
-                    'user_id' => $user->id,
-                    'name' => $user->name,
-                ]);
-            }
-        }
+    if ($user->company_user_id != "") {
+    //setHashID();
+
+    $client->users->create([
+    'email' => $user->email,
+    'companies' => [
+    [
+    'name' => $user->companyUser->name,
+    'company_id' => $user->company_user_id,
+    ],
+    ],
+    ]);
+    } else {
+    $client->users->create([
+    'email' => $user->email,
+    'user_id' => $user->id,
+    'name' => $user->name,
+    ]);
+    }
+
+    }*/
     }
 }

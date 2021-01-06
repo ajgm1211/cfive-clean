@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Contact;
 use App\Http\Requests\StoreContact;
-use App\Http\Resources\ContactResource;
 use App\Http\Traits\EntityTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -241,7 +240,7 @@ class ContactController extends Controller
             $contact->delete();
 
             if ($request->ajax()) {
-                return response()->json(['message' =>'Contact deleted successfully!']);
+                return response()->json(['message' => 'Contact deleted successfully!']);
             }
 
             return response()->json(['message' => 'OK']);

@@ -4,8 +4,6 @@
 
 namespace App\Helpers\Surchargers;
 
-use App\Harbor;
-use App\LocalCharge;
 use App\Surcharge;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +18,7 @@ class HelperSurchargers
     //Recargos LOCALCHARGE
     public static function get_surchargers($id)
     {
-        $goodsurcharges = DB::select('call proc_localchar('.$id.')');
+        $goodsurcharges = DB::select('call proc_localchar(' . $id . ')');
         $surchargecollection = collect([]);
         foreach ($goodsurcharges as $surcharge) {
             $origin = '';
@@ -54,16 +52,16 @@ class HelperSurchargers
             $ammount = $surcharge->ammount;
             $currency = $surcharge->currency;
             $arreglo = [
-                'id'                => $surcharge->id,
-                'surchargelb'       => $surchargeName,
-                'origin_portLb'     => $origin,
-                'destiny_portLb'    => $destiny,
-                'carrierlb'         => $carrier,
-                'typedestinylb'     => $typedestiny,
-                'ammount'           => $ammount,
+                'id' => $surcharge->id,
+                'surchargelb' => $surchargeName,
+                'origin_portLb' => $origin,
+                'destiny_portLb' => $destiny,
+                'carrierlb' => $carrier,
+                'typedestinylb' => $typedestiny,
+                'ammount' => $ammount,
                 'calculationtypelb' => $calculationtype,
-                'currencylb'        => $currency,
-                'operation'         => 2,
+                'currencylb' => $currency,
+                'operation' => 2,
             ];
 
             $surchargecollection->push($arreglo);
@@ -80,7 +78,7 @@ class HelperSurchargers
         $resp = false;
         $find = false;
         $posible_array = [];
-        $surchargersFineds = Surcharge::where('variation->type', 'like', '%'.strtolower($name).'%')
+        $surchargersFineds = Surcharge::where('variation->type', 'like', '%' . trim(strtolower($name)) . '%')
             ->where('company_user_id', null)
             ->get();
 
@@ -89,7 +87,7 @@ class HelperSurchargers
             $data = $surchargersFineds[0]->id;
             $count = 1;
         } elseif (count($surchargersFineds) > 1) {
-            foreach ($surchargersFineds as  $surchargersFined) {
+            foreach ($surchargersFineds as $surchargersFined) {
                 $array_varation = json_decode($surchargersFined->variation, true);
                 if (in_array(strtolower($name), $array_varation['type'])) {
                     $find = true;
@@ -106,16 +104,16 @@ class HelperSurchargers
                 } elseif (count($posible_array) > 1) {
                     $resp = false;
                     $posible_array = collect($posible_array);
-                    $data = $name.' (Error) ['.$posible_array->implode(', ').']';
+                    $data = $name . ' (Error) [' . $posible_array->implode(', ') . ']';
                 }
             }
-            if (! $find) {
+            if (!$find) {
                 $resp = false;
-                $data = $name.' (Error) ['.$surchargersFineds->implode('id', ', ').']';
+                $data = $name . ' (Error) [' . $surchargersFineds->implode('id', ', ') . ']';
                 $count = count($surchargersFineds);
             }
         }
 
-        return ['data' => $data, 'boolean' => $resp, 'count'=> $count];
+        return ['data' => $data, 'boolean' => $resp, 'count' => $count];
     }
 }

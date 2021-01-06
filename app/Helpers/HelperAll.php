@@ -6,13 +6,12 @@ namespace App\Helpers;
 
 use App\Currency;
 use App\GroupContainer;
-use App\Rate;
 
 class HelperAll
 {
     public static function addOptionSelect($dataAll, $id, $name)
     {
-        $data = [null=>'Please Select'];
+        $data = [null => 'Please Select'];
         foreach ($dataAll as $dataRun) {
             $data[$dataRun[$id]] = $dataRun[$name];
         }
@@ -30,7 +29,7 @@ class HelperAll
             } else {
                 $currency_val = $curr_ps;
             }
-            $data = $val_ps.' '.$currency_val;
+            $data = $val_ps . ' ' . $currency_val;
         } else { // Moneda especificada en el Select o columna
             $data = $val_ps;
         }
@@ -46,7 +45,7 @@ class HelperAll
         if (count($Arr) <= 1) {
             $result = $Arr[0];
         } else {
-            $result = $Arr[0].' (error)';
+            $result = $Arr[0] . ' (error)';
         }
 
         return $result;
@@ -62,7 +61,7 @@ class HelperAll
             $result['value'] = $Arr[0];
             $result['color'] = 'green';
         } else {
-            $result['value'] = $Arr[0].' (error)';
+            $result['value'] = $Arr[0] . ' (error)';
             $result['color'] = 'red';
         }
 
@@ -77,7 +76,7 @@ class HelperAll
             $datajson = json_decode($equiments->data, true);
             $equiment = [];
             // Head Datatable <th>
-            $equiment = ['id' => $equiment_id, 'color' => $datajson['color'], 'name'=>$equiments->name, 'thead' => [null, 'Origin', 'Destiny', 'Carrier']];
+            $equiment = ['id' => $equiment_id, 'color' => $datajson['color'], 'name' => $equiments->name, 'thead' => [null, 'Origin', 'Destiny', 'Carrier']];
             foreach ($equiments->containers as $containers) {
                 array_push($equiment['thead'], $containers->code);
             }
@@ -85,15 +84,15 @@ class HelperAll
             array_push($equiment['thead'], 'Option');
             // Head Datatable json{}
             $json_array = [
-                ['data'=>'origin', 'name'=>'origin'],
-                ['data'=>'destiny', 'name'=>'destiny'],
-                ['data'=>'carrier', 'name'=>'carrier'],
+                ['data' => 'origin', 'name' => 'origin'],
+                ['data' => 'destiny', 'name' => 'destiny'],
+                ['data' => 'carrier', 'name' => 'carrier'],
             ];
             foreach ($equiments->containers as $containers) {
-                array_push($json_array, ['data'=>'C'.$containers->code, 'name'=>'C'.$containers->code]);
+                array_push($json_array, ['data' => 'C' . $containers->code, 'name' => 'C' . $containers->code]);
             }
-            array_push($json_array, ['data'=>'currency', 'name'=>'currency']);
-            array_push($json_array, ['data'=>'action', 'name'=>'action', 'orderable'=>false, 'searchable'=>false]);
+            array_push($json_array, ['data' => 'currency', 'name' => 'currency']);
+            array_push($json_array, ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false]);
             $equiment['columns'] = json_encode($json_array);
         }
 
@@ -108,7 +107,7 @@ class HelperAll
             $datajson = json_decode($equiments->data, true);
             $equiment = [];
             // Head Datatable <th>
-            $equiment = ['id' => $equiment_id, 'color' => $datajson['color'], 'name'=>$equiments->name, 'thead' => []];
+            $equiment = ['id' => $equiment_id, 'color' => $datajson['color'], 'name' => $equiments->name, 'thead' => []];
             foreach ($equiments->containers as $containers) {
                 array_push($equiment['thead'], $containers->code);
             }
@@ -132,6 +131,27 @@ class HelperAll
             $color = '#04950f';
         }
 
+        return $color;
+    }
+    public static function statusColorHarbor($hierarchy, $name = '')
+    {
+
+        $color = array();
+        if ($hierarchy == 'parent') {
+            $color[0] = '#f81538';
+            $color[1] = 'false';
+            $color[2] = '';
+
+        } else if ($hierarchy == 'child') {
+            $color[0] = '#5527f0;';
+            $color[1] = 'true';
+            $color[2] = 'data-toggle="tooltip" data-placement="top" title="' . $name . '"';
+
+        } else {
+            $color[0] = '#04950f';
+            $color[1] = 'false';
+            $color[2] = '';
+        }
         return $color;
     }
 }

@@ -162,3 +162,9 @@ function processOldDryContainers($array, $type)
         }
     }
 }
+
+function floatvalue($val){
+    $val = str_replace(",",".",$val);
+    $val = preg_replace('/\.(?=.*\.)/', '', $val);
+    return floatval($val);
+}

@@ -1,45 +1,46 @@
 <?php
 
-namespace Tests\Unit;
+// namespace Tests\Unit;
 
-use App\Contract;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+// use Tests\TestCase;
+// use App\Contract;
+// use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class contractsTest extends TestCase
-{
-    use DatabaseTransactions;
+// class ContractsTest extends TestCase
+// {
+//     use DatabaseTransactions;
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testcontracts()
-    {
-        $this->withoutExceptionHandling();
+//     /**
+//      * A basic test example.
+//      *
+//      * @return void
+//      */
+//     public function testcontracts()
+//     {
 
-        $contracts = factory(Contract::class)->create();
+//         $this->withoutExceptionHandling();
 
-        $this->seeInDatabase('contracts', $contracts->toArray());
-    }
+//         $contracts = factory(Contract::class)->create();
 
-    public function testcontractsupdated()
-    {
-        $model = factory(Contract::class)->create();
+//         $this->seeInDatabase('contracts', $contracts->toArray());
+//     }
 
-        $contracts = Contract::find($model->id);
+//     public function testcontractsupdated()
+//     {
+//         $model = factory(Contract::class)->create();
 
-        $contracts->name = 'TDD CARGOFIVE';
+//         $contracts = Contract::find($model->id);
 
-        $contracts->update();
+//         $contracts->name = 'TDD CARGOFIVE';
 
-        // $model
+//         $contracts->update();
 
-        $this->seeInDatabase('contracts', [
-            'name' => 'TDD CARGOFIVE',
-        ]);
-    }
-}
+//         // $model
+
+//         $this->seeInDatabase('contracts', [
+//             'name' => 'TDD CARGOFIVE'
+//         ]);
+//     }
+// }

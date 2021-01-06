@@ -11,6 +11,7 @@ class ApiIntegrationSetting extends Model
         'api_key',
         'api_integration_id',
         'enable',
+        'status'
     ];
 
     public function api_integration()

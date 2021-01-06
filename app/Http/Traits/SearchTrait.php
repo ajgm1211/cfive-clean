@@ -46,16 +46,18 @@ trait SearchTrait
 
         $inlands = $inlands->get();
 
-        $dataDest = [];
+        $dataDest = array();
+
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
             foreach ($contain as $cont) {
-                $km = 'km'.$cont->code;
+                $km = 'km' . $cont->code;
                 $$km = true;
             }
 
             $inlandDetails = [];
             foreach ($inlandsValue->inlandports as $ports) {
+
                 $monto = 0;
                 if (in_array($ports->ports->id, $port)) {
                     if ($distancia == 0) {
@@ -98,7 +100,7 @@ trait SearchTrait
                         $json = json_decode($jsonContainer);
 
                         foreach ($contain as $cont) {
-                            $km = 'km'.$cont->code;
+                            $km = 'km' . $cont->code;
                             //$$km = true;
                             /* $options = json_decode($cont->options);
                             if (@$options->field_rate != 'containers') {
@@ -109,8 +111,8 @@ trait SearchTrait
                              */
                             if (in_array($cont->id, $equipment)) {
                                 if ($distancia >= $range->lower && $distancia <= $range->upper) {
-                                    if (isset($json->{'C'.$cont->code})) {
-                                        $rateMount = $json->{'C'.$cont->code};
+                                    if (isset($json->{'C' . $cont->code})) {
+                                        $rateMount = $json->{'C' . $cont->code};
                                         $sub_20 = number_format($rateMount / $rateI, 2, '.', '');
                                         $amount_inland = number_format($rateMount, 2, '.', '');
                                         $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
@@ -142,21 +144,22 @@ trait SearchTrait
                             $jsonkm = json_decode($jsonContainerkm);
 
                             foreach ($contain as $cont) {
-                                $km = 'km'.$cont->code;
-                                $texto20 = 'Inland '.$cont->code.' x 1';
+                                $km = 'km' . $cont->code;
+                                $texto20 = 'Inland ' . $cont->code . ' x 1';
 
                                 //  if (isset($options->field_inland)) {
 
                                 if ($$km && in_array($cont->id, $equipment)) {
-                                    if (isset($jsonkm->{'C'.$cont->code})) {
-                                        $rateMount = $jsonkm->{'C'.$cont->code};
+                                    if (isset($jsonkm->{'C' . $cont->code})) {
+                                        $rateMount = $jsonkm->{'C' . $cont->code};
                                         $montoKm = ($distancia * $rateMount) / $rateGeneral;
                                         // dd($distancia,$rateGeneral,$rateMount,$montoKm);
 
                                         $sub_20 = number_format($montoKm, 2, '.', '');
                                         $monto += $sub_20;
                                         $amount_inland = $distancia * $rateMount;
-                                        $amount_inland = number_format($rateMount, 2, '.', '');
+
+                                        $amount_inland = number_format($amount_inland, 2, '.', '');
                                         $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
                                     } else {
                                         $rateMount = 0;
@@ -165,6 +168,7 @@ trait SearchTrait
                                         $sub_20 = 0;
                                         $montoKm = 0;
                                     }
+
                                     // CALCULO MARKUPS
                                     $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
@@ -172,6 +176,7 @@ trait SearchTrait
                                     $sub_20 = number_format($sub_20, 2, '.', '');
                                     $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'des_in' => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
+
                                     $inlandDetails[] = $arrayInland20;
                                 }
                                 // }
@@ -217,8 +222,8 @@ trait SearchTrait
                     if (@$options->field_rate == 'containers') {
                         $test = json_encode($data->{$options->field_rate});
                         $jsonContainer = json_decode($data->{$options->field_rate});
-                        if (isset($jsonContainer->{'C'.$cont->code})) {
-                            $rateMount = $jsonContainer->{'C'.$cont->code};
+                        if (isset($jsonContainer->{'C' . $cont->code})) {
+                            $rateMount = $jsonContainer->{'C' . $cont->code};
                         } else {
                             $rateMount = 0;
                         }
@@ -237,37 +242,40 @@ trait SearchTrait
             }
         }
 
-        $arregloG = ['arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum, 'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter];
+        $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR, 'arregloSum' => $arregloSum, 'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
+
+        return $arregloG;
 
         return $arregloG;
     }
 
     public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers, $rateFreight = 1)
     {
-        $arregloRateSave['rate'] = [];
-        $arregloRateSave['rateSum'] = [];
-        $arregloRateSave['markups'] = [];
-        $arregloRate = [];
 
-        $markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
+        $arregloRateSave['rate'] = array();
+        $arregloRateSave['rateSum'] = array();
+        $arregloRateSave['markups'] = array();
+        $arregloRate = array();
 
-        $tot_F = $markup['monto'.$containers] / $rateC;
-        $tot_R = $markup['monto'.$containers] / $rateFreight;
+        $markup = $this->freightMarkupsTrait($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers, $rateFreight);
+
+        $tot_F = $markup['monto' . $containers] / $rateC;
+        $tot_R = $markup['monto' . $containers];
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
 
-        $arrayDetail = ['price'.$containers => $amount, 'currency'.$containers => $data->currency->alphacode, 'idCurrency'.$containers => $data->currency_id, 'total'.$containers => $tot_F];
+        $arrayDetail = ['price' . $containers => $amount, 'currency' . $containers => $data->currency->alphacode, 'idCurrency' . $containers => $data->currency_id, 'total' . $containers => $tot_F];
 
         // Arreglos para guardar los rates
-        $array_save = ['c'.$containers => $amount];
-        $array_sum = ['c'.$containers => $tot_R];
+        $array_save = ['c' . $containers => $amount];
+        $array_sum = ['c' . $containers => $tot_R];
 
         $arregloRateSave['rate'] = array_merge($array_save, $arregloRateSave['rate']);
         $arregloRateSave['rateSum'] = array_merge($array_sum, $arregloRateSave['rateSum']);
 
         // Markups
-        $array_markup = ['m'.$containers => $markup['markup'.$containers]];
+        $array_markup = ['m' . $containers => $markup['markup' . $containers]];
         $arregloRateSave['markups'] = array_merge($array_markup, $arregloRateSave['markups']);
 
         $array = array_merge($arrayDetail, $markup);
@@ -453,20 +461,61 @@ trait SearchTrait
         return $collectionMarkup;
     }
 
-    public function freightMarkups($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type)
+    public function freightMarkupsTrait($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type, $rateFreight)
     {
+
         if ($freighPercentage != 0) {
             $freighPercentage = intval($freighPercentage);
             $markup = ($monto * $freighPercentage) / 100;
             $markup = number_format($markup, 2, '.', '');
             $monto += $markup;
             number_format($monto, 2, '.', '');
-            $arraymarkup = ['markup'.$type => $markup, 'markupConvert'.$type => $markup, 'typemarkup'.$type => "$typeCurrency ($freighPercentage%)", 'monto'.$type => $monto, 'montoMarkupO' => $markup];
+            $arraymarkup = ['markup' . $type => $markup, 'markupConvert' . $type => $markup, 'typemarkup' . $type => "$typeCurrency ($freighPercentage%)", 'monto' . $type => $monto, 'montoMarkupO' => $markup];
         } else {
+
             $markup = trim($freighAmmount);
-            $monto += $freighMarkup;
+
+            if ($freighMarkup != 0) {
+                $monto += $freighMarkup * $rateFreight;
+            } else {
+                $monto += $freighMarkup;
+            }
+
             $monto = number_format($monto, 2, '.', '');
-            $arraymarkup = ['markup'.$type => $markup, 'markupConvert'.$type => $freighMarkup, 'typemarkup'.$type => $typeCurrency, 'monto'.$type => $monto, 'montoMarkupO' => $markup];
+
+            $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $freighMarkup, "typemarkup" . $type => $typeCurrency, "monto" . $type => $monto, 'montoMarkupO' => $markup);
+        }
+
+        return $arraymarkup;
+    }
+
+    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency, $rateFreight)
+    {
+
+        if ($localPercentage != 0) {
+
+            // Monto original
+            $markupO = ($montoOrig * $localPercentage) / 100;
+            $montoOrig += $markupO;
+            $montoOrig = number_format($montoOrig, 2, '.', '');
+
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
+        } else { // oki
+
+            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
+
+            $markupOrig = $localMarkup * $valor;
+
+            $monto = $monto / $rateFreight;
+            $markup = trim($localMarkup);
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
         }
 
         return $arraymarkup;
@@ -573,14 +622,16 @@ trait SearchTrait
         if ($status != 'api') {
             $transit = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
 
-            if (! empty($transit)) {
+            if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
-                if ($transit->service->id == '1') {
-                    $transitArray['service'] = '';
-                } else {
-                    $transitArray['service'] = $transit->service->name;
-                }
+                $transitArray['service'] = $transit->service->name;
+                /**if ($transit->service->id == '1') {
+            $transitArray['service'] = '';
+            } else {
+            $transitArray['service'] = $transit->service->name;
+            }**/
+
             } else {
                 $transitArray['via'] = '';
                 $transitArray['transit_time'] = '';

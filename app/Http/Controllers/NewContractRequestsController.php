@@ -2,44 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\AutoImportation;
 use App\Carrier;
-use App\CarrierautoImportation;
 use App\CompanyUser;
 use App\Contract;
 use App\ContractCarrier;
 use App\Direction;
 use App\Harbor;
-use App\ImportationJob;
-use App\Job;
+use App\Http\Requests\StoreNewRequestFcl;
 use App\Jobs\ExportRequestsJob;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\SendEmailRequestFclJob;
-use App\Mail\NewRequestToAdminMail;
-use App\Mail\NotificationAutoImport;
-use App\Mail\RequestToUserMail;
 use App\NewContractRequest;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use App\RequetsCarrierFcl;
 use App\User;
-use Carbon\Carbon;
 use Excel;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PrvRequest;
-use PrvValidation;
-use Spatie\Permission\Models\Permission;
 use Yajra\Datatables\Datatables;
+use \Carbon\Carbon;
 
 class NewContractRequestsController extends Controller
 {
+
     public function index(Request $request)
     {
         return view('Requests.index');
@@ -57,7 +47,6 @@ class NewContractRequestsController extends Controller
         if ($user->hasAnyPermission([1])) {
             $permiso_eliminar = true;
         }
-
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
                 return $Ncontracts->company_user;
@@ -70,7 +59,7 @@ class NewContractRequestsController extends Controller
             })
             ->addColumn('direction', function ($Ncontracts) {
                 if (empty($Ncontracts->direction) == true) {
-                    return ' -------- ';
+                    return " -------- ";
                 } else {
                     return $Ncontracts->direction;
                 }
@@ -79,7 +68,7 @@ class NewContractRequestsController extends Controller
                 if (count($Ncontracts->carriers) >= 1) {
                     return $Ncontracts->carriers;
                 } else {
-                    return ' -------- ';
+                    return " -------- ";
                 }
             })
             ->addColumn('validation', function ($Ncontracts) {
@@ -92,13 +81,13 @@ class NewContractRequestsController extends Controller
                 return $Ncontracts->user;
             })
             ->addColumn('username_load', function ($Ncontracts) {
-                return '<span id="userLoad'.$Ncontracts->id.'">'.$Ncontracts->username_load.'</span>';
+                return '<span id="userLoad' . $Ncontracts->id . '">' . $Ncontracts->username_load . '</span>';
             })
             ->addColumn('time_elapsed', function ($Ncontracts) {
                 if (empty($Ncontracts->time_elapsed) != true) {
                     return $Ncontracts->time_elapsed;
                 } else {
-                    return '<span id="timeElapsed'.$Ncontracts->id.'"> ------------------ </span>';
+                    return '<span id="timeElapsed' . $Ncontracts->id . '"> ------------------ </span>';
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
@@ -106,56 +95,56 @@ class NewContractRequestsController extends Controller
                 if (strnatcasecmp($Ncontracts->status, 'Pending') == 0) {
                     //$color = 'color:#031B4E';
                     $color = 'color:#f81538';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
                     $color = 'color:#5527f0';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                     $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
 
-                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
+                return '<a href="#" onclick="showModal(' . $Ncontracts->id . ')"style="' . $color . '" id="statusHrf' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '">' . $Ncontracts->status . '</a>
                 &nbsp;
-                <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
+                <samp class="la la-pencil-square-o" id="statusSamp' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '" for="" style="' . $color . '"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) use ($permiso_eliminar) {
+
                 $buttons = '
                 &nbsp;&nbsp;
-				<a href="'.route('RequestImportation.show', $Ncontracts->id).'" title="Download File">
+				<a href="' . route("RequestImportation.show", $Ncontracts->id) . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
                 $eliminiar_buton = '
-                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
+                <a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . ' Number Contract: ' . $Ncontracts->numbercontract . '"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
                 if ($permiso_eliminar) {
-                    $buttons = $buttons.$eliminiar_buton;
+                    $buttons = $buttons . $eliminiar_buton;
                 }
 
                 if (empty($Ncontracts->contract) != true) {
-                    $buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.','.$Ncontracts->id.")'  title='Duplicate to another company'>
+                    $buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\"," . $Ncontracts->contract . "," . $Ncontracts->id . ")'  title='Duplicate to another company'>
                       <i style='color:#b90000' class='la la-copy'></i>
                     </a>";
-                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" title="Proccess FCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
                     </a>
 
-                    '.$buttonDp.'
+                    ' . $buttonDp . '
                     &nbsp;&nbsp;
                     <a href="#" title="Edit FCL Contract">
-                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
+                    <samp class="la la-edit" onclick="editcontract(' . $Ncontracts->contract . ')" style="font-size:20px; color:#04950f"></samp>
                     </a>
                     ';
-                    $buttons = $butPrCt.$buttons;
+                    $buttons = $butPrCt . $buttons;
                 } else {
-                    $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
+                    $butPrRq = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->id . '/1/0" title="Proccess FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
-                    $buttons = $butPrRq.$buttons;
+                    $buttons = $butPrRq . $buttons;
                 }
-
                 return $buttons;
             })
 
@@ -167,7 +156,7 @@ class NewContractRequestsController extends Controller
         //dd($request->all());
     }
 
-    public function store2(Request $request)
+    public function store2(StoreNewRequestFcl $request)
     {
         //dd($request->all());
         //return response()->json($request);
@@ -178,17 +167,17 @@ class NewContractRequestsController extends Controller
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
         /*$validator = \Validator::make(
-            array('ext' => $ext),
-            array('ext' => 'in:xls,xlsx,csv,pdf')
+        array('ext' => $ext),
+        array('ext' => 'in:xls,xlsx,csv,pdf')
         );
         if ($validator->fails()) {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'just archive with extension xlsx, xls, csv and pdf.');
-            return redirect()->route('Requestimporfcl');
+        $request->session()->flash('message.nivel', 'danger');
+        $request->session()->flash('message.content', 'just archive with extension xlsx, xls, csv and pdf.');
+        return redirect()->route('Requestimporfcl');
         }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
-        $nombre = $now.'_'.$nombre;
+        $nombre = $now . '_' . $nombre;
         $fileBoll = \Storage::disk('FclRequest')->put($nombre, \File::get($file));
         $typeVal = 1;
         $arreglotype = '';
@@ -197,6 +186,7 @@ class NewContractRequestsController extends Controller
         $type = json_encode($type);
         $data = json_encode($data);
         if ($fileBoll) {
+
             $CompanyUserId = $request->CompanyUserId;
             $direction_id = $request->direction;
 
@@ -212,8 +202,8 @@ class NewContractRequestsController extends Controller
 
             foreach ($request->carrierM as $carrierVal) {
                 ContractCarrier::create([
-                    'carrier_id'    => $carrierVal,
-                    'contract_id'   => $contract->id,
+                    'carrier_id' => $carrierVal,
+                    'contract_id' => $contract->id,
                 ]);
             }
 
@@ -245,19 +235,19 @@ class NewContractRequestsController extends Controller
                 ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
             }
             $user = User::find($request->user);
-            $message = 'There is a new request from '.$user->name.' - '.$user->companyUser->name;
+            $message = "There is a new request from " . $user->name . " - " . $user->companyUser->name;
             $user->notify(new SlackNotification($message));
             $admins = User::where('type', 'admin')->get();
-            $message = 'A new request has been created - '.$Ncontract->id;
+            $message = 'A new request has been created - ' . $Ncontract->id;
             NotificationsJob::dispatch('Request-Fcl', [
                 'user' => $request->user,
                 'ncontract' => $Ncontract->toArray(),
             ]);
             foreach ($admins as $userNotifique) {
                 /*\Mail::to($userNotifique->email)->send(new NewRequestToAdminMail(
-                    $userNotifique->toArray(),
-                    $user->toArray(),
-                    $Ncontract->toArray()));*/
+                $userNotifique->toArray(),
+                $user->toArray(),
+                $Ncontract->toArray()));*/
                 $userNotifique->notify(new N_general($user, $message));
             }
 
@@ -276,32 +266,28 @@ class NewContractRequestsController extends Controller
         $company = CompanyUser::find($Ncontract->company_user_id);
         $extObj = new \SplFileInfo($Ncontract->namefile);
         $ext = $extObj->getExtension();
-        $name = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
         $success = false;
         $descarga = null;
 
-        if (Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile, $name)) {
+        if (Storage::disk('s3_upload')->exists('Request/FCL/' . $Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile, $name);
-        } elseif (Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile, $name)) {
+            return Storage::disk('s3_upload')->download('Request/FCL/' . $Ncontract->namefile, $name);
+        } elseif (Storage::disk('s3_upload')->exists('contracts/' . $Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile, $name);
+            return Storage::disk('s3_upload')->download('contracts/' . $Ncontract->namefile, $name);
         } elseif (Storage::disk('FclRequest')->exists($Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('FclRequest')->download($Ncontract->namefile, $name);
+            return Storage::disk('FclRequest')->download($Ncontract->namefile, $name);
         } elseif (Storage::disk('UpLoadFile')->exists($Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('UpLoadFile')->download($Ncontract->namefile, $name);
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile, $name);
         } else {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error. File not found');
-
             return back();
         }
+
     }
 
     public function showStatus($id)
@@ -323,7 +309,6 @@ class NewContractRequestsController extends Controller
 
         return view('Requests.Body-Modals.edit', compact('requests', 'status_arr'));
     }
-
     public function edit($id)
     {
         $Ncontracts = NewContractRequest::with('companyuser', 'user')->find($id);
@@ -358,11 +343,12 @@ class NewContractRequestsController extends Controller
             if ($type->values == 1) {
                 $contenValuesSome = 'Las columnas valores solo contiene los valores';
                 $ValuesSomeBol = true;
-            } elseif ($type->values == 2) {
+
+            } else if ($type->values == 2) {
                 $contenValuesWithCurre = 'Las columnas de los valores, contienen los currency';
                 $ValuesWithCurreBol = true;
             }
-        } elseif ($type->type == 1) {
+        } else if ($type->type == 1) {
             $rateBol = true;
             $contenRate = 'El archivo contiene solo Rates';
         }
@@ -370,7 +356,7 @@ class NewContractRequestsController extends Controller
         if ($data->DatCar) {
             $ValCarrierBol = true;
             $carrierObj = Carrier::find($data->carrier);
-            $contenValuesCarrier = 'El archivo no contiene la columna Carrier. Carrier: '.$carrierObj->name;
+            $contenValuesCarrier = 'El archivo no contiene la columna Carrier. Carrier: ' . $carrierObj->name;
         }
 
         if ($data->DatDes) {
@@ -378,9 +364,9 @@ class NewContractRequestsController extends Controller
             $destinos = '';
             foreach ($data->destiny as $destiny) {
                 $destinosObj = Harbor::find($destiny);
-                $destinos = $destinos.$destinosObj->display_name.'.. ';
+                $destinos = $destinos . $destinosObj->display_name . '.. ';
             }
-            $contenValuesDestiny = 'El archivo no contiene la columna Destino. Destino: '.$destinos;
+            $contenValuesDestiny = 'El archivo no contiene la columna Destino. Destino: ' . $destinos;
         }
 
         if ($data->DatOri) {
@@ -388,9 +374,9 @@ class NewContractRequestsController extends Controller
             $origenes = '';
             foreach ($data->origin as $origen) {
                 $origenObj = Harbor::find($origen);
-                $origenes = $origenes.''.$origenObj->display_name.'...  ';
+                $origenes = $origenes . '' . $origenObj->display_name . '...  ';
             }
-            $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: '.$origenes;
+            $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: ' . $origenes;
         }
 
         if ($ValuesOriginBol == true || $ValuesDestinyBol == true || $ValCarrierBol == true) {
@@ -400,32 +386,32 @@ class NewContractRequestsController extends Controller
         $colectionFinal = collect([]);
 
         $Contenido = [
-            'namecontract'          => $Ncontracts->namecontract,
-            'numbercontract'        => $Ncontracts->numbercontract,
-            'validation'            => $Ncontracts->validation,
-            'company'               => $Ncontracts->companyuser->name,
-            'status'                => $Ncontracts->status,
-            'User'                  => $Ncontracts->user->name.' '.$Ncontracts->user->lastname,
-            'created'               => $Ncontracts->created,
+            'namecontract' => $Ncontracts->namecontract,
+            'numbercontract' => $Ncontracts->numbercontract,
+            'validation' => $Ncontracts->validation,
+            'company' => $Ncontracts->companyuser->name,
+            'status' => $Ncontracts->status,
+            'User' => $Ncontracts->user->name . ' ' . $Ncontracts->user->lastname,
+            'created' => $Ncontracts->created,
 
-            'surchargeBol'          => $surchargeBol,
-            'contenSurchar'         => $contenSurchar,
-            'rateBol'               => $rateBol,
-            'contenRate'            => $contenRate,
+            'surchargeBol' => $surchargeBol,
+            'contenSurchar' => $contenSurchar,
+            'rateBol' => $rateBol,
+            'contenRate' => $contenRate,
 
-            'ValuesSomeBol'         => $ValuesSomeBol,
-            'contenValuesSome'      => $contenValuesSome,
-            'ValuesWithCurreBol'    => $ValuesWithCurreBol,
+            'ValuesSomeBol' => $ValuesSomeBol,
+            'contenValuesSome' => $contenValuesSome,
+            'ValuesWithCurreBol' => $ValuesWithCurreBol,
             'contenValuesWithCurre' => $contenValuesWithCurre,
 
-            'ValCarrierBol'         => $ValCarrierBol,
-            'contenValuesCarrier'   => $contenValuesCarrier,
-            'ValuesDestinyBol'      => $ValuesDestinyBol,
-            'contenValuesDestiny'   => $contenValuesDestiny,
+            'ValCarrierBol' => $ValCarrierBol,
+            'contenValuesCarrier' => $contenValuesCarrier,
+            'ValuesDestinyBol' => $ValuesDestinyBol,
+            'contenValuesDestiny' => $contenValuesDestiny,
 
-            'ValuesOriginBol'       => $ValuesOriginBol,
-            'contenValuesOrigin'    => $contenValuesOrigin,
-            'tarjetBol'             => $tarjetBol,
+            'ValuesOriginBol' => $ValuesOriginBol,
+            'contenValuesOrigin' => $contenValuesOrigin,
+            'tarjetBol' => $tarjetBol,
 
         ];
 
@@ -455,7 +441,7 @@ class NewContractRequestsController extends Controller
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
             if ($Ncontract->username_load == 'Not assigned') {
-                $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
+                $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
 
             if ($Ncontract->status == 'Processing') {
@@ -475,29 +461,30 @@ class NewContractRequestsController extends Controller
                         if ($time_exacto == 0 || $time_exacto == '0') {
                             $time_exacto = '1 minute';
                         } else {
-                            $time_exacto = $time_exacto.' minutes';
+                            $time_exacto = $time_exacto . ' minutes';
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
                 }
             } elseif ($Ncontract->status == 'Done') {
+
                 if ($Ncontract->time_manager == null) {
                     $fechaEnd = Carbon::parse($now2);
                     $fechaStar = Carbon::parse($Ncontract->created);
                     $time_manager = number_format($fechaEnd->diffInMinutes($fechaStar) / 60, 2);
-                    $Ncontract->time_manager = $time_manager.' hours';
+                    $Ncontract->time_manager = $time_manager . ' hours';
                     //$Ncontract->time_manager = $fechaEnd->diffInHours($fechaStar).' hours';
                 }
 
                 if ($Ncontract->sentemail == false) {
                     $users = User::all()->where('company_user_id', '=', $Ncontract->company_user_id);
-                    $message = 'Your request N° '.$Ncontract->id.' was processed';
+                    $message = 'Your request N° ' . $Ncontract->id . ' was processed';
                     foreach ($users as $user) {
                         $user->notify(new N_general(\Auth::user(), $message));
                     }
 
                     $usercreador = User::find($Ncontract->user_id);
-                    $message = 'The importation '.$Ncontract->id.' was completed';
+                    $message = "The importation " . $Ncontract->id . " was completed";
                     $usercreador->notify(new SlackNotification($message));
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
@@ -510,18 +497,18 @@ class NewContractRequestsController extends Controller
 
             if (strnatcasecmp($Ncontract->status, 'Pending') == 0) {
                 $color = '#f81538';
-            } elseif (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
                 $color = '#5527f0';
-            } elseif (strnatcasecmp($Ncontract->status, 'Review') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Review') == 0) {
                 $color = '#e07000';
-            } elseif (strnatcasecmp($Ncontract->status, 'Done') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Done') == 0) {
                 $color = '#04950f';
             }
-
-            return response()->json($data = ['data'=>1, 'status' => $Ncontract->status, 'color'=> $color, 'request' => $Ncontract]);
+            return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract]);
         } catch (\Exception $e) {
-            return response()->json($data = ['data'=>2]);
+            return response()->json($data = ['data' => 2]);
         }
+
     }
 
     public function destroy($id)
@@ -535,7 +522,6 @@ class NewContractRequestsController extends Controller
             $Ncontract = NewContractRequest::find($id);
             Storage::disk('FclRequest')->delete($Ncontract->namefile);
             $Ncontract->delete();
-
             return 1;
         } catch (\Exception $e) {
             return 2;
@@ -547,7 +533,7 @@ class NewContractRequestsController extends Controller
     {
         $harbor = harbor::all()->pluck('display_name', 'id');
         $carrier = carrier::all()->pluck('name', 'id');
-        $direction = [null=>'Please Select'];
+        $direction = [null => 'Please Select'];
         $direction2 = Direction::all();
         $user = \Auth::user();
         foreach ($direction2 as $d) {
@@ -563,17 +549,17 @@ class NewContractRequestsController extends Controller
     public function similarcontracts(Request $request, $id)
     {
         $contracts = Contract::select(['id',
-                                       'name',
-                                       'number',
-                                       'company_user_id',
-                                       'account_id',
-                                       'direction_id',
-                                       'validity',
-                                       'expire',
-                                      ]);
+            'name',
+            'number',
+            'company_user_id',
+            'account_id',
+            'direction_id',
+            'validity',
+            'expire',
+        ]);
 
         return Datatables::of($contracts->where('company_user_id', $id))
-            ->filter(function ($query) use ($request,$id) {
+            ->filter(function ($query) use ($request, $id) {
                 if ($request->has('direction') && $request->get('direction') != null) {
                     $query->where('direction_id', '=', $request->get('direction'));
                 } else {
@@ -587,6 +573,7 @@ class NewContractRequestsController extends Controller
                 if ($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
                     $query->where('validity', '=', $request->get('dateO'))->where('expire', '=', $request->get('dateT'));
                 }
+
             })
             ->addColumn('carrier', function ($contracts) {
                 $dd = $contracts->load('carriers.carrier');
@@ -595,6 +582,7 @@ class NewContractRequestsController extends Controller
                 } else {
                     return '-------';
                 }
+
             })
             ->addColumn('direction', function ($contracts) {
                 $dds = $contracts->load('direction');
@@ -619,15 +607,16 @@ class NewContractRequestsController extends Controller
         $dateEnd = \Carbon\Carbon::parse($dateEnd);
         $dateEnd = $dateEnd->addDay()->format('Y-m-d');
 
-        $countNRq = NewContractRequest::whereBetween('created', [$dateStart.' 00:00:00', $dateEnd.' 23:59:59'])->count();
+        $countNRq = NewContractRequest::whereBetween('created', [$dateStart . ' 00:00:00', $dateEnd . ' 23:59:59'])->count();
 
         if ($countNRq <= 100) {
-            $nameFile = 'Request_Fcl_'.$now;
+            $nameFile = 'Request_Fcl_' . $now;
             $data = PrvRequest::RequestFclBetween($dateStart, $dateEnd);
 
             //dd($data->chunk(2));
 
             $myFile = Excel::create($nameFile, function ($excel) use ($data) {
+
                 $excel->sheet('REQUEST_FCL', function ($sheet) use ($data) {
                     $sheet->cells('A1:N1', function ($cells) {
                         $cells->setBackground('#2525ba');
@@ -635,72 +624,72 @@ class NewContractRequestsController extends Controller
                         //$cells->setValignment('center');
                     });
 
-                    $sheet->setWidth([
-                        'A'     =>  10,
-                        'B'     =>  30,
-                        'C'     =>  25,
-                        'D'     =>  10,
-                        'E'     =>  20,
-                        'F'     =>  25,
-                        'G'     =>  15,
-                        'H'     =>  20,
-                        'I'     =>  20,
-                        'J'     =>  25,
-                        'K'     =>  25,
-                        'L'     =>  15,
-                        'M'     =>  15,
-                        'N'     =>  15,
-                    ]);
+                    $sheet->setWidth(array(
+                        'A' => 10,
+                        'B' => 30,
+                        'C' => 25,
+                        'D' => 10,
+                        'E' => 20,
+                        'F' => 25,
+                        'G' => 15,
+                        'H' => 20,
+                        'I' => 20,
+                        'J' => 25,
+                        'K' => 25,
+                        'L' => 15,
+                        'M' => 15,
+                        'N' => 15,
+                    ));
 
-                    $sheet->row(1, [
-                        'Id',
-                        'Company',
-                        'Reference',
-                        'Direction',
-                        'Carrier',
-                        'Validation',
-                        'Date',
-                        'User',
-                        'Username load',
-                        'Time Start',
-                        'Time End',
-                        'Time Elapsed. Minutes',
-                        'Management Time. Hours',
-                        'Status',
-                    ]);
+                    $sheet->row(1, array(
+                        "Id",
+                        "Company",
+                        "Reference",
+                        "Direction",
+                        "Carrier",
+                        "Validation",
+                        "Date",
+                        "User",
+                        "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed. Minutes",
+                        "Management Time. Hours",
+                        "Status",
+                    ));
                     $i = 2;
 
                     $data = $data->chunk(500);
-                    $data = $data->toArray();
+                    $data = $data->toArray();;
                     foreach ($data as $nrequests) {
                         foreach ($nrequests as $nrequest) {
-                            $sheet->row($i, [
-                                'Id'                => $nrequest['id'],
-                                'Company'           => $nrequest['company'],
-                                'Reference'         => $nrequest['reference'],
-                                'Direction'         => $nrequest['direction'],
-                                'Carrier'           => $nrequest['carrier'],
-                                'Validation'        => $nrequest['validation'],
-                                'Date'              => $nrequest['date'],
-                                'User'              => $nrequest['user'],
-                                'Username load'     => $nrequest['username_load'],
-                                'Time Start'        => $nrequest['time_start'],
-                                'Time End'          => $nrequest['time_end'],
-                                'Time Elapsed'      => $nrequest['time_elapsed'],
-                                'Management Time'   => $nrequest['time_manager'],
-                                'Status'            => $nrequest['status'],
-                            ]);
-                            $sheet->setBorder('A1:N'.$i, 'thin');
+                            $sheet->row($i, array(
+                                "Id" => $nrequest['id'],
+                                "Company" => $nrequest['company'],
+                                "Reference" => $nrequest['reference'],
+                                "Direction" => $nrequest['direction'],
+                                "Carrier" => $nrequest['carrier'],
+                                "Validation" => $nrequest['validation'],
+                                "Date" => $nrequest['date'],
+                                "User" => $nrequest['user'],
+                                "Username load" => $nrequest['username_load'],
+                                "Time Start" => $nrequest['time_start'],
+                                "Time End" => $nrequest['time_end'],
+                                "Time Elapsed" => $nrequest['time_elapsed'],
+                                "Management Time" => $nrequest['time_manager'],
+                                "Status" => $nrequest['status'],
+                            ));
+                            $sheet->setBorder('A1:N' . $i, 'thin');
 
-                            $sheet->cells('F'.$i, function ($cells) {
+                            $sheet->cells('F' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
-                            $sheet->cells('K'.$i, function ($cells) {
+                            $sheet->cells('K' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
-                            $sheet->cells('J'.$i, function ($cells) {
+                            $sheet->cells('J' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
@@ -708,22 +697,22 @@ class NewContractRequestsController extends Controller
                         }
                     }
                 });
+
             });
 
             $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
-            $response = [
+            $response = array(
                 'actt' => 1,
-                'name' => $nameFile.'.xlsx', //no extention needed
-                'file' => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'.base64_encode($myFile), //mime type of used format
-            ];
+                'name' => $nameFile . '.xlsx', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($myFile), //mime type of used format
+            );
         } else {
             $auth = \Auth::user()->toArray();
             ExportRequestsJob::dispatch($dateStart, $dateEnd, $auth, 'fcl')->onQueue('operaciones');
-            $response = [
+            $response = array(
                 'actt' => 2,
-            ];
+            );
         }
-
         return response()->json($response);
     }
 
@@ -735,7 +724,6 @@ class NewContractRequestsController extends Controller
         foreach ($requestFc->requestcarriers as $carrierF) {
             array_push($carriers, $carrierF->carrier_id);
         }
-
         return response()->json(['success' => true, 'data' => $requestFc->toArray(), 'carriers' => $carriers]);
     }
 
@@ -743,7 +731,7 @@ class NewContractRequestsController extends Controller
     public function test(Request $request)
     {
         $carrier = carrier::all()->pluck('name', 'id');
-        $direction = [null=>'Please Select'];
+        $direction = [null => 'Please Select'];
         $direction2 = Direction::all();
         $user = \Auth::user();
         foreach ($direction2 as $d) {

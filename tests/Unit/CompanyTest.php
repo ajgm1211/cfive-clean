@@ -1,43 +1,44 @@
 <?php
 
-namespace Tests\Unit;
+// namespace Tests\Unit;
 
-use App\Company;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+// use Tests\TestCase;
+// use App\Company;
+// use Illuminate\Foundation\Testing\WithFaker;
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CompanyTest extends TestCase
-{
-    use DatabaseTransactions;
+// class CompanyTest extends TestCase
+// {
+//     use DatabaseTransactions;
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_if_client_company_is_stored()
-    {
-        $company = factory(Company::class)->create();
+//     /**
+//      * A basic test example.
+//      *
+//      * @return void
+//      */
+//     public function test_if_client_company_is_stored()
+//     {
+//         $company = factory(Company::class)->create();
 
-        $this->seeInDatabase('companies', $company->toArray());
-    }
+//         $this->seeInDatabase('companies', $company->toArray());
+//     }
 
-    public function test_if_client_company_is_updated()
-    {
-        $model = factory(Company::class)->create();
+//     public function test_if_client_company_is_updated()
+//     {
 
-        $company = Company::find($model->id);
+//         $model = factory(Company::class)->create();
 
-        $company->business_name = 'tecnicarbonCA';
+//         $company = Company::find($model->id);
 
-        $company->update();
+//         $company->business_name = 'tecnicarbonCA';
 
-        // $model
+//         $company->update();
 
-        $this->seeInDatabase('companies', [
-            'business_name' => 'tecnicarbonCA',
-        ]);
-    }
-}
+//         // $model
+
+//         $this->seeInDatabase('companies', [
+//             'business_name' => 'tecnicarbonCA'
+//         ]);
+//     }
+// }

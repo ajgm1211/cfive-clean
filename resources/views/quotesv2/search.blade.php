@@ -8,6 +8,14 @@
 body {
     background: #f6f6f6;
 }
+
+.tooltip-inner{
+    background-color: #031B4E; 
+    color: #FFFFFF; 
+    border: 1px solid rgb(0, 85, 128); 
+    padding: 5px;
+    font-size: 11px;
+}
 .bg-manual {
 
 background-color: #969cc0;
@@ -641,6 +649,23 @@ background-color: #36A3F7;
 .hida {
     display: none;
 }
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--done .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: #0072fc;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--current .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: rgba(0, 114, 252, 0.70);
+}
+
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span {
+    width: 3rem;
+    height: 3rem;
+}
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span > span {
+    font-size: 16px;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__progress .progress .progress-bar:after {
+    background-color: #0172fc;
+}
 /* estilos */
 </style>
 @endsection
@@ -648,10 +673,8 @@ background-color: #36A3F7;
 @section('title', 'Quotes')
 @section('content')
 <br>
-
+{!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 <div class="padding">
-    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
-
     <div class="col-lg-12">
         @if ($errors->any())
         <div class="alert alert-danger">
@@ -669,7 +692,7 @@ background-color: #36A3F7;
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
@@ -744,7 +767,8 @@ background-color: #36A3F7;
                                     <select id="origin_harbor" name="originport[]" class="portharbors form-control" multiple="true" required>
                                     @if(@$form['originport'] != null)
                                         @foreach(@$form['originport'] as $origin)
-                                            <option value="{{ $origin }}" selected="selected">{{ $harbors[$origin] }}</option>
+                                        
+                                            <option value="{{ $origin }}"  selected="selected">{{ $harbors[$origin] }}</option>
                                         @endforeach
                                     @endif
                                     </select>
@@ -1172,20 +1196,18 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_search"
-                                        id="quote_search">Search</button>
+                                        id="quote_search"><i class="flaticon-search-magnifier-interface-symbol"></i> &nbsp;Search</button>
                                     <button type="button"
                                         class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide"
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create
-                                        Manual</span></button>
+                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1"><i class="fa fa-plus"></i> Add Contract</span></button>
                                 </center>
                             </div>
                         </div>
@@ -1194,11 +1216,21 @@ background-color: #36A3F7;
             </div>
         </div>
     </div>
-
-    {!! Form::close() !!}
-
-
 </div>
+
+<div class="padding">
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-lg-12" align='right'>
+                    <button type="button" class="btn btn-link quote_man"><i class="fa fa-plus"></i> Create Quote Manually</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{!! Form::close() !!}
 
 
 
@@ -1209,7 +1241,8 @@ background-color: #36A3F7;
 </div>
 <div class="row padding search">
     <!-- Tabla de muestreo de las cotizaciones -->
-    {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
+    {!! Form::open(['class' => 'form-group m-form__group full-width', 'id' => 'rateForm']) !!} 
+    <!-- {!! Form::open(['route' => 'quote.store','class' => 'form-group m-form__group full-width']) !!} -->
     <input type="hidden" id="isDecimal" value="{{ $isDecimal }}">
     <input type="hidden" id="oculto" value="no">
     <input type="hidden" name="form" value="{{ json_encode($form) }}"
@@ -1238,8 +1271,12 @@ background-color: #36A3F7;
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6" align='right'> <button type="submit"
-                                        class="btn m-btn--pill    btn-info">Create Quote</button></div>
+                                <div class="col-lg-6" align='right'> 
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')" title="New Feature">
+                                        Create FCL Quote
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -1934,7 +1971,16 @@ background-color: #36A3F7;
         </div>
     </div>
 </div>
+
+
+
 @include('companies.partials.companiesModal')
+@include('quotesv2.partials.createContractModal')
+
+
+
+
+
 
 @endsection
 
@@ -1970,7 +2016,9 @@ precargar()
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript">
+
 </script>
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete"
     async defer></script>
@@ -2077,6 +2125,14 @@ function AbrirModal(action, id) {
             });
         });
     }
+    if (action == "addContract") {
+        var url = '{{ route("quotesv2.addContract") }}';
+        $('.modal-body').load(url, function() {
+            $('#createContractModal').modal({
+                show: true
+            });
+        });
+    }
 }
 $('#delivery_type').on('change', function() {
     var value = $(this).val();
@@ -2125,7 +2181,7 @@ $('#quoteType').on('change', function() {
             '</ul>' +
             '</span>' +
             '<span class="c5-select-multiple-container ' + clickOnID + '">' +
-            '<span class="c5-select-header">Types</span>' +
+           /*  '<span class="c5-select-header">Types</span>' +
             '<ul class="c5-select-list list-types-carriers">' +
             '<li class="c5-case"><label class="c5-label">CMA CGM Spot' +
             '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">' +
@@ -2136,7 +2192,7 @@ $('#quoteType').on('change', function() {
             '<li class="c5-case"><label class="c5-label">SAFMARINE Spot' +
             '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">' +
             '<span class="checkmark"></span></label></li>' +
-            '</ul>' +
+            '</ul>' + */
             '<span class="c5-select-header">Carriers</span>' +
             '<span class="c5-select-container-close">' +
             '<i class="fa fa-times" aria-hidden="true"></i>' +
@@ -2371,6 +2427,54 @@ function getContainerByGroup(id_group) {
         }
     });
 }
+
+$('#mySelect2').select2({
+  // ...
+  templateSelection: function (data, container) {
+    // Add custom attributes to the <option> tag for the selected option
+    $(data.element).attr('data-custom-attribute', data.customValue);
+    return data.text;
+  }
+});
+
+var uploadedDocumentMap = {}
+  Dropzone.options.documentDropzone = {
+    url: '{{ route('contracts.storeMedia') }}',
+    maxFilesize: 2, // MB
+    addRemoveLinks: true,
+    headers: {
+    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+  },
+    success: function (file, response) {
+      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">');
+      uploadedDocumentMap[file.name] = response.name
+      $('#m_form').find('input[name="existsFile"]').val(1);
+    },
+      removedfile: function (file) {
+        file.previewElement.remove()
+        var name = ''
+        if (typeof file.file_name !== 'undefined') {
+          name = file.file_name
+        } else {
+          name = uploadedDocumentMap[file.name]
+        }
+        $
+        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove();
+        $('#m_form').find('input[name="existsFile"]').val('');
+      },
+        init: function () {
+          @if(isset($project) && $project->document)
+          var files =
+              {!! json_encode($project->document) !!}
+          for (var i in files) {
+            var file = files[i]
+            this.options.addedfile.call(this, file)
+            file.previewElement.classList.add('dz-complete')
+            $('m_form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
+          }
+          @endif
+        }
+        }
 </script>
 
 @stop

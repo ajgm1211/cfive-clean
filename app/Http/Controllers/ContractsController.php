@@ -257,6 +257,9 @@ class ContractsController extends Controller
         ]);
     }
 
+
+
+
     public function store(Request $request)
     {
         $contract = new Contract($request->all());
