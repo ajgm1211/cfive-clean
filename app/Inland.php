@@ -28,6 +28,7 @@ class Inland extends Model implements Auditable
         'company_user_id',
         'gp_container_id',
         'direction_id',
+        'provider_id'
     ];
 
     public function inlandRange()
@@ -53,6 +54,11 @@ class Inland extends Model implements Auditable
     public function direction()
     {
         return $this->belongsTo('App\Direction');
+    }
+
+    public function providers()
+    {
+        return $this->belongsTo('App\Provider', 'provider_id');
     }
 
     public function inland_company_restriction()

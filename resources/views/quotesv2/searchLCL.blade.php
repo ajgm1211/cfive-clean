@@ -796,7 +796,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-1">
-                                <label>Quote Type</label>
+                                <label>Type</label>
                                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$quoteType,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
@@ -1315,7 +1315,7 @@
         <div class="row padding search">
             <!-- Tabla de muestreo de las cotizaciones -->
             <div class="container-fluid">
-                {!! Form::open(['route' => 'quotes-v2.storeLCL','class' => 'form-group m-form__group']) !!}
+                {!! Form::open(['class' => 'form-group m-form__group full-width', 'id' => 'rateForm']) !!}
                 <input type="hidden" name="forma" value="aaaaaa">
                 <input type="hidden" name="form" value="{{ json_encode($form) }}"
                     class="btn btn-sm btn-default btn-bold btn-upper formu">
@@ -1344,8 +1344,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6" align='right'> <button type="submit"
-                                                    class="btn m-btn--pill    btn-info">Create Quote</button></div>
+                                            <div class="col-lg-6" align='right'> 
+                                                <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'LCL')"><b>Create Quote</b></button>
+                                                <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'LCL')" title="New Feature">
+                                                    Create LCL Quote
+                                                </button>
+                                            </div>
+                                            <!--<div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill  btn-info">Create Quote</button></div>-->
                                         </div>
 
                                         <div class="row">
@@ -1383,6 +1388,7 @@
                                         <div class="col-lg-12"><br><br></div>
                                     </div>
                                     @foreach($arreglo as $arr)
+
                                     <!-- Empieza tarjeta de cotifzacion -->
 
                                     <div class="card-p__quotes input-select{{$loop->iteration}}"
@@ -1568,7 +1574,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1654,7 +1660,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>
@@ -1689,7 +1695,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span class="colorphacode">
-                                                            {{ $rates['total'] }}</span></div>
+                                                    {{ $rates['subtotal'] }}  {{ $rates['currency'] }} </span></div>
 
                                                 </div>
                                                 @endforeach
@@ -1712,12 +1718,12 @@
 
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}
+                                                                    {{ number_format($localfreight['montoMarkup'] /   $localfreight['cantidad'], 2, '.', '') }}
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
                                                                 <span class="bg-rates">
-                                                                    {{ $localfreight['monto']}} </span>
+                                                                    {{ $localfreight['montoMarkup']}} </span>
                                                             </div>
 
                                                             <div class="wth">
@@ -1725,14 +1731,14 @@
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
-                                                                <span class="bg-rates"> {{ $localfreight['currency']}}
+                                                                <span class="bg-rates"> {{ $arr->rateCurrency }}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-1"><span
                                                             class="colorphacode">{{ $localfreight['montoMarkup']}}
-                                                            {{ $arr->quoteCurrency }}</span></div>
+                                                            {{ $arr->rateCurrency }}</span></div>
                                                 </div>
                                                 @endforeach
                                                 @endforeach
@@ -1741,7 +1747,7 @@
                                                 <div class="row bg-light">
                                                     <div class="col-lg-4 col-lg-offset-"><span
                                                             class="portalphacode">Subtotal Freight Charges :
-                                                        </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
+                                                        </span>{{ $arr->totalFreightOrig  }} {{ $arr->rateCurrency }}</div>
                                                     <div class="col-lg-7">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="wth"><span class="portalphacode"></span></div>
@@ -1772,7 +1778,7 @@
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Price Per
                                                                     Units</span></div>
-                                                            <div class="wth"><span class="portalphacode">Ammount</span>
+                                                            <div class="wth"><span class="portalphacode">Amount</span>
                                                             </div>
                                                             <div class="wth"><span class="portalphacode">Markup</span>
                                                             </div>

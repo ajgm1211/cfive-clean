@@ -9,11 +9,12 @@
 
         </style>
     </head>
-    <body style="background-color: white; font-size: 11px;">
-        <!-- HEADER -->
-        @include('quotesv2.pdf.partials.header')
-
+    <body style="background-color: white; font-size: 11px; margin: 50px 50px 50px 50px">
+        
         <main>
+            <!-- HEADER -->
+            @include('quotesv2.pdf.partials.header')
+
             <!-- DETAILS -->
             @include('quotesv2.pdf.partials.details_fcl') 
 
@@ -37,8 +38,13 @@
             
             <!-- PAYMENTS CONDITIONS -->
             @include('quotesv2.pdf.partials.payments_conditions')
+
+            <!-- FOOTER -->
+            @include('quotesv2.pdf.partials.footer')
         </main>
-        <!-- FOOTER -->
-        @include('quotesv2.pdf.partials.footer')
+        
+
+        <div class="footer-page" style="background: {{ $user->companyUser->colors_pdf }}"></div>
+        
     </body>
 </html>

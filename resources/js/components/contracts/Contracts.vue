@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid">
 		<div class="row mt-5">
-			<div class="col-12 mb-5">
+			<div class="col-12 mb-2" style="padding: 0px 50px">
 				<a href="/api/contracts/" class="p-light quote-link">
 					<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
 				</a>
@@ -29,6 +29,7 @@
 							:equipment="equipment" 
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
+							:contractData="currentData"
 							></ocean-freight>
 						</b-tab>
 
@@ -41,7 +42,7 @@
 							</surcharges>
 						</b-tab>
 
-						<b-tab title="Restrictions">
+						<b-tab title="Only Apply To">
 							<restrictions v-if="loaded"
 								:datalists="datalists"
 								:actions="actions.restrictions"

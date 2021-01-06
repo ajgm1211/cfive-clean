@@ -4,17 +4,10 @@ namespace App\Http\Controllers;
 
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
-use App\Company;
-use App\Contact;
 use App\Http\Requests\StoreApiIntegration;
-use App\Jobs\SyncCompaniesJob;
+use App\Jobs\SyncCompaniesEvery30Job;
 use App\Partner;
-use App\Vforwarding;
-use App\Visualtrans;
-use GuzzleHttp\Client;
-use GuzzleHttp\Message\Request as ClienteR;
-use GuzzleHttp\Message\Response;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiIntegrationController extends Controller
 {
@@ -40,17 +33,37 @@ class ApiIntegrationController extends Controller
     {
         $api = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
 
-        if (! empty($api)) {
-            $api->enable = $request->enable;
-            $api->update();
+        if (!empty($api)) {
+            DB::table('api_integration_settings')->update(['status' => $request->enable]);
+            DB::table('api_integrations')->update(['status' => $request->enable]);
         } else {
             $api = new ApiIntegrationSetting();
             $api->company_user_id = $request->company_user_id;
-            $api->enable = $request->enable;
+            $api->status = $request->enable;
             $api->save();
         }
 
         return response()->json(['data' => $api]);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function status(Request $request)
+    {
+        $apiU = ApiIntegration::where('id', $request->id)->first();
+
+        if (!empty($apiU)) {
+            $apiU->status = $request->status;
+            $apiU->update();
+        } else {
+            $apiU = new ApiIntegration();
+            $apiU->status = $request->status;
+            $apiU->save();
+        }
+
+        return response()->json(['data' => $apiU]);
     }
 
     /**
@@ -71,7 +84,9 @@ class ApiIntegrationController extends Controller
      */
     public function store(StoreApiIntegration $request)
     {
-        ApiIntegration::create($request->all());
+        $ap = new ApiIntegration($request->all());
+        $ap->status = 0;
+        $ap->save();
 
         $request->session()->flash('message.content', 'Record saved successfully');
         $request->session()->flash('message.nivel', 'success');
@@ -141,46 +156,14 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
-            $query->where('company_user_id', \Auth::user()->company_user_id);
-        })->with('partner')->first();
-
-        $setting->status = 1;
-        $setting->save();
-
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8'],
-        ]);
-
-        switch ($setting->partner->name) {
-            case 'vForwarding':
-                $endpoint = $setting->url.$setting->api_key;
-                $data = new Vforwarding();
-                $response = $data->getData($client, $endpoint, $setting);
-            break;
-            case 'Visualtrans':
-                $endpoint = $setting->url.$setting->api_key;
-                $data = new Visualtrans();
-                $response = $data->getData($client, $endpoint, $setting);
-            break;
-        }
-
-        if (! $response) {
-            return response()->json(['message' => 'Something went wrong on our side']);
-        }
-
-        $setting->status = 0;
-        $setting->save();
-
-        return response()->json(['message' => 'Ok']);
+        SyncCompaniesEvery30Job::dispatch();
     }
 
     public function getContacts($company_id)
     {
         $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
 
-        $endpoint = 'https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D='.$company_id.'&api_key='.$api->api_key;
+        $endpoint = 'https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D=' . $company_id . '&api_key=' . $api->api_key;
 
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
@@ -198,7 +181,7 @@ class ApiIntegrationController extends Controller
 
             return $api_response;
         } catch (\Exception $e) {
-            return 'Error: '.$e;
+            return 'Error: ' . $e;
         }
     }
 }

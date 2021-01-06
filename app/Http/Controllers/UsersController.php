@@ -7,7 +7,6 @@ use App\Http\Requests\StoreUsers;
 use App\Mail\VerifyMail;
 use App\Notifications\SlackNotification;
 use App\QuoteV2;
-use App\Subuser;
 use App\TermAndConditionV2;
 use App\User;
 use App\VerifyUser;
@@ -19,11 +18,10 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
 use Intercom\IntercomClient;
 use Laracasts\Flash\Flash;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
+
     public function index()
     {
         //
@@ -47,8 +45,10 @@ class UsersController extends Controller
      */
     public function store(StoreUsers $request)
     {
+
         try {
-            if ($request->type == 'subuser' || $request->type == 'data_entry') {
+            if ($request->type == "subuser" || $request->type == "data_entry") {
+
                 $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
             }
 
@@ -57,27 +57,27 @@ class UsersController extends Controller
             }
 
             $user = new User($request->all());
-            $user->password = bcrypt($request->password);
+            $user->password = $request->password;
             $user->save();
-            if ($request->type == 'subuser') {
+            if ($request->type == "subuser") {
                 $user->assignRole('subuser');
             }
-            if ($request->type == 'company') {
+            if ($request->type == "company") {
                 $user->assignRole('company');
             }
-            if ($request->type == 'admin') {
+            if ($request->type == "admin") {
                 $user->assignRole('administrator');
             }
-            if ($request->type == 'data_entry') {
+            if ($request->type == "data_entry") {
                 $user->assignRole('data_entry');
             }
-            $message = $user->name.' '.$user->lastname.' has been registered in Cargofive.';
+            $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
             $user->notify(new SlackNotification($message));
 
             VerifyUser::create([
-        'user_id' => $user->id,
-        'token' => str_random(40),
-      ]);
+                'user_id' => $user->id,
+                'token' => str_random(40),
+            ]);
 
             \Mail::to($user->email)->send(new VerifyMail($user));
 
@@ -87,23 +87,26 @@ class UsersController extends Controller
             $this->intercom($client, $user);
 
             if ($user->company_user_id != '') {
+
                 $client->users->create([
-          'email' => $user->email,
-          'user_id' => $user->id,
-          'name' => $user->name,
-          'companies' => [
-            [
-              'name' => $user->companyUser->name,
-              'company_id' => $user->company_user_id,
-            ],
-          ],
-        ]);
+                    "email" => $user->email,
+                    "user_id" => $user->id,
+                    "name" => $user->name,
+                    "companies" => [
+                        [
+                            "name" => $user->companyUser->name,
+                            "company_id" => $user->company_user_id,
+                        ],
+                    ],
+                ]);
+
             } else {
+
                 $client->users->create([
-          'email' => $user->email,
-          'user_id' =>$user->id,
-          'name' => $user->name,
-        ]);
+                    "email" => $user->email,
+                    "user_id" => $user->id,
+                    "name" => $user->name,
+                ]);
             }
 
             $request->session()->flash('message.nivel', 'success');
@@ -112,6 +115,7 @@ class UsersController extends Controller
 
             return redirect('users/home');
         } catch (\Exception $e) {
+
             $error = 'An error has occurred. Try again';
             // if ($e->errorInfo[0] == '23000') {
             //   $error = 'The email address entered is already registered';
@@ -151,10 +155,8 @@ class UsersController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'The email has been sent successfully ');
-
         return redirect('users/home');
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -177,6 +179,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'name' => 'required',
             'lastname' => 'required',
@@ -184,27 +187,28 @@ class UsersController extends Controller
                 'required',
                 Rule::unique('users')->ignore($id),
             ],
-            'password' => 'sometimes|required',
+            'password' => 'sometimes|confirmed',
+            'password_confirmation' => 'required_with:password',
         ]);
 
         $requestForm = $request->all();
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $roles = $user->getRoleNames();
 
-        if (! $roles->isEmpty()) {
+        if (!$roles->isEmpty()) {
             $user->removeRole($roles[0]);
         }
 
-        if ($request->type == 'admin') {
+        if ($request->type == "admin") {
             $user->assignRole('administrator');
         }
-        if ($request->type == 'subuser') {
+        if ($request->type == "subuser") {
             $user->assignRole('subuser');
         }
-        if ($request->type == 'company') {
+        if ($request->type == "company") {
             $user->assignRole('company');
         }
-        if ($request->type == 'data_entry') {
+        if ($request->type == "data_entry") {
             $user->assignRole('data_entry');
         }
 
@@ -227,13 +231,14 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
         $user = User::find($id);
         $user->delete();
 
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
-        $cliente = $client->users->getUsers(['email' => $user->email]);
+        $cliente = $client->users->getUsers(["email" => $user->email]);
 
         if ($cliente->total_count > 0) {
             foreach ($cliente->users as $cli) {
@@ -256,7 +261,7 @@ class UsersController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully deleted : '.$user->name.' '.$user->lastname);
+        $request->session()->flash('message.content', 'You successfully deleted : ' . $user->name . ' ' . $user->lastname);
 
         return redirect()->route('users.home');
     }
@@ -271,7 +276,6 @@ class UsersController extends Controller
 
         return view('users/message', ['userid' => $id, 'users' => $users]);
     }
-
     public function resetmsg($id)
     {
         return view('users/messagereset', ['userid' => $id]);
@@ -285,7 +289,7 @@ class UsersController extends Controller
         }
 
         if (Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser') {
-            $data = User::where('company_user_id', '=', Auth::user()->company_user_id)->with('companyUser')->get();
+            $data = User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->get();
         }
 
         return view('users/indexhtml', ['arreglo' => $data]);
@@ -293,10 +297,10 @@ class UsersController extends Controller
 
     public function datajson()
     {
+
         $user = new User();
 
         $response = User::all('name', 'lastname', 'email', 'rol')->toJson();
-
         return view('users/indexjson')->with('url', $response);
     }
 
@@ -310,7 +314,6 @@ class UsersController extends Controller
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'User has been disabled successfully!');
-
             return redirect()->route('users.home');
         } else {
             $user->state = 1;
@@ -318,7 +321,6 @@ class UsersController extends Controller
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'User has been activated successfully!');
-
             return redirect()->route('users.home');
         }
     }
@@ -326,15 +328,12 @@ class UsersController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         return redirect('/login');
     }
-
     public function notifications()
     {
         return auth()->user()->unreadNotifications()->limit(4)->get()->toArray();
     }
-
     public function notifications_read()
     {
         return auth()->user()->notifications()->limit(4)->get()->toArray();
@@ -357,7 +356,6 @@ class UsersController extends Controller
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'User has been verified successfully!');
-
             return redirect()->route('users.home');
         } else {
             $user->verified = 0;
@@ -365,17 +363,16 @@ class UsersController extends Controller
             $request->session()->flash('message.nivel', 'warning');
             $request->session()->flash('message.title', 'Alert!');
             $request->session()->flash('message.content', 'This user has been placed as unverified!');
-
             return redirect()->route('users.home');
         }
     }
-
     public function intercom($client, $user)
     {
-        $cliente = $client->users->getUsers(['email' => $user->email]);
+
+        $cliente = $client->users->getUsers(["email" => $user->email]);
         if ($cliente->total_count > 1) {
             foreach ($cliente->users as $u) {
-                if ($u->type == 'user') {
+                if ($u->type == "user") {
                     if ($u->user_id != $user->id) {
                         $client->users->archiveUser($u->id);
                     }

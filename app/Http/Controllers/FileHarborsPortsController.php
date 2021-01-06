@@ -4,18 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Country;
 use App\Harbor;
-use App\Harbor_copy;
-use Excel;
+use HelperAll;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Yajra\Datatables\Datatables;
 
 class FileHarborsPortsController extends Controller
 {
     public function index()
     {
-        return  view('harbors.index');
+        return view('harbors.index');
     }
 
     public function create()
@@ -24,42 +20,49 @@ class FileHarborsPortsController extends Controller
         $harbors = \DB::select('call  proc_harbors');
 
         return Datatables::of($harbors)
-      ->addColumn('name', function ($harbors) {
-          return '<span id="tdname'.$harbors->id.'">'.$harbors->name.'</span>';
-      })
-      ->addColumn('code', function ($harbors) {
-          return '<span id="tdcode'.$harbors->id.'">'.$harbors->code.'</span>';
-      })
-      ->addColumn('display_name', function ($harbors) {
-          return '<span id="tddisplay_name'.$harbors->id.'">'.$harbors->display_name.'</span>';
-      })
-      ->addColumn('coordinates', function ($harbors) {
-          return '<span id="tdcoordinates'.$harbors->id.'">'.$harbors->coordinates.'</span>';
-      })
-      ->addColumn('country_id', function ($harbors) {
-          return '<span id="tdcountry'.$harbors->id.'">'.$harbors->country_id.'</span>';
-      })
-      ->addColumn('varation', function ($harbors) {
-          return '<span id="tdvaration'.$harbors->id.'">'.$harbors->varation.'</span>';
-      })
-      ->addColumn('action', function ($harbor) {
-          return '<a href="#" data-id-edit="'.$harbor->id.'" onclick="showModal(2,'.$harbor->id.')" class=""><i class="la  la-edit"></i></a>
-                        &nbsp 
-                        &nbsp  <a href="#" data-id-remove="'.$harbor->id.'" class="BorrarHarbor"><i class="la  la-remove"></i></a>
-                        &nbsp 
-                        &nbsp  <a href="/inlandD/find/'.setearRouteKey($harbor->id).'" data-id-distance="'.setearRouteKey($harbor->id).'" class=""><i class="la  la-pencil"></i></a>
+            ->addColumn('name', function ($harbors) {
+                return '<span id="tdname' . $harbors->id . '">' . $harbors->name . '</span>';
+            })
+            ->addColumn('code', function ($harbors) {
+                return '<span id="tdcode' . $harbors->id . '">' . $harbors->code . '</span>';
+            })
+            ->addColumn('display_name', function ($harbors) {
+                return '<span id="tddisplay_name' . $harbors->id . '">' . $harbors->display_name . '</span>';
+            })
+            ->addColumn('coordinates', function ($harbors) {
+                return '<span id="tdcoordinates' . $harbors->id . '">' . $harbors->coordinates . '</span>';
+            })
+            ->addColumn('country_id', function ($harbors) {
+                return '<span id="tdcountry' . $harbors->id . '">' . $harbors->country_id . '</span>';
+            })
+            ->addColumn('varation', function ($harbors) {
+                return '<span id="tdvaration' . $harbors->id . '">' . $harbors->varation . '</span>';
+            })
+            ->addColumn('action', function ($harbor) {
+
+                $color = HelperAll::statusColorHarbor($harbor->hierarchy);
+                $colorear = 'color:' . $color[0];
+                $deshabilitar = $color[1];
+                return '<a href="#" data-id-edit="' . $harbor->id . '" onclick="showModal(2,' . $harbor->id . ')" class=""><i class="la  la-edit"></i></a>
+                        &nbsp
+                        &nbsp  <a href="#" data-id-remove="' . $harbor->id . '" class="BorrarHarbor"><i class="la  la-remove"></i></a>
+                        &nbsp
+                        &nbsp  <a href="/inlandD/find/' . setearRouteKey($harbor->id) . '" data-id-distance="' . setearRouteKey($harbor->id) . '" class=""><i class="la  la-pencil"></i></a>
+                        &nbsp&nbsp
+
+                        <a readonly="true" href="#" "style="' . $colorear . ' ' . $deshabilitar . ' "data-id-edit="' . $harbor->id . '" onclick="showModal(3,' . $harbor->id . ',' . $deshabilitar . ')" class=""><i style="' . $colorear . '" class="la  la-edit" ></i></a>
 
                         ';
-      })
+            })
 
-      ->make();
+            ->make();
     }
 
     public function loadviewAdd()
     {
         $country = Country::all()->pluck('name', 'id');
 
-        return  view('harbors.Body-Modals.add', compact('country'));
+        return view('harbors.Body-Modals.add', compact('country'));
     }
 
     public function store(Request $request)
@@ -84,23 +87,23 @@ class FileHarborsPortsController extends Controller
 
         $harbor->load('country');
 
-        $buttons = '<a href="#" data-id-edit="'.$harbor->id.'" onclick="showModal(2,'.$harbor->id.')" class=""><i class="la  la-edit"></i></a>
-		&nbsp &nbsp  <a href="#" data-id-remove="'.$harbor->id.'" class="BorrarHarbor"><i class="la  la-remove"></i></a>';
+        $buttons = '<a href="#" data-id-edit="' . $harbor->id . '" onclick="showModal(2,' . $harbor->id . ')" class=""><i class="la  la-edit"></i></a>
+		&nbsp &nbsp  <a href="#" data-id-remove="' . $harbor->id . '" class="BorrarHarbor"><i class="la  la-remove"></i></a>';
 
         $data = [
-      'name'          => $harbor->name,
-      'code'          => $harbor->code,
-      'display_name'  => $harbor->display_name,
-      'coordinates'   => $harbor->coordinates,
-      'country_id'    => $harbor->country->name,
-      'varation'      => $json,
-      'action'		=> $buttons,
-    ];
+            'name' => $harbor->name,
+            'code' => $harbor->code,
+            'display_name' => $harbor->display_name,
+            'coordinates' => $harbor->coordinates,
+            'country_id' => $harbor->country->name,
+            'varation' => $json,
+            'action' => $buttons,
+        ];
 
-        return response()->json(['success' => true, 'data'=> $data]);
-        //		$request->session()->flash('message.nivel', 'success');
-    //		$request->session()->flash('message.content', 'Your Harbor was created');
-    //		return redirect()->route('UploadFile.index');
+        return response()->json(['success' => true, 'data' => $data]);
+        //        $request->session()->flash('message.nivel', 'success');
+        //        $request->session()->flash('message.content', 'Your Harbor was created');
+        //        return redirect()->route('UploadFile.index');
     }
 
     public function show($id)
@@ -110,7 +113,7 @@ class FileHarborsPortsController extends Controller
         $decodejosn = json_decode($harbors->varation, true);
         $decodejosn = $decodejosn['type'];
 
-        return  view('harbors.Body-Modals.edit', compact('country', 'harbors', 'decodejosn'));
+        return view('harbors.Body-Modals.edit', compact('country', 'harbors', 'decodejosn'));
     }
 
     public function edit($id)
@@ -139,16 +142,16 @@ class FileHarborsPortsController extends Controller
         $harbor->update();
         $harbor->load('country');
         $data = [
-      'id'          	=> $harbor->id,
-      'name'          => $harbor->name,
-      'code'          => $harbor->code,
-      'display_name'  => $harbor->display_name,
-      'coordinates'   => $harbor->coordinates,
-      'country_id'    => $harbor->country->name,
-      'varation'      => $json,
-    ];
+            'id' => $harbor->id,
+            'name' => $harbor->name,
+            'code' => $harbor->code,
+            'display_name' => $harbor->display_name,
+            'coordinates' => $harbor->coordinates,
+            'country_id' => $harbor->country->name,
+            'varation' => $json,
+        ];
 
-        return response()->json(['success' => true, 'data'=> $data]);
+        return response()->json(['success' => true, 'data' => $data]);
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your Harbor was updated');
 

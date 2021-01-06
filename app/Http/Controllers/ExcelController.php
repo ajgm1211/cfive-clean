@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\AutomaticRate;
+use App\CalculationType;
 use App\CompanyUser;
 use App\Container;
+use App\ContainerCalculation;
 use App\Currency;
-use App\Harbor;
 use App\Http\Traits\QuoteV2Trait;
 use App\QuoteV2;
+use App\Rate;
 use App\SaleTermV2;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ExcelController extends Controller
@@ -132,7 +133,7 @@ class ExcelController extends Controller
                 if ($hide != 'hidden') {
                     foreach ($containers as $c) {
                         if ($c->code == $k) {
-                            $str .= $k.' ';
+                            $str .= $k . ' ';
                         }
                     }
                 }
@@ -149,20 +150,20 @@ class ExcelController extends Controller
             $sheet->setCellValue('C19', $quote->type == 'FCL' ? 'N/A' : $quote->total_quantity);
 
             $sheet->setCellValue('B20', 'Dimensiones:');
-            $sheet->setCellValue('C20', $quote->type == 'FCL' ? 'N/A' : @$quote->packing_load->height.' x '.@$quote->packing_load->width.' x '.@$quote->packing_load->large);
+            $sheet->setCellValue('C20', $quote->type == 'FCL' ? 'N/A' : @$quote->packing_load->height . ' x ' . @$quote->packing_load->width . ' x ' . @$quote->packing_load->large);
 
             $sheet->setCellValue('B21', 'Peso Bruto:');
-            $sheet->setCellValue('C21', $quote->type == 'FCL' ? 'N/A' : $quote->total_weight.' Kg');
+            $sheet->setCellValue('C21', $quote->type == 'FCL' ? 'N/A' : $quote->total_weight . ' Kg');
 
             $sheet->setCellValue('B22', 'Volumen:');
-            $sheet->setCellValue('C22', $quote->type == 'FCL' ? 'N/A' : $quote->total_volume.' m3');
+            $sheet->setCellValue('C22', $quote->type == 'FCL' ? 'N/A' : $quote->total_volume . ' m3');
 
             $sheet->setCellValue('A24', '7)');
             $sheet->setCellValue('B24', 'POL:');
-            $sheet->setCellValue('C24', $item->origin_port->name.', '.$item->origin_port->code);
+            $sheet->setCellValue('C24', $item->origin_port->name . ', ' . $item->origin_port->code);
 
             $sheet->setCellValue('B25', 'POD:');
-            $sheet->setCellValue('C25', $item->destination_port->name.', '.$item->destination_port->code);
+            $sheet->setCellValue('C25', $item->destination_port->name . ', ' . $item->destination_port->code);
 
             $sheet->setCellValue('A27', '8)');
             $sheet->setCellValue('B27', 'Dirección de recolección:');
@@ -219,16 +220,16 @@ class ExcelController extends Controller
             $sheet->setCellValue('C41', 'Detalle');
             if ($quote->type == 'FCL') {
                 $col = 'D';
-                $spreadsheet->getSheet($key)->getStyle($col.'41')->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle($col . '41')->applyFromArray($styleArray);
                 foreach ($equipmentHides as $k => $hide) {
                     foreach ($containers as $c) {
-                        if ($c->code == $k && $hide == '') {
-                            $sheet->setCellValue($col++.'41', $k);
-                            $spreadsheet->getSheet($key)->getStyle($col.'41')->applyFromArray($styleArray);
+                        if ($c->code == $k && $hide == "") {
+                            $sheet->setCellValue($col++ . '41', $k);
+                            $spreadsheet->getSheet($key)->getStyle($col . '41')->applyFromArray($styleArray);
                         }
                     }
                 }
-                $sheet->setCellValue($col.'41', 'Moneda');
+                $sheet->setCellValue($col . '41', 'Moneda');
             } else {
                 $sheet->setCellValue('D41', 'Unidades');
                 $sheet->setCellValue('E41', 'Precio');
@@ -245,32 +246,34 @@ class ExcelController extends Controller
             if ($quote->type == 'LCL' || $quote->type == 'AIR') {
                 foreach ($item->charge_lcl_air as $charge) {
                     $type = $this->getAmountType($charge->type_id);
-                    $sheet->setCellValue('B'.$i, $type);
+                    $sheet->setCellValue('B' . $i, $type);
                     if ($charge->surcharge_id == '') {
-                        $sheet->setCellValue('C'.$i, 'Ocean freight');
+                        $sheet->setCellValue('C' . $i, 'Ocean freight');
                     } else {
-                        $sheet->setCellValue('C'.$i, @$charge->surcharge->name);
+                        $sheet->setCellValue('C' . $i, @$charge->surcharge->name);
                     }
-                    $sheet->setCellValue('D'.$i, $charge->units);
-                    $sheet->setCellValue('E'.$i, (($charge->units * $charge->price_per_unit) + $charge->markup) / $charge->units);
-                    $sheet->setCellValue('F'.$i, ($charge->units * $charge->price_per_unit) + $charge->markup);
-                    $sheet->setCellValue('G'.$i, $charge->currency->alphacode);
-                    $spreadsheet->getSheet($key)->getStyle('D'.$i)->applyFromArray($styleArray);
-                    $spreadsheet->getSheet($key)->getStyle('E'.$i)->applyFromArray($styleArray);
-                    $spreadsheet->getSheet($key)->getStyle('F'.$i)->applyFromArray($styleArray);
-                    $spreadsheet->getSheet($key)->getStyle('G'.$i)->applyFromArray($styleArray);
+                    $sheet->setCellValue('D' . $i, $charge->units);
+                    $sheet->setCellValue('E' . $i, (($charge->units * $charge->price_per_unit) + $charge->markup) / $charge->units);
+                    $sheet->setCellValue('F' . $i, ($charge->units * $charge->price_per_unit) + $charge->markup);
+                    $sheet->setCellValue('G' . $i, $charge->currency->alphacode);
+                    $spreadsheet->getSheet($key)->getStyle('D' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('E' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('F' . $i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle('G' . $i)->applyFromArray($styleArray);
                     $i++;
                 }
             } else {
+
                 $this->calculateFcl($item, $containers);
 
                 foreach ($item->charge as $charge) {
+
                     $col_amount = 'D';
-                    $spreadsheet->getSheet($key)->getStyle($col_amount.$i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
 
                     foreach ($containers as $c) {
-                        ${'sum_'.$c->code} = 0;
-                        ${'sum_m'.$c->code} = 0;
+                        ${'sum_' . $c->code} = 0;
+                        ${'sum_m' . $c->code} = 0;
                         $total = 0;
                         $total_m = 0;
                     }
@@ -282,41 +285,41 @@ class ExcelController extends Controller
                     $markups = $this->processOldContainers($markups, 'markups');
 
                     foreach ($containers as $c) {
-                        if (isset($amounts['c'.$c->code])) {
-                            ${'sum_'.$c->code} += @$charge->${'total_'.$c->code};
-                            $total += ${'sum_'.$c->code};
+                        if (isset($amounts['c' . $c->code])) {
+                            ${'sum_' . $c->code} += @$charge->${'total_' . $c->code};
+                            $total += ${'sum_' . $c->code};
                         }
 
-                        if (isset($markups['m'.$c->code])) {
-                            ${'sum_m'.$c->code} += @$charge->${'total_'.$c->code};
-                            $total_m += ${'sum_m'.$c->code};
+                        if (isset($markups['m' . $c->code])) {
+                            ${'sum_m' . $c->code} += @$charge->${'total_' . $c->code};
+                            $total_m += ${'sum_m' . $c->code};
                         }
                     }
 
                     $type = $this->getAmountType($charge->type_id);
                     if ($charge->surcharge_id == '') {
-                        $sheet->setCellValue('B'.$i, 'Ocean freight');
+                        $sheet->setCellValue('B' . $i, 'Ocean freight');
                     } else {
-                        $sheet->setCellValue('B'.$i, @$charge->surcharge->name);
+                        $sheet->setCellValue('B' . $i, @$charge->surcharge->name);
                     }
-                    $sheet->setCellValue('C'.$i, @$charge->calculation_type->name);
+                    $sheet->setCellValue('C' . $i, @$charge->calculation_type->name);
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
-                            if ($c->code == $k && $hide == '') {
-                                $sheet->setCellValue($col_amount++.$i, @$amounts['c'.$c->code] + @$markups['m'.$c->code]);
-                                $spreadsheet->getSheet($key)->getStyle($col_amount.$i)->applyFromArray($styleArray);
+                            if ($c->code == $k && $hide == "") {
+                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code]+@$markups['m' . $c->code]);
+                                $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
                             }
                         }
                     }
-                    $sheet->setCellValue($col_amount.$i, $charge->currency->alphacode);
-                    $spreadsheet->getSheet($key)->getStyle($col_amount.$i)->applyFromArray($styleArray);
+                    $sheet->setCellValue($col_amount . $i, $charge->currency->alphacode);
+                    $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
 
                     $i++;
                 }
 
                 foreach ($item->inland as $inland) {
                     $col_inland = 'D';
-                    $spreadsheet->getSheet($key)->getStyle($col_inland.$i)->applyFromArray($styleArray);
+                    $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
 
                     $inland_rates = json_decode($inland->rate, true);
                     $inland_markups = json_decode($inland->markup, true);
@@ -324,17 +327,17 @@ class ExcelController extends Controller
                     $inland_rates = $this->processOldContainers($inland_rates, 'amounts');
                     $inland_markups = $this->processOldContainers($inland_markups, 'markups');
 
-                    $sheet->setCellValue('B'.$i, $inland->provider);
-                    $sheet->setCellValue('C'.$i, $inland->distance.' Km');
+                    $sheet->setCellValue('B' . $i, $inland->provider);
+                    $sheet->setCellValue('C' . $i, $inland->distance . ' Km');
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
-                            if ($c->code == $k && $hide == '') {
-                                $sheet->setCellValue($col_inland++.$i, @$inland_rates['c'.$c->code] + @$inland_markups['m'.$c->code]);
-                                $spreadsheet->getSheet($key)->getStyle($col_inland.$i)->applyFromArray($styleArray);
+                            if ($c->code == $k && $hide == "") {
+                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code]+@$inland_markups['m' . $c->code]);
+                                $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
                             }
                         }
                     }
-                    $sheet->setCellValue($col_inland.$i, $inland->currency->alphacode);
+                    $sheet->setCellValue($col_inland . $i, $inland->currency->alphacode);
 
                     $i++;
                 }
@@ -345,21 +348,21 @@ class ExcelController extends Controller
                     foreach ($sale_terms_origin as $sale_term_origin) {
                         foreach ($sale_term_origin->charge as $sale_origin) {
                             $col_sale = 'D';
-                            $spreadsheet->getSheet($key)->getStyle($col_sale.$i)->applyFromArray($styleArray);
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
 
                             $sale_rates = json_decode($sale_origin->rate, true);
 
-                            $sheet->setCellValue('B'.$i, $sale_origin->charge);
-                            $sheet->setCellValue('C'.$i, $sale_origin->detail);
+                            $sheet->setCellValue('B' . $i, $sale_origin->charge);
+                            $sheet->setCellValue('C' . $i, $sale_origin->detail);
                             foreach ($equipmentHides as $k => $hide) {
                                 foreach ($containers as $c) {
-                                    if ($c->code == $k && $hide == '') {
-                                        $sheet->setCellValue($col_sale++.$i, @$sale_rates['c'.$c->code]);
-                                        $spreadsheet->getSheet($key)->getStyle($col_sale.$i)->applyFromArray($styleArray);
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
                                     }
                                 }
                             }
-                            $sheet->setCellValue($col_sale.$i, @$sale_origin->currency->alphacode);
+                            $sheet->setCellValue($col_sale . $i, @$sale_origin->currency->alphacode);
 
                             $i++;
                         }
@@ -372,21 +375,21 @@ class ExcelController extends Controller
                     foreach ($sale_terms_destination as $sale_term_destination) {
                         foreach ($sale_term_destination->charge as $sale_destination) {
                             $col_sale = 'D';
-                            $spreadsheet->getSheet($key)->getStyle($col_sale.$i)->applyFromArray($styleArray);
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
 
                             $sale_rates = json_decode($sale_destination->rate, true);
 
-                            $sheet->setCellValue('B'.$i, $sale_destination->charge);
-                            $sheet->setCellValue('C'.$i, $sale_destination->detail);
+                            $sheet->setCellValue('B' . $i, $sale_destination->charge);
+                            $sheet->setCellValue('C' . $i, $sale_destination->detail);
                             foreach ($equipmentHides as $k => $hide) {
                                 foreach ($containers as $c) {
-                                    if ($c->code == $k && $hide == '') {
-                                        $sheet->setCellValue($col_sale++.$i, @$sale_rates['c'.$c->code]);
-                                        $spreadsheet->getSheet($key)->getStyle($col_sale.$i)->applyFromArray($styleArray);
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
                                     }
                                 }
                             }
-                            $sheet->setCellValue($col_sale.$i, @$sale_destination->currency->alphacode);
+                            $sheet->setCellValue($col_sale . $i, @$sale_destination->currency->alphacode);
 
                             $i++;
                         }
@@ -418,8 +421,8 @@ class ExcelController extends Controller
             $a = $i + 2;
 
             for ($i; $i > 40; $i--) {
-                $spreadsheet->getSheet($key)->getStyle('B'.$i)->applyFromArray($styleArray);
-                $spreadsheet->getSheet($key)->getStyle('C'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('B' . $i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('C' . $i)->applyFromArray($styleArray);
             }
         }
 
@@ -429,46 +432,46 @@ class ExcelController extends Controller
         $e = $d + 2;
         $f = $e + 1;
 
-        $sheet->setCellValue('A'.$a, '12)');
-        $sheet->setCellValue('B'.$a, 'Vigencia de tarifa:');
-        $sheet->setCellValue('C'.$a, $quote->validity_start.'/'.$quote->validity_end);
-        $spreadsheet->getSheet($key)->getStyle('C'.$a)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $a, '12)');
+        $sheet->setCellValue('B' . $a, 'Vigencia de tarifa:');
+        $sheet->setCellValue('C' . $a, $quote->validity_start . '/' . $quote->validity_end);
+        $spreadsheet->getSheet($key)->getStyle('C' . $a)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$b, 'Enviar pre-alerta a:');
-        $sheet->setCellValue('C'.$b, @$quote->company->business_name);
-        $spreadsheet->getSheet($key)->getStyle('C'.$b)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $b, 'Enviar pre-alerta a:');
+        $sheet->setCellValue('C' . $b, @$quote->company->business_name);
+        $spreadsheet->getSheet($key)->getStyle('C' . $b)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('A'.$c, '13)');
-        $sheet->setCellValue('B'.$c, 'Instrucciones adicionales:');
-        $sheet->setCellValue('C'.$c, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('D'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('E'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('F'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('G'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('H'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('I'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('J'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $c, '13)');
+        $sheet->setCellValue('B' . $c, 'Instrucciones adicionales:');
+        $sheet->setCellValue('C' . $c, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('D' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('E' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('F' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('G' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('I' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('J' . $c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$d, 'Se otorgó beneficio de carta garantía:');
-        $sheet->setCellValue('C'.$d, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('D'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('E'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('F'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('G'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('H'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('I'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getSheet($key)->getStyle('J'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $d, 'Se otorgó beneficio de carta garantía:');
+        $sheet->setCellValue('C' . $d, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('D' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('E' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('F' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('G' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('I' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('J' . $d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('A'.$e, '14)');
-        $sheet->setCellValue('B'.$e, 'Vendedor:');
-        $sheet->setCellValue('C'.$e, $quote->user->name.' '.$quote->user->lastname);
-        $spreadsheet->getSheet($key)->getStyle('C'.$e)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('A' . $e, '14)');
+        $sheet->setCellValue('B' . $e, 'Vendedor:');
+        $sheet->setCellValue('C' . $e, $quote->user->name . ' ' . $quote->user->lastname);
+        $spreadsheet->getSheet($key)->getStyle('C' . $e)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        $sheet->setCellValue('B'.$f, 'Elaboró:');
-        $sheet->setCellValue('C'.$f, '');
-        $spreadsheet->getSheet($key)->getStyle('C'.$f)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->setCellValue('B' . $f, 'Elaboró:');
+        $sheet->setCellValue('C' . $f, '');
+        $spreadsheet->getSheet($key)->getStyle('C' . $f)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         //Bottom border
         $spreadsheet->getSheet($key)->getStyle('C9')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
@@ -537,75 +540,9 @@ class ExcelController extends Controller
             $name = $quote->quote_id;
         }
 
-        $writer->save(storage_path('app/public/'.$name.'-'.$carrier.'.xlsx'));
+        $writer->save(storage_path('app/public/' . $name . '-' . $carrier . '.xlsx'));
 
-        return response()->download(storage_path('app/public/'.$name.'-'.$carrier.'.xlsx'))->deleteFileAfterSend();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->download(storage_path('app/public/' . $name . '-' . $carrier . '.xlsx'))->deleteFileAfterSend();
     }
 
     public function calculateFcl($rates, $containers)
@@ -617,13 +554,14 @@ class ExcelController extends Controller
         $total = 'total';
 
         foreach ($containers as $c) {
-            ${$sum.'_'.$c->code} = 0;
-            ${$total.'_'.$c->code} = 0;
-            ${$total.'_markup_'.$c->code} = 0;
+            ${$sum . '_' . $c->code} = 0;
+            ${$total . '_' . $c->code} = 0;
+            ${$total . '_markup_' . $c->code} = 0;
         }
 
         //Charges
         foreach ($rates->charge as $value) {
+
             $company = CompanyUser::find(\Auth::user()->company_user_id);
 
             $typeCurrency = $company->currency->alphacode;
@@ -638,19 +576,19 @@ class ExcelController extends Controller
             $pre_m = 'total_m';
 
             foreach ($containers as $c) {
-                ${$pre_c.$c->code} = 'total_c'.$c->code;
-                ${$pre_m.$c->code} = 'total_m'.$c->code;
-                if (isset($array_amounts['c'.$c->code])) {
-                    ${$amount.'_'.$c->code} = $array_amounts['c'.$c->code];
-                    ${$amount.'_'.$total.'_'.$c->code} = ${$amount.'_'.$c->code} / $currency_rate;
-                    ${$total.'_'.$c->code} = number_format(${$amount.'_'.$total.'_'.$c->code}, 2, '.', '');
-                    $value->${$pre_c.$c->code} = ${$total.'_'.$c->code};
+                ${$pre_c . $c->code} = 'total_c' . $c->code;
+                ${$pre_m . $c->code} = 'total_m' . $c->code;
+                if (isset($array_amounts['c' . $c->code])) {
+                    ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                    ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
+                    ${$total . '_' . $c->code} = number_format(${$amount . '_' . $total . '_' . $c->code}, 2, '.', '');
+                    $value->${$pre_c . $c->code} = ${$total . '_' . $c->code};
                 }
 
-                if (isset($array_markups['m'.$c->code])) {
-                    ${$markup.'_'.$c->code} = $array_markups['m'.$c->code];
-                    ${$total.'_markup_'.$c->code} = ${$markup.'_'.$c->code} / $currency_rate;
-                    $value->${$pre_m.$c->code} = ${$total.'_markup_'.$c->code};
+                if (isset($array_markups['m' . $c->code])) {
+                    ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                    ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
+                    $value->${$pre_m . $c->code} = ${$total . '_markup_' . $c->code};
                 }
             }
 
@@ -662,8 +600,8 @@ class ExcelController extends Controller
         //Inland
         foreach ($rates->inland as $item) {
             foreach ($containers as $c) {
-                ${$sum.'_'.$inland.'_'.$c->code} = 0;
-                ${$total.'_'.$inland.'_'.$markup.'_'.$c->code} = 0;
+                ${$sum . '_' . $inland . '_' . $c->code} = 0;
+                ${$total . '_' . $inland . '_' . $markup . '_' . $c->code} = 0;
             }
 
             $company = CompanyUser::find(\Auth::user()->company_user_id);
@@ -679,19 +617,19 @@ class ExcelController extends Controller
             $array_markups = $this->processOldContainers($array_markups, 'markups');
 
             foreach ($containers as $c) {
-                ${$sum.'_'.$total.'_'.$inland.$c->code} = 0;
-                if (isset($array_amounts['c'.$c->code])) {
-                    ${$amount.'_'.$inland.$c->code} = $array_amounts['c'.$c->code];
-                    ${$total.'_'.$inland.$c->code} = ${$amount.'_'.$inland.$c->code} / $currency_rate;
-                    ${$sum.'_'.$total.'_'.$inland.$c->code} = number_format(${$total.'_'.$inland.$c->code}, 2, '.', '');
+                ${$sum . '_' . $total . '_' . $inland . $c->code} = 0;
+                if (isset($array_amounts['c' . $c->code])) {
+                    ${$amount . '_' . $inland . $c->code} = $array_amounts['c' . $c->code];
+                    ${$total . '_' . $inland . $c->code} = ${$amount . '_' . $inland . $c->code} / $currency_rate;
+                    ${$sum . '_' . $total . '_' . $inland . $c->code} = number_format(${$total . '_' . $inland . $c->code}, 2, '.', '');
                 }
-                if (isset($array_markups['m'.$c->code])) {
-                    ${$markup.'_'.$inland.$c->code} = $array_markups['m'.$c->code];
-                    ${$total.'_'.$inland.'_'.$markup.$c->code} = number_format(${$markup.'_'.$inland.$c->code} / $currency_rate, 2, '.', '');
+                if (isset($array_markups['m' . $c->code])) {
+                    ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
+                    ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
                 }
 
-                $item->${$total.'_c'.$c->code} = number_format(@${$sum.'_'.$total.'_'.$inland.$c->code}, 2, '.', '');
-                $item->${$total.'_m'.$c->code} = number_format(@${$total.'_'.$inland.'_'.$markup.$c->code}, 2, '.', '');
+                $item->${$total . '_c' . $c->code} = number_format(@${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
+                $item->${$total . '_m' . $c->code} = number_format(@${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
             }
 
             $currency_charge = Currency::find($item->currency_id);
@@ -704,6 +642,7 @@ class ExcelController extends Controller
 
     public function calculateFclOld($rates)
     {
+
         $sum20 = 0;
         $sum40 = 0;
         $sum40hc = 0;
@@ -733,6 +672,7 @@ class ExcelController extends Controller
         $total_lcl_air_destination = 0;
 
         foreach ($rates->charge as $value) {
+
             $company = CompanyUser::find(\Auth::user()->company_user_id);
 
             $typeCurrency = $company->currency->alphacode;
@@ -817,13 +757,12 @@ class ExcelController extends Controller
     {
         $rates = Currency::where('id', '=', $id)->get();
         foreach ($rates as $rate) {
-            if ($typeCurrency == 'USD') {
+            if ($typeCurrency == "USD") {
                 $rateC = $rate->rates;
             } else {
                 $rateC = $rate->rates_eur;
             }
         }
-
         return $rateC;
     }
 
@@ -841,4 +780,271 @@ class ExcelController extends Controller
                 break;
         }
     }
+
+    public function downloadRates(Request $request)
+    {
+
+        $data = $request->validate([
+
+            'data.direction' => 'required',
+            'data.validity' => 'required',
+            'data.expire' => 'required',
+            'data.gp_container' => 'required',
+        ]);
+        //dd($request->input('validity'));
+
+        $direction = $data['data']['direction']; //'2020/10/01';
+        $code = $data['data']['gp_container']; //'2020/10/01';
+        $containers = Container::where('gp_container_id', $code)->get();
+        $contArray = $containers->pluck('code')->toArray();
+        $dateSince = $data['data']['validity']; //'2020/10/01';
+        $dateUntil = $data['data']['expire']; //'2020/10/30';
+        $company_id = '';
+        $company_user_id = \Auth::user()->company_user_id;
+        $user_id = \Auth::user()->id;
+        $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+        $container_calculation = ContainerCalculation::get();
+
+        if ($direction == 3) {
+            $direction = array(1, 2, 3);
+        } else {
+            $direction = array($direction);
+        }
+
+        $arrayFirstPart = array(
+            'Contract',
+            'Reference',
+            'Carrier',
+            'Direction',
+            'Origin',
+            'Destination',
+            'Charge',
+
+        );
+        $arrayFirstPart = array_merge($arrayFirstPart, $contArray);
+        $arraySecondPart = array(
+            'Currency',
+            'From',
+            'Until',
+        );
+        $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
+
+        /*$arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
+        $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
+        $a->where('user_id', '=', $user_id);
+        })->orDoesntHave('contract_user_restriction');
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
+        $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
+        $b->where('company_id', '=', $company_id);
+        })->orDoesntHave('contract_company_restriction');
+        })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction) {
+        if ($company_setting->future_dates == 1) {
+        $q->where(function ($query) use ($dateSince) {
+        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+        })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+        } else {
+        $q->where(function ($query) use ($dateSince, $dateUntil) {
+        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+        })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+        }
+        })->orderBy('contract_id')->get();*/
+
+        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code) {
+            if ($company_setting->future_dates == 1) {
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+            } else {
+                $q->where(function ($query) use ($dateSince, $dateUntil) {
+                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+            }
+        })->orderBy('contract_id')->get();
+
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
+        $nameFile = str_replace([' '], '_', $now . '_rates');
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation) {
+                //dd($contract);
+                $sheet->cells('A1:AG1', function ($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setValignment('center');
+                });
+                //$sheet->setBorder('A1:AO1', 'thin');
+
+                $sheet->row(1, $arrayComplete);
+                $a = 2;
+                $contractId = -1;
+                foreach ($arreglo as $data) {
+
+                    $montos = array();
+                    $montos2 = array();
+                    $montosAllIn = array();
+                    $montosAllInTot = array();
+                    foreach ($containers as $cont) {
+                        $name_rate = 'rate' . $cont->code;
+
+                        $var = 'array' . $cont->code;
+                        $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
+
+                        $options = json_decode($cont->options);
+                        //dd($options);
+                        if (@$options->field_rate == 'containers') {
+                            $test = json_encode($data->{$options->field_rate});
+                            $jsonContainer = json_decode($data->{$options->field_rate});
+                            if (isset($jsonContainer->{'C' . $cont->code})) {
+                                $rateMount = $jsonContainer->{'C' . $cont->code};
+                                $$name_rate = $rateMount;
+                                $montosAllIn = array($cont->code => $$name_rate);
+                            } else {
+                                $rateMount = 0;
+                                $$name_rate = $rateMount;
+                                $montosAllIn = array($cont->code => $$name_rate);
+                            }
+                        } else {
+                            $rateMount = $data->{$options->field_rate};
+                            $$name_rate = $rateMount;
+                            $montosAllIn = array($cont->code => $$name_rate);
+                        }
+
+                        $montos2 = array($cont->code => $rateMount);
+                        $montos = array_merge($montos, $montos2);
+                        $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
+
+                    }
+                    $arrayFirstPartAmount = array(
+                        'Contract' => $data->contract->name,
+                        'Reference' => $data->contract->id,
+                        'Carrier' => $data->carrier->name,
+                        'Direction' => $data->contract->direction->name,
+                        'Origin' => ucwords(strtolower($data->port_origin->name)),
+                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
+                        'Charge' => 'freight',
+                    );
+                    $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
+                    $arraySecondPartAmount = array(
+                        'Currency' => $data->currency->alphacode,
+                        'From' => $data->contract->validity,
+                        'Until' => $data->contract->expire,
+
+                    );
+                    $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+                    $sheet->row($a, $arrayCompleteAmount);
+                    $a++;
+                    // Local charges
+                    if ($contractId != $data->contract->id) {
+
+                        $contractId = $data->contract->id;
+                        $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
+
+                        for ($i = 0; $i < count($data1); $i++) {
+                            //'country_orig' =>  $data1[$i]->country_orig,
+                            //  'country_dest' =>   $data1[$i]->country_dest,
+                            $montosLocal = array();
+                            $montosLocal2 = array();
+                            $arrayFirstPartLocal = array(
+                                'Contract' => $data->contract->name,
+                                'Reference' => $data->contract->id,
+                                'Carrier' => $data1[$i]->carrier,
+                                'Direction' => $data->contract->direction->name,
+                                'Origin' => $data1[$i]->port_orig,
+                                'Destination' => $data1[$i]->port_dest,
+                                'Charge' => $data1[$i]->surcharge,
+
+                            );
+
+                            $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+                            $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
+
+                            foreach ($containers as $cont) {
+                                $name_arreglo = 'array' . $cont->code;
+                                $name_rate = 'rate' . $cont->code;
+                                if (in_array($calculationID->id, $$name_arreglo)) {
+                                    $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
+                                    $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
+                                    $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
+                                    $montosAllInTot[$cont->code] = $$name_rate;
+                                    $montosLocal2 = array($cont->code => $monto);
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                } else {
+                                    $montosLocal2 = array($cont->code => '0');
+
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                }
+                            }
+                            $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
+
+                            $arraySecondPartLocal = array(
+                                'Currency' => $data1[$i]->currency,
+                                'From' => $data->contract->validity,
+                                'Until' => $data->contract->expire,
+                            );
+                            $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+
+                            $sheet->row($a, $arrayCompleteLocal);
+                            $a++;
+                        }
+                    }
+
+                    // MONTOS ALL IN
+
+                    $arrayFirstPartAmountAllIn = array(
+                        'Contract' => $data->contract->name,
+                        'Reference' => $data->contract->id,
+                        'Carrier' => $data->carrier->name,
+                        'Direction' => $data->contract->direction->name,
+                        'Origin' => ucwords(strtolower($data->port_origin->name)),
+                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
+                        'Charge' => 'freight - ALL IN',
+                    );
+                    $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
+                    $arraySecondPartAmountAllIn = array(
+                        'Currency' => $data->currency->alphacode,
+                        'From' => $data->contract->validity,
+                        'Until' => $data->contract->expire,
+
+                    );
+                    $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
+                    $sheet->row($a, $arrayCompleteAmountAllIn);
+                    $a++;
+                    // Fin montos All In
+
+                    $sheet->setBorder('A1:I' . $i, 'thin');
+                    $sheet->cells('C' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+                    $sheet->cells('I' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+                }
+            });
+        })->store('csv', storage_path('excel/exports'));
+
+        $path = storage_path('excel/exports') . '/' . $nameFile . '.csv'; // or storage_path() if needed
+        $header = [
+            'Content-Type' => 'application/*',
+        ];
+
+        return response()->download($path, $nameFile, $header);
+    }
+
+    public function perTeu($monto, $calculation_type, $code)
+    {
+        $arrayTeu = CalculationType::where('options->isteu', true)->pluck('id')->toArray();
+        $codeArray = Container::where('code', 'like', '20%')->pluck('code')->toArray();
+
+        if (!in_array($code, $codeArray)) {
+            if (in_array($calculation_type, $arrayTeu)) {
+                $monto = $monto * 2;
+                return $monto;
+            } else {
+                return $monto;
+            }
+        } else {
+            return $monto;
+        }
+    }
+
 }

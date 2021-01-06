@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\CalculationType;
-use HelperAll;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
@@ -20,12 +19,12 @@ class CalculationTypeController extends Controller
         //dd($containerscal);
         return DataTables::of($calculations)
             ->addColumn('action', function ($calculations) {
-                $eliminiar_buton = '<a href="#" class="eliminarCalculation" data-id-conatiner-calculation="'.$calculations->id.'" title="Delete" >
+                $eliminiar_buton = '<a href="#" class="eliminarCalculation" data-id-conatiner-calculation="' . $calculations->id . '" title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
                 $update_button = '&nbsp;&nbsp;&nbsp;<a href="#" title="Edit">
-                    <samp class="la la-edit" onclick="showModal(\'updateCalculation\','.$calculations->id.')" style="font-size:20px; color:#031B4E"></samp>
+                    <samp class="la la-edit" onclick="showModal(\'updateCalculation\',' . $calculations->id . ')" style="font-size:20px; color:#031B4E"></samp>
                     </a>
                     ';
                 //$button = $update_button.$eliminiar_buton;
@@ -40,16 +39,17 @@ class CalculationTypeController extends Controller
     {
         $calculation = new CalculationType();
         $calculation->name = $request->name;
-        $calculation->code = $request->code;
+        $calculation->display_name = strtoupper($request->name);
+        $calculation->code = strtoupper($request->code);
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        if (! $request->name_prin_ch) {
+        if (!$request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
         }
-        $options = ['group'=>$group, 'isteu'=>$isteu, 'name'=>$name_prin_inp];
+        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
         $calculation->options = json_encode($options);
 
         $calculation->save();
@@ -71,7 +71,7 @@ class CalculationTypeController extends Controller
 
         $options = json_decode($calculation->options);
         if (empty($options)) {
-            $options = json_encode(['group'=>false, 'isteu'=>false, 'name'=>'N\A']);
+            $options = json_encode(['group' => false, 'isteu' => false, 'name' => 'N\A']);
             $options = json_decode($options);
         }
 
@@ -84,14 +84,15 @@ class CalculationTypeController extends Controller
         $group = $request->group ? true : false;
         $isteu = $request->isteu ? true : false;
         $calculation->name = $request->name;
-        $calculation->code = $request->code;
-        if (! $request->name_prin_ch) {
+        $calculation->display_name = strtoupper($request->name);
+        $calculation->code = strtoupper($request->code);
+        if (!$request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
         }
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        $options = ['group'=>$group, 'isteu'=>$isteu, 'name'=>$name_prin_inp];
+        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
         $calculation->options = json_encode($options);
         $calculation->update();
 

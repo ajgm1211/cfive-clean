@@ -2,496 +2,468 @@
 
 namespace App\Http\Controllers;
 
-use Api2Pdf\Api2Pdf;
-use App\Company;
-use App\CompanyPrice;
-use App\CompanyUser;
-use App\Contact;
-use App\Country;
+use App\AutomaticInlandTotal;
+use App\AutomaticRate;
+use App\AutomaticRateTotal;
+use App\Container;
 use App\Currency;
-use App\DestinationAmmount;
-use App\DestinationAmount;
-use App\EmailTemplate;
-use App\FreightAmmount;
-use App\Harbor;
-use App\Jobs\SendQuotes;
-use App\Mail\SendQuotePdf;
-use App\OriginAmmount;
-use App\OriginAmount;
-use App\PackageLoad;
-use App\Price;
-use App\Quote;
-use App\SendQuote;
-use App\TermsPort;
-use App\User;
-use Illuminate\Http\Request;
+use App\FclPdf;
+use App\LclPdf;
+use App\LocalChargeQuote;
+use App\LocalChargeQuoteTotal;
+use App\QuoteV2;
+use EventIntercom;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class PdfController extends Controller
 {
-    public function quote($id)
+    public function quote(QuoteV2 $quote)
     {
-        // set API Endpoint and access key (and any options of your choice)
-        $id = obtenerRouteKey($id);
-        $endpoint = 'live';
-        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
-
-        $quote = Quote::where('id', $id)->with('contact')->first();
-        $origin_harbor = Harbor::where('id', $quote->origin_harbor_id)->first();
-        $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
-        $origin_ammounts = OriginAmmount::where('quote_id', $quote->id)->get();
-        $freight_ammounts = FreightAmmount::where('quote_id', $quote->id)->get();
-        $destination_ammounts = DestinationAmmount::where('quote_id', $quote->id)->get();
-        $user = User::where('id', \Auth::id())->with('companyUser')->first();
-        $package_loads = PackageLoad::where('quote_id', $id)->get();
-
-        if (\Auth::user()->company_user_id) {
-            $company_user = CompanyUser::find(\Auth::user()->company_user_id);
-            $type = $company_user->type_pdf;
-            $ammounts_type = $company_user->pdf_ammounts;
-            $currency_cfg = Currency::find($company_user->currency_id);
-            $port_all = harbor::where('name', 'ALL')->first();
-            $terms_all = TermsPort::where('port_id', $port_all->id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_origin = TermsPort::where('port_id', $quote->origin_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_destination = TermsPort::where('port_id', $quote->destination_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
+        switch ($quote->type) {
+            case "FCL":
+                $pdf = new FclPdf();
+                return $pdf->generate($quote);
+                // EVENTO INTERCOM
+                $event = new EventIntercom();
+                $event->event_pdfFcl();
+                break;
+            case "LCL":
+                $pdf = new LclPdf();
+                return $pdf->generate($quote);
+                // EVENTO INTERCOM
+                $event = new EventIntercom();
+                $event->event_pdfLcl();
+                break;
         }
-
-        foreach ($origin_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
-
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
-
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates_eur;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
-
-        foreach ($freight_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
-
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
-
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
-
-        //dd(json_encode($item->markup/1.16));
-
-        foreach ($destination_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
-
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
-
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
-
-        if ($quote->pdf_language != '') {
-            if ($quote->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($quote->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        } elseif ($quote->company->pdf_language != '') {
-            if ($quote->company->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($quote->company->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        } else {
-            if ($company_user->pdf_language == 1) {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($company_user->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($company_user->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        }
-
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
-
-        return $pdf->stream('quote_'.$quote->id.'.pdf');
     }
 
-    public function quote_2($id)
+    public function generateFclPdf($quote)
     {
-        // set API Endpoint and access key (and any options of your choice)
-        $id = obtenerRouteKey($id);
-        $endpoint = 'live';
-        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
+        $containers = Container::all();
 
-        $quote = Quote::where('id', $id)->with('contact')->first();
-        $origin_harbor = Harbor::where('id', $quote->origin_harbor_id)->first();
-        $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
-        $origin_ammounts = OriginAmmount::where('quote_id', $quote->id)->get();
-        $freight_ammounts = FreightAmmount::where('quote_id', $quote->id)->get();
-        $destination_ammounts = DestinationAmmount::where('quote_id', $quote->id)->get();
-        $user = User::where('id', \Auth::id())->with('companyUser')->first();
-        $package_loads = PackageLoad::where('quote_id', $id)->get();
+        $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
-        if (\Auth::user()->company_user_id) {
-            $company_user = CompanyUser::find(\Auth::user()->company_user_id);
-            $type = $company_user->type_pdf;
-            $ammounts_type = $company_user->pdf_ammounts;
-            $currency_cfg = Currency::find($company_user->currency_id);
-            $port_all = harbor::where('name', 'ALL')->first();
-            $terms_all = TermsPort::where('port_id', $port_all->id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_origin = TermsPort::where('port_id', $quote->origin_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_destination = TermsPort::where('port_id', $quote->destination_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-        }
+        $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
 
-        foreach ($origin_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $inlands = $quote->load('inland');
 
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
+        $inlands = $this->processInland($inlands->inland, $containers);
 
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
+        $origin_charges = $this->localCharges($quote, 1);
 
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates_eur;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
+        $destination_charges = $this->localCharges($quote, 2);
 
-        foreach ($freight_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
+        $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
+        $quote_totals = $this->quoteTotals($quote, $containers);
 
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
-
-        //dd(json_encode($item->markup/1.16));
-
-        foreach ($destination_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
-
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
-
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-                $currency_rate = Currency::where('api_code', 'USD'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-                $currency_rate = Currency::where('api_code_eur', 'EUR'.$currency->alphacode)->first();
-                $rate = $currency_rate->rates;
-            }
-            $item->markup_converted = $markup_converted;
-            $item->rate = $rate;
-        }
-
-        $view = \View::make('quotes.pdf.index-new', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view);
 
-        return $pdf->stream('quote_'.$quote->id.'.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+
+        return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
 
-    public function send_pdf_quote(Request $request)
+    public function localCharges($quote, $type)
     {
-        // set API Endpoint and access key (and any options of your choice)
-        $endpoint = 'live';
-        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
+        $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
 
-        $quote = Quote::findOrFail($request->id);
-        $contact_email = Contact::find($quote->contact_id);
-        $companies = Company::all()->pluck('business_name', 'id');
-        $harbors = Harbor::all()->pluck('name', 'id');
-        $origin_harbor = Harbor::where('id', $quote->origin_harbor_id)->first();
-        $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
-        $prices = Price::all()->pluck('name', 'id');
-        $contacts = Contact::where('company_id', $quote->company_id)->pluck('first_name', 'id');
-        $origin_ammounts = OriginAmmount::where('quote_id', $quote->id)->get();
-        $freight_ammounts = FreightAmmount::where('quote_id', $quote->id)->get();
-        $destination_ammounts = DestinationAmmount::where('quote_id', $quote->id)->get();
-        $user = User::where('id', \Auth::id())->with('companyUser')->first();
-        $package_loads = PackageLoad::where('quote_id', $request->id)->get();
-        if (\Auth::user()->company_user_id) {
-            $company_user = CompanyUser::find(\Auth::user()->company_user_id);
-            $type = $company_user->type_pdf;
-            $ammounts_type = $company_user->pdf_ammounts;
-            $currency_cfg = Currency::find($company_user->currency_id);
-            $port_all = harbor::where('name', 'ALL')->first();
-            $terms_all = TermsPort::where('port_id', $port_all->id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_origin = TermsPort::where('port_id', $quote->origin_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
-            $terms_destination = TermsPort::where('port_id', $quote->destination_harbor_id)->with('term')->whereHas('term', function ($q) {
-                $q->where('termsAndConditions.company_user_id', \Auth::user()->company_user_id);
-            })->get();
+        $localcharges = $localcharges->groupBy([
+
+            function ($item) {
+                return $item['port']['name'] . ', ' . $item['port']['code'];
+            },
+
+        ]);
+
+        foreach ($localcharges as $value) {
+            $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
         }
 
-        foreach ($origin_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        return $localcharges;
+    }
 
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
+    public function localChargeTotals($quote, $type, $port)
+    {
+        $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
 
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
+        return $total;
+    }
 
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-            }
-            $item->markup_converted = $markup_converted;
-        }
+    public function processInland($values, $containers)
+    {
 
-        foreach ($freight_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $inlands = collect($values);
 
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
+        $inlands = $inlands->groupBy([
 
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
+            function ($item) {
+                return $item['type'];
+            },
+            function ($item) {
+                return $item['port']['name'] . ', ' . $item['port']['code'];
+            },
 
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-            }
-            $item->markup_converted = $markup_converted;
-        }
+        ], $preserveKeys = true);
 
-        //dd(json_encode($item->markup/1.16));
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
 
-        foreach ($destination_ammounts as $item) {
-            $currency = Currency::find($item->currency_id);
-            // Initialize CURL:
-            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        foreach ($inlands as $inland) {
+            foreach ($inland as $values) {
+                foreach ($values as $item) {
 
-            // Store the data:
-            $json = curl_exec($ch);
-            curl_close($ch);
+                    foreach ($containers as $c) {
+                        ${$total . $amount . $c->code} = 0;
+                        ${$total . $amount . $markup . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = 0;
+                    }
 
-            // Decode JSON response:
-            $exchangeRates = json_decode($json, true);
+                    $array_amounts = json_decode($item->rate, true);
+                    $array_markups = json_decode($item->markup, true);
 
-            if ($quote->currencies->alphacode == 'USD') {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'USD'];
-            } else {
-                $markup_converted = $item->markup / $exchangeRates['quotes'][$currency->alphacode.'EUR'];
-            }
-            $item->markup_converted = $markup_converted;
-        }
+                    $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                    $array_markups = $this->processOldContainers($array_markups, 'markups');
 
-        if ($quote->pdf_language != '') {
-            if ($quote->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($quote->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        } elseif ($quote->company->pdf_language != '') {
-            if ($quote->company->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($quote->company->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        } else {
-            if ($company_user->pdf_language == 1) {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($company_user->pdf_language == 2) {
-                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } elseif ($company_user->pdf_language == 3) {
-                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            } else {
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote, 'origin_harbor'=>$origin_harbor, 'destination_harbor'=>$destination_harbor, 'origin_ammounts'=>$origin_ammounts, 'freight_ammounts'=>$freight_ammounts, 'destination_ammounts'=>$destination_ammounts, 'user'=>$user, 'currency_cfg'=>$currency_cfg, 'package_loads'=>$package_loads, 'terms_origin'=>$terms_origin, 'terms_destination'=>$terms_destination, 'terms_all'=>$terms_all, 'charges_type'=>$type, 'ammounts_type'=>$ammounts_type]);
-            }
-        }
+                    foreach ($containers as $c) {
+                        ${$sum . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                        ${$total . $c->code} = 0;
+                        ${$total . $sum . $c->code} = $total . $sum . $c->code;
 
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+                        if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code};
+                        }
 
-        $subject = $request->subject;
-        $body = $request->body;
-        $to = $request->to;
-
-        if ($to != '') {
-            $explode = explode(';', $to);
-            foreach ($explode as $item) {
-                $send_quote = new SendQuote();
-                $send_quote->to = trim($item);
-                $send_quote->from = \Auth::user()->email;
-                $send_quote->subject = $subject;
-                $send_quote->body = $body;
-                $send_quote->quote_id = $quote->id;
-                $send_quote->status = 0;
-                $send_quote->save();
-            }
-        } else {
-            $send_quote = new SendQuote();
-            $send_quote->to = $contact_email->email;
-            $send_quote->from = \Auth::user()->email;
-            $send_quote->subject = $subject;
-            $send_quote->body = $body;
-            $send_quote->quote_id = $quote->id;
-            $send_quote->status = 0;
-            $send_quote->save();
-        }
-        //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
-
-        $quote->status_quote_id = 2;
-        $quote->update();
-
-        return response()->json(['message' => 'Ok']);
-
-        /*if(count($contact_email)>0) {
-
-                $subject = $request->subject;
-                $body = $request->body;
-                $to = $request->to;
-                if($to!=''){
-                    \Mail::to($to)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
-                }else{
-                    \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+                        if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                            $item->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                        }
+                    }
                 }
+            }
+        }
 
-                $quote->status_quote_id=2;
-                $quote->update();
-                return response()->json(['message' => 'Ok']);
-            }else{
-                return response()->json(['message' => 'Error']);
-            }*/
+        return $inlands;
     }
 
-    public function test()
+    public function freightCharges($freight_charges, $quote, $containers)
     {
-        $apiClient = new Api2Pdf('8a8fd7ad-0bca-4130-949c-5b4f22003fba');
-        $apiClient->setInline(true);
-        $apiClient->setFilename('test.pdf');
-        $apiClient->setOptions(
-                [
-                    'orientation' => 'landscape',
-                    'pageSize'=> 'A4',
-                ]
-            );
-        $result = $apiClient->wkHtmlToPdfFromUrl('https://app.cargofive.com/v2/quotes/show/oW');
-        dd($result);
+
+        $freight_charges_grouped = collect($freight_charges);
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+        $charge_freight = 0;
+
+        foreach ($freight_charges_grouped as $item) {
+
+            foreach ($containers as $c) {
+                ${$total . $amount . $c->code} = 0;
+                ${$total . $amount . $markup . $c->code} = 0;
+                ${$sum . $amount . $markup . $c->code} = 0;
+            }
+
+            foreach ($item->charge as $amounts) {
+                if ($amounts->type_id == 3) {
+
+                    /*if (@$quote->pdf_option->grouped_freight_charges == 1) {
+                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                    } else {
+                    $typeCurrency = $item->currency->alphacode;
+                    }*/
+
+                    $typeCurrency = $item->currency->alphacode;
+
+                    $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
+                    $array_amounts = json_decode($amounts->amount, true);
+                    $array_markups = json_decode($amounts->markups, true);
+
+                    $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                    $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                    foreach ($containers as $c) {
+                        ${$sum . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                        ${$total . $c->code} = 0;
+                        ${$total . $sum . $c->code} = $total . $sum . $c->code;
+
+                        if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                            ${$sum . $c->code} = $array_markups['m' . $c->code];
+                            ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                        }
+
+                        if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                            $charge_freight++;
+                            $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                            $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code}, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $freight_charges_grouped;
+
+    }
+
+    public function freightChargesDetailed($freight_charges, $quote, $containers)
+    {
+
+        $freight_charges_grouped = collect($freight_charges);
+
+        $freight_charges_grouped = $freight_charges_grouped->groupBy([
+
+            function ($item) {
+                return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+            },
+            function ($item) {
+                return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },
+
+        ], $preserveKeys = true);
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+        $charge_freight = 0;
+
+        foreach ($freight_charges_grouped as $freight) {
+            foreach ($freight as $detail) {
+                foreach ($detail as $item) {
+                    foreach ($containers as $c) {
+                        ${$total . $amount . $c->code} = 0;
+                        ${$total . $amount . $markup . $c->code} = 0;
+                        ${$sum . $amount . $markup . $c->code} = 0;
+                    }
+
+                    foreach ($item as $rate) {
+                        foreach ($rate->charge as $amounts) {
+                            if ($amounts->type_id == 3) {
+
+                                /*if ($quote->pdf_option->grouped_freight_charges == 1) {
+                                $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                } else {
+                                $typeCurrency = $rate->currency->alphacode;
+                                }*/
+
+                                $typeCurrency = $rate->currency->alphacode;
+
+                                $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
+                                $array_amounts = json_decode($amounts->amount, true);
+                                $array_markups = json_decode($amounts->markups, true);
+
+                                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                $array_markups = $this->processOldContainers($array_markups, 'markups');
+
+                                foreach ($containers as $c) {
+                                    ${$sum . $c->code} = 0;
+                                    ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+                                    ${$total . $c->code} = 0;
+                                    ${$total . $sum . $c->code} = $total . $sum . $c->code;
+
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . $c->code} = ${$sum . $c->code} / $currency_rate;
+                                    }
+
+                                    if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                                        $charge_freight++;
+                                        $amounts->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+                                        $amounts->${$sum . $amount . $markup . $c->code} = isDecimal(${$sum . $c->code}, true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $freight->charge_freight = $charge_freight;
+        }
+
+        return $freight_charges_grouped;
+    }
+
+    public function quoteTotals($quote, $containers)
+    {
+
+        $freightTotals = AutomaticRateTotal::GetQuote($quote->id)->get();
+
+        $totalsArrayOutput = array();
+
+        $routePrefix = 'route_';
+        $routeId = 1;
+        foreach ($freightTotals as $frTotal) {
+            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name;
+            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name;
+            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name;
+            $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'];
+            $routeId++;
+        }
+
+        $inlandTotals = AutomaticInlandTotal::GetQuote($quote->id)->get();
+
+        $localChargeTotals = LocalChargeQuoteTotal::Quotation($quote->id)->get();
+
+        $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
+
+        foreach ($totals as $total) {
+
+            if (is_a($total, 'App\AutomaticRateTotal')) {
+                $totalsArrayInput = json_decode($total->totals, true);
+                $portArray['origin'] = $total->origin_port()->first()->display_name;
+                $portArray['destination'] = $total->destination_port()->first()->display_name;
+            } else if (is_a($total, 'App\AutomaticInlandTotal')) {
+                $totalsArrayInput = json_decode($total->totals, true);
+                if ($total->type == 'Origin') {
+                    $portArray['origin'] = $total->get_port()->first()->display_name;
+                    $portArray['destination'] = null;
+                } else if ($total->type == 'Destination') {
+                    $portArray['origin'] = null;
+                    $portArray['destination'] = $total->get_port()->first()->display_name;
+                }
+            } else if (is_a($total, 'App\LocalChargeQuoteTotal')) {
+                $totalsArrayInput = $total->total;
+                if ($total->get_type()->first()->description == 'origin') {
+                    $portArray['origin'] = $total->get_port()->first()->display_name;
+                    $portArray['destination'] = null;
+                } else if ($total->get_type()->first()->description == 'destiny') {
+                    $portArray['origin'] = null;
+                    $portArray['destination'] = $total->get_port()->first()->display_name;
+                }
+            }
+
+            $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
+
+            $totalsCurrencyInput = Currency::where('id', $total->currency_id)->first();
+
+            $totalsCurrencyOutput = Currency::where('id', $quote->pdf_options['totalsCurrency']['id'])->first();
+
+            $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput, $totalsCurrencyOutput, $totalsArrayInput);
+
+            foreach ($totalsArrayOutput as $key => $route) {
+                if ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) {
+                    foreach ($containers as $c) {
+                        if (isset($totalsArrayInput['c' . $c->code])) {
+                            $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
+                            if (isset($totalsArrayOutput[$key]['c' . $c->code])) {
+                                $totalsArrayOutput[$key]['c' . $c->code] += $dmCalc;
+                            } else {
+                                $totalsArrayOutput[$key]['c' . $c->code] = $dmCalc;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        dd($totalsArrayOutput);
+
+        return $totalsArrayOutput;
+    }
+
+    /**
+     * Mostrar/Ocultar contenedores en la vista
+     * @param array $equipmentForm
+     * @param integer $tipo
+     * @return type
+     */
+    public function hideContainerV2($equipmentForm, $tipo, $container)
+    {
+
+        $equipment = new Collection();
+
+        if ($tipo == 'BD') {
+            $equipmentForm = json_decode($equipmentForm);
+        }
+
+        foreach ($container as $cont) {
+            $hidden = 'hidden' . $cont->code;
+            $$hidden = 'hidden';
+            foreach ($equipmentForm as $val) {
+                if ($val == '20') {
+                    $val = 1;
+                } elseif ($val == '40') {
+                    $val = 2;
+                } elseif ($val == '40HC') {
+                    $val = 3;
+                } elseif ($val == '45HC') {
+                    $val = 4;
+                } elseif ($val == '40NOR') {
+                    $val = 5;
+                }
+                if ($val == $cont->id) {
+
+                    $$hidden = '';
+                }
+            }
+            $equipment->put($cont->code, $$hidden);
+        }
+
+        // Clases para reordenamiento de la tabla y ajuste
+        $originClass = 'col-md-2';
+        $destinyClass = 'col-md-1';
+        $dataOrigDest = 'col-md-3';
+
+        $countEquipment = count($equipmentForm);
+        $countEquipment = 5 - $countEquipment;
+        if ($countEquipment == 1) {
+            $originClass = 'col-md-3';
+            $destinyClass = 'col-md-1';
+            $dataOrigDest = 'col-md-4';
+        }
+        if ($countEquipment == 2) {
+            $originClass = 'col-md-3';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-5';
+        }
+        if ($countEquipment == 3) {
+            $originClass = 'col-md-4';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-6';
+        }
+        if ($countEquipment == 4) {
+            $originClass = 'col-md-5';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-7';
+        }
+
+        $equipment->put('originClass', $originClass);
+        $equipment->put('destinyClass', $destinyClass);
+        $equipment->put('dataOrigDest', $dataOrigDest);
+        return ($equipment);
     }
 }

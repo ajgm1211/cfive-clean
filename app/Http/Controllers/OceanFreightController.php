@@ -36,8 +36,33 @@ class OceanFreightController extends Controller
         $data = $this->validateData($request, $contract);
 
         $prepared_data = $this->prepareData($data, $contract);
-
-        $rate = Rate::create($prepared_data);
+        $origin = $data['origin'];
+        $destination =$data['destination'];
+        $carriers = $data['carrier'];
+        
+        foreach($carriers as $carrier){
+            foreach($origin as $origi){  
+                foreach($destination as $destiny){  
+                    $rate = Rate::create([    
+                        'origin_port'=>$origi,
+                        'destiny_port'=>$destiny,
+                        'carrier_id'=>$carrier,
+                        'contract_id'=>$contract->id,
+                        'twuenty'=>  $prepared_data['twuenty'],
+                        'forty'=>$prepared_data['forty'],
+                        'fortyhc'=>$prepared_data['fortyhc'],
+                        'fortynor'=> $prepared_data['fortynor'],
+                        'fortyfive'=>$prepared_data['fortyfive'],
+                        'containers'=>$prepared_data['containers'],
+                        'currency_id' => $data['currency'],
+                        'schedule_type_id' => isset($data['schedule_type']) ? $data['schedule_type'] : null,
+                        'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
+                        'via' => isset($data['via']) ? $data['via'] : null
+                        ]);
+                }        
+            } 
+        }
+        
 
         return new OceanFreightResource($rate);
     }
@@ -54,7 +79,7 @@ class OceanFreightController extends Controller
             'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
             'via' => isset($data['via']) ? $data['via'] : null,
         ];
-
+    
         $prepared_data = $this->prepareContainer($prepared_data, $data, $contract);
 
         return $prepared_data;
