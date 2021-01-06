@@ -102,7 +102,7 @@
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
-                                    <a href="{{route('RequestsGlobalchargersFcl.create')}}">
+                                    <!-- <a href="{{route('RequestsGlobalchargersFcl.create')}}">
 
                                         <button type="button"
                                             class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
@@ -113,7 +113,7 @@
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
-                                    </a>
+                                    </a> -->
 
                                     <button type="button" name="bulk_delete" id="bulk_delete"
                                         class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
@@ -143,37 +143,37 @@ New \ Status Import  &nbsp;
                             style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th width="2%">
                                         Select
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Origin
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Destination
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Charge Type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Calculation type
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Currency
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Carrier
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Amount
                                     </th>
-                                    <th>
+                                    <th width="9%">
                                         Validity
                                     </th>
-                                    <th>
+                                    <th width="8%">
                                         Options
                                     </th>
                                 </tr>
@@ -252,8 +252,7 @@ New \ Status Import  &nbsp;
     }
 
     $(function() {
-        $('#requesttable').DataTable({
-
+        var tabla = $('#requesttable').DataTable({
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
@@ -269,20 +268,40 @@ New \ Status Import  &nbsp;
                 { data: 'validitylb', name: 'validitylb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
-            "order": [[0, 'des']],
+            initComplete: function () {
+                this.api().columns([1,2,3,4,5,6,7,8,9,10]).every(function () {
+                    var column = this;
+                    $('#requesttable .head .head_hide').html('');
+
+                    var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select>')
+                    .prependTo($(column.header()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            },
             "lengthChange": false,
             "searching": true,
-            "ordering": true,
-            "width": true,
-            "autoWidth": false,
-            "stateSave": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
-            "serverSide": true,
-            "paging": true
-        });
-
+            "dom": 'Bfrtip',
+            "paging": true,
+            "scrollX": true,
+            "stateSave": false, 
+        });    
     });
-
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({

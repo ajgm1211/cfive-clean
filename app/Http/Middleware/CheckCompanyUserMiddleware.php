@@ -2,10 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Contract;
-use Closure;
-use Illuminate\Support\Facades\Auth;
-
 class CheckCompanyUserMiddleware
 {
     /**

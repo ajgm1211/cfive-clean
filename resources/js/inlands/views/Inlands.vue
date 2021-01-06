@@ -1,13 +1,12 @@
 <template>
 	<div class="container-fluid">
-		<div class="row mt-5">
-			<div class="col-12 mb-5">
+		<div class="row mt-5" >
+			<div class="col-12 mb-2" style="padding: 0px 50px">
 				<a href="/api/inlands/" class="p-light quote-link">
 					<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
 				</a>
 			</div>
 			<div class="col-12">
-
 				<!-- Form Contract Inline -->
 				<FormInlineView
 				v-if="loaded"
@@ -119,17 +118,17 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'equipments',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
 	                },
 	                type: { 
-	                    label: 'Calculation Type', 
+	                    label: 'Calculation', 
 	                    searchable: true, 
 	                    type: 'select', 
 	                    rules: 'required', 
 	                    trackby: 'name', 
-	                    placeholder: 'Select option', 
+	                    placeholder: 'Select', 
 	                    options: 'types',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-1'
 	                },
                     restrictions: { 
                         label:'Restrictions', 
@@ -138,7 +137,19 @@
                         trackby: 'business_name', 
                         placeholder: 'Select options', 
                         options: 'companies' 
+					},
+                    providers: { 
+                        label: 'Provider', 
+                        searchable: true, 
+                        type: 'select', 
+                        rules: 'required', 
+                        trackby: 'name', 
+                        placeholder: 'Select', 
+						options: 'providers',
+						colClass: 'col-lg-1'
+                        
                     },
+					
 				}
 			}
 		},

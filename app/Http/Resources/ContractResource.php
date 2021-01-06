@@ -14,6 +14,9 @@ class ContractResource extends JsonResource
      */
     public function toArray($request)
     {
+        $created_at=$this->created_at;
+        $fecha=$this->formatear($created_at);
+        
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -23,6 +26,7 @@ class ContractResource extends JsonResource
             'status' => $this->status,
             'validity' => $this->validity,
             'expire' => $this->expire,
+            'created_at'=> $fecha,
             'remarks' => $this->remarks ? $this->remarks : '',
             'carriers' => $this->carriers->pluck('carrier'),
             'restrictions' => [
@@ -31,5 +35,14 @@ class ContractResource extends JsonResource
             ],
             'gp_container' => $this->gpContainer ? $this->gpContainer : ['id' => 1, 'name' => 'DRY'],
         ];
+    }
+
+    public function formatear($created_at){
+
+        $fecha=date('Y-m-d H:m:s', strtotime($created_at));
+
+        return $fecha;
+
+
     }
 }

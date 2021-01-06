@@ -703,7 +703,7 @@ $(document).on('click', '#delete-company', function() {
                             type: 'get',
                             url: '/companies/destroy/' + id,
                             success: function(data) {
-                                if (data.message === 'Company deleted successfully!') {
+                                if (data.message === 'Company deleted successfully!'    ) {
                                     swal(
                                         'Deleted!',
                                         'The company has been deleted.',

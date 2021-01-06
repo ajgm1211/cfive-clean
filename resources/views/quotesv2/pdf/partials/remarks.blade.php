@@ -10,32 +10,39 @@
 @endforeach
 
 @if($i>0)    
-    <br>
-    <div class="clearfix">
-        <span class="color-title text-left"><b>{{__('pdf.remarks')}}</b><br><br/></span>
 
+    <div class="clearfix">
+
+        <p><span class="title text-left" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b></span></p>
+        
         @foreach($rates as $rate)
             @if(trim(strip_tags($rate->remarks)) !== '')
+
                 <span>{!! str_replace('&nbsp;', ' ',$rate->remarks) !!}</span><br/>
+
             @endif
+
             @switch($quote->pdf_option->language)
+
                 @case("English")
                     @if(trim(strip_tags($rate->remarks_english)) !== '')
                         <span>{!! str_replace('&nbsp;', ' ', $rate->remarks_english) !!}</span>
                     @endif
-                    @break
+                @break
+
                 @case("Portuguese")
                     @if(trim(strip_tags($rate->remarks_portuguese)) !== '')
                         <span>{!! str_replace('&nbsp;', ' ', $rate->remarks_portuguese) !!}</span>
                     @endif
-                    @break
+                @break
+
                 @case("Spanish")
                     @if(trim(strip_tags($rate->remarks_spanish)) !== '')
                         <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_spanish) !!}</span>
                     @endif
-                    @break
+                @break
             @endswitch
         @endforeach
+
     </div>
 @endif
-<br>

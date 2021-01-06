@@ -2,7 +2,6 @@
 
 namespace App\Http\Filters;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 abstract class AbstractFilter
@@ -10,7 +9,7 @@ abstract class AbstractFilter
     protected $filter_by = []; // Use it to search query
     protected $request; // Illuminate\Http\Request
     protected $filter_by_relations = []; // Use it to search query by relational fields
-    protected $default_filter_by = [];  // Use it to filter initial default datatable
+    protected $default_filter_by = []; // Use it to filter initial default datatable
     protected $query; // Query to filter data
     protected $pagination = 20; // Use it to paginate datatable (Required)
     protected $parent_id = null;
@@ -27,10 +26,10 @@ abstract class AbstractFilter
     public function filter()
     {
         /*if($this->parent_id && $this->parent_model)
-            $this->filterByParent();
+        $this->filterByParent();
 
         else if($this->request->query('filteredby', null) && $this->request->query('filteredval', null))
-        	$this->defaulFilter();*/
+        $this->defaulFilter();*/
 
         if ($this->request->query('q', null) && $this->request->query('q') != '') {
             $this->query->where(function ($query) {
@@ -56,6 +55,8 @@ abstract class AbstractFilter
     {
         $values = $this->request->query('filteredval');
 
+        $values = $this->request->query('filteredval');
+
         $this->query->whereHas(
             $this->request->query('filteredby'), function ($q) use ($values) {
                 $q->whereIn($this->default_filter_by[$this->request->query('filteredby')], $values);
@@ -70,7 +71,7 @@ abstract class AbstractFilter
             $filter_by = $this->filter_by;
 
             foreach ($filter_by as $column) {
-                $q->orWhere($column, 'LIKE', '%'.$qry.'%');
+                $q->orWhere($column, 'LIKE', '%' . $qry . '%');
             }
         });
     }
@@ -93,11 +94,13 @@ abstract class AbstractFilter
     protected function searchByRelationOr($filter_by_relations, $qry, $query)
     {
         $query->orWhere(function ($qr) use ($filter_by_relations, $qry) {
+
             foreach ($filter_by_relations as $column) {
+
                 $col = explode('__', $column);
 
                 $qr->orWhereHas($col[0], function ($q) use ($qry, $col) {
-                    $q->where($col[1], 'LIKE', '%'.$qry.'%');
+                    $q->where($col[1], 'LIKE', '%' . $qry . '%');
                 });
             }
         });
@@ -106,11 +109,13 @@ abstract class AbstractFilter
     protected function searchByRelationAnd($filter_by_relations, $qry, $query)
     {
         $query->where(function ($qr) use ($filter_by_relations, $qry) {
+
             foreach ($filter_by_relations as $column) {
+
                 $col = explode('__', $column);
 
                 $qr->orWhereHas($col[0], function ($q) use ($qry, $col) {
-                    $q->where($col[1], 'LIKE', '%'.$qry.'%');
+                    $q->where($col[1], 'LIKE', '%' . $qry . '%');
                 });
             }
         });

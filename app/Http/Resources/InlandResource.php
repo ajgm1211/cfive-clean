@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\GroupContainer;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InlandResource extends JsonResource
@@ -27,6 +26,7 @@ class InlandResource extends JsonResource
             'direction' => $this->direction,
             'ports' => $this->inlandports->pluck('ports'),
             'restrictions' => $this->inland_company_restriction->pluck('company'),
+            'providers' => $this->providers ?? [],
         ];
     }
 }

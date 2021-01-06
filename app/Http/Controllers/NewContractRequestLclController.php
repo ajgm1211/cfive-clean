@@ -8,28 +8,28 @@ use App\ContractCarrierLcl;
 use App\ContractLcl;
 use App\Direction;
 use App\Harbor;
+use App\Http\Requests\StoreNewRequestLcl;
 use App\Jobs\ExportRequestsJob;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\SendEmailRequestLclJob;
-use App\Mail\NewRequestLclToAdminMail;
-use App\Mail\RequestLclToUserMail;
 use App\NewContractRequestLcl;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use App\RequetsCarrierLcl;
 use App\User;
 use Carbon\Carbon;
+use EventIntercom;
 use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PrvRequest;
-use Spatie\Permission\Models\Permission;
 use Yajra\Datatables\Datatables;
 
 class NewContractRequestLclController extends Controller
 {
+
     public function index()
     {
         return view('RequestsLcl.index');
@@ -38,7 +38,6 @@ class NewContractRequestLclController extends Controller
     public function indexListClient()
     {
         $company_userid = \Auth::user()->company_user_id;
-
         return view('RequestsLcl.indexClient', compact('company_userid'));
     }
 
@@ -53,7 +52,6 @@ class NewContractRequestLclController extends Controller
         if ($user->hasAnyPermission([1])) {
             $permiso_eliminar = true;
         }
-
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
                 return $Ncontracts->company_user;
@@ -63,7 +61,7 @@ class NewContractRequestLclController extends Controller
             })
             ->addColumn('direction', function ($Ncontracts) {
                 if (empty($Ncontracts->direction) == true) {
-                    return ' ---------- ';
+                    return " ---------- ";
                 } else {
                     return $Ncontracts->direction;
                 }
@@ -72,7 +70,7 @@ class NewContractRequestLclController extends Controller
                 if (empty($Ncontracts->carriers) != true) {
                     return $Ncontracts->carriers;
                 } else {
-                    return ' ------------------ ';
+                    return " ------------------ ";
                 }
             })
             ->addColumn('validation', function ($Ncontracts) {
@@ -85,13 +83,13 @@ class NewContractRequestLclController extends Controller
                 return $Ncontracts->user;
             })
             ->addColumn('username_load', function ($Ncontracts) {
-                return '<span id="userLoad'.$Ncontracts->id.'">'.$Ncontracts->username_load.'</span>';
+                return '<span id="userLoad' . $Ncontracts->id . '">' . $Ncontracts->username_load . '</span>';
             })
             ->addColumn('time_elapsed', function ($Ncontracts) {
                 if (empty($Ncontracts->time_elapsed) != true) {
                     return $Ncontracts->time_elapsed;
                 } else {
-                    return '<span id="timeElapsed'.$Ncontracts->id.'"> ------------------ </span>';
+                    return '<span id="timeElapsed' . $Ncontracts->id . '"> ------------------ </span>';
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
@@ -99,49 +97,50 @@ class NewContractRequestLclController extends Controller
                 if (strnatcasecmp($Ncontracts->status, 'Pending') == 0) {
                     //$color = 'color:#031B4E';
                     $color = 'color:#f81538';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
                     $color = 'color:#5527f0';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                     $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
 
-                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
+                return '<a href="#" onclick="showModal(' . $Ncontracts->id . ')"style="' . $color . '" id="statusHrf' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '">' . $Ncontracts->status . '</a>
                 &nbsp;
-                <samp class="la la-pencil-square-o statusHrf'.$Ncontracts->id.'" for="" id="statusSamp'.$Ncontracts->id.'"  style="font-size:15px;'.$color.'"></samp>';
+                <samp class="la la-pencil-square-o statusHrf' . $Ncontracts->id . '" for="" id="statusSamp' . $Ncontracts->id . '"  style="font-size:15px;' . $color . '"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) use ($permiso_eliminar) {
+
                 $buttons = '&nbsp;&nbsp;
-                <a href="'.route('RequestImportationLcl.show', $Ncontracts->id).'" title="Download File">
+                <a href="' . route("RequestImportationLcl.show", $Ncontracts->id) . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>&nbsp;&nbsp;';
-                $eliminiar_buton = '                
-                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' References: '.$Ncontracts->namecontract.'"  title="Delete" >
+                $eliminiar_buton = '
+                <a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . ' References: ' . $Ncontracts->namecontract . '"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
                 if ($permiso_eliminar) {
-                    $buttons = $buttons.$eliminiar_buton;
+                    $buttons = $buttons . $eliminiar_buton;
                 }
 
                 if (empty($Ncontracts->contract) != true) {
                     $butPrCt = '
-                <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess LCL Contract">
+                <a href="/ImportationLCL/RequestProccessLCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" title="Proccess LCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
                 </a>
                 &nbsp;&nbsp;
                 <a href="#" title="Edit LCL Contract">
-                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
+                    <samp class="la la-edit" onclick="editcontract(' . $Ncontracts->contract . ')" style="font-size:20px; color:#04950f"></samp>
                 </a>
                     ';
-                    $buttons = $butPrCt.$buttons;
+                    $buttons = $butPrCt . $buttons;
                 } else {
                     $butPrRq = '
-                <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->id.'/1/0" title="Proccess LCL Request">
+                <a href="/ImportationLCL/RequestProccessLCL/' . $Ncontracts->id . '/1/0" title="Proccess LCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                 </a>';
-                    $buttons = $butPrRq.$buttons;
+                    $buttons = $butPrRq . $buttons;
                 }
 
                 return $buttons;
@@ -180,25 +179,25 @@ class NewContractRequestLclController extends Controller
                 }
             })
             ->addColumn('user', function ($Ncontracts) {
-                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+                return $Ncontracts->user->name . ' ' . $Ncontracts->user->lastname;
             })
             ->addColumn('status', function ($Ncontracts) {
                 $color = '';
                 if (strnatcasecmp($Ncontracts->status, 'Pending') == 0) {
                     //$color = 'color:#031B4E';
                     $color = 'color:#f81538';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
                     $color = 'color:#5527f0';
-                } elseif (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
+                } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                     $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
 
-                return '<label style="'.$color.'">'.$Ncontracts->status.'</label>';
+                return '<label style="' . $color . '">' . $Ncontracts->status . '</label>';
             })
             ->addColumn('action', function ($Ncontracts) {
-                return '<a href="/RequestsLcl/RequestImportationLcl/'.$Ncontracts->id.'" title="Download File">
+                return '<a href="/RequestsLcl/RequestImportationLcl/' . $Ncontracts->id . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
             })
@@ -211,7 +210,7 @@ class NewContractRequestLclController extends Controller
         //dd($request->all());
     }
 
-    public function store2(Request $request)
+    public function store2(StoreNewRequestLcl $request)
     {
         //dd($request->all());
         $fileBoll = false;
@@ -221,18 +220,18 @@ class NewContractRequestLclController extends Controller
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
         /* $validator = \Validator::make(
-            array('ext' => $ext),
-            array('ext' => 'in:xls,xlsx,csv')
+        array('ext' => $ext),
+        array('ext' => 'in:xls,xlsx,csv')
         );
 
         if ($validator->fails()) {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-            return redirect()->route('Requestimporfcl');
+        $request->session()->flash('message.nivel', 'danger');
+        $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+        return redirect()->route('Requestimporfcl');
         }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
-        $nombre = $now.'_'.$nombre;
+        $nombre = $now . '_' . $nombre;
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;
@@ -243,6 +242,7 @@ class NewContractRequestLclController extends Controller
         $type = json_encode($type);
         $data = json_encode($data);
         if ($fileBoll) {
+
             $direction_id = $request->direction;
             $CompanyUserId = $request->CompanyUserId;
 
@@ -261,8 +261,8 @@ class NewContractRequestLclController extends Controller
 
             foreach ($request->carrierM as $carrierVal) {
                 ContractCarrierLcl::create([
-                    'carrier_id'    => $carrierVal,
-                    'contract_id'   => $Contract_id,
+                    'carrier_id' => $carrierVal,
+                    'contract_id' => $Contract_id,
                 ]);
             }
 
@@ -293,31 +293,36 @@ class NewContractRequestLclController extends Controller
             }
 
             $user = User::find($request->user);
-            $message = 'There is a new request from '.$user->name.' - '.$user->companyUser->name;
+            $message = "There is a new request from " . $user->name . " - " . $user->companyUser->name;
             $user->notify(new SlackNotification($message));
             $admins = User::where('type', 'admin')->get();
-            $message = 'has created an new request: '.$Ncontract->id;
+            $message = 'has created an new request: ' . $Ncontract->id;
             NotificationsJob::dispatch('Request-Lcl', [
                 'user' => $request->user,
                 'ncontract' => $Ncontract->toArray(),
             ]);
             foreach ($admins as $userNotifique) {
                 /*\Mail::to($userNotifique->email)->send(new NewRequestLclToAdminMail(
-                    $userNotifique->toArray(),
-                    $user->toArray(),
-                    $Ncontract->toArray()));*/
+                $userNotifique->toArray(),
+                $user->toArray(),
+                $Ncontract->toArray()));*/
                 $userNotifique->notify(new N_general($user, $message));
             }
 
+            // EVENTO INTERCOM
+            $event = new EventIntercom();
+            $event->event_newRequestLCL();
+
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-
             return redirect()->route('contractslcl.index');
+
         } else {
+
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
-
             return redirect()->route('contractslcl.index');
+
         }
     }
 
@@ -338,7 +343,6 @@ class NewContractRequestLclController extends Controller
             $status_arr['Review'] = 'Review';
             $status_arr['Done'] = 'Done';
         }
-
         return view('RequestsLcl.Body-Modals.edit', compact('requests', 'status_arr'));
     }
 
@@ -351,53 +355,48 @@ class NewContractRequestLclController extends Controller
         $company = CompanyUser::find($Ncontract->company_user_id);
         $extObj = new \SplFileInfo($Ncontract->namefile);
         $ext = $extObj->getExtension();
-        $name = $Ncontract->id.'-'.$company->name.'_'.$now.'-LCL.'.$ext;
+        $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-LCL.' . $ext;
 
         $success = false;
         $descarga = null;
 
-        if (Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile, $name)) {
+        if (Storage::disk('s3_upload')->exists('Request/LCL/' . $Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile, $name);
-        } elseif (Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile, $name)) {
+            return Storage::disk('s3_upload')->download('Request/LCL/' . $Ncontract->namefile, $name);
+        } elseif (Storage::disk('s3_upload')->exists('contracts/' . $Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile, $name);
+            return Storage::disk('s3_upload')->download('contracts/' . $Ncontract->namefile, $name);
         } elseif (Storage::disk('LclRequest')->exists($Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('LclRequest')->download($Ncontract->namefile, $name);
+            return Storage::disk('LclRequest')->download($Ncontract->namefile, $name);
         } elseif (Storage::disk('UpLoadFile')->exists($Ncontract->namefile, $name)) {
             $success = true;
-
-            return	Storage::disk('UpLoadFile')->download($Ncontract->namefile, $name);
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile, $name);
         } else {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error. File not found');
-
             return back();
         }
 
         /*try{
-            return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
-        } catch(\Exception $e){
-            try{
-                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-            } catch(\Exception $e){
-                try{
-                    return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
-                } catch(\Exception $e){
-                    try{
-                        return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-                    } catch(\Exception $e){
-                        $request->session()->flash('message.nivel', 'danger');
-                        $request->session()->flash('message.content', 'Error. File not found');
-                        return back();
-                    }
-                }
-            }
-        }*/
+    return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
+    } catch(\Exception $e){
+    try{
+    return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+    } catch(\Exception $e){
+    try{
+    return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
+    } catch(\Exception $e){
+    try{
+    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+    } catch(\Exception $e){
+    $request->session()->flash('message.nivel', 'danger');
+    $request->session()->flash('message.content', 'Error. File not found');
+    return back();
+    }
+    }
+    }
+    }*/
     }
 
     public function edit($id)
@@ -414,6 +413,7 @@ class NewContractRequestLclController extends Controller
         // $status = 'Done';
 
         try {
+
             $time = new \DateTime();
             $now2 = $time->format('Y-m-d H:i:s');
 
@@ -421,7 +421,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
             if ($Ncontract->username_load == 'Not assigned') {
-                $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
+                $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
 
             if ($Ncontract->status == 'Processing') {
@@ -429,6 +429,7 @@ class NewContractRequestLclController extends Controller
                     $Ncontract->time_star = $now2;
                     $Ncontract->time_star_one = true;
                 }
+
             } elseif ($Ncontract->status == 'Review') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
@@ -441,35 +442,39 @@ class NewContractRequestLclController extends Controller
                         if ($time_exacto == 0 || $time_exacto == '0') {
                             $time_exacto = '1 minute';
                         } else {
-                            $time_exacto = $time_exacto.' minutes';
+                            $time_exacto = $time_exacto . ' minutes';
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
                 }
+
             } elseif ($Ncontract->status == 'Done') {
+
                 if ($Ncontract->time_manager == null) {
                     $fechaEnd = Carbon::parse($now2);
                     $fechaStar = Carbon::parse($Ncontract->created);
                     $time_manager = number_format($fechaEnd->diffInMinutes($fechaStar) / 60, 2);
-                    $Ncontract->time_manager = $time_manager.' hours';
+                    $Ncontract->time_manager = $time_manager . ' hours';
                     //$Ncontract->time_manager = $fechaEnd->diffInHours($fechaStar).' hours';
                 }
 
                 if ($Ncontract->sentemail == false) {
                     $users = User::all()->where('company_user_id', '=', $Ncontract->company_user_id);
-                    $message = 'The request was processed N°: '.$Ncontract->id;
+                    $message = 'The request was processed N°: ' . $Ncontract->id;
                     foreach ($users as $user) {
+
                         $user->notify(new N_general(\Auth::user(), $message));
                     }
 
                     $usercreador = User::find($Ncontract->user_id);
-                    $message = 'The importation '.$Ncontract->id.' was completed';
+                    $message = "The importation " . $Ncontract->id . " was completed";
                     $usercreador->notify(new SlackNotification($message));
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
                         SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
                     }
+
                 }
             }
 
@@ -477,18 +482,18 @@ class NewContractRequestLclController extends Controller
 
             if (strnatcasecmp($Ncontract->status, 'Pending') == 0) {
                 $color = '#f81538';
-            } elseif (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
                 $color = '#5527f0';
-            } elseif (strnatcasecmp($Ncontract->status, 'Review') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Review') == 0) {
                 $color = '#e07000';
-            } elseif (strnatcasecmp($Ncontract->status, 'Done') == 0) {
+            } else if (strnatcasecmp($Ncontract->status, 'Done') == 0) {
                 $color = '#04950f';
             }
-
-            return response()->json($data = ['data'=>1, 'status' => $Ncontract->status, 'color'=> $color, 'request' => $Ncontract->toArray()]);
+            return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract->toArray()]);
         } catch (\Exception $e) {
-            return response()->json($data = ['data'=>2]);
+            return response()->json($data = ['data' => 2]);
         }
+
     }
 
     public function update(Request $request, $id)
@@ -508,7 +513,6 @@ class NewContractRequestLclController extends Controller
             $Ncontract = NewContractRequestLcl::find($id);
             Storage::disk('LclRequest')->delete($Ncontract->namefile);
             $Ncontract->delete();
-
             return 1;
         } catch (\Exception $e) {
             return 2;
@@ -520,13 +524,12 @@ class NewContractRequestLclController extends Controller
     {
         $harbor = harbor::all()->pluck('display_name', 'id');
         $carrier = carrier::all()->pluck('name', 'id');
-        $direction = [null=>'Please Select'];
+        $direction = [null => 'Please Select'];
         $direction2 = Direction::all();
         foreach ($direction2 as $d) {
             $direction[$d['id']] = $d->name;
         }
         $user = \Auth::user();
-
         return view('RequestsLcl.NewRequest', compact('harbor', 'carrier', 'user', 'direction'));
     }
 
@@ -540,15 +543,16 @@ class NewContractRequestLclController extends Controller
         $now = $now->format('dmY_His');
         $dateEnd = \Carbon\Carbon::parse($dateEnd);
         $dateEnd = $dateEnd->addDay()->format('Y-m-d');
-        $countNRq = NewContractRequestLcl::whereBetween('created', [$dateStart.' 00:00:00', $dateEnd.' 23:59:59'])->count();
+        $countNRq = NewContractRequestLcl::whereBetween('created', [$dateStart . ' 00:00:00', $dateEnd . ' 23:59:59'])->count();
 
         if ($countNRq <= 100) {
-            $nameFile = 'Request_Lcl_'.$now;
+            $nameFile = 'Request_Lcl_' . $now;
             $data = PrvRequest::RequestLclBetween($dateStart, $dateEnd);
 
             //dd($data->chunk(2));
 
             $myFile = Excel::create($nameFile, function ($excel) use ($data) {
+
                 $excel->sheet('REQUEST_LCL', function ($sheet) use ($data) {
                     $sheet->cells('A1:N1', function ($cells) {
                         $cells->setBackground('#2525ba');
@@ -556,76 +560,76 @@ class NewContractRequestLclController extends Controller
                         //$cells->setValignment('center');
                     });
 
-                    $sheet->setWidth([
-                        'A'     =>  10,
-                        'B'     =>  30,
-                        'C'     =>  25,
-                        'D'     =>  10,
-                        'E'     =>  20,
-                        'F'     =>  25,
-                        'G'     =>  25,
-                        'H'     =>  20,
-                        'I'     =>  20,
-                        'J'     =>  25,
-                        'K'     =>  25,
-                        'L'     =>  15,
-                        'M'     =>  15,
-                        'N'     =>  15,
-                    ]);
+                    $sheet->setWidth(array(
+                        'A' => 10,
+                        'B' => 30,
+                        'C' => 25,
+                        'D' => 10,
+                        'E' => 20,
+                        'F' => 25,
+                        'G' => 25,
+                        'H' => 20,
+                        'I' => 20,
+                        'J' => 25,
+                        'K' => 25,
+                        'L' => 15,
+                        'M' => 15,
+                        'N' => 15,
+                    ));
 
-                    $sheet->row(1, [
-                        'Id',
-                        'Company',
-                        'Reference',
-                        'Direction',
-                        'Carrier',
-                        'Validation',
-                        'Date',
-                        'User',
-                        'Username load',
-                        'Time Start',
-                        'Time End',
-                        'Time Elapsed. Minutes',
-                        'Management Time. Hours',
-                        'Status',
-                    ]);
+                    $sheet->row(1, array(
+                        "Id",
+                        "Company",
+                        "Reference",
+                        "Direction",
+                        "Carrier",
+                        "Validation",
+                        "Date",
+                        "User",
+                        "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed. Minutes",
+                        "Management Time. Hours",
+                        "Status",
+                    ));
                     $i = 2;
 
                     $data = $data->chunk(500);
-                    $data = $data->toArray();
+                    $data = $data->toArray();;
                     foreach ($data as $nrequests) {
                         foreach ($nrequests as $nrequest) {
-                            $sheet->row($i, [
-                                'Id'                => $nrequest['id'],
-                                'Company'           => $nrequest['company'],
-                                'Reference'         => $nrequest['reference'],
-                                'Direction'         => $nrequest['direction'],
-                                'Carrier'           => $nrequest['carrier'],
-                                'Validation'        => $nrequest['validation'],
-                                'Date'              => $nrequest['date'],
-                                'User'              => $nrequest['user'],
-                                'Username load'     => $nrequest['username_load'],
-                                'Time Start'        => $nrequest['time_start'],
-                                'Time End'          => $nrequest['time_end'],
-                                'Time Elapsed'      => $nrequest['time_elapsed'],
-                                'Management Time'   => $nrequest['time_manager'],
-                                'Status'            => $nrequest['status'],
-                            ]);
-                            $sheet->setBorder('A1:N'.$i, 'thin');
+                            $sheet->row($i, array(
+                                "Id" => $nrequest['id'],
+                                "Company" => $nrequest['company'],
+                                "Reference" => $nrequest['reference'],
+                                "Direction" => $nrequest['direction'],
+                                "Carrier" => $nrequest['carrier'],
+                                "Validation" => $nrequest['validation'],
+                                "Date" => $nrequest['date'],
+                                "User" => $nrequest['user'],
+                                "Username load" => $nrequest['username_load'],
+                                "Time Start" => $nrequest['time_start'],
+                                "Time End" => $nrequest['time_end'],
+                                "Time Elapsed" => $nrequest['time_elapsed'],
+                                "Management Time" => $nrequest['time_manager'],
+                                "Status" => $nrequest['status'],
+                            ));
+                            $sheet->setBorder('A1:N' . $i, 'thin');
 
-                            $sheet->cells('F'.$i, function ($cells) {
+                            $sheet->cells('F' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
-                            $sheet->cells('G'.$i, function ($cells) {
+                            $sheet->cells('G' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
-                            $sheet->cells('K'.$i, function ($cells) {
+                            $sheet->cells('K' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
-                            $sheet->cells('J'.$i, function ($cells) {
+                            $sheet->cells('J' . $i, function ($cells) {
                                 $cells->setAlignment('center');
                             });
 
@@ -633,22 +637,22 @@ class NewContractRequestLclController extends Controller
                         }
                     }
                 });
+
             });
 
             $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
-            $response = [
+            $response = array(
                 'actt' => 1,
-                'name' => $nameFile.'.xlsx', //no extention needed
-                'file' => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'.base64_encode($myFile), //mime type of used format
-            ];
+                'name' => $nameFile . '.xlsx', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($myFile), //mime type of used format
+            );
         } else {
             $auth = \Auth::user()->toArray();
             ExportRequestsJob::dispatch($dateStart, $dateEnd, $auth, 'lcl')->onQueue('operaciones');
-            $response = [
+            $response = array(
                 'actt' => 2,
-            ];
+            );
         }
-
         return response()->json($response);
     }
 
@@ -665,16 +669,16 @@ class NewContractRequestLclController extends Controller
     public function similarcontracts(Request $request, $id)
     {
         $contracts = ContractLcl::select(['id',
-                                          'name',
-                                          'company_user_id',
-                                          'account_id',
-                                          'direction_id',
-                                          'validity',
-                                          'expire',
-                                         ]);
+            'name',
+            'company_user_id',
+            'account_id',
+            'direction_id',
+            'validity',
+            'expire',
+        ]);
 
         return Datatables::of($contracts->where('company_user_id', $id))
-            ->filter(function ($query) use ($request,$id) {
+            ->filter(function ($query) use ($request, $id) {
                 if ($request->has('direction') && $request->get('direction') != null) {
                     $query->where('direction_id', '=', $request->get('direction'));
                 } else {
@@ -688,6 +692,7 @@ class NewContractRequestLclController extends Controller
                 if ($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
                     $query->where('validity', '=', $request->get('dateO'))->where('expire', '=', $request->get('dateT'));
                 }
+
             })
             ->addColumn('carrier', function ($contracts) {
                 $dd = $contracts->load('carriers.carrier');
@@ -696,6 +701,7 @@ class NewContractRequestLclController extends Controller
                 } else {
                     return '-------';
                 }
+
             })
             ->addColumn('direction', function ($contracts) {
                 $dds = $contracts->load('direction');

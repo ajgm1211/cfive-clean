@@ -9,24 +9,25 @@ use GuzzleHttp\Client;
 
 class Vforwarding
 {
-    public function getData($client, $endpoint, $setting)
+    public function getData($setting)
     {
         try {
-            $response = $client->get($endpoint);
 
-            $type = $response->getHeader('content-type');
+            $page = 1;
 
-            $type = explode(';', $type[0]);
+            do {
 
-            $api_response = $response->getBody()->getContents();
+                $uri_paginate =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
 
-            if ($type[1] == 'charset=iso-8859-1') {
-                $api_response = iconv('iso-8859-1', 'UTF-8', $api_response);
-            }
+                $response = $this->callApi($uri_paginate);
 
-            $result = json_decode($api_response, true);
+                $max_page = ceil($response['count'] / 1000);
 
-            SyncCompaniesJob::dispatch($result, \Auth::user(), $setting->partner);
+                SyncCompaniesJob::dispatch($response, \Auth::user(), $setting->partner);
+                \Log::info('Running page: ' . $page);
+
+                $page += 1;
+            } while ($page <= $max_page);
 
             return true;
         } catch (\Exception $e) {
@@ -34,5 +35,29 @@ class Vforwarding
 
             return false;
         }
+    }
+
+    public function callApi($uri)
+    {
+        $client = new Client([
+            'verify' => false,
+            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
+        ]);
+
+        $response = $client->get($uri);
+
+        $type = $response->getHeader('content-type');
+
+        $type = explode(';', $type[0]);
+
+        $api_response = $response->getBody()->getContents();
+
+        if ($type[1] == 'charset=iso-8859-1') {
+            $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
+        }
+
+        $data = json_decode($api_response, true);
+
+        return $data;
     }
 }
