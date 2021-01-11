@@ -1071,7 +1071,7 @@ input.multiselect__input:focus {
     width: 100% !important;
 }
 
-.search label img {
+.img-icon {
     top: 9px;
     left: 15px;
     width: 25px;
@@ -1080,17 +1080,18 @@ input.multiselect__input:focus {
     position: absolute;
 }
 
-.type-packages .multiselect__tags {
-    padding: 4px 7px 5px 6px !important;
-}
-
-.search label .multiselect__tags {
+.search div .multiselect__tags {
     min-height: 50px !important;
     height: auto !important;
     padding: 4px 7px 5px 50px !important;
     display: flex;
     align-items: center;
 }
+
+.type-packages .multiselect__tags {
+    padding: 4px 7px 5px 6px !important;
+}
+
 
 .delivery-type {
     width: 25% !important;
@@ -1721,4 +1722,14 @@ input.surcharge-input {
 
 .type-packages .delivery-type {
     top: 16px;
+}
+.search .dropdown-containers button {
+    color: #333333 !important;
+    background-color: #F8F8F8 !important;;
+    border: none;
+}
+
+#carrier .custom-control {
+    display: block;
+    margin-bottom: 10px;
 }
