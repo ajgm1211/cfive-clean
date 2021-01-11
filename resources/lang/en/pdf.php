@@ -17,7 +17,8 @@ return [
     "pol" => "POL",
     "type" => "Type",
     "service" => "Service",
-    "remarks" => "Remarks",
+    "remarks" => "Ocean Freight Remarks",
+    "localcharge_remarks" => "Local Charges Remarks",
     "terms" => "Terms & Conditions",
     "from" => "From",
     "to" => "To",
@@ -54,4 +55,8 @@ return [
     "inland" => "Inland",
     "provider" => "Provider",
     "distance" => "Distance",
+    "ocean_freight" => "Ocean freight",
+    "minimum" => "Minimum",
+    "totals" => "Totals",
+    "price" => "Price",
 ];

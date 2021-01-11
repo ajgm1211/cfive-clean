@@ -19,7 +19,7 @@ class Charge extends Model
 
     protected $appends = ['currency_code'];
 
-    protected $fillable = ['automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'currency_id', 'total'];
+    protected $fillable = ['automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'currency_id', 'total', 'provider_name'];
 
     public function automatic_rate()
     {
