@@ -112,6 +112,11 @@ class AutomaticRate extends Model
         return $this->hasMany('App\AutomaticRateTotal', 'automatic_rate_id');
     }
 
+    public function total_rate()
+    {
+        return $this->hasOne('App\AutomaticRateTotal', 'automatic_rate_id');
+    }
+
     public function scopeCharge($query, $type_id, $type)
     {
         $query->whereHas('charge', function ($query) use ($type_id) {
