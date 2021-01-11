@@ -6,6 +6,7 @@ use App\Country;
 use App\Harbor;
 use HelperAll;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class FileHarborsPortsController extends Controller
 {
@@ -19,7 +20,7 @@ class FileHarborsPortsController extends Controller
         //$harbors = Harbor::with('country')->get();
         $harbors = \DB::select('call  proc_harbors');
 
-        return Datatables::of($harbors)
+        return DataTables::of($harbors)
             ->addColumn('name', function ($harbors) {
                 return '<span id="tdname' . $harbors->id . '">' . $harbors->name . '</span>';
             })
