@@ -1106,7 +1106,52 @@ class GlobalChargesController extends Controller
         $company_user_id_selec = $request->input('company_user_id_selec');
         $carrier_id_selec = $request->input('carrier_id_selec');
         $reload_DT = $request->input('reload_DT');
+        // PORT TO PORT
+        if ($request->input('allOriginPort') != null) {
+            $all_port = array($request->input('allOriginPort'));
+            $request->request->add(['port_orig' => $all_port]);
+        }
+        if ($request->input('allDestinationPort') != null) {
+            $all_portD = array($request->input('allDestinationPort'));
+            $request->request->add(['port_dest' => $all_portD]);
+        }
+        //COUNTRY TO COUNTRY
+        if ($request->input('allOriginCountry') != null) {
+            $all_country = array($request->input('allOriginCountry'));
+            $request->request->add(['country_orig' => $all_country]);
+        }
 
+        if ($request->input('allDestinationCountry') != null) {
+            $all_countryD = array($request->input('allDestinationCountry'));
+            $request->request->add(['country_dest' => $all_countryD]);
+        }
+
+        //PORT TO COUNTRY
+
+        if ($request->input('allOriginPortCountry') != null) {
+            $all_country = array($request->input('allOriginPortCountry'));
+            $request->request->add(['portcountry_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationPortCountry') != null) {
+            $all_countryD = array($request->input('allDestinationPortCountry'));
+            $request->request->add(['portcountry_dest' => $all_countryD]);
+        }
+
+        //COUNTRY  TO PORT 
+
+
+        if ($request->input('allOriginCountryPort') != null) {
+            $all_country = array($request->input('allOriginCountryPort'));
+            $request->request->add(['countryport_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationCountryPort') != null) {
+            $all_countryD = array($request->input('allDestinationCountryPort'));
+            $request->request->add(['countryport_dest' => $all_countryD]);
+        }
+
+        $data = $this->validateData($request);
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
@@ -1182,6 +1227,51 @@ class GlobalChargesController extends Controller
                         }
                     }
                 }
+                //Excepciones Ports
+                if ($request->input('exceptionPortOrig') != null) {
+                    $exceptionPortOrig = $request->input('exceptionPortOrig');
+                    foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
+                        $ports = new GlobalCharPortException();
+                        $ports->port_orig = $exPortOrig;
+
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
+                }
+
+                if ($request->input('exceptionPortDest') != null) {
+                    $exceptionPortDest = $request->input('exceptionPortDest');
+                    foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
+                        $ports = new GlobalCharPortException();
+
+                        $ports->port_dest = $exPortDest;
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
+                }
+
+                // Excepciones Country
+                if ($request->input('exceptionCountryOrig') != null) {
+                    $exceptionCountryOrig = $request->input('exceptionCountryOrig');
+                    foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
+                        $countries = new GlobalCharCountryException();
+                        $countries->country_orig = $exCountOrig;
+
+                        $countries->globalcharge()->associate($global);
+                        $countries->save();
+                    }
+                }
+
+                if ($request->input('exceptionCountryDest') != null) {
+                    $exceptionCountryDest = $request->input('exceptionCountryDest');
+                    foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
+                        $countries = new GlobalCharCountryException();
+
+                        $countries->country_dest = $exCountDest;
+                        $countries->globalcharge()->associate($global);
+                        $countries->save();
+                    }
+                }
             }
         }
 
@@ -1213,6 +1303,7 @@ class GlobalChargesController extends Controller
         $company_users = CompanyUser::pluck('name', 'id');
         $validation_expire = $globalcharges->validity . " / " . $globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
+  
 
         $activacion = array("rdrouteP" => false, "rdrouteC" => false, "rdroutePC" => false, "rdrouteCP" => false, 'act' => '');
 
@@ -1233,13 +1324,58 @@ class GlobalChargesController extends Controller
             $activacion['act'] = 'divport';
         }
 
-        return view('globalchargesAdm.edit', compact('globalcharges', 'harbor', 'carrier', 'regionPt', 'regionCt', 'currency', 'company_users', 'calculationT', 'typedestiny', 'surcharge', 'countries', 'company_user_id_selec', 'carrier_id_selec', 'reload_DT', 'activacion'));
+        return view('globalchargesAdm.edit', compact('globalcharges', 'harbor', 'carrier', 'regionPt', 'regionCt', 'currency', 'company_users',
+                                                     'calculationT', 'typedestiny', 'surcharge', 'countries', 'company_user_id_selec', 'carrier_id_selec',
+                                                     'reload_DT', 'activacion'));
     }
 
     public function updateAdm(Request $request, $id)
     {
         //dd($request->all()) ;
+        // PORT TO PORT
+        if ($request->input('allOriginPort') != null) {
+            $all_port = array($request->input('allOriginPort'));
+            $request->request->add(['port_orig' => $all_port]);
+        }
+        if ($request->input('allDestinationPort') != null) {
+            $all_portD = array($request->input('allDestinationPort'));
+            $request->request->add(['port_dest' => $all_portD]);
+        }
+        //COUNTRY TO COUNTRY
+        if ($request->input('allOriginCountry') != null) {
+            $all_country = array($request->input('allOriginCountry'));
+            $request->request->add(['country_orig' => $all_country]);
+        }
 
+        if ($request->input('allDestinationCountry') != null) {
+            $all_countryD = array($request->input('allDestinationCountry'));
+            $request->request->add(['country_dest' => $all_countryD]);
+        }
+
+        //PORT TO COUNTRY
+
+        if ($request->input('allOriginPortCountry') != null) {
+            $all_country = array($request->input('allOriginPortCountry'));
+            $request->request->add(['portcountry_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationPortCountry') != null) {
+            $all_countryD = array($request->input('allDestinationPortCountry'));
+            $request->request->add(['portcountry_dest' => $all_countryD]);
+        }
+
+        //COUNTRY  TO PORT 
+
+
+        if ($request->input('allOriginCountryPort') != null) {
+            $all_country = array($request->input('allOriginCountryPort'));
+            $request->request->add(['countryport_orig' => $all_country]);
+        }
+
+        if ($request->input('allDestinationCountryPort') != null) {
+            $all_countryD = array($request->input('allDestinationCountryPort'));
+            $request->request->add(['countryport_dest' => $all_countryD]);
+        }
         $harbor = Harbor::pluck('display_name', 'id');
         $carrier = Carrier::pluck('name', 'id');
         $currency = Currency::pluck('alphacode', 'id');
@@ -1273,6 +1409,14 @@ class GlobalChargesController extends Controller
 
         $deleteCountryPort = GlobalCharCountryPort::where("globalcharge_id", $id);
         $deleteCountryPort->delete();
+        
+        // Excepciones 
+        $deletePortExcepcion = GlobalCharPortException::where("globalcharge_id", $id);
+        $deletePortExcepcion->delete();
+
+        $deleteCountryExcepcion = GlobalCharCountryException::where("globalcharge_id", $id);
+        $deleteCountryExcepcion->delete();
+
         $global->update();
         $contador = 1;
         foreach ($carrierInp as $key) {
@@ -1341,6 +1485,51 @@ class GlobalChargesController extends Controller
                         $detail->globalcharge()->associate($global);
                         $detail->save();
                     }
+                }
+            }
+             //Excepciones Ports
+             if ($request->input('exceptionPortOrig') != null) {
+                $exceptionPortOrig = $request->input('exceptionPortOrig');
+                foreach ($exceptionPortOrig as $keyPortOrig => $exPortOrig) {
+                    $ports = new GlobalCharPortException();
+                    $ports->port_orig = $exPortOrig;
+
+                    $ports->globalcharge()->associate($global);
+                    $ports->save();
+                }
+            }
+
+            if ($request->input('exceptionPortDest') != null) {
+                $exceptionPortDest = $request->input('exceptionPortDest');
+                foreach ($exceptionPortDest as $keyPortDest => $exPortDest) {
+                    $ports = new GlobalCharPortException();
+
+                    $ports->port_dest = $exPortDest;
+                    $ports->globalcharge()->associate($global);
+                    $ports->save();
+                }
+            }
+
+            // Excepciones Country
+            if ($request->input('exceptionCountryOrig') != null) {
+                $exceptionCountryOrig = $request->input('exceptionCountryOrig');
+                foreach ($exceptionCountryOrig as $keyCountOrig => $exCountOrig) {
+                    $countries = new GlobalCharCountryException();
+                    $countries->country_orig = $exCountOrig;
+
+                    $countries->globalcharge()->associate($global);
+                    $countries->save();
+                }
+            }
+
+            if ($request->input('exceptionCountryDest') != null) {
+                $exceptionCountryDest = $request->input('exceptionCountryDest');
+                foreach ($exceptionCountryDest as $keyCountDest => $exCountDest) {
+                    $countries = new GlobalCharCountryException();
+
+                    $countries->country_dest = $exCountDest;
+                    $countries->globalcharge()->associate($global);
+                    $countries->save();
                 }
             }
 
