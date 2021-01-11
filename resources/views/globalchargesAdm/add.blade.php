@@ -37,75 +37,115 @@
       </div>
     </div>
     <div class="form-group m-form__group row">
-      <div class="col-lg-4">
+    <div class="col-lg-4">
         <label>
           {!! Form::label('type', 'Type') !!}
         </label>
         {{ Form::select('type',[''=>'Select Option'],null,['id' => 'type','class'=>'m-select2-general form-control','required' => 'true']) }}
       </div>
-      <div class="col-lg-4">
-        <div class="divport" >
-          {!! Form::label('orig', 'Origin Port') !!}
-          {{ Form::select('port_orig[]', $harbor,
+    <div class="col-lg-4">
+                <div class="divport">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginPort' value='1485' id='allOriginPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('port_orig[]', $harbor,
           null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ,'required' => 'true' ]) }}
-        </div>
-        <div class="divcountry" hidden="true">
 
-          {!! Form::label('origC', 'Origin Country') !!}
-          {{ Form::select('country_orig[]', $countries,
+                </div>
+                <div class="divcountry" hidden="true">
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('origC', 'Origin Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginCountry' value='250' id='allOriginCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('country_orig[]', $countries,
           null,['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
 
-        </div>
-        <div class="divportcountry" hidden="true">
+                </div>
+                <div class="divportcountry" hidden="true">
 
-          <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
-          {{ Form::select('portcountry_orig[]', $harbor,
-          null,['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginPortCountry' value='1485' id='allOriginPortCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('portcountry_orig[]', $harbor,null,['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
 
-        </div>
-        <div class="divcountryport" hidden="true">
+                </div>
+                <div class="divcountryport" hidden="true">
 
-          <i class="la la-anchor icon__modal"></i>{!! Form::label('origC', 'Origin Country') !!}
-          {{ Form::select('countryport_orig[]', $countries,
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('origC', 'Origin Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginCountryPort' value='250' id='allOriginCountryPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('countryport_orig[]', $countries,
           null,['id' => 'countryport_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
 
-        </div>
-      </div>			
-      <div class="col-lg-4">
-        <div class="divport" >
-          {!! Form::label('dest', 'Destination Port') !!}
-          <div class="m-input-icon m-input-icon--right">
-            {{ Form::select('port_dest[]', $harbor,
-            null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple','required' => 'true' ]) }}
-            <span class="m-input-icon__icon m-input-icon__icon--right">
-              <span>
-                <i class="la la-info-circle"></i>
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="divcountry" hidden="true" >
+                </div>
+            </div>			
+       <!-- ***************************  DESTINATION *************************** -->
+       <div class="col-lg-4">
+                <div class="divport">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
+                    &nbsp;
+                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationPort' value='1485' id='allDestinationPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    <div class="m-input-icon m-input-icon--right">
+                        {{ Form::select('port_dest[]', $harbor,null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple','required' => 'true' ]) }}
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-info-circle"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="divcountry" hidden="true">
 
-          {!! Form::label('destC', 'Destination Country') !!}
-          {{ Form::select('country_dest[]',$countries,null,[ 'id' => 'country_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationCountry' value='250' id='allDestinationCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('country_dest[]',$countries,null,[ 'id' => 'country_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
 
-        </div>
-        <div class="divportcountry" hidden="true" >
+                </div>
+                <div class="divportcountry" hidden="true">
 
-          <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
-          {{ Form::select('portcountry_dest[]',$countries,null,[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationPortCountry' value='250' id='allDestinationPortCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('portcountry_dest[]',$countries,null,[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
 
-        </div>
-        <div class="divcountryport" hidden="true" >
+                </div>
+                <div class="divcountryport" hidden="true">
 
-          <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
-
-          {{ Form::select('countryport_dest[]', $harbor,
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationCountryPort' value='1485' id='allDestinationCountryPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
+                    {{ Form::select('countryport_dest[]', $harbor,
           null,['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
 
-        </div>
+                </div>
 
-      </div>
+            </div>
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
@@ -157,7 +197,43 @@
 
         {!! Form::number('ammount', 0, ['id' => 'ammount','class' => 'form-control','step'=>'0.01' ,'required' => 'true']) !!}
       </div>
+       <!--  EXCEPCIONES  -->
     </div>
+            <div class="form-group m-form__group row">
+
+            <div class="excepcionPortOrig" hidden="true">
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
+                    {{ Form::select('exceptionPortOrig[]', $harbor,
+          null,['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionPortDest" hidden="true">
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
+                    {{ Form::select('exceptionPortDest[]', $harbor,
+          null,['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionCountryOrig" hidden="true">
+                <div class="col-lg-9">
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Country') !!}
+                    {{ Form::select('exceptionCountryOrig[]', $countries,
+          null,['id' => 'exceptionCountryOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionCountryDest" hidden="true">
+                <div class="col-lg-9">
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Destination Country') !!}
+                    {{ Form::select('exceptionCountryDest[]', $countries,
+          null,['id' => 'exceptionCountryDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+
+
+        </div>
   </div>  
   <br>
   <div class="m-portlet__foot m-portlet__foot--fit">
