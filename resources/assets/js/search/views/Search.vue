@@ -300,6 +300,7 @@
 						<b-tab title="CALCULATE BY TOTAL SHIPMENT" active>
                             
                             <div class="row">
+
                                 <div class="col-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
@@ -309,9 +310,23 @@
                                         >
                                         </b-form-input>
                                         <img src="/images/paquete.svg" alt="paquete">
-                                        <span>PALLETS</span>
+                                        <div class="type-packages">
+                                                <multiselect
+                                                    v-model="typePallet"
+                                                    :multiple="false"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="false"
+                                                    :show-labels="false"
+                                                    :options="optionsTypePallet"
+                                                    placeholder="Select Filter"
+                                                    class="s-input no-select-style "
+                                                >
+                                                </multiselect>
+                                                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                                        </div>
                                     </label>
                                 </div>
+
                                 <div class="col-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
@@ -324,6 +339,7 @@
                                         <span>KG</span>
                                     </label>
                                 </div>
+
                                 <div class="col-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
@@ -336,6 +352,7 @@
                                         <span>M<sup>3</sup></span>
                                     </label>
                                 </div>
+
                                 <div class="col-3" style="text-align:center">
                                     <h6><b>CHARGEABLE WEIGHT</b></h6>
                                     <p>12.00<sup>m3</sup></p>
@@ -345,104 +362,116 @@
 						</b-tab>
 
 						<b-tab title="CALCULATE BY PACKAGING">
+
 							<div class="row">
 
-                        <div v-if="invalidSurcharger" class="col-12 mb-3">
-                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Complete all the fileds</h5>
-                        </div>
+                                <div v-if="invalidCalculate" class="col-12 mb-3">
+                                    <h6 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Complete all the fileds</h6>
+                                </div>
 
-                        <div class="col-12 d-flex justify-content-end align-items-center">
-                                    <span v-on:click="addSurcharger" class="btn-add-surch"><b-icon icon="check-circle"></b-icon></span>
-                                </div>
-                        <div id="surcharges-list" class="col-12">
+                                <div id="surcharges-list" class="col-12">
 
-                            <div class="row surcharge-content">
-                                <div class="col-12 col-sm-1">
-                                    <label>
-                                        <multiselect
-                                            v-model="pallets"
-                                            :multiple="false"
-                                            :close-on-select="true"
-                                            :clear-on-select="true"
-                                            :show-labels="false"
-                                            :options="optionsTypePallet"
-                                            placeholder="Choose an Option"
-                                            class="input-modal surcharge-input"
-                                            >
-                                        </multiselect>
-                                    </label>
+                                    <div class="row surcharge-content">
+                                        <div class="col-12 col-sm-1">
+                                            <label>
+                                                <multiselect
+                                                    v-model="pallets"
+                                                    :multiple="false"
+                                                    :close-on-select="true"
+                                                    :clear-on-select="false"
+                                                    :show-labels="false"
+                                                    :options="optionsTypePallet"
+                                                    placeholder="Choose"
+                                                    class="input-modal surcharge-input"
+                                                >
+                                                </multiselect>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-1">
+                                            <label class="d-flex align-items-center">
+                                                <b-form-input
+                                                    v-model="quantity"
+                                                    placeholder="Quantity" 
+                                                    class="s-input-form"
+                                                >
+                                                </b-form-input>
+                                                <img src="/images/paquete.svg" alt="paquete">
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-2">
+                                            <label class="d-flex align-items-center">
+                                                <b-form-input
+                                                    v-model="height"
+                                                    placeholder="Height" 
+                                                    class="s-input-form"
+                                                >
+                                                </b-form-input>
+                                                <img src="/images/paquete.svg" alt="paquete">
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-2">
+                                            <label class="d-flex align-items-center">
+                                                <b-form-input
+                                                    v-model="width"
+                                                    placeholder="Width" 
+                                                    class="s-input-form"
+                                                >
+                                                </b-form-input>
+                                                <img src="/images/paquete.svg" alt="paquete">
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-2">
+                                            <label>
+                                                <b-form-input
+                                                    v-model="large"
+                                                    placeholder="Large"
+                                                    class="s-input-form"
+                                                ></b-form-input>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-2">
+                                            <label>
+                                                <b-form-input
+                                                    v-model="weight"
+                                                    placeholder="Weight"
+                                                    class="s-input-form"
+                                                ></b-form-input>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 col-sm-1 d-flex align-items-center justify-content-center">
+                                            <span>{{ total }} M<sup>3</sup></span>
+                                        </div>
+
+                                        <div class="col-12 col-sm-1 d-flex justify-content-end align-items-center">
+                                            <span v-on:click="addSurcharger" class="btn-add-surch"><b-icon icon="check-circle"></b-icon> ADD LOAD</span>
+                                        </div>
+                                        
+                                    </div>
+
                                 </div>
-                                <div class="col-12 col-sm-2">
-                                    <label class="d-flex align-items-center">
-                                        <b-form-input
-                                            v-model="quantity"
-                                            placeholder="Quantity" 
-                                            class="s-input-form"
-                                        >
-                                        </b-form-input>
-                                        <img src="/images/paquete.svg" alt="paquete">
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-2">
-                                    <label class="d-flex align-items-center">
-                                        <b-form-input
-                                            v-model="height"
-                                            placeholder="Height" 
-                                            class="s-input-form"
-                                        >
-                                        </b-form-input>
-                                        <img src="/images/paquete.svg" alt="paquete">
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-2">
-                                    <label class="d-flex align-items-center">
-                                        <b-form-input
-                                            v-model="width"
-                                            placeholder="Width" 
-                                            class="s-input-form"
-                                        >
-                                        </b-form-input>
-                                        <img src="/images/paquete.svg" alt="paquete">
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-2">
-                                    <label>
-                                        <b-form-input
-                                            v-model="large"
-                                            placeholder="Large"
-                                            class="s-input-form"
-                                        ></b-form-input>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-2">
-                                    <label>
-                                        <b-form-input
-                                            v-model="weight"
-                                            placeholder="Weight"
-                                            class="s-input-form"
-                                        ></b-form-input>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-1 d-flex align-items-center justify-content-center">
-                                    <span>12.00 M<sup>3</sup></span>
-                                </div>
-                                
+
                             </div>
 
-                        </div>
-                    </div>
+                            <div class="row">
+                                <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataPackaging">
 
-                    <div class="row">
-                        <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataPackaging">
+                                    <div class="col-12 col-sm-1"><p>{{ item.type }}</p></div>
+                                    <div class="col-12 col-sm-1"><p>{{ item.quantity }}</p></div>
+                                    <div class="col-12 col-sm-2"><p>{{ item.height }}</p></div>
+                                    <div class="col-12 col-sm-2"><p>{{ item.width }}</p></div>
+                                    <div class="col-12 col-sm-2"><p>{{ item.large }}</p></div>
+                                    <div class="col-12 col-sm-2"><p>{{ item.weight }}</p></div>
+                                    <div class="col-12 col-sm-1"><p>{{ item.total }}</p></div>
+                                    <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
 
-                            <div class="col-12 col-sm-3"><p>{{ item.type }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.calculation }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.currency }}</p></div>
-                            <div class="col-12 col-sm-2"><p>{{ item.amount }}</p></div>
-                            <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
-
-                        </div>
-                    </div>
+                                </div>
+                            </div>
 						</b-tab>
 
 					</b-tabs>
@@ -484,18 +513,21 @@ export default {
             carriers: '',
             contact: '',
             pricelevel: '',
-            pallets: '',
+            pallets: 'PALLETS',
             quantity: '',
             width: '',
             weight: '',
             height: '',
             large: '',
+            total: '',
+            typePallet: 'PALLETS',
             container: [],
             selected: 'radio1',
             deliveryType: 'PORT TO PORT',
             valueOrigen: [],
             valueDestination: [],
             origenPort: [],
+            invalidCalculate: false,
             destinationPort: [],
             optionsOrigenPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
             optionsDestinationPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
@@ -504,7 +536,7 @@ export default {
                 { text: 'Import', value: 'import' },
                 { text: 'Export', value: 'export' }
             ],
-            optionsTypePallet: ['CHOOSE TYPE', 'PALLETS', 'PACKAGES'],
+            optionsTypePallet: ['PALLETS', 'PACKAGES'],
             optionCompany: ['Select option', 'Cargofive', 'Altius', 'Lantia', 'FreightBros'],
             optionContact: ['Select option', 'Genesis', 'Ruben', 'Sebastian', 'Julio'],
             optionPriceLevel: ['Select option', 'Precio 1', 'Precio 2', 'Precio 3', 'Precio 4'],
@@ -524,18 +556,20 @@ export default {
     },
     methods: {
         deleteSurcharger(index){
-                    this.dataSurcharger.splice(index, 1);
-                    console.log(this.dataSurcharger);
+                    this.dataPackaging.splice(index, 1);
+                    console.log(this.dataPackaging);
                 },
 
         addSurcharger() {
 
-            if(this.typeContract == "" || this.calculationType == "" || this.currencySurcharge == "" ) {
-                this.invalidSurcharger = true;
+            if(this.pallets == "" || this.quantity == "" || this.height == "" || this.width == "" || this.large == "" || this.weight == "" ) {
+                this.invalidCalculate = true;
                 return
             }
 
-            this.invalidSurcharger = false;
+            this.invalidCalculate = false;
+
+            var totalPackging = this.quantity + this.height + this.width + this.large + this.weight;
 
             var packaging = {
                 type: this.pallets,
@@ -544,11 +578,14 @@ export default {
                 width: this.width,
                 large: this.large,
                 weight: this.weight,
+                total: this.totalPackging,
             };
-
+            console.log(packaging);
             this.dataPackaging.push(packaging);
             
-            this.typeContract = ""; this.calculationType = ""; this.currencySurcharge = ""; this.amount = "";
+            this.pallets = ""; this.quantity = ""; this.height = ""; 
+            this.width = "";   this.large = "";    this.weight = ""; 
+            this.total = "";
         },
     },
     watch: {

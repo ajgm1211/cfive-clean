@@ -26,6 +26,8 @@ td,
 th,
 tr,
 legend,
+button,
+b,
 div
 .h6 {
     font-family: "Sailec" !important;
@@ -1078,6 +1080,10 @@ input.multiselect__input:focus {
     position: absolute;
 }
 
+.type-packages .multiselect__tags {
+    padding: 4px 7px 5px 6px !important;
+}
+
 .search label .multiselect__tags {
     min-height: 50px !important;
     height: auto !important;
@@ -1377,6 +1383,7 @@ input.multiselect__input:focus {
     b,
     p {
         float: right;
+        text-align: right;
     }
 }
 
@@ -1386,7 +1393,7 @@ input.multiselect__input:focus {
     img {
         width: 30px;
         top: -25px;
-        left: 85px;
+        left: 160px;
         color: #051b4e;
         position: absolute;
     }
@@ -1404,7 +1411,7 @@ input.multiselect__input:focus {
         background-color: transparent;
     }
     .line {
-        width: 150px;
+        width: 300px;
         height: 2px;
         background-color: #dddddd;
     }
@@ -1422,7 +1429,7 @@ input.multiselect__input:focus {
 }
 
 .result-search .via .direction-form.route-indirect .line {
-    width: 61px !important;
+    width: 136px !important;
 }
 
 .direction-desc {
@@ -1703,4 +1710,15 @@ input.surcharge-input {
 
 .font-tabs .nav-item a {
     font-size: 12px;
+}
+
+.type-packages {
+    width: 160px !important; 
+    height: 33.5px;
+    position:relative; 
+    top: -7px;
+}
+
+.type-packages .delivery-type {
+    top: 16px;
 }
