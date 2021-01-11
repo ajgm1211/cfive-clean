@@ -57,15 +57,15 @@ class RemarkConditionsController extends Controller
         $carriers = $request->carriers;
         $countries = $request->countries;
 
-        if (count($ports) >= 1) {
+        if (count((array)$ports) >= 1) {
             $this->storeRelationships($ports, $remark->id, 'port');
         }
 
-        if (count($carriers) >= 1) {
+        if (count((array)$carriers) >= 1) {
             $this->storeRelationships($carriers, $remark->id, 'carrier');
         }
 
-        if (count($countries) >= 1) {
+        if (count((array)$countries) >= 1) {
             $this->storeRelationships($countries, $remark->id, 'country');
         }
 
@@ -143,17 +143,17 @@ class RemarkConditionsController extends Controller
         $carriers = $request->carriers;
         $countries = $request->countries;
 
-        if (count($ports) >= 1) {
+        if (count((array)$ports) >= 1) {
             RemarkHarbor::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($ports, $id, 'port');
         }
 
-        if (count($carriers) >= 1) {
+        if (count((array)$carriers) >= 1) {
             RemarkCarrier::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($carriers, $id, 'carrier');
         }
 
-        if (count($countries) >= 1) {
+        if (count((array)$countries) >= 1) {
             RemarkCountry::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($countries, $id, 'country');
         }
