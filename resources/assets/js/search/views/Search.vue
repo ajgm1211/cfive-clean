@@ -21,7 +21,7 @@
                                 class="s-input no-select-style"
                             >
                             </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode img-icon"></b-icon>
                         </div>
 
                         <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
@@ -37,7 +37,7 @@
                                 class="s-input no-select-style "
                             >
                             </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type img-icon"></b-icon>
                         </div>
 
 
@@ -70,25 +70,22 @@
 
                 <!-- Origin Port -->
                 <div class="col-12 col-sm-3 origen-search input-search-form" style="position:relative; z-index:60"> 
-                    <label>
-                        <multiselect
-                            v-model="valueOrigen"
-                            :multiple="true"
-                            :close-on-select="true"
-                            :clear-on-select="true"
-                            :show-labels="false"
-                            :options="optionsOrigenPort"
-                            placeholder="From" 
-                            class="s-input"
-                        >
-                        </multiselect>
-                        <img src="/images/port.svg" alt="port">
-                    </label>
+                    <multiselect
+                        v-model="valueOrigen"
+                        :multiple="true"
+                        :close-on-select="true"
+                        :clear-on-select="true"
+                        :show-labels="false"
+                        :options="optionsOrigenPort"
+                        placeholder="From" 
+                        class="s-input"
+                    >
+                    </multiselect>
+                    <img src="/images/port.svg" class="img-icon" alt="port">
                 </div>
 
                 <!-- Destination Port -->
                 <div class="col-12 col-sm-3 input-search-form" style="position:relative; z-index:60">
-                    <label>
                         <multiselect
                             v-model="valueDestination"
                             :multiple="true"
@@ -100,13 +97,11 @@
                             class="s-input"
                         >
                         </multiselect>
-                        <img src="/images/port.svg" alt="port">
-                    </label>
+                        <img src="/images/port.svg" class="img-icon" alt="port">
                 </div>
                 
                 <!-- Date Picker-->
                 <div class="col-12 col-sm-3 input-search-form">
-                    <label>
                         <date-range-picker
                             :opens="'center'"
                             :locale-data="{
@@ -120,14 +115,12 @@
                             :linkedCalendars="true"
                             class="s-input"
                         ></date-range-picker>
-                        <img src="/images/calendario.svg" alt="calendario">
-                    </label>
+                        <img src="/images/calendario.svg" class="img-icon" alt="calendario">
                 </div>
 
                 <!-- Containers -->
                 <div class="col-12 col-sm-2 input-search-form containers-search" style="padding-left: 5px;">
-                    <label>
-                        <multiselect
+                        <!-- <multiselect
                             v-model="container"
                             :multiple="true"
                             :close-on-select="true"
@@ -137,9 +130,29 @@
                             placeholder="Containers" 
                             class="s-input"
                         >
-                        </multiselect>
-                        <img src="/images/container.svg" alt="port">
-                    </label>
+                        </multiselect> -->
+                        <b-dropdown id="dropdown-containers" text="Containers" ref="dropdown" class="m-2">
+                            <b-dropdown-form>
+                                <b-form-group label="Type" v-slot="{ ariaDescribedby }" @submit.stop.prevent>
+                                    <b-form-radio-group
+                                        id="carrier"
+                                        v-model="selectedContainers"
+                                        :options="optionsContainers"
+                                        :aria-describedby="ariaDescribedby"
+                                    ></b-form-radio-group>
+                                </b-form-group>
+                                <b-form-group label="Equipment List" v-slot="{ ariaDescribedby }" @submit.stop.prevent>
+                                    <b-form-checkbox-group
+                                        id="equipment"
+                                        v-model="selected"
+                                        :options="options+clase"
+                                        :aria-describedby="ariaDescribedby"
+                                        name="equipment"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                            </b-dropdown-form>
+                        </b-dropdown>
+                        <img src="/images/container.svg" class="img-icon" alt="port">
                 </div>
 
             </div>
@@ -153,7 +166,7 @@
 
                 <!-- Origin City -->
                 <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3 origen-search input-search-form" style="position:relative; z-index:50">
-                    <label>
+
                         <multiselect
                             v-model="origenPort"
                             :multiple="true"
@@ -165,13 +178,12 @@
                             class="s-input"
                         >
                         </multiselect>
-                        <img src="/images/city.svg" alt="port">
-                    </label>
+                        <img src="/images/city.svg" class="img-icon" alt="port">
                 </div>
 
                 <!-- Destination City -->
                 <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3 input-search-form" style="position:relative; z-index:50">
-                    <label>
+                    
                         <multiselect
                             v-model="destinationPort"
                             :multiple="true"
@@ -183,8 +195,8 @@
                             class="s-input"
                         >
                         </multiselect>
-                        <img src="/images/city.svg" alt="port">
-                    </label>
+                        <img src="/images/city.svg" class="img-icon" alt="port">
+
                 </div>
 
             </div>
@@ -197,7 +209,6 @@
                 <div class="row mr-0 ml-0">
 
                     <div class="col-12 col-sm-3">
-                        <label>
                             <multiselect
                             v-model="company"
                             :multiple="false"
@@ -209,12 +220,11 @@
                             class="s-input"
                             >
                             </multiselect>
-                            <img src="/images/empresa.svg" alt="port">
-                        </label>
+                            <img src="/images/empresa.svg" class="img-icon" alt="port">
+                        
                     </div>
                 
                     <div class="col-12 col-sm-3">
-                        <label>
                             <multiselect
                             v-model="contact"
                             :multiple="false"
@@ -226,12 +236,10 @@
                             class="s-input"
                             >
                             </multiselect>
-                            <img src="/images/contacto.svg" alt="port">
-                        </label>
+                            <img src="/images/contacto.svg" class="img-icon" alt="port">
                     </div>
 
                     <div class="col-12 col-sm-3">
-                        <label>
                             <multiselect
                             v-model="pricelevel"
                             :multiple="false"
@@ -243,12 +251,10 @@
                             class="s-input"
                             >
                             </multiselect>
-                            <img src="/images/pricelevel.svg" alt="port">
-                        </label>
+                            <img src="/images/pricelevel.svg" class="img-icon" alt="port">
                     </div>
 
                     <div class="col-12 col-sm-3">
-                        <label>
                             <multiselect
                             v-model="carriers"
                             :multiple="false"
@@ -260,8 +266,7 @@
                             class="s-input"
                             >
                             </multiselect>
-                            <img src="/images/carrier.svg" alt="port">
-                        </label>
+                            <img src="/images/carrier.svg" class="img-icon" alt="port">
                     </div>
 
                 </div>
@@ -309,7 +314,7 @@
                                             class="s-input-form mr-1"
                                         >
                                         </b-form-input>
-                                        <img src="/images/paquete.svg" alt="paquete">
+                                        <img src="/images/paquete.svg" class="img-icon" alt="paquete">
                                         <div class="type-packages">
                                                 <multiselect
                                                     v-model="typePallet"
@@ -335,7 +340,7 @@
                                             class="s-input-form mr-1"
                                         >
                                         </b-form-input>
-                                        <img src="/images/peso.svg" alt="peso">
+                                        <img src="/images/peso.svg" class="img-icon" alt="peso">
                                         <span>KG</span>
                                     </label>
                                 </div>
@@ -348,7 +353,7 @@
                                             class="s-input-form mr-1"
                                         >
                                         </b-form-input>
-                                        <img src="/images/espacio-de-trabajo.svg" alt="volumen">
+                                        <img src="/images/espacio-de-trabajo.svg" class="img-icon" alt="volumen">
                                         <span>M<sup>3</sup></span>
                                     </label>
                                 </div>
@@ -396,7 +401,7 @@
                                                     class="s-input-form"
                                                 >
                                                 </b-form-input>
-                                                <img src="/images/paquete.svg" alt="paquete">
+                                                <img src="/images/paquete.svg" class="img-icon" alt="paquete">
                                             </label>
                                         </div>
 
@@ -408,7 +413,7 @@
                                                     class="s-input-form"
                                                 >
                                                 </b-form-input>
-                                                <img src="/images/paquete.svg" alt="paquete">
+                                                <img src="/images/paquete.svg" class="img-icon" alt="paquete">
                                             </label>
                                         </div>
 
@@ -420,7 +425,7 @@
                                                     class="s-input-form"
                                                 >
                                                 </b-form-input>
-                                                <img src="/images/paquete.svg" alt="paquete">
+                                                <img src="/images/paquete.svg" class="img-icon"alt="paquete">
                                             </label>
                                         </div>
 
@@ -544,6 +549,25 @@ export default {
             optionContainer: ['Select option', '20DV', '40DV', '40CH', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'],
             optionsType: ['FCL', 'LCL', 'AIR'],
             optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR'],
+            selectedContainers: 'dry', // Must be an array reference!
+            optionsContainers: [
+                { text: 'DRY', value: 'dry' },
+                { text: 'REEFER', value: 'reefer' },
+                { text: 'OPEN TOP', value: 'open' },
+                { text: 'FLAT RACK', value: 'rack' },
+            ],
+            selectedCarries: [], // Must be an array reference!
+            optionsCarries: [
+                { text: 'APL', value: 'orange' },
+                { text: 'CCNI', value: 'apple' },
+                { text: 'CMA CGM', value: 'pineapple' },
+                { text: 'COSCO', value: 'grape' },
+                { text: 'CSAV', value: 'orange' },
+                { text: 'Evergreen', value: 'apple' },
+                { text: 'Hamburg Sub', value: 'pineapple' },
+                { text: 'Hanjin', value: 'grape' },
+                { text: 'HaHapag Lloydnjin', value: 'grape' },
+            ],
 
             //DATEPICKER
             locale: 'en-US',
