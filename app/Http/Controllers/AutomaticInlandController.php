@@ -372,7 +372,7 @@ class AutomaticInlandController extends Controller
         
         $ports_sorted = [];
         
-        if(count($origin_ports!=0)){
+        if(count($origin_ports)>0){
             foreach($origin_ports as $port){
                 $inlands = AutomaticInland::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -389,7 +389,7 @@ class AutomaticInlandController extends Controller
             }
         }
         
-        if(count($destination_ports!=0)){
+        if(count($destination_ports)>0){
             foreach($destination_ports as $port){
                 $inlands = AutomaticInland::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
