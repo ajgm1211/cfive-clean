@@ -1,6 +1,6 @@
 .table-responsive {
     overflow: initial !important;
-    overflow-x: scroll !important;
+    overflow-x: initial !important;
 }
 
 .sc-table.table-sm tr:nth-child(odd) {
@@ -28,7 +28,7 @@ tr,
 legend,
 button,
 b,
-div
+div,
 .h6 {
     font-family: "Sailec" !important;
 }
@@ -152,7 +152,7 @@ div
 }
 
 .btn-bg {
-    color: #fff;
+    color: #fff !important;
     font-weight: bold;
     border: none !important;
     background-color: #006bf9 !important;
@@ -446,10 +446,8 @@ i.mx-icon-calendar {
 }
 
 .multiselect__select {
-    top: 0px !important;
     right: 5px !important;
-    height: 50px !important;
-    display: none !important;
+    top: 0px !important;
 }
 
 .multiselect__select::before {
@@ -504,6 +502,17 @@ i.mx-icon-calendar {
     border-color: #006bf9 !important;
 }
 
+.vue-daterange-picker.s-input .reportrange-text {
+    border: none !important;
+    background: #f8f8f8;
+    min-height: 50px;
+}
+
+.vue-daterange-picker.s-input .reportrange-text i {
+    padding-top: 6px;
+    font-size: 30px;
+}
+
 
 /*** --- Tabs --- ***/
 
@@ -539,8 +548,8 @@ i.mx-icon-calendar {
 
 .multiselect__placeholder {
     white-space: nowrap;
-    font-size: 12px;
     margin-bottom: 0px !important;
+    padding-top: 0px !important;
     padding-left: 3px;
 }
 
@@ -552,6 +561,11 @@ i.mx-icon-calendar {
     position: relative;
     top: 25px;
     left: 11px;
+}
+
+#id_carriers .multiselect__tags,
+.multiselect-height .multiselect__tags {
+    height: 35px !important;
 }
 
 
@@ -626,7 +640,6 @@ i.mx-icon-calendar {
 input.multiselect__input {
     font-size: 13px;
     padding-left: 3px;
-    background: transparent !important;
 }
 
 input.multiselect__input:focus {
@@ -690,6 +703,10 @@ input.multiselect__input:focus {
 
 .tab-pane .card-body {
     overflow-x: scroll;
+}
+
+.no-scroll .card-body {
+    overflow: inherit;
 }
 
 .btn-adds {
@@ -981,6 +998,10 @@ input.multiselect__input:focus {
     background: transparent;
 }
 
+.multiselect__placeholder {
+    font-size: 12px;
+}
+
 
 /* Ocean Freight */
 
@@ -1023,6 +1044,10 @@ input.multiselect__input:focus {
 
 .badge {
     font-size: 12px !important;
+}
+
+.multiselect__tag {
+    margin-bottom: 0px !important;
 }
 
 .md-field {
@@ -1173,7 +1198,7 @@ input.multiselect__input:focus {
 
 .radio-direction .active {
     color: #ffffff !important;
-    background:  #071C4B !important;
+    background: #071C4B !important;
 }
 
 .radio-direction label span {
@@ -1572,8 +1597,6 @@ input.input-modal {
     padding: 20px 0px 20px 45px;
 }
 
-
-
 #add-contract___BV_modal_body_ {
     padding: 0px !important;
 }
@@ -1622,6 +1645,7 @@ input.input-modal {
 .surcharge-input .multiselect__tags {
     padding: 11px 3px 11px 11px !important;
 }
+
 input.surcharge-input {
     padding: 20px 3px 20px 11px !important;
 }
@@ -1679,10 +1703,11 @@ input.surcharge-input {
 
 .stepComplete .add-contract-step {
     color: #ffffff !important;
-    background-color:  #006afa !important;
+    background-color: #006afa !important;
 }
+
 .stepComplete::before {
-    background-color:  #006afa !important;
+    background-color: #006afa !important;
 }
 
 .invalid-data {

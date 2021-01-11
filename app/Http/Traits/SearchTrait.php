@@ -269,24 +269,26 @@ trait SearchTrait
                 }
             }
         }
+     
 
         $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum ,'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
+        
         return $arregloG;
 
     }
 
     public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers,$rateFreight  = 1)
     {
-
+     
         $arregloRateSave['rate'] = array();
         $arregloRateSave['rateSum'] = array();
         $arregloRateSave['markups'] = array();
         $arregloRate = array();
-
-        $markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
+      
+        $markup = $this->freightMarkupsTrait($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers,$rateFreight);
 
         $tot_F = $markup['monto' . $containers] / $rateC;
-        $tot_R = $markup['monto' . $containers] / $rateFreight;
+        $tot_R = $markup['monto' . $containers] ;
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
@@ -506,9 +508,9 @@ trait SearchTrait
         return $collectionMarkup;
     }
 
-    public function freightMarkups($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type)
+    public function freightMarkupsTrait($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type,$rateFreight)
     {
-
+        
         if ($freighPercentage != 0) {
             $freighPercentage = intval($freighPercentage);
             $markup = ($monto * $freighPercentage) / 100;
@@ -518,14 +520,55 @@ trait SearchTrait
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $markup, "typemarkup" . $type => "$typeCurrency ($freighPercentage%)", "monto" . $type => $monto, 'montoMarkupO' => $markup);
         } else {
 
+            
             $markup = trim($freighAmmount);
-            $monto += $freighMarkup;
+           
+           if($freighMarkup != 0)
+               $monto += $freighMarkup * $rateFreight;
+            else
+               $monto += $freighMarkup ;
             $monto = number_format($monto, 2, '.', '');
+            
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $freighMarkup, "typemarkup" . $type => $typeCurrency, "monto" . $type => $monto, 'montoMarkupO' => $markup);
         }
 
         return $arraymarkup;
 
+    }
+
+    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
+    {
+        
+        if ($localPercentage != 0) {
+
+            // Monto original
+            $markupO = ($montoOrig * $localPercentage) / 100;
+            $montoOrig += $markupO;
+            $montoOrig = number_format($montoOrig, 2, '.', '');
+
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
+        } else { // oki
+          
+            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
+
+
+                $markupOrig = $localMarkup * $valor;
+
+         
+          
+            $monto = $monto / $rateFreight;
+            $markup = trim($localMarkup);
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
+        }
+
+        return $arraymarkup;
     }
 
     public function inlandMarkup($inlandPercentage, $inlandAmmount, $inlandMarkup, $monto, $typeCurrency, $markupInlandCurre)
@@ -646,11 +689,12 @@ trait SearchTrait
             if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
-                if ($transit->service->id == '1') {
+                $transitArray['service'] = $transit->service->name;
+                /**if ($transit->service->id == '1') {
                     $transitArray['service'] = '';
                 } else {
                     $transitArray['service'] = $transit->service->name;
-                }
+                }**/
 
             } else {
                 $transitArray['via'] = "";

@@ -59,7 +59,7 @@
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
                                 
-                                                        <td {{ $hide }}>{{ @$rate->${'total_sum_'.$c->code} }} {{@$rate->currency->alphacode}}</td>
+                                                        <td {{ $hide }}>{{ isDecimal(@$rate->${'total_sum_'.$c->code},true) }} {{@$rate->currency->alphacode}}</td>
                                 
                                                     @endif
                                                 @endforeach

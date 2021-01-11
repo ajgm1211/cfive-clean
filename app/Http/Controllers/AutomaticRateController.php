@@ -8,7 +8,9 @@ use App\QuoteV2;
 use App\Charge;
 use App\ChargeLclAir;
 use App\AutomaticInlandTotal;
+use App\AutomaticRateTotal;
 use App\Http\Resources\AutomaticRateResource;
+use App\Http\Resources\AutomaticRateTotalResource;
 use Illuminate\Support\Facades\Auth;
 
 class AutomaticRateController extends Controller
@@ -28,6 +30,8 @@ class AutomaticRateController extends Controller
             'POD' => 'required',
             'carrier'=> 'required'
         ]);
+        
+        $currency = $quote->company_user()->first()->currency()->first();
 
         $rate = AutomaticRate::create([
             'quote_id' => $quote->id,
@@ -36,7 +40,7 @@ class AutomaticRateController extends Controller
             'validity_end' => $quote->validity_end,
             'origin_port_id' => $data['POL'],
             'destination_port_id' => $data['POD'],
-            'currency_id' => '149',
+            'currency_id' => $currency->id,
             'carrier_id' => $data['carrier'],
         ]);
         
@@ -51,7 +55,7 @@ class AutomaticRateController extends Controller
             $freight = ChargeLclAir::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
-                'calculation_type_id' => '10',
+                'calculation_type_id' => '4',
                 'units' => 1.00,
                 'price_per_unit' => 1.00,
                 'minimum' => 1.00,
@@ -61,22 +65,32 @@ class AutomaticRateController extends Controller
             ]);
         }
 
-        $originInland = AutomaticInlandTotal::create([
-            'quote_id' => $quote->id,
-            'port_id' => $rate->origin_port_id,
-            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-            'type' => 'Origin',
-        ]);
-
-        $destInland = AutomaticInlandTotal::create([
-            'quote_id' => $quote->id,
-            'port_id' => $rate->destination_port_id,
-            'currency_id' => $quote->user()->first()->companyUser()->first()->currency_id,
-            'type' => 'Destination',
-        ]);
-
-                
+        $this->storeTotals($quote,$rate);
+       
         return new AutomaticRateResource($rate);
+    }
+
+    public function storeTotals(QuoteV2 $quote, AutomaticRate $rate){
+        
+        $totals = $rate->totals()->first();
+
+        $currency = $rate->currency()->first();
+        
+        if($totals){
+            $totals->totalize($currency->id);
+        }else{
+            $totals = AutomaticRateTotal::create([
+                'quote_id' => $quote->id,
+                'currency_id' => $currency->id,
+                'origin_port_id' => $rate->origin_port_id,
+                'destination_port_id' => $rate->destination_port_id,
+                'automatic_rate_id' => $rate->id,
+                'totals' => null,
+                'markups' => null                    
+            ]);
+
+            $totals->totalize($currency->id);
+        }
     }
  
     public function update(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
@@ -94,7 +108,7 @@ class AutomaticRateController extends Controller
 
         }else{
             $data = $request->validate([
-                'transit_time' => 'numeric'
+                'transit_time' => 'numeric|nullable'
             ]);
             
             foreach($form_keys as $fkey){
@@ -122,6 +136,8 @@ class AutomaticRateController extends Controller
     {
         $form_keys = $request->input('keys');
 
+        $totals = $autorate->totals()->first();
+
         $data = [];
            
         foreach($form_keys as $fkey){
@@ -136,19 +152,19 @@ class AutomaticRateController extends Controller
             if($value==null){$value=0;}
             if($key!='profits_currency'){
                 if($quote->type == 'FCL'){
-                    $markups['m'.str_replace('profits_','',$key)] = $value;
+                    $markups['m'.str_replace('profits_','',$key)] = isDecimal($value,true);
                 }else if($quote->type == 'LCL'){
-                    $markups[str_replace('profits_','',$key)] = $value;
+                    $markups[str_replace('profits_','',$key)] = isDecimal($value,true);
                 }
             }
         }
             
         if(count($markups) != 0){
-            $markups_json = json_encode($markups);
 
-            $autorate->update(['markups'=>$markups_json]);
+            $totals->update(['markups'=>$markups]);
+            $autorate->update(['markups'=>$markups]);
 
-            $autorate->totalize($request->input('profits_currency'));
+            $totals->totalize($request->input('profits_currency'));
         }
     }
 
@@ -157,17 +173,39 @@ class AutomaticRateController extends Controller
         return new AutomaticRateResource($autorate);
     }
 
+    public function retrieveTotals(QuoteV2 $quote, AutomaticRate $autorate)
+    {
+        $totals = $autorate->totals()->first();
+
+        return new AutomaticRateTotalResource($totals);
+    }
+
     public function destroy(AutomaticRate $autorate)
     {
-        $autorate->delete();
+        $quote = $autorate->quotev2()->first();
+
+        $inlandAddressesOrig = $quote->inland_addresses()->where('port_id',$autorate->origin_port_id)->get();
+
+        $inlandAddressesDest = $quote->inland_addresses()->where('port_id',$autorate->destination_port_id)->get();
+
+        if($inlandAddressesOrig){
+            foreach($inlandAddressesOrig as $address){
+                $address->delete();
+
+            }
+        }
         
-        $originInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->origin_port_id]])->first();
+        if($inlandAddressesDest){
+            foreach($inlandAddressesDest as $address){
+                $address->delete();
+            }
+        }
 
-        $originInland->delete();
+        $totals = $autorate->totals();
 
-        $destInland = AutomaticInlandTotal::where([['quote_id',$autorate->quote_id],['port_id',$autorate->destination_port_id]])->first();
+        $totals->delete();
 
-        $destInland->delete();
+        $autorate->delete();
 
         return response()->json(null, 204);
     }

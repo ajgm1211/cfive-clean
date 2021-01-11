@@ -30,6 +30,9 @@ use App\Provider;
 use App\Country;
 use App\InlandDistance;
 use App\CalculationTypeLcl;
+use App\AutomaticRateTotal;
+use App\AutomaticInlandTotal;
+use App\DestinationType;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
 use Illuminate\Support\Collection;
@@ -45,7 +48,7 @@ class QuotationController extends Controller
 
     public function list(Request $request)
     {
-        $results = QuoteV2::typeFCL()->filterByCurrentCompany()->filter($request);
+        $results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
     }
@@ -157,6 +160,10 @@ class QuotationController extends Controller
             return $ctype->only(['id','name']);
         });
 
+        $destination_types = DestinationType::get()->map(function ($desttype){
+            return $desttype->only(['id','name']);
+        });
+
         $data = compact(
             'companies',
             'contacts',
@@ -182,7 +189,8 @@ class QuotationController extends Controller
             'distances',
             'cargo_types',
             'calculationtypeslcl',
-            'filtered_currencies'
+            'filtered_currencies',
+            'destination_types'
         );
 
         return response()->json(['data'=>$data]);
@@ -293,10 +301,8 @@ class QuotationController extends Controller
 
     public function edit (Request $request, QuoteV2 $quote)
     {
-        $autorates = $quote->rate()->get();
-        foreach($autorates as $auto){
-            $auto->totalize($auto->currency_id);
-        }
+        $this->validateOldQuote($quote);
+
         return view('quote.edit');
     }
 
@@ -323,7 +329,6 @@ class QuotationController extends Controller
                     'incoterm_id' => 'sometimes|nullable',
                     'payment_conditions' => 'sometimes|nullable',
                     'kind_of_cargo' => 'sometimes|nullable'
-
                 ]);
             } else if($request->input('cargo_type_id')!=null){
                 $data = $request->validate([
@@ -398,7 +403,11 @@ class QuotationController extends Controller
 
     public function destroyAll(Request $request)
     {   
-        DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
+        $toDestroy = QuoteV2::whereIn('id', $request->input('ids'))->get();
+        
+        foreach($toDestroy as $td){
+            $this->destroy($td);
+        }
 
         return response()->json(null, 204);
     }
@@ -409,5 +418,120 @@ class QuotationController extends Controller
         $quote = QuoteV2::firstOrFail($quote_id);
 
         return redirect()->action('QuotationController@edit', $quote);
+    }
+
+    public function validateOldQuote($quote){
+
+        $rates = $quote->rates_v2()->get();
+        $inlandTotals = $quote->automatic_inland_totals()->get();
+        $inlandAddress = $quote->automatic_inland_address()->get();
+        $quote_rate_totals = $quote->automatic_rate_totals()->get();
+
+        if(count($rates) != 0){
+            foreach($rates as $rate){
+                $rateTotal = $rate->totals()->first();
+                if(!$rateTotal){
+                    $currency = $rate->currency()->first();
+                    
+                    $newRateTotal = AutomaticRateTotal::create([
+                        'quote_id' => $quote->id,
+                        'currency_id' => $currency->id,
+                        'origin_port_id' => $rate->origin_port_id,
+                        'destination_port_id' => $rate->destination_port_id,
+                        'automatic_rate_id' => $rate->id,
+                        'totals' => null,
+                        'markups' => null                    
+                    ]);
+
+                    $newRateTotal->totalize($currency->id);
+                }else{
+                    $currency = $rate->currency()->first();
+
+                    $rateTotal->totalize($currency->id);
+                }
+            }
+        }
+
+        if(count($inlandTotals) == 0 && count($inlandAddress) != 0){
+            foreach($inlandAddress as $address){
+                foreach($rates as $autoRate){
+                    if($address->port_id == $autoRate->origin_port_id){
+                        $type = 'Origin';
+                    }else if($address->port_id == $autoRate->destination_port_id){
+                        $type = 'Destination';
+                    }
+                }
+                
+                $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
+
+                $totals = AutomaticInlandTotal::create([
+                    'quote_id' => $quote->id,
+                    'port_id' => $address->port_id,
+                    'type' => $type,
+                    'inland_address_id' => $address->id,
+                    'currency_id' => $user_currency
+                ]);
+
+                if($quote->type == 'FCL'){
+                    $inlands = $quote->inland()->get();
+                }else if($quote->type == 'LCL'){
+                    $inlands = $quote->inland_lcl()->get();
+                }
+
+                if(count($inlands)!=0){
+                    foreach($inlands as $inland){
+                        if($inland->port_id == $totals->port_id){
+                            $inland->inland_totals_id = $totals->id;
+                            $inland->save();
+                        }
+                    }
+                }
+
+                $totals->totalize();
+            }
+        }else if(count($inlandTotals)!=0){
+            foreach($inlandTotals as $total){
+                $total->totalize();
+                if($quote->type == 'FCL'){
+                    $inlands = $total->inlands()->get();
+                }else if($quote->type == 'LCL'){
+                    $inlands = $total->inlands_lcl()->get();
+                }
+                
+                if(count($inlands)!=0){
+                    foreach($inlands as $inland){
+                        if($inland->port_id == $total->port_id){
+                            $inland->inland_totals_id = $total->id;
+                            $inland->save();
+                        }
+                    }
+                }else{
+                    $total->inland_address()->first()->delete();
+                }              
+            }
+        }
+
+        if($quote->pdf_options==null || count($quote->pdf_options) != 4){            
+            $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
+            $currency_id = $company->companyUser->currency_id;
+            $currency = Currency::find($currency_id);
+    
+            $pdfOptions = [
+                "allIn" =>true, 
+                "showCarrier"=>true, 
+                "showTotals"=>false, 
+                "totalsCurrency" =>$currency];
+            
+            $quote->pdf_options = $pdfOptions;
+            $quote->save();
+        }
+
+        if(count($quote_rate_totals) != 0){
+            foreach($quote_rate_totals as $qr_total){
+                if($qr_total->rate()->first() == null){
+                    $qr_total->delete();
+                }
+            }
+        }
     }
 }

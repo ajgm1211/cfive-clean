@@ -24,6 +24,7 @@ class StoreLocalChargeQuote extends FormRequest
     public function rules()
     {
         return [
+            'charges.surcharge' => 'required',
             'charges.price' => 'required',
             'charges.calculation_type' => 'required',
             'charges.currency' => 'required',
@@ -31,6 +32,22 @@ class StoreLocalChargeQuote extends FormRequest
             'port_id' => 'required',
             'quote_id' => 'required',
             'type_id' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'charges.surcharge.required'  => 'Charge is required',
+            'charges.price.required'  => 'You must enter rates',
+            'charges.calculation_type.required'  => 'Detail is required',
+            'charges.carrier.required'  => 'Provider is required',
+            'charges.currency.required'  => 'Currency is required',
         ];
     }
 }

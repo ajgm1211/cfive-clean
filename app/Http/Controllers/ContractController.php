@@ -7,6 +7,7 @@ use App\Carrier;
 use App\Company;
 use App\Container;
 use App\Contract;
+use App\ContractCarrier;
 use App\ContractLcl;
 use App\Country;
 use App\Currency;
@@ -17,6 +18,9 @@ use App\Http\Requests\UploadContractFile;
 use App\Http\Resources\ContractResource;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
+use App\LocalCharCarrier;
+use App\LocalCharge;
+use App\LocalCharPort;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\Notifications\SlackNotification;
@@ -48,7 +52,8 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
@@ -434,7 +439,7 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-
+            
             if ($request->code) {
                 $query = Contract::where('code', $request->code);
                 $query_lcl = ContractLcl::where('code', $request->code);
@@ -445,7 +450,7 @@ class ContractController extends Controller
 
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
-
+            
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
             }
@@ -549,7 +554,7 @@ class ContractController extends Controller
         } else {
             $code = $request->reference;
         }
-
+        
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -561,7 +566,8 @@ class ContractController extends Controller
                     'status' => 'incomplete',
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
             case 'LCL':
@@ -573,7 +579,8 @@ class ContractController extends Controller
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
         }
@@ -657,6 +664,18 @@ class ContractController extends Controller
         $contract = new Contract();
         $container = Container::get();
 
+        $data = $request->validate([
+            'referenceC'       => 'required',
+            'group_containerC' => 'required',
+            'C20DV'            => 'sometimes|required',
+            'C40DV'            => 'sometimes|required',
+            'C40HC'            => 'sometimes|required',
+            'C40NOR'           => 'sometimes|required',
+            'C45HC'            => 'sometimes|required',
+            'amountC'          => 'sometimes|required',
+            'document'         => 'required',
+        ]);
+
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);
@@ -666,6 +685,8 @@ class ContractController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
         $contract->save();
+
+        $contract->ContractCarrierSyncSingle($request->carrierR);
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
@@ -678,7 +699,6 @@ class ContractController extends Controller
             $rates->fortyhc = $request->C40HC;
             $rates->fortynor = $request->C40NOR;
             $rates->fortyfive = $request->C45HC;
-
         } else {
 
             $rates->twuenty = 0;
@@ -701,14 +721,47 @@ class ContractController extends Controller
         $rates->contract()->associate($contract);
         $rates->save();
 
-        foreach ($request->input('document', []) as $file) {
-            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contracts3');
+        // Surcharges
+
+        $calculation_type = $request->input('calculation');
+        $typeC = $request->input('type');
+        $currencyC = $request->input('currency');
+        $amountC = $request->input('amount');
+
+        if (count($calculation_type) > 0) {
+            foreach ($calculation_type as $ct => $ctype) {
+
+                if (!empty($request->input('amount'))) {
+                    $localcharge = new LocalCharge();
+                    $localcharge->surcharge_id = $typeC[$ct];
+                    $localcharge->typedestiny_id = '3';
+                    $localcharge->calculationtype_id = $ctype;
+                    $localcharge->ammount = $amountC[$ct];
+                    $localcharge->currency_id = $currencyC[$ct];
+                    $localcharge->contract()->associate($contract);
+                    $localcharge->save();
+
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+
+                    $detailport = new LocalCharPort();
+                    $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                    $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                    $detailport->localcharge()->associate($localcharge);
+                    $detailport->save();
+                }
+            }
         }
 
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
+        }
 
         return response()->json([
-            'data' => $rates->toJson(),
+            //'data' => $localcharge->toJson(),
+            'data' => 'Success',
         ]);
     }
-
 }

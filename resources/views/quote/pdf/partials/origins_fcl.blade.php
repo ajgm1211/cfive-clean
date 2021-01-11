@@ -5,7 +5,7 @@
         <!-- Section Title -->
         <div>
 
-            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$port}}</b></p>
+            <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$port}}</b></p>
 
             
 
@@ -23,8 +23,6 @@
 
                     <th class="unit"><b>{{__('pdf.detail')}}</b></th>
 
-                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-
                     @foreach ($equipmentHides as $key=>$hide)
                         @foreach ($containers as $c)
                             @if($c->code == $key)
@@ -35,8 +33,6 @@
                         @endforeach
                     @endforeach
 
-                    <!--<th class="unit"><b>{{__('pdf.currency')}}</b></th>-->
-
                 </tr>
 
             </thead>
@@ -46,21 +42,15 @@
             <tbody>
                 @foreach($value as $key => $charge)
                     <tr>
-                        <td>{!! is_int($key) ? $charge->charge:'<b>'.__('pdf.total').'</b>' !!}</td>
-                        <td>{{ $charge->calculation_type['name'] }}</td>
+                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
+                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
                         @foreach ($charge->total as $total)
-                            <td>{!! is_int($key) ? $total:'<b>'.$total.'</b>' !!} {!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>
+                            <td>{!!  $total !!} {!! @$charge->currency->alphacode !!}</td>
                         @endforeach
-                        <!--<td>{!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>-->
                     </tr>
                 @endforeach
             </tbody>
             <!-- End Table Body -->
-
-            <tfoot>
-
-            </tfoot>
-
         </table>
         <!-- End Table -->
     @endforeach
