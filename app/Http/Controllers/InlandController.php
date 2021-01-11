@@ -10,7 +10,9 @@ use App\GroupContainer;
 use App\Harbor;
 use App\Http\Resources\InlandResource;
 use App\Inland;
+use App\InlandType;
 use App\Provider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InlandController extends Controller

@@ -239,7 +239,7 @@ class ContractController extends Controller
             'carriers' => 'required',
         ]);
 
-        $status = $this->updateStatus($data['expire']);
+        $status = $this->updateStatus($contract);
 
         $contract->update([
             'name' => $data['name'],
@@ -259,12 +259,16 @@ class ContractController extends Controller
     {
 
         $date = date('Y-m-d');
-        $expire = date('Y-m-d', strtotime($data));
-
-        if ($expire <= $date) {
-            $status = 'expired';
-        } else {
-            $status = 'publish';
+        $expire = date('Y-m-d', strtotime($data['expire']));
+        
+        if($data['status'] != 'incomplete'){
+            if ($date <= $expire) {
+                $status = 'publish';
+            } else {
+                $status = 'expired';
+            }
+        }else{
+            $status = 'incomplete';
         }
 
         return $status;

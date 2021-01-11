@@ -98,7 +98,7 @@ class RequestFclV2Controller extends Controller
                 }
             })
             ->addColumn('carrier', function ($Ncontracts) {
-                if (count($Ncontracts->carriers) >= 1) {
+                if (count((array)$Ncontracts->carriers) >= 1) {
                     return $Ncontracts->carriers;
                 } else {
                     return " -------- ";

@@ -31,7 +31,7 @@ class HelperUserConfiguracion
         $user = User::find($user_id);
         $user->load('userConfiguration');
         $json = self::arrays();
-        if (count($user->userConfiguration) > 0) {
+        if (count((array)$user->userConfiguration) > 0) {
             $data = self::syncronize_json($user_id);
         } else {
             $conf = new UserConfiguration();

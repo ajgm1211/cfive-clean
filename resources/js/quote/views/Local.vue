@@ -128,8 +128,6 @@
                                             )
                                         "
                                     ></b-form-input>
-                                </b-td>
-                                <b-td>
                                     <b-form-input
                                         v-if="currentQuoteData.type == 'LCL'"
                                         v-model="charge.charge"
