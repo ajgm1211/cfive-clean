@@ -65,7 +65,18 @@
 
                 <div
                     class="col-12 col-lg-4 d-flex justify-content-end align-items-center"
-                >
+                >                 
+                    <a 
+                        v-if="
+                        loaded &&
+                        currentAddress != undefined 
+                        "
+                        href="#" 
+                        class="btn btn-link btn-delete" 
+                        id="show-btn" 
+                        @click="deleteInland()"
+                        >Delete Inland</a
+                    >
                     <a
                         href="#"
                         class="btn btn-primary btn-bg"
@@ -106,11 +117,11 @@
                         :totalsFields="totalsFields"
                         :datalists="datalists"
                         :equipment="equipment"
-                        :actions="actions.automaticinlands"
+                        :actions="inlandActions"
                         :quoteEquip="quoteEquip"
                         :autoAdd="false"
                         :limitEquipment="true"
-                        :totalActions="actions.automaticinlands"
+                        :totalActions="inlandActions"
                         :paginated="false"
                         :autoupdateDataTable="true"
                         :multiList="true"
@@ -151,8 +162,8 @@
             centered
             hide-footer
             title="Inland Charges"
-            @close="unsetModal"
-            @hidden="unsetModal"
+            @close="unsetModal(modalOpen=false)"
+            @hidden="unsetModal(modalOpen=false)"
         >
             <div class="container">
                 <div class="row align-items-center justify-content-between">
@@ -170,12 +181,13 @@
                         </multiselect>
                     </div>
 
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" v-if="modalAddressBar">
                         <label> ADDRESS </label>
                         <gmap-autocomplete
                             v-if="!modalDistance"
                             @place_changed="setPlace"
                             @input="clearAutocomplete"
+                            :value="autocompleteValue"
                             class="form-input form-control"
                             placeholder="Start typing an address"
                         >
@@ -197,21 +209,22 @@
                     <div class="col-lg-6 d-flex mt-3 justify-content-end">
                         <button
                             class="btn btn-link mr-2"
-                            @click="setNewAddress"
+                            @click="validateModalAddress('manual')"
                         >
                             + Add Manually
                         </button>
-                        <button
+                        <button 
+                            v-if="currentQuoteData['type']=='FCL'"
                             class="btn btn-primary btn-bg"
-                            @click="searchInlands"
+                            @click="validateModalAddress('search')"
                         >
                             Search
                         </button>
                     </div>
                 </div>
+                <!-- DataTable -->
                 <div class="row">
                     <div class="col-12 mt-5">
-                        <!-- DataTable -->
                         <b-table-simple
                             v-if="inlandAddRequested"
                             hover
@@ -222,7 +235,8 @@
                             <!-- Header table -->
                             <b-thead class="q-thead">
                                 <b-tr>
-                                    <b-th></b-th>
+                                    <b-th v-if="inlandFound">
+                                    </b-th>
 
                                     <b-th>
                                         <span class="label-text">Charge</span>
@@ -241,6 +255,11 @@
                                         >
                                     </b-th>
 
+                                    <b-th
+                                        v-if="currentQuoteData['type']=='LCL'"
+                                        ><span class="label-text">Rate</span>
+                                    </b-th>
+
                                     <b-th>
                                         <span class="label-text">Currency</span>
                                     </b-th>
@@ -249,23 +268,31 @@
                                 </b-tr>
                             </b-thead>
 
-                            <b-tbody>
+                            <!-- Loader gif -->
+                            <b-tbody v-if="isBusy">
+                                <b-tr class="b-table-busy-slot">
+                                    <b-td :colspan="fields.length" role="cell" class="">
+                                        <div class="text-center text-primary my-2">
+                                            <b-spinner class="align-middle"></b-spinner>
+                                            <strong>Loading...</strong>
+                                        </div>
+                                    </b-td>
+                                </b-tr>
+                            </b-tbody>
+                            <!-- Loader gif -->
+
+                            <b-tbody v-else>
                                 <b-tr
                                     class="q-tr"
                                     v-for="(inlandAdd, key) in this.inlandAdds"
                                     :key="key"
                                 >
-                                    <b-td>
+                                    <b-td v-if="inlandFound">
                                         <b-form-checkbox
-                                            v-if="
-                                                inlandAdd.port ==
-                                                currentPort['id']
-                                            "
                                             v-model="inlandAdd.selected"
-                                            :id="'id_' + inlandAdd.id"
+                                            @input="totalizeModalInlands"
                                         ></b-form-checkbox>
                                     </b-td>
-
                                     <b-td>
                                         <b-form-input
                                             v-if="
@@ -295,6 +322,20 @@
                                     </b-td>
 
                                     <b-td
+                                        v-if="currentQuoteData['type']=='LCL'"
+                                        ><b-form-input
+                                            v-model="inlandAdd.total"
+                                            placeholder="Insert rate"
+                                            @blur="totalizeModalInlands"
+                                        ></b-form-input>
+                                        <b-form-input
+                                            v-model="inlandAdd.profit"
+                                            placeholder="Insert profit"
+                                            @blur="totalizeModalInlands"
+                                        ></b-form-input>
+                                    </b-td>
+
+                                    <b-td
                                         v-for="(item, key) in quoteEquip"
                                         :key="key"
                                     >
@@ -309,7 +350,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                         <b-form-input
                                             v-if="
@@ -322,7 +363,7 @@
                                             "
                                             type="number"
                                             class="q-input"
-                                            @input="totalizeModalInlands"
+                                            @blur="totalizeModalInlands"
                                         ></b-form-input>
                                     </b-td>
 
@@ -368,11 +409,18 @@
                                 <b-tr class="q-total">
                                     <b-td></b-td>
 
-                                    <b-td></b-td>
+                                    <b-td v-if="inlandFound"></b-td>
 
                                     <b-td>
                                         <span>
                                             <b>Total</b>
+                                        </span>
+                                    </b-td>
+
+                                    <b-td
+                                        v-if="currentQuoteData['type'] == 'LCL'"
+                                        ><span>
+                                            <b>{{inlandModalTotalLcl}}</b>
                                         </span>
                                     </b-td>
 
@@ -414,6 +462,14 @@
                         </div>
 
                         <div
+                            v-if="modalSelectWarning"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            Select an Inland to add
+                        </div>
+
+                        <div
                             v-if="modalSearchWarning"
                             class="alert alert-danger"
                             role="alert"
@@ -422,19 +478,19 @@
                         </div>
 
                         <div
-                            v-if="modalSelected"
-                            class="alert alert-warning"
-                            role="alert"
-                        >
-                            Select an Inland to add
-                        </div>
-
-                        <div
                             v-if="modalSuccess"
                             class="alert alert-success"
                             role="alert"
                         >
-                            Selected Inlands added successfully!
+                            Inlands added successfully!
+                        </div>
+
+                        <div
+                            v-if="searchAdded"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            All Inlands for this port added
                         </div>
                     </div>
                 </div>
@@ -475,7 +531,6 @@ export default {
     },
     watch: {
         currentPort: function (newVal, oldVal) {
-            this.updateTable();
             this.setAddresses();
         },
 
@@ -491,6 +546,7 @@ export default {
             ids: [],
             imageFolder: "/images/flags/1x1/",
             loaded: false,
+            isBusy: false,
             options: [
                 "Select option",
                 "options",
@@ -517,10 +573,17 @@ export default {
             inlandFound: false,
             inlandAddRequested: false,
             inlandAdds: [],
+            inlandActions: {},
+            autocompleteValue: null,
             modalWarning: "",
             modalSearchWarning: false,
+            modalSelectWarning: false,
             modalDistance: false,
+            modalOpen: false,
+            modalAddressBar: true,
             inlandModalTotals: {},
+            inlandModalTotalLcl: 0,
+            searchAdded: false,
             client_currency: this.currentQuoteData.client_currency,
             /* Table headers */
             fields: [
@@ -577,12 +640,11 @@ export default {
         };
     },
     created() {
+        this.setLclFields();
+
         this.setPorts();
 
         this.setTotalsFields();
-    },
-    mounted() {
-        this.createInlandTotals(this.currentAddress["address"]);
     },
     methods: {
         showModal() {
@@ -591,73 +653,50 @@ export default {
             component.modalDistance = false;
 
             component.$refs["addInland"].show();
-            component.datalists.distances.forEach(function (distance) {
-                if (component.currentPort.id == distance.harbor_id) {
-                    component.modalDistance = true;
-                    component.distance_options.push(distance);
-                }
-            });
+            component.modalOpen = true;
+            component.changeModalAddress();
         },
 
         setPorts() {
             let component = this;
+            
+            component.inlandActions
+                .harbors(component.$route)
+                .then((response) => {
+                    response.data.forEach(function(port){
+                        var portMatch = false;
 
-            component.freights.forEach(function (freight) {
-                component.datalists.harbors.forEach(function (harbor) {
-                    let portMatch = false;
-
-                    if (freight.origin_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Origin",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
-                    }
-                    if (freight.destination_port_id == harbor.id) {
-                        var harbor_opt = {
-                            name: harbor.display_name,
-                            id: harbor.id,
-                            type: "Destination",
-                            flag: component.imageFolder
-                                .concat(harbor.code.slice(0, 2).toLowerCase())
-                                .concat(".svg"),
-                        };
-                        portMatch = true;
-                    }
-
-                    if (portMatch) {
-                        let inOptions = false;
-
-                        component.port_options.forEach(function (opt) {
-                            if (harbor_opt["name"] == opt.name) {
-                                inOptions = true;
+                        port.flag = component.imageFolder
+                                .concat(port.code.slice(0, 2).toLowerCase())
+                                .concat(".svg");
+                        
+                        component.port_options.forEach(function (opt){
+                            if(opt.id == port.id){
+                                portMatch = true;
                             }
                         });
-
-                        if (!inOptions) {
-                            component.port_options.push(harbor_opt);
+                        
+                        if(!portMatch){
+                            component.port_options.push(port)
                         }
+                    })
+                    if (component.currentPort == "") {
+                        component.currentPort = component.port_options[0];
                     }
-                });
+
+                    component.currentAddress = [];
+
+                    component.loaded = true;
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
             });
-
-            if (component.currentPort == "") {
-                component.currentPort = component.port_options[0];
-            }
-
-            component.currentAddress = [];
-
-            component.loaded = true;
         },
 
         setAddresses(newAddress = null) {
             let component = this;
-
-            component.actions.automaticinlands
+            
+            component.inlandActions
                 .retrieveAddresses(
                     component.currentPort["id"],
                     component.$route
@@ -668,11 +707,13 @@ export default {
                         component.currentAddress = component.address_options[0];
                     } else {
                         component.address_options.forEach(function (address) {
-                            if (address["address"] == newAddress && !component.inlandFound) {
+                            if (address["address"] == newAddress) {
                                 component.currentAddress = address;
-                                component.setModalTable();
                             }
                         });
+                    }
+                    if(component.modalOpen){
+                        component.changeModalAddress();
                     }
                 })
                 .catch((data) => {
@@ -697,39 +738,64 @@ export default {
         setTotalsFields() {
             let component = this;
 
-            component.quoteEquip.forEach(function (eq) {
-                component.totalsFields["Profits"]["profits_".concat(eq)] = {
-                    type: "text",
-                    placeholder: eq,
+            if(component.currentQuoteData['type']=='FCL'){
+                component.quoteEquip.forEach(function (eq) {
+                    component.totalsFields["Profits"]["profits_".concat(eq)] = {
+                        type: "text",
+                        disabled: true,
+                    };
+                    component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                        type: "text",
+                    };
+                });
+    
+                component.totalsFields["Profits"]["currency_id"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
                 };
-                component.totalsFields["Totals"]["totals_".concat(eq)] = {
+                component.totalsFields["Totals"]["totals_currency"] = {
                     type: "span",
+                    label: "alphacode",
                 };
-            });
-
-            component.totalsFields["Profits"]["currency_id"] = {
-                searchable: true,
-                type: "select",
-                rules: "required",
-                trackby: "alphacode",
-                placeholder: "Select Currency",
-                options: "currency",
-                disabled: true,
-            };
-            component.totalsFields["Totals"]["totals_currency"] = {
-                type: "span",
-                label: "alphacode",
-            };
+            }else if(component.currentQuoteData['type']=='LCL'){
+                component.totalsFields["Profits"]["profit"] = {
+                        type: "text",
+                        disabled: true,
+                    };
+                component.totalsFields["Totals"]["lcl_totals"] = {
+                        type: "span",
+                    };
+                component.totalsFields["Profits"]["currency_id"] = {
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "alphacode",
+                    placeholder: "Select Currency",
+                    options: "currency",
+                    disabled: true,
+                };
+                component.totalsFields["Totals"]["totals_currency"] = {
+                    type: "span",
+                    label: "alphacode",
+                };
+            }
         },
 
         formFieldUpdated(containers_fields) {
-            let component = this;
-
-            component.containers_fields = containers_fields;
-            component.form_fields = {
-                ...this.vform_fields,
-                ...containers_fields,
-            };
+            if(this.currentQuoteData['type']=='FCL'){
+                let component = this;
+    
+                component.containers_fields = containers_fields;
+                component.form_fields = {
+                    ...this.vform_fields,
+                    ...containers_fields,
+                };
+            }
         },
 
         updateTable() {
@@ -741,77 +807,21 @@ export default {
             }, 100);
         },
 
-        setNewAddress() {
+        validateModalAddress(type) {
             let component = this;
-            let addressMatch = false;
 
-            if (component.modalAddress != "") {
-                component.address_options.forEach(function (address) {
-                    if (component.modalAddress == address["address"]) {
-                        component.currentAddress = address;
-                    } else {
-                        addressMatch = true;
-                    }
-                });
-
-                if (addressMatch || component.address_options.length == 0) {
-                    component.createInlandTotals(component.modalAddress);
-                    addressMatch = false;
-                } else if (!component.inlandFound) {
+            if(!["",null].includes(component.modalAddress)) {
+                component.autocompleteValue = component.modalAddress;
+                if(type == "manual"){
                     component.setModalTable();
+                }else if(type == "search"){
+                    component.searchInlands();
                 }
             } else {
                 component.modalWarning = "Address";
                 setTimeout(() => {
                     component.modalWarning = "";
-                }, 3000);
-            }
-        },
-
-        createInlandTotals(totalAddress) {
-            let component = this;
-
-            if (
-                (component.currentAddress != undefined &&
-                    Object.keys(this.currentAddress).length != 0) ||
-                totalAddress == component.modalAddress
-            ) {
-                if (this.modalDistance) {
-                    var portAddressCombo = [
-                        totalAddress["display_name"] +
-                        ";" +
-                        component.currentPort["type"] +
-                        ";" +
-                        component.currentPort["id"],
-                    ];
-                } else {
-                    var portAddressCombo = [
-                        totalAddress +
-                        ";" +
-                        component.currentPort["type"] +
-                        ";" +
-                        component.currentPort["id"],
-                    ];
-                }
-
-                component.actions.automaticinlands
-                    .createTotals(portAddressCombo, component.$route)
-                    .then((response) => {
-                        if (component.modalAddress != "") {
-                            if (this.modalDistance) {
-                                component.setAddresses(
-                                    component.modalAddress["display_name"]
-                                );
-                            } else {
-                                component.setAddresses(component.modalAddress);
-                            }
-                        } else {
-                            component.updateTable();
-                        }
-                    })
-                    .catch((data) => {
-                        this.$refs.observer.setErrors(data.data.errors);
-                    });
+                }, 1500);
             }
         },
 
@@ -824,7 +834,15 @@ export default {
             component.inlandAddRequested = true;
             if (inlandSearch != null) {
                 inlandSearch.forEach(function (search) {
-                    if (component.ids.length != 0) {
+                    var alreadyAdded = false;
+                    component.inlandAdds.forEach(function(add){
+                        if(search["providerName"] == add["charge"]){
+                            alreadyAdded = true;
+                        }
+                    });
+
+                    if(!alreadyAdded || component.inlandAdds.length == 0){
+                        if (component.ids.length != 0) {
                         highest = component.ids.sort(function (a, b) {
                             return b - a;
                         });
@@ -864,10 +882,13 @@ export default {
                                 search["inlandDetails"][equip]["markup"];
                             newInlandAdd["rates_" + equip] =
                                 search["inlandDetails"][equip]["montoInlandT"];
+                            newInlandAdd.markup["markups_" + equip] =
+                                search["inlandDetails"][equip]["markup"];
                         }else{
                             newInlandAdd.price["c" + equip] = 0;
                             newInlandAdd.markup["m" + equip] = 0;
                             newInlandAdd["rates_" + equip] = 0;
+                            newInlandAdd["markups_" + equip] = 0;
                         }
                     });
                     component.datalists.currency.forEach(function (curr) {
@@ -884,6 +905,12 @@ export default {
                     component.inlandAdds.push(newInlandAdd);
 
                     component.totalizeModalInlands();
+                    }else if(alreadyAdded){
+                        component.searchAdded = true;
+                        setTimeout(() => {
+                            component.searchAdded = false;
+                        }, 2000);
+                    }
                 });
             } else {
                 if (component.ids.length != 0) {
@@ -903,11 +930,13 @@ export default {
                     charge: "",
                     address: "",
                     type: "",
+                    total: "",
+                    profit: "",
                     provider_id: {},
                     currency_id: {},
                     price: {},
                     markup: {},
-                    selected: false,
+                    selected: true,
                     distance: 0,
                 };
 
@@ -915,6 +944,7 @@ export default {
                     newInlandAdd.price["c" + equip] = "";
                     newInlandAdd.markup["m" + equip] = "";
                     newInlandAdd["rates_" + equip] = "";
+                    newInlandAdd["markups_" + equip] = "";
                 });
 
                 component.inlandAdds.push(newInlandAdd);
@@ -925,17 +955,25 @@ export default {
             const index = this.inlandAdds.indexOf(this.inlandAdds[id]);
 
             this.inlandAdds.splice(index, 1);
+
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
+
+            this.totalizeModalInlands();
         },
 
         totalizeModalInlands() {
             let component = this;
+
+            this.inlandModalTotals = {};
+            this.inlandModalTotalLcl = 0;
 
             component.inlandAdds.forEach(function (inlandAdd) {
                 let modalInlandCurrency = inlandAdd.currency_id;
 
                 if (modalInlandCurrency["alphacode"] == undefined) {
                     return;
-                } else {
+                } else if (inlandAdd.selected){
                     let inlandAddCurrency = modalInlandCurrency["alphacode"];
                     let inlandAddConversion = modalInlandCurrency["rates"];
                     let clientCurrency =
@@ -943,58 +981,96 @@ export default {
                     let clientConversion =
                         component.currentQuoteData.client_currency["rates"];
 
-                    component.quoteEquip.forEach(function (equip) {
-                        let price_num = Number(inlandAdd.price["c" + equip]);
-                        let markup_num = Number(inlandAdd.markup["m" + equip]);
+                    if(component.currentQuoteData['type']=='FCL'){
+                        component.quoteEquip.forEach(function (equip) {
+                            let rates_num = Number(inlandAdd.price["c" + equip]);
+                            let markup_num = Number(inlandAdd.markup["m" + equip]);
+                            let totals = Number;
+    
+                            inlandAdd["rates_" + equip] = rates_num;
+                            inlandAdd["markups_" + equip] = markup_num;
+    
+                            if (inlandAddCurrency != clientCurrency) {
+                                let totals_usd = Number;
+    
+                                totals_usd = (rates_num / inlandAddConversion) + (markup_num /inlandAddConversion);
+    
+                                totals = totals_usd * clientConversion;
+                            } else {
+                                totals = rates_num + markup_num;
+                            }
+
+                            if(component.inlandModalTotals["c" + equip] == undefined ){
+                              component.inlandModalTotals[
+                                "c" + equip
+                            ] = totals;  
+                            }else{
+                                component.inlandModalTotals[
+                                    "c" + equip
+                                ] += totals;
+                            }
+                        });
+                    }else if(component.currentQuoteData['type']=='LCL'){
+                        let rates_num = Number(inlandAdd.total);
+                        let profit_num = Number(inlandAdd.profit);
                         let totals = Number;
 
-                        inlandAdd["rates_" + equip] = price_num + markup_num;
-
                         if (inlandAddCurrency == clientCurrency) {
-                            totals = price_num + markup_num;
+                                totals = rates_num + profit_num;
                         } else {
                             let price_usd = Number;
-                            let markup_usd = Number;
-                            let totals_usd = Number;
 
-                            price_usd = price_num / inlandAddConversion;
-                            markup_usd = markup_num / inlandAddConversion;
+                            price_usd = (rates_num + profit_num) / inlandAddConversion;
 
-                            totals_usd = price_usd + markup_usd;
-
-                            totals = totals_usd * clientConversion;
+                            totals = price_usd * clientConversion;
                         }
-
-                        component.inlandModalTotals[
-                            "c" + equip
-                        ] = totals.toFixed(2);
-                    });
+                        component.inlandModalTotalLcl += totals;
+                    }
                 }
             });
+            component.setDecimals();
         },
 
         addInland() {
             let component = this;
+            let noSelection = true;
+
+            component.autocompleteValue = component.modalAddress;
 
             component.inlandAdds.forEach(function (inlandAdd) {
-                if (inlandAdd.selected) {
-                    if (Object.keys(inlandAdd.currency_id).length == 0) {
-                        component.modalWarning = "Currency";
-                        setTimeout(() => {
-                            component.modalWarning = "";
-                        }, 3000);
-                    } else {
-                        inlandAdd["type"] = component.currentPort["type"];
-                        if (component.modalDistance) {
-                            inlandAdd["address"] =
-                                component.modalAddress.display_name;
-                            inlandAdd["distance"] =
-                                component.modalAddress.distance;
-                        } else {
-                            inlandAdd["address"] = component.modalAddress;
-                        }
+                if(inlandAdd.selected){
+                    noSelection = false;
+                }
+            });
 
-                        component.actions.automaticinlands
+            component.inlandAdds.forEach(function (inlandAdd) {
+                if (Object.keys(inlandAdd.currency_id).length == 0) {
+                    component.modalWarning = "Currency";
+                    setTimeout(() => {
+                        component.modalWarning = "";
+                    }, 1500);
+                } else if (inlandAdd.selected == false){
+                    if(noSelection){
+                        component.modalSelectWarning = true;
+                        setTimeout(() => {
+                            component.modalSelectWarning = false;
+                        }, 1500);
+                    }
+                } else {
+                    inlandAdd["type"] = component.currentPort["type"];
+                    if (component.modalDistance) {
+                        inlandAdd["address"] =
+                            component.modalAddress.display_name;
+                        inlandAdd["distance"] =
+                            component.modalAddress.distance;
+                    } else {
+                        inlandAdd["address"] = component.modalAddress;
+                    }
+
+                    component.isBusy = true;
+
+                    setTimeout(function (){
+                        component.inlandActions
                             .create(
                                 component.currentPort["id"],
                                 inlandAdd,
@@ -1008,25 +1084,30 @@ export default {
                                 component.totalizeModalInlands();
                                 component.modalSuccess = true;
                                 component.updateTable();
+                                component.isBusy = false;
                                 setTimeout(function () {
                                     component.$refs["addInland"].hide();
                                     component.inlandAddRequested = false;
                                     component.modalSuccess = false;
-                                }, 3000);
+                                    if(component.modalDistance){
+                                        component.setAddresses(component.modalAddress['display_name']);
+                                    }else{
+                                        component.setAddresses(component.autocompleteValue);
+                                    }
+                                }, 1500);
                             })
                             .catch((data) => {
                                 component.$refs.observer.setErrors(
                                     data.data.errors
                                 );
                             });
-                    }
-                } else {
-                    component.modalSelected = true;
-                    setTimeout(function () {
-                        component.modalSelected = false;
-                    }, 3000);
+                    }, (component.inlandAdds.indexOf(inlandAdd) + 1) * 1000);
                 }
             });
+
+            setTimeout(function () {
+                component.isBusy = false;
+            }, 2000);
         },
 
         setPlace(place) {
@@ -1034,55 +1115,221 @@ export default {
         },
 
         searchInlands() {
-            if (this.modalAddress != "") {
-                let data = {};
-                let inlandSearch = {};
-                let component = this;
+            let data = {};
+            let inlandSearch = {};
+            let component = this;
 
-                data["address"] = component.modalAddress;
-                if (component.modalDistance) {
-                    data["distance"] = component.modalAddress.distance;
-                } else {
-                    data["distance"] = 0;
-                }
-
-                component.actions.automaticinlands
-                    .search(component.currentPort["id"], data, component.$route)
-                    .then((response) => {
-                        inlandSearch = response.data;
-                        if (inlandSearch.length == 0) {
-                            component.modalSearchWarning = true;
-                            setTimeout(() => {
-                                component.modalSearchWarning = false;
-                            }, 3000);
-                            component.inlandFound = false;
-                        } else {
-                            component.setModalTable(inlandSearch);
-                            component.createInlandTotals(component.modalAddress);
-                            component.inlandFound = true;
-                        }
-                    })
-                    .catch((data) => {
-                        component.$refs.observer.setErrors(data.data.errors);
-                    });
+            data["address"] = component.modalAddress;
+            if (component.modalDistance) {
+                data["distance"] = component.modalAddress.distance;
             } else {
-                this.modalWarning = "Address";
-                setTimeout(() => {
-                    this.modalWarning = "";
-                }, 3000);
+                data["distance"] = 0;
             }
+
+            component.inlandActions
+                .search(component.currentPort["id"], data, component.$route)
+                .then((response) => {
+                    inlandSearch = response.data;
+                    if (inlandSearch.length == 0) {
+                        component.modalSearchWarning = true;
+                        setTimeout(() => {
+                            component.modalSearchWarning = false;
+                        }, 1500);
+                        component.inlandFound = false;
+                    } else {
+                        component.setModalTable(inlandSearch);
+                        component.inlandFound = true;
+                    }
+                })
+                .catch((data) => {
+                    component.$refs.observer.setErrors(data.data.errors);
+                });
+            
         },
 
         unsetModal() {
+            this.modalOpen = false;
             this.inlandAdds = [];
             this.inlandAddRequested = false;
             this.inlandModalTotals = {};
             this.inlandFound = false;
             this.modalAddress = "";
+            this.inlandModalTotalLcl = 0;
         },
 
         clearAutocomplete() {
             this.modalAddress = "";
+        },
+
+        setLclFields(){
+            if(this.currentQuoteData['type']=='FCL'){
+                this.inlandActions = this.actions.automaticinlands;
+            }else if(this.currentQuoteData['type']=='LCL'){
+                this.inlandActions = this.actions.automaticinlandslcl;
+                this.vform_fields = {
+                    charge: {
+                        label: "CHARGE",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Select charge",
+                    },
+                    provider_id: {
+                        label: "PROVIDER",
+                        type: "select",
+                        searchable: true,
+                        trackby: "name",
+                        placeholder: "Select Provider",
+                        options: "providers",
+                    },
+                    total:{
+                        label: "RATE",
+                        type: "text",
+                        rules: "required"
+                    },
+                    currency_id: {
+                        label: "CURRENCY",
+                        searchable: true,
+                        type: "select",
+                        rules: "required",
+                        trackby: "alphacode",
+                        placeholder: "Select Currency",
+                        options: "currency",
+                    },
+                };
+                this.fields = [
+                    {
+                        key: "charge",
+                        label: "CHARGE",
+                        type: "text",
+                    },
+                    {
+                        key: "provider_id",
+                        label: "PROVIDER",
+                        type: "select",
+                        trackby: "name",
+                        options: "providers",
+                    },
+                    {
+                        key: "total",
+                        label: "RATE",
+                        type: "text",
+                    },
+                    {
+                        key: "currency_id",
+                        label: "CURRENCY",
+                        type: "select",
+                        trackby: "alphacode",
+                        options: "currency",
+                    },
+                ];
+            }
+        },
+
+        setDecimals(){
+            let component = this;
+
+            component.inlandAdds.forEach(function (inlandAdd) {
+                if(component.currentQuoteData['type']=='FCL'){
+                    component.quoteEquip.forEach(function (equip) {
+                        if(inlandAdd.price["c" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.price["c" + equip] = Number(inlandAdd.price["c" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.price["c" + equip] = Math.trunc(Number(inlandAdd.price["c" + equip]));
+                            }
+                        }
+                        if(inlandAdd.markup["m" + equip]){
+                            if(component.currentQuoteData['decimals'] == 1){
+                                inlandAdd.markup["m" + equip] = Number(inlandAdd.markup["m" + equip]).toFixed(2);
+                            }else if(component.currentQuoteData['decimals']==0){
+                                inlandAdd.markup["m" + equip] = Math.trunc(Number(inlandAdd.markup["m" + equip]));
+                            }
+                        }
+                    });                    
+                }else if(component.currentQuoteData['type']=='LCL'){
+                    if (inlandAdd.total) {
+                        if(component.currentQuoteData['decimals'] == 1){
+                            inlandAdd.total = Number(inlandAdd.total).toFixed(2);
+                        }else if(component.currentQuoteData['decimals']==0){
+                            inlandAdd.total = Math.trunc(Number(inlandAdd.total));
+                        }
+                    }
+                }
+            });
+            component.quoteEquip.forEach(function (equip) {
+                if(Object.keys(component.inlandModalTotals).length != 0){
+                    if(component.currentQuoteData['decimals'] == 1){
+                        component.inlandModalTotals["c" + equip] = Number(component.inlandModalTotals["c" + equip]).toFixed(2);
+                    }else if(component.currentQuoteData['decimals']==0){
+                        component.inlandModalTotals["c" + equip] = Math.trunc(Number(component.inlandModalTotals["c" + equip]));
+                    }
+                }
+            });
+            if(component.inlandModalTotalLcl!=0){
+                if(component.currentQuoteData['decimals'] == 1){
+                    component.inlandModalTotalLcl = component.inlandModalTotalLcl.toFixed(2);
+                }else if(component.currentQuoteData['decimals'] == 0){
+                    component.inlandModalTotalLcl = Math.trunc(component.inlandModalTotalLcl);
+                }
+            }
+        },
+
+        changeModalAddress(){
+            let component = this;
+            
+            component.modalAddressBar = false;
+            component.modalDistance = false;
+
+            component.datalists.distances.forEach(function (distance) {
+                if (component.currentPort.id == distance.harbor_id) {
+                    component.modalDistance = true;
+                    component.distance_options.push(distance);
+                }
+                if(component.currentAddress != undefined){
+                    if(distance["display_name"] == component.currentAddress["address"]){
+                        component.modalAddress = distance;
+                    }
+                }
+            });
+            
+            if(!component.modalDistance){
+                if(component.currentAddress != undefined &&
+                Object.keys(component.currentAddress).length != 0){
+                    component.autocompleteValue = component.currentAddress["address"]
+                    component.modalAddress = component.currentAddress["address"];
+                }else{
+                    component.autocompleteValue = null;
+                    component.modalAddress = null;
+                }            
+            }
+        
+            setTimeout(() => {
+                component.modalAddressBar = true;                
+            }, 100);
+        },
+
+        deleteInland(){
+            let component = this;
+
+            if (
+                (component.currentAddress != undefined &&
+                    Object.keys(this.currentAddress).length != 0) 
+            ) {
+                var portAddressCombo = [
+                    component.currentAddress["address"] +
+                    ";" +
+                    component.currentPort["id"]
+                ];
+            
+            component.inlandActions
+                .deleteFull(portAddressCombo, component.$route)
+                .then((response) => {
+                    component.setAddresses();                        
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
         },
     },
 };

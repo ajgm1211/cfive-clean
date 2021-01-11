@@ -12108,6 +12108,10 @@ CONTENTS:
   max-width: 50px !important;
 }
 
+.error {
+  color: red !important;
+}
+
 .desktop {
   display: block;
 }
@@ -86056,6 +86060,10 @@ a.m-brand__logo-wrapper img {
 .m-brand__logo img {
   height: 30px;
   width: auto;
+}
+
+.m-stack__item.m-stack__item--middle.m-brand__logo {
+  width: 100% !important;
 }
 
 #m_header_nav {

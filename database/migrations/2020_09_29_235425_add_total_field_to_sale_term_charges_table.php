@@ -14,7 +14,7 @@ class AddTotalFieldToSaleTermChargesTable extends Migration
     public function up()
     {
         Schema::table('sale_term_charges', function (Blueprint $table) {
-           $table->json('total')->after('name')->nullable();
+           $table->json('total')->after('currency_id')->nullable();
         });
     }
 

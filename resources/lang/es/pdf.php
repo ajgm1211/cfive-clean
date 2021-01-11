@@ -17,7 +17,8 @@ return [
     "pol" => "Puerto embarque",
     "type" => "Tipo",
     "service" => "Servicio",
-    "remarks" => "Observaciones",
+    "remarks" => "Observaciones Flete",
+    "localcharge_remarks" => "Observaciones Gastos Locales",
     "terms" => "Términos y Condiciones",
     "from" => "De",
     "to" => "Para",
@@ -55,4 +56,8 @@ return [
     "inland" => "Flete terrestre",
     "provider" => "Proveedor",
     "distance" => "Distancia",
+    "ocean_freight" => "Flete Marítimo",
+    "minimum" => "Mínimo",
+    "totals" => "Totales",
+    "price" => "Precio",
 ];
