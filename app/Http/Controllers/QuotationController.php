@@ -425,6 +425,7 @@ class QuotationController extends Controller
         $rates = $quote->rates_v2()->get();
         $inlandTotals = $quote->automatic_inland_totals()->get();
         $inlandAddress = $quote->automatic_inland_address()->get();
+        $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
         if(count($rates) != 0){
             foreach($rates as $rate){
@@ -525,7 +526,12 @@ class QuotationController extends Controller
             $quote->save();
         }
 
-        
-
+        if(count($quote_rate_totals) != 0){
+            foreach($quote_rate_totals as $qr_total){
+                if($qr_total->rate()->first() == null){
+                    $qr_total->delete();
+                }
+            }
+        }
     }
 }
