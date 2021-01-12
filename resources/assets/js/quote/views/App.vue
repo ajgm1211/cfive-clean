@@ -79,7 +79,7 @@ export default {
                         return value.name;
                     },
                 },
-                { key: "validity_start", label: "Created at" },
+                { key: "created_at", label: "Created at" },
             ],
         };
     },
