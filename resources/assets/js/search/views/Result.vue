@@ -34,7 +34,7 @@
         </div>
 
         <!-- HEADER FCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="false">
+        <div class="row mt-4 mb-4 result-header" v-if="true">
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-4"></div>
@@ -49,7 +49,7 @@
         </div>
 
         <!-- HEADER LCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="true">
+        <div class="row mt-4 mb-4 result-header" v-if="false">
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-8 d-flex align-items-center justify-content-between">
@@ -64,7 +64,7 @@
         <div class="row" id="top-results">
 
             <!-- LCL CARD -->
-            <div class="col-12 mb-4" >
+            <div class="col-12 mb-4" v-if="false">
 
                 <div class="result-search">
 
@@ -225,7 +225,7 @@
             </div>
 
             <!-- FCL CARD -->
-            <div class="col-12 mb-4" v-if="false">
+            <div class="col-12 mb-4">
 
                 <div class="result-search">
 
