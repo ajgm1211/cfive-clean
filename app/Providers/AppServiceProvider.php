@@ -27,9 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Contract::observe(ContractObserver::class);
         Quote::observe(QuoteObserver::class);
 
-        if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production') {
+        /*if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production') {
             $url->forceScheme('https');
-        }
+        }*/
     }
 
     /**
