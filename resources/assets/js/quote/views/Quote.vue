@@ -156,12 +156,19 @@ export default {
             totals: false,
             tabs_loaded: false,
             form_fields: {
-                custom_quote_id: {
+                quote_id: {
                     label: "QUOTE ID",
                     type: "text",
                     rules: "required",
-                    disabled: false,
+                    disabled: true,
                     placeholder: "Quote ID",
+                    colClass: "col-lg-3",
+                },
+                custom_quote_id: {
+                    label: "CUSTOM QUOTE ID",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom Quote ID",
                     colClass: "col-lg-3",
                 },
                 delivery_type: {
