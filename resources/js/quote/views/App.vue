@@ -62,6 +62,8 @@ export default {
                         return this.setClient(value);
                     },
                     filterIsOpen: false,
+                    filterTrackBy: "business_name",
+                    trackLabel: "business_name"
                 },
                 { key: "type", label: "Type", filterIsOpen: false, },
                 {
