@@ -2,70 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use App\OauthClient;
-use App\User;
-use App\Rate;
-use App\Contract;
-use App\ContractLcl;
-use App\GlobalCharPort;
-use App\GlobalCharCountry;
-use App\LocalCharPort;
-use App\LocalCharCountry;
-use App\LocalCharge;
-use App\GlobalCharge;
-use App\OauthAccessToken;
-use App\ViewLocalCharges;
-use App\ViewGlobalCharge;
-use App\Currency;
-use App\Harbor;
-use App\Company;
-use App\Country;
-use App\CompanyUser;
-use App\QuoteV2;
-use App\Carrier;
 use App\Airline;
 use App\Airport;
-use App\Http\Resources\SurchargeResource;
-use App\Surcharge;
-use App\ContainerCalculation;
+use App\Carrier;
+use App\Company;
+use App\CompanyUser;
 use App\Container;
-use App\IntegrationQuoteStatus;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Illuminate\Support\Collection as Collection;
-use Illuminate\Support\Facades\Auth;
+use App\ContainerCalculation;
+use App\Contract;
+use App\ContractLcl;
+use App\Country;
+use App\Currency;
+use App\GlobalCharge;
+use App\Harbor;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
+use App\IntegrationQuoteStatus;
+use App\LocalCharge;
 use App\LocalChargeApi;
+use App\OauthClient;
+use App\QuoteV2;
+use App\Rate;
+use App\Surcharge;
+use App\User;
+use App\ViewGlobalCharge;
+use App\ViewLocalCharges;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
 {
-
     use SearchTraitApi;
     use UtilTrait;
 
     public function index()
     {
-
         if (\Auth::user()->type == 'company') {
             $tokens = OauthClient::where('company_user_id', \Auth::user()->company_user_id)->get();
-        } else if (\Auth::user()->type == 'admin') {
+        } elseif (\Auth::user()->type == 'admin') {
             $tokens = OauthClient::all();
         }
+
         return view('oauth.index', compact('tokens'));
     }
 
     public function createAccessToken()
     {
-
         $token = new OauthClient();
 
-        $token->name = "Password Grant Token " . str_random(5);
+        $token->name = 'Password Grant Token ' . str_random(5);
         $token->company_user_id = \Auth::user()->company_user_id;
         $token->secret = str_random(40);
-        $token->redirect = "http://localhost";
+        $token->redirect = 'http://localhost';
         $token->personal_access_client = 0;
         $token->password_client = 1;
         $token->revoked = 0;
@@ -75,56 +66,57 @@ class ApiController extends Controller
         return redirect('/oauth/list');
     }
 
-
     public function signup(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string',
-            'email'    => 'required|string|email|unique:users',
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed',
         ]);
         $user = new User([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
         $user->save();
+
         return response()->json([
-            'message' => 'Successfully created user!'
+            'message' => 'Successfully created user!',
         ], 201);
     }
+
     public function createToken(Request $request, $user_id)
     {
         /*$request->validate([
-            'email'       => 'required|string|email',
-            'password'    => 'required|string',
-            'remember_me' => 'boolean',
+        'email'       => 'required|string|email',
+        'password'    => 'required|string',
+        'remember_me' => 'boolean',
         ]);
         $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'], 401);
-            }*/
+        return response()->json([
+        'message' => 'Unauthorized'], 401);
+        }*/
         $user = User::find($user_id);
         $tokenResult = $user->createToken($user->name . ' ' . $user->lastname . ' Token');
         $token = $tokenResult->token;
         /*if ($request->remember_me) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
+        $token->expires_at = Carbon::now()->addWeeks(1);
         }*/
         $token->save();
 
         return redirect('users/home');
         /*return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-            'expires_at'   => Carbon::parse(
-                $tokenResult->token->expires_at)
-                ->toDateTimeString(),
-            ]);*/
+    'access_token' => $tokenResult->accessToken,
+    'token_type'   => 'Bearer',
+    'expires_at'   => Carbon::parse(
+    $tokenResult->token->expires_at)
+    ->toDateTimeString(),
+    ]);*/
     }
 
     /**
-     * Login user and create token
+     * Login user and create token.
      *
      * @param  [string] email
      * @param  [string] password
@@ -138,25 +130,28 @@ class ApiController extends Controller
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean'
+            'remember_me' => 'boolean',
         ]);
         $credentials = request(['email', 'password']);
-        if (!Auth::attempt($credentials))
+        if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ], 401);
+        }
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        if ($request->remember_me)
+        if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }
         $token->save();
+
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
-            )->toDateTimeString()
+            )->toDateTimeString(),
         ]);
     }
 
@@ -166,28 +161,27 @@ class ApiController extends Controller
         $token->delete();
 
         return response()->json([
-            'message' => 'Ok'
+            'message' => 'Ok',
         ]);
     }
 
     /**
-     * Logout from session
-     * @param Request $request 
+     * Logout from session.
+     * @param Request $request
      * @return JSON
      */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        return response()->json(['message' =>
-        'Successfully logged out']);
+
+        return response()->json(['message' => 'Successfully logged out']);
     }
 
     /**
-     * Show user info
-     * @param Request $request 
+     * Show user info.
+     * @param Request $request
      * @return JSON
      */
-
     public function user(Request $request)
     {
         return response()->json($request->user());
@@ -195,7 +189,6 @@ class ApiController extends Controller
 
     public function test()
     {
-
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
         ]);
@@ -209,7 +202,7 @@ class ApiController extends Controller
                     'username' => 'admin@example.com',
                     'password' => 'secret',
                     'scope' => '*',
-                ]
+                ],
             ]);
             // You'd typically save this payload in the session
             $auth = json_decode((string) $response->getBody());
@@ -219,22 +212,21 @@ class ApiController extends Controller
                     'Content-Type' => 'application/json',
                     'X-Requested-With' => 'XMLHttpRequest',
                     'Authorization' => 'Bearer ' . $auth->access_token,
-                ]
+                ],
             ]);
 
             $all = json_decode((string) $response->getBody());
             dd(json_encode($all));
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            echo "Unable to retrieve access token.";
+            echo 'Unable to retrieve access token.';
         }
     }
 
     /**
-     * Show FCL Rates list
-     * @param Request $request 
+     * Show FCL Rates list.
+     * @param Request $request
      * @return JSON
      */
-
     public function rates(Request $request)
     {
         $query = Rate::whereHas('contract', function ($q) {
@@ -283,16 +275,13 @@ class ApiController extends Controller
         return $rates;
     }
 
-
     /**
-     * Show charges list
-     * @param Request $request 
+     * Show charges list.
+     * @param Request $request
      * @return JSON
      */
-
     public function charges(Request $request)
     {
-
         $query = ViewLocalCharges::whereHas('contract', function ($q) {
             $q->where('company_user_id', \Auth::user()->company_user_id);
         })->select(
@@ -320,14 +309,12 @@ class ApiController extends Controller
     }
 
     /**
-     * Show globalcharge list
-     * @param Request $request 
+     * Show globalcharge list.
+     * @param Request $request
      * @return JSON
      */
-
     public function globalCharges(Request $request)
     {
-
         $charges = ViewGlobalCharge::where('company_user_id', \Auth::user()->company_user_id)->take($request->size)->get();
 
         $collection = Collection::make($charges);
@@ -352,8 +339,8 @@ class ApiController extends Controller
     }
 
     /**
-     * Show contracts list
-     * @param Request $request 
+     * Show contracts list.
+     * @param Request $request
      * @return JSON
      */
     public function contracts(Request $request)
@@ -370,11 +357,10 @@ class ApiController extends Controller
     }
 
     /**
-     * Show quotes list
-     * @param Request $request 
+     * Show quotes list.
+     * @param Request $request
      * @return JSON
      */
-
     public function quotes(Request $request)
     {
         $type = $request->type;
@@ -413,6 +399,7 @@ class ApiController extends Controller
                 unset($quote['origin_address']);
                 unset($quote['destination_address']);
                 unset($quote['currency_id']);
+
                 return $quote;
             });
         }
@@ -422,10 +409,9 @@ class ApiController extends Controller
 
     /**
      * Show quotes by ID
-     * @param Request $request 
+     * @param Request $request
      * @return JSON
      */
-
     public function quoteById(Request $request, $id)
     {
         $type = $request->type;
@@ -444,21 +430,19 @@ class ApiController extends Controller
 
         //Update Integration Quote Status
         /*if ($integration) {
-            IntegrationQuoteStatus::where('quote_id', $quote->id)->update(['status' => 1]);
+        IntegrationQuoteStatus::where('quote_id', $quote->id)->update(['status' => 1]);
         }*/
 
         return $quote;
     }
 
     /**
-     * Show carriers list
-     * @param Request $request 
+     * Show carriers list.
+     * @param Request $request
      * @return JSON
      */
-
     public function carriers(Request $request)
     {
-
         if ($request->paginate) {
             $carriers = Carrier::paginate($request->paginate);
         } else {
@@ -469,14 +453,12 @@ class ApiController extends Controller
     }
 
     /**
-     * Show airlines list
-     * @param Request $request 
+     * Show airlines list.
+     * @param Request $request
      * @return JSON
      */
-
     public function airlines(Request $request)
     {
-
         if ($request->paginate) {
             $airlines = Airline::paginate($request->paginate);
         } else {
@@ -487,14 +469,12 @@ class ApiController extends Controller
     }
 
     /**
-     * Show surcharges list
-     * @param Request $request 
+     * Show surcharges list.
+     * @param Request $request
      * @return JSON
      */
-
     public function surcharges(Request $request)
     {
-
         $name = $request->name;
 
         $query = Surcharge::when($name, function ($query, $name) {
@@ -511,11 +491,10 @@ class ApiController extends Controller
     }
 
     /**
-     * Show ports list
-     * @param Request $request 
+     * Show ports list.
+     * @param Request $request
      * @return JSON
      */
-
     public function ports(Request $request)
     {
         $name = $request->name;
@@ -534,11 +513,10 @@ class ApiController extends Controller
     }
 
     /**
-     * Show airports list
-     * @param Request $request 
+     * Show airports list.
+     * @param Request $request
      * @return JSON
      */
-
     public function airports(Request $request)
     {
         $name = $request->name;
@@ -556,26 +534,25 @@ class ApiController extends Controller
     }
     public function getCarrier($carrierUrl)
     {
-        if($carrierUrl == "all"){
+        if ($carrierUrl == "all") {
             $carriers = Carrier::all()->pluck('id')->toArray();
 
-        }else{
-            $carriers = Carrier::where('name' , $carrierUrl)->orWhere('uncode' , $carrierUrl)->pluck('id')->toArray();
+        } else {
+            $carriers = Carrier::where('name', $carrierUrl)->orWhere('uncode', $carrierUrl)->pluck('id')->toArray();
         }
-    
 
         return $carriers;
     }
-    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all' ,$api_company_id = 0)
+    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all', $api_company_id = 0)
     {
         try {
-            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0);
+            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl, $api_company_id = 0);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
 
-    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl ,$api_company_id = 0)
+    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl, $api_company_id = 0)
     {
         $portOrig = Harbor::where('code', $code_origin)->firstOrFail();
         $portDest = Harbor::where('code', $code_destination)->firstOrFail();
@@ -598,11 +575,11 @@ class ApiController extends Controller
         $chargesDestination = 'true';
         $chargesFreight = 'true';
         $markup = null;
-        $remarks = "";
-        $remarksGeneral = "";
+        $remarks = '';
+        $remarksGeneral = '';
 
-        $equipment = array();
-        $totalesCont = array();
+        $equipment = [];
+        $totalesCont = [];
 
         //Colecciones
         $general = new collection();
@@ -610,7 +587,7 @@ class ApiController extends Controller
         $inlandOrigin = new collection();
         $collectionRate = new Collection();
 
-        $typeCurrency =  $company->currency->alphacode;
+        $typeCurrency = $company->currency->alphacode;
         $idCurrency = $company->currency_id;
         $company_user_id = $company->id;
         $dateSince = $inicio;
@@ -624,13 +601,13 @@ class ApiController extends Controller
         }
 
         if (strtoupper($group) == 'DRY') {
-            $equipment = array('1', '2', '3', '4', '5');
+            $equipment = ['1', '2', '3', '4', '5'];
         } elseif (strtoupper($group) == 'REEFER') {
-            $equipment = array('6', '7', '8');
+            $equipment = ['6', '7', '8'];
         } elseif (strtoupper($group) == 'OPENTOP') {
-            $equipment = array('9', '10');
+            $equipment = ['9', '10'];
         } elseif (strtoupper($group) == 'FLATRACK') {
-            $equipment = array('11', '12');
+            $equipment = ['11', '12'];
         } else {
             abort(404);
         }
@@ -678,7 +655,7 @@ class ApiController extends Controller
         }
 
         foreach ($containers as $cont) {
-            $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+            $totalesContainer = [$cont->code => ['tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0]];
             $totalesCont = array_merge($totalesContainer, $totalesCont);
             $var = 'array' . $cont->code;
             $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
@@ -691,33 +668,33 @@ class ApiController extends Controller
             $totalT = 0;
 
             //Arreglo totalizador de freight , destination , origin por contenedor
-            $totalesCont = array();
-            $arregloRateSum = array();
+            $totalesCont = [];
+            $arregloRateSum = [];
 
             foreach ($containers as $cont) {
-                $totalesContainer = array($cont->code => array('tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0));
+                $totalesContainer = [$cont->code => ['tot_' . $cont->code . '_F' => 0, 'tot_' . $cont->code . '_O' => 0, 'tot_' . $cont->code . '_D' => 0]];
                 $totalesCont = array_merge($totalesContainer, $totalesCont);
                 // Inicializar arreglo rate
-                $arregloRate = array('c' . $cont->code => '0');
+                $arregloRate = ['c' . $cont->code => '0'];
                 $arregloRateSum = array_merge($arregloRateSum, $arregloRate);
             }
 
             $carrier[] = $data->carrier_id;
-            $orig_port = array($data->origin_port);
-            $dest_port = array($data->destiny_port);
+            $orig_port = [$data->origin_port];
+            $dest_port = [$data->destiny_port];
 
             $collectionOrigin = new collection();
             $collectionDestiny = new collection();
             $collectionFreight = new collection();
 
-            $arregloRate = array();
+            $arregloRate = [];
             //Arreglos para guardar el rate
-            $array_ocean_freight = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'currency' => $data->currency->alphacode);
+            $array_ocean_freight = ['type' => 'Ocean Freight', 'detail' => 'Per Container', 'currency' => $data->currency->alphacode];
 
-            $arregloRateSave['markups'] = array();
-            $arregloRateSave['rate'] = array();
+            $arregloRateSave['markups'] = [];
+            $arregloRateSave['rate'] = [];
             //Arreglo para guardar charges
-            $arregloCharges['origin'] = array();
+            $arregloCharges['origin'] = [];
 
             $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
             // Rates
@@ -745,7 +722,6 @@ class ApiController extends Controller
 
             // ################### Calculos local  Charges #############################
             if ($contractStatus != 'api') {
-
                 $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
                     $q->whereIn('carrier_id', $carrier);
                 })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
@@ -759,7 +735,6 @@ class ApiController extends Controller
                         $q->select('id', 'alphacode', 'rates as exchange_usd', 'rates_eur as exchange_eur');
                     }])->get();
             } else {
-
                 $localChar = LocalChargeApi::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
                     $q->whereIn('carrier_id', $carrier);
                 })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
@@ -775,7 +750,6 @@ class ApiController extends Controller
             }
 
             foreach ($localChar as $local) {
-
                 $rateMount = $this->ratesCurrency($local->currency->id, $typeCurrency);
 
                 // Condicion para enviar los terminos de venta o compra
@@ -787,7 +761,7 @@ class ApiController extends Controller
 
                 foreach ($local->localcharcarriers as $localCarrier) {
                     if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all->id) {
-                        $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
+                        $localParams = ['terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier];
                         //Origin
                         if ($chargesOrigin != null) {
                             if ($local->typedestiny_id == '1') {
@@ -803,7 +777,6 @@ class ApiController extends Controller
                         if ($chargesDestination != null) {
                             if ($local->typedestiny_id == '2') {
                                 foreach ($containers as $cont) {
-
                                     $name_arreglo = 'array' . $cont->code;
 
                                     if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
@@ -823,7 +796,6 @@ class ApiController extends Controller
                                 //Fin Variables
 
                                 foreach ($containers as $cont) {
-
                                     $name_arreglo = 'array' . $cont->code;
 
                                     if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
@@ -839,7 +811,6 @@ class ApiController extends Controller
             //################## Calculos Global Charges #################################
 
             if ($contractStatus != 'api') {
-
                 $globalChar = GlobalCharge::where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function ($q) use ($carrier) {
                     $q->whereIn('carrier_id', $carrier);
                 })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
@@ -863,15 +834,12 @@ class ApiController extends Controller
                         $terminos = $global->surcharge->name;
                     }
                     foreach ($global->globalcharcarrier as $globalCarrier) {
-
                         if ($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id == $carrier_all->id) {
-                            $globalParams = array('terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier);
+                            $globalParams = ['terminos' => $terminos, 'local' => $global, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $globalCarrier];
                             //Origin
                             if ($chargesOrigin != null) {
-
                                 if ($global->typedestiny_id == '1') {
                                     foreach ($containers as $cont) {
-
                                         $name_arreglo = 'array' . $cont->code;
 
                                         if (in_array($global->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
@@ -896,9 +864,7 @@ class ApiController extends Controller
                             //Freight
 
                             if ($chargesFreight != null) {
-
                                 if ($global->typedestiny_id == '3') {
-
                                     $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
                                     $globalParams['typeCurrency'] = $data->currency->alphacode;
                                     $globalParams['idCurrency'] = $data->currency->id;
@@ -920,12 +886,12 @@ class ApiController extends Controller
             // ############################ Fin global charges ######################
 
             $totalRates += $totalT;
-            $array = array('type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . " " . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id);
+            $array = ['type' => 'Ocean Freight', 'detail' => 'Per Container', 'subtotal' => $totalRates, 'total' => $totalRates . ' ' . $typeCurrency, 'idCurrency' => $data->currency_id, 'currency_rate' => $data->currency->alphacode, 'rate_id' => $data->id];
             $array = array_merge($array, $arregloRate);
             $array = array_merge($array, $arregloRateSave);
             $collectionRate->push($array);
 
-            // SCHEDULE 
+            // SCHEDULE
 
             $transit_time = $this->transitTime($data->port_origin->id, $data->port_destiny->id, $data->carrier->id, $data->contract->status);
 
@@ -957,19 +923,19 @@ class ApiController extends Controller
                 foreach ($collectionOrigin as $origin) {
                     if ($cont->code == $origin['type']) {
                         $rateCurrency = $this->ratesCurrency($origin['currency_id'], $typeCurrency);
-                        ${$sum_origin . $cont->code} +=  $origin['price'] / $rateCurrency;
+                        ${$sum_origin . $cont->code} += $origin['price'] / $rateCurrency;
                     }
                 }
                 foreach ($collectionFreight as $freight) {
                     if ($cont->code == $freight['type']) {
                         $rateCurrency = $this->ratesCurrency($freight['currency_id'], $typeCurrency);
-                        ${$sum_freight . $cont->code} +=  $freight['price'] / $rateCurrency;
+                        ${$sum_freight . $cont->code} += $freight['price'] / $rateCurrency;
                     }
                 }
                 foreach ($collectionDestiny as $destination) {
                     if ($cont->code == $destination['type']) {
                         $rateCurrency = $this->ratesCurrency($destination['currency_id'], $typeCurrency);
-                        ${$sum_destination . $cont->code} +=  $destination['price'] / $rateCurrency;
+                        ${$sum_destination . $cont->code} += $destination['price'] / $rateCurrency;
                     }
                 }
             }
@@ -981,18 +947,18 @@ class ApiController extends Controller
                 $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                 $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
-                $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
+                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] / $rateTot;
                 // TOTALES
                 $name_tot = 'total' . $cont->code;
                 $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
-                $$name_tot += ${$sum_origin . $cont->code} + ${$sum_freight . $cont->code} + ${$sum_destination . $cont->code};
+                $$name_tot += ${$sum_origin . $cont->code}+${$sum_freight . $cont->code}+${$sum_destination . $cont->code};
                 $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
             }
 
             //remarks
 
-            if ($data->contract->remarks != "") {
-                $remarks = $data->contract->remarks . "<br>";
+            if ($data->contract->remarks != '') {
+                $remarks = $data->contract->remarks . '<br>';
             }
 
             $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
@@ -1038,7 +1004,7 @@ class ApiController extends Controller
             foreach ($containers as $cont) {
                 foreach ($equipment as $eq) {
                     if ($eq == $cont->id) {
-                        $detalle['Rates']['total' . $cont->code] =  $data['total' . $cont->code];
+                        $detalle['Rates']['total' . $cont->code] = $data['total' . $cont->code];
                     }
                 }
             }
@@ -1053,12 +1019,12 @@ class ApiController extends Controller
             $detalle['Rates']['carrier'] = $data->carrier;
             //Set contract details
             $detalle['Rates']['contract']['valid_from'] = $data->contract->validity;
-            $detalle['Rates']['contract']['valid_until'] =   $data->contract->expire;
-            $detalle['Rates']['contract']['number'] =   $data->contract->number;
-            $detalle['Rates']['contract']['ref'] =   $data->contract->name;
-            $detalle['Rates']['contract']['status'] =   $data->contract->status == 'publish' ? 'published' : $data->contract->status;
+            $detalle['Rates']['contract']['valid_until'] = $data->contract->expire;
+            $detalle['Rates']['contract']['number'] = $data->contract->number;
+            $detalle['Rates']['contract']['ref'] = $data->contract->name;
+            $detalle['Rates']['contract']['status'] = $data->contract->status == 'publish' ? 'published' : $data->contract->status;
 
-            $detalle['Rates']['remarks'] = $remarksGeneral . "<br>" . $remarks;
+            $detalle['Rates']['remarks'] = $remarksGeneral . '<br>' . $remarks;
 
             $general->push($detalle);
         }
@@ -1076,15 +1042,15 @@ class ApiController extends Controller
             $convert = $request->convert;
 
             if ($contract != null) {
-                if($contract->status == 'incomplete' || $contract->status == 'draft'){
+                if ($contract->status == 'incomplete' || $contract->status == 'draft') {
                     return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
-                }else{
+                } else {
                     return $contract->processSearchByIdFcl($response, $convert);
                 }
             } elseif ($contract_lcl != null) {
-                if($contract_lcl->status == 'incomplete' || $contract_lcl->status == 'draft'){
+                if ($contract_lcl->status == 'incomplete' || $contract_lcl->status == 'draft') {
                     return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
-                }else{
+                } else {
                     return $contract_lcl->processSearchByIdLcl($response, $convert);
                 }
             } else {
@@ -1092,6 +1058,7 @@ class ApiController extends Controller
             }
         } catch (\Exception $e) {
             \Log::error($e);
+
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }

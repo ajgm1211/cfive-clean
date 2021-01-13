@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddAccounImportationGlobalchargeTable extends Migration
 {
@@ -17,7 +17,7 @@ class AddAccounImportationGlobalchargeTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->date('date');
-            $table->enum('status',['complete','incomplete'])->default('incomplete');
+            $table->enum('status', ['complete', 'incomplete'])->default('incomplete');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->timestamps();

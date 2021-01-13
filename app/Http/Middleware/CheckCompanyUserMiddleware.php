@@ -3,11 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Contract;
-use App\QuoteV2;
-use App\AutomaticRate;
-use Illuminate\Support\Facades\Auth;
-
 class CheckCompanyUserMiddleware
 {
     /**
@@ -19,19 +14,16 @@ class CheckCompanyUserMiddleware
      */
     public function handle($request, Closure $next, $key)
     {
-
         $model = $request->{$key};
 
-        if($model->company_user_id != $request->user()->company_user_id){
-
-            if($request->ajax() || $request->wantsJson())
+        if ($model->company_user_id != $request->user()->company_user_id) {
+            if ($request->ajax() || $request->wantsJson()) {
                 abort(403, 'Unauthorized action.');
-            else
-                return redirect()->route('quotes-v2.search'); 
-
+            } else {
+                return redirect()->route('quotes-v2.search');
+            }
         }
 
         return $next($request);
-
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpColumnContainersTable extends Migration
 {
@@ -13,7 +13,7 @@ class UpColumnContainersTable extends Migration
      */
     public function up()
     {
-        Schema::table('containers', function (Blueprint $table){
+        Schema::table('containers', function (Blueprint $table) {
             $table->integer('gp_container_id')->nullable()->after('code')->unsigned();
             $table->foreign('gp_container_id')->references('id')->on('group_containers');
         });

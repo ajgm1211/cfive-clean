@@ -12,7 +12,8 @@ class ViewGlobalchargeLcl extends Model
     {
         if ($carrier != '') {
             $carrier = Carrier::find($carrier);
-            return $query->where('carrier','like','%'.$carrier->name.'%');
+
+            return $query->where('carrier', 'like', '%'.$carrier->name.'%');
         }
     }
 
@@ -21,5 +22,5 @@ class ViewGlobalchargeLcl extends Model
         if ($companyUser != '') {
             return $query->where('company_user_id', $companyUser);
         }
-    } 
+    }
 }
