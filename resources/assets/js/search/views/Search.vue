@@ -191,7 +191,7 @@
             <!-- ADDITIONAL SERVICES -->
             <b-collapse id="collapse-1" class="mt-3">
 
-                <h6 class="t-as mt-3 mb-3 ml-4">ADDITIONAL SERVICES</h6>
+                <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
             
                 <div class="row mr-3 ml-3">
 
@@ -242,11 +242,12 @@
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
+                        
                             <b-dropdown id="dropdown-carriers" :text="textCarriers" ref="dropdown" class="m-2">
                                 <b-dropdown-form>
                                     <label class="mt-2">
                                         <span>All Carriers</span>
-                                        <b-form-checkbox v-model="allCarriers" :indeterminate="indeterminate" switch @change="toggleAll"></b-form-checkbox>
+                                        <b-form-checkbox v-model="allCarriers" @change="selectAll" class="switch-all-carriers"></b-form-checkbox>
                                     </label>
                                     <b-form-group label="Carriers">
                                         <b-form-checkbox-group
@@ -288,7 +289,7 @@
             </b-collapse>
 
             <!-- LCL FORM INPUTS -->
-            <div class="row" v-if="type == 'LCL'">
+            <div class="row mr-0 ml-0 lcl-inputs" v-if="type == 'LCL'">
                     <!-- Tabs Section -->
 				<b-card no-body class="card-tabs col-12 font-tabs">
 					<b-tabs card>
@@ -297,7 +298,7 @@
                             
                             <div class="row">
 
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
                                             v-model="packages"
@@ -314,16 +315,16 @@
                                                     :clear-on-select="false"
                                                     :show-labels="false"
                                                     :options="optionsTypePallet"
-                                                    placeholder="Select Filter"
+                                                    placeholder="Select"
                                                     class="s-input no-select-style "
                                                 >
                                                 </multiselect>
-                                                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                                                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type" style="right: -10px !important"></b-icon>
                                         </div>
                                     </label>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
                                             v-model="weight"
@@ -336,7 +337,7 @@
                                     </label>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
                                             v-model="volumen"
@@ -349,7 +350,7 @@
                                     </label>
                                 </div>
 
-                                <div class="col-3" style="text-align:center">
+                                <div class="col-12 col-sm-3" style="text-align:center">
                                     <h6><b>CHARGEABLE WEIGHT</b></h6>
                                     <p>12.00<sup>m3</sup></p>
                                 </div>
@@ -368,34 +369,37 @@
                                 <div id="surcharges-list" class="col-12">
 
                                     <div class="row surcharge-content">
-                                        <div class="col-12 col-sm-1">
+                                        <div class="col-12 col-sm-1 pr-0">
                                             
+                                            <div class="type-packages">
                                                 <multiselect
-                                                    v-model="pallets"
+                                                    v-model="typePallet"
                                                     :multiple="false"
                                                     :close-on-select="true"
                                                     :clear-on-select="false"
                                                     :show-labels="false"
                                                     :options="optionsTypePallet"
-                                                    placeholder="Choose"
-                                                    class="input-modal surcharge-input"
+                                                    placeholder="Select"
+                                                    class="s-input no-select-style "
                                                 >
                                                 </multiselect>
+                                                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type "></b-icon>
+                                            </div>
                                             
                                         </div>
 
-                                        <div class="col-12 col-sm-1">
+                                        <div class="col-12 col-sm-1 pr-0">
                                             <label class="d-flex align-items-center">
                                                 <b-form-input
                                                     v-model="quantity"
                                                     placeholder="Quantity" 
-                                                    class="s-input-form"
+                                                    class="s-input-form input-quantity"
                                                 >
                                                 </b-form-input>
                                             </label>
                                         </div>
 
-                                        <div class="col-12 col-sm-2">
+                                        <div class="col-12 col-sm-2 pr-0">
                                             <label class="d-flex align-items-center">
                                                 <b-form-input
                                                     v-model="height"
@@ -407,7 +411,7 @@
                                             </label>
                                         </div>
 
-                                        <div class="col-12 col-sm-2">
+                                        <div class="col-12 col-sm-2 pr-0">
                                             <label class="d-flex align-items-center">
                                                 <b-form-input
                                                     v-model="width"
@@ -419,7 +423,7 @@
                                             </label>
                                         </div>
 
-                                        <div class="col-12 col-sm-2">
+                                        <div class="col-12 col-sm-2 pr-0">
                                             <label>
                                                 <b-form-input
                                                     v-model="large"
@@ -430,7 +434,7 @@
                                             </label>
                                         </div>
 
-                                        <div class="col-12 col-sm-2">
+                                        <div class="col-12 col-sm-2 pr-0">
                                             <label>
                                                 <b-form-input
                                                     v-model="weight"
@@ -441,11 +445,11 @@
                                             </label>
                                         </div>
 
-                                        <div class="col-12 col-sm-1 d-flex align-items-center justify-content-center">
-                                            <span>{{ total }} M<sup>3</sup></span>
+                                        <div class="col-12 col-sm-1 pr-0 d-flex align-items-center justify-content-center">
+                                            <span>1un M<sup>3</sup> 12KG</span>
                                         </div>
 
-                                        <div class="col-12 col-sm-1 d-flex justify-content-end align-items-center">
+                                        <div class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center">
                                             <span v-on:click="addSurcharger" class="btn-add-surch"><b-icon icon="check-circle"></b-icon></span>
                                         </div>
                                         
@@ -458,14 +462,14 @@
                             <div class="row">
                                 <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataPackaging">
 
-                                    <div class="col-12 col-sm-1"><p>{{ item.type }}</p></div>
-                                    <div class="col-12 col-sm-1"><p>{{ item.quantity }}</p></div>
-                                    <div class="col-12 col-sm-2"><p>{{ item.height }}</p></div>
-                                    <div class="col-12 col-sm-2"><p>{{ item.width }}</p></div>
-                                    <div class="col-12 col-sm-2"><p>{{ item.large }}</p></div>
-                                    <div class="col-12 col-sm-2"><p>{{ item.weight }}</p></div>
-                                    <div class="col-12 col-sm-1"><p>{{ item.total }}</p></div>
-                                    <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
+                                    <div class="col-12 col-sm-1 pr-0"><p>{{ item.type }}</p></div>
+                                    <div class="col-12 col-sm-1 pr-0"><p>{{ item.quantity }}</p></div>
+                                    <div class="col-12 col-sm-2 pr-0"><p>{{ item.height }}</p></div>
+                                    <div class="col-12 col-sm-2 pr-0"><p>{{ item.width }}</p></div>
+                                    <div class="col-12 col-sm-2 pr-0"><p>{{ item.large }}</p></div>
+                                    <div class="col-12 col-sm-2 pr-0"><p>{{ item.weight }}</p></div>
+                                    <div class="col-12 col-sm-1 pr-0"><p>{{ item.total }}</p></div>
+                                    <div class="col-12 col-sm-1 pr-0"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
 
                                 </div>
                             </div>
@@ -505,12 +509,14 @@ export default {
             direction: 'import',
             dataPackaging: [],
             containersSelected: '',
-            allCarriers: false,
+            allCarriers: true,
             indeterminate: false,
-            textCarriers: '',
+            textCarriers: 'All Carriers Selected',
+            originCharges: [],
+            destinationCharges: [],
             type: 'FCL',
             company: '',
-            carriers: [],
+            carriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sud', 'Hanjin', 'Hapag Lloyd', 'HMM', 'Maersk'],
             contact: '',
             pricelevel: '',
             pallets: 'PALLETS',
@@ -539,7 +545,7 @@ export default {
             optionPriceLevel: ['Select option', 'Precio 1', 'Precio 2', 'Precio 3', 'Precio 4'],
             optionsType: ['FCL', 'LCL', 'AIR'],
             optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR'],
-            selectedContainers: 'dry', // Must be an array reference!
+            selectedContainers: 'dry',
             optionsContainers: [
                 { text: 'DRY', value: 'dry' },
                 { text: 'REEFER', value: 'reefer' },
@@ -553,18 +559,9 @@ export default {
                     { text: '45HC', value: '45HC' },
                     { text: '40NOR', value: '40NOR' },
                 ],
-            selectedCarries: [], // Must be an array reference!
-            optionCarriers: [
-                { text: 'APL', value: 'APL' },
-                { text: 'CCNI', value: 'CCNI' },
-                { text: 'CMA CGM', value: 'CMA CGM' },
-                { text: 'COSCO', value: 'COSCO' },
-                { text: 'CSAV', value: 'CSAV' },
-                { text: 'Evergreen', value: 'Evergreen' },
-                { text: 'Hamburg Sub', value: 'Hamburg' },
-                { text: 'Hanjin', value: 'Hanjin' },
-                { text: 'HaHapag Lloydnjin', value: 'HaHapag Lloydnjin' },
-            ],
+             
+            optionCarriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sud', 'Hanjin', 'Hapag Lloyd', 'HMM', 'Maersk'],
+            selectedCarries: [],
             equipment: ['20DV', '40DV', '40HC'],
     
 
@@ -610,6 +607,18 @@ export default {
             this.width = "";   this.large = "";    this.weight = ""; 
             this.total = "";
         },
+
+        selectAll() {
+            this.allCarriers = !this.allCarriers; 
+            this.carriers = []; 
+            if(this.allCarriers){ 
+                // Check all 
+                for (var key in this.optionCarriers) {          
+                    this.carriers.push(this.optionCarriers[key]); 
+                } 
+            } 
+        },
+        
         
     },
     watch: {
@@ -684,15 +693,26 @@ export default {
 
         carriers() {
             if (this.carriers.length == this.optionCarriers.length) {
-                this.textCarriers = 'All Selected';
+                this.textCarriers = 'All Carriers Selected';
             } else if (this.carriers.length >= 5) {
                 this.textCarriers = this.carriers.length + " Carriers Selected";
             } else if (this.carriers.length == 0) {
-                this.textCarriers = 'Carriers';
+                this.textCarriers = 'Select a Carrier';
             } else {
                 this.textCarriers = this.carriers.join(', ');
             }
+        },
+
+        allCarriers() {
+            this.carriers = []; 
+            if(this.allCarriers){ 
+                // Check all 
+                for (var key in this.optionCarriers) {          
+                    this.carriers.push(this.optionCarriers[key]); 
+                } 
+            } 
         }
     }
+
 }
 </script>
