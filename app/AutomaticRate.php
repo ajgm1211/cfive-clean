@@ -109,7 +109,7 @@ class AutomaticRate extends Model
 
     public function totals()
     {
-        return $this->hasOne('App\AutomaticRateTotal', 'automatic_rate_id');
+        return $this->hasMany('App\AutomaticRateTotal', 'automatic_rate_id');
     }
 
     public function scopeCharge($query, $type_id, $type)
@@ -177,11 +177,13 @@ class AutomaticRate extends Model
 
         if ($quote->type == 'FCL') {
             $this->load(
-                'charge'
+                'charge',
+                'totals'
             );
         } else if ($quote->type == 'LCL') {
             $this->load(
-                'charge_lcl_air'
+                'charge_lcl_air',
+                'totals'
             );
         }
 
@@ -191,6 +193,9 @@ class AutomaticRate extends Model
             foreach ($relation as $relationRecord) {
 
                 $newRelationship = $relationRecord->replicate();
+                if($newRelationship->quote_id){
+                    $newRelationship->quote_id = $quote->id;
+                }
                 $newRelationship->automatic_rate_id = $new_rate->id;
                 $newRelationship->save();
             }
