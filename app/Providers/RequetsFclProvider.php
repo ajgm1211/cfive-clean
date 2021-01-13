@@ -23,6 +23,6 @@ class RequetsFclProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/Request/RequestFcl.php';
+        require_once app_path().'/Helpers/Request/RequestFcl.php';
     }
 }

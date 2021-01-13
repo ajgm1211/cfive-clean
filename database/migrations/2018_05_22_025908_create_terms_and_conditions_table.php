@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTermsAndConditionsTable extends Migration
 {
@@ -17,8 +17,8 @@ class CreateTermsAndConditionsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('user_id')->unsigned();
-            $table->string('import',3000)->nullable();
-            $table->string('export',3000)->nullable();
+            $table->string('import', 3000)->nullable();
+            $table->string('export', 3000)->nullable();
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->foreign('user_id')->references('id')->on('users');

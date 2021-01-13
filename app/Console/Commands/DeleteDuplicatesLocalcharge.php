@@ -40,7 +40,6 @@ class DeleteDuplicatesLocalcharge extends Command
     public function handle()
     {
         try {
-
             $duplicates = DB::table('localcharcarriers')
                 ->select('carrier_id', 'localcharge_id')
                 ->groupBy('carrier_id', 'localcharge_id')
@@ -49,7 +48,6 @@ class DeleteDuplicatesLocalcharge extends Command
                 ->get();
 
             foreach ($duplicates as $item) {
-
                 $localcharcarrier = LocalCharCarrier::where([
                     ['carrier_id', $item->carrier_id],
                     ['localcharge_id', $item->localcharge_id],

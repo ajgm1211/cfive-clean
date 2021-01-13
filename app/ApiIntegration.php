@@ -18,11 +18,13 @@ class ApiIntegration extends Model
 
     protected $modules = ['Contacts', 'Companies'];
 
-    public function api_integration_setting(){
+    public function api_integration_setting()
+    {
         return $this->belongsTo('App\ApiIntegrationSetting');
     }
 
-    public function partner(){
+    public function partner()
+    {
         return $this->belongsTo('App\Partner');
     }
 }

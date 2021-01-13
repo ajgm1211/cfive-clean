@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddProcedureFailRatesFclTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddProcedureFailRatesFclTable extends Migration
      */
     public function up()
     {
-        DB::unprepared("DROP PROCEDURE IF EXISTS proc_fail_rates_fcl;CREATE PROCEDURE proc_fail_rates_fcl(In contract_id_sc INT) SELECT * FROM failes_rates WHERE contract_id = contract_id_sc;");
+        DB::unprepared('DROP PROCEDURE IF EXISTS proc_fail_rates_fcl;CREATE PROCEDURE proc_fail_rates_fcl(In contract_id_sc INT) SELECT * FROM failes_rates WHERE contract_id = contract_id_sc;');
     }
 
     /**

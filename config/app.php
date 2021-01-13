@@ -189,10 +189,6 @@ return [
     Kordy\Ticketit\TicketitServiceProvider::class,
     App\Providers\CrispServiceProvider::class,
     App\Providers\AllServiceProvider::class,
-    
-
-
-
 
   ],
 

@@ -23,6 +23,6 @@ class RatesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/Rates/HelperRates.php';
+        require_once app_path().'/Helpers/Rates/HelperRates.php';
     }
 }
