@@ -1,7 +1,7 @@
                     <!-- Section Title -->
                     <div>
                                     
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
+                        <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
                         
                        
 

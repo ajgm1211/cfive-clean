@@ -49,6 +49,15 @@ class AutomaticRateTotal extends Model
         return $query->where('quote_id', $id);
     }
 
+    public function duplicate($quote)
+    {
+        $newRecord = $this->replicate();
+        $newRecord->quote_id = $quote->id;
+        $newRecord->save();
+
+        return $newRecord;
+    }
+
     public function totalize($newCurrencyId)
     {
         //getting all data needed to calculate totals

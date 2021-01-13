@@ -66,7 +66,7 @@ class LocalChargeQuotationController extends Controller
     {
         $carriers = Carrier::all();
         $providers = Provider::all();
-        
+
         $carriers = $carriers->map(function ($value) {
             return $value->only(['id', 'name']);
         });
@@ -309,7 +309,7 @@ class LocalChargeQuotationController extends Controller
         LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
 
         $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
-        
+
         foreach ($sale_charges as $sale_charge) {
 
             $local_charge = LocalChargeQuote::create([
@@ -503,6 +503,19 @@ class LocalChargeQuotationController extends Controller
                 $total = ChargeLclAir::findOrFail($id);
                 $total->$index = $request->data;
                 $total->update();
+                break;
+            case 9:
+                $index = $request->index;
+
+                $local_charge = LocalChargeQuoteLcl::findOrFail($id);
+                if (strpos($index, 'total') !== false) {
+                    $local_charge->$index = floatvalue($request->data);
+                } else {
+                    $local_charge->$index = $request->data;
+                }
+                $local_charge->update();
+
+                $local_charge->totalize();
                 break;
         }
 
