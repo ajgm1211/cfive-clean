@@ -56,7 +56,7 @@ class AutomaticInland extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         foreach ($array as $k => $amount_value) {
             if ($k == 'c20') {
@@ -72,8 +72,8 @@ class AutomaticInland extends Model
             } else {
                 $containers = Container::all();
                 foreach ($containers as $container) {
-                    if ($k == 'c' . $container->code) {
-                        $value['c' . $container->code] = $amount_value;
+                    if ($k == 'c'.$container->code) {
+                        $value['c'.$container->code] = $amount_value;
                     }
                 }
             }

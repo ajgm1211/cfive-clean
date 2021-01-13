@@ -91294,7 +91294,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/ExampleComponent.vue"
+Component.options.__file = "resources/js/components/ExampleComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -91303,9 +91303,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7168fb6a", Component.options)
+    hotAPI.createRecord("data-v-299e239e", Component.options)
   } else {
-    hotAPI.reload("data-v-7168fb6a", Component.options)
+    hotAPI.reload("data-v-299e239e", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -91383,7 +91383,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7168fb6a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-299e239e", module.exports)
   }
 }
 
@@ -91413,7 +91413,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/quotes/Show.vue"
+Component.options.__file = "resources/js/components/quotes/Show.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -91422,9 +91422,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-36e7b9ee", Component.options)
+    hotAPI.createRecord("data-v-d6017d8c", Component.options)
   } else {
-    hotAPI.reload("data-v-36e7b9ee", Component.options)
+    hotAPI.reload("data-v-d6017d8c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -91557,7 +91557,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-36e7b9ee", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-d6017d8c", module.exports)
   }
 }
 

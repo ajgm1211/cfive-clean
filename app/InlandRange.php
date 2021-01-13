@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Http\Filters\InlandRangeFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class InlandRange extends Model
@@ -16,7 +16,7 @@ class InlandRange extends Model
         'currency_id',
         'inland_id',
         'json_containers',
-        'status'
+        'status',
     ];
 
     public function inland()
@@ -59,18 +59,17 @@ class InlandRange extends Model
         'json_containers' => 'array',
     ];
 
-
     public function per_container()
     {
         $first = true;
 
         foreach ($this->json_containers as $key => $value) {
-
             if ($first) {
                 $first_value = $value;
                 $first = false;
-            } else 
-                if ($value != $first_value) return '-';
+            } elseif ($value != $first_value) {
+                return '-';
+            }
         }
 
         return $value;

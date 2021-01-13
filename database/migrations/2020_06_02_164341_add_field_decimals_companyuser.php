@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldDecimalsCompanyuser extends Migration
 {
@@ -15,7 +15,6 @@ class AddFieldDecimalsCompanyuser extends Migration
     {
         Schema::table('company_users', function (Blueprint $table) {
             $table->boolean('decimals')->after('pdf_ammounts')->default('1');
-            
         });
     }
 

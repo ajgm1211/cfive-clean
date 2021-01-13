@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateColumnScrapersTokensTable extends Migration
 {
@@ -13,7 +13,7 @@ class UpdateColumnScrapersTokensTable extends Migration
      */
     public function up()
     {
-        DB::unprepared("ALTER TABLE `scrapers_tokens` CHANGE `token` `token` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;");
+        DB::unprepared('ALTER TABLE `scrapers_tokens` CHANGE `token` `token` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;');
     }
 
     /**

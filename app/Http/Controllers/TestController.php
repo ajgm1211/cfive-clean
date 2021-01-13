@@ -23,7 +23,6 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-
         $client = new \GuzzleHttp\Client();
         $url = 'https://www.maersk.com/webuser-rest-war/loginwithusernamepassword';
         $array = [
@@ -53,6 +52,7 @@ class TestController extends Controller
     {
         SendEmailRequestFclJob::dispatch($user_id, $id);
     }
+
     public function create(Request $request)
     {
         $client = new Client(['cookies' => true]);
@@ -104,7 +104,7 @@ class TestController extends Controller
                 try {
                     if (env('APP_ENV') == 'local') {
                         $client = new Client(['base_uri' => 'http://contractsai/']);
-                    } else if (env('APP_ENV') == 'developer') {
+                    } elseif (env('APP_ENV') == 'developer') {
                         $client = new Client(['base_uri' => 'http://dev.contractsai.cargofive.com/']);
                     } else {
                         $client = new Client(['base_uri' => 'http://prod.contractsai.cargofive.com/']);
@@ -158,6 +158,7 @@ class TestController extends Controller
         TestJob::dispatch();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'OK');
+
         return back();
     }
 
@@ -190,36 +191,36 @@ class TestController extends Controller
         /*$user = User::find(1);
         dd($user);*/
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
-      /*  \DB::table('users')->chunkById(100, function ($users) use($client) {
-                foreach ($users as $user) {
-                    
-                    $this->intercom($client, $user);
-                }
-            });*/
+        /*  \DB::table('users')->chunkById(100, function ($users) use($client) {
+        foreach ($users as $user) {
 
-       $user = User::where('email','araceli@acrosslogistics.com')->first();
-          $this->intercom($client, $user);
+        $this->intercom($client, $user);
+        }
+        });*/
+
+        $user = User::where('email', 'araceli@acrosslogistics.com')->first();
+        $this->intercom($client, $user);
         echo "Finalizado";
 
+        echo 'Finalizado';
     }
 
     public function intercom($client, $user)
     {
-
-        try{
-            $cliente = $client->users->getUsers(["email" => $user->email]);
-        }catch(Exception $e){
-                echo  $user->email;
+        try {
+            $cliente = $client->users->getUsers(['email' => $user->email]);
+        } catch (Exception $e) {
+            echo $user->email;
         }
-       dd($cliente->total_count );
+        dd($cliente->total_count);
         if ($cliente->total_count > 1) {
-            echo "Mas de uno " . $user->email."<BR>";
+            echo "Mas de uno " . $user->email . "<BR>";
             foreach ($cliente->users as $u) {
-                if ($u->type == "user") {
+                if ($u->type == 'user') {
                     if ($u->user_id != $user->id) {
-                    
+
                         //$client->users->archiveUser($u->id);
-                        echo "Diferente id " . $user->email."<BR>";
+                        echo "Diferente id " . $user->email . "<BR>";
                     }
                 }
             }
@@ -227,27 +228,26 @@ class TestController extends Controller
 
         /*if ($cliente->total_count == 0) {
 
-            if ($user->company_user_id != "") {
-                //setHashID();
+    if ($user->company_user_id != "") {
+    //setHashID();
 
-                $client->users->create([
-                    "email" => $user->email,
-                    "companies" => [
-                        [
-                            "name" => $user->companyUser->name,
-                            "company_id" => $user->company_user_id,
-                        ],
-                    ],
-                ]);
-            } else {
+    $client->users->create([
+    'email' => $user->email,
+    'companies' => [
+    [
+    'name' => $user->companyUser->name,
+    'company_id' => $user->company_user_id,
+    ],
+    ],
+    ]);
+    } else {
+    $client->users->create([
+    'email' => $user->email,
+    'user_id' => $user->id,
+    'name' => $user->name,
+    ]);
+    }
 
-                $client->users->create([
-                    "email" => $user->email,
-                    "user_id" => $user->id,
-                    "name" => $user->name,
-                ]);
-            }
-
-        }*/
+    }*/
     }
 }

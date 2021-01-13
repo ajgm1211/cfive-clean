@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAutomaticInlandsTable extends Migration
 {
@@ -23,7 +23,7 @@ class CreateAutomaticInlandsTable extends Migration
             $table->string('contract');
             $table->integer('port_id')->unsigned();
             $table->foreign('port_id')->references('id')->on('harbors')->onDelete('cascade');
-            $table->enum('type',['Origin','Destination']);
+            $table->enum('type', ['Origin', 'Destination']);
             $table->float('distance');
             $table->json('rate');
             $table->json('markup');

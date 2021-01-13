@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Mail\VerifyMail;
+use App\Notifications\SlackNotification;
 use App\User;
 use App\VerifyUser;
-use App\Mail\VerifyMail;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
-use App\Notifications\SlackNotification;
+use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -66,7 +66,7 @@ class RegisterController extends Controller
       // change below as required
       return redirect('/login')->with('status', 'We ');
     }else{
-      
+
       return $validation;
     }
     */
@@ -87,7 +87,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
         $user = User::create([
             'name' => $data['name'],
             'lastname' => $data['lastname'],
@@ -96,23 +95,23 @@ class RegisterController extends Controller
             'password' => $data['password']
         ]);
 
-
         $user->assignRole('company');
 
-        $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
+        $message = $user->name.' '.$user->lastname.' has been registered in Cargofive.';
         $user->notify(new SlackNotification($message));
 
         VerifyUser::create([
             'user_id' => $user->id,
-            'token' => str_random(40)
+            'token' => str_random(40),
         ]);
 
         \Mail::to($user->email)->send(new VerifyMail($user));
+
         return $user;
     }
 
     /**
-     * Verify email user after register
+     * Verify email user after register.
      *
      * @param  string  $token
      * @return view
@@ -122,16 +121,16 @@ class RegisterController extends Controller
         $verifyUser = VerifyUser::where('token', $token)->first();
         if (isset($verifyUser)) {
             $user = $verifyUser->user;
-            if (!$user->verified) {
+            if (! $user->verified) {
                 $verifyUser->user->verified = 1;
                 $verifyUser->user->save();
                 VerifyUser::where('token', $token)->delete();
-                $status = "Your email was verified successfully!";
+                $status = 'Your email was verified successfully!';
             } else {
-                $status = "Your email is already verified";
+                $status = 'Your email is already verified';
             }
         } else {
-            return redirect('/login')->with('warning', "Sorry! Your email cannot be identified.");
+            return redirect('/login')->with('warning', 'Sorry! Your email cannot be identified.');
         }
 
         return redirect('/login')->with('status', $status);
@@ -140,10 +139,7 @@ class RegisterController extends Controller
     // @overwrite
     protected function registered(Request $request, $user)
     {
-
-
         $this->guard()->logout();
-
 
         return redirect('/login')->with('status', 'We sent you an activation code. Check your email and click on the link to verify.');
     }

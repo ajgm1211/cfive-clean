@@ -3,11 +3,11 @@
 namespace App\Exports;
 
 use App\Quote;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
 
 class QuotesExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -15,8 +15,7 @@ class QuotesExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Quote::all() ;
-
+        return Quote::all();
     }
 
     public function headings(): array
@@ -67,86 +66,86 @@ class QuotesExport implements FromCollection, WithHeadings, WithMapping
     }
 
     /**
-     * @var Quote $quote
+     * @var Quote
      */
     public function map($quote): array
     {
-        if($quote->origin_harbor){
+        if ($quote->origin_harbor) {
             $origin = $quote->origin_harbor->display_name;
-        } elseif($quote->origin_airport){
+        } elseif ($quote->origin_airport) {
             $origin = $quote->origin_airport->name;
         } else {
             $origin = $quote->origin_address;
         }
 
-        if($quote->destination_harbor){
+        if ($quote->destination_harbor) {
             $destination = $quote->destination_harbor->display_name;
-        } elseif($quote->destination_airport){
+        } elseif ($quote->destination_airport) {
             $destination = $quote->destination_airport->name;
         } else {
             $destination = $quote->destination_address;
         }
 
-        if($quote->pdf_language==1){
+        if ($quote->pdf_language == 1) {
             $pdf_language = 'English';
-        } elseif($quote->pdf_language==2){
+        } elseif ($quote->pdf_language == 2) {
             $pdf_language = 'Spanish';
-        } elseif($quote->pdf_language==3) {
+        } elseif ($quote->pdf_language == 3) {
             $pdf_language = 'Portuguese';
-        }else{
+        } else {
             $pdf_language = 'English';
         }
 
-        if($quote->type_cargo==1){
+        if ($quote->type_cargo == 1) {
             $cargo_type = 'FCL';
-        } elseif($quote->type_cargo==2){
+        } elseif ($quote->type_cargo == 2) {
             $cargo_type = 'LCL';
-        } else{
+        } else {
             $cargo_type = 'AIR';
         }
 
-        if($quote->delivery_type==1){
+        if ($quote->delivery_type == 1) {
             $delivery_type = 'Port to Port';
-        } elseif($quote->delivery_type==2){
+        } elseif ($quote->delivery_type == 2) {
             $delivery_type = 'Port to Door';
-        } elseif($quote->delivery_type==3){
+        } elseif ($quote->delivery_type == 3) {
             $delivery_type = 'Door to Port';
-        } else{
+        } else {
             $delivery_type = 'Door to Door';
         }
 
-        if($quote->carrier_id!=''){
-            $carrier=$quote->carrier->name;
-        }else{
-            $carrier=$quote->airline->name;
+        if ($quote->carrier_id != '') {
+            $carrier = $quote->carrier->name;
+        } else {
+            $carrier = $quote->airline->name;
         }
 
-        if($quote->modality==1){
-            $modality='Export';
-        }else{
-            $modality='Import';
+        if ($quote->modality == 1) {
+            $modality = 'Export';
+        } else {
+            $modality = 'Import';
         }
 
-        if($quote->incoterm==1){
-            $incoterm='EWX';
-        }elseif($quote->incoterm==2){
-            $incoterm='FAS';
-        }elseif($quote->incoterm==3){
-            $incoterm='FCA';
-        }elseif($quote->incoterm==4){
-            $incoterm='FOB';
-        }elseif($quote->incoterm==5){
-            $incoterm='CFR';
-        }elseif($quote->incoterm==6){
-            $incoterm='CIF';
-        }elseif($quote->incoterm==7){
-            $incoterm='CIP';
-        }elseif($quote->incoterm==8){
-            $incoterm='DAT';
-        }elseif($quote->incoterm==9){
-            $incoterm='DAP';
-        }elseif($quote->incoterm==10){
-            $incoterm='DDP';
+        if ($quote->incoterm == 1) {
+            $incoterm = 'EWX';
+        } elseif ($quote->incoterm == 2) {
+            $incoterm = 'FAS';
+        } elseif ($quote->incoterm == 3) {
+            $incoterm = 'FCA';
+        } elseif ($quote->incoterm == 4) {
+            $incoterm = 'FOB';
+        } elseif ($quote->incoterm == 5) {
+            $incoterm = 'CFR';
+        } elseif ($quote->incoterm == 6) {
+            $incoterm = 'CIF';
+        } elseif ($quote->incoterm == 7) {
+            $incoterm = 'CIP';
+        } elseif ($quote->incoterm == 8) {
+            $incoterm = 'DAT';
+        } elseif ($quote->incoterm == 9) {
+            $incoterm = 'DAP';
+        } elseif ($quote->incoterm == 10) {
+            $incoterm = 'DDP';
         }
 
         return [

@@ -2,53 +2,56 @@
 
 namespace App\Jobs;
 
-use Excel;
-use App\User;
-use PrvHarbor;
-use App\Region;
-use App\Harbor;
-use PrvCarrier;
-use App\Country;
-use App\Carrier;
-use App\Currency;
-use App\Surcharge;
-use Carbon\Carbon;
-use App\CompanyUser;
-use App\TypeDestiny;
-use App\GlobalChargeLcl;
-use App\GlobalCharPortLcl;
+use App\AccountImportationGlobalChargerLcl;
 use App\CalculationTypeLcl;
+use App\Carrier;
+use App\CompanyUser;
+use App\Country;
+use App\Currency;
+use App\FailedGlobalchargerLcl;
 use App\GlobalCharCarrierLcl;
 use App\GlobalCharCountryLcl;
-use App\FailedGlobalchargerLcl;
-use App\Notifications\N_general;
+use App\GlobalChargeLcl;
+use App\GlobalCharPortLcl;
+use App\Harbor;
 use App\Jobs\ProcessContractFile;
-use Illuminate\Support\Facades\Storage;
-use App\Notifications\SlackNotification;
-use App\AccountImportationGlobalChargerLcl;
 use App\NewRequestGlobalChargerLcl as RequestGCLCL;
-
+use App\Notifications\N_general;
+use App\Notifications\SlackNotification;
+use App\Region;
+use App\Surcharge;
+use App\TypeDestiny;
+use App\User;
+use Carbon\Carbon;
+use Excel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+use PrvCarrier;
+use PrvHarbor;
 
 class ImportationGlobalchargerLclJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $request,$companyUserId,$UserId;
+    public $request;
+    public $companyUserId;
+    public $UserId;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($request,$companyUserId,$UserId)
+    public function __construct($request, $companyUserId, $UserId)
     {
-        $this->request          = $request;
-        $this->companyUserId    = $companyUserId;
-        $this->UserId           = $UserId;
-    } 
+        $this->request = $request;
+        $this->companyUserId = $companyUserId;
+        $this->UserId = $UserId;
+    }
+
     /**
      * Execute the job.
      *
@@ -58,53 +61,52 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
     {
         $requestobj = $this->request;
         $companyUserIdVal = $this->companyUserId;
-        $errors     = 0;
-        $NameFile   = $requestobj['FileName'];
-        $path       = Storage::disk('GCImportLcl')->url($NameFile);
-        
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = Storage::disk('GCImportLcl')->url($NameFile);
+
         Excel::selectSheetsByIndex(0)
-            ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
+            ->Load($path, function ($reader) use ($requestobj,$errors,$NameFile,$companyUserIdVal) {
                 $reader->noHeading = true;
 
-                $minimun                = "Minimun";
-                $amount                 = "Amount";                
-                $origin                 = "origin";
-                $originExc              = "Origin";
-                $destiny                = "destiny";
-                $destinyExc             = "Destiny";
-                $currency               = "Currency";
-                $originCountry          = "originCount";//arreglo de multiples country
-                $originRegion           = "originRegion";//arreglo de multiples Region
-                $destinycountry         = "destinyCount";//arreglo de multiples country
-                $destinyRegion          = "destinyRegion";//arreglo de multiples Region
-                $carrier                = "Carrier";
-                $CalculationType        = "Calculation_Type";
-                $Charge                 = "Charge";
-                $statustypecurren       = "statustypecurren";
-                $typedestiny            = "Type_Destiny";
-                $validityfrom           = "Validity_From";
-                $validityto             = "Validity_To";
-                $differentiator         = "Differentiator";
+                $minimun = 'Minimun';
+                $amount = 'Amount';
+                $origin = 'origin';
+                $originExc = 'Origin';
+                $destiny = 'destiny';
+                $destinyExc = 'Destiny';
+                $currency = 'Currency';
+                $originCountry = 'originCount'; //arreglo de multiples country
+                $originRegion = 'originRegion'; //arreglo de multiples Region
+                $destinycountry = 'destinyCount'; //arreglo de multiples country
+                $destinyRegion = 'destinyRegion'; //arreglo de multiples Region
+                $carrier = 'Carrier';
+                $CalculationType = 'Calculation_Type';
+                $Charge = 'Charge';
+                $statustypecurren = 'statustypecurren';
+                $typedestiny = 'Type_Destiny';
+                $validityfrom = 'Validity_From';
+                $validityto = 'Validity_To';
+                $differentiator = 'Differentiator';
 
-                $statusPortCountryTW        = $requestobj['statusPortCountry'];
-                $account_id                 = $requestobj['account_id'];
-                $statusexistdatevalidity    = $requestobj['existdatevalidity'];
-                $statusPortCountry          = $requestobj['statusPortCountry'];
+                $statusPortCountryTW = $requestobj['statusPortCountry'];
+                $account_id = $requestobj['account_id'];
+                $statusexistdatevalidity = $requestobj['existdatevalidity'];
+                $statusPortCountry = $requestobj['statusPortCountry'];
 
-                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':','1','2','3','4','5','6','7','8','9','0'];
+                $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
-                $globalChargerCollection    = collect([]);
-                $globalChargerFailCollection   = collect([]);
-
+                $globalChargerCollection = collect([]);
+                $globalChargerFailCollection = collect([]);
 
                 $i = 1;
-                $falli =0;
-                foreach($reader->get() as $read){
+                $falli = 0;
+                foreach ($reader->get() as $read) {
 
                     //--------------------------------------------------------
-                    if($i != 1){
+                    if ($i != 1) {
                         $differentiatorVal = '';
-                        if($statusPortCountryTW == 2){
+                        if ($statusPortCountryTW == 2) {
                             $differentiatorVal = $read[$requestobj[$differentiator]];
                         } else {
                             $differentiatorVal = 'port';
@@ -112,31 +114,31 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                         //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
                         //--- ORIGIN ------------------------------------------------------
                         $oricount = 0;
-                        if($requestobj['existorigin'] == true){
+                        if ($requestobj['existorigin'] == true) {
                             $originMultps = [0];
                         } else {
-                            $originMultps = explode('|',$read[$requestobj[$originExc]]);
-                            foreach($originMultps as $originMultCompact){
-                                if(strnatcasecmp($differentiatorVal,'region') == 0){
+                            $originMultps = explode('|', $read[$requestobj[$originExc]]);
+                            foreach ($originMultps as $originMultCompact) {
+                                if (strnatcasecmp($differentiatorVal, 'region') == 0) {
                                     $originMultCompact = trim($originMultCompact);
-                                    $regionsOR = Region::where('name','like','%'.$originMultCompact.'%')->with('CountriesRegions.country')->get();
-                                    if(count($regionsOR) == 1){
+                                    $regionsOR = Region::where('name', 'like', '%'.$originMultCompact.'%')->with('CountriesRegions.country')->get();
+                                    if (count($regionsOR) == 1) {
                                         // region add
-                                        foreach($regionsOR as $regionor){   
-                                            if($oricount == 0){
+                                        foreach ($regionsOR as $regionor) {
+                                            if ($oricount == 0) {
                                                 $originMultps = $regionor->CountriesRegions->pluck('country')->pluck('name')->toArray();
                                             } else {
-                                                foreach($regionor->CountriesRegions->pluck('country')->pluck('name')->toArray() as $oricountriesarray){
-                                                    array_push($originMultps,$oricountriesarray);
+                                                foreach ($regionor->CountriesRegions->pluck('country')->pluck('name')->toArray() as $oricountriesarray) {
+                                                    array_push($originMultps, $oricountriesarray);
                                                 }
                                             }
                                         }
-                                    } elseif(count($regionsOR) == 0) {
+                                    } elseif (count($regionsOR) == 0) {
                                         // pais add
-                                        if($oricount == 0){
-                                            $originMultps =[$originMultCompact];
+                                        if ($oricount == 0) {
+                                            $originMultps = [$originMultCompact];
                                         } else {
-                                            array_push($originMultps,$originMultCompact);
+                                            array_push($originMultps, $originMultCompact);
                                         }
                                     }
                                 }
@@ -145,33 +147,32 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                         }
                         //--- DESTINY -----------------------------------------------------
                         $descount = 0;
-                        if($requestobj['existdestiny'] == true){
+                        if ($requestobj['existdestiny'] == true) {
                             $destinyMultps = [0];
                         } else {
-                            $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
-                            foreach($destinyMultps as $destinyMultCompact){
-                                if(strnatcasecmp($differentiatorVal,'region') == 0){
+                            $destinyMultps = explode('|', $read[$requestobj[$destinyExc]]);
+                            foreach ($destinyMultps as $destinyMultCompact) {
+                                if (strnatcasecmp($differentiatorVal, 'region') == 0) {
                                     $destinyMultCompact = trim($destinyMultCompact);
-                                    $regionsDES = Region::where('name','like','%'.$destinyMultCompact.'%')->with('CountriesRegions.country')->get();
-                                    if(count($regionsDES) == 1){
+                                    $regionsDES = Region::where('name', 'like', '%'.$destinyMultCompact.'%')->with('CountriesRegions.country')->get();
+                                    if (count($regionsDES) == 1) {
                                         // region add
-                                        foreach($regionsDES as $regiondes){                                            
-                                            if($descount == 0){
+                                        foreach ($regionsDES as $regiondes) {
+                                            if ($descount == 0) {
                                                 $destinyMultps = $regiondes->CountriesRegions->pluck('country')->pluck('name')->toArray();
                                             } else {
-                                                foreach($regiondes->CountriesRegions->pluck('country')->pluck('name')->toArray() as $descountriesarray){
-                                                    array_push($destinyMultps,$descountriesarray);
+                                                foreach ($regiondes->CountriesRegions->pluck('country')->pluck('name')->toArray() as $descountriesarray) {
+                                                    array_push($destinyMultps, $descountriesarray);
                                                 }
                                             }
                                         }
-                                    } elseif(count($regionsDES) == 0) {
+                                    } elseif (count($regionsDES) == 0) {
                                         // pais add
-                                        if($descount == 0){
-                                            $destinyMultps =[$destinyMultCompact];
+                                        if ($descount == 0) {
+                                            $destinyMultps = [$destinyMultCompact];
                                         } else {
-                                            array_push($destinyMultps,$destinyMultCompact);
+                                            array_push($destinyMultps, $destinyMultCompact);
                                         }
-
                                     }
                                 }
                                 $descount++;
@@ -181,99 +182,96 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                         //dd($originMultps);
                         //dd($destinyMultps);
 
-                        foreach($originMultps as $originMult){
-                            foreach($destinyMultps as $destinyMult){
+                        foreach ($originMultps as $originMult) {
+                            foreach ($destinyMultps as $destinyMult) {
+                                $carrierVal = '';
+                                $typedestinyVal = '';
+                                $originVal = '';
+                                $destinyVal = '';
+                                $origenFL = '';
+                                $destinyFL = '';
+                                $currencyVal = '';
+                                $currencyReadVal = '';
+                                $currencyReadVal = '';
+                                $minimunVal = null;
+                                $amountVal = null;
 
-                                $carrierVal                 = '';
-                                $typedestinyVal             = '';
-                                $originVal                  = '';
-                                $destinyVal                 = '';
-                                $origenFL                   = '';
-                                $destinyFL                  = '';
-                                $currencyVal                = '';
-                                $currencyReadVal            = '';
-                                $currencyReadVal            = '';
-                                $minimunVal                 = null;
-                                $amountVal                  = null;
+                                $currencyValAmount = '';
+                                $currencyValMinimun = '';
 
-                                $currencyValAmount          = '';
-                                $currencyValMinimun         = '';
+                                $calculationtypeVal = '';
+                                $surchargelist = '';
+                                $surchargeVal = '';
+                                $validityfromVal = '';
+                                $validitytoVal = '';
+                                $differentiatorVal = 1;
+                                $account_idVal = $account_id;
 
-                                $calculationtypeVal         = '';
-                                $surchargelist              = '';
-                                $surchargeVal               = '';
-                                $validityfromVal            = '';
-                                $validitytoVal		        = '';
-                                $differentiatorVal          = 1;
-                                $account_idVal              = $account_id;
+                                $calculationtypeValfail = '';
+                                $currencResultwen = '';
+                                $currencResulfor = '';
 
-                                $calculationtypeValfail     = '';
-                                $currencResultwen           = '';
-                                $currencResulfor            = '';
+                                $currencResul = '';
 
-                                $currencResul               = '';
+                                $minimunArr = [];
+                                $amountArr = [];
 
-                                $minimunArr                 = [];
-                                $amountArr                  = [];
+                                $originBol = false;
+                                $origExiBol = false;
+                                $destinyBol = false;
+                                $destiExitBol = false;
+                                $typedestinyExitBol = false;
+                                $typedestinyBol = false;
+                                $carriExitBol = false;
+                                $curreExiBol = false;
+                                $curreExitBol = false;
+                                $curreExiMinimunBol = false;
+                                $curreExiAmountBol = false;
 
+                                $minimunExiBol = false;
+                                $amountExiBol = false;
 
-                                $originBol               = false;
-                                $origExiBol              = false;
-                                $destinyBol              = false;
-                                $destiExitBol            = false;
-                                $typedestinyExitBol      = false;
-                                $typedestinyBol          = false;
-                                $carriExitBol            = false;
-                                $curreExiBol             = false;
-                                $curreExitBol            = false;
-                                $curreExiMinimunBol      = false;
-                                $curreExiAmountBol       = false;
+                                $carriBol = false;
+                                $calculationtypeExiBol = false;
+                                $variantecurrency = false;
+                                $typeExiBol = false;
+                                $minimunArrBol = false;
+                                $amountArrBol = false;
+                                $validityfromExiBol = false;
+                                $validitytoExiBol = false;
+                                $differentiatorBol = false;
+                                $values = true;
 
-                                $minimunExiBol           = false;
-                                $amountExiBol            = false;
-
-                                $carriBol                = false;
-                                $calculationtypeExiBol   = false;
-                                $variantecurrency        = false;
-                                $typeExiBol              = false;
-                                $minimunArrBol           = false;
-                                $amountArrBol            = false;
-                                $validityfromExiBol		 = false;
-                                $validitytoExiBol		 = false;
-                                $differentiatorBol       = false;
-                                $values                  = true;
-
-                                if($requestobj[$statustypecurren] == 1){
-                                    $currencyReadVal        = $read[$requestobj[$currency]];
-                                } 
-
-                                if($requestobj['existorigin'] != 1 && $requestobj['existdestiny'] != 1){
-                                    $randons    = [];
+                                if ($requestobj[$statustypecurren] == 1) {
+                                    $currencyReadVal = $read[$requestobj[$currency]];
                                 }
 
-                                $minimunReadVal             = $read[$requestobj[$minimun]];
-                                $minimunVal                 = $minimunReadVal;
-                                $amountReadVal              = $read[$requestobj[$amount]];
-                                $amountVal                  = $amountReadVal;
-                                $calculationvalvaration     = $read[$requestobj[$CalculationType]];
-                                $chargerValRead             = $read[$requestobj[$Charge]];
+                                if ($requestobj['existorigin'] != 1 && $requestobj['existdestiny'] != 1) {
+                                    $randons = [];
+                                }
 
+                                $minimunReadVal = $read[$requestobj[$minimun]];
+                                $minimunVal = $minimunReadVal;
+                                $amountReadVal = $read[$requestobj[$amount]];
+                                $amountVal = $amountReadVal;
+                                $calculationvalvaration = $read[$requestobj[$CalculationType]];
+                                $chargerValRead = $read[$requestobj[$Charge]];
 
-                                if($statusexistdatevalidity == 1){
-                                    $dateArr = explode('/',$requestobj['validitydate']);
-                                    $validityfromVal    = trim($dateArr[0]);
-                                    $validitytoVal      = trim($dateArr[1]);
-                                } else{
+                                if ($statusexistdatevalidity == 1) {
+                                    $dateArr = explode('/', $requestobj['validitydate']);
+                                    $validityfromVal = trim($dateArr[0]);
+                                    $validitytoVal = trim($dateArr[1]);
+                                } else {
                                     $validityfromVal = $read[$requestobj[$validityfrom]];
                                     $validitytoVal = $read[$requestobj[$validityto]];
                                 }
 
                                 //--------------- DIFRENCIADOR HARBOR COUNTRY -----------------------------------------
 
-                                if($statusPortCountry == 2){
-                                    $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country
-                                    $differentiatorValTw = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country
-                                    if(strnatcasecmp($differentiatorVal,'country') == 0 || strnatcasecmp($differentiatorVal,'region') == 0){
+                                if ($statusPortCountry == 2) {
+                                    $differentiatorVal = $read[$requestobj[$differentiator]]; // hacer validacion de puerto o country
+                                    $differentiatorValTw = $read[$requestobj[$differentiator]]; // hacer validacion de puerto o country
+                                    if (strnatcasecmp($differentiatorVal, 'country') == 0 || strnatcasecmp($differentiatorVal, 'region') == 0) {
                                         $differentiatorBol = true;
                                         $differentiatorVal = 2;
                                     } else {
@@ -283,84 +281,83 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
 
                                 //--------------- ORIGEN MULTIPLE O SIMPLE --------------------------------------------
 
-                                if($requestobj['existorigin'] == 1){
+                                if ($requestobj['existorigin'] == 1) {
                                     $originBol = true;
                                     $origExiBol = true; //segundo boolean para verificar campos errados
-                                    if($differentiatorBol == false){
+                                    if ($differentiatorBol == false) {
                                         $randons = $requestobj[$origin];
-                                    } else if($differentiatorBol == true){
-                                        if(strnatcasecmp($differentiatorValTw,'country') == 0){
+                                    } elseif ($differentiatorBol == true) {
+                                        if (strnatcasecmp($differentiatorValTw, 'country') == 0) {
                                             $randons = $requestobj[$originCountry];
-                                        } else{
+                                        } else {
                                             $randons = [];
-                                            foreach($requestobj[$originRegion] as $randosoriR){
+                                            foreach ($requestobj[$originRegion] as $randosoriR) {
                                                 $regionsORIrans = Region::with('CountriesRegions.country')->find($randosoriR);
-                                                foreach($regionsORIrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsORIran){
-                                                    array_push($randons,$regionsORIran);
+                                                foreach ($regionsORIrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsORIran) {
+                                                    array_push($randons, $regionsORIran);
                                                 }
                                             }
                                         }
                                     }
                                 } else {
                                     //$originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                                    $originVal = trim($originMult);// hacer validacion de puerto en DB
-                                    if($differentiatorBol == false){
+                                    $originVal = trim($originMult); // hacer validacion de puerto en DB
+                                    if ($differentiatorBol == false) {
                                         // El origen es  por puerto
                                         $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-                                        if($resultadoPortOri['boolean']){
-                                            $origExiBol = true;    
+                                        if ($resultadoPortOri['boolean']) {
+                                            $origExiBol = true;
                                         }
-                                        $originVal  = $resultadoPortOri['puerto'];
-                                    } else if($differentiatorBol == true){
+                                        $originVal = $resultadoPortOri['puerto'];
+                                    } elseif ($differentiatorBol == true) {
                                         // El origen es  por country
                                         $resultadocountrytOri = PrvHarbor::get_country($originVal);
-                                        if($resultadocountrytOri['boolean']){
-                                            $origExiBol = true;    
+                                        if ($resultadocountrytOri['boolean']) {
+                                            $origExiBol = true;
                                         }
-                                        $originVal  = $resultadocountrytOri['country'];
+                                        $originVal = $resultadocountrytOri['country'];
                                     }
-
                                 }
                                 //dd($originVal);
                                 //---------------- DESTINO MULTIPLE O SIMPLE ------------------------------------------
 
-                                if($requestobj['existdestiny'] == 1){
+                                if ($requestobj['existdestiny'] == 1) {
                                     $destinyBol = true;
                                     $destiExitBol = true; //segundo boolean para verificar campos errados
-                                    if($differentiatorBol == false){
+                                    if ($differentiatorBol == false) {
                                         $randons = $requestobj[$destiny];
-                                    } else if($differentiatorBol == true){
-                                        if(strnatcasecmp($differentiatorValTw,'country') == 0){
+                                    } elseif ($differentiatorBol == true) {
+                                        if (strnatcasecmp($differentiatorValTw, 'country') == 0) {
                                             $randons = $requestobj[$destinycountry];
-                                        } else{
+                                        } else {
                                             $randons = $requestobj[$destinyRegion];
 
                                             $randons = [];
-                                            foreach($requestobj[$destinyRegion] as $randosdesR){
+                                            foreach ($requestobj[$destinyRegion] as $randosdesR) {
                                                 $regionsDEsrans = Region::with('CountriesRegions.country')->find($randosdesR);
-                                                foreach($regionsDEsrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsDESran){
-                                                    array_push($randons,$regionsDESran);
+                                                foreach ($regionsDEsrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsDESran) {
+                                                    array_push($randons, $regionsDESran);
                                                 }
                                             }
                                         }
                                     }
                                 } else {
                                     //$destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                                    $destinyVal = trim($destinyMult);// hacer validacion de puerto en DB
-                                    if($differentiatorBol == false){
+                                    $destinyVal = trim($destinyMult); // hacer validacion de puerto en DB
+                                    if ($differentiatorBol == false) {
                                         // El origen es  por Harbors
                                         $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
-                                        if($resultadoPortDes['boolean']){
-                                            $destiExitBol = true;    
+                                        if ($resultadoPortDes['boolean']) {
+                                            $destiExitBol = true;
                                         }
-                                        $destinyVal  = $resultadoPortDes['puerto'];
-                                    } else if($differentiatorBol == true){
+                                        $destinyVal = $resultadoPortDes['puerto'];
+                                    } elseif ($differentiatorBol == true) {
                                         //El destino es por Country
                                         $resultadocountryDes = PrvHarbor::get_country($destinyVal);
-                                        if($resultadocountryDes['boolean']){
-                                            $destiExitBol = true;    
+                                        if ($resultadocountryDes['boolean']) {
+                                            $destiExitBol = true;
                                         }
-                                        $destinyVal  = $resultadocountryDes['country'];
+                                        $destinyVal = $resultadocountryDes['country'];
                                     }
                                 }
 
@@ -368,231 +365,226 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                 //dd($randons);
                                 //------------------ VALIDITY FROM ----------------------------------------------------
 
-                                try{
+                                try {
                                     $validityfromVal = Carbon::parse($validityfromVal)->format('Y-m-d');
                                     $validityfromExiBol = true;
-                                } catch (\Exception $err){
+                                } catch (\Exception $err) {
                                     $validityfromVal = $validityfromVal.'_E_E';
                                 }
 
                                 //------------------ VALIDITY TO ------------------------------------------------------
 
-                                try{
+                                try {
                                     $validitytoVal = Carbon::parse($validitytoVal)->format('Y-m-d');
                                     $validitytoExiBol = true;
-                                } catch (\Exception $err){
+                                } catch (\Exception $err) {
                                     $validitytoVal = $validitytoVal.'_E_E';
                                 }
 
                                 //--------------- Type Destiny --------------------------------------------------------
 
-                                if($requestobj['existtypedestiny'] == 1){
+                                if ($requestobj['existtypedestiny'] == 1) {
                                     $typedestinyExitBol = true;
-                                    $typedestinyBol     = true;
-                                    $typedestinyVal     = $requestobj['typedestiny']; // es cuando se indica que no posee type destiny 
+                                    $typedestinyBol = true;
+                                    $typedestinyVal = $requestobj['typedestiny']; // es cuando se indica que no posee type destiny
                                 } else {
-                                    $typedestinyVal      = $read[$requestobj[$typedestiny]]; // cuando el type destiny  existe en el excel
-                                    $typedestinyResul    = str_replace($caracteres,'',$typedestinyVal);
-                                    $typedestinyobj      = TypeDestiny::where('description','=',$typedestinyResul)->first();
-                                    if(empty($typedestinyobj->id) != true){
+                                    $typedestinyVal = $read[$requestobj[$typedestiny]]; // cuando el type destiny  existe en el excel
+                                    $typedestinyResul = str_replace($caracteres, '', $typedestinyVal);
+                                    $typedestinyobj = TypeDestiny::where('description', '=', $typedestinyResul)->first();
+                                    if (empty($typedestinyobj->id) != true) {
                                         $typedestinyExitBol = true;
                                         $typedestinyVal = $typedestinyobj->id;
-                                    }else{
+                                    } else {
                                         $typedestinyVal = $typedestinyVal.'_E_E';
                                     }
                                 }
 
                                 //--------------- CARRIER -------------------------------------------------------------
 
-                                if($requestobj['existcarrier'] == 1){
+                                if ($requestobj['existcarrier'] == 1) {
                                     $carriExitBol = true;
-                                    $carriBol     = true;
-                                    $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
+                                    $carriBol = true;
+                                    $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier
                                 } else {
-                                    $carrierVal      = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                                    $carrierArr      = PrvCarrier::get_carrier($carrierVal);
-                                    $carriExitBol    = $carrierArr['boolean'];
-                                    $carrierVal      = $carrierArr['carrier'];
+                                    $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
+                                    $carrierArr = PrvCarrier::get_carrier($carrierVal);
+                                    $carriExitBol = $carrierArr['boolean'];
+                                    $carrierVal = $carrierArr['carrier'];
                                 }
 
                                 //---------------- CURRENCY VALUES ----------------------------------------------------
 
-                                if(empty($minimunVal) != true){ //Primero valido si el campo viene lleno, en caso contrario lo lleno manuelamene
-                                    $minimunArrBol  = true;
-                                    $minimunArr     = explode(' ',trim($minimunVal));
+                                if (empty($minimunVal) != true) { //Primero valido si el campo viene lleno, en caso contrario lo lleno manuelamene
+                                    $minimunArrBol = true;
+                                    $minimunArr = explode(' ', trim($minimunVal));
                                 } else {
-                                    $minimunArr     = ['0.0']; 
+                                    $minimunArr = ['0.0'];
                                 }
 
-                                if(empty($amountVal) != true){
-                                    $amountArrBol   = true;
-                                    $amountArr      = explode(' ',trim($amountVal));
+                                if (empty($amountVal) != true) {
+                                    $amountArrBol = true;
+                                    $amountArr = explode(' ', trim($amountVal));
                                 } else {
-                                    $amountArr      = ['0.0'];
+                                    $amountArr = ['0.0'];
                                 }
 
                                 // ----------------------- Validacion de comapos vacios--------------------------------
 
-                                if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency para no llenar el valor del currency arreglo[posicion 2] 
+                                if ($requestobj[$statustypecurren] == 2) { // se verifica si el valor viene junto con el currency para no llenar el valor del currency arreglo[posicion 2]
                                     // ------- AMOUNT'
-                                    if($amountArrBol == false){ // Cargamos el arreglo[1] para que se pueda registrar
-                                        if($minimunArrBol == true){
-                                            array_push($amountArr,$minimunArr[1]);
+                                    if ($amountArrBol == false) { // Cargamos el arreglo[1] para que se pueda registrar
+                                        if ($minimunArrBol == true) {
+                                            array_push($amountArr, $minimunArr[1]);
                                         } else {
-                                            array_push($amountArr,'');
+                                            array_push($amountArr, '');
                                         }
                                     }
 
                                     // ------- MINIUMUN -----------------------------------------------------------Min
-                                    if($minimunArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
-                                        if($amountArrBol == true){
-                                            array_push($minimunArr,$amountArr[1]);
+                                    if ($minimunArrBol == false) { // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+                                        if ($amountArrBol == true) {
+                                            array_push($minimunArr, $amountArr[1]);
                                         } else {
-                                            array_push($minimunArr,'');
+                                            array_push($minimunArr, '');
                                         }
                                     }
                                 }
 
                                 //---------------- AMOUNT -------------------------------------------------------------
 
-                                if(empty($amountArr[0]) != true || floatval($amountArr[0]) == 0.00){
+                                if (empty($amountArr[0]) != true || floatval($amountArr[0]) == 0.00) {
                                     $amountExiBol = true;
-                                    $amountVal  = floatval($amountArr[0]);
-                                }  else{
-                                    $amountVal  = $amountArr[0].'_E_E';
+                                    $amountVal = floatval($amountArr[0]);
+                                } else {
+                                    $amountVal = $amountArr[0].'_E_E';
                                 }
 
                                 //----------------- MINIMUN -----------------------------------------------------------
 
-                                if(empty($minimunArr[0]) != true || floatval($minimunArr[0]) == 0.00){
+                                if (empty($minimunArr[0]) != true || floatval($minimunArr[0]) == 0.00) {
                                     $minimunExiBol = true;
-                                    $minimunVal   = floatval($minimunArr[0]);
-                                }  else{
+                                    $minimunVal = floatval($minimunArr[0]);
+                                } else {
                                     $minimunVal = $minimunArr[0].'_E_E';
-                                }                         
+                                }
 
-                                if($amountVal == 0.00
-                                   && $minimunVal == 0.00){
+                                if ($amountVal == 0.00
+                                   && $minimunVal == 0.00) {
                                     $values = false;
                                 }
 
                                 //---------------- CURRENCY -----------------------------------------------------------
 
-                                if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
+                                if ($requestobj[$statustypecurren] == 2) { // se verifica si el valor viene junto con el currency
 
                                     // cargar  columna con el  valor y currency  juntos, se descompone
 
                                     //---------------- CURRENCY AMUONT + VALUE ----------------------------------------
 
-
-                                    if(count($amountArr) > 1){
-                                        $currencyValAmount = str_replace($caracteres,'',$amountArr[1]);
+                                    if (count($amountArr) > 1) {
+                                        $currencyValAmount = str_replace($caracteres, '', $amountArr[1]);
                                     } else {
                                         $currencyValAmount = '_E_E';
                                     }
 
-                                    $currencAmount = Currency::where('alphacode','=',$currencyValAmount)->first();
+                                    $currencAmount = Currency::where('alphacode', '=', $currencyValAmount)->first();
 
-                                    if(empty($currencAmount->id) != true){
+                                    if (empty($currencAmount->id) != true) {
                                         $curreExiAmountBol = true;
-                                        $currencyValAmount =  $currencAmount->id;
-                                    } else{
-                                        if(count($amountArr) > 1){
+                                        $currencyValAmount = $currencAmount->id;
+                                    } else {
+                                        if (count($amountArr) > 1) {
                                             $currencyValAmount = $amountArr[1].'_E_E';
-                                        } else{
+                                        } else {
                                             $currencyValAmount = '_E_E';
                                         }
                                     }
 
                                     //---------------- CURRENCY MINUMUN + VALUE ---------------------------------------
 
-                                    if(count($minimunArr) > 1){
-                                        $currencResulMin = str_replace($caracteres,'',$minimunArr[1]);
-                                    } else{
+                                    if (count($minimunArr) > 1) {
+                                        $currencResulMin = str_replace($caracteres, '', $minimunArr[1]);
+                                    } else {
                                         $currencResulMin = '_E_E';
                                     }
 
-                                    $currencMinimun = Currency::where('alphacode','=',$currencResulMin)->first();
+                                    $currencMinimun = Currency::where('alphacode', '=', $currencResulMin)->first();
 
-                                    if(empty($currencMinimun->id) != true){
+                                    if (empty($currencMinimun->id) != true) {
                                         $curreExiMinimunBol = true;
-                                        $currencyValMinimun =  $currencMinimun->id;
-                                    } else{
-                                        if(count($minimunArr) > 1){
+                                        $currencyValMinimun = $currencMinimun->id;
+                                    } else {
+                                        if (count($minimunArr) > 1) {
                                             $currencyValMinimun = $minimunArr[1].'_E_E';
                                         } else {
                                             $currencyValMinimun = '_E_E';
                                         }
                                     }
 
-                                    if($curreExiAmountBol == false && $curreExiMinimunBol == true){
+                                    if ($curreExiAmountBol == false && $curreExiMinimunBol == true) {
                                         $curreExiAmountBol = true;
                                         $currencyValAmount = $currencyValMinimun;
-                                    } elseif($curreExiAmountBol == true && $curreExiMinimunBol == false){
+                                    } elseif ($curreExiAmountBol == true && $curreExiMinimunBol == false) {
                                         $curreExiMinimunBol = true;
                                         $currencyValMinimun = $currencyValAmount;
                                     }
 
-                                    if($curreExiAmountBol){
+                                    if ($curreExiAmountBol) {
                                         $currencyVal = $currencyValAmount;
                                     } else {
                                         $currencyVal = $currencyValMinimun;
                                     }
 
-                                    if($curreExiAmountBol == true && $curreExiMinimunBol == true){
+                                    if ($curreExiAmountBol == true && $curreExiMinimunBol == true) {
                                         $variantecurrency = true;
                                     }
-
                                 } else {
-
-                                    if(empty($currencyReadVal) != true){
-                                        $currencResul= str_replace($caracteres,'',$currencyReadVal);
-                                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
-                                        if(empty($currenc->id) != true){    
+                                    if (empty($currencyReadVal) != true) {
+                                        $currencResul = str_replace($caracteres, '', $currencyReadVal);
+                                        $currenc = Currency::where('alphacode', '=', $currencResul)->first();
+                                        if (empty($currenc->id) != true) {
                                             $curreExitBol = true;
-                                            $currencyVal =  $currenc->id;
-                                        } else{
-                                            $currencyVal = $currencyReadVal.'_E_E';                                    
+                                            $currencyVal = $currenc->id;
+                                        } else {
+                                            $currencyVal = $currencyReadVal.'_E_E';
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         $currencyVal = $currencyReadVal.'_E_E';
                                     }
 
-                                    if($curreExitBol == true ){
+                                    if ($curreExitBol == true) {
                                         $variantecurrency = true;
                                     }
                                 }
 
                                 //------------------ CALCULATION TYPE -------------------------------------------------
 
-                                $calculationtype = CalculationTypeLcl::where('code','=',$calculationvalvaration)->orWhere('name','=',$calculationvalvaration)->first();
-                                if(empty($calculationtype) != true){
-                                    $calculationtypeExiBol  = true;
-                                    $calculationtypeVal     = $calculationtype['id'];
-                                } else{
-                                    $calculationtypeVal     = $calculationvalvaration.' ROW Excel '.$i.' _E_E';
+                                $calculationtype = CalculationTypeLcl::where('code', '=', $calculationvalvaration)->orWhere('name', '=', $calculationvalvaration)->first();
+                                if (empty($calculationtype) != true) {
+                                    $calculationtypeExiBol = true;
+                                    $calculationtypeVal = $calculationtype['id'];
+                                } else {
+                                    $calculationtypeVal = $calculationvalvaration.' ROW Excel '.$i.' _E_E';
                                 }
 
                                 //------------------ TYPE -------------------------------------------------------------
 
-                                if(empty($chargerValRead) != true){
+                                if (empty($chargerValRead) != true) {
                                     $typeExiBol = true;
 
-                                    $surchargelist = Surcharge::where('name','=',$chargerValRead)
-                                        ->where('company_user_id','=', $companyUserIdVal)
+                                    $surchargelist = Surcharge::where('name', '=', $chargerValRead)
+                                        ->where('company_user_id', '=', $companyUserIdVal)
                                         ->first();
-                                    if(empty($surchargelist) != true){
+                                    if (empty($surchargelist) != true) {
                                         $surchargeVal = $surchargelist['id'];
-                                    } 	else{
+                                    } else {
                                         $surchargelist = Surcharge::create([
                                             'name'              => $chargerValRead,
                                             'description'       => $chargerValRead,
-                                            'company_user_id'   => $companyUserIdVal
+                                            'company_user_id'   => $companyUserIdVal,
                                         ]);
                                         $surchargeVal = $surchargelist->id;
                                     }
-
                                 } else {
                                     $surchargeVal = $chargerValRead.'_E_E';
                                 }
@@ -625,7 +617,7 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     '$validitytoVal'             => $validitytoVal,
                                     '$differentiatorVal'         => $differentiatorVal,
                                     '$originVal'                 => $originVal,
-                                    '$destinyVal'                => $destinyVal,                 
+                                    '$destinyVal'                => $destinyVal,
                                     '$typedestinyVal'            => $typedestinyVal,
                                     '$carrierVal'                => $carrierVal,
                                     '$minimunVal'                => $minimunVal,
@@ -642,55 +634,54 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     '$statusexistdatevalidity'   => $statusexistdatevalidity,
                                     '$calculationvalvaration'    => $calculationvalvaration,
                                     '$calculationtype'           => $calculationtype,
-                                    '$chargerValRead'            => $chargerValRead
+                                    '$chargerValRead'            => $chargerValRead,
                                 ];
 
                                 //dd($prueba);
 
-                                if($carriExitBol            	== true
-                                   && $origExiBol           	== true
-                                   && $destiExitBol         	== true
-                                   && $amountExiBol         	== true
-                                   && $minimunExiBol          	== true
-                                   && $calculationtypeExiBol 	== true
-                                   && $variantecurrency     	== true
-                                   && $typeExiBol           	== true
-                                   && $typedestinyExitBol   	== true
-                                   && $validityfromExiBol       == true
-                                   && $validitytoExiBol         == true
-                                   && $values 					== true ){
-
-                                    if($differentiatorBol == false){ //si es puerto verificamos si exite uno creado con puerto
+                                if ($carriExitBol == true
+                                   && $origExiBol == true
+                                   && $destiExitBol == true
+                                   && $amountExiBol == true
+                                   && $minimunExiBol == true
+                                   && $calculationtypeExiBol == true
+                                   && $variantecurrency == true
+                                   && $typeExiBol == true
+                                   && $typedestinyExitBol == true
+                                   && $validityfromExiBol == true
+                                   && $validitytoExiBol == true
+                                   && $values == true) {
+                                    if ($differentiatorBol == false) { //si es puerto verificamos si exite uno creado con puerto
                                         $typeplace = 'globalcharportlcl';
-                                    }else {  //si es country verificamos si exite uno creado con country
+                                    } else {  //si es country verificamos si exite uno creado con country
                                         $typeplace = 'globalcharcountrylcl';
                                     }
 
                                     // evaluamos si viene el valor con el currency juntos
 
-                                    if($requestobj[$statustypecurren] == 2){
-                                        if($curreExiAmountBol){
+                                    if ($requestobj[$statustypecurren] == 2) {
+                                        if ($curreExiAmountBol) {
                                             $currencyVal = $currencyValAmount;
-                                        }elseif($curreExiMinimunBol) {
+                                        } elseif ($curreExiMinimunBol) {
                                             $currencyVal = $currencyValMinimun;
                                         }
                                     }
 
-                                    if($amountVal != 0 || $amountVal != 0.0){
+                                    if ($amountVal != 0 || $amountVal != 0.0) {
                                         $globalChargeArreG = null;
-                                        $globalChargeArreG = GlobalChargeLcl::where('surcharge_id',$surchargeVal)
-                                            ->where('typedestiny_id',$typedestinyVal)
-                                            ->where('company_user_id',$companyUserIdVal)
-                                            ->where('calculationtypelcl_id',$calculationtypeVal)
-                                            ->where('ammount',$amountVal)
-                                            ->where('minimum',$minimunVal)
-                                            ->where('validity',$validityfromVal)
-                                            ->where('expire',$validitytoVal)
-                                            ->where('currency_id',$currencyVal)
+                                        $globalChargeArreG = GlobalChargeLcl::where('surcharge_id', $surchargeVal)
+                                            ->where('typedestiny_id', $typedestinyVal)
+                                            ->where('company_user_id', $companyUserIdVal)
+                                            ->where('calculationtypelcl_id', $calculationtypeVal)
+                                            ->where('ammount', $amountVal)
+                                            ->where('minimum', $minimunVal)
+                                            ->where('validity', $validityfromVal)
+                                            ->where('expire', $validitytoVal)
+                                            ->where('currency_id', $currencyVal)
                                             ->has($typeplace)
                                             ->first();
 
-                                        if(count($globalChargeArreG) == 0){
+                                        if (count($globalChargeArreG) == 0) {
                                             $globalChargeArreG = GlobalChargeLcl::create([ // tabla GlobalCharge
                                                 'surcharge_id'       						=> $surchargeVal,
                                                 'typedestiny_id'     						=> $typedestinyVal,
@@ -701,25 +692,25 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                                 'minimum'            						=> $minimunVal,
                                                 'validity' 									=> $validityfromVal,
                                                 'expire'					 				=> $validitytoVal,
-                                                'currency_id'        						=> $currencyVal
-                                            ]);   
+                                                'currency_id'        						=> $currencyVal,
+                                            ]);
                                         }
                                         //---------------------------------- VALIDATE G.C. CARRIER -------------------------------------------
 
                                         $exitGCCPC = null;
-                                        $exitGCCPC = GlobalCharCarrierLcl::where('carrier_id',$carrierVal)->where('globalchargelcl_id',$globalChargeArreG->id)->first();
-                                        if(count($exitGCCPC) == 0){
+                                        $exitGCCPC = GlobalCharCarrierLcl::where('carrier_id', $carrierVal)->where('globalchargelcl_id', $globalChargeArreG->id)->first();
+                                        if (count($exitGCCPC) == 0) {
                                             GlobalCharCarrierLcl::create([ // tabla GlobalCharCarrier
                                                 'carrier_id'            => $carrierVal,
-                                                'globalchargelcl_id'    => $globalChargeArreG->id
+                                                'globalchargelcl_id'    => $globalChargeArreG->id,
                                             ]);
                                         }
                                         //----------------------------------- ORIGIN DESTINATION ---------------------------------------------
 
-                                        if($originBol == true || $destinyBol == true){
-                                            foreach($randons as  $rando){
+                                        if ($originBol == true || $destinyBol == true) {
+                                            foreach ($randons as  $rando) {
                                                 //insert por arreglo de puerto
-                                                if($originBol == true ){
+                                                if ($originBol == true) {
                                                     $originVal = $rando;
                                                 } else {
                                                     $destinyVal = $rando;
@@ -727,57 +718,56 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
 
                                                 //---------------------------------- CAMBIAR POR ID -------------------------------
 
-                                                if($differentiatorBol == false){
+                                                if ($differentiatorBol == false) {
                                                     $exgcpt = null;
-                                                    $exgcpt = GlobalCharPortLcl::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                        ->where('globalchargelcl_id',$globalChargeArreG->id)->first();
-                                                    if(count($exgcpt) == 0){
+                                                    $exgcpt = GlobalCharPortLcl::where('port_orig', $originVal)->where('port_dest', $destinyVal)
+                                                        ->where('globalchargelcl_id', $globalChargeArreG->id)->first();
+                                                    if (count($exgcpt) == 0) {
                                                         GlobalCharPortLcl::create([ // tabla GlobalCharPort
                                                             'port_orig'      	=> $originVal,
                                                             'port_dest'      	=> $destinyVal,
-                                                            'globalchargelcl_id'   => $globalChargeArreG->id
+                                                            'globalchargelcl_id'   => $globalChargeArreG->id,
                                                         ]);
                                                     }
                                                 } else {
                                                     $exgcct = null;
-                                                    $exgcct = GlobalCharCountryLcl::where('country_orig',$originVal)
-                                                        ->where('country_dest',$destinyVal)
-                                                        ->where('globalchargelcl_id',$globalChargeArreG->id)->first();
-                                                    if(count($exgcct) == 0){
+                                                    $exgcct = GlobalCharCountryLcl::where('country_orig', $originVal)
+                                                        ->where('country_dest', $destinyVal)
+                                                        ->where('globalchargelcl_id', $globalChargeArreG->id)->first();
+                                                    if (count($exgcct) == 0) {
                                                         GlobalCharCountryLcl::create([ // tabla GlobalCharCountry harbor
                                                             'country_orig'          => $originVal,
                                                             'country_dest'          => $destinyVal,
-                                                            'globalchargelcl_id'    => $globalChargeArreG->id
+                                                            'globalchargelcl_id'    => $globalChargeArreG->id,
                                                         ]);
                                                     }
                                                 }
 
                                                 //---------------------------------------------------------------------------------
-
-                                            } 
-                                        }else {
+                                            }
+                                        } else {
                                             // fila por puerto, sin expecificar origen ni destino manualmente
-                                            if($differentiatorBol == false){
+                                            if ($differentiatorBol == false) {
                                                 $exgcpt = null;
-                                                $exgcpt = GlobalCharPortLcl::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                    ->where('globalchargelcl_id',$globalChargeArreG->id)->first();
-                                                if(count($exgcpt) == 0){
+                                                $exgcpt = GlobalCharPortLcl::where('port_orig', $originVal)->where('port_dest', $destinyVal)
+                                                    ->where('globalchargelcl_id', $globalChargeArreG->id)->first();
+                                                if (count($exgcpt) == 0) {
                                                     GlobalCharPortLcl::create([ // tabla GlobalCharPort
                                                         'port_orig'      	=> $originVal,
                                                         'port_dest'      	=> $destinyVal,
-                                                        'globalchargelcl_id'   => $globalChargeArreG->id
+                                                        'globalchargelcl_id'   => $globalChargeArreG->id,
                                                     ]);
                                                 }
                                             } else {
                                                 $exgcct = null;
-                                                $exgcct = GlobalCharCountryLcl::where('country_orig',$originVal)
-                                                    ->where('country_dest',$destinyVal)
-                                                    ->where('globalchargelcl_id',$globalChargeArreG->id)->first();
-                                                if(count($exgcct) == 0){
+                                                $exgcct = GlobalCharCountryLcl::where('country_orig', $originVal)
+                                                    ->where('country_dest', $destinyVal)
+                                                    ->where('globalchargelcl_id', $globalChargeArreG->id)->first();
+                                                if (count($exgcct) == 0) {
                                                     GlobalCharCountryLcl::create([ // tabla GlobalCharCountry harbor
                                                         'country_orig'      => $originVal,
                                                         'country_dest'      => $destinyVal,
-                                                        'globalchargelcl_id'   => $globalChargeArreG->id
+                                                        'globalchargelcl_id'   => $globalChargeArreG->id,
                                                     ]);
                                                 }
                                             }
@@ -787,26 +777,25 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     }
 
                                     //dd('primer registro');
-
                                 } else {
                                     //dd($prueba);
                                     // van los fallidos
                                     //---------------------------- TYPE DESTINY  ----------------------------------------------------
 
-                                    if($typedestinyExitBol == true){
+                                    if ($typedestinyExitBol == true) {
                                         //if($typedestinyBol == true){
-                                            $typedestinyobj = TypeDestiny::find($typedestinyVal);
-                                            $typedestinyVal = $typedestinyobj->description;
+                                        $typedestinyobj = TypeDestiny::find($typedestinyVal);
+                                        $typedestinyVal = $typedestinyobj->description;
                                         //}
                                     }
 
                                     //---------------------------- CARRIER  ---------------------------------------------------------
 
-                                    if($carriExitBol == true){
-                                        if($carriBol == true){
-                                            $carrier = Carrier::find($carrierVal); 
-                                            $carrierVal = $carrier['name'];  
-                                        }else{
+                                    if ($carriExitBol == true) {
+                                        if ($carriBol == true) {
+                                            $carrier = Carrier::find($carrierVal);
+                                            $carrierVal = $carrier['name'];
+                                        } else {
                                             /*$carriExitBol2   = false;
                                             $carrierArr      = PrvCarrier::get_carrier($read[$requestobj['Carrier']]);
                                             $carrierVal      = $carrierArr['carrier'];
@@ -822,37 +811,37 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
 
                                     //---------------------------- VALUES CURRENCY ---------------------------------------------------
 
-                                    if($curreExiBol == true){
+                                    if ($curreExiBol == true) {
                                         $currencyVal = $read[$requestobj[$currency]];
                                     }
 
-                                    if( $amountExiBol == true){
-                                        if(empty($amountVal) == true){
+                                    if ($amountExiBol == true) {
+                                        if (empty($amountVal) == true) {
                                             $amountVal = '0';
-                                        } 
+                                        }
                                     }
 
-                                    if( $minimunExiBol == true){
-                                        if(empty($minimunVal) == true){
+                                    if ($minimunExiBol == true) {
+                                        if (empty($minimunVal) == true) {
                                             $minimunVal = '0';
                                         }
                                     }
 
-                                    if( $variantecurrency == true){
+                                    if ($variantecurrency == true) {
                                         $currencyobj = Currency::find($currencyVal);
                                         $currencyVal = $currencyobj['alphacode'];
-                                    } 
+                                    }
 
                                     //---------------------------- CALCULATION TYPE -------------------------------------------------
 
-                                    if($calculationtypeExiBol == true){
+                                    if ($calculationtypeExiBol == true) {
                                         $calculationType = CalculationTypeLcl::find($calculationtypeVal);
                                         $calculationtypeVal = $calculationType['name'];
-                                    } 
+                                    }
 
                                     //---------------------------- TYPE -------------------------------------------------------------
 
-                                    if($typeExiBol == true){
+                                    if ($typeExiBol == true) {
                                         $Surchargeobj = Surcharge::find($surchargeVal);
                                         $surchargeVal = $Surchargeobj['name'];
                                     }
@@ -860,51 +849,51 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     //////////////////////////////////////////////////////////////////////////////////////////////
                                     // Globalchargers Fallidos
                                     // multiples puertos o por seleccion
-                                    if($originBol == true || $destinyBol == true){
-                                        foreach($randons as  $rando){
+                                    if ($originBol == true || $destinyBol == true) {
+                                        foreach ($randons as  $rando) {
                                             //insert por arreglo de puerto
-                                            if($originBol == true ){
-                                                if($differentiatorBol){
+                                            if ($originBol == true) {
+                                                if ($differentiatorBol) {
                                                     $originerr = Country::find($rando);
                                                 } else {
                                                     $originerr = Harbor::find($rando);
                                                 }
                                                 $originVal = $originerr['name'];
-                                                if($destiExitBol == true){    
+                                                if ($destiExitBol == true) {
                                                     $destinyVal = $read[$requestobj[$destinyExc]];
                                                 }
                                             } else {
-                                                if($differentiatorBol){
+                                                if ($differentiatorBol) {
                                                     $destinyerr = Country::find($rando);
                                                 } else {
                                                     $destinyerr = Harbor::find($rando);
                                                 }
                                                 $destinyVal = $destinyerr['name'];
-                                                if($origExiBol == true){
-                                                    $originVal = $read[$requestobj[$originExc]];                                      
+                                                if ($origExiBol == true) {
+                                                    $originVal = $read[$requestobj[$originExc]];
                                                 }
                                             }
 
-                                            if($amountVal != 0 || $amountVal != 0.00){
+                                            if ($amountVal != 0 || $amountVal != 0.00) {
                                                 $extgc = null;
-                                                $extgc = FailedGlobalchargerLcl::where('surcharge',$surchargeVal)
-                                                    ->where('origin',$originVal)
-                                                    ->where('destiny',$destinyVal)
-                                                    ->where('typedestiny',$typedestinyVal)
-                                                    ->where('calculationtypelcl',$calculationtypeVal)
-                                                    ->where('ammount',$amountVal)
-                                                    ->where('minimum',$minimunVal)
-                                                    ->where('currency',$currencyVal)
-                                                    ->where('carrier',$carrierVal)
-                                                    ->where('expire',$validitytoVal)
-                                                    ->where('validity',$validityfromVal)
-                                                    ->where('port',true)
-                                                    ->where('country',false)
-                                                    ->where('company_user_id',$companyUserIdVal)
-                                                    ->where('differentiator',$differentiatorVal)
+                                                $extgc = FailedGlobalchargerLcl::where('surcharge', $surchargeVal)
+                                                    ->where('origin', $originVal)
+                                                    ->where('destiny', $destinyVal)
+                                                    ->where('typedestiny', $typedestinyVal)
+                                                    ->where('calculationtypelcl', $calculationtypeVal)
+                                                    ->where('ammount', $amountVal)
+                                                    ->where('minimum', $minimunVal)
+                                                    ->where('currency', $currencyVal)
+                                                    ->where('carrier', $carrierVal)
+                                                    ->where('expire', $validitytoVal)
+                                                    ->where('validity', $validityfromVal)
+                                                    ->where('port', true)
+                                                    ->where('country', false)
+                                                    ->where('company_user_id', $companyUserIdVal)
+                                                    ->where('differentiator', $differentiatorVal)
                                                     ->get();
 
-                                                if(count($extgc) == 0){
+                                                if (count($extgc) == 0) {
                                                     FailedGlobalchargerLcl::create([
                                                         'surcharge'             => $surchargeVal,
                                                         'origin'          	    => $originVal,
@@ -917,30 +906,29 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                                         'carrier'	            => $carrierVal,
                                                         'expire'	            => $validitytoVal,
                                                         'validity'              => $validityfromVal,
-                                                        'port'        		    => true,// por defecto
-                                                        'country'        	    => false,// por defecto
+                                                        'port'        		    => true, // por defecto
+                                                        'country'        	    => false, // por defecto
                                                         'company_user_id'       => $companyUserIdVal,
                                                         'account_imp_gclcl_id'  => $account_idVal,
-                                                        'differentiator'        => $differentiatorVal
+                                                        'differentiator'        => $differentiatorVal,
                                                     ]);
-                                                    //$ratescollection->push($ree);                    
+                                                    //$ratescollection->push($ree);
                                                 }
                                             }
-
                                         }
                                     } else {
                                         // puertos leidos del excel
-                                        if($origExiBol == true){
-                                            if($differentiatorBol == true){
+                                        if ($origExiBol == true) {
+                                            if ($differentiatorBol == true) {
                                                 $originExits = Country::find($originVal);
-                                                $originVal = $originExits['name'];     
+                                                $originVal = $originExits['name'];
                                             } else {
                                                 $originExits = Harbor::find($originVal);
-                                                $originVal = $originExits->name;                                       
+                                                $originVal = $originExits->name;
                                             }
                                         }
-                                        if($destiExitBol == true){ 
-                                            if($differentiatorBol == true){
+                                        if ($destiExitBol == true) {
+                                            if ($differentiatorBol == true) {
                                                 $destinyExits = Country::find($destinyVal);
                                                 $destinyVal = $destinyExits['name'];
                                             } else {
@@ -949,27 +937,26 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                             }
                                         }
 
-
-                                        if($amountVal != 0 || $amountVal != 0.00){
+                                        if ($amountVal != 0 || $amountVal != 0.00) {
                                             $extgc = null;
-                                            $extgc = FailedGlobalchargerLcl::where('surcharge',$surchargeVal)
-                                                ->where('origin',$originVal)
-                                                ->where('destiny',$destinyVal)
-                                                ->where('typedestiny',$typedestinyVal)
-                                                ->where('calculationtypelcl',$calculationtypeVal)
-                                                ->where('ammount',$amountVal)
-                                                ->where('minimum',$minimunVal)
-                                                ->where('currency',$currencyVal)
-                                                ->where('carrier',$carrierVal)
-                                                ->where('expire',$validitytoVal)
-                                                ->where('validity',$validityfromVal)
-                                                ->where('port',true)
-                                                ->where('country',false)
-                                                ->where('company_user_id',$companyUserIdVal)
-                                                ->where('differentiator',$differentiatorVal)
+                                            $extgc = FailedGlobalchargerLcl::where('surcharge', $surchargeVal)
+                                                ->where('origin', $originVal)
+                                                ->where('destiny', $destinyVal)
+                                                ->where('typedestiny', $typedestinyVal)
+                                                ->where('calculationtypelcl', $calculationtypeVal)
+                                                ->where('ammount', $amountVal)
+                                                ->where('minimum', $minimunVal)
+                                                ->where('currency', $currencyVal)
+                                                ->where('carrier', $carrierVal)
+                                                ->where('expire', $validitytoVal)
+                                                ->where('validity', $validityfromVal)
+                                                ->where('port', true)
+                                                ->where('country', false)
+                                                ->where('company_user_id', $companyUserIdVal)
+                                                ->where('differentiator', $differentiatorVal)
                                                 ->get();
 
-                                            if(count($extgc) == 0){
+                                            if (count($extgc) == 0) {
                                                 FailedGlobalchargerLcl::create([
                                                     'surcharge'             => $surchargeVal,
                                                     'origin'          	    => $originVal,
@@ -982,11 +969,11 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                                     'carrier'	            => $carrierVal,
                                                     'expire'	            => $validitytoVal,
                                                     'validity'              => $validityfromVal,
-                                                    'port'        		    => true,// por defecto
-                                                    'country'        	    => false,// por defecto
+                                                    'port'        		    => true, // por defecto
+                                                    'country'        	    => false, // por defecto
                                                     'company_user_id'       => $companyUserIdVal,
                                                     'account_imp_gclcl_id'  => $account_idVal,
-                                                    'differentiator'        => $differentiatorVal
+                                                    'differentiator'        => $differentiatorVal,
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -996,7 +983,6 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     $falli++;
                                     //echo $i;
                                     //dd($ratescollection);
-
                                 }
                             }
                         }
@@ -1005,27 +991,27 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                     $i++;
                 }
             });
-        
-        $nopalicaHs = Harbor::where('name','No Aplica')->get();
-        $nopalicaCs = Country::where('name','No Aplica')->get();
-        foreach($nopalicaHs as $nopalicaH){
+
+        $nopalicaHs = Harbor::where('name', 'No Aplica')->get();
+        $nopalicaCs = Country::where('name', 'No Aplica')->get();
+        foreach ($nopalicaHs as $nopalicaH) {
             $nopalicaH = $nopalicaH['id'];
         }
-        foreach($nopalicaCs as $nopalicaC){
+        foreach ($nopalicaCs as $nopalicaC) {
             $nopalicaC = $nopalicaC['id'];
         }
 
-        FailedGlobalchargerLcl::where('account_imp_gclcl_id','=',$requestobj['account_id'])->where('origin','LIKE','%No Aplica%')->delete();
-        FailedGlobalchargerLcl::where('account_imp_gclcl_id','=',$requestobj['account_id'])->where('destiny','LIKE','%No Aplica%')->delete();
+        FailedGlobalchargerLcl::where('account_imp_gclcl_id', '=', $requestobj['account_id'])->where('origin', 'LIKE', '%No Aplica%')->delete();
+        FailedGlobalchargerLcl::where('account_imp_gclcl_id', '=', $requestobj['account_id'])->where('destiny', 'LIKE', '%No Aplica%')->delete();
 
-        GlobalChargeLcl::where('account_imp_gclcl_id',$requestobj['account_id'])
-            ->whereHas('globalcharportlcl',function($query) use($nopalicaH){
-                $query->where('port_dest',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+        GlobalChargeLcl::where('account_imp_gclcl_id', $requestobj['account_id'])
+            ->whereHas('globalcharportlcl', function ($query) use ($nopalicaH) {
+                $query->where('port_dest', $nopalicaH)->orWhere('port_orig', $nopalicaH);
             })
-            ->orWhereHas('globalcharcountrylcl',function($query) use($nopalicaC){
-                $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            ->orWhereHas('globalcharcountrylcl', function ($query) use ($nopalicaC) {
+                $query->where('country_dest', $nopalicaC)->orWhere('country_orig', $nopalicaC);
             })->Delete();
-        
+
         $account = AccountImportationGlobalChargerLcl::find($requestobj['account_id']);
         $account->status = 'complete';
         $account->update();
@@ -1033,8 +1019,8 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
         Storage::disk('GCImportLcl')->Delete($NameFile);
 
         $userNotifique = User::find($this->UserId);
-        $message = 'The file GCLCL imported was processed :' . $requestobj['account_id'];
+        $message = 'The file GCLCL imported was processed :'.$requestobj['account_id'];
         $userNotifique->notify(new SlackNotification($message));
-        $userNotifique->notify(new N_general($userNotifique,$message)); 
+        $userNotifique->notify(new N_general($userNotifique, $message));
     }
 }

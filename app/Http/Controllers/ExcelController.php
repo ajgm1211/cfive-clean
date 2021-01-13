@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CalculationType;
 use App\CompanyUser;
 use App\Container;
 use App\ContainerCalculation;
@@ -10,9 +11,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\QuoteV2;
 use App\Rate;
 use App\SaleTermV2;
-use App\CalculationType;
 use Illuminate\Http\Request;
-
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -307,7 +306,7 @@ class ExcelController extends Controller
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code] + @$markups['m' . $c->code]);
+                                $sheet->setCellValue($col_amount++ . $i, @$amounts['c' . $c->code]+@$markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_amount . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -333,7 +332,7 @@ class ExcelController extends Controller
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
-                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code] + @$inland_markups['m' . $c->code]);
+                                $sheet->setCellValue($col_inland++ . $i, @$inland_rates['c' . $c->code]+@$inland_markups['m' . $c->code]);
                                 $spreadsheet->getSheet($key)->getStyle($col_inland . $i)->applyFromArray($styleArray);
                             }
                         }
@@ -785,7 +784,6 @@ class ExcelController extends Controller
     public function downloadRates(Request $request)
     {
 
-
         $data = $request->validate([
 
             'data.direction' => 'required',
@@ -807,10 +805,11 @@ class ExcelController extends Controller
         $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
 
-        if ($direction == 3)
+        if ($direction == 3) {
             $direction = array(1, 2, 3);
-        else
+        } else {
             $direction = array($direction);
+        }
 
         $arrayFirstPart = array(
             'Contract',
@@ -831,23 +830,23 @@ class ExcelController extends Controller
         $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
 
         /*$arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
-            $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
-                $a->where('user_id', '=', $user_id);
-            })->orDoesntHave('contract_user_restriction');
+        $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
+        $a->where('user_id', '=', $user_id);
+        })->orDoesntHave('contract_user_restriction');
         })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $direction) {
-            $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
-                $b->where('company_id', '=', $company_id);
-            })->orDoesntHave('contract_company_restriction');
+        $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
+        $b->where('company_id', '=', $company_id);
+        })->orDoesntHave('contract_company_restriction');
         })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction) {
-            if ($company_setting->future_dates == 1) {
-                $q->where(function ($query) use ($dateSince) {
-                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
-            } else {
-                $q->where(function ($query) use ($dateSince, $dateUntil) {
-                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
-            }
+        if ($company_setting->future_dates == 1) {
+        $q->where(function ($query) use ($dateSince) {
+        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+        })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+        } else {
+        $q->where(function ($query) use ($dateSince, $dateUntil) {
+        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+        })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', '1');
+        }
         })->orderBy('contract_id')->get();*/
 
         $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code) {
@@ -865,7 +864,7 @@ class ExcelController extends Controller
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file =  Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation) {
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation) {
             $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation) {
                 //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
@@ -898,22 +897,22 @@ class ExcelController extends Controller
                             if (isset($jsonContainer->{'C' . $cont->code})) {
                                 $rateMount = $jsonContainer->{'C' . $cont->code};
                                 $$name_rate = $rateMount;
-                                $montosAllIn = array($cont->code =>$$name_rate);
+                                $montosAllIn = array($cont->code => $$name_rate);
                             } else {
                                 $rateMount = 0;
                                 $$name_rate = $rateMount;
-                                $montosAllIn = array($cont->code =>$$name_rate);
+                                $montosAllIn = array($cont->code => $$name_rate);
                             }
                         } else {
                             $rateMount = $data->{$options->field_rate};
                             $$name_rate = $rateMount;
-                            $montosAllIn = array($cont->code =>$$name_rate);
+                            $montosAllIn = array($cont->code => $$name_rate);
                         }
 
                         $montos2 = array($cont->code => $rateMount);
                         $montos = array_merge($montos, $montos2);
                         $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
-                    
+
                     }
                     $arrayFirstPartAmount = array(
                         'Contract' => $data->contract->name,
@@ -940,7 +939,6 @@ class ExcelController extends Controller
                         $contractId = $data->contract->id;
                         $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
 
-
                         for ($i = 0; $i < count($data1); $i++) {
                             //'country_orig' =>  $data1[$i]->country_orig,
                             //  'country_dest' =>   $data1[$i]->country_dest,
@@ -966,13 +964,13 @@ class ExcelController extends Controller
                                 if (in_array($calculationID->id, $$name_arreglo)) {
                                     $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
                                     $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
-                                    $$name_rate  = number_format($$name_rate  + ( $monto / $currency_rate ), 2, '.', '');  
+                                    $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
                                     $montosAllInTot[$cont->code] = $$name_rate;
                                     $montosLocal2 = array($cont->code => $monto);
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 } else {
                                     $montosLocal2 = array($cont->code => '0');
-                                   
+
                                     $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 }
                             }
@@ -990,8 +988,7 @@ class ExcelController extends Controller
                         }
                     }
 
-                    // MONTOS ALL IN 
-
+                    // MONTOS ALL IN
 
                     $arrayFirstPartAmountAllIn = array(
                         'Contract' => $data->contract->name,
@@ -1032,7 +1029,6 @@ class ExcelController extends Controller
 
         return response()->download($path, $nameFile, $header);
     }
-
 
     public function perTeu($monto, $calculation_type, $code)
     {
