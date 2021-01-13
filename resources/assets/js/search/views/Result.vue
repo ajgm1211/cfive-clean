@@ -34,7 +34,7 @@
         </div>
 
         <!-- HEADER FCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="true">
+        <div class="row mt-4 mb-4 result-header" >
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-4"></div>
@@ -225,7 +225,7 @@
             </div>
 
             <!-- FCL CARD -->
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-4" >
 
                 <div class="result-search">
 
@@ -990,17 +990,18 @@ export default {
 					url_tags[i].setAttribute('href', media.url);
 					i+=1;
 				});	
-			},
-			removeThisFile(file){
-				let id = this.$route.params.id;
-				
-				this.actions.removefile(id, { 'id': file.id })
-				.then( ( response ) => {
-				})
-				.catch(( data ) => {
+        },
+            
+        removeThisFile(file){
+            let id = this.$route.params.id;
+            
+            this.actions.removefile(id, { 'id': file.id })
+            .then( ( response ) => {
+            })
+            .catch(( data ) => {
 
-				});
-			},
+            });
+        },
 
         nextStep() {
             if ( this.stepOne ) {

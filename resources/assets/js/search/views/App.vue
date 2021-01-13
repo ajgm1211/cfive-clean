@@ -3,9 +3,9 @@
         
         <Search></Search>
 
-        <Recent v-if="false" ></Recent>
+        <Recent></Recent>
 
-        <Result v-if="true"></Result>
+        <Result v-if="false"></Result>
 
     </div>
 </template>

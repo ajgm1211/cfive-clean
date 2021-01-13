@@ -34,18 +34,18 @@ div
 }
 
 .multiselect__content-wrapper::-webkit-scrollbar, 
-#carrier-list::-webkit-scrollbar {
+#carriers-list::-webkit-scrollbar {
     width: 6px;
 }
 
 .multiselect__content-wrapper::-webkit-scrollbar-thumb,
-#carrier-list::-webkit-scrollbar-thumb {
+#carriers-list::-webkit-scrollbar-thumb {
     background: #aaa;
     border-radius: 10px;
 }
 
 .multiselect__content-wrapper::-webkit-scrollbar-thumb:hover,
-#carrier-list::-webkit-scrollbar-thumb:hover {
+#carriers-list::-webkit-scrollbar-thumb:hover {
     background: #006bf9;
 }
 
@@ -1092,7 +1092,13 @@ input.multiselect__input:focus {
 }
 
 .type-packages .multiselect__tags {
+    top: 10px;
+    position: relative;
     padding: 4px 7px 5px 6px !important;
+}
+
+.type-packages .multiselect__single {
+    background: #ffffff !important;
 }
 
 .s-input {
@@ -1557,7 +1563,7 @@ input.multiselect__input:focus {
 }
 
 .card-amount p {
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .footer-add-contract-modal {
@@ -1717,14 +1723,14 @@ input.surcharge-input {
 }
 
 .type-packages {
-    width: 160px !important; 
     height: 33.5px;
     position:relative; 
     top: -7px;
 }
 
 .type-packages .delivery-type {
-    top: 16px;
+    top: 15px;
+    right: 3px !important;
 }
 .search #dropdown-containers button, .search #dropdown-carriers button {
     color: #333333 !important;
@@ -1788,7 +1794,7 @@ input.surcharge-input {
 }
 
 .type-input .multiselect__single, .delivery-input .multiselect__single {
-    background: #ffffff;
+    background: #ffffff !important;
 }
 
 #dropdown-carriers label {
@@ -1802,4 +1808,12 @@ input.surcharge-input {
     align-items: flex-start;
     overflow-y: scroll;
     height: 200px;
+}
+
+.input-quantity {
+    padding: 4px 7px 5px 14px !important;
+}
+
+.lcl-inputs .form-control:focus {
+    background: #f8f8f8 !important;
 }
