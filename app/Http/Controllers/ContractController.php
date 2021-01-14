@@ -24,11 +24,13 @@ use App\LocalCharPort;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\Notifications\SlackNotification;
+use App\Providers\EventIntercomServiceProvider;
 use App\Rate;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\User;
 use Exception;
+use EventIntercom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -758,6 +760,10 @@ class ContractController extends Controller
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
         }
+
+            $event= new EventIntercom();
+            $event->event_add_contract_express();
+
 
         return response()->json([
             //'data' => $localcharge->toJson(),
