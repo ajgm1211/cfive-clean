@@ -53,7 +53,7 @@ export default {
             activeOcean: false,
             actions: actions,
             fields: [
-                { key: "custom_quote_id", label: "#" },
+                { key: "quote_id", label: "#" },
                 {
                     key: "company_id",
                     label: "Client",
@@ -79,7 +79,7 @@ export default {
                         return value.name;
                     },
                 },
-                { key: "validity_start", label: "Created at" },
+                { key: "created_at", label: "Created at" },
             ],
         };
     },
