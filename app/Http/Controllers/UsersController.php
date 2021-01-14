@@ -140,8 +140,59 @@ class UsersController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show()
   {
+      $id=\Auth::user()->id;
+      $user= user::find($id);
+      return view('users.update',compact('user'));
+  }
+
+  public function UpdateUser(Request $request,$id){
+        
+        $request->validate([
+          'name' => 'required',
+          'lastname' => 'required',
+          'email' => [
+              'required',
+              Rule::unique('users')->ignore($id),
+          ],
+          'password' => 'sometimes|confirmed',
+          'password_confirmation' => 'required_with:password',
+      ]);
+
+    $requestForm = $request->all();
+    $user = User::findOrFail($id);
+    $roles = $user->getRoleNames();
+
+    if (!$roles->isEmpty()) {
+    $user->removeRole($roles[0]);
+    }
+
+    if ($request->type == "admin") {
+    $user->assignRole('administrator');
+    }
+    if ($request->type == "subuser") {
+    $user->assignRole('subuser');
+    }
+    if ($request->type == "company") {
+    $user->assignRole('company');
+    }
+    if ($request->type == "data_entry") {
+    $user->assignRole('data_entry');
+    }
+
+    $user->update($requestForm);
+
+    if ($request->ajax()) {
+    return response()->json('User updated successfully!');
+    }
+
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'Record updated successfully ');
+
+		return redirect()->route('user.info');
+		
   }
 
   public function add()
