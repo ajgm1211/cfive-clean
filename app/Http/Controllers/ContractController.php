@@ -686,6 +686,7 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
+        $contract->is_manual = 1;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
@@ -729,6 +730,7 @@ class ContractController extends Controller
         $typeC = $request->input('type');
         $currencyC = $request->input('currency');
         $amountC = $request->input('amount');
+        
 
         if (count($calculation_type) > 0) {
             foreach ($calculation_type as $ct => $ctype) {
