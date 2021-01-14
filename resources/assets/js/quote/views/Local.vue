@@ -689,7 +689,7 @@
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.markup,
-                                                'markups',
+                                                'markup',
                                                 8
                                             )
                                         "
