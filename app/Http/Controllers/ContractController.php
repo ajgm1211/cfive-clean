@@ -760,7 +760,7 @@ class ContractController extends Controller
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
         }
-
+            //EVENT INTERCOM
             $event= new EventIntercom();
             $event->event_add_contract_express();
 
