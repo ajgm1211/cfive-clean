@@ -163,4 +163,36 @@ class AutomaticInlandTotal extends Model
             return $query->where('port_id', $port);
         });
     }
+
+    public function duplicate(QuoteV2 $quote, InlandAddress $address)
+    {
+        $newInlandTotal = $this->replicate();
+        $newInlandTotal->quote_id = $quote->id;
+        $newInlandTotal->inland_address_id = $address->id;
+        $newInlandTotal->save(); 
+
+        if($quote->type == 'FCL'){
+            $this->load(
+                'inlands'
+            );
+        }else if($quote->type == 'LCL'){
+            $this->load(
+                'inlands_lcl'
+            );
+        }
+
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->inland_totals_id = $newInlandTotal->id;
+                $newRelationship->quote_id = $quote->id;
+                $newRelationship->save();
+            }
+
+        }    
+
+        return $newInlandTotal;
+    }
 }

@@ -31,6 +31,7 @@ use App\Country;
 use App\InlandDistance;
 use App\CalculationTypeLcl;
 use App\AutomaticRateTotal;
+use App\AutomaticInlandTotal;
 use App\DestinationType;
 use App\Http\Resources\QuotationResource;
 use App\SaleTermCode;
@@ -407,7 +408,11 @@ class QuotationController extends Controller
 
     public function destroyAll(Request $request)
     {   
-        DB::table('quote_v2s')->whereIn('id', $request->input('ids'))->delete();
+        $toDestroy = QuoteV2::whereIn('id', $request->input('ids'))->get();
+        
+        foreach($toDestroy as $td){
+            $this->destroy($td);
+        }
 
         return response()->json(null, 204);
     }
@@ -425,6 +430,7 @@ class QuotationController extends Controller
         $rates = $quote->rates_v2()->get();
         $inlandTotals = $quote->automatic_inland_totals()->get();
         $inlandAddress = $quote->automatic_inland_address()->get();
+        $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
         if(count($rates) != 0){
             foreach($rates as $rate){
@@ -451,34 +457,62 @@ class QuotationController extends Controller
             }
         }
 
-        if(count($inlandTotals)!=0){
+        if(count($inlandTotals) == 0 && count($inlandAddress) != 0){
+            foreach($inlandAddress as $address){
+                foreach($rates as $autoRate){
+                    if($address->port_id == $autoRate->origin_port_id){
+                        $type = 'Origin';
+                    }else if($address->port_id == $autoRate->destination_port_id){
+                        $type = 'Destination';
+                    }
+                }
+                
+                $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
+
+                $totals = AutomaticInlandTotal::create([
+                    'quote_id' => $quote->id,
+                    'port_id' => $address->port_id,
+                    'type' => $type,
+                    'inland_address_id' => $address->id,
+                    'currency_id' => $user_currency
+                ]);
+
+                if($quote->type == 'FCL'){
+                    $inlands = $quote->inland()->get();
+                }else if($quote->type == 'LCL'){
+                    $inlands = $quote->inland_lcl()->get();
+                }
+
+                if(count($inlands)!=0){
+                    foreach($inlands as $inland){
+                        if($inland->port_id == $totals->port_id){
+                            $inland->inland_totals_id = $totals->id;
+                            $inland->save();
+                        }
+                    }
+                }
+
+                $totals->totalize();
+            }
+        }else if(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
                 if($quote->type == 'FCL'){
                     $inlands = $total->inlands()->get();
-                    if(count($inlands)!=0){
-                        foreach($inlands as $inland){
-                            if($inland->port_id == $total->port_id){
-                                $inland->inland_totals_id = $total->id;
-                                $inland->save();
-                            }
-                        }
-                    }else{
-                        $total->inland_address()->first()->delete();
-                    }
                 }else if($quote->type == 'LCL'){
-                    $inlands_lcl = $total->inlands_lcl()->get();
-                    if(count($inlands_lcl)!=0){
-                        foreach($inlands_lcl as $inland_lcl){
-                            if($inland_lcl->port_id == $total->port_id){
-                                $inland_lcl->inland_totals_id = $total->id;
-                                $inland_lcl->save();
-                            }
+                    $inlands = $total->inlands_lcl()->get();
+                }
+                
+                if(count($inlands)!=0){
+                    foreach($inlands as $inland){
+                        if($inland->port_id == $total->port_id){
+                            $inland->inland_totals_id = $total->id;
+                            $inland->save();
                         }
-                    }else{
-                        $total->inland_address()->first()->delete();
                     }
-                }                
+                }else{
+                    $total->inland_address()->first()->delete();
+                }              
             }
         }
 
@@ -497,7 +531,12 @@ class QuotationController extends Controller
             $quote->save();
         }
 
-        
-
+        if(count($quote_rate_totals) != 0){
+            foreach($quote_rate_totals as $qr_total){
+                if($qr_total->rate()->first() == null){
+                    $qr_total->delete();
+                }
+            }
+        }
     }
 }
