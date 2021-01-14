@@ -1976,7 +1976,8 @@ class QuoteV2Controller extends Controller
             $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => $form->origin_address, 'destination_address' => $form->destination_address]);
 
             $quote = QuoteV2::create($request->all());
-
+            $quote ->custom_quote_id = $quote->quote_id;
+            
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
