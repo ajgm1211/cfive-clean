@@ -315,6 +315,7 @@ class QuotationController extends Controller
         if($form_keys!=null){
             if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id') == null){
                 $data = $request->validate([
+                    'custom_quote_id' => 'required',
                     'delivery_type' => 'required',
                     'equipment' => 'required',
                     'status' => 'required',
