@@ -23,17 +23,17 @@ class PdfController extends Controller
         switch ($quote->type) {
             case "FCL":
                 $pdf = new FclPdf();
+                return $pdf->generate($quote);
                 // EVENTO INTERCOM
                 $event = new EventIntercom();
-                $event->event_pdfFcl();
-                return $pdf->generate($quote);               
+                $event->event_pdfFcl();               
                 break;
             case "LCL":
                 $pdf = new LclPdf();
+                return $pdf->generate($quote);
                 // EVENTO INTERCOM
                 $event = new EventIntercom();
                 $event->event_pdfLcl();
-                return $pdf->generate($quote);
                 break;
         }
     }
