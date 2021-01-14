@@ -16,6 +16,10 @@
         @include('quote.pdf.partials.remarks')
         <!-- ORIGIN -->
         @include('quote.pdf.partials.origins_fcl')
+        <!-- LOCALCHARGE REMARKS -->
+        @if($destination_charges->count()==0)
+            @include('quote.pdf.partials.localcharge_remarks')
+        @endif        
         <!-- DESTINY -->
         @include('quote.pdf.partials.destinations_fcl')
         <!-- LOCALCHARGE REMARKS -->

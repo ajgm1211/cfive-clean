@@ -441,7 +441,7 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-
+            
             if ($request->code) {
                 $query = Contract::where('code', $request->code);
                 $query_lcl = ContractLcl::where('code', $request->code);
@@ -452,7 +452,7 @@ class ContractController extends Controller
 
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
-
+            
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
             }
@@ -556,7 +556,7 @@ class ContractController extends Controller
         } else {
             $code = $request->reference;
         }
-
+        
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -568,7 +568,8 @@ class ContractController extends Controller
                     'status' => 'incomplete',
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
             case 'LCL':
@@ -580,7 +581,8 @@ class ContractController extends Controller
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
         }
