@@ -1007,6 +1007,11 @@ export default {
             },
         };
     },
+    watch: {
+        charges: function(){
+            this.$emit("chargesUpdated",this.charges);
+        }
+    },
     methods: {
         add() {
             if (this.value != "") {
