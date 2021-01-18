@@ -331,6 +331,10 @@ class AutomaticInlandController extends Controller
         $total->totalize();
     }
 
+    public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id){
+        dd($request);
+    }
+
     public function retrieveTotals(QuoteV2 $quote, $combo)
     {   
         $combo_array = explode(';',$combo);
