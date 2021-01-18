@@ -6,11 +6,13 @@ use App\Currency;
 use App\Inland;
 use App\Price;
 use App\TransitTime;
+use App\Container;
+use App\GroupContainer;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
+
 trait SearchTrait
 {
-
     public function inlands($inlandParams, $markup, $equipment, $contain, $type, $mode, $groupContainer, $distancia = 0)
     {
         $modality_inland = $mode; // FALTA AGREGAR EXPORT
@@ -269,24 +271,26 @@ trait SearchTrait
                 }
             }
         }
+     
 
         $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR,  'arregloSum' => $arregloSum ,'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
+        
         return $arregloG;
 
     }
 
     public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers,$rateFreight  = 1)
     {
-
+     
         $arregloRateSave['rate'] = array();
         $arregloRateSave['rateSum'] = array();
         $arregloRateSave['markups'] = array();
         $arregloRate = array();
-
-        $markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
+      
+        $markup = $this->freightMarkupsTrait($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers,$rateFreight);
 
         $tot_F = $markup['monto' . $containers] / $rateC;
-        $tot_R = $markup['monto' . $containers] / $rateFreight;
+        $tot_R = $markup['monto' . $containers] ;
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
@@ -410,16 +414,16 @@ trait SearchTrait
             // Freight
             $fclFreight = $freight->freight_markup->where('price_type_id', '=', 1);
             // Valor de porcentaje
-            $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
+            $freighPercentage = $this->cleanJsonData($fclFreight->pluck('percent_markup'));
             // markup currency
-            $markupFreightCurre = $this->skipPluck($fclFreight->pluck('currency'));
+            $markupFreightCurre = $this->cleanJsonData($fclFreight->pluck('currency'));
             // markup con el monto segun la moneda
             $freighMarkup = $this->ratesCurrency($markupFreightCurre, $typeCurrency);
             // Objeto con las propiedades del currency
             $markupFreightCurre = Currency::find($markupFreightCurre);
             $markupFreightCurre = $markupFreightCurre->alphacode;
             // Monto original
-            $freighAmmount = $this->skipPluck($fclFreight->pluck('fixed_markup'));
+            $freighAmmount = $this->cleanJsonData($fclFreight->pluck('fixed_markup'));
             // monto aplicado al currency
             $freighMarkup = $freighAmmount / $freighMarkup;
             $freighMarkup = number_format($freighMarkup, 2, '.', '');
@@ -428,31 +432,31 @@ trait SearchTrait
             $fclLocal = $freight->local_markup->where('price_type_id', '=', 1);
             // markup currency
 
-            if ($request->mode == "1") {
-                $markupLocalCurre = $this->skipPluck($fclLocal->pluck('currency_export'));
+            if ((isset($request->mode) && $request->mode == "1")|| $request['direction'] == 2) {
+                $markupLocalCurre = $this->cleanJsonData($fclLocal->pluck('currency_export'));
                 // valor de la conversion segun la moneda
                 $localMarkup = $this->ratesCurrency($markupLocalCurre, $typeCurrency);
                 // Objeto con las propiedades del currency por monto fijo
                 $markupLocalCurre = Currency::find($markupLocalCurre);
                 $markupLocalCurre = $markupLocalCurre->alphacode;
                 // En caso de ser Porcentaje
-                $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
+                $localPercentage = intval($this->cleanJsonData($fclLocal->pluck('percent_markup_export')));
                 // Monto original
-                $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
+                $localAmmount = intval($this->cleanJsonData($fclLocal->pluck('fixed_markup_export')));
                 // monto aplicado al currency
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
-            } else {
-                $markupLocalCurre = $this->skipPluck($fclLocal->pluck('currency_import'));
+            } elseif((isset($request->mode) && $request->mode != "1")|| $request['direction'] == 1) {
+                $markupLocalCurre = $this->cleanJsonData($fclLocal->pluck('currency_import'));
                 // valor de la conversion segun la moneda
                 $localMarkup = $this->ratesCurrency($markupLocalCurre, $typeCurrency);
                 // Objeto con las propiedades del currency por monto fijo
                 $markupLocalCurre = Currency::find($markupLocalCurre);
                 $markupLocalCurre = $markupLocalCurre->alphacode;
                 // en caso de ser porcentake
-                $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
+                $localPercentage = intval($this->cleanJsonData($fclLocal->pluck('percent_markup_import')));
                 // monto original
-                $localAmmount = intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
+                $localAmmount = intval($this->cleanJsonData($fclLocal->pluck('fixed_markup_import')));
 
                 // monto aplicado al currency
                 $localMarkup = $localAmmount / $localMarkup;
@@ -465,31 +469,31 @@ trait SearchTrait
             // Inlands
             $fclInland = $freight->inland_markup->where('price_type_id', '=', 1);
 
-            if ($request->mode == "1") {
-                $markupInlandCurre = $this->skipPluck($fclInland->pluck('currency_export'));
+            if ((isset($request->mode) && $request->mode == "1")|| $request['direction'] == 2) {
+                $markupInlandCurre = $this->cleanJsonData($fclInland->pluck('currency_export'));
                 // valor de la conversion segun la moneda
                 $inlandMarkup = $this->ratesCurrency($markupInlandCurre, $typeCurrency);
                 // Objeto con las propiedades del currency por monto fijo
                 $markupInlandCurre = Currency::find($markupInlandCurre);
                 $markupInlandCurre = $markupInlandCurre->alphacode;
                 // en caso de ser porcentake
-                $inlandPercentage = intval($this->skipPluck($fclInland->pluck('percent_markup_export')));
+                $inlandPercentage = intval($this->cleanJsonData($fclInland->pluck('percent_markup_export')));
                 // Monto original
-                $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_export')));
+                $inlandAmmount = intval($this->cleanJsonData($fclInland->pluck('fixed_markup_export')));
                 // monto aplicado al currency
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
-            } else {
-                $markupInlandCurre = $this->skipPluck($fclInland->pluck('currency_import'));
+            } elseif((isset($request->mode) && $request->mode != "1")|| $request['direction'] == 1) {
+                $markupInlandCurre = $this->cleanJsonData($fclInland->pluck('currency_import'));
                 // valor de la conversion segun la moneda
                 $inlandMarkup = $this->ratesCurrency($markupInlandCurre, $typeCurrency);
                 // Objeto con las propiedades del currency por monto fijo
                 $markupInlandCurre = Currency::find($markupInlandCurre);
                 $markupInlandCurre = $markupInlandCurre->alphacode;
                 // en caso de ser porcentake
-                $inlandPercentage = intval($this->skipPluck($fclInland->pluck('percent_markup_import')));
+                $inlandPercentage = intval($this->cleanJsonData($fclInland->pluck('percent_markup_import')));
                 // monto original
-                $inlandAmmount = intval($this->skipPluck($fclInland->pluck('fixed_markup_import')));
+                $inlandAmmount = intval($this->cleanJsonData($fclInland->pluck('fixed_markup_import')));
                 // monto aplicado al currency
                 $inlandMarkup = $inlandAmmount / $inlandMarkup;
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
@@ -506,9 +510,9 @@ trait SearchTrait
         return $collectionMarkup;
     }
 
-    public function freightMarkups($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type)
+    public function freightMarkupsTrait($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type,$rateFreight)
     {
-
+        
         if ($freighPercentage != 0) {
             $freighPercentage = intval($freighPercentage);
             $markup = ($monto * $freighPercentage) / 100;
@@ -518,14 +522,55 @@ trait SearchTrait
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $markup, "typemarkup" . $type => "$typeCurrency ($freighPercentage%)", "monto" . $type => $monto, 'montoMarkupO' => $markup);
         } else {
 
+            
             $markup = trim($freighAmmount);
-            $monto += $freighMarkup;
+           
+           if($freighMarkup != 0)
+               $monto += $freighMarkup * $rateFreight;
+            else
+               $monto += $freighMarkup ;
             $monto = number_format($monto, 2, '.', '');
+            
             $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $freighMarkup, "typemarkup" . $type => $typeCurrency, "monto" . $type => $monto, 'montoMarkupO' => $markup);
         }
 
         return $arraymarkup;
 
+    }
+
+    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
+    {
+        
+        if ($localPercentage != 0) {
+
+            // Monto original
+            $markupO = ($montoOrig * $localPercentage) / 100;
+            $montoOrig += $markupO;
+            $montoOrig = number_format($montoOrig, 2, '.', '');
+
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
+        } else { // oki
+          
+            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
+
+
+                $markupOrig = $localMarkup * $valor;
+
+         
+          
+            $monto = $monto / $rateFreight;
+            $markup = trim($localMarkup);
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
+        }
+
+        return $arraymarkup;
     }
 
     public function inlandMarkup($inlandPercentage, $inlandAmmount, $inlandMarkup, $monto, $typeCurrency, $markupInlandCurre)
@@ -570,7 +615,7 @@ trait SearchTrait
 
     }
 
-    public function filtrarRate($arreglo, $equipmentForm, $gpId, $container)
+    public function filtrarRate($arreglo, $equipmentForm, $gpId = null, $container)
     {
 
         $arreglo->where(function ($query) use ($container, $equipmentForm) {
@@ -580,8 +625,7 @@ trait SearchTrait
                     $options = json_decode($cont->options);
 
                     if ($val == $cont->id) {
-                        //               dd($options);
-
+                        
                         if ($options->field_rate != 'containers') {
                             $query->orwhere(@$options->field_rate, '!=', "0");
                         } else {
@@ -646,11 +690,12 @@ trait SearchTrait
             if (!empty($transit)) {
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
-                if ($transit->service->id == '1') {
+                $transitArray['service'] = $transit->service->name;
+                /**if ($transit->service->id == '1') {
                     $transitArray['service'] = '';
                 } else {
                     $transitArray['service'] = $transit->service->name;
-                }
+                }**/
 
             } else {
                 $transitArray['via'] = "";
@@ -681,6 +726,199 @@ trait SearchTrait
         }
 
         return $typeCurrencyI;
+    }
+
+    //NEW SEARCH FUNCTIONS
+
+    //Returns array containing group ids present in a container ids array
+    public function getEquipmentGroups(Array $equipment)
+    {
+        $container_groups = Array();
+
+        foreach($equipment as $container_id){
+            $container = Container::where('id',$container_id)->first();
+            if(!in_array($container['gp_container_id'],$container_groups)){
+                array_push($container_groups,$container['gp_container_id']);
+            }
+        }
+
+        return $container_groups;
+    }
+
+    //Returns only ids from a 2-levels deep array containing ids, names, etc
+    public function getIdsFromSearchRequest(Array $search_request)
+    {
+        //Copying original array for structure purposes
+        $ids_array = $search_request;
+
+        //iterating input array
+        foreach($search_request as $key=>$first_level_parameter){
+            //pulling and storing ids at first level
+            if(is_array($first_level_parameter) && array_key_exists('id',$first_level_parameter)){
+                $ids_array[$key] = $first_level_parameter['id'];
+            //pulling and storing ids at second level
+            }elseif(is_array($first_level_parameter) && !array_key_exists('id',$first_level_parameter)){
+                $i = 0;
+                foreach($first_level_parameter as $second_level_parameter){
+                    if(is_array($second_level_parameter) && array_key_exists('id',$second_level_parameter)){
+                        $ids_array[$key][$i] = $second_level_parameter['id'];
+                        $i++;
+                    }
+                }
+            }
+        }
+
+        return $ids_array;
+    }
+
+    //Getting markups from price Levels
+    public function getMarkupsFromPriceLevels($price_level_id, $client_currency, $direction, $type)
+    {
+        //Querying for price levels and markups associated (freight,local charges and inlands)
+            //First company-specific price levels
+        $price_level = Price::whereHas('company_price', function ($q) use ($price_level_id) {
+            $q->where('price_id', '=', $price_level_id);
+        })->with('freight_markup', 'local_markup', 'inland_markup')->get();
+            //if none, simply any price level
+        if($price_level->isEmpty()){
+            $price_level = Price::where('id',$price_level_id)->with('freight_markup', 'local_markup', 'inland_markup')->get();
+        }   
+
+        //Looping through each price level to extract markups
+        foreach ($price_level as $price) {
+            // Filtering freight markups by search type
+            if($type == 'FCL'){
+                $freight_markup = $price->freight_markup->where('price_type_id', '=', 1);
+            }elseif($type == 'LCL'){
+                $freight_markup = $price->freight_markup->where('price_type_id', '=', 2);
+            }
+
+            //Percent markup
+            $freight_percentage = $this->cleanJsonData($freight_markup->pluck('percent_markup'));
+            //Fixed markup
+            $freight_amount = $this->cleanJsonData($freight_markup->pluck('fixed_markup'));
+            //Markup currency
+            $freight_currency = $this->cleanJsonData($freight_markup->pluck('currency'));
+            //Querying currency model
+            $freight_currency = Currency::find($freight_currency);
+            //Converting fixed markup to client currency
+            $freight_amount = $this->convertToCurrency($freight_currency,$client_currency,Array($freight_amount));
+            //Formatting to client decimal settings
+            $freight_amount = isDecimal($freight_amount[0], true);
+
+            // Filtering Local Charges markups by search type
+            if($type == 'FCL'){
+                $local_charge_markup = $price->local_markup->where('price_type_id', '=', 1);
+            }elseif($type == 'LCL'){
+                $local_charge_markup = $price->local_markup->where('price_type_id', '=', 2);
+            }
+            //Selecting search direction (import or export)
+            if ($direction == 2) {
+                //Percent markup
+                $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_export')));
+                //Fixed markup
+                $local_charge_amount = intval($this->cleanJsonData($local_charge_markup->pluck('fixed_markup_export')));
+                //Markup currency
+                $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_export'));
+                //Querying currency model
+                $local_charge_currency = Currency::find($local_charge_currency);
+                //Converting fixed markup to client currency
+                $local_charge_amount = $this->convertToCurrency($local_charge_currency, $client_currency, Array($local_charge_amount));
+                //Formatting to client decimal settings
+                $local_charge_markup = isDecimal($local_charge_amount[0], true);
+            } elseif($direction == 1) {
+                //Percent markup
+                $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_import')));
+                //Fixed markup
+                $local_charge_amount = intval($this->cleanJsonData($local_charge_markup->pluck('fixed_markup_import')));
+                //Markup currency
+                $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_import'));
+                //Querying currency model
+                $local_charge_currency = Currency::find($local_charge_currency);
+                //Converting fixed markup to client currency
+                $local_charge_amount = $this->convertToCurrency($local_charge_currency, $client_currency, Array($local_charge_amount));
+                //Formatting to client decimal settings
+                $local_charge_amount = isDecimal($local_charge_amount[0], true);
+            }
+
+            // Filtering Inland markups by search type
+            if($type == 'FCL'){
+                $inland_markup = $price->inland_markup->where('price_type_id', '=', 1);
+            }elseif($type == 'LCL'){
+                $inland_markup = $price->inland_markup->where('price_type_id', '=', 2);
+            }
+
+            if ($direction == 2) {
+                //Percent markup
+                $inland_percentage = intval($this->cleanJsonData($inland_markup->pluck('percent_markup_export')));
+                //Fixed markup
+                $inland_amount = intval($this->cleanJsonData($inland_markup->pluck('fixed_markup_export')));
+                //Markup currency
+                $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_export'));
+                //Querying currency model
+                $inland_currency = Currency::find($inland_currency);
+                //Converting fixed markup to client currency
+                $inland_amount = $this->convertToCurrency($inland_currency, $client_currency, Array($inland_amount));
+                //Formatting to client decimal settings
+                $inland_markup = isDecimal($inland_amount[0], true);
+            } elseif($direction == 1) {
+                //Percent markup
+                $inland_percentage = intval($this->cleanJsonData($inland_markup->pluck('percent_markup_import')));
+                //Fixed markup
+                $inland_amount = intval($this->cleanJsonData($inland_markup->pluck('fixed_markup_import')));
+                //Markup currency
+                $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_import'));
+                //Querying currency model
+                $inland_currency = Currency::find($inland_currency);
+                //Converting fixed markup to client currency
+                $inland_amount = $this->convertToCurrency($inland_currency, $client_currency, Array($inland_amount));
+                //Formatting to client decimal settings
+                $inland_amount = isDecimal($inland_amount[0], true);
+            }
+        }
+        $markup_array['freight'] = array('freight_amount' => $freight_amount, 'freight_percentage' => $freight_percentage, 'freight_currency' => $freight_currency);
+
+        $markup_array['local_charges'] = array('local_charge_amount' => $local_charge_amount, 'local_charge_percentage' => $local_charge_percentage, 'local_charge_currency' => $local_charge_currency);
+
+        $markup_array['inland'] = array('inland_amount' => $inland_amount, 'inland_percentage' => $inland_percentage, 'inland_currency' => $inland_currency);
+
+        $collectionMarkup = new Collection($markup_array);
+
+        return $collectionMarkup;
+    }
+
+    //Cleans old JSON data which is formatted with string type [] and \
+    public function cleanJsonData($pluck)
+    {
+        $skips = ["[", "]", "\""];
+        return str_replace($skips, '', $pluck);
+    }
+
+    //If rate data comes separate from mode (twuenty, forty, etc) joins them under the "containers" field 
+    //ONLY FOR DRY CONTAINERS
+    public function joinRateContainers($rates)
+    {
+        foreach($rates as $rate){
+            $container_array = [];
+            $container_group_id = $rate->contract->gp_container_id;
+
+            if($container_group_id == 1){
+                if($rate->twuenty != null){
+                    $container_array['C20DV'] = $rate->twuenty;
+                }if($rate->forty != null){
+                    $container_array['C40DV'] = $rate->forty;
+                }if($rate->fortyhc != null){
+                    $container_array['C40HC'] = $rate->fortyhc;
+                }if($rate->fortynor != null){
+                    $container_array['C40NOR'] = $rate->fortynor;
+                }if($rate->fortyfive != null){
+                    $container_array['C45HC'] = $rate->fortyfive;
+                }      
+            
+                $rate->containers = json_encode($container_array);
+                $rate->save();
+            }
+        }
     }
 
 }
