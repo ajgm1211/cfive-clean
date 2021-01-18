@@ -4517,11 +4517,11 @@ class QuoteV2Controller extends Controller
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id)->where('carrier_id','59');
+                })->where('company_user_id', '=', $company_user_id);
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id)->where('carrier_id','59');
+                })->where('company_user_id', '=', $company_user_id);
             }
         })->get();
 
