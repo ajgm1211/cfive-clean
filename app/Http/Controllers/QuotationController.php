@@ -489,7 +489,7 @@ class QuotationController extends Controller
 
                 $totals->totalize();
             }
-        }else if(count($inlandTotals)!=0){
+        }elseif(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
                 if($quote->type == 'FCL'){

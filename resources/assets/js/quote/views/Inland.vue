@@ -138,18 +138,21 @@
 
                 <!-- Checkbox Group Action -->
                 <div class="col-12 d-flex">
-                    <b-form-checkbox value="carrier" class="mr-4"
+                    <b-form-checkbox v-model="groupInlands" value="carrier" class="mr-4" @input="updatePdfOptions"
                         ><span>Group as:</span>
                     </b-form-checkbox>
 
                     <multiselect
-                        v-model="value"
-                        :options="options"
+                        v-model="groupedAs"
+                        :options="currentPortLocalCharges"
                         :searchable="true"
-                        :close-on-select="false"
+                        :close-on-select="true"
                         :show-labels="false"
-                        placeholder="Forfait"
-                        style="width: 8%"
+                        label="charge"
+                        track-by="charge"
+                        placeholder="Local Charge"
+                        style="width: 20%"
+                        @input="updatePdfOptions"
                     ></multiselect>
                 </div>
                 <!-- End Checkbox Group Action -->
@@ -529,10 +532,12 @@ export default {
         equipment: Object,
         quoteEquip: Array,
         actions: Object,
+        localCharges: Array,
     },
     watch: {
         currentPort: function (newVal, oldVal) {
             this.setAddresses();
+            this.setGroupingOptions();
         },
 
         currentAddress: function (newVal, oldVal) {
@@ -545,24 +550,12 @@ export default {
             vdata: {},
             value: "",
             ids: [],
+            groupedAs: {},
+            groupInlands: false,
+            currentPortLocalCharges: [],
             imageFolder: "/images/flags/1x1/",
             loaded: false,
             isBusy: false,
-            options: [
-                "Select option",
-                "options",
-                "selected",
-                "mulitple",
-                "label",
-                "searchable",
-                "clearOnSelect",
-                "hideSelected",
-                "maxHeight",
-                "allowEmpty",
-                "showLabels",
-                "onChange",
-                "touched",
-            ],
             port_options: [],
             currentPort: "",
             address_options: [],
@@ -646,6 +639,7 @@ export default {
         this.setPorts();
 
         this.setTotalsFields();
+
     },
     methods: {
         showModal() {
@@ -1332,6 +1326,36 @@ export default {
                 });
             }
         },
+
+        setGroupingOptions(){
+            let component = this;
+
+            component.currentPortLocalCharges = [];
+
+            component.localCharges.forEach(function (charge){
+                if(charge.port_id == component.currentPort.id){
+                    component.currentPortLocalCharges.push(charge);
+                }
+            });
+        },
+
+        updatePdfOptions(){
+            let pdfOptions = {
+                pdf_options: {
+                    grouped: this.groupedInlands,
+                    groupAs: this.groupedAs,
+                },
+            };
+
+            this.inlandActions
+                .updatePdfOptions(this.currentPort.id, pdfOptions, this.$route)
+                .then((response) => {
+                    console.log("Done!")
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        }
     },
 };
 </script>
