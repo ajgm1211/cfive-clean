@@ -4,7 +4,7 @@
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center">
-                <h2 class="mr-5 t-recent">results found: <b>10</b></h2>
+                <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
                 <div class="d-flex filter-search">
                     <b>filter by:</b>
                     <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
@@ -39,11 +39,13 @@
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-4"></div>
             <div class="row col-12 col-sm-4 d-flex align-items-center justify-content-end">
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>20DV</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40DV</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40HC</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>45HC</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40NOR</b></div>
+                <div 
+                    class="col-12 col-sm-2 d-flex justify-content-end"
+                    v-for="(container,requestKey) in request.containers"
+                    :key="requestKey"
+                ><b>
+                    {{container.code}}
+                </b></div>
             </div>
 
         </div>
@@ -225,7 +227,11 @@
             </div>
 
             <!-- FCL CARD -->
-            <div class="col-12 mb-4" >
+            <div 
+                class="col-12 mb-4" 
+                v-for="(rate,key) in rates"
+                :key="key"
+            >
 
                 <div class="result-search">
 
@@ -234,7 +240,10 @@
 
                        <!-- CARRIER -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                            <img src="/images/maersk.png" alt="logo" width="160px">
+                            <img 
+                                :src="'/imgcarrier/' + rate.carrier.image"  
+                                alt="logo" 
+                                width="160px">
                         </div>
 
                         <!-- INFO CARD -->
@@ -242,7 +251,7 @@
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
-                                <h6 class="mt-4 mb-5">contact reference title</h6>
+                                <h6 class="mt-4 mb-5">{{rate.contract.name}}</h6>
                             </div>
 
                             <!-- INFO AND PRICE -->
@@ -255,7 +264,7 @@
                                     <div class="origin mr-4">
 
                                         <span>origin</span>
-                                        <p>Lisboa, Lis</p>
+                                        <p>{{rate.port_origin.display_name}}</p>
 
                                     </div>
 
@@ -279,8 +288,8 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b>madrid españa</b>
-                                            <p><b>TT:</b> 45 Days</p>
+                                            <b>{{rate.via ? rate.via : "Direct"}}</b>
+                                            <p><b>TT:</b> {{rate.transit_time ? rate.transit_time : "None"}}</p>
 
                                         </div>
 
@@ -290,7 +299,7 @@
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
-                                        <p>Buenos Aires, Arg</p>
+                                        <p>{{rate.port_destiny.display_name}}</p>
 
                                     </div>
 
@@ -299,11 +308,13 @@
                                 <!-- PRICES -->
                                 <div class="col-12 col-sm-6">
                                     <div class="row justify-content-end card-amount">
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div 
+                                            class="col-12 col-sm-2"
+                                            v-for="(container,contKey) in request.containers"
+                                            :key="contKey"
+                                        >
+                                            <p><b>{{ rate.markups ? rate.totals['C'+container.code] : rate.containers['C'+container.code]}}</b>{{rate.currency.alphacode}}</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -314,7 +325,7 @@
 
                                 <div class="d-flex align-items-center">
 
-                                    <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
+                                    <p class="mr-4 mb-0"><b>Validity:</b> {{rate.contract.validity + " / " + rate.contract.expire}}</p>
                                     <a href="#">download contract</a>
 
                                 </div>
@@ -888,6 +899,12 @@ import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 
 export default {
+    props: {
+        rates: Array,
+        pricelevels: Array,
+        request: Object,
+        datalists: Object,
+    },
     components: {
         Multiselect,
         DateRangePicker,
@@ -1085,12 +1102,19 @@ export default {
         }
     },
     mounted(){
+        let component = this;
+
+        //console.log(component.request);
+        //console.log(component.datalists);
+
+        console.log(component.rates);
+
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
             if(window.scrollY > navBar.offsetTop){
-                this.isActive = true;
-                } else {
-                this.isActive = false;
+                component.isActive = true;
+            } else {
+                component.isActive = false;
             }
         }
     }

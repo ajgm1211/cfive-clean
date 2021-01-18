@@ -1,7 +1,7 @@
 <template>
     <div class="search pt-5">
 
-         <b-form ref="form">
+         <div v-if="loaded">
 
             <!-- Type / Delivery type / Additional Services -->
             <div class="row mr-0 ml-0">
@@ -11,12 +11,12 @@
                         <!-- Type (FCL LCL AIR)-->
                         <div class="type-input">
                             <multiselect
-                                v-model="type"
+                                v-model="searchRequest.type"
                                 :multiple="false"
                                 :close-on-select="true"
                                 :clear-on-select="false"
                                 :show-labels="false"
-                                :options="optionsType"
+                                :options="typeOptions"
                                 placeholder="Select"
                                 class="s-input no-select-style"
                             >
@@ -27,12 +27,14 @@
                         <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
                         <div class="delivery-input">
                             <multiselect
-                                v-model="deliveryType"
+                                v-model="searchRequest.deliveryType"
                                 :multiple="false"
                                 :close-on-select="true"
                                 :clear-on-select="false"
-                                :show-labels="false"
-                                :options="optionsDeliveryType"
+                                :show-labels="false"                                
+                                :options="deliveryTypeOptions"
+                                label="name"
+                                track-by="name"
                                 placeholder="Select"
                                 class="s-input no-select-style "
                             >
@@ -50,15 +52,15 @@
 
             </div>
 
-            <!-- Ipunts Serch -->
+            <!-- Inputs Search -->
             <div class="row mr-0 ml-0">
 
                 <!-- Import / Export -->
                 <div class="col-12 col-sm-1">
 
                     <b-form-radio-group
-                        v-model="direction"
-                        :options="options"
+                        v-model="searchRequest.direction"
+                        :options="directionOptions"
                         buttons
                         button-variant="outline-primary"
                         size="lg"
@@ -71,14 +73,16 @@
                 <!-- Origin Port -->
                 <div class="col-12 col-sm-3 origen-search input-search-form mb-2" style="position:relative; z-index:70"> 
                     <multiselect
-                        v-model="valueOrigen"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="optionsOrigenPort"
-                        placeholder="From" 
-                        class="s-input"
+                        v-model="searchRequest.originPorts"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="originPortOptions"
+                            label="display_name"
+                            track-by="display_name"
+                            placeholder="From" 
+                            class="s-input"
                     >
                     </multiselect>
                     <img src="/images/port.svg" class="img-icon img-icon-left" alt="port">
@@ -87,12 +91,14 @@
                 <!-- Destination Port -->
                 <div class="col-12 col-sm-3 input-search-form mb-2" style="position:relative; z-index:70">
                         <multiselect
-                            v-model="valueDestination"
+                            v-model="searchRequest.destinationPorts"
                             :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsDestinationPort"
+                            :options="destinationPortOptions"
+                            label="display_name"
+                            track-by="display_name"
                             placeholder="To" 
                             class="s-input"
                         >
@@ -111,7 +117,7 @@
                             :singleDatePicker="false"
                             :autoApply="true"
                             :timePicker="false"
-                            v-model="dateRange"
+                            v-model="searchRequest.dateRange"
                             :linkedCalendars="true"
                             class="s-input"
                         ></date-range-picker>
@@ -155,12 +161,12 @@
                 <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3 origen-search input-search-form" style="position:relative; z-index:60">
 
                         <multiselect
-                            v-model="origenPort"
+                            v-model="searchRequest.originAddress"
                             :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsOrigenPort"
+                            :options="originAddressOptions"
                             placeholder="From" 
                             class="s-input"
                         >
@@ -172,12 +178,12 @@
                 <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3 input-search-form" style="position:relative; z-index:60">
                     
                         <multiselect
-                            v-model="destinationPort"
+                            v-model="searchRequest.destinationAddress"
                             :multiple="true"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionsDestinationPort"
+                            :options="destinationAddressOptions"
                             placeholder="To" 
                             class="s-input"
                         >
@@ -197,12 +203,14 @@
 
                     <div class="col-12 col-sm-3 input-search-form">
                             <multiselect
-                            v-model="company"
+                            v-model="searchRequest.company"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionCompany"
+                            :options="companyOptions"
+                            label="business_name"
+                            track-by="business_name"
                             placeholder="Company" 
                             class="s-input"
                             >
@@ -213,12 +221,14 @@
                 
                     <div class="col-12 col-sm-3 input-search-form">
                             <multiselect
-                            v-model="contact"
+                            v-model="searchRequest.contact"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionContact"
+                            :options="contactOptions"
+                            label="name"
+                            track-by="name"
                             placeholder="Contact" 
                             class="s-input"
                             >
@@ -228,12 +238,14 @@
 
                     <div class="col-12 col-sm-3 input-search-form">
                             <multiselect
-                            v-model="pricelevel"
+                            v-model="searchRequest.pricelevel"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :options="optionPriceLevel"
+                            :options="priceLevelOptions"
+                            label="name"
+                            track-by="name"
                             placeholder="Price Level" 
                             class="s-input"
                             >
@@ -265,9 +277,9 @@
 
                 <div class="row mr-0 ml-4 mt-5 d-flex justify-content-start">
                     <b-form-checkbox
-                        id="originCharges"
-                        v-model="originCharges"
-                        name="originCharges"
+                        id="originChargesCheckbox"
+                        v-model="searchRequest.originChargesCheckbox"
+                        name="originChargesCheckbox"
                         value="accepted"
                         unchecked-value="not_accepted"
                         class="mr-5 as-checkbox"
@@ -275,9 +287,9 @@
                         Include origin charges
                     </b-form-checkbox>
                     <b-form-checkbox
-                        id="destinationCharges"
-                        v-model="destinationCharges"
-                        name="destinationCharges"
+                        id="destinationChargesCheckbox"
+                        v-model="searchRequest.destinationChargesCheckbox"
+                        name="destinationChargesCheckbox"
                         value="accepted"
                         unchecked-value="not_accepted"
                         class="as-checkbox"
@@ -481,10 +493,25 @@
             </div>
 
             <div class="row justify-content-center mr-0 ml-0">
-                <div class="col-2 d-flex justify-content-center"><button class="btn-search" >SEARCH</button></div>
+                <div class="col-2 d-flex justify-content-center">
+                    <button
+                        v-if="!searching" 
+                        class="btn-search"
+                        @click="requestSearch"
+                    >
+                        SEARCH
+                    </button>
+                    <button
+                        v-else
+                        class="btn-search"
+                    >
+                        <div class="spinner-border text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button></div>
             </div>
 
-        </b-form>
+        </div>
 
     </div>
 </template>
@@ -494,6 +521,7 @@ import Search from './Search';
 import Multiselect from "vue-multiselect";
 import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import actions from "../../actions";
 
 export default {
     components: {
@@ -503,6 +531,44 @@ export default {
     },
     data() {
         return {
+            loaded: false,
+            searching: false,
+            actions: actions,
+            IDRequest: {},
+            searchRequest: {
+                direction: 1,
+                type: 'FCL',
+                destinationChargesCheckbox: false,
+                originChargesCheckbox: false,
+                deliveryType: {},
+                containers: [],
+                originPorts: [],
+                destinationPorts: [],
+                company: '',
+                contact: '',
+                pricelevel: '',
+                carriers: [],
+                originAddress: [],
+                destinationAddress: [],
+                dateRange: {
+                    "validity_start":"2021-01-08",
+                    "validity_end":"2021-01-31"
+                },
+            },
+            datalists: {},
+            typeOptions: ['FCL', 'LCL', 'AIR'],
+            deliveryTypeOptions: {},
+            directionOptions: {},
+            originPortOptions: {},
+            destinationPortOptions: {},
+            containerOptions: {},
+            originAddressOptions: {},
+            destinationAddressOptions: {},
+            companyOptions: {},
+            contactOptions: {},
+            priceLevelOptions: {},
+            carrierOptions: {},
+            //Gene defined
             ptdActive: false,
             dtpActive: false,
             dtdActive: false,
@@ -574,7 +640,63 @@ export default {
             },
         }
     },
+    created() {
+        api.getData({}, "/api/search/data", (err, data) => {
+            this.setDropdownLists(err, data.data);
+            this.setSearchDisplay();
+        });
+    },
     methods: {
+        //Set lists of data
+        setDropdownLists(err, data) {
+            this.datalists = data;
+            this.$emit("initialDataLoaded",this.datalists);
+        },
+
+        //set UI elements
+        setSearchDisplay() {
+            let component = this;
+
+            component.originPortOptions = component.datalists.harbors;
+            component.destinationPortOptions = component.datalists.harbors;
+            component.directionOptions = [
+                { text: component.datalists.directions[0].name, value: component.datalists.directions[0].id },
+                { text: component.datalists.directions[1].name, value: component.datalists.directions[1].id }
+                //{ text: component.datalists.directions[2].name, value: component.datalists.directions[2].id }
+            ];
+            component.containerOptions = component.datalists.containers;
+            component.companyOptions = component.datalists.companies;
+            component.contactOptions = component.datalists.contacts;
+            component.priceLevelOptions = component.datalists.price_levels;
+            component.carrierOptions = component.datalists.carriers;
+            component.deliveryTypeOptions = component.datalists.delivery_types;
+            component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
+            component.loaded = true;
+        },
+
+        //Send Search Request to Controller
+        requestSearch() {
+            this.$emit("searchRequest");
+            this.searching = true;
+            if(this.searchRequest.carriers.length == 0){
+                this.searchRequest.carriers = this.carrierOptions;
+            }
+            actions.search
+                .process(this.searchRequest)
+                .then((response) => {
+                    response.data.rates.forEach(function (rate){
+                        if(typeof rate.containers == "string"){
+                            rate.containers = JSON.parse(rate.containers)
+                        }
+                    });
+                    this.$emit("searchSuccess",response.data.rates,this.searchRequest);
+                    this.searching = false;
+                    })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                    });
+        },
+
         deleteSurcharger(index){
                     this.dataPackaging.splice(index, 1);
                     console.log(this.dataPackaging);
