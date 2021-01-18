@@ -1,11 +1,22 @@
 <template>
     <div>
-        
-        <Search></Search>
 
-        <Recent></Recent>
+        <Search
+            @initialDataLoaded="setDatalists"
+            @searchRequest="setSearchStatus"
+            @searchSuccess="setSearchData"
+        ></Search>
 
-        <Result v-if="false"></Result>
+        <Recent 
+            v-if="Object.keys(foundRates).length == 0 && !searching"
+        ></Recent>
+
+        <Result 
+            v-if="Object.keys(foundRates).length != 0"
+            :rates="foundRates"
+            :request="searchRequest"
+            :datalists="datalists"
+        ></Result>
 
     </div>
 </template>
@@ -20,6 +31,30 @@ export default {
         Search,
         Recent,
         Result
-    }
+    },
+    data() {
+        return {
+            searching: false,
+            foundRates: {},
+            searchRequest: {},
+            datalists: {},
+        }
+    },
+    methods :
+    {
+        setDatalists(initialData){
+            this.datalists = initialData;
+        },
+
+        setSearchStatus(){
+            this.searching = true;
+        },
+
+        setSearchData(searchData,searchRequest){
+            this.searching = false;
+            this.foundRates = searchData;
+            this.searchRequest = searchRequest;
+        },
+    },
 }
 </script>
