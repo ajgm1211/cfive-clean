@@ -566,17 +566,52 @@ class ApiController extends Controller
 
         return $carriers;
     }
-    public function search($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all' ,$api_company_id = 0)
+    public function search(Request $request,$mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all' ,$api_company_id = 0)
     {
         try {
-            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0);
+            return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0,$request);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
 
-    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl ,$api_company_id = 0)
+    public function processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl ,$api_company_id = 0,$request)
     {
+        if($request->input('traffic') != null ){
+            
+            switch($request->input('traffic')){
+                case 'import':
+                    $traf = array('1');
+                break;
+                case 'export':
+                    $traf = array('2');
+                break;         
+                case 'both':
+                    $traf = array('3');
+                break;
+                default:
+                    $traf = array('0');
+                break;
+           }               
+        }else {
+            $traf = array('1','2','3');
+        }
+
+
+        if (strtoupper($group) == 'DRY') {
+            $equipment = array('1', '2', '3', '4', '5');
+        } elseif (strtoupper($group) == 'REEFER') {
+            $equipment = array('6', '7', '8');
+        } elseif (strtoupper($group) == 'OPENTOP') {
+            $equipment = array('9', '10');
+        } elseif (strtoupper($group) == 'FLATRACK') {
+            $equipment = array('11', '12');
+        } else {
+            abort(404);
+        }
+
+        
+        
         $portOrig = Harbor::where('code', $code_origin)->firstOrFail();
         $portDest = Harbor::where('code', $code_destination)->firstOrFail();
 
@@ -641,7 +676,7 @@ class ApiController extends Controller
 
         if ($validateEquipment['count'] < 2) {
             if ($companies_id != null || $companies_id != 0) {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $companies_id,$traf) {
                     $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                         $a->where('user_id', '=', $user_id);
                     })->orDoesntHave('contract_user_restriction');
@@ -649,10 +684,10 @@ class ApiController extends Controller
                     $q->whereHas('contract_company_restriction', function ($b) use ($companies_id) {
                         $b->where('company_id', '=', $companies_id);
                     })->orDoesntHave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$traf) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId'])->whereIn('direction_id',$traf);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
@@ -661,10 +696,10 @@ class ApiController extends Controller
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
-                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment) {
+                })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $validateEquipment,$traf) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
+                    })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId'])->whereIn('direction_id',$traf);
                 })->with(['carrier' => function ($query) {
                     $query->select('id', 'name', 'uncode', 'image', 'image as url');
                 }]);
@@ -998,6 +1033,7 @@ class ApiController extends Controller
             $remarksGeneral .= $this->remarksCondition($data->port_origin, $data->port_destiny, $data->carrier);
 
             $routes['type'] = 'FCL';
+           // $routes['traffic'] = $traf;
             $routes['origin_port'] = array('name' => $data->port_origin->name, 'code' => $data->port_origin->code);
             $routes['destination_port'] = array('name' => $data->port_destiny->name, 'code' => $data->port_destiny->code);
             $routes['ocean_freight'] = $array_ocean_freight;
