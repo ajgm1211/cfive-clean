@@ -3202,7 +3202,7 @@ class ImportationController extends Controller
     {
         try {
             $contract = Contract::where('account_id', $id)->first();
-            if (count($contract) == 1) {
+            if (count((array)$contract) == 1) {
                 $data = PrvValidation::ContractWithJob($contract->id);
                 if ($data['bool'] == false) {
                     $account = AccountFcl::find($id);
