@@ -173,9 +173,6 @@ New \ Status Import  &nbsp;
                                     <th width="9%">
                                         Validity
                                     </th>
-                                    <th>
-                                        More Information
-                                    </th>
                                     <th width="8%">
                                         Options
                                     </th>
@@ -253,15 +250,15 @@ New \ Status Import  &nbsp;
         }
 
     }
-    function format ( d ) {
-        // `d` is the original data object for the row
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td>Exceptions:</td>'+
-                '<td>'+d.name+'</td>'+
-            '</tr>'+
-        '</table>';
-    }
+    // function format ( d ) {
+    //     // `d` is the original data object for the row
+    //     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+    //         '<tr>'+
+    //             '<td>Exceptions:</td>'+
+    //             '<td>'+d.name+'</td>'+
+    //         '</tr>'+
+    //     '</table>';
+    // }
 
     $(function() {
         var tabla = $('#requesttable').DataTable({
@@ -278,13 +275,13 @@ New \ Status Import  &nbsp;
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'ammount', name: 'ammount' },
                 { data: 'validitylb', name: 'validitylb' },
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "searchable":     false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
+                // {
+                //     "className":      'details-control',
+                //     "orderable":      false,
+                //     "searchable":     false,
+                //     "data":           null,
+                //     "defaultContent": ''
+                // },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
 
             ],
@@ -322,21 +319,21 @@ New \ Status Import  &nbsp;
             "stateSave": false, 
         }); 
 
-        $('#requesttable tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = tabla.row( tr );
+    //     $('#requesttable tbody').on('click', 'td.details-control', function () {
+    //         var tr = $(this).closest('tr');
+    //         var row = tabla.row( tr );
  
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    } );
+    //     if ( row.child.isShown() ) {
+    //         // This row is already open - close it
+    //         row.child.hide();
+    //         tr.removeClass('shown');
+    //     }
+    //     else {
+    //         // Open this row
+    //         row.child( format(row.data()) ).show();
+    //         tr.addClass('shown');
+    //     }
+    // } );
           
     });
 

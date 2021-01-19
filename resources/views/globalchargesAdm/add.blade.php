@@ -10,19 +10,19 @@
             </label>
             <div class="m-radio-inline">
               <label class="m-radio">
-                <input type="radio" id="rdrouteP" onclick="activarCountry('divport')" checked='true' name="typeroute" value="port"> Port
+                <input type="radio" id="rdrouteP" onclick="activarCountry('divport','false')" checked='true' name="typeroute" value="port"> Port
                 <span></span>
               </label>
               <label class="m-radio">
-                <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry')"  name="typeroute" value="country"> Country
+                <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry','false')"  name="typeroute" value="country"> Country
                 <span></span>
               </label>
               <label class="m-radio">
-                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry')"  name="typeroute" value="portcountry"> Port to Country
+                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry','false')"  name="typeroute" value="portcountry"> Port to Country
                 <span></span>
               </label>
               <label class="m-radio">
-                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport')"  name="typeroute" value="countryport"> Country to Port
+                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport','false')"  name="typeroute" value="countryport"> Country to Port
                 <span></span>
               </label>
             </div>

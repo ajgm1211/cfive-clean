@@ -725,6 +725,7 @@ class GlobalChargesController extends Controller
     public function show($id)
     {
         $globalcharges = DB::select('call  select_for_company_globalcharger(' . $id . ')');
+        
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges) {
@@ -983,6 +984,10 @@ class GlobalChargesController extends Controller
         $data1 = \DB::select(\DB::raw('call select_globalcharge_adm(' . $co . ',' . $ca . ')'));
         $globalcharges = new Collection;
         for ($i = 0; $i < count($data1); $i++) {
+            $p_exception=GlobalCharPortException::where('globalcharge_id',$data1[$i]->id)->with('harbor1','harbor')->get();
+         
+            $c_exception=GlobalCharCountryException::where('globalcharge_id',$data1[$i]->id)->with('harbor1','harbor')->get();
+
             $globalcharges->push([
                 'id' => $data1[$i]->id,
                 'charge' => $data1[$i]->charge,
@@ -1005,6 +1010,8 @@ class GlobalChargesController extends Controller
                 'valid_from' => $data1[$i]->valid_from,
                 'valid_until' => $data1[$i]->valid_until,
                 'company_user' => $data1[$i]->company_user,
+                'p_exception'=> $p_exception->toArray(),
+                'c_exception'=> $c_exception->toArray(),
 
             ]);
         }
