@@ -57,19 +57,19 @@
                                 {!! Form::label('Type Route', 'Type Route') !!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\'); activarRegions(\'divport\'); offsetSwitch(\'divport\')' ]) }} Port
+                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\',false); activarRegions(\'divport\'); offsetSwitch(\'divport\',false)' ]) }} Port
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\'); activarRegions(\'divcountry\'); offsetSwitch(\'divcountry\')' ]) }} Country
+                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\',false); activarRegions(\'divcountry\'); offsetSwitch(\'divcountry\',false)' ]) }} Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\'); activarRegions(\'divportcountry\'); offsetSwitch(\'divportcountry\')' ]) }} Port to Country
+                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\',false); activarRegions(\'divportcountry\'); offsetSwitch(\'divportcountry\',false)' ]) }} Port to Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\'); activarRegions(\'divcountryport\'); offsetSwitch(\'divcountryport\')' ]) }}  Country to Port
+                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\',false); activarRegions(\'divcountryport\'); offsetSwitch(\'divcountryport\',false)' ]) }}  Country to Port
                                 <span></span>
                             </label>
                             <i onclick="inverter()" style="font-size:22px" class="la la-arrows-h" title="Exchange Origin / Destination"></i>

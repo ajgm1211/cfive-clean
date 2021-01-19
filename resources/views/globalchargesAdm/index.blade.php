@@ -243,17 +243,50 @@
 
         //$('#frmSurcharges').text('<input type="hidden" name="company_user_id" value="">');
     }
-    function format ( d ) {
-        // `d` is the original data object for the row
+    function format (data) {
+        var orig='';
+        var dest='';
+
+        if(data.p_exception != null ){
+            $.each( data.p_exception  , function(key, value) {
+                if(value.port_orig==null && value.port_dest != null ){
+                    dest+=value.harbor1.display_name;
+                    console.log(value.habor1);
+                }else{
+                    orig+=value.harbor.display_name;
+                    console.log(value.harbor.display_name);
+                }
+            });
+        }
+        if(data.c_exception != null ){
+            $.each( data.c_exception  , function(key, value) {
+
+                if(value.country_orig!=null && value.country_dest == null )
+                {
+                    console.log(value);
+                    orig+=value.harbor1.name;
+                    console.log(value.harbor1.name);
+                }else{
+                    dest+=value.harbor.name;
+                    console.log(value);
+                }
+            });
+        }
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+
-                '<td>Exceptions:</td>'+
-                '<td>'+d.name+'</td>'+
+                '<td>Exceptions at origin:</td>'+
+                '<td>'+orig+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>Exceptions at destination:</td>'+
+                '<td>'+dest+'</td>'+
             '</tr>'+
         '</table>';
     }
+    
 
     function loadDatatable(company_id,carrier){
+        
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -287,8 +320,7 @@
                     }
                 }
             ],
-            //serverSide: true,
-            //ajax: '/globalcharges/createAdm/'+company_id+'/1',
+            
             ajax: {
                 url: "{{ route('gcadm.create') }}",
                 data: {
@@ -296,6 +328,7 @@
                     "carrier":carrier,
                 }
             },
+            
             columns: [
                 { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
@@ -330,6 +363,7 @@
             "paging": true
         });
         
+    
         $('#requesttable tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
@@ -353,6 +387,7 @@
     $(document).on('click', '#search', function(){
         var company_id=$('#company_user').val();
         var carrier=$('#carrier').val();
+        url: "{{ route('gcadm.index') }}",
         loadDatatable(company_id,carrier);
     });
 
