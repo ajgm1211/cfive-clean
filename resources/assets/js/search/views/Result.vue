@@ -163,7 +163,7 @@
                         <!-- ADD QUOTE BTN -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
 
-                                <b-form-checkbox v-model="checked1" class="btn-add-quote" name="check-button" button>
+                                <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
 
@@ -342,7 +342,7 @@
 
                         <!-- ADD QUOTE BTN -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
-                                <b-form-checkbox v-model="checked2" class="btn-add-quote" name="check-button" button>
+                                <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
                         </div>
@@ -914,7 +914,6 @@ export default {
         return {
             checked1: false,
             checked2: false,
-            checked3: false,
             isActive: false,
             stepOne: true,
             stepTwo: false,
@@ -1107,7 +1106,11 @@ export default {
         //console.log(component.request);
         //console.log(component.datalists);
 
-        console.log(component.rates);
+        //console.log(component.rates);
+
+        component.rates.forEach(function (rate){
+            rate.addToQuote = false;
+        });
 
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
