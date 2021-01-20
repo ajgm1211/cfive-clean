@@ -19,12 +19,23 @@ class QuotationLocalChargeResource extends JsonResource
             'charge' => $this->charge,
             'calculation_type' => $this->calculation_type->name ?? null,
             'port' => $this->port->display_name ?? null,
-            'price' => $this->price,
-            'profit' => $this->profit ?? null,
-            'total' => $this->total,
+            'price' => $this->arrayToString($this->price) ?? null,
+            'profit' => $this->arrayToString($this->profit) ?? null,
+            'total' => $this->arrayToString($this->total) ?? null,
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
         ];
 
+    }
+
+    public function arrayToString($array){
+
+        $new_array = [];
+
+        foreach($array as $key=>$item){
+            $new_array[$key] = (string) $item;
+        }
+
+        return $new_array;
     }
 }
