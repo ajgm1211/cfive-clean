@@ -18,6 +18,7 @@ use App\TermAndConditionV2;
 use App\DeliveryType;
 use App\Currency;
 use App\Container;
+use App\GroupContainer;
 use App\ScheduleType;
 use App\Country;
 use App\Rate;
@@ -93,6 +94,8 @@ class SearchApiController extends Controller
         });
 
         $containers = Container::all();
+        
+        $container_groups = GroupContainer::all();
 
         $directions = Direction::all();
 
@@ -117,6 +120,7 @@ class SearchApiController extends Controller
             'currency',
             'common_currencies',
             'containers',
+            'container_groups',
             'comps',
             'countries',
             'delivery_types',
@@ -139,6 +143,7 @@ class SearchApiController extends Controller
             'destinationPorts.*.id' => 'required',
             'dateRange' => 'required',
             'containers.*.id' => 'required', 
+            'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required', 
             'direction' => 'required',
             'carriers.*.id' => 'required',
@@ -228,11 +233,9 @@ class SearchApiController extends Controller
         $user_id = $user->id;
         $company_user_id = $user->company_user_id;
         $company_user = CompanyUser::where('id',$company_user_id)->first();
-
-        //SEARCH TRAIT - Getting container groups in equipment array, to filter contracts
-        $container_groups = $this->getEquipmentGroups($data['containers']);
-
+        
         //setting variables for query
+        $container_group = $data['selectedContainerGroup'];
         $company_id = $data['company'];
         $origin_ports = $data['originPorts'];
         $destiny_ports = $data['destinationPorts'];
@@ -246,19 +249,19 @@ class SearchApiController extends Controller
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $container_groups) {
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $container_group) {
                 $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
                     $b->where('company_id', '=', $company_id);
                 })->orDoesntHave('contract_company_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_groups, $company_user) {
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->whereIn('gp_container_id', $container_groups);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->whereIn('gp_container_id', $container_groups);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 }
             });
         } else {
@@ -266,15 +269,15 @@ class SearchApiController extends Controller
                 $q->doesnthave('contract_user_restriction');
             })->whereHas('contract', function ($q) {
                 $q->doesnthave('contract_company_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_groups, $company_user) {
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->whereIn('gp_container_id', $container_groups);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->whereIn('gp_container_id', $container_groups);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 }
             });
         }

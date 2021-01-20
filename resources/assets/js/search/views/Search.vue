@@ -27,7 +27,7 @@
                         <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
                         <div class="delivery-input">
                             <multiselect
-                                v-model="searchRequest.deliveryType"
+                                v-model="deliveryType"
                                 :multiple="false"
                                 :close-on-select="true"
                                 :clear-on-select="false"
@@ -126,21 +126,21 @@
 
                 <!-- Containers -->
                 <div class="col-12 col-sm-2 input-search-form containers-search" style="padding-left: 5px;">
-                        <b-dropdown id="dropdown-containers" :text="equipment.join(', ')" ref="dropdown" class="m-2">
+                        <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
                             <b-dropdown-form>
                                 <b-form-group label="Type">
                                     <b-form-radio-group
                                         id="containers"
-                                        v-model="selectedContainers"
-                                        :options="optionsContainers"
+                                        v-model="selectedContainerGroup"
+                                        :options="containerGroupOptions"
 
                                     ></b-form-radio-group>
                                 </b-form-group>
                                 <b-form-group label="Equipment List">
                                     <b-form-checkbox-group
                                         id="equipment"
-                                        v-model="equipment"
-                                        :options="filterContainers"
+                                        v-model="containers"
+                                        :options="containerOptions"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                             </b-dropdown-form>
@@ -255,17 +255,20 @@
 
                     <div class="col-12 col-sm-3 input-search-form">
                         
-                            <b-dropdown id="dropdown-carriers" :text="textCarriers" ref="dropdown" class="m-2">
+                            <b-dropdown id="dropdown-carriers" :text="carrierText" ref="dropdown" class="m-2">
                                 <b-dropdown-form>
                                     <label class="mt-2">
                                         <span>All Carriers</span>
-                                        <b-form-checkbox v-model="allCarriers" @change="selectAll" class="switch-all-carriers"></b-form-checkbox>
+                                        <b-form-checkbox 
+                                            v-model="allCarriers" 
+                                            class="switch-all-carriers"
+                                        ></b-form-checkbox>
                                     </label>
                                     <b-form-group label="Carriers">
                                         <b-form-checkbox-group
                                             id="carriers-list"
                                             v-model="carriers"
-                                            :options="optionCarriers"
+                                            :options="carrierOptions"
                                         ></b-form-checkbox-group>
                                     </b-form-group>
                                 </b-dropdown-form>
@@ -301,7 +304,7 @@
             </b-collapse>
 
             <!-- LCL FORM INPUTS -->
-            <div class="row mr-0 ml-0 lcl-inputs" v-if="type == 'LCL'">
+            <div class="row mr-0 ml-0 lcl-inputs" v-if="searchRequest.type == 'LCL'">
                     <!-- Tabs Section -->
 				<b-card no-body class="card-tabs col-12 font-tabs">
 					<b-tabs card>
@@ -534,6 +537,7 @@ export default {
             loaded: false,
             searching: false,
             actions: actions,
+            datalists: {},
             IDRequest: {},
             searchRequest: {
                 direction: 1,
@@ -541,6 +545,7 @@ export default {
                 destinationChargesCheckbox: false,
                 originChargesCheckbox: false,
                 deliveryType: {},
+                selectedContainerGroup: {},
                 containers: [],
                 originPorts: [],
                 destinationPorts: [],
@@ -555,81 +560,35 @@ export default {
                     "validity_end":"2021-01-31"
                 },
             },
-            datalists: {},
+            selectedContainerGroup: {},
+            containers: [],
+            deliveryType: {},
+            carriers: [],
+            containerOptions: [],
             typeOptions: ['FCL', 'LCL', 'AIR'],
             deliveryTypeOptions: {},
             directionOptions: {},
             originPortOptions: {},
             destinationPortOptions: {},
-            containerOptions: {},
-            originAddressOptions: {},
-            destinationAddressOptions: {},
+            originAddressOptions: [],
+            destinationAddressOptions: [],
             companyOptions: {},
             contactOptions: {},
             priceLevelOptions: {},
-            carrierOptions: {},
+            carrierOptions: [],
+            containerText: [],
+            allCarriers: false,
+            carrierText: 'All Carriers Selected',
             //Gene defined
             ptdActive: false,
             dtpActive: false,
             dtdActive: false,
-            direction: 'import',
             dataPackaging: [],
-            containersSelected: '',
-            allCarriers: true,
             indeterminate: false,
-            textCarriers: 'All Carriers Selected',
-            originCharges: [],
-            destinationCharges: [],
-            type: 'FCL',
-            company: '',
-            carriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sud', 'Hanjin', 'Hapag Lloyd', 'HMM', 'Maersk'],
-            contact: '',
-            pricelevel: '',
-            pallets: 'PALLETS',
-            quantity: '',
-            width: '',
-            weight: '',
-            height: '',
-            large: '',
-            total: '',
             typePallet: 'PALLETS',
-            container: [],
             selected: 'radio1',
-            deliveryType: 'PORT TO PORT',
-            valueOrigen: [],
-            valueDestination: [],
-            origenPort: [],
             invalidCalculate: false,
-            destinationPort: [],
-            optionsOrigenPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
-            optionsDestinationPort: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
-            optionsDestination: ['Select option', 'Buenos Aries, Arg', 'Puerto Cabello, Vnzl', 'Barcelona, Vnzl', 'São Paulo, Br', 'Shangai, Ch', 'Tokio, Jp', 'Lisboa, Pt'],
-            options: [ { text: 'Import', value: 'import' },  { text: 'Export', value: 'export' } ],
-            optionsTypePallet: ['PALLETS', 'PACKAGES'],
-            optionCompany: ['Select option', 'Cargofive', 'Altius', 'Lantia', 'FreightBros'],
-            optionContact: ['Select option', 'Genesis', 'Ruben', 'Sebastian', 'Julio'],
-            optionPriceLevel: ['Select option', 'Precio 1', 'Precio 2', 'Precio 3', 'Precio 4'],
-            optionsType: ['FCL', 'LCL', 'AIR'],
-            optionsDeliveryType: ['PORT TO PORT', 'PORT TO DOOR', 'DOOR TO PORT', 'DOOR TO DOOR'],
-            selectedContainers: 'dry',
-            optionsContainers: [
-                { text: 'DRY', value: 'dry' },
-                { text: 'REEFER', value: 'reefer' },
-                { text: 'OPEN TOP', value: 'open' },
-                { text: 'FLAT RACK', value: 'rack' },
-            ],
-            filterContainers: [
-                    { text: '20DV', value: '20DV' },
-                    { text: '40DV', value: '40DV' },
-                    { text: '40HC', value: '40HC' },
-                    { text: '45HC', value: '45HC' },
-                    { text: '40NOR', value: '40NOR' },
-                ],
-             
-            optionCarriers: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sud', 'Hanjin', 'Hapag Lloyd', 'HMM', 'Maersk'],
-            selectedCarries: [],
-            equipment: ['20DV', '40DV', '40HC'],
-    
+            optionsTypePallet: ['PALLETS', 'PACKAGES'],  
 
             //DATEPICKER
             locale: 'en-US',
@@ -664,23 +623,35 @@ export default {
                 { text: component.datalists.directions[1].name, value: component.datalists.directions[1].id }
                 //{ text: component.datalists.directions[2].name, value: component.datalists.directions[2].id }
             ];
+            component.containerGroupOptions =  [
+                { text: component.datalists.container_groups[0].name, value: component.datalists.container_groups[0] },
+                { text: component.datalists.container_groups[1].name, value: component.datalists.container_groups[1] },
+                { text: component.datalists.container_groups[2].name, value: component.datalists.container_groups[2] },
+                { text: component.datalists.container_groups[3].name, value: component.datalists.container_groups[3] }
+            ];
+            component.datalists.carriers.forEach(function (carrier){
+                component.carrierOptions.push({ text: carrier.name, value: carrier });
+            });
+            component.selectedContainerGroup = component.datalists.container_groups[0];
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
             component.priceLevelOptions = component.datalists.price_levels;
-            component.carrierOptions = component.datalists.carriers;
             component.deliveryTypeOptions = component.datalists.delivery_types;
-            component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
+            component.deliveryType = component.deliveryTypeOptions[0];
+            component.allCarriers = true;
             component.loaded = true;
         },
 
         //Send Search Request to Controller
         requestSearch() {
+            console.log(this.deliveryType)
             this.$emit("searchRequest");
             this.searching = true;
-            if(this.searchRequest.carriers.length == 0){
-                this.searchRequest.carriers = this.carrierOptions;
-            }
+            this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
+            this.searchRequest.containers = this.containers;
+            this.searchRequest.deliveryType = this.deliveryType;
+            this.searchRequest.carriers = this.carriers;
             actions.search
                 .process(this.searchRequest)
                 .then((response) => {
@@ -729,42 +700,30 @@ export default {
             this.width = "";   this.large = "";    this.weight = ""; 
             this.total = "";
         },
-
-        selectAll() {
-            this.allCarriers = !this.allCarriers; 
-            this.carriers = []; 
-            if(this.allCarriers){ 
-                // Check all 
-                for (var key in this.optionCarriers) {          
-                    this.carriers.push(this.optionCarriers[key]); 
-                } 
-            } 
-        },
-        
-        
+          
     },
     watch: {
         deliveryType: function() {
-            if ( this.deliveryType == "PORT TO PORT" ) {
+            if ( this.deliveryType.id == 1 ) {
 
                 this.ptdActive = false; this.dtpActive = false; this.dtdActive = false; 
                 return;
 
-            } else if (this.deliveryType == "PORT TO DOOR") {
+            } else if (this.deliveryType.id == 2) {
 
                 this.dtpActive = false; this.dtdActive = false; 
 
                 this.ptdActive = !this.ptdActive;
                 return;
 
-            } else if (this.deliveryType == "DOOR TO PORT") {
+            } else if (this.deliveryType.id == 3) {
 
                 this.ptdActive = false; this.dtdActive = false; 
 
                 this.dtpActive = !this.dtpActive;
                 return;
 
-            } else if (this.deliveryType == "DOOR TO DOOR") {
+            } else if (this.deliveryType.id == 4) {
 
                 this.ptdActive = false; this.dtpActive = false; 
                
@@ -774,65 +733,74 @@ export default {
             }
         },
 
-        selectedContainers: function() {
-            if(this.selectedContainers == 'dry') {
-                this.equipment = [ '20DV', '40DV', '40HC'];
-                this.filterContainers = [
-                    { text: '20DV', value: '20DV'},
-                    { text: '40DV', value: '40DV'},
-                    { text: '40HC', value: '40HC'},
-                    { text: '45HC', value: '45HC' },
-                    { text: '40NOR', value: '40NOR' },
-                ];
-            } else if(this.selectedContainers == 'reefer') {
-                this.equipment = [ '20RF', '40RF', '40HCRF'];
-                this.filterContainers = [
-                    { text: '20RF', value: '20RF'},
-                    { text: '40RF', value: '40RF'},
-                    { text: '40HCRF', value: '40HCRF'},
-                ];
-            } else if(this.selectedContainers == 'open') {
-                this.equipment = [ '20OT', '40OT'];
-                this.filterContainers = [
-                    { text: '20OT', value: '20OT'},
-                    { text: '40OT', value: '40OT'},
-                ];;
-            } else if(this.selectedContainers == 'rack') {
-                this.equipment = [ '20FR', '40FR'];
-                this.filterContainers = [
-                    { text: '20FR', value: '20FR'},
-                    { text: '40FR', value: '40FR'},
-                ];
+        selectedContainerGroup: function() {
+            let component = this;
+            let fullContainersByGroup = [];
+            let selectedContainersByGroup = [];
+
+            component.containerOptions = [];
+
+            component.datalists.containers.forEach(function (container){
+                if(component.selectedContainerGroup.id == container.gp_container_id){
+                    selectedContainersByGroup.push(container);
+                    fullContainersByGroup.push(container);
+                }
+            });
+
+            if(selectedContainersByGroup.length > 3){
+                selectedContainersByGroup.splice(3,2);
             }
 
+            fullContainersByGroup.forEach(function (cont){
+                component.containerOptions.push({ text: cont.code, value: cont });
+            });
+            component.containers = selectedContainersByGroup;
         },
         
-        equipment: function() {
-            if(this.equipment == []){
-                this.equipment = ['Select Containers'];
+        containers: function() {
+            let component = this;
+
+            component.containerText = [];
+
+            component.containers.forEach(function (container){
+                component.containerText.push(container.code)
+            });
+
+            if(this.containers == []){
+                this.containerText = ['Select Containers'];
             }
         },
 
         carriers() {
-            if (this.carriers.length == this.optionCarriers.length) {
-                this.textCarriers = 'All Carriers Selected';
-            } else if (this.carriers.length >= 5) {
-                this.textCarriers = this.carriers.length + " Carriers Selected";
-            } else if (this.carriers.length == 0) {
-                this.textCarriers = 'Select a Carrier';
+            let component = this;
+
+            if (component.carriers.length == component.carrierOptions.length) {
+                component.carrierText = 'All Carriers Selected';
+            } else if (component.carriers.length >= 5) {
+                component.carrierText = component.carriers.length + " Carriers Selected";
+            } else if (component.carriers.length == 0) {
+                component.carrierText = 'Select a Carrier';
             } else {
-                this.textCarriers = this.carriers.join(', ');
+                let selectedCarriers = [];
+
+                component.carriers.forEach(function (carrier){
+                    selectedCarriers.push(carrier.name);
+                });
+
+                component.carrierText = selectedCarriers.join(', ');
             }
         },
 
         allCarriers() {
-            this.carriers = []; 
-            if(this.allCarriers){ 
+            let component = this;
+
+            component.carriers = []; 
+            if(component.allCarriers){ 
                 // Check all 
-                for (var key in this.optionCarriers) {          
-                    this.carriers.push(this.optionCarriers[key]); 
-                } 
-            } 
+                component.datalists.carriers.forEach(function (carrier){
+                    component.carriers.push(carrier);
+                });
+            }
         }
     }
 
