@@ -118,7 +118,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                 //  Surcharge ------------------------------------------------------------------------------
 
                 $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
-                if (count($surchargerV) == 1) {
+                if (count((array)$surchargerV) == 1) {
                     $surcharB = true;
                     $surchargerV = $surchargerV['id'];
                 }
@@ -126,7 +126,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                 //  Type Destiny ---------------------------------------------------------------------------
 
                 $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
-                if (count($typedestunyV) == 1) {
+                if (count((array)$typedestunyV) == 1) {
                     $typedestinyB = true;
                     $typedestunyV = $typedestunyV['id'];
                 }
@@ -135,7 +135,7 @@ class ReprocessSurchargersJob implements ShouldQueue
 
                 $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
 
-                if (count($calculationtypeV) == 1) {
+                if (count((array)$calculationtypeV) == 1) {
                     $calculationtypeV = $calculationtypeV['id'];
                 }
 
@@ -147,7 +147,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                 //  Currency -------------------------------------------------------------------------------
 
                 $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
-                if (count($currencyV) == 1) {
+                if (count((array)$currencyV) == 1) {
                     $currencyB = true;
                     $currencyV = $currencyV['id'];
                 }
@@ -185,7 +185,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                             ->where('currency_id', $currencyV)
                             ->first();
 
-                    if (count($LocalchargeId) == 0) {
+                    if (count((array)$LocalchargeId) == 0) {
                         $LocalchargeId = LocalCharge::create([
                                 'surcharge_id'          => $surchargerV,
                                 'typedestiny_id'        => $typedestunyV,
@@ -201,7 +201,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                     $existCa = null;
                     $existCa = LocalCharCarrier::where('carrier_id', $carrierV)
                             ->where('localcharge_id', $LocalchargeId)->first();
-                    if (count($existCa) == 0) {
+                    if (count((array)$existCa) == 0) {
                         LocalCharCarrier::create([
                                 'carrier_id'     => $carrierV,
                                 'localcharge_id' => $LocalchargeId,
@@ -214,7 +214,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                                 ->where('port_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                        if (count($existsP) == 0) {
+                        if (count((array)$existsP) == 0) {
                             LocalCharPort::create([
                                     'port_orig'         => $originV,
                                     'port_dest'         => $destinationV,
@@ -227,7 +227,7 @@ class ReprocessSurchargersJob implements ShouldQueue
                                 ->where('country_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                        if (count($existsC) == 0) {
+                        if (count((array)$existsC) == 0) {
                             LocalCharCountry::create([
                                     'country_orig'      => $originV,
                                     'country_dest'      => $destinationV,

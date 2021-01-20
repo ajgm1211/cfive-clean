@@ -121,14 +121,17 @@ class ImportationTransitTimeController extends Controller
                     $destiny_Bol = $destiny_arr['boolean'];
                     $destiny_val = $destiny_arr['puerto'];
 
-                    $destinationTObj = DestinationType::where('code', $type_val)->first();
+                    $destinationTObj = DestinationType::where('code', $type_val)->get();
+
                     if (count($destinationTObj) == 1) {
                         $type_bol = true;
-                        $type_val = $destinationTObj->id;
+                        $type_val = $destinationTObj[0]->id;
                         if ($type_val == 2) {
                             $via_val = ' ';
                         }
                     } elseif (count($destinationTObj) == 0) {
+                        $type_val = $type_val.'(Error)';
+                    } elseif (count($destinationTObj) > 1) {
                         $type_val = $type_val.'(Error)';
                     }
 
