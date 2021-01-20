@@ -533,7 +533,9 @@ class ImportationController extends Controller
         $carrier_exec   = Carrier::where('name','ALL')->first();
         $carrier_exec   = $carrier_exec->id;
         $equiment       = ['id' => null,'name' => null,'color' => null];
+        $api_contract   = [];
         $json_rq        = null;
+        
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
             @$requestfcl->load('Requestcarriers');
@@ -542,6 +544,8 @@ class ImportationController extends Controller
                 if(!empty($json_rq['group_containers'])){
                     $equiment['id']     = $json_rq['group_containers']['id'];
                     $equiment['name']   = $json_rq['group_containers']['name'];
+                    $api_contract['code']  = $json_rq['contract']['code'] ?? null;
+                    $api_contract['is_api']  = $json_rq['contract']['is_api'] ?? 0;
                     $groupContainer     = GroupContainer::find($equiment['id']);
                     $json_rq            = json_decode($groupContainer->data,true);
                     $equiment['color']  = $json_rq['color'];
@@ -599,7 +603,7 @@ class ImportationController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         if($selector == 1){
-            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency','equiment'));    
+            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency','equiment','api_contract'));    
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
         } elseif($selector == 2){
@@ -629,6 +633,8 @@ class ImportationController extends Controller
         $typedestinyVal     = $request->typedestiny;
         $chargeVal          = $request->chargeVal;
         $gp_container_id    = $request->gp_container_id;
+        $contract_code      = $request->contract_code;
+        $contract_is_api    = $request->contract_is_api;
         $validity           = explode('/',$request->validation_expire);
 
         $statustypecurren   = $request->valuesCurrency;
@@ -670,6 +676,8 @@ class ImportationController extends Controller
                 $contract->company_user_id  = $CompanyUserId;
                 $contract->account_id       = $account->id;
                 $contract->gp_container_id  = $gp_container_id;
+                $contract->code             = $contract_code;
+                $contract->is_api           = $contract_is_api;
                 $contract->save();
 
                 foreach($request->carrierM as $carrierVal){
