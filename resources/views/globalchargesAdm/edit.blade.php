@@ -1,6 +1,6 @@
 
 <script>
-    activarCountryOld('{{ $activacion['act'] }}');
+    activarCountry2('{{ $activacion['act'] }}');
     activarRegions('{{ $activacion['act'] }}');
 </script>
 <!-- HASTA AQUI BIEN SI DESAPARECE NO BORRAR SOLO HASTA ESTE MENSAJE -->
