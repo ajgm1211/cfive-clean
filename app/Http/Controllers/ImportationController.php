@@ -348,9 +348,9 @@ class ImportationController extends Controller
                     }
 
                     //  Surcharge ------------------------------------------------------------------------------
-
+                    
                     $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
-                    if (count($surchargerV) == 1) {
+                    if (count((array)$surchargerV) == 1) {
                         $surcharB = true;
                         $surchargerV = $surchargerV['id'];
                     }
@@ -358,7 +358,7 @@ class ImportationController extends Controller
                     //  Type Destiny ---------------------------------------------------------------------------
 
                     $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
-                    if (count($typedestunyV) == 1) {
+                    if (count((array)$typedestunyV) == 1) {
                         $typedestinyB = true;
                         $typedestunyV = $typedestunyV['id'];
                     }
@@ -367,7 +367,7 @@ class ImportationController extends Controller
 
                     $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
 
-                    if (count($calculationtypeV) == 1) {
+                    if (count((array)$calculationtypeV) == 1) {
                         $calculationtypeV = $calculationtypeV['id'];
                     }
 
@@ -379,7 +379,7 @@ class ImportationController extends Controller
                     //  Currency -------------------------------------------------------------------------------
 
                     $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
-                    if (count($currencyV) == 1) {
+                    if (count((array)$currencyV) == 1) {
                         $currencyB = true;
                         $currencyV = $currencyV['id'];
                     }
@@ -417,7 +417,7 @@ class ImportationController extends Controller
                             ->where('currency_id', $currencyV)
                             ->first();
 
-                        if (count($LocalchargeId) == 0) {
+                        if (count((array)$LocalchargeId) == 0) {
                             $LocalchargeId = LocalCharge::create([
                                 'surcharge_id' => $surchargerV,
                                 'typedestiny_id' => $typedestunyV,
@@ -433,7 +433,7 @@ class ImportationController extends Controller
                         $existCa = null;
                         $existCa = LocalCharCarrier::where('carrier_id', $carrierV)
                             ->where('localcharge_id', $LocalchargeId)->first();
-                        if (count($existCa) == 0) {
+                        if (count((array)$existCa) == 0) {
                             LocalCharCarrier::create([
                                 'carrier_id' => $carrierV,
                                 'localcharge_id' => $LocalchargeId,
@@ -446,7 +446,7 @@ class ImportationController extends Controller
                                 ->where('port_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                            if (count($existsP) == 0) {
+                            if (count((array)$existsP) == 0) {
                                 LocalCharPort::create([
                                     'port_orig' => $originV,
                                     'port_dest' => $destinationV,
@@ -459,7 +459,7 @@ class ImportationController extends Controller
                                 ->where('country_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                            if (count($existsC) == 0) {
+                            if (count((array)$existsC) == 0) {
                                 LocalCharCountry::create([
                                     'country_orig' => $originV,
                                     'country_dest' => $destinationV,
@@ -1099,7 +1099,7 @@ class ImportationController extends Controller
                             ->where('containers', $containers)
                             ->where('currency_id', $data_currency[$key])
                             ->first();
-                        if (count($exists_rate) == 0) {
+                        if (count((array)$exists_rate) == 0) {
                             $return = Rate::create([
                                 'origin_port' => $origin,
                                 'destiny_port' => $destiny,
@@ -3214,7 +3214,7 @@ class ImportationController extends Controller
     {
         try {
             $contract = Contract::where('account_id', $id)->first();
-            if (count($contract) == 1) {
+            if (count((array)$contract) == 1) {
                 $data = PrvValidation::ContractWithJob($contract->id);
                 if ($data['bool'] == false) {
                     $account = AccountFcl::find($id);
