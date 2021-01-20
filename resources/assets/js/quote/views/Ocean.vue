@@ -57,7 +57,7 @@
 
                     <!-- Add Freight -->
                     <div class="d-flex align-items-center">
-                                                <!-- Inputs Freight -->
+                        <!-- Inputs Freight -->
                         <div class="d-flex align-items-center">
                             <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
                             <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-primary btn-bg">+ Add Charge</a>
@@ -389,7 +389,6 @@ export default {
                 let id = this.$route.params.id;
 
                 component.$emit("freightAdded",id)
-
             }
         },
 
