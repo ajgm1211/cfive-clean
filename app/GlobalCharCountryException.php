@@ -20,11 +20,10 @@ class GlobalCharCountryException extends Model
 		return $this->belongsTo('App\Country','country_dest');
 
 	}
-    public function harbor(){
-        return $this->belongsTo('App\Country','country_dest','id');
-    }
-    public function harbor1(){
+	public function contryorigin(){
         return $this->belongsTo('App\Country','country_orig','id');
     }
-
+    public function countrydestiny(){
+        return $this->belongsTo('App\Country','country_dest','id');
+    }
 }

@@ -984,9 +984,9 @@ class GlobalChargesController extends Controller
         $data1 = \DB::select(\DB::raw('call select_globalcharge_adm(' . $co . ',' . $ca . ')'));
         $globalcharges = new Collection;
         for ($i = 0; $i < count($data1); $i++) {
-            $p_exception=GlobalCharPortException::where('globalcharge_id',$data1[$i]->id)->with('harbor1','harbor')->get();
+            $p_exception=GlobalCharPortException::where('globalcharge_id',$data1[$i]->id)->with('portorigin','portdestiny')->get();
          
-            $c_exception=GlobalCharCountryException::where('globalcharge_id',$data1[$i]->id)->with('harbor1','harbor')->get();
+            $c_exception=GlobalCharCountryException::where('globalcharge_id',$data1[$i]->id)->with('contryorigin','countrydestiny')->get();
 
             $globalcharges->push([
                 'id' => $data1[$i]->id,
