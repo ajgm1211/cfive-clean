@@ -249,12 +249,12 @@
 
         if(data.p_exception != null ){
             $.each( data.p_exception  , function(key, value) {
-                if(value.port_orig==null && value.port_dest != null ){
-                    dest+=value.harbor1.display_name;
-                    console.log(value.habor1);
+                if(value.port_orig!=null && value.port_dest == null ){
+                    orig+=value.portorigin.display_name;
+                    console.log(value.portorigin.display_name);
                 }else{
-                    orig+=value.harbor.display_name;
-                    console.log(value.harbor.display_name);
+                    dest+=value.portdestiny.display_name;
+                    console.log(value.portdestiny.display_name);
                 }
             });
         }
@@ -263,12 +263,11 @@
 
                 if(value.country_orig!=null && value.country_dest == null )
                 {
-                    console.log(value);
-                    orig+=value.harbor1.name;
-                    console.log(value.harbor1.name);
+                    orig+=value.contryorigin.name;
+                    console.log(value.contryorigin.name);
                 }else{
-                    dest+=value.harbor.name;
-                    console.log(value);
+                    dest+=value.countrydestiny.name;
+                    console.log(value.countrydestiny.name);
                 }
             });
         }
@@ -362,9 +361,10 @@
             "processing": true,
             "paging": true
         });
-        
-    
-        $('#requesttable tbody').on('click', 'td.details-control', function () {
+            
+      table.clear();  
+    }
+     $('#requesttable tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
  
@@ -378,11 +378,6 @@
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }} );
-
-        table.clear();
-        
-        
-    }
 
     $(document).on('click', '#search', function(){
         var company_id=$('#company_user').val();
