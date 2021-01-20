@@ -1009,8 +1009,9 @@ export default {
     },
     watch: {
         charges: function(){
-            this.$emit("chargesUpdated",this.charges);
-        }
+            let id = this.$route.params.id;
+
+            this.$emit("chargesUpdated",id);}
     },
     methods: {
         add() {
