@@ -97,6 +97,9 @@
                                         {!! Form::select('carrierM[]',$carrier,$requestfcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
+                                <!-- Input's para que no se pierdan variables de contratos cargados vía API -->
+                                {!!  Form::hidden('contract_code',$api_contract['code'],['class'=>'form-control m-input'])!!}
+                                {!!  Form::hidden('contract_is_api',$api_contract['is_api'],['class'=>'form-control m-input'])!!}
                             </div>
                             @elseif($selector == 2)
                             <div class="form-group m-form__group row">
