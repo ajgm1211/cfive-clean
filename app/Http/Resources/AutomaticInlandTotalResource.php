@@ -23,6 +23,7 @@ class AutomaticInlandTotalResource extends JsonResource
             'totals' => $this->totals,
             'markups' => $this->markups,
             'totals_currency' => $this->currency()->first()->alphacode,
+            'pdf_options' => $this->pdf_options
         ];
 
         return $this->addContainers($data);

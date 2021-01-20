@@ -11,7 +11,7 @@ class AutomaticInland extends Model
 {
     protected $casts = [
         'markup' => 'array',
-        'rate' => 'array',
+        'rate' => 'array'
     ];
 
     protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 

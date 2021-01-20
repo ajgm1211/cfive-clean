@@ -90,7 +90,7 @@
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
                                 :currentQuoteData="currentData"
-                                @chargesUpdated="setCurrentCharges"
+                                @chargesUpdated="setInitialData"
                             ></Local>
                         </b-tab>
 
@@ -102,7 +102,7 @@
                             :actions="actions"
                             :datalists="datalists"
                             :freights="freights"
-                            :localCharges="currentLocalCharges"
+                            :localCharges="currentData.local_charges"
                             ></Inland>
                         </b-tab>
 
@@ -404,13 +404,7 @@ export default {
                 setTimeout(function() {
                     component.totals=true
                 },100);
-            }
-
-            setTimeout(function() {
-                component.locals = true
-            },100);
-
-            
+            }            
         },
 
         changeView(val){
@@ -476,14 +470,6 @@ export default {
                 this.currentData['chargeable_weight'] = calc_weight;
             }
         },
-
-        setCurrentCharges(currentCharges) {
-            this.inlands = false;
-
-            this.currentLocalCharges = currentCharges;
-            console.log(this.currentLocalCharges)
-        },
-
     },
     
 };
