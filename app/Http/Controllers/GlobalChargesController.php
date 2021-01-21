@@ -610,7 +610,10 @@ class GlobalChargesController extends Controller
     {
 
         $global = GlobalCharge::find($id);
-        $global->delete();
+        if(!empty($global)){
+            $global->delete();
+        }
+        
     }
     public function editGlobalChar($id)
     {
