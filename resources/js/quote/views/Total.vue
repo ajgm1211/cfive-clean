@@ -31,6 +31,8 @@
                             :close-on-select="true"
                             :clear-on-select="false"
                             :show-labels="false"
+                            :hide-selected="true"
+                            :allow-empty="false"
                             label="alphacode"
                             track-by="alphacode"
                             placeholder="Select Currency"

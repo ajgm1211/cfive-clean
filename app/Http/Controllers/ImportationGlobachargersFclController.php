@@ -860,7 +860,7 @@ class ImportationGlobachargersFclController extends Controller
 
                 $originAIn = $originOb['id'];
                 $originC = count($originA);
-                if ($originC <= 1 && count($originAIn) == 1) {
+                if ($originC <= 1 && count((array)$originAIn) == 1) {
                     $originA = $originOb['name'];
                 } else {
                     $originA = $originA[0].' (error)';
@@ -879,7 +879,7 @@ class ImportationGlobachargersFclController extends Controller
 
                 $destinationAIn = $destinationOb['id'];
                 $destinationC = count($destinationA);
-                if ($destinationC <= 1 && count($destinationAIn) == 1) {
+                if ($destinationC <= 1 && count((array)$destinationAIn) == 1) {
                     $destinationA = $destinationOb['name'];
                 } else {
                     $destinationA = $destinationA[0].' (error)';

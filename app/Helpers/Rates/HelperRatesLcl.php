@@ -27,7 +27,7 @@ class HelperRatesLcl
             $detinyRate = $rate['port_destiny']['name'];
             $carrierRate = $rate['carrier']['name'];
             $currencyRate = $rate->Currency->alphacode;
-            if (count($rate->scheduletype) >= 1) {
+            if (count((array)$rate->scheduletype) >= 1) {
                 $scheduleRate = $rate->scheduletype['name'];
             } else {
                 $scheduleRate = '--------';
