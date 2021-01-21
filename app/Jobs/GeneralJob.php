@@ -400,7 +400,7 @@ class GeneralJob implements ShouldQueue
                 }
 
                 $carrierEX = count($carrierArr);
-                $twuentyEX = count($twentyArr);
+                $twuentyEX = count((array)$twentyArr);
                 $fortyEX = count($fortyArr);
                 $fortyhcEX = count($fortyhcArr);
                 $currencyEX = count($currencyArr);

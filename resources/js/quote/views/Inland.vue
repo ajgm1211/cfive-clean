@@ -19,6 +19,7 @@
                         :searchable="true"
                         :close-on-select="true"
                         :show-labels="false"
+                        :allow-empty="false"
                         label="name"
                         track-by="name"
                         placeholder="Select Template"
