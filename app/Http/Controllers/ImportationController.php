@@ -348,9 +348,9 @@ class ImportationController extends Controller
                     }
 
                     //  Surcharge ------------------------------------------------------------------------------
-
+                    
                     $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
-                    if (count($surchargerV) == 1) {
+                    if (count((array)$surchargerV) == 1) {
                         $surcharB = true;
                         $surchargerV = $surchargerV['id'];
                     }
@@ -358,7 +358,7 @@ class ImportationController extends Controller
                     //  Type Destiny ---------------------------------------------------------------------------
 
                     $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
-                    if (count($typedestunyV) == 1) {
+                    if (count((array)$typedestunyV) == 1) {
                         $typedestinyB = true;
                         $typedestunyV = $typedestunyV['id'];
                     }
@@ -367,7 +367,7 @@ class ImportationController extends Controller
 
                     $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
 
-                    if (count($calculationtypeV) == 1) {
+                    if (count((array)$calculationtypeV) == 1) {
                         $calculationtypeV = $calculationtypeV['id'];
                     }
 
@@ -379,7 +379,7 @@ class ImportationController extends Controller
                     //  Currency -------------------------------------------------------------------------------
 
                     $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
-                    if (count($currencyV) == 1) {
+                    if (count((array)$currencyV) == 1) {
                         $currencyB = true;
                         $currencyV = $currencyV['id'];
                     }
@@ -417,7 +417,7 @@ class ImportationController extends Controller
                             ->where('currency_id', $currencyV)
                             ->first();
 
-                        if (count($LocalchargeId) == 0) {
+                        if (count((array)$LocalchargeId) == 0) {
                             $LocalchargeId = LocalCharge::create([
                                 'surcharge_id' => $surchargerV,
                                 'typedestiny_id' => $typedestunyV,
@@ -433,7 +433,7 @@ class ImportationController extends Controller
                         $existCa = null;
                         $existCa = LocalCharCarrier::where('carrier_id', $carrierV)
                             ->where('localcharge_id', $LocalchargeId)->first();
-                        if (count($existCa) == 0) {
+                        if (count((array)$existCa) == 0) {
                             LocalCharCarrier::create([
                                 'carrier_id' => $carrierV,
                                 'localcharge_id' => $LocalchargeId,
@@ -446,7 +446,7 @@ class ImportationController extends Controller
                                 ->where('port_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                            if (count($existsP) == 0) {
+                            if (count((array)$existsP) == 0) {
                                 LocalCharPort::create([
                                     'port_orig' => $originV,
                                     'port_dest' => $destinationV,
@@ -459,7 +459,7 @@ class ImportationController extends Controller
                                 ->where('country_dest', $destinationV)
                                 ->where('localcharge_id', $LocalchargeId)
                                 ->first();
-                            if (count($existsC) == 0) {
+                            if (count((array)$existsC) == 0) {
                                 LocalCharCountry::create([
                                     'country_orig' => $originV,
                                     'country_dest' => $destinationV,
@@ -504,24 +504,28 @@ class ImportationController extends Controller
     }
 
     // precarga la vista para importar rates mas surchargers desde Request
-    public function requestProccess($id, $selector, $request_id)
-    {
-        $load_carrier = false;
-        $carrier_exec = Carrier::where('name', 'ALL')->first();
-        $carrier_exec = $carrier_exec->id;
-        $equiment = ['id' => null, 'name' => null, 'color' => null];
-        $json_rq = null;
-        if ($selector == 1) {
-            $requestfcl = RequestFcl::find($id);
+
+    public function requestProccess($id,$selector,$request_id){
+        $load_carrier   = false;
+        $carrier_exec   = Carrier::where('name','ALL')->first();
+        $carrier_exec   = $carrier_exec->id;
+        $equiment       = ['id' => null,'name' => null,'color' => null];
+        $api_contract   = [];
+        $json_rq        = null;
+        
+        if($selector == 1){
+            $requestfcl     = RequestFcl::find($id);
             @$requestfcl->load('Requestcarriers');
-            if (json_decode($requestfcl->data, true) != null) {
-                $json_rq = json_decode($requestfcl->data, true);
-                if (!empty($json_rq['group_containers'])) {
-                    $equiment['id'] = $json_rq['group_containers']['id'];
-                    $equiment['name'] = $json_rq['group_containers']['name'];
-                    $groupContainer = GroupContainer::find($equiment['id']);
-                    $json_rq = json_decode($groupContainer->data, true);
-                    $equiment['color'] = $json_rq['color'];
+            if(json_decode($requestfcl->data,true) != null){
+                $json_rq = json_decode($requestfcl->data,true);
+                if(!empty($json_rq['group_containers'])){
+                    $equiment['id']     = $json_rq['group_containers']['id'];
+                    $equiment['name']   = $json_rq['group_containers']['name'];
+                    $api_contract['code']  = $json_rq['contract']['code'] ?? null;
+                    $api_contract['is_api']  = $json_rq['contract']['is_api'] ?? 0;
+                    $groupContainer     = GroupContainer::find($equiment['id']);
+                    $json_rq            = json_decode($groupContainer->data,true);
+                    $equiment['color']  = $json_rq['color'];
                 }
             } else {
                 $groupContainer = GroupContainer::find(1);
@@ -566,21 +570,22 @@ class ImportationController extends Controller
 
         // dd($equiment);
 
-        $harbor = harbor::pluck('display_name', 'id');
-        $country = Country::pluck('name', 'id');
-        $region = Region::pluck('name', 'id');
-        $carrier = carrier::pluck('name', 'id');
-        $coins = currency::pluck('alphacode', 'id');
-        $currency = currency::where('alphacode', 'USD')->pluck('id');
-        $direction = Direction::pluck('name', 'id');
-        $companysUser = CompanyUser::all()->pluck('name', 'id');
-        $typedestiny = TypeDestiny::all()->pluck('description', 'id');
-        if ($selector == 1) {
-            return view('importationV2.Fcl.newImport', compact('harbor', 'direction', 'country', 'region', 'carrier', 'companysUser', 'typedestiny', 'requestfcl', 'selector', 'load_carrier', 'coins', 'currency', 'equiment'));
 
-            //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));
-        } elseif ($selector == 2) {
-            return view('importationV2.Fcl.newImport', compact('harbor', 'direction', 'country', 'region', 'carrier', 'companysUser', 'typedestiny', 'contract', 'selector', 'request_id', 'load_carrier', 'coins', 'currency', 'equiment'));
+        $harbor         = harbor::pluck('display_name','id');
+        $country        = Country::pluck('name','id');
+        $region         = Region::pluck('name','id');
+        $carrier        = carrier::pluck('name','id');
+        $coins          = currency::pluck('alphacode','id');
+        $currency       = currency::where('alphacode','USD')->pluck('id');
+        $direction      = Direction::pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        if($selector == 1){
+            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency','equiment','api_contract'));    
+
+            //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
+        } elseif($selector == 2){
+            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier','coins','currency','equiment'));
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
         }
@@ -590,35 +595,39 @@ class ImportationController extends Controller
     public function UploadFileNewContract(Request $request)
     {
         //dd($request->all());
-        $now = new \DateTime();
-        $now2 = $now;
-        $now = $now->format('dmY_His');
-        $now2 = $now2->format('Y-m-d');
-        $datTypeDes = false;
-        $name = $request->name;
-        $CompanyUserId = $request->CompanyUserId;
-        $request_id = $request->request_id;
-        $contract_id = $request->contract_id;
-        $selector = $request->selector;
-        $dataCarrier = $request->DatCar;
-        $carrierVal = $request->carrier;
-        $datTypeDes = $request->DatTypeDes;
-        $typedestinyVal = $request->typedestiny;
-        $chargeVal = $request->chargeVal;
-        $gp_container_id = $request->gp_container_id;
-        $validity = explode('/', $request->validation_expire);
 
-        $statustypecurren = $request->valuesCurrency;
-        $currency = $request->currency;
-        $statusPortCountry = $request->valuesportcountry;
-        $direction_id = $request->direction;
-        $file = $request->input('document');
+        $now                = new \DateTime();
+        $now2               = $now;
+        $now                = $now->format('dmY_His');
+        $now2               = $now2->format('Y-m-d');
+        $datTypeDes         = false;
+        $name               = $request->name;
+        $CompanyUserId      = $request->CompanyUserId;
+        $request_id         = $request->request_id;
+        $contract_id        = $request->contract_id;
+        $selector           = $request->selector;
+        $dataCarrier        = $request->DatCar;
+        $carrierVal         = $request->carrier;
+        $datTypeDes         = $request->DatTypeDes;
+        $typedestinyVal     = $request->typedestiny;
+        $chargeVal          = $request->chargeVal;
+        $gp_container_id    = $request->gp_container_id;
+        $contract_code      = $request->contract_code;
+        $contract_is_api    = $request->contract_is_api;
+        $validity           = explode('/',$request->validation_expire);
 
-        $carrierBol = false;
-        $PortCountryRegionBol = false;
-        $typedestinyBol = false;
-        $filebool = false;
-        $data = collect([]);
+        $statustypecurren   = $request->valuesCurrency;
+        $currency           = $request->currency;
+        $statusPortCountry  = $request->valuesportcountry;
+        $direction_id       = $request->direction;
+        $file 				= $request->input('document');
+
+        $carrierBol             = false;
+        $PortCountryRegionBol   = false;
+        $typedestinyBol         = false;
+        $filebool               = false;
+        $data                   = collect([]);
+
         //$contract_id            = 45;
 
         if (!empty($file)) {
@@ -636,16 +645,19 @@ class ImportationController extends Controller
                 $contract->account_id = $account->id;
                 $contract->update();
             } else {
-                $contract = new Contract();
-                $contract->name = $request->name;
 
-                $contract->validity = $validity[0];
-                $contract->expire = $validity[1];
-                $contract->direction_id = $direction_id;
-                $contract->status = 'incomplete';
-                $contract->company_user_id = $CompanyUserId;
-                $contract->account_id = $account->id;
-                $contract->gp_container_id = $gp_container_id;
+                $contract   = new Contract();
+                $contract->name             = $request->name;
+
+                $contract->validity         = $validity[0];
+                $contract->expire           = $validity[1];
+                $contract->direction_id     = $direction_id;
+                $contract->status           = 'incomplete';
+                $contract->company_user_id  = $CompanyUserId;
+                $contract->account_id       = $account->id;
+                $contract->gp_container_id  = $gp_container_id;
+                $contract->code             = $contract_code;
+                $contract->is_api           = $contract_is_api;
                 $contract->save();
 
                 foreach ($request->carrierM as $carrierVal) {
@@ -1087,7 +1099,7 @@ class ImportationController extends Controller
                             ->where('containers', $containers)
                             ->where('currency_id', $data_currency[$key])
                             ->first();
-                        if (count($exists_rate) == 0) {
+                        if (count((array)$exists_rate) == 0) {
                             $return = Rate::create([
                                 'origin_port' => $origin,
                                 'destiny_port' => $destiny,
