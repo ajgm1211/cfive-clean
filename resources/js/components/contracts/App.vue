@@ -51,10 +51,22 @@
                 :download=true
                 btnTxt="Export Excel"
                 @exit="closeModal('exportExcel')"
-                @success="closeModal('exportExcel')"
+                @success="closeModal('exportExcel',true)"
                 :actions="actions.excel"
                 >
             </FormView>
+
+            <div class="row">
+                    <div class="col-lg-12">
+                        <div
+                            v-if="modalSuccess"
+                            class="alert alert-success"
+                            role="alert"
+                        >
+                            Your file is being processed. It will be sent to your email address
+                        </div>
+                    </div>
+                </div>
         </b-modal>
         <!-- End Create Form -->
 
@@ -76,6 +88,7 @@
         data() {
             return {
                 isBusy:true, // Loader
+                modalSuccess: false,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 fdata2: { validity: { startDate: null, endDate: null } },
@@ -196,8 +209,18 @@
                  window.location = '/RequestFcl/NewRqFcl';
             },
 
-            closeModal(modal){
-                this.$bvModal.hide(modal);
+            closeModal(modal, exporting = false){
+                let component = this;
+                
+                if(exporting == false){
+                    component.$bvModal.hide(modal);
+                }else{
+                    component.modalSuccess = true;
+                    setTimeout(function () {
+                        component.modalSuccess = false;
+                        component.$bvModal.hide(modal);
+                    }, 3000);
+                }
             },
 
             success(id){
