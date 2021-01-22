@@ -730,7 +730,7 @@ class ContractController extends Controller
         $currencyC = $request->input('currency');
         $amountC = $request->input('amount');
 
-        if (count($calculation_type) > 0) {
+        if (count((array)$calculation_type) > 0) {
             foreach ($calculation_type as $ct => $ctype) {
 
                 if (!empty($request->input('amount'))) {
