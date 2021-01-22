@@ -823,7 +823,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             ->where('country_dest', $destinyVal)
                                                             ->where('localcharge_id', $surchargeObj->id)
                                                             ->first();
-                                                        if (count($existCount) == 0) {
+                                                        if (count((array)$existCount) == 0) {
                                                             $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
                                                                 'country_orig' => $originVal,
                                                                 'country_dest' => $destinyVal,
