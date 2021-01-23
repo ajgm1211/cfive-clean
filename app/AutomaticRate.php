@@ -275,10 +275,10 @@ class AutomaticRate extends Model
     {
         $json = json_decode($value);
 
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $value;
+        if (!is_object($json)  || !is_array($json)) {
+            return json_decode($json);
         }else{
-            return json_decode(json_decode($value));
+            return $json;
         }
         
     }
