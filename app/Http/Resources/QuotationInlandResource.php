@@ -24,9 +24,20 @@ class QuotationInlandResource extends JsonResource
             'provider' => $this->providers->name ?? null,
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
-            'price' => $this->price,
-            'profit' => $this->profit,
+            'price' => $this->arrayToString($this->price),
+            'profit' => $this->arrayToString($this->profit),
             'currency' => $this->currency->alphacode ?? null,
         ];
+    }
+
+    public function arrayToString($array){
+
+        $new_array = [];
+
+        foreach($array as $key=>$item){
+            $new_array[$key] = (string) $item;
+        }
+
+        return $new_array;
     }
 }
