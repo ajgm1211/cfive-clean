@@ -1087,7 +1087,7 @@ class ImportationLclController extends Controller
                             ->where('minimum', floatval($data_minimum[$key]))
                             ->where('currency_id', $data_currency[$key])
                             ->first();
-                        if (count($exists_rate) == 0) {
+                        if (count((array)$exists_rate) == 0) {
                             $return = RateLcl::create([
                                 'origin_port'       => $origin,
                                 'destiny_port'      => $destiny,

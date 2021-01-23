@@ -940,7 +940,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     ->has($typeplace)
                                                     ->first();
 
-                                                if (count($globalChargeArreG) == 0) {
+                                                if (count((array)$globalChargeArreG) == 0) {
                                                     $globalChargeArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -957,7 +957,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 $exitGCCPC = null;
                                                 $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                if (count($exitGCCPC) == 0) {
+                                                if (count((array)$exitGCCPC) == 0) {
                                                     GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                         'carrier_id'      => $carrierVal,
                                                         'globalcharge_id' => $globalChargeArreG->id,
@@ -981,7 +981,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -994,7 +994,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1012,7 +1012,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                             ->where('typedestiny_id', $typedestinyVal)
                                                             ->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                        if (count($exgcpt) == 0) {
+                                                        if (count((array)$exgcpt) == 0) {
                                                             GlobalCharPort::create([ // tabla GlobalCharPort
                                                                 'port_orig'      	=> $originVal,
                                                                 'port_dest'      	=> $destinyVal,
@@ -1025,7 +1025,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                             ->where('country_dest', $destinyVal)
                                                             ->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                        if (count($exgcct) == 0) {
+                                                        if (count((array)$exgcct) == 0) {
                                                             GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                 'country_orig'      => $originVal,
                                                                 'country_dest'      => $destinyVal,
@@ -1046,7 +1046,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 // cargar valor y currency  juntos, se trae la descomposicion
                                                 // ----------------------- CARGA 20' -------------------------------------------
                                                 if ($twentyVal != 0 || $twentyVal != 0.0) {
-                                                    $globalChargeTWArreG = null;
+                                                    $globalChargeTWArreG = [];
                                                     $globalChargeTWArreG = GlobalCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
                                                         ->where('company_user_id', $companyUserIdVal)
@@ -1058,7 +1058,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeTWArreG) == 0) {
+                                                    if (count((array)$globalChargeTWArreG) == 0) {
                                                         $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1076,7 +1076,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
 
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeTWArreG->id,
@@ -1096,7 +1096,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1109,7 +1109,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1125,7 +1125,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1138,7 +1138,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1163,7 +1163,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORArreG) == 0) {
+                                                    if (count((array)$globalChargeFORArreG) == 0) {
                                                         $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1181,7 +1181,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
 
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORArreG->id,
@@ -1202,7 +1202,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1215,7 +1215,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1231,7 +1231,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1244,7 +1244,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1270,7 +1270,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORHCArreG) == 0) {
+                                                    if (count((array)$globalChargeFORHCArreG) == 0) {
                                                         $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1287,7 +1287,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORHCArreG->id,
@@ -1308,7 +1308,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1321,7 +1321,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1337,7 +1337,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1350,7 +1350,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1379,7 +1379,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORNORArreG) == 0) {
+                                                    if (count((array)$globalChargeFORNORArreG) == 0) {
                                                         $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1396,7 +1396,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORNORArreG->id,
@@ -1417,7 +1417,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1430,7 +1430,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1446,7 +1446,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1459,7 +1459,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1487,7 +1487,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORfiveArreG) == 0) {
+                                                    if (count((array)$globalChargeFORfiveArreG) == 0) {
                                                         $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1504,7 +1504,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORfiveArreG->id,
@@ -1525,7 +1525,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1538,7 +1538,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1554,7 +1554,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1567,7 +1567,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1601,7 +1601,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeTWArreG) == 0) {
+                                                    if (count((array)$globalChargeTWArreG) == 0) {
                                                         $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1619,7 +1619,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
 
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeTWArreG->id,
@@ -1640,7 +1640,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1653,7 +1653,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1669,7 +1669,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1682,7 +1682,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeTWArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1708,7 +1708,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORArreG) == 0) {
+                                                    if (count((array)$globalChargeFORArreG) == 0) {
                                                         $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1725,7 +1725,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORArreG->id,
@@ -1747,7 +1747,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                     ->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1760,7 +1760,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1776,7 +1776,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1789,7 +1789,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1815,7 +1815,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORHCArreG) == 0) {
+                                                    if (count((array)$globalChargeFORHCArreG) == 0) {
                                                         $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1832,7 +1832,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORHCArreG->id,
@@ -1853,7 +1853,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1866,7 +1866,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1882,7 +1882,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -1895,7 +1895,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORHCArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -1923,7 +1923,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORNORArreG) == 0) {
+                                                    if (count((array)$globalChargeFORNORArreG) == 0) {
                                                         $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1940,7 +1940,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORNORArreG->id,
@@ -1961,7 +1961,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -1974,7 +1974,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -1990,7 +1990,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -2003,7 +2003,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORNORArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -2031,7 +2031,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($globalChargeFORfiveArreG) == 0) {
+                                                    if (count((array)$globalChargeFORfiveArreG) == 0) {
                                                         $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -2048,7 +2048,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                    if (count($exitGCCPC) == 0) {
+                                                    if (count((array)$exitGCCPC) == 0) {
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
                                                             'globalcharge_id' => $globalChargeFORfiveArreG->id,
@@ -2069,7 +2069,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                     ->where('typedestiny_id', $typedestinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                                if (count($exgcpt) == 0) {
+                                                                if (count((array)$exgcpt) == 0) {
                                                                     GlobalCharPort::create([ // tabla GlobalCharPort
                                                                         'port_orig'      	=> $originVal,
                                                                         'port_dest'      	=> $destinyVal,
@@ -2082,7 +2082,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                     ->where('country_dest', $destinyVal)
                                                                     ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                                if (count($exgcct) == 0) {
+                                                                if (count((array)$exgcct) == 0) {
                                                                     GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                         'country_orig'      => $originVal,
                                                                         'country_dest'      => $destinyVal,
@@ -2098,7 +2098,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -2111,7 +2111,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargeFORfiveArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -2173,7 +2173,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     ->has($typeplace)
                                                     ->first();
 
-                                                if (count($globalChargePERArreG) == 0) {
+                                                if (count((array)$globalChargePERArreG) == 0) {
                                                     $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -2190,7 +2190,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 $exitGCCPC = null;
                                                 $exitGCCPC = GlobalCharCarrier::where('carrier_id', $carrierVal)
                                                     ->where('globalcharge_id', $globalChargePERArreG->id)->first();
-                                                if (count($exitGCCPC) == 0) {
+                                                if (count((array)$exitGCCPC) == 0) {
                                                     GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                         'carrier_id'      => $carrierVal,
                                                         'globalcharge_id' => $globalChargePERArreG->id,
@@ -2211,7 +2211,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
                                                                 ->where('globalcharge_id', $globalChargePERArreG->id)->first();
-                                                            if (count($exgcpt) == 0) {
+                                                            if (count((array)$exgcpt) == 0) {
                                                                 GlobalCharPort::create([ // tabla GlobalCharPort
                                                                     'port_orig'      	=> $originVal,
                                                                     'port_dest'      	=> $destinyVal,
@@ -2224,7 +2224,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                                 ->where('country_dest', $destinyVal)
                                                                 ->where('globalcharge_id', $globalChargePERArreG->id)->first();
-                                                            if (count($exgcct) == 0) {
+                                                            if (count((array)$exgcct) == 0) {
                                                                 GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                     'country_orig'      => $originVal,
                                                                     'country_dest'      => $destinyVal,
@@ -2240,7 +2240,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $exgcpt = GlobalCharPort::where('port_orig', $originVal)->where('port_dest', $destinyVal)
                                                             ->where('typedestiny_id', $typedestinyVal)
                                                             ->where('globalcharge_id', $globalChargePERArreG->id)->first();
-                                                        if (count($exgcpt) == 0) {
+                                                        if (count((array)$exgcpt) == 0) {
                                                             GlobalCharPort::create([ // tabla GlobalCharPort
                                                                 'port_orig'      	=> $originVal,
                                                                 'port_dest'      	=> $destinyVal,
@@ -2253,7 +2253,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $exgcct = GlobalCharCountry::where('country_orig', $originVal)
                                                             ->where('country_dest', $destinyVal)
                                                             ->where('globalcharge_id', $globalChargePERArreG->id)->first();
-                                                        if (count($exgcct) == 0) {
+                                                        if (count((array)$exgcct) == 0) {
                                                             GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
                                                                 'country_orig'      => $originVal,
                                                                 'country_dest'      => $destinyVal,
@@ -2479,7 +2479,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2528,7 +2528,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2576,7 +2576,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2624,7 +2624,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2672,7 +2672,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2720,7 +2720,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -2807,7 +2807,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2856,7 +2856,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2903,7 +2903,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2952,7 +2952,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3000,7 +3000,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3049,7 +3049,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3163,7 +3163,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
 
-                                                            if (count($extgc) == 0) {
+                                                            if (count((array)$extgc) == 0) {
                                                                 FailedGlobalcharge::create([
                                                                     'surcharge'       	=> $surchargeVal,
                                                                     'origin'          	=> $originVal,
@@ -3227,7 +3227,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3323,7 +3323,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3371,7 +3371,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3418,7 +3418,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3466,7 +3466,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3515,7 +3515,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3563,7 +3563,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ->where('differentiator', $differentiatorVal)
                                                             ->get();
 
-                                                        if (count($extgc) == 0) {
+                                                        if (count((array)$extgc) == 0) {
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -3653,7 +3653,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -3702,7 +3702,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -3750,7 +3750,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -3798,7 +3798,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -3846,7 +3846,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -3894,7 +3894,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($extgc) == 0) {
+                                                    if (count((array)$extgc) == 0) {
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,

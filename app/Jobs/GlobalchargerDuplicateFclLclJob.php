@@ -63,7 +63,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                 $surchName = $globalOfAr->surcharge->name;
                 $surcharger = Surcharge::where('name', $surchName)->where('company_user_id', $company_user)->first();
 
-                if (count($surcharger) >= 1) {
+                if (count((array)$surcharger) >= 1) {
                     $surcharger = $surcharger->id;
                 } else {
                     $surcharger = Surcharge::create([

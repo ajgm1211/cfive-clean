@@ -193,7 +193,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $columna_cont[$contenedor->code] = [$value_, $currencyVal, $options_cont->optional, false, $options_cont->column];
                                 $currency_bol[$contenedor->code] = true;
                             } elseif ($statusCurrency == 2) { // valor y currency en la misma columna del excel
-                                $value_arr = null;
+                                $value_arr = [];
                                 $value_arr = explode(' ', $row[$final_columns[$contenedor->code]]);
                                 if (count($value_arr) == 1) {
                                     array_push($value_arr, '_E_E');
@@ -281,8 +281,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     foreach ($originMultps as $originMultCompact) {
                         if (strnatcasecmp($differentiatorVal, 'region') == 0) {
                             $originMultCompact = trim($originMultCompact);
+                            $regionsOR = [];
                             $regionsOR = Region::where('name', 'like', '%' . $originMultCompact . '%')->with('CountriesRegions.country')->get();
-                            if (count($regionsOR) == 1) {
+                            if (count((array)$regionsOR) == 1) {
                                 // region add
                                 foreach ($regionsOR as $regionor) {
                                     if ($oricount == 0) {
@@ -293,7 +294,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
                                     }
                                 }
-                            } elseif (count($regionsOR) == 0) {
+                            } elseif (count((array)$regionsOR) == 0) {
                                 // pais add
                                 if ($oricount == 0) {
                                     $originMultps = [$originMultCompact];
@@ -311,8 +312,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     foreach ($destinyMultps as $destinyMultCompact) {
                         if (strnatcasecmp($differentiatorVal, 'region') == 0) {
                             $destinyMultCompact = trim($destinyMultCompact);
+                            $regionsDES = [];
                             $regionsDES = Region::where('name', 'like', '%' . $destinyMultCompact . '%')->with('CountriesRegions.country')->get();
-                            if (count($regionsDES) == 1) {
+                            if (count((array)$regionsDES) == 1) {
                                 // region add
                                 foreach ($regionsDES as $regiondes) {
                                     if ($descount == 0) {
@@ -323,7 +325,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
                                     }
                                 }
-                            } elseif (count($regionsDES) == 0) {
+                            } elseif (count((array)$regionsDES) == 0) {
                                 // pais add
                                 if ($descount == 0) {
                                     $destinyMultps = [$destinyMultCompact];
@@ -585,7 +587,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 ///////////////////////////////// GOOD
 
                                 $container_json = null;
-
                                 if (strnatcasecmp($chargeExc_val, $chargeVal) == 0) { // Rates
                                     if ($differentiatorBol == false) {
                                         $twuenty_val = 0;
@@ -629,7 +630,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                             $container_json = json_encode($container_json);
                                         }
-                                        $exists = null;
+                                        $exists = [];
                                         $exists = Rate::where('origin_port', $originVal)
                                             ->where('destiny_port', $destinyVal)
                                             ->where('carrier_id', $carrierVal)
@@ -703,7 +704,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                             if ($ammount != 0 || $ammount != 0.00) {
                                                 //Se verifica si existe un surcharge asociado con puerto o country dependiendo del diferenciador
-                                                $surchargeObj = null;
+                                                $surchargeObj = [];
                                                 $surchargeObj = LocalCharge::where('surcharge_id', $surchargeVal)
                                                     ->where('typedestiny_id', $typedestinyVal)
                                                     ->where('contract_id', $contract_id)
@@ -713,7 +714,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ->has($typeplace)
                                                     ->first();
 
-                                                if (count($surchargeObj) == 0) {
+                                                if (count((array)$surchargeObj) == 0) {
                                                     $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                         'surcharge_id' => $surchargeVal,
                                                         'typedestiny_id' => $typedestinyVal,
@@ -723,12 +724,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'currency_id' => $currency_val,
                                                     ]);
                                                 }
-
                                                 //----------------------- CARRIERS -------------------------------------------
-                                                $existsCar = null;
+                                                $existsCar = [];
                                                 $existsCar = LocalCharCarrier::where('carrier_id', $carrierVal)
                                                     ->where('localcharge_id', $surchargeObj->id)->first();
-                                                if (count($existsCar) == 0) {
+                                                if (count((array)$existsCar) == 0) {
                                                     LocalCharCarrier::create([ // tabla localcharcarriers
                                                         'carrier_id' => $carrierVal,
                                                         'localcharge_id' => $surchargeObj->id,
@@ -738,12 +738,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 //----------------------- ORIGEN DESTINO PUETO PAÍS --------------------------
 
                                                 if ($differentiatorBol) { // country
-                                                    $existCount = null;
+                                                    $existCount = [];
                                                     $existCount = LocalCharCountry::where('country_orig', $originVal)
                                                         ->where('country_dest', $destinyVal)
                                                         ->where('localcharge_id', $surchargeObj->id)
                                                         ->first();
-                                                    if (count($existCount) == 0) {
+                                                    if (count((array)$existCount) == 0) {
                                                         $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
                                                             'country_orig' => $originVal,
                                                             'country_dest' => $destinyVal,
@@ -751,12 +751,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ]);
                                                     }
                                                 } else { // port
-                                                    $existPort = null;
+                                                    $existPort = [];
                                                     $existPort = LocalCharPort::where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
                                                         ->where('localcharge_id', $surchargeObj->id)
                                                         ->first();
-                                                    if (count($existPort) == 0) {
+                                                    if (count((array)$existPort) == 0) {
                                                         $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
                                                             'port_orig' => $originVal,
                                                             'port_dest' => $destinyVal,
@@ -783,7 +783,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 //dd($key,$row_calculation);
                                                 if ($row_calculation['ammount'] != 0 || $row_calculation['ammount'] != 0.00) {
                                                     //Se verifica si existe un surcharge asociado con puerto o country dependiendo del diferenciador
-                                                    $surchargeObj = null;
+                                                    $surchargeObj = [];
                                                     $surchargeObj = LocalCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
                                                         ->where('contract_id', $contract_id)
@@ -793,7 +793,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ->has($typeplace)
                                                         ->first();
 
-                                                    if (count($surchargeObj) == 0) {
+                                                    if (count((array)$surchargeObj) == 0) {
                                                         $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                             'surcharge_id' => $surchargeVal,
                                                             'typedestiny_id' => $typedestinyVal,
@@ -805,10 +805,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
 
                                                     //----------------------- CARRIERS -------------------------------------------
-                                                    $existsCar = null;
+                                                    $existsCar = [];
                                                     $existsCar = LocalCharCarrier::where('carrier_id', $carrierVal)
                                                         ->where('localcharge_id', $surchargeObj->id)->first();
-                                                    if (count($existsCar) == 0) {
+                                                    if (count((array)$existsCar) == 0) {
                                                         LocalCharCarrier::create([ // tabla localcharcarriers
                                                             'carrier_id' => $carrierVal,
                                                             'localcharge_id' => $surchargeObj->id,
@@ -818,12 +818,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     //----------------------- ORIGEN DESTINO PUETO PAÍS --------------------------
 
                                                     if ($differentiatorBol) { // country
-                                                        $existCount = null;
+                                                        $existCount = [];
                                                         $existCount = LocalCharCountry::where('country_orig', $originVal)
                                                             ->where('country_dest', $destinyVal)
                                                             ->where('localcharge_id', $surchargeObj->id)
                                                             ->first();
-                                                        if (count($existCount) == 0) {
+                                                        if (count((array)$existCount) == 0) {
                                                             $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
                                                                 'country_orig' => $originVal,
                                                                 'country_dest' => $destinyVal,
@@ -831,12 +831,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             ]);
                                                         }
                                                     } else { // port
-                                                        $existPort = null;
+                                                        $existPort = [];
                                                         $existPort = LocalCharPort::where('port_orig', $originVal)
                                                             ->where('port_dest', $destinyVal)
                                                             ->where('localcharge_id', $surchargeObj->id)
                                                             ->first();
-                                                        if (count($existPort) == 0) {
+                                                        if (count((array)$existPort) == 0) {
                                                             $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
                                                                 'port_orig' => $originVal,
                                                                 'port_dest' => $destinyVal,
@@ -862,7 +862,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
 
                                         //Se verifica si existe un surcharge asociado con puerto o country dependiendo del diferenciador
-                                        $surchargeObj = null;
+                                        $surchargeObj = [];
                                         $surchargeObj = LocalCharge::where('surcharge_id', $surchargeVal)
                                             ->where('typedestiny_id', $typedestinyVal)
                                             ->where('contract_id', $contract_id)
@@ -872,7 +872,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             ->has($typeplace)
                                             ->first();
 
-                                        if (count($surchargeObj) == 0) {
+                                        if (count((array)$surchargeObj) == 0) {
                                             $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                 'surcharge_id' => $surchargeVal,
                                                 'typedestiny_id' => $typedestinyVal,
@@ -884,10 +884,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
 
                                         //----------------------- CARRIERS -------------------------------------------
-                                        $existsCar = null;
+                                        $existsCar = [];
                                         $existsCar = LocalCharCarrier::where('carrier_id', $carrierVal)
                                             ->where('localcharge_id', $surchargeObj->id)->first();
-                                        if (count($existsCar) == 0) {
+                                        if (count((array)$existsCar) == 0) {
                                             LocalCharCarrier::create([ // tabla localcharcarriers
                                                 'carrier_id' => $carrierVal,
                                                 'localcharge_id' => $surchargeObj->id,
@@ -896,12 +896,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                         //----------------------- ORIGEN DESTINO PUETO PAÍS --------------------------
                                         if ($differentiatorBol) { // country
-                                            $existCount = null;
+                                            $existCount = [];
                                             $existCount = LocalCharCountry::where('country_orig', $originVal)
                                                 ->where('country_dest', $destinyVal)
                                                 ->where('localcharge_id', $surchargeObj->id)
                                                 ->first();
-                                            if (count($existCount) == 0) {
+                                            if (count((array)$existCount) == 0) {
                                                 $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
                                                     'country_orig' => $originVal,
                                                     'country_dest' => $destinyVal,
@@ -909,12 +909,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ]);
                                             }
                                         } else { // port
-                                            $existPort = null;
+                                            $existPort = [];
                                             $existPort = LocalCharPort::where('port_orig', $originVal)
                                                 ->where('port_dest', $destinyVal)
                                                 ->where('localcharge_id', $surchargeObj->id)
                                                 ->first();
-                                            if (count($existPort) == 0) {
+                                            if (count((array)$existPort) == 0) {
                                                 $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
                                                     'port_orig' => $originVal,
                                                     'port_dest' => $destinyVal,
@@ -1062,7 +1062,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ->where('containers', $container_json)
                                                 ->where('currency_id', $currency_val)
                                                 ->get();
-
+                                            
                                             if (count($exists) == 0) {
                                                 $respFR = FailRate::create([
                                                     'origin_port' => $originVal,
@@ -1127,7 +1127,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
 
                                                     //dd($ammount,$currency_val);
-                                                    $exists = null;
+                                                    $exists = [];
                                                     $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
@@ -1139,6 +1139,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ->where('carrier_id', $carrierVal)
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
+
                                                     if (count($exists) == 0) {
                                                         FailSurCharge::create([
                                                             'surcharge_id' => $surchargeVal,
@@ -1184,7 +1185,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     //dd($rows_calculations);
                                                     foreach ($rows_calculations as $key => $row_calculation) {
                                                         if ($row_calculation['ammount_zero'] != true) {
-                                                            $exists = null;
+                                                            $exists = [];
                                                             $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                                 ->where('port_orig', $originVal)
                                                                 ->where('port_dest', $destinyVal)
@@ -1246,7 +1247,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $currency_val = $currencyObj->alphacode;
                                                 }
                                                 //dd('registro pr ship',$variant_currency,$columna_cont,$currency_val,$ammount);
-                                                $exists = null;
+                                                $exists = [];
                                                 $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                     ->where('port_orig', $originVal)
                                                     ->where('port_dest', $destinyVal)
@@ -1305,7 +1306,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             //dd('llega aqui Cals',$rows_calculations);
                                             foreach ($rows_calculations as $key => $row_calculation) {
                                                 if ($row_calculation['ammount_zero'] != true) {
-                                                    $exists = null;
+                                                    $exists = [];
                                                     $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
