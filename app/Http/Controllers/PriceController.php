@@ -45,7 +45,7 @@ class PriceController extends Controller
         $price->company_user_id = \Auth::user()->company_user_id;
         $price->save();
 
-        if (count($request->input('companies')) > 0) {
+        if (count((array)$request->input('companies')) > 0) {
             foreach ($request->input('companies') as $v) {
                 $company_price = new CompanyPrice();
                 $company_price->company_id = $v;
