@@ -299,6 +299,11 @@ class QuoteV2 extends Model implements HasMedia
         });
     }
 
+    public function scopeFilterByType($q)
+    {
+        return $q->where('type', 'FCL')->orWhere('type', 'LCL');
+    }
+
     public function scopeUserRelation($q)
     {
         return $q->with(['user' => function ($query) {
