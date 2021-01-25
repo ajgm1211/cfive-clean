@@ -7,6 +7,7 @@ use App\CalculationType;
 use App\CalculationTypeContent;
 use App\Carrier;
 use App\Company;
+use App\AuthtokenToken;
 use App\CompanyUser;
 use App\Contact;
 use App\Container;
@@ -25,6 +26,7 @@ use App\Harbor;
 use App\Jobs\GeneralJob;
 use App\Jobs\ImportationRatesSurchargerJob;
 use App\Jobs\ReprocessRatesJob;
+use App\Jobs\ValidateTemplateJob;
 use App\Jobs\ReprocessSurchargersJob;
 use App\Jobs\ValidatorSurchargeJob;
 use App\LocalCharCarrier;
@@ -3293,8 +3295,24 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation()
     {
-
-        $surchargersFined = PrvSurchargers::get_single_surcharger('isps');
-        dd($surchargersFined);
+//        $client = new \GuzzleHttp\Client();
+//        $url = env('BARRACUDA_EP')."contracts/processing/74";
+//        $json = '{"spreadsheetData":false}';
+//        $token = AuthtokenToken::where('user_id',1)->first();
+//        $response = $client->request('POST',$url,[
+//            'headers' => [
+//                'Authorization' => 'token '.$token->key,
+//                'Accept'        => '*/*',
+//                'Content-Type'  => 'application/json',
+//                'User-Agent'    => '*/*',
+//                'Connection'    => 'keep-alive'
+//            ],
+//            'body'=>$json
+//        ]);
+//        $response = json_decode($response->getBody()->getContents(),true);
+//        dd($response,$token);
+        
+        ValidateTemplateJob::dispatch('74');
+        dd('ok');
     }
 }
