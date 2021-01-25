@@ -988,8 +988,11 @@ class GlobalChargesController extends Controller
         $globalcharges = new Collection;
         for ($i = 0; $i < count($data1); $i++) {
             $p_exception=GlobalCharPortException::where('globalcharge_id',$data1[$i]->id)->with('portorigin','portdestiny')->get();
-         
+            
             $c_exception=GlobalCharCountryException::where('globalcharge_id',$data1[$i]->id)->with('contryorigin','countrydestiny')->get();
+
+     
+
 
             $globalcharges->push([
                 'id' => $data1[$i]->id,
@@ -1059,6 +1062,14 @@ class GlobalChargesController extends Controller
             })
             ->addColumn('validitylb', function ($globalcharges) {
                 return $globalcharges['valid_from'] . '/' . $globalcharges['valid_until'];
+            })
+            ->addColumn('division',  function ($globalcharges){
+                if (empty($globalcharges['p_exception'] == true) && empty($globalcharges['c_exception'] == true)) {
+                    return '<div >  <i class="la la-edit" style="font-size:20px; color:red;"></i></div>';
+                }else{
+                    return '<div >  <i class="la la-edit" style="font-size:20px; color:green;"></i></div>';
+                }
+                
             })
             ->addColumn('action', function ($globalcharges) {
                 return '<a  id="edit_l" onclick="AbrirModal(' . "'editGlobalCharge'" . ',' . $globalcharges['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
