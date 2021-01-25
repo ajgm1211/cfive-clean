@@ -1063,26 +1063,42 @@ class GlobalChargesController extends Controller
             ->addColumn('validitylb', function ($globalcharges) {
                 return $globalcharges['valid_from'] . '/' . $globalcharges['valid_until'];
             })
-            ->addColumn('division',  function ($globalcharges){
-                if (empty($globalcharges['p_exception'] == true) && empty($globalcharges['c_exception'] == true)) {
-                    return '<div >  <i class="la la-edit" style="font-size:20px; color:red;"></i></div>';
-                }else{
-                    return '<div >  <i class="la la-edit" style="font-size:20px; color:green;"></i></div>';
-                }
-                
-            })
             ->addColumn('action', function ($globalcharges) {
+            if (empty($globalcharges['p_exception'] == true) && empty($globalcharges['c_exception'] == true)) {
                 return '<a  id="edit_l" onclick="AbrirModal(' . "'editGlobalCharge'" . ',' . $globalcharges['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                    <i class="la la-edit"></i>
-                    </a>
+                            <i class="la la-edit"></i>
+                        </a>
 
-                    <!--<a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
+                        <!--<a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
 											<i id="rm_l' . $globalcharges['id'] . '" class="la la-times-circle"></i>
 										</a>-->
 
-                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal(' . "'duplicateGlobalCharge'" . ',' . $globalcharges['id'] . ')">
-											<i class="la la-plus"></i>
-				   </a>';
+                        <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal(' . "'duplicateGlobalCharge'" . ',' . $globalcharges['id'] . ')">
+                            <i class="la la-plus"></i>
+                        </a>
+
+                        <a class="m-portlet__nav-link btn m-btn m-btn--icon m-btn--icon-only ">
+                            <i class="la la-times-circle" style="font-size:20px; color:red;"></i>
+                        </a>'
+                   ;
+
+                }else{
+                    return '<a  id="edit_l" onclick="AbrirModal(' . "'editGlobalCharge'" . ',' . $globalcharges['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <i class="la la-edit"></i>
+                            </a>
+
+                             <!--<a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
+											<i id="rm_l' . $globalcharges['id'] . '" class="la la-times-circle"></i>
+										</a>-->
+
+                            <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal(' . "'duplicateGlobalCharge'" . ',' . $globalcharges['id'] . ')">
+								<i class="la la-plus"></i>
+                            </a>
+                            
+                            <a class="m-portlet__nav-link btn m-btn m-btn--icon m-btn--icon-only ">
+                                <i class="la la-check-circle" style="font-size:20px; color:green;"></i>
+                            </a>';
+                }
             })
             //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
             //->rawColumns(['checkbox','action'])
