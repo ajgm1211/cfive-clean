@@ -19,9 +19,14 @@ class GlobalCharPortException extends Model
     {
         return $this->belongsTo('App\Harbor', 'port_orig');
     }
-
-    public function portDest()
-    {
-        return $this->belongsTo('App\Harbor', 'port_dest');
+    public function portDest(){
+        return $this->belongsTo('App\Harbor','port_dest');
     }
+    public function portorigin(){
+            return $this->belongsTo('App\Harbor','port_orig','id');
+        }
+    public function portdestiny(){
+        return $this->belongsTo('App\Harbor','port_dest','id');
+    }
+    
 }
