@@ -119,14 +119,26 @@ class InlandRangeController extends Controller
         $validator = Validator::make($request->all(), $vdata);
 
         $lower=$request->input('lower');
+<<<<<<< HEAD
+        $upper=$request->input('upper');
+
+=======
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
         if(is_null($lower)){
             $lower=0;
         }
 
+<<<<<<< HEAD
+        if(is_null($upper)){
+            $upper=0;
+        }
+        
+=======
         $upper=$request->input('upper');
         if(is_null($upper)){
             $upper=0;
         }
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
         $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $lower)->where('upper', '>=', $lower)->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });

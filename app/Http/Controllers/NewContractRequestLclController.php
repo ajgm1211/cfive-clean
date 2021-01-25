@@ -24,8 +24,14 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+<<<<<<< HEAD
+use Spatie\Permission\Models\Permission;
+use App\Notifications\SlackNotification;
+use App\Http\Requests\StoreNewRequestLcl;
+=======
 use PrvRequest;
 use Yajra\Datatables\Datatables;
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
 
 class NewContractRequestLclController extends Controller
 {
@@ -200,6 +206,30 @@ class NewContractRequestLclController extends Controller
                 return '<a href="/RequestsLcl/RequestImportationLcl/' . $Ncontracts->id . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
+<<<<<<< HEAD
+			})
+
+			->make();
+	}
+
+	public function store(Request $request)
+	{
+		//dd($request->all());
+	}
+
+	public function store2(StoreNewRequestLcl $request)
+	{
+		//dd($request->all());
+		$fileBoll = false;
+		$time   = new \DateTime();
+		$now    = $time->format('dmY_His');
+		$now2   = $time->format('Y-m-d H:i:s');
+		$file   = $request->file('file');
+		$ext    = strtolower($file->getClientOriginalExtension());
+		/* $validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv')
+=======
             })
 
             ->make();
@@ -222,6 +252,7 @@ class NewContractRequestLclController extends Controller
         /* $validator = \Validator::make(
         array('ext' => $ext),
         array('ext' => 'in:xls,xlsx,csv')
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
         );
 
         if ($validator->fails()) {

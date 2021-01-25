@@ -71,8 +71,8 @@
                                     <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    
+                                    'class'=>'form-control m-input','required'])!!}
                                 </div>
                                 <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
@@ -390,6 +390,10 @@
             );
         }
     }); 
+<<<<<<< HEAD
+
+=======
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
     $('#button-submit').on('click',function(){
         var carrier =$('select#carrierM').val();
         if(carrier == 0){
@@ -408,7 +412,10 @@
         if(date_star == date_end){
             swal(
                 "Error",
+<<<<<<< HEAD
+=======
                 "Error, Please select the date!", "error",
+>>>>>>> f47777ff0fdaede293c9e144f65f82be000f3c69
                 "Error, Please select the Date!", "error",
                 true,
             );
