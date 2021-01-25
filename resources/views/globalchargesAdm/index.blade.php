@@ -349,13 +349,7 @@
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'amount', name: 'amount' },
                 { data: 'validitylb', name: 'validitylb' },
-                {
-                    "className":      'details-control',
-                    "orderable":      false,
-                    "searchable":     false,
-                    "data":           null,
-                    "defaultContent": ''
-                },
+                { data: 'division', name: 'division' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }     
             ],
             "order": [[0, 'des']],
