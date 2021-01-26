@@ -213,7 +213,7 @@ class ImportationController extends Controller
                     if ($originB == true && $destinyB == true &&
                         $scheduleTBol == true && $curreExitBol == true && $carriExitBol == true) {
                         $collecciont = '';
-                        $exists = null;
+                        $exists = [];
                         $exists = Rate::where('origin_port', $originV)
                             ->where('destiny_port', $destinationV)
                             ->where('carrier_id', $carrierVal)
@@ -1235,7 +1235,7 @@ class ImportationController extends Controller
 
         $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
             ->first();
-        $originA = null;
+        $originA = [];
         if (count($originA) <= 1) {
             $originA = $originOb['name'];
             $originAIn = $originOb['id'];
@@ -1246,7 +1246,7 @@ class ImportationController extends Controller
 
         $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
             ->first();
-        $destinationAIn = null;
+        $destinationAIn = [];
         if (count($destinationA) <= 1) {
             $destinationAIn = $destinationOb['id'];
             $destinationA = $destinationOb['name'];
@@ -1399,7 +1399,7 @@ class ImportationController extends Controller
                         ->where('transit_time', $request->transit_time)
                         ->where('via', $request->via)
                         ->first();
-                    if (count($exists_rate) == 0) {
+                    if (count((array)$exists_rate) == 0) {
                         $return = Rate::create([
                             'origin_port' => $origin,
                             'destiny_port' => $destiny,
