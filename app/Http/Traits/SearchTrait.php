@@ -5,6 +5,8 @@ use App\CalculationType;
 use App\Currency;
 use App\Inland;
 use App\Price;
+use App\Harbor;
+use App\Country;
 use App\TransitTime;
 use App\Container;
 use App\GroupContainer;
@@ -919,6 +921,24 @@ trait SearchTrait
                 $rate->save();
             }
         }
+    }
+
+    //Gets country for given port. Output depends on input. It returns ID if ID given, and MODEL if MODEL given
+    public function getPortCountry($port)
+    {
+        //Checking if MODEL
+        if(is_a($port,'App\Harbor')){
+            //Retrieving country model by id
+            $country = Country::where('id',$port->country_id)->first();
+            //Checking if int (ID)
+        }elseif(is_int($port)){
+            //Retrieving port model
+            $port = Harbor::where('id',$port)->first();
+            //Retrieving country by id and getting ID
+            $country = Country::where('id',$port->country_id)->first()->id;
+        }
+
+        return $country;
     }
 
 }
