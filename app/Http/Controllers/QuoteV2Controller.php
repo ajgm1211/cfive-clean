@@ -2889,6 +2889,7 @@ class QuoteV2Controller extends Controller
 
         foreach ($request->input('originport') as $origP) {
 
+            
             $infoOrig = explode("-", $origP);
             if ($infoOrig[2] == null) {
                 $origin_port[] = $infoOrig[0];
@@ -3429,6 +3430,7 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
+
                 // ################## Fin local Charges        #############################
                 //################## Calculos Global Charges #################################
 

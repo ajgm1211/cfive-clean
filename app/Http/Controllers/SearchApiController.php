@@ -17,6 +17,7 @@ use App\Company;
 use App\TermAndConditionV2;
 use App\DeliveryType;
 use App\Currency;
+use App\TypeDestiny;
 use App\Container;
 use App\GroupContainer;
 use App\ScheduleType;
@@ -25,6 +26,8 @@ use App\Rate;
 use App\Contract;
 use App\Price;
 use App\CompanyUser;
+use App\LocalCharge;
+use App\GlobalCharge;
 
 use Illuminate\Http\Request;
 
@@ -111,6 +114,8 @@ class SearchApiController extends Controller
             return $price->only(['id','name']);
         });
 
+        $type_destiny = TypeDestiny::all();
+
         //Collecting all data retrieved
         $data = compact(
             'company_user_id',
@@ -128,7 +133,8 @@ class SearchApiController extends Controller
             'harbors',
             'price_levels',
             'schedule_types',
-            'terms_and_conditions'
+            'terms_and_conditions',
+            'type_destiny'
         );
 
         return response()->json(['data'=>$data]);
@@ -152,6 +158,15 @@ class SearchApiController extends Controller
             'contact' => 'sometimes',
             'pricelevel' => 'sometimes'
         ]);
+
+        //Setting current company and user
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user_id = $user->company_user_id;
+
+        //Including company and user in search data array
+        $new_search_data['user'] = $user_id;
+        $new_search_data['company'] = $company_user_id; 
                 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromSearchRequest($new_search_data);
@@ -163,7 +178,10 @@ class SearchApiController extends Controller
         $rates = $this->searchRates($new_search_data_ids);
 
         //Retrieving local charges with search data
-        //$local_charges = $this->searchLocalCharges($new_search_data_ids, $rates);
+        $local_charges = $this->searchLocalCharges($new_search_data_ids, $rates);
+
+        //Retrieving global charges with search data
+        $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rates);
 
         //Retrieving and calculating inlands from search data, only if door delivery indicated
         if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
@@ -226,26 +244,25 @@ class SearchApiController extends Controller
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
-    public function searchRates($data)
+    public function searchRates($search_data)
     {
-        //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
+        //Setting current company
         
         //setting variables for query
-        $container_group = $data['selectedContainerGroup'];
-        $company_id = $data['company'];
-        $origin_ports = $data['originPorts'];
-        $destiny_ports = $data['destinationPorts'];
-        $arregloCarrier = $data['carriers'];
-        $dateSince = $data['dateRange']['validity_start'];
-        $dateUntil = $data['dateRange']['validity_end'];
+        $company_user_id = $search_data['company'];
+        $company_user = Company::where('id',$search_data['company'])->first();
+        $user_id = $search_data['user'];
+        $container_group = $search_data['selectedContainerGroup'];
+        $company_id = $search_data['company'];
+        $origin_ports = $search_data['originPorts'];
+        $destiny_ports = $search_data['destinationPorts'];
+        $arregloCarrier = $search_data['carriers'];
+        $dateSince = $search_data['dateRange']['validity_start'];
+        $dateUntil = $search_data['dateRange']['validity_end'];
     
         //Querying rates database
         if ($company_id != null || $company_id != 0) {
-            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier','curency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier','currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
@@ -285,7 +302,8 @@ class SearchApiController extends Controller
         //Retrieving all containers for filtering
         $all_containers = Container::get();
 
-        $rates_query = $this->filtrarRate($rates_query, $data['containers'], null, $all_containers);
+        //Filtering only containers that have an amount associated
+        $rates_query = $this->filtrarRate($rates_query, $search_data['containers'], null, $all_containers);
 
         //Applying quey and returning models
         $rates_array = $rates_query->get();
@@ -313,48 +331,146 @@ class SearchApiController extends Controller
     }
     
     //Finds local charges matching contracts
-    public function searchLocalCharges($search_data,$rates_data)
+    public function searchLocalCharges($search_data, $rates)
     {
-        if(count($rates_data) != 0){
-            foreach($rates_data as $rate){
-                dump($rate->contract);
+        //Checking that there are rates returned by the search
+        if(count($rates) != 0){
+            //Creating empty collection for storing charges
+            $local_charges = collect([]);
+            //Pulling necessary data from the search IDs array
+            $carriers = $search_data['carriers'];
+            $origin_ports = $search_data['originPorts'];
+            $destination_ports = $search_data['destinationPorts'];
+            $origin_countries = [];
+            $destination_countries = [];
+            //SEARCH API - Getting countries from port arrays and building countries array
+            foreach($origin_ports as $origin_port){
+                $origin_country = $this->getPortCountry($origin_port);
+                array_push($origin_countries,$origin_country);
+            }
+            foreach($destination_ports as $destination_port){
+                $destination_country = $this->getPortCountry($destination_port);
+                array_push($destination_countries,$destination_country);
+            }
+
+            //Including "ALL" columns for querying LocalCharges with such option marked
+                //IDS: On Harbors: 1485; On Countries: 250
+            array_push($origin_ports,1485);
+            array_push($destination_ports,1485);
+            array_push($origin_countries,250);
+            array_push($destination_countries,250);
+
+            //Looping through rates
+            foreach($rates as $rate){
+                //Checking if contract comes from API
+                if ($rate->contract->status != 'api') {
+                    //Querying NON API contract local charges
+                    $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+                        $q->whereIn('carrier_id', $carriers);
+                    })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                        $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
+                            $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                        })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
+                            $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                        });
+                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+                } else {
+                    //Querying API contract local charges
+                    $local_charge = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+                        $q->whereIn('carrier_id', $carriers);
+                    })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                        $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
+                            $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                        })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
+                            $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                        });
+                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+                }
+            }
+
+            //Looping through Local Charges found, including in final collection if not there
+            foreach($local_charge as $charge){
+                if(!$local_charges->contains($charge)){
+                    $local_charges->push($charge);
+                }
             }
             
-            if ($contractStatus != 'api') {
-                $localChar = LocalCharge::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
-                    $query->whereHas('localcharports', function ($q) use ($orig_port, $dest_port) {
-                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
-                    })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
-                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
-                    });
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
-            } else {
-                $localChar = LocalChargeApi::where('contract_id', '=', $data->contract_id)->whereHas('localcharcarriers', function ($q) use ($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
-                    $query->whereHas('localcharports', function ($q) use ($orig_port, $dest_port) {
-                        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
-                    })->orwhereHas('localcharcountries', function ($q) use ($origin_country, $destiny_country) {
-                        $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
-                    });
-                })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
-            }
-        } else {
-            $local_charges = [];
         }
+
+        return $local_charges;        
+    }
+
+    public function searchGlobalCharges($search_data, $rates)
+    {
+        //Checking that there are rates returned by the search
+        if(count($rates) != 0){
+            //Creating empty collection for storing charges
+            $global_charges = collect([]);
+            //Pulling necessary data from the search IDs array
+            $validity_start = $search_data['dateRange']['validity_start'];
+            $validity_end = $search_data['dateRange']['validity_end'];
+            $carriers = $search_data['carriers'];
+            $origin_ports = $search_data['originPorts'];
+            $destination_ports = $search_data['destinationPorts'];
+            $company_user_id = $search_data['company'];
+            $origin_countries = [];
+            $destination_countries = [];
+            //SEARCH API - Getting countries from port arrays and building countries array
+            foreach($origin_ports as $origin_port){
+                $origin_country = $this->getPortCountry($origin_port);
+                array_push($origin_countries,$origin_country);
+            }
+            foreach($destination_ports as $destination_port){
+                $destination_country = $this->getPortCountry($destination_port);
+                array_push($destination_countries,$destination_country);
+            }
+
+            //Including "ALL" columns for querying GlobalCharges with such option marked
+                //IDS: On Harbors: 1485; On Countries: 250
+            array_push($origin_ports,1485);
+            array_push($destination_ports,1485);
+            array_push($origin_countries,250);
+            array_push($destination_countries,250);
+
+            $contractStatus = 'NOT API'; //CHANGE THIS LATER
         
+            if ($contractStatus != 'api') {
+    
+                $global_charge = GlobalCharge::where('validity', '<=', $validity_start)->where('expire', '>=', $validity_end)->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+                    $q->whereIn('carrier_id', $carriers);
+                })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                    $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
+                        $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                    })->orwhereHas('globalcharcountry', function ($q) use ($origin_countries, $destination_countries) {
+                        $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                    })->orwhereHas('globalcharportcountry', function ($q) use ($origin_ports, $destination_countries) {
+                        $q->whereIn('port_orig', $origin_ports)->whereIn('country_dest', $destination_countries);
+                    })->orwhereHas('globalcharcountryport', function ($q) use ($origin_countries, $destination_ports) {
+                        $q->whereIn('country_orig', $origin_countries)->whereIn('port_dest', $destination_ports);
+                    });
+                })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_countries, $destination_countries) {
+                    $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
+                })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
+                    $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
+                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
+            }
+
+            //Looping through Global Charges found, including in final collection if not there
+            foreach($global_charge as $charge){
+                if(!$global_charges->contains($charge)){
+                    $global_charges->push($charge);
+                }
+            }
+        }
+
+        dd($global_charges);
     }
     
     //Retrieves and cleans markups from price levels
-    public function searchPriceLevels($request_ids)
+    public function searchPriceLevels($search_data)
     {
-        //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
+        //Retrieving current company
+        $company_user = CompanyUser::where('id',$search_data['company'])->first();
     
         //getting client profile currency
         $client_currency = $company_user->currency;
@@ -363,7 +479,7 @@ class SearchApiController extends Controller
             //Freight markups (fixed & percent)
             //Local Charge markups (fixed & percent)
             //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($request_ids['pricelevel'], $client_currency, $request_ids['direction'], $request_ids['type']);
+        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $client_currency, $search_data['direction'], $search_data['type']);
     
         return $markups;
     }
