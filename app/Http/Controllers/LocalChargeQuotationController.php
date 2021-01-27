@@ -65,7 +65,7 @@ class LocalChargeQuotationController extends Controller
     public function providers()
     {
         $carriers = Carrier::all();
-        $providers = Provider::all();
+        $providers = Provider::where('company_user_id',\Auth::user()->company_user_id)->get();
 
         $carriers = $carriers->map(function ($value) {
             return $value->only(['id', 'name']);
