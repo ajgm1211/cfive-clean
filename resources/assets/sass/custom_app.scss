@@ -553,7 +553,8 @@ i.mx-icon-calendar {
     padding-left: 3px;
 }
 
-.search .multiselect__input, .search .multiselect__single {
+.search .multiselect__input,
+.search .multiselect__single {
     margin-bottom: 0px;
 }
 
@@ -1116,7 +1117,6 @@ input.multiselect__input:focus {
 .type-packages .multiselect__tags {
     padding: 4px 7px 5px 6px !important;
 }
-
 
 .delivery-type {
     width: 25% !important;
@@ -1723,9 +1723,11 @@ input.surcharge-input {
     padding-left: 5px;
     padding-right: inherit;
 }
+
 .input-search-form .form-control.reportrange-text {
     padding: 16px 50px;
 }
+
 .origen-search {
     padding-left: 30px !important;
 }
@@ -1739,22 +1741,35 @@ input.surcharge-input {
 }
 
 .type-packages {
-    width: 160px !important; 
+    width: 160px !important;
     height: 33.5px;
-    position:relative; 
+    position: relative;
     top: -7px;
 }
 
 .type-packages .delivery-type {
     top: 16px;
 }
+
 .search .dropdown-containers button {
     color: #333333 !important;
-    background-color: #F8F8F8 !important;;
+    background-color: #F8F8F8 !important;
+    ;
     border: none;
 }
 
 #carrier .custom-control {
     display: block;
     margin-bottom: 10px;
+}
+
+
+/*local modal table*/
+
+.data-surcharge {
+    width: 100px;
+}
+
+.data-detail {
+    width: 100px;
 }
