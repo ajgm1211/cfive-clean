@@ -425,7 +425,7 @@
                         <b>{{ this.port }}</b>
                     </span>
                 </div>
-
+            
                 <div class="col-12 mt-5" style="overflow-y: auto">
                     <!-- DataTable -->
                     <b-table-simple hover small responsive="sm" borderless>
@@ -497,6 +497,7 @@
                                     ></b-form-checkbox>
                                 </b-td>
 
+                                <!-- Charge -->
                                 <b-td>
                                     <multiselect
                                         v-model="localcharge.surcharge"
@@ -505,9 +506,10 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a surcharge"
+                                        placeholder="Surcharge"
                                         label="name"
                                         track-by="name"
+                                        class="data-surcharge"
                                         @input="
                                             onUpdate(
                                                 localcharge.id,
@@ -517,8 +519,10 @@
                                             )
                                         "
                                     ></multiselect>
+                                    hjhhjhghg
                                 </b-td>
 
+                                <!-- Detail -->
                                 <b-td>
                                     <multiselect
                                         v-if="currentQuoteData.type == 'FCL'"
@@ -528,9 +532,10 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Select"
                                         label="name"
                                         track-by="name"
+                                        class="data-detail"
                                         @input="
                                             onUpdate(
                                                 localcharge.id,
@@ -553,6 +558,7 @@
                                         placeholder="Choose a calculation type"
                                         label="name"
                                         track-by="name"
+                                        class="data-detail"
                                         @input="
                                             onUpdate(
                                                 localcharge.id,
@@ -564,6 +570,7 @@
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Show As -->
                                 <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="localcharge.sale_codes"
@@ -575,9 +582,11 @@
                                         placeholder="Choose a sale code"
                                         label="name"
                                         track-by="name"
+                                        class="data-showas"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Provider -->
                                 <b-td>
                                     <multiselect
                                         v-model="
@@ -593,6 +602,7 @@
                                         placeholder="Choose a provider"
                                         label="name"
                                         track-by="name"
+                                        class="data-provider"
                                         @input="
                                             onUpdate(
                                                 localcharge.id,
@@ -618,7 +628,7 @@
                                     <b-form-input
                                         placeholder
                                         v-model="localcharge.price['c' + item]"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -632,7 +642,7 @@
                                     <b-form-input
                                         placeholder
                                         v-model="localcharge.markup['m' + item]"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -648,7 +658,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.units"
-                                        class="q-input"
+                                        class="q-input data-currency"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
@@ -666,7 +676,7 @@
                                     <b-form-input
                                         v-model="localcharge.price_per_unit"
                                         style="width:80px;"
-                                        class="q-input"
+                                        class="q-input data-currency"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
