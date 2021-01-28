@@ -8,7 +8,6 @@
     padding: 13px 30px;
     border-radius: 50px !important;
 }
-
 </style>
 
 <div class="container m-content">
@@ -70,30 +69,7 @@
                                 <div class="form-group m-form__group">
                                     <label for="password">Confirm your password</label>
                                     <input id="password_confirmation" type="password" name="password_confirmation" class="form-control m-input" value="" placeholder="Please confirm your password">
-                                </div>                                
-
-                                @if( $user->type == 'admin')
-                                <div class="form-group m-form__group">
-                                    <label for="type">Type</label>
-                                    <select class="form-control" name="type" >
-                                        <option value="">Choose a type</option>
-                                        <option value="admin" {{$user->type=='admin' ? 'selected':''}}>Admin</option>
-                                        <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
-                                        <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
-                                        <option value="data_entry" {{$user->type=='data_entry' ? 'selected':''}}>Data entry</option>
-                                    </select>
-                                </div>
-                                @else
-                                <div class="form-group m-form__group">
-                                    <label for="type">Type</label>
-                                    <select class="form-control" name="type">
-                                        <option value="">Choose a type</option>
-                                        <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
-                                        <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
-                                    </select>
-                                </div>
-                                @endif
-                                
+                                </div>                                                               
                             </div>
                             </div>
                             <br>
