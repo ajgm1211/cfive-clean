@@ -112,6 +112,11 @@ class AutomaticRate extends Model
         return $this->hasMany('App\AutomaticRateTotal', 'automatic_rate_id');
     }
 
+    public function total_rate()
+    {
+        return $this->hasOne('App\AutomaticRateTotal', 'automatic_rate_id');
+    }
+
     public function scopeCharge($query, $type_id, $type)
     {
         $query->whereHas('charge', function ($query) use ($type_id) {
@@ -268,8 +273,14 @@ class AutomaticRate extends Model
 
     public function getProfitAttribute($value)
     {
+        $json = json_decode($value);
 
-        return json_decode(json_decode($value));
+        if (!is_object($json)  || !is_array($json)) {
+            return json_decode($json);
+        }else{
+            return $json;
+        }
+        
     }
 
     /*public function getTotalAttribute($value)

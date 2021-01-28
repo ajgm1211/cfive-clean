@@ -494,9 +494,18 @@ class QuotationController extends Controller
 
                 $totals->totalize();
             }
-        }else if(count($inlandTotals)!=0){
+        }elseif(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
+                if($total->pdf_options == null){
+                    $pdfOptions = [
+                        "grouped" =>false, 
+                        "groupId"=>null
+                        ];
+                    
+                    $total->pdf_options = $pdfOptions;
+                    $total->save();
+                }
                 if($quote->type == 'FCL'){
                     $inlands = $total->inlands()->get();
                 }else if($quote->type == 'LCL'){

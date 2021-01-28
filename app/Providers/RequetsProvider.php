@@ -23,6 +23,6 @@ class RequetsProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/Request/NRequest.php';
+        require_once app_path().'/Helpers/Request/NRequest.php';
     }
 }

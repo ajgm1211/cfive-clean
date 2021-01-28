@@ -4,133 +4,114 @@ use Illuminate\Database\Seeder;
 
 class AirlinesTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('airlines')->delete();
-        
-        \DB::table('airlines')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('airlines')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'American Airlines',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            1 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'Copa Airlines',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            2 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            2 => [
                 'id' => 3,
                 'name' => 'United Airlines',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            3 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            3 => [
                 'id' => 4,
                 'name' => 'TAP Portugal',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            4 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            4 => [
                 'id' => 5,
                 'name' => 'Turkish Airlines',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            5 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            5 => [
                 'id' => 6,
                 'name' => 'Emirates',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            6 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            6 => [
                 'id' => 7,
                 'name' => 'Vueling Airlines',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            7 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            7 => [
                 'id' => 8,
                 'name' => 'British Airways',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            8 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            8 => [
                 'id' => 9,
                 'name' => 'Iberia',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            9 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            9 => [
                 'id' => 10,
                 'name' => 'Air France',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            10 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            10 => [
                 'id' => 11,
                 'name' => 'KLM',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            11 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            11 => [
                 'id' => 12,
                 'name' => 'Avianca',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            12 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            12 => [
                 'id' => 13,
                 'name' => 'LATAM',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            13 => 
-            array (
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            13 => [
                 'id' => 14,
                 'name' => 'Lufthansa',
-                'image' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-        ));
-        
-        
+                'image' => null,
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+        ]);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App;
 
+use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesJob;
 use App\Partner;
-use App\Http\Requests\StoreApiIntegration;
 use GuzzleHttp\Client;
 
 class Vforwarding
@@ -32,6 +32,7 @@ class Vforwarding
             return true;
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
+
             return false;
         }
     }
