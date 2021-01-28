@@ -605,7 +605,7 @@ class ContractsController extends Controller
         return \DataTables::collection($contractG)
 
             ->addColumn('direction', function (Contract $contractG) {
-                if (count($contractG->direction) != 0) {
+                if (count((array)$contractG->direction) != 0) {
                     return $contractG->direction->name;
                 } else {
                     return '-----------------';
