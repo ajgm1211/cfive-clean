@@ -1767,9 +1767,36 @@ input.surcharge-input {
 /*local modal table*/
 
 .data-surcharge {
-    width: 100px;
+    width: 120px !important;
+}
+
+.data-currency {
+    width: 105px !important;
 }
 
 .data-detail {
-    width: 100px;
+    width: 180px !important;
+}
+
+.data-showas,
+input.data-showas {
+    width: 180px !important;
+}
+
+.data-provider,
+input.data-provider {
+    width: 180px !important;
+}
+
+.data-profit {
+    input {
+        width: 60px !important;
+        margin-right: 3px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-xl {
+        max-width: 1320px !important;
+    }
 }
