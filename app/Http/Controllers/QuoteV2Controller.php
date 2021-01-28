@@ -2806,7 +2806,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+        
         $company_user_id = \Auth::user()->company_user_id;
         //variables del modal contract
         $group_containerC = GroupContainer::pluck('name', 'id');
