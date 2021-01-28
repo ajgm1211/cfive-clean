@@ -145,6 +145,14 @@ class AutomaticInlandController extends Controller
                 'inland_address_id' => $inland_address->id,
                 'currency_id' => $user_currency
             ]);
+            
+            $pdfOptions = [
+                "grouped" =>false, 
+                "groupId"=>null
+                ];
+                
+            $totals->pdf_options = $pdfOptions;
+            $totals->save();
         }
 
         $inland = AutomaticInland::create([
@@ -329,6 +337,15 @@ class AutomaticInlandController extends Controller
         }
 
         $total->totalize();
+    }
+
+    public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
+    {
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id]])->get();
+
+        foreach($totals as $total){
+            $total->update(['pdf_options'=>$request->input('pdf_options')]);
+        }
     }
 
     public function retrieveTotals(QuoteV2 $quote, $combo)
