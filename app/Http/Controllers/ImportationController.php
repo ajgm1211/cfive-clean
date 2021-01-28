@@ -7,6 +7,7 @@ use App\CalculationType;
 use App\CalculationTypeContent;
 use App\Carrier;
 use App\Company;
+use App\AuthtokenToken;
 use App\CompanyUser;
 use App\Contact;
 use App\Container;
@@ -25,6 +26,7 @@ use App\Harbor;
 use App\Jobs\GeneralJob;
 use App\Jobs\ImportationRatesSurchargerJob;
 use App\Jobs\ReprocessRatesJob;
+use App\Jobs\ValidateTemplateJob;
 use App\Jobs\ReprocessSurchargersJob;
 use App\Jobs\ValidatorSurchargeJob;
 use App\LocalCharCarrier;
@@ -213,7 +215,7 @@ class ImportationController extends Controller
                     if ($originB == true && $destinyB == true &&
                         $scheduleTBol == true && $curreExitBol == true && $carriExitBol == true) {
                         $collecciont = '';
-                        $exists = null;
+                        $exists = [];
                         $exists = Rate::where('origin_port', $originV)
                             ->where('destiny_port', $destinationV)
                             ->where('carrier_id', $carrierVal)
@@ -1235,7 +1237,7 @@ class ImportationController extends Controller
 
         $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
             ->first();
-        $originA = null;
+        $originA = [];
         if (count($originA) <= 1) {
             $originA = $originOb['name'];
             $originAIn = $originOb['id'];
@@ -1246,7 +1248,7 @@ class ImportationController extends Controller
 
         $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
             ->first();
-        $destinationAIn = null;
+        $destinationAIn = [];
         if (count($destinationA) <= 1) {
             $destinationAIn = $destinationOb['id'];
             $destinationA = $destinationOb['name'];
@@ -1399,7 +1401,7 @@ class ImportationController extends Controller
                         ->where('transit_time', $request->transit_time)
                         ->where('via', $request->via)
                         ->first();
-                    if (count($exists_rate) == 0) {
+                    if (count((array)$exists_rate) == 0) {
                         $return = Rate::create([
                             'origin_port' => $origin,
                             'destiny_port' => $destiny,
@@ -3293,8 +3295,24 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation()
     {
-
-        $surchargersFined = PrvSurchargers::get_single_surcharger('isps');
-        dd($surchargersFined);
+//        $client = new \GuzzleHttp\Client();
+//        $url = env('BARRACUDA_EP')."contracts/processing/74";
+//        $json = '{"spreadsheetData":false}';
+//        $token = AuthtokenToken::where('user_id',1)->first();
+//        $response = $client->request('POST',$url,[
+//            'headers' => [
+//                'Authorization' => 'token '.$token->key,
+//                'Accept'        => '*/*',
+//                'Content-Type'  => 'application/json',
+//                'User-Agent'    => '*/*',
+//                'Connection'    => 'keep-alive'
+//            ],
+//            'body'=>$json
+//        ]);
+//        $response = json_decode($response->getBody()->getContents(),true);
+//        dd($response,$token);
+        
+        ValidateTemplateJob::dispatch('74');
+        dd('ok');
     }
 }

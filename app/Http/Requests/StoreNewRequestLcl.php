@@ -23,12 +23,12 @@ class StoreNewRequestLcl extends FormRequest
      */
     public function rules()
     {
-        return [       
+        return [
             'name' => 'required',
-			'validation_expire' => 'required',
-			'carrierM' => 'required',
+            'validation_expire' => 'required',
+            'carrierM' => 'required',
             'direction' => 'required',
-            'file'=>'required',       
+            'file' => 'required',
         ];
     }
 

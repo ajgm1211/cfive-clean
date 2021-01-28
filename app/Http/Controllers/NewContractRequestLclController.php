@@ -705,7 +705,7 @@ class NewContractRequestLclController extends Controller
             })
             ->addColumn('direction', function ($contracts) {
                 $dds = $contracts->load('direction');
-                if (count((array)$dds->direction) != 0) {
+                if (count((array) $dds->direction) != 0) {
                     return $dds->direction->name;
                 } else {
                     return '-------';

@@ -23,5 +23,11 @@ class GlobalCharCountryException extends Model
     public function countryDest()
     {
         return $this->belongsTo('App\Country', 'country_dest');
+	}
+	public function contryorigin(){
+        return $this->belongsTo('App\Country','country_orig','id');
+    }
+    public function countrydestiny(){
+        return $this->belongsTo('App\Country','country_dest','id');
     }
 }
