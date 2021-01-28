@@ -71,8 +71,8 @@
                                     <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    
+                                    'class'=>'form-control m-input','required'])!!}
                                 </div>
                                 <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
@@ -408,7 +408,6 @@
         if(date_star == date_end){
             swal(
                 "Error",
-                "Error, Please select the date!", "error",
                 "Error, Please select the Date!", "error",
                 true,
             );

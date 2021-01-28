@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ViewLocalChargesIds extends Model
 {
-       protected $table = 'views_localcharges_ids';
+    protected $table = 'views_localcharges_ids';
 }

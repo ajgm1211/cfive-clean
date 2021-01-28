@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\TransitTime;
+use App\Carrier;
 use App\DestinationType;
 use App\Harbor;
-use App\Carrier;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TransitTimeResource;
+use App\TransitTime;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
 class TransitTimeController extends Controller
 {
     /**
-     * Render index view 
+     * Render index view.
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -25,7 +25,7 @@ class TransitTimeController extends Controller
         return view('transit_time.index');
     }
 
-   	/**
+    /**
      * Display the specified resource collection.
      *
      * @param  Illuminate\Http\Request  $request
@@ -35,7 +35,7 @@ class TransitTimeController extends Controller
     {
         $results = TransitTime::filter($request);
 
-    	return TransitTimeResource::collection($results);
+        return TransitTimeResource::collection($results);
     }
 
     /**
@@ -45,11 +45,11 @@ class TransitTimeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function data(Request $request)
-    {        
+    {
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name']);
         });
-        
+
         $services = DestinationType::get()->map(function ($service) {
             return $service->only(['id', 'name']);
         });
@@ -64,9 +64,8 @@ class TransitTimeController extends Controller
             'harbors'
         );
 
-        return response()->json(['data' => $data ]);
+        return response()->json(['data' => $data]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -93,9 +92,9 @@ class TransitTimeController extends Controller
             'carrier_id' => $data['carrier'],
             'service_id' => $data['service'],
             'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : '',
-            'via' => isset($data['via']) ? $data['via'] : ''
+            'via' => isset($data['via']) ? $data['via'] : '',
         ];
-        
+
         return $prepared_data;
     }
 
@@ -103,7 +102,7 @@ class TransitTimeController extends Controller
      * Validate data submitted before save.
      *
      * @param  \Illuminate\Http\Request $request
-     * @return Array
+     * @return array
      */
     public function validateData($request, $transit_time = null)
     {
@@ -113,20 +112,20 @@ class TransitTimeController extends Controller
             'carrier' => 'required',
             'service' => 'required',
             'transit_time' => 'required',
-            'via' => 'sometimes|nullable'
+            'via' => 'sometimes|nullable',
         ];
 
         $validator = Validator::make($request->all(), $vdata);
-        
+
         $val = TransitTime::scheduleExists($request, $transit_time);
 
-        $validator->after(function ($validator) use ($val){
-            if ($val)
+        $validator->after(function ($validator) use ($val) {
+            if ($val) {
                 $validator->errors()->add('general', 'This schedule already exists');
+            }
         });
 
-    	
-    	return $validator->validate();
+        return $validator->validate();
     }
 
     /**
@@ -178,7 +177,7 @@ class TransitTimeController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('transit_times')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('transit_times')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

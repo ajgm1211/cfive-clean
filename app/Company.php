@@ -14,6 +14,7 @@ class Company extends Model implements Auditable
     {
         return $this->hasMany('App\Contact');
     }
+
     public function groupUserCompanies()
     {
         return $this->hasMany('App\GroupUserCompany');
@@ -28,6 +29,7 @@ class Company extends Model implements Auditable
     {
         return $this->belongsTo('App\Currency');
     }
+
     public function user()
     {
         return $this->belongsTo('App\user', 'owner');
@@ -50,7 +52,6 @@ class Company extends Model implements Auditable
 
     public function company_user()
     {
-
         return $this->belongsTo('App\CompanyUser');
     }
 

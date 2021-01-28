@@ -16,7 +16,7 @@
     @section('css')
 
 
-    <link href="/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+     <link href="/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Page Vendors -->
     <!-- Google Tag Manager -->
     <script>

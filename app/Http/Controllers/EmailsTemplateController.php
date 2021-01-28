@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\EmailTemplate;
-use App\CompanyUser;
-use App\MergeTag;
-use App\Contact;
 use App\Company;
+use App\CompanyUser;
+use App\Contact;
+use App\EmailTemplate;
+use App\Http\Requests\StoreEmailTemplate;
+use App\MergeTag;
 use App\QuoteV2;
 use App\User;
-use App\Http\Requests\StoreEmailTemplate;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class EmailsTemplateController extends Controller
 {
     /**
@@ -21,8 +22,7 @@ class EmailsTemplateController extends Controller
      */
     public function index()
     {
-
-        $templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->get();
+        $templates = EmailTemplate::where('company_user_id', \Auth::user()->company_user_id)->get();
 
         return view('emails-template.list', compact('templates'));
     }
@@ -37,9 +37,9 @@ class EmailsTemplateController extends Controller
         //
     }
 
-    public function createHtmlTag($data){
-
-        $tag ='<!DOCTYPE html>
+    public function createHtmlTag($data)
+    {
+        $tag = '<!DOCTYPE html>
             <html>
                 <head>
                 </head>
@@ -58,19 +58,18 @@ class EmailsTemplateController extends Controller
         return $tag;
     }
 
-    public function add(){
-
+    public function add()
+    {
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $mergeTag = MergeTag::All();
         $array = $mergeTag->where('user_name', Auth::user()->name);
         //dd($mergeTag);
         $templates = [];
-        foreach ($array as $arr)
-        {
+        foreach ($array as $arr) {
             $templates[] = [
                 'title' => $arr->tag_name,
-                'content' => self::createHtmlTag($arr)
+                'content' => self::createHtmlTag($arr),
             ];
         }
 
@@ -100,7 +99,6 @@ class EmailsTemplateController extends Controller
         $request->session()->flash('message.content', 'Template created successfully!');
 
         return redirect()->route('templates.index');
-
     }
 
     /**
@@ -114,7 +112,6 @@ class EmailsTemplateController extends Controller
         $template = EmailTemplate::find($id);
 
         return view('emails-template.show', compact('template'));
-
     }
 
     /**
@@ -125,17 +122,16 @@ class EmailsTemplateController extends Controller
      */
     public function edit($id)
     {
-        $id  = obtenerRouteKey($id);
+        $id = obtenerRouteKey($id);
         $template = EmailTemplate::find($id);
         $mergeTag = MergeTag::All();
         $array = $mergeTag->where('user_name', Auth::user()->name);
 
         $templates = [];
-        foreach ($array as $arr)
-        {
+        foreach ($array as $arr) {
             $templates[] = [
                 'title' => $arr->tag_name,
-                'content' => self::createHtmlTag($arr)
+                'content' => self::createHtmlTag($arr),
             ];
         }
 
@@ -161,11 +157,12 @@ class EmailsTemplateController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Template updated successfully!');
+
         return redirect()->route('templates.index');
     }
 
     /**
-     * Preview template
+     * Preview template.
      *
      * @param  $request
      * @return \Illuminate\Http\Response
@@ -173,47 +170,47 @@ class EmailsTemplateController extends Controller
     public function preview(Request $request)
     {
         $template = EmailTemplate::find($request->id);
-        $data             = $request->data;
+        $data = $request->data;
         //$data             = '{"quote_bool":"false","company_id":2,"contact_id":2,"quote_id":""}';
-        $quote            = '';
-        $quote_id         = '';
-        $contact_id       = '';
-        $company_user_id  = '';
+        $quote = '';
+        $quote_id = '';
+        $contact_id = '';
+        $company_user_id = '';
 
         $data = json_decode($data);
 
-        if($data->quote_bool == 'true'){
-            $quote         = QuoteV2::find($data->quote_id);
-            $quote_id      = $quote->id;
-            $contact_id    = $quote->contact_id;
-            $company_id    = $quote->company_id;
+        if ($data->quote_bool == 'true') {
+            $quote = QuoteV2::find($data->quote_id);
+            $quote_id = $quote->id;
+            $contact_id = $quote->contact_id;
+            $company_id = $quote->company_id;
         } else {
-            $quote_id      = '<label style="color:red;">¿ID?</label>';
-            $company_id    = $data->company_id;
-            $contact_id    = $data->contact_id;
+            $quote_id = '<label style="color:red;">¿ID?</label>';
+            $company_id = $data->company_id;
+            $contact_id = $data->contact_id;
         }
 
-        if($company_id){
+        if ($company_id) {
             $company = Company::find($company_id);
         }
-        if($contact_id){
-            $contact = Contact::find($contact_id);          
+        if ($contact_id) {
+            $contact = Contact::find($contact_id);
         }
 
-        if($quote->custom_quote_id != ''){
+        if ($quote->custom_quote_id != '') {
             $quote_id = $quote->custom_quote_id;
-        }else{
+        } else {
             $quote_id = $quote->quote_id;
         }
 
-        $body = str_replace('{First Name}',@$contact->first_name,$template->menssage);
-        $body = str_replace('{Last Name}',@$contact->last_name,$body);
-        $body = str_replace('{Company Name}',@$company->business_name,$body);
-        $body = str_replace('{Quote ID}',@$quote_id,$body);
-        $subject = str_replace('{Quote ID}',@$quote_id,$template->subject);
+        $body = str_replace('{First Name}', @$contact->first_name, $template->menssage);
+        $body = str_replace('{Last Name}', @$contact->last_name, $body);
+        $body = str_replace('{Company Name}', @$company->business_name, $body);
+        $body = str_replace('{Quote ID}', @$quote_id, $body);
+        $subject = str_replace('{Quote ID}', @$quote_id, $template->subject);
 
-        return response()->json(['id'=>$template->id,'subject'=>$subject,'message'=>$body]);
-    }    
+        return response()->json(['id'=>$template->id, 'subject'=>$subject, 'message'=>$body]);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -225,22 +222,23 @@ class EmailsTemplateController extends Controller
     {
         $template = EmailTemplate::find($id);
         $template->delete();
+
         return $template;
     }
 
-    public function destroyTemplate(Request $request,$id){
+    public function destroyTemplate(Request $request, $id)
+    {
         $template = self::destroy($id);
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Template deleted successfully!');
-        return redirect()->route('templates.index');
 
+        return redirect()->route('templates.index');
     }
 
     public function destroymsg($id)
     {
-        return view('emails-template.message' ,['id' => $id]);
-
+        return view('emails-template.message', ['id' => $id]);
     }
 }

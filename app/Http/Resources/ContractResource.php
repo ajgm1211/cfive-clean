@@ -29,11 +29,11 @@ class ContractResource extends JsonResource
             'created_at'=> $fecha,
             'remarks' => $this->remarks ? $this->remarks : '',
             'carriers' => $this->carriers->pluck('carrier'),
-            'restrictions' => [ 
+            'restrictions' => [
                 'companies' => $this->contract_company_restriction->pluck('company'),
-                'users' => $this->contract_user_restriction->pluck('user')
+                'users' => $this->contract_user_restriction->pluck('user'),
             ],
-            'gp_container' => $this->gpContainer ? $this->gpContainer : [ 'id' => 1, 'name' => 'DRY']
+            'gp_container' => $this->gpContainer ? $this->gpContainer : ['id' => 1, 'name' => 'DRY'],
         ];
     }
 

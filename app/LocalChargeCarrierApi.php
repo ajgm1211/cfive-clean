@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocalChargeCarrierApi extends Model
 {
-  protected $fillable =   ['carrier_id','localcharge_id'];
-  public $timestamps = false;
-  public function localchargeapi()
-  {
+    protected $fillable = ['carrier_id', 'localcharge_id'];
+    public $timestamps = false;
 
-    return $this->belongsTo('App\LocalChargeApi','localcharge_id');
-  }
-  public function carrier(){
+    public function localchargeapi()
+    {
+        return $this->belongsTo('App\LocalChargeApi', 'localcharge_id');
+    }
 
-    return $this->belongsTo('App\Carrier');
-
-  }
+    public function carrier()
+    {
+        return $this->belongsTo('App\Carrier');
+    }
 }
