@@ -38,6 +38,7 @@
 								  v-if="surcharges"
 								  :datalists="datalists"
 								  :actions="actions.surcharges"
+								  :contractData="currentData"
 								  >
 							</surcharges>
 						</b-tab>

@@ -1007,6 +1007,12 @@ export default {
             },
         };
     },
+    watch: {
+        charges: function(){
+            let id = this.$route.params.id;
+
+            this.$emit("chargesUpdated",id);}
+    },
     methods: {
         add() {
             if (this.value != "") {
