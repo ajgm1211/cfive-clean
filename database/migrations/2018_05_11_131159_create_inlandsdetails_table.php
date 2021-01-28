@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateInlandsdetailsTable extends Migration
 {
@@ -14,7 +14,7 @@ class CreateInlandsdetailsTable extends Migration
     public function up()
     {
         Schema::create('inlandsdetails', function (Blueprint $table) {
-               $table->increments('id');
+            $table->increments('id');
             $table->string('lower');
             $table->string('upper');
             $table->double('ammount');

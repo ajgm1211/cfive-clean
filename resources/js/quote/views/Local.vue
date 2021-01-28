@@ -689,7 +689,7 @@
                                             onUpdate(
                                                 localcharge.id,
                                                 localcharge.markup,
-                                                'markups',
+                                                'markup',
                                                 8
                                             )
                                         "
@@ -1006,6 +1006,12 @@ export default {
                 },
             },
         };
+    },
+    watch: {
+        charges: function(){
+            let id = this.$route.params.id;
+
+            this.$emit("chargesUpdated",id);}
     },
     methods: {
         add() {

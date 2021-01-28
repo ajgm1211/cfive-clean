@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnRequestForContractlcl extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnRequestForContractlcl extends Migration
      */
     public function up()
     {
-        Schema::table('new_contract_request_lcl', function(Blueprint $table){
+        Schema::table('new_contract_request_lcl', function (Blueprint $table) {
             $table->integer('contract_id')->unsigned()->nullable()->after('sentemail');
             $table->foreign('contract_id')->references('id')->on('contracts_lcl')->onDelete('set null');
         });
@@ -26,7 +26,7 @@ class AddColumnRequestForContractlcl extends Migration
      */
     public function down()
     {
-        Schema::table('new_contract_request_lcl', function($table) {
+        Schema::table('new_contract_request_lcl', function ($table) {
             $table->dropColumn('contract_id');
         });
     }

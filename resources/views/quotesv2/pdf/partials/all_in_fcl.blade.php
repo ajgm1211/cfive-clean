@@ -62,7 +62,7 @@
                     ${'totalized_'.$c->code} = 'totalized_'.$c->code;
                 }
 
-                $array = array();
+                $array = [];
                 
                 foreach($rate->charge as $value){
                     array_push($array, $value->type_id);

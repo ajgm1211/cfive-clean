@@ -1,9 +1,9 @@
 
 <script>
-    activarCountryOld('{{ $activacion['act'] }}');
+    activarCountry2('{{ $activacion['act'] }}');
     activarRegions('{{ $activacion['act'] }}');
 </script>
-
+<!-- HASTA AQUI BIEN SI DESAPARECE NO BORRAR SOLO HASTA ESTE MENSAJE -->
 
 <div class="m-portlet">
 
@@ -57,19 +57,19 @@
                                 {!! Form::label('Type Route', 'Type Route') !!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\'); activarRegions(\'divport\'); offsetSwitch(\'divport\')' ]) }} Port
+                                {{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\',false); activarRegions(\'divport\'); offsetSwitch(\'divport\',false)' ]) }} Port
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\'); activarRegions(\'divcountry\'); offsetSwitch(\'divcountry\')' ]) }} Country
+                                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\',false); activarRegions(\'divcountry\'); offsetSwitch(\'divcountry\',false)' ]) }} Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\'); activarRegions(\'divportcountry\'); offsetSwitch(\'divportcountry\')' ]) }} Port to Country
+                                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\',false); activarRegions(\'divportcountry\'); offsetSwitch(\'divportcountry\',false)' ]) }} Port to Country
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\'); activarRegions(\'divcountryport\'); offsetSwitch(\'divcountryport\')' ]) }}  Country to Port
+                                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\',false); activarRegions(\'divcountryport\'); offsetSwitch(\'divcountryport\',false)' ]) }}  Country to Port
                                 <span></span>
                             </label>
                             <i onclick="inverter()" style="font-size:22px" class="la la-arrows-h" title="Exchange Origin / Destination"></i>
@@ -97,66 +97,101 @@
                 {{ Form::select('surcharge_id', $surcharge,$globalcharges->surcharge_id,['id' => 'type','class'=>'m-select2-general form-control ']) }}
             </div>
             <div class="col-lg-4">
-                <div class="divport" >
-                    {!! Form::label('orig', 'Origin Port') !!}                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="port_orig" > Clear</i>
+                <div class="divport">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginPort' value='1485' id='allOriginPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('port_orig[]', $harbor,
-                    $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
+          $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
                 </div>
+                
                 <div class="divcountry" hidden="true">
 
-                    {!! Form::label('origC', 'Origin Country') !!} 
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="country_orig" > Clear</i>
+                    <i class="la la-anchor icon__modal"></i> {!! Form::label('origC', 'Origin Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginCountry' value='250' id='allOriginCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('country_orig[]', $countries,
-                    $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
+            $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
                 </div>
+
                 <div class="divportcountry" hidden="true">
-                    <i class="la la-anchor icon__modal"></i>{!! Form::label('origPC', 'Origin Port') !!}                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="portcountry_orig" > Clear</i>
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('origPC', 'Origin Port') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginPortCountry' value='1485' id='allOriginPortCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('portcountry_orig[]', $harbor,$globalcharges->globalcharportcountry->pluck('portOrig')->unique()->pluck('id'),['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
 
                 </div>
                 <div class="divcountryport" hidden="true">
+
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('origCP', 'Origin Country') !!}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="countryport_orig" > Clear</i>
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allOriginCountryPort' value='250' id='allOriginCountryPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('countryport_orig[]', $countries,$globalcharges->globalcharcountryport->pluck('countryOrig')->unique()->pluck('id'),['id' => 'countryport_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
 
                 </div>
+                
             </div>
-
             <div class="col-lg-4">
-                <div class="divport" >
-                    {!! Form::label('dest', 'Destination Port') !!}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="port_dest" > Clear</i>
+                <div class="divport">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
+                    &nbsp;
+                    <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationPort' value='1485' id='allDestinationPort' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     <div class="m-input-icon m-input-icon--right">
                         {{ Form::select('port_dest[]', $harbor,
-                        $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
+            $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
                     </div>
                 </div>
-                <div class="divcountry" hidden="true" >
-                    {!! Form::label('destC', 'Destination Country') !!}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="country_dest" > Clear</i>
+                
+                <div class="divcountry" hidden="true">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationCountry' value='250' id='allDestinationCountry' type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
                 </div>
-                <div class="divportcountry" hidden="true" >
+                <div class="divportcountry" hidden="true">
 
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('destPC', 'Destination Country') !!}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="portcountry_dest" > Clear</i>
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationPortCountry' value='250' id='allDestinationPortCountry'
+                            type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('portcountry_dest[]',$countries,$globalcharges->globalcharportcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
 
                 </div>
-                <div class="divcountryport" hidden="true" >
+                <div class="divcountryport" hidden="true">
                     <i class="la la-anchor icon__modal"></i>{!! Form::label('destCP', 'Destination Port') !!}
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <i style="color:red" class="clearSelect" select-id="countryport_dest" > Clear</i>
+                    &nbsp; <label class="m-checkbox m-checkbox--check-bold m-checkbox--state-brand">
+                        <input name='allDestinationCountryPort' value='1485' id='allDestinationCountryPort'
+                            type="checkbox">
+                        {!! Form::label('all', 'All') !!}
+                        <span></span>
+                    </label>
                     {{ Form::select('countryport_dest[]', $harbor,$globalcharges->globalcharcountryport->pluck('portDest')->unique()->pluck('id'),['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
                 </div>
+                
             </div>
         </div>
         <div class="form-group m-form__group row">
@@ -220,6 +255,42 @@
                 </div>
 
             </div>
+        </div>
+        
+        <div class="form-group m-form__group row">
+
+            <div class="excepcionPortOrig" hidden='true'>
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Port') !!}
+                    {{ Form::select('exceptionPortOrig[]', $harbor,
+                      $globalcharges->globalexceptionport->pluck('port_orig'),['id' => 'exceptionPortOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionPortDest" hidden='true'>
+                <div class="col-lg-9">
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Except Destination Port') !!}
+                    {{ Form::select('exceptionPortDest[]', $harbor,
+                      $globalcharges->globalexceptionport->pluck('port_dest'),['id' => 'exceptionPortDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionCountryOrig" hidden='true'>
+                <div class="col-lg-9">
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Origin Country') !!}
+                    {{ Form::select('exceptionCountryOrig[]', $countries,
+                      $globalcharges->globalexceptioncountry->pluck('country_orig'),['id' => 'exceptionCountryOrig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+            <div class="excepcionCountryDest" hidden='true'>
+                <div class="col-lg-9">
+
+                    <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Except Destination Country') !!}
+                    {{ Form::select('exceptionCountryDest[]', $countries,
+                      $globalcharges->globalexceptioncountry->pluck('country_dest'),['id' => 'exceptionCountryDest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+                </div>
+            </div>
+
+
         </div>
     </div>  
     <br>

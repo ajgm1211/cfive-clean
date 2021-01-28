@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateQuoteV2sTable extends Migration
 {
@@ -17,7 +17,7 @@ class CreateQuoteV2sTable extends Migration
             $table->increments('id');
             $table->string('quote_id');
             $table->string('custom_quote_id')->nullable();
-            $table->enum('type',['LCL','FCL','AIR']);
+            $table->enum('type', ['LCL', 'FCL', 'AIR']);
             $table->string('delivery_type');
             $table->json('equipment')->nullable();
             //$table->integer('cargo_type')->nullable();
@@ -37,7 +37,7 @@ class CreateQuoteV2sTable extends Migration
             $table->foreign('incoterm_id')->references('id')->on('incoterms')->onDelete('cascade');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
-            $table->enum('status',['Draft','Won','Sent']);
+            $table->enum('status', ['Draft', 'Won', 'Sent']);
             $table->text('payment_conditions')->nullable();
             $table->text('terms_and_conditions')->nullable();
             $table->string('origin_address')->nullable();

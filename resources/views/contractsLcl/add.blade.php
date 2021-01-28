@@ -116,8 +116,8 @@ $validation_expire = 'Please enter validity date';
                                 </thead>
                                 <tbody>
                                     <tr   id='tr_clone'  >
-                                        <td width = '13%'>{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
-                                        <td  width = '13%'>{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
+                                        <td width = '13%'>{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
+                                        <td  width = '13%'>{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
                                         <td  width = '12%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
 
                                         <td  width = '12%'>{!! Form::number('uom[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;']) !!} </td>
