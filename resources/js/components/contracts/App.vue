@@ -19,7 +19,7 @@
                     <DataTable 
                         :fields="fields"
                         :actions="actions.contracts"
-                        :filter="false"
+                        :filter="true"
                         @onEdit="onEdit"
                         ></DataTable>
                 </b-card>
@@ -51,10 +51,22 @@
                 :download=true
                 btnTxt="Export Excel"
                 @exit="closeModal('exportExcel')"
-                @success="closeModal('exportExcel')"
+                @success="closeModal('exportExcel',true)"
                 :actions="actions.excel"
                 >
             </FormView>
+
+            <div class="row">
+                    <div class="col-lg-12">
+                        <div
+                            v-if="modalSuccess"
+                            class="alert alert-success"
+                            role="alert"
+                        >
+                            Your file is being processed. It will be sent to your email address
+                        </div>
+                    </div>
+                </div>
         </b-modal>
         <!-- End Create Form -->
 
@@ -76,6 +88,7 @@
         data() {
             return {
                 isBusy:true, // Loader
+                modalSuccess: false,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 fdata2: { validity: { startDate: null, endDate: null } },
@@ -90,14 +103,14 @@
 
                 /* Table headers */
                 fields: [
-                    { key: 'name', label: 'Reference', formatter: value => { return `<p class="truncate-contract" title="${value}">${value}</p>` } }, 
-                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
-                    { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` } },
-                    { key: 'validity', label: 'Valid From' }, 
-                    { key: 'expire', label: 'Valid Until' }, 
-                    { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name } }, 
-                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name } },
-                    { key: 'created_at', label: 'Created At'},
+                    { key: 'name', label: 'Reference', formatter: value => { return `<p class="truncate-contract" title="${value}">${value}</p>` }, filterIsOpen:false }, 
+                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) }, filterIsOpen:false, filterTrackBy: "name", trackLabel: "name"},
+                    { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` }, filterIsOpen:false },
+                    { key: 'validity', label: 'Valid From', filterIsOpen:false }, 
+                    { key: 'expire', label: 'Valid Until', filterIsOpen:false }, 
+                    { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name }, filterIsOpen:false, filterTrackBy: "name", trackLabel: "name"}, 
+                    { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name }, filterIsOpen:false, filterTrackBy: "name", trackLabel: "name"},
+                    { key: 'created_at', label: 'Created At', filterIsOpen:false},
 
                 ],
 
@@ -196,8 +209,18 @@
                  window.location = '/RequestFcl/NewRqFcl';
             },
 
-            closeModal(modal){
-                this.$bvModal.hide(modal);
+            closeModal(modal, exporting = false){
+                let component = this;
+                
+                if(exporting == false){
+                    component.$bvModal.hide(modal);
+                }else{
+                    component.modalSuccess = true;
+                    setTimeout(function () {
+                        component.modalSuccess = false;
+                        component.$bvModal.hide(modal);
+                    }, 3000);
+                }
             },
 
             success(id){

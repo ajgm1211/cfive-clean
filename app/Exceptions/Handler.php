@@ -6,8 +6,8 @@ use ErrorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -58,20 +58,16 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($exception instanceof HttpException) 
-        {
-            if($request->ajax() || $request->wantsJson()) 
-            {
+        if ($exception instanceof HttpException) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'message' => $exception->getMessage(),
                 ], 403);
             }
         }
 
-        if ($exception instanceof ErrorException) 
-        {
-            if($request->ajax() || $request->wantsJson()) 
-            {
+        if ($exception instanceof ErrorException) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'message' => $exception->getMessage(),
                 ], 500);
@@ -81,10 +77,8 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($exception instanceof ModelNotFoundException) 
-        {
-            if($request->ajax() || $request->wantsJson()) 
-            {
+        if ($exception instanceof ModelNotFoundException) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'message' => 'Record not found',
                 ], 404);

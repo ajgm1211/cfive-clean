@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldsToApiIntegrationsTable extends Migration
 {
@@ -16,7 +16,7 @@ class AddFieldsToApiIntegrationsTable extends Migration
         Schema::table('api_integrations', function (Blueprint $table) {
             $table->string('name')->after('id');
             $table->string('api_key')->after('url');
-            $table->enum('module',['Contacts','Companies'])->after('url');
+            $table->enum('module', ['Contacts', 'Companies'])->after('url');
             $table->integer('api_integration_setting_id')->unsigned()->after('module');
             $table->foreign('api_integration_setting_id')->references('id')->on('api_integration_settings');
         });

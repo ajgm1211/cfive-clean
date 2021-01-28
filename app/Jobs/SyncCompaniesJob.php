@@ -3,16 +3,13 @@
 namespace App\Jobs;
 
 use App\ApiIntegration;
-use App\ApiIntegrationSetting;
 use App\Company;
 use App\Connection;
-use App\Visualtrans;
-use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SyncCompaniesJob implements ShouldQueue
 {
@@ -49,7 +46,7 @@ class SyncCompaniesJob implements ShouldQueue
         $data = new Connection();
         $page = 1;
         do {
-            $uri =  $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
+            $uri = $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
             $response = $data->getData($uri);
             $max_page = ceil($response['count'] / 100);
             foreach ($response['entidades'] as $item) {
@@ -58,7 +55,7 @@ class SyncCompaniesJob implements ShouldQueue
                 $invoice = $data->getInvoices($item['codigo']);
                 if ($invoice) {
                     Company::updateOrCreate([
-                        'api_id' => $item['codigo']
+                        'api_id' => $item['codigo'],
                     ], [
                         'business_name' => $item['nombre-fiscal'],
                         'tax_number' => $item['cif-nif'],

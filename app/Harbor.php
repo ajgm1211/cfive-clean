@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Harbor extends Model
 {
-    protected $table    = "harbors";
+    protected $table = "harbors";
     protected $fillable = ['id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation'];
 
     public function globalcharge()
     {
-
         return $this->hasOne('App\GlobalCharge');
     }
 
