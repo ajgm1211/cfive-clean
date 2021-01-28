@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddPaymentConditionsToCompaniesTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddPaymentConditionsToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->text('payment_conditions',5000)->nullable()->after('pdf_language');
+            $table->text('payment_conditions', 5000)->nullable()->after('pdf_language');
         });
     }
 

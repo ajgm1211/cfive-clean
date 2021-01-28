@@ -24,7 +24,7 @@ class StoreGlobalCharges extends FormRequest
     public function rules()
     {
         return [
-            
+
             //PORT TO PORT
             'port_dest' => 'required_if:typeroute,==,port',
             'port_orig' => 'required_if:typeroute,==,port',
@@ -43,8 +43,8 @@ class StoreGlobalCharges extends FormRequest
 
             'surcharge_id'=>'required',
             'calculationtype' => 'required',
-            'localcarrier' => 'required', 
-              
+            'localcarrier' => 'required',
+
         ];
     }
 }

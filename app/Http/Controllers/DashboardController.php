@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\AutomaticRate;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\User;
-use App\QuoteV2;
 use App\CompanyUser;
 use App\Container;
 use App\Currency;
-
+use App\QuoteV2;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -21,7 +20,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
         $company = CompanyUser::where('id', \Auth::User()->company_user_id)->pluck('currency_id');
         $containers = Container::all();
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
@@ -30,7 +28,7 @@ class DashboardController extends Controller
         if (Auth::user()->type == 'admin') {
             $users = User::pluck('name', 'id');
             $quotes = QuoteV2::all();
-        } else if (Auth::user()->type == 'company') {
+        } elseif (Auth::user()->type == 'company') {
             $users = User::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
             $quotes = QuoteV2::where('company_user_id', \Auth::User()->company_user_id)->get();
         } else {
@@ -54,7 +52,7 @@ class DashboardController extends Controller
                 foreach ($charge->charge as $item) {
                     $rate = 0;
                     $markup = 0;
-                    
+
                     $exchange = ratesCurrencyFunction($item->currency_id, @Auth::user()->companyUser->currency->alphacode);
 
                     $amounts = json_decode($item->amount, true);
@@ -62,11 +60,11 @@ class DashboardController extends Controller
 
                     $amounts = processOldDryContainers($amounts, 'amounts');
                     $markups = processOldDryContainers($markups, 'markups');
-                    
+
                     foreach ($containers as $container) {
                         $rate = (int) @$amounts['c'.$container->code];
                         $markup = (int) @$markups['m'.$container->code];
-                        $totalRate += number_format(($rate + $markup)/$exchange,  2, '.', '');
+                        $totalRate += number_format(($rate + $markup) / $exchange, 2, '.', '');
                     }
 
                     if ($q->status == 'Draft') {
@@ -132,9 +130,9 @@ class DashboardController extends Controller
      */
     public function filter(Request $request)
     {
-        $dates = explode(" / ", $request->pick_up_date);
-        $dates[0] = date("Y-m-d", strtotime($dates[0]));
-        $dates[1] = date("Y-m-d", strtotime($dates[1]));
+        $dates = explode(' / ', $request->pick_up_date);
+        $dates[0] = date('Y-m-d', strtotime($dates[0]));
+        $dates[1] = date('Y-m-d', strtotime($dates[1]));
 
         $pick_up_dates = collect(['start_date' => $dates[0], 'end_date' => $dates[1]]);
         $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
@@ -144,13 +142,13 @@ class DashboardController extends Controller
         $currency = $cur[0];
 
         $user = User::find($request->user);
-        
+
         if (Auth::user()->type == 'admin') {
             $users = User::pluck('name', 'id');
         } else {
             $users = User::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
         }
-        
+
         if ($request->user) {
             $quotes = QuoteV2::whereDate('created_at', '>=', $dates[0])
                 ->whereDate('created_at', '<=', $dates[1])->where('user_id', $request->user)->get();
@@ -163,7 +161,7 @@ class DashboardController extends Controller
                     ->whereDate('created_at', '<=', $dates[1])->where('company_user_id', \Auth::user()->company_user_id)->get();
             }
         }
-        
+
         $totalQuotes = $quotes->count();
 
         if ($totalQuotes == 0) {
@@ -181,7 +179,6 @@ class DashboardController extends Controller
 
             foreach ($charges as $charge) {
                 foreach ($charge->charge as $item) {
-                    
                     $exchange = ratesCurrencyFunction($item->currency_id, Auth::user()->companyUser->currency->alphacode);
 
                     $amounts = json_decode($item->amount, true);
@@ -189,9 +186,9 @@ class DashboardController extends Controller
 
                     $amounts = processOldDryContainers($amounts, 'amounts');
                     $markups = processOldDryContainers($markups, 'markups');
-                    
+
                     foreach ($containers as $container) {
-                        $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code])/$exchange,  2, '.', '');
+                        $totalRate += number_format((@$amounts['c'.$container->code] + @$markups['m'.$container->code]) / $exchange, 2, '.', '');
                     }
 
                     if ($q->status == 'Draft') {

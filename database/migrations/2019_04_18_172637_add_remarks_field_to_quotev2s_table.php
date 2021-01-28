@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddRemarksFieldToQuotev2sTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddRemarksFieldToQuotev2sTable extends Migration
     public function up()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->string('remarks',5000)->nullable()->after('date_issued');
+            $table->string('remarks', 5000)->nullable()->after('date_issued');
         });
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnRequestlclTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnRequestlclTable extends Migration
      */
     public function up()
     {
-        Schema::table('new_contract_request_lcl', function (Blueprint $table){
+        Schema::table('new_contract_request_lcl', function (Blueprint $table) {
             $table->integer('direction_id')->nullable()->after('validation')->unsigned();
             $table->foreign('direction_id')->references('id')->on('directions');
         });
@@ -26,7 +26,7 @@ class AddColumnRequestlclTable extends Migration
      */
     public function down()
     {
-         Schema::table('new_contract_request_lcl', function($table) {
+        Schema::table('new_contract_request_lcl', function ($table) {
             $table->dropColumn('direction');
         });
     }

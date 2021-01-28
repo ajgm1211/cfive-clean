@@ -7,7 +7,6 @@ use App\Carrier;
 use App\Company;
 use App\Container;
 use App\Contract;
-use App\ContractCarrier;
 use App\ContractLcl;
 use App\Country;
 use App\Currency;
@@ -52,8 +51,7 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function list(Request $request)
-    {
+    function list(Request $request) {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
@@ -241,7 +239,7 @@ class ContractController extends Controller
             'carriers' => 'required',
         ]);
 
-        $status = $this->updateStatus($data['expire']);
+        $status = $this->updateStatus($contract);
 
         $contract->update([
             'name' => $data['name'],
@@ -261,12 +259,16 @@ class ContractController extends Controller
     {
 
         $date = date('Y-m-d');
-        $expire = date('Y-m-d', strtotime($data));
-
-        if ($expire <= $date) {
-            $status = 'expired';
-        } else {
-            $status = 'publish';
+        $expire = date('Y-m-d', strtotime($data['expire']));
+        
+        if($data['status'] != 'incomplete'){
+            if ($date <= $expire) {
+                $status = 'publish';
+            } else {
+                $status = 'expired';
+            }
+        }else{
+            $status = 'incomplete';
         }
 
         return $status;
@@ -439,7 +441,7 @@ class ContractController extends Controller
             $user = User::findOrFail(Auth::user()->id);
             $admins = User::isAdmin()->get();
             $type = strtoupper($request->type);
-            
+
             if ($request->code) {
                 $query = Contract::where('code', $request->code);
                 $query_lcl = ContractLcl::where('code', $request->code);
@@ -450,7 +452,7 @@ class ContractController extends Controller
 
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
-            
+
             if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
             }
@@ -554,7 +556,7 @@ class ContractController extends Controller
         } else {
             $code = $request->reference;
         }
-        
+
         switch ($type) {
             case 'FCL':
                 $contract = Contract::create([
@@ -609,7 +611,7 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}}',
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":'.$contract->code.',"is_api":'.$contract->is_api.'}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
@@ -665,15 +667,15 @@ class ContractController extends Controller
         $container = Container::get();
 
         $data = $request->validate([
-            'referenceC'       => 'required',
+            'referenceC' => 'required',
             'group_containerC' => 'required',
-            'C20DV'            => 'sometimes|required',
-            'C40DV'            => 'sometimes|required',
-            'C40HC'            => 'sometimes|required',
-            'C40NOR'           => 'sometimes|required',
-            'C45HC'            => 'sometimes|required',
-            'amountC'          => 'sometimes|required',
-            'document'         => 'required',
+            'C20DV' => 'sometimes|required',
+            'C40DV' => 'sometimes|required',
+            'C40HC' => 'sometimes|required',
+            'C40NOR' => 'sometimes|required',
+            'C45HC' => 'sometimes|required',
+            'amountC' => 'sometimes|required',
+            'document' => 'required',
         ]);
 
         $contract->company_user_id = Auth::user()->company_user_id;
@@ -728,7 +730,7 @@ class ContractController extends Controller
         $currencyC = $request->input('currency');
         $amountC = $request->input('amount');
 
-        if (count($calculation_type) > 0) {
+        if (count((array)$calculation_type) > 0) {
             foreach ($calculation_type as $ct => $ctype) {
 
                 if (!empty($request->input('amount'))) {
