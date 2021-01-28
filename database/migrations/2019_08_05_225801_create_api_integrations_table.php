@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateApiIntegrationsTable extends Migration
 {
@@ -16,7 +16,7 @@ class CreateApiIntegrationsTable extends Migration
         Schema::create('api_integrations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('url');
-            $table->enum('type',['get','post','put']);
+            $table->enum('type', ['get', 'post', 'put']);
             $table->timestamps();
         });
     }

@@ -306,8 +306,8 @@
                                                                 $origin_amounts = json_decode($item->amount,true);
                                                                 $origin_markups = json_decode($item->markups,true);
                                                             }else{
-                                                                $origin_amounts = json_decode($item->amount,true);
-                                                                $origin_markups = json_decode($item->markups,true);
+                                                                $origin_amounts = $item->amount;
+                                                                $origin_markups = $item->markups;
                                                             }
 
                                                             if(!Empty($origin_amounts)){

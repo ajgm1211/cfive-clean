@@ -23,6 +23,6 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/HelpNotification.php';
+        require_once app_path().'/Helpers/HelpNotification.php';
     }
 }

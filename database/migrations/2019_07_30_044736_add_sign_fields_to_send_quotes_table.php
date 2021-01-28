@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddSignFieldsToSendQuotesTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddSignFieldsToSendQuotesTable extends Migration
     public function up()
     {
         Schema::table('send_quotes', function (Blueprint $table) {
-            $table->enum('sign_type',['text','image'])->nullable()->after('quote_id');
+            $table->enum('sign_type', ['text', 'image'])->nullable()->after('quote_id');
             $table->string('sign')->nullable()->after('sign_type');
         });
     }

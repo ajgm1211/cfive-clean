@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Container;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TransitTimeResource extends JsonResource
 {
@@ -17,12 +17,12 @@ class TransitTimeResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'origin' => $this->origin, 
+            'origin' => $this->origin,
             'destination' => $this->destination,
             'carrier' => $this->carrier,
             'service' => $this->service,
             'transit_time' => $this->transit_time,
-            'via' => $this->via
+            'via' => $this->via,
         ];
     }
 }

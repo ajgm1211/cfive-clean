@@ -4,21 +4,17 @@ use Illuminate\Database\Seeder;
 
 class HarborsCopyTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('harbors_copy')->delete();
-        
-        \DB::table('harbors_copy')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('harbors_copy')->insert([
+            0 => [
                 'id' => 742,
                 'name' => 'Abu Dhabi',
                 'code' => 'AEAUH',
@@ -28,9 +24,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "abu dhabi-aeauh-united arab emirates", "abu dhabi ,ae", "united arab emirates: abu dhabi", "abu dhabi pt", "abu dhabi port", "abu dhabi city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 743,
                 'name' => 'Ajman',
                 'code' => 'AEAJM',
@@ -40,9 +35,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ajman-aeajm-united arab emirates", "ajman ,ae", "united arab emirates: ajman", "ajman pt", "ajman port", "ajman city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            2 => 
-            array (
+            ],
+            2 => [
                 'id' => 744,
                 'name' => 'Fujairah',
                 'code' => 'AEFJR',
@@ -52,9 +46,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fujairah-aefjr-united arab emirates", "fujairah ,ae", "united arab emirates: fujairah", "fujairah pt", "fujairah port", "fujairah city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            3 => 
-            array (
+            ],
+            3 => [
                 'id' => 745,
                 'name' => 'Jebel Ali',
                 'code' => 'AEJEA',
@@ -64,9 +57,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["aejal", "", "jebel ali-aejea-united arab emirates", "jebel ali ,ae", "united arab emirates: jebel ali", "jebel ali pt", "jebel ali port", "jebel ali city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            4 => 
-            array (
+            ],
+            4 => [
                 'id' => 746,
                 'name' => 'Sharjah',
                 'code' => 'AESHJ',
@@ -76,9 +68,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sharjah-aeshj-united arab emirates", "sharjah ,ae", "united arab emirates: sharjah", "sharjah pt", "sharjah port", "sharjah city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            5 => 
-            array (
+            ],
+            5 => [
                 'id' => 747,
                 'name' => 'KHOR AL FAKKAN',
                 'code' => 'AEKLF',
@@ -88,9 +79,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "khor al fakkan-aeklf-united arab emirates", "khor al fakkan ,ae", "united arab emirates: khor al fakkan", "khor al fakkan pt", "khor al fakkan port", "khor al fakkan city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            6 => 
-            array (
+            ],
+            6 => [
                 'id' => 748,
                 'name' => 'RAS AL KHAIMAH',
                 'code' => 'AERKT',
@@ -100,21 +90,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ras al khaimah-aerkt-united arab emirates", "ras al khaimah ,ae", "united arab emirates: ras al khaimah", "ras al khaimah pt", "ras al khaimah port", "ras al khaimah city"]}',
                 'created_at' => '2018-09-05 19:34:09',
                 'updated_at' => '2018-09-05 19:34:09',
-            ),
-            7 => 
-            array (
+            ],
+            7 => [
                 'id' => 749,
                 'name' => 'UMM AL QAIWAIN',
                 'code' => 'AEQIW',
                 'display_name' => 'UMM AL QAIWAIN, AEQIW',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 2,
                 'varation' => '{"type": ["", "", "umm al qaiwain-aeqiw-united arab emirates", "umm al qaiwain ,ae", "united arab emirates: umm al qaiwain", "umm al qaiwain pt", "umm al qaiwain port", "umm al qaiwain city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            8 => 
-            array (
+            ],
+            8 => [
                 'id' => 750,
                 'name' => 'ANTIGUA',
                 'code' => 'AGANU',
@@ -124,9 +112,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "antigua-aganu-antigua and barbuda", "antigua ,ag", "antigua and barbuda: antigua", "antigua pt", "antigua port", "antigua city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            9 => 
-            array (
+            ],
+            9 => [
                 'id' => 751,
                 'name' => 'DURRES',
                 'code' => 'ALDRZ',
@@ -136,9 +123,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "durres-aldrz-albania", "durres ,al", "albania: durres", "durres pt", "durres port", "durres city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            10 => 
-            array (
+            ],
+            10 => [
                 'id' => 752,
                 'name' => 'LOBITO',
                 'code' => 'AOLOB',
@@ -148,9 +134,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lobito-aolob-angola", "lobito ,ao", "angola: lobito", "lobito pt", "lobito port", "lobito city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            11 => 
-            array (
+            ],
+            11 => [
                 'id' => 753,
                 'name' => 'LUANDA',
                 'code' => 'AOLAD',
@@ -160,9 +145,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["aolua", "", "luanda-aolad-angola", "luanda ,ao", "angola: luanda", "luanda pt", "luanda port", "luanda city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            12 => 
-            array (
+            ],
+            12 => [
                 'id' => 754,
                 'name' => 'NAMIBE',
                 'code' => 'AOMSZ',
@@ -172,9 +156,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "namibe-aomsz-angola", "namibe ,ao", "angola: namibe", "namibe pt", "namibe port", "namibe city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            13 => 
-            array (
+            ],
+            13 => [
                 'id' => 755,
                 'name' => 'BAHIA BLANCA',
                 'code' => 'ARBHI',
@@ -184,9 +167,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arbbl", "", "bahia blanca-arbhi-argentina", "bahia blanca ,ar", "argentina: bahia blanca", "bahia blanca pt", "bahia blanca port", "bahia blanca city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            14 => 
-            array (
+            ],
+            14 => [
                 'id' => 756,
                 'name' => 'BUENOS AIRES',
                 'code' => 'ARBUE',
@@ -196,9 +178,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arbna", "", "buenos aires-arbue-argentina", "buenos aires ,ar", "argentina: buenos aires", "buenos aires pt", "buenos aires port", "buenos aires city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            15 => 
-            array (
+            ],
+            15 => [
                 'id' => 757,
                 'name' => 'CORRIENTES',
                 'code' => 'ARCNQ',
@@ -208,9 +189,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arcrr", "", "corrientes-arcnq-argentina", "corrientes ,ar", "argentina: corrientes", "corrientes pt", "corrientes port", "corrientes city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            16 => 
-            array (
+            ],
+            16 => [
                 'id' => 758,
                 'name' => 'LAS PALMAS',
                 'code' => 'ARLPS',
@@ -220,9 +200,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arlsp", "", "las palmas-arlps-argentina", "las palmas ,ar", "argentina: las palmas", "las palmas pt", "las palmas port", "las palmas city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            17 => 
-            array (
+            ],
+            17 => [
                 'id' => 759,
                 'name' => 'MAR DEL PLATA',
                 'code' => 'ARMDQ',
@@ -232,9 +211,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["armdp", "", "mar del plata-armdq-argentina", "mar del plata ,ar", "argentina: mar del plata", "mar del plata pt", "mar del plata port", "mar del plata city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            18 => 
-            array (
+            ],
+            18 => [
                 'id' => 760,
                 'name' => 'PUERTO DESEADO',
                 'code' => 'ARPUD',
@@ -244,9 +222,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arpde", "", "puerto deseado-arpud-argentina", "puerto deseado ,ar", "argentina: puerto deseado", "puerto deseado pt", "puerto deseado port", "puerto deseado city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            19 => 
-            array (
+            ],
+            19 => [
                 'id' => 761,
                 'name' => 'PUERTO MADRYN',
                 'code' => 'ARPMY',
@@ -256,9 +233,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arpma", "", "puerto madryn-arpmy-argentina", "puerto madryn ,ar", "argentina: puerto madryn", "puerto madryn pt", "puerto madryn port", "puerto madryn city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            20 => 
-            array (
+            ],
+            20 => [
                 'id' => 762,
                 'name' => 'ROSARIO',
                 'code' => 'ARROS',
@@ -268,9 +244,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rosario-arros-argentina", "rosario ,ar", "argentina: rosario", "rosario pt", "rosario port", "rosario city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            21 => 
-            array (
+            ],
+            21 => [
                 'id' => 763,
                 'name' => 'SAN ANTONIO ESTE',
                 'code' => 'ARSAE',
@@ -280,9 +255,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "san antonio este-arsae-argentina", "san antonio este ,ar", "argentina: san antonio este", "san antonio este pt", "san antonio este port", "san antonio este city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            22 => 
-            array (
+            ],
+            22 => [
                 'id' => 764,
                 'name' => 'USHUAIA',
                 'code' => 'ARUSH',
@@ -292,9 +266,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ushuaia-arush-argentina", "ushuaia ,ar", "argentina: ushuaia", "ushuaia pt", "ushuaia port", "ushuaia city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            23 => 
-            array (
+            ],
+            23 => [
                 'id' => 765,
                 'name' => 'VILLA CONSTITUCION',
                 'code' => 'ARVCN',
@@ -304,9 +277,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "villa constitucion-arvcn-argentina", "villa constitucion ,ar", "argentina: villa constitucion", "villa constitucion pt", "villa constitucion port", "villa constitucion city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            24 => 
-            array (
+            ],
+            24 => [
                 'id' => 766,
                 'name' => 'ZARATE',
                 'code' => 'ARZAE',
@@ -316,9 +288,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["arzar", "", "zarate-arzae-argentina", "zarate ,ar", "argentina: zarate", "zarate pt", "zarate port", "zarate city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            25 => 
-            array (
+            ],
+            25 => [
                 'id' => 767,
                 'name' => 'PAGO PAGO',
                 'code' => 'ASPPG',
@@ -328,9 +299,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["aspgo", "", "pago pago-asppg-american samoa", "pago pago ,as", "american samoa: pago pago", "pago pago pt", "pago pago port", "pago pago city"]}',
                 'created_at' => '2018-09-05 19:34:10',
                 'updated_at' => '2018-09-05 19:34:10',
-            ),
-            26 => 
-            array (
+            ],
+            26 => [
                 'id' => 768,
                 'name' => 'Adelaide',
                 'code' => 'AUADL',
@@ -340,9 +310,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "adelaide-auadl-australia", "adelaide ,au", "australia: adelaide", "adelaide pt", "adelaide port", "adelaide city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            27 => 
-            array (
+            ],
+            27 => [
                 'id' => 769,
                 'name' => 'Bell Bay',
                 'code' => 'AUBEL',
@@ -352,9 +321,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["aublb", "", "bell bay-aubel-australia", "bell bay ,au", "australia: bell bay", "bell bay pt", "bell bay port", "bell bay city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            28 => 
-            array (
+            ],
+            28 => [
                 'id' => 770,
                 'name' => 'Brisbane',
                 'code' => 'AUBNE',
@@ -364,9 +332,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["aubri", "", "brisbane-aubne-australia", "brisbane ,au", "australia: brisbane", "brisbane pt", "brisbane port", "brisbane city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            29 => 
-            array (
+            ],
+            29 => [
                 'id' => 771,
                 'name' => 'Fremantle',
                 'code' => 'AUFRE',
@@ -376,9 +343,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fremantle-aufre-australia", "fremantle ,au", "australia: fremantle", "fremantle pt", "fremantle port", "fremantle city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            30 => 
-            array (
+            ],
+            30 => [
                 'id' => 772,
                 'name' => 'Melbourne',
                 'code' => 'AUMEL',
@@ -388,9 +354,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "melbourne-aumel-australia", "melbourne ,au", "australia: melbourne", "melbourne pt", "melbourne port", "melbourne city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            31 => 
-            array (
+            ],
+            31 => [
                 'id' => 773,
                 'name' => 'Sydney',
                 'code' => 'AUSYD',
@@ -400,9 +365,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sydney-ausyd-australia", "sydney ,au", "australia: sydney", "sydney pt", "sydney port", "sydney city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            32 => 
-            array (
+            ],
+            32 => [
                 'id' => 774,
                 'name' => 'Townsville',
                 'code' => 'AUTSV',
@@ -412,9 +376,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["autow", "", "townsville-autsv-australia", "townsville ,au", "australia: townsville", "townsville pt", "townsville port", "townsville city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            33 => 
-            array (
+            ],
+            33 => [
                 'id' => 775,
                 'name' => 'ESPERANCE',
                 'code' => 'AUEPR',
@@ -424,9 +387,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "esperance-auepr-australia", "esperance ,au", "australia: esperance", "esperance pt", "esperance port", "esperance city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            34 => 
-            array (
+            ],
+            34 => [
                 'id' => 776,
                 'name' => 'BRIDGETOWN',
                 'code' => 'BBBGI',
@@ -436,9 +398,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bridgetown-bbbgi-barbados", "bridgetown ,bb", "barbados: bridgetown", "bridgetown pt", "bridgetown port", "bridgetown city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            35 => 
-            array (
+            ],
+            35 => [
                 'id' => 777,
                 'name' => 'Chittagong',
                 'code' => 'BDCGP',
@@ -448,9 +409,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chittagong-bdcgp-bangladesh", "chittagong ,bd", "bangladesh: chittagong", "chittagong pt", "chittagong port", "chittagong city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            36 => 
-            array (
+            ],
+            36 => [
                 'id' => 778,
                 'name' => 'MONGLA',
                 'code' => 'BDMGL',
@@ -460,9 +420,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["bdmon", "", "mongla-bdmgl-bangladesh", "mongla ,bd", "bangladesh: mongla", "mongla pt", "mongla port", "mongla city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            37 => 
-            array (
+            ],
+            37 => [
                 'id' => 779,
                 'name' => 'Antwerp',
                 'code' => 'BEANR',
@@ -472,9 +431,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["beant", "", "antwerp-beanr-belgium", "antwerp ,be", "belgium: antwerp", "antwerp pt", "antwerp port", "antwerp city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            38 => 
-            array (
+            ],
+            38 => [
                 'id' => 780,
                 'name' => 'ZEEBRUGGE',
                 'code' => 'BEZEE',
@@ -484,9 +442,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zeebrugge-bezee-belgium", "zeebrugge ,be", "belgium: zeebrugge", "zeebrugge pt", "zeebrugge port", "zeebrugge city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            39 => 
-            array (
+            ],
+            39 => [
                 'id' => 781,
                 'name' => 'Burgas',
                 'code' => 'BGBOJ',
@@ -496,9 +453,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["bgbur", "", "burgas-bgboj-bulgaria", "burgas ,bg", "bulgaria: burgas", "burgas pt", "burgas port", "burgas city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            40 => 
-            array (
+            ],
+            40 => [
                 'id' => 782,
                 'name' => 'Varna',
                 'code' => 'BGVAR',
@@ -508,9 +464,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "varna-bgvar-bulgaria", "varna ,bg", "bulgaria: varna", "varna pt", "varna port", "varna city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            41 => 
-            array (
+            ],
+            41 => [
                 'id' => 783,
                 'name' => 'Bahrain',
                 'code' => 'BHKBS',
@@ -520,9 +475,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bahrain-bhkbs-bahrain", "bahrain ,bh", "bahrain: bahrain", "bahrain pt", "bahrain port", "bahrain city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            42 => 
-            array (
+            ],
+            42 => [
                 'id' => 784,
                 'name' => 'COTONOU',
                 'code' => 'BJCOO',
@@ -532,9 +486,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cotonou-bjcoo-benin", "cotonou ,bj", "benin: cotonou", "cotonou pt", "cotonou port", "cotonou city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            43 => 
-            array (
+            ],
+            43 => [
                 'id' => 785,
                 'name' => 'BELEM',
                 'code' => 'BRBEL',
@@ -544,9 +497,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "belem-brbel-brazil", "belem ,br", "brazil: belem", "belem pt", "belem port", "belem city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            44 => 
-            array (
+            ],
+            44 => [
                 'id' => 786,
                 'name' => 'ITAJAI',
                 'code' => 'BRITJ',
@@ -556,9 +508,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "itajai-britj-brazil", "itajai ,br", "brazil: itajai", "itajai pt", "itajai port", "itajai city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            45 => 
-            array (
+            ],
+            45 => [
                 'id' => 787,
                 'name' => 'ITAPOA',
                 'code' => 'BRIOA',
@@ -568,9 +519,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "itapoa-brioa-brazil", "itapoa ,br", "brazil: itapoa", "itapoa pt", "itapoa port", "itapoa city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            46 => 
-            array (
+            ],
+            46 => [
                 'id' => 788,
                 'name' => 'MANAUS',
                 'code' => 'BRMAO',
@@ -580,9 +530,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "manaus-brmao-brazil", "manaus ,br", "brazil: manaus", "manaus pt", "manaus port", "manaus city"]}',
                 'created_at' => '2018-09-05 19:34:11',
                 'updated_at' => '2018-09-05 19:34:11',
-            ),
-            47 => 
-            array (
+            ],
+            47 => [
                 'id' => 789,
                 'name' => 'NAVEGANTES',
                 'code' => 'BRNVT',
@@ -592,9 +541,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "navegantes-brnvt-brazil", "navegantes ,br", "brazil: navegantes", "navegantes pt", "navegantes port", "navegantes city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            48 => 
-            array (
+            ],
+            48 => [
                 'id' => 790,
                 'name' => 'PARANAGUA',
                 'code' => 'BRPNG',
@@ -604,9 +552,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "paranagua-brpng-brazil", "paranagua ,br", "brazil: paranagua", "paranagua pt", "paranagua port", "paranagua city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            49 => 
-            array (
+            ],
+            49 => [
                 'id' => 791,
                 'name' => 'PECEM',
                 'code' => 'BRPEC',
@@ -616,9 +563,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pecem-brpec-brazil", "pecem ,br", "brazil: pecem", "pecem pt", "pecem port", "pecem city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            50 => 
-            array (
+            ],
+            50 => [
                 'id' => 792,
                 'name' => 'PORTO VELHO',
                 'code' => 'BRPVH',
@@ -628,9 +574,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "porto velho-brpvh-brazil", "porto velho ,br", "brazil: porto velho", "porto velho pt", "porto velho port", "porto velho city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            51 => 
-            array (
+            ],
+            51 => [
                 'id' => 793,
                 'name' => 'RIO DE JANEIRO',
                 'code' => 'BRRIO',
@@ -640,9 +585,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rio de janeiro-brrio-brazil", "rio de janeiro ,br", "brazil: rio de janeiro", "rio de janeiro pt", "rio de janeiro port", "rio de janeiro city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            52 => 
-            array (
+            ],
+            52 => [
                 'id' => 794,
                 'name' => 'RIO GRANDE',
                 'code' => 'BRRIG',
@@ -652,9 +596,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rio grande-brrig-brazil", "rio grande ,br", "brazil: rio grande", "rio grande pt", "rio grande port", "rio grande city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            53 => 
-            array (
+            ],
+            53 => [
                 'id' => 795,
                 'name' => 'SALVADOR',
                 'code' => 'BRSSA',
@@ -664,9 +607,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salvador-brssa-brazil", "salvador ,br", "brazil: salvador", "salvador pt", "salvador port", "salvador city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            54 => 
-            array (
+            ],
+            54 => [
                 'id' => 796,
                 'name' => 'SANTAREM',
                 'code' => 'BRSTM',
@@ -676,9 +618,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santarem-brstm-brazil", "santarem ,br", "brazil: santarem", "santarem pt", "santarem port", "santarem city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            55 => 
-            array (
+            ],
+            55 => [
                 'id' => 797,
                 'name' => 'SANTOS',
                 'code' => 'BRSSZ',
@@ -688,9 +629,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santos-brssz-brazil", "santos ,br", "brazil: santos", "santos pt", "santos port", "santos city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            56 => 
-            array (
+            ],
+            56 => [
                 'id' => 798,
                 'name' => 'SUAPE',
                 'code' => 'BRSUA',
@@ -700,9 +640,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "suape-brsua-brazil", "suape ,br", "brazil: suape", "suape pt", "suape port", "suape city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            57 => 
-            array (
+            ],
+            57 => [
                 'id' => 799,
                 'name' => 'VILA DO CONDE',
                 'code' => 'BRVLC',
@@ -712,9 +651,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vila do conde-brvlc-brazil", "vila do conde ,br", "brazil: vila do conde", "vila do conde pt", "vila do conde port", "vila do conde city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            58 => 
-            array (
+            ],
+            58 => [
                 'id' => 800,
                 'name' => 'VITORIA',
                 'code' => 'BRVIX',
@@ -724,9 +662,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vitoria-brvix-brazil", "vitoria ,br", "brazil: vitoria", "vitoria pt", "vitoria port", "vitoria city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            59 => 
-            array (
+            ],
+            59 => [
                 'id' => 801,
                 'name' => 'Freeport',
                 'code' => 'BSFPO',
@@ -736,9 +673,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "freeport-bsfpo-bahamas", "freeport ,bs", "bahamas: freeport", "freeport pt", "freeport port", "freeport city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            60 => 
-            array (
+            ],
+            60 => [
                 'id' => 802,
                 'name' => 'NASSAU',
                 'code' => 'BSNAS',
@@ -748,9 +684,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nassau-bsnas-bahamas", "nassau ,bs", "bahamas: nassau", "nassau pt", "nassau port", "nassau city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            61 => 
-            array (
+            ],
+            61 => [
                 'id' => 803,
                 'name' => 'BELIZE CITY',
                 'code' => 'BZBZE',
@@ -760,9 +695,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "belize city-bzbze-belize", "belize city ,bz", "belize: belize city", "belize city pt", "belize city port", "belize city city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            62 => 
-            array (
+            ],
+            62 => [
                 'id' => 804,
                 'name' => 'MONTREAL',
                 'code' => 'CAMTR',
@@ -772,9 +706,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "montreal-camtr-canada", "montreal ,ca", "canada: montreal", "montreal pt", "montreal port", "montreal city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            63 => 
-            array (
+            ],
+            63 => [
                 'id' => 805,
                 'name' => 'PRINCE RUPERT',
                 'code' => 'CAPRR',
@@ -784,9 +717,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "prince rupert-caprr-canada", "prince rupert ,ca", "canada: prince rupert", "prince rupert pt", "prince rupert port", "prince rupert city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            64 => 
-            array (
+            ],
+            64 => [
                 'id' => 806,
                 'name' => 'SAINT JOHN',
                 'code' => 'CASJB',
@@ -796,9 +728,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "saint john-casjb-canada", "saint john ,ca", "canada: saint john", "saint john pt", "saint john port", "saint john city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            65 => 
-            array (
+            ],
+            65 => [
                 'id' => 807,
                 'name' => 'VANCOUVER',
                 'code' => 'CAVAN',
@@ -808,9 +739,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vancouver-cavan-canada", "vancouver ,ca", "canada: vancouver", "vancouver pt", "vancouver port", "vancouver city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            66 => 
-            array (
+            ],
+            66 => [
                 'id' => 808,
                 'name' => 'ABIDJAN',
                 'code' => 'CIABJ',
@@ -820,9 +750,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "abidjan-ciabj-cote d\'ivoire", "abidjan ,ci", "cote d\'ivoire: abidjan", "abidjan pt", "abidjan port", "abidjan city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            67 => 
-            array (
+            ],
+            67 => [
                 'id' => 809,
                 'name' => 'SAN-PEDRO',
                 'code' => 'CISPY',
@@ -832,9 +761,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "san-pedro-cispy-cote d\'ivoire", "san-pedro ,ci", "cote d\'ivoire: san-pedro", "san-pedro pt", "san-pedro port", "san-pedro city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            68 => 
-            array (
+            ],
+            68 => [
                 'id' => 810,
                 'name' => 'RAROTONGA',
                 'code' => 'CKRAR',
@@ -844,9 +772,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rarotonga-ckrar-cook islands", "rarotonga ,ck", "cook islands: rarotonga", "rarotonga pt", "rarotonga port", "rarotonga city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            69 => 
-            array (
+            ],
+            69 => [
                 'id' => 811,
                 'name' => 'Arica',
                 'code' => 'CLARI',
@@ -856,9 +783,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "arica-clari-chile", "arica ,cl", "chile: arica", "arica pt", "arica port", "arica city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            70 => 
-            array (
+            ],
+            70 => [
                 'id' => 812,
                 'name' => 'Iquique',
                 'code' => 'CLIQQ',
@@ -868,9 +794,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "iquique-cliqq-chile", "iquique ,cl", "chile: iquique", "iquique pt", "iquique port", "iquique city"]}',
                 'created_at' => '2018-09-05 19:34:12',
                 'updated_at' => '2018-09-05 19:34:12',
-            ),
-            71 => 
-            array (
+            ],
+            71 => [
                 'id' => 813,
                 'name' => 'San Antonio',
                 'code' => 'CLSAI',
@@ -880,9 +805,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "san antonio-clsai-chile", "san antonio ,cl", "chile: san antonio", "san antonio pt", "san antonio port", "san antonio city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            72 => 
-            array (
+            ],
+            72 => [
                 'id' => 814,
                 'name' => 'San Vicente',
                 'code' => 'CLSVE',
@@ -892,9 +816,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "san vicente-clsve-chile", "san vicente ,cl", "chile: san vicente", "san vicente pt", "san vicente port", "san vicente city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            73 => 
-            array (
+            ],
+            73 => [
                 'id' => 815,
                 'name' => 'CORONEL',
                 'code' => 'CLCNL',
@@ -904,9 +827,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "coronel-clcnl-chile", "coronel ,cl", "chile: coronel", "coronel pt", "coronel port", "coronel city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            74 => 
-            array (
+            ],
+            74 => [
                 'id' => 816,
                 'name' => 'LIRQUEN',
                 'code' => 'CLLQN',
@@ -916,21 +838,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lirquen-cllqn-chile", "lirquen ,cl", "chile: lirquen", "lirquen pt", "lirquen port", "lirquen city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            75 => 
-            array (
+            ],
+            75 => [
                 'id' => 817,
                 'name' => 'PUERTO ANGAMOS',
                 'code' => 'CLPAG',
                 'display_name' => 'PUERTO ANGAMOS, CLPAG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 44,
                 'varation' => '{"type": ["", "", "puerto angamos-clpag-chile", "puerto angamos ,cl", "chile: puerto angamos", "puerto angamos pt", "puerto angamos port", "puerto angamos city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            76 => 
-            array (
+            ],
+            76 => [
                 'id' => 818,
                 'name' => 'VALPARAISO',
                 'code' => 'CLVAP',
@@ -940,9 +860,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "valparaiso-clvap-chile", "valparaiso ,cl", "chile: valparaiso", "valparaiso pt", "valparaiso port", "valparaiso city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            77 => 
-            array (
+            ],
+            77 => [
                 'id' => 819,
                 'name' => 'DOUALA',
                 'code' => 'CMDLA',
@@ -952,9 +871,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "douala-cmdla-cameroon", "douala ,cm", "cameroon: douala", "douala pt", "douala port", "douala city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            78 => 
-            array (
+            ],
+            78 => [
                 'id' => 820,
                 'name' => 'Anqing',
                 'code' => 'CNAQG',
@@ -964,9 +882,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "anqing-cnaqg-china", "anqing ,cn", "china: anqing", "anqing pt", "anqing port", "anqing city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            79 => 
-            array (
+            ],
+            79 => [
                 'id' => 821,
                 'name' => 'Beihai',
                 'code' => 'CNBHY',
@@ -976,33 +893,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "beihai-cnbhy-china", "beihai ,cn", "china: beihai", "beihai pt", "beihai port", "beihai city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            80 => 
-            array (
+            ],
+            80 => [
                 'id' => 822,
                 'name' => 'Beijiao',
                 'code' => 'CNBIJ',
                 'display_name' => 'Beijiao, CNBIJ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "beijiao-cnbij-china", "beijiao ,cn", "china: beijiao", "beijiao pt", "beijiao port", "beijiao city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            81 => 
-            array (
+            ],
+            81 => [
                 'id' => 823,
                 'name' => 'Changsha',
                 'code' => 'CNCSH',
                 'display_name' => 'Changsha, CNCSH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "changsha-cncsh-china", "changsha ,cn", "china: changsha", "changsha pt", "changsha port", "changsha city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            82 => 
-            array (
+            ],
+            82 => [
                 'id' => 824,
                 'name' => 'Changshu',
                 'code' => 'CNCGS ',
@@ -1012,9 +926,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "changshu-cncgs -china", "changshu ,cn", "china: changshu", "changshu pt", "changshu port", "changshu city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            83 => 
-            array (
+            ],
+            83 => [
                 'id' => 825,
                 'name' => 'Changzhou',
                 'code' => 'CNCZX ',
@@ -1024,9 +937,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "changzhou-cnczx -china", "changzhou ,cn", "china: changzhou", "changzhou pt", "changzhou port", "changzhou city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            84 => 
-            array (
+            ],
+            84 => [
                 'id' => 826,
                 'name' => 'Chongqing',
                 'code' => 'CNCQI',
@@ -1036,21 +948,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chongqing-cncqi-china", "chongqing ,cn", "china: chongqing", "chongqing pt", "chongqing port", "chongqing city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            85 => 
-            array (
+            ],
+            85 => [
                 'id' => 827,
                 'name' => 'Dafeng',
                 'code' => 'CNDFG',
                 'display_name' => 'Dafeng, CNDFG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "dafeng-cndfg-china", "dafeng ,cn", "china: dafeng", "dafeng pt", "dafeng port", "dafeng city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            86 => 
-            array (
+            ],
+            86 => [
                 'id' => 828,
                 'name' => 'Dalian',
                 'code' => 'CNDLC',
@@ -1060,9 +970,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dalian-cndlc-china", "dalian ,cn", "china: dalian", "dalian pt", "dalian port", "dalian city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            87 => 
-            array (
+            ],
+            87 => [
                 'id' => 829,
                 'name' => 'Fangcheng',
                 'code' => 'CNFAN',
@@ -1072,9 +981,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fangcheng-cnfan-china", "fangcheng ,cn", "china: fangcheng", "fangcheng pt", "fangcheng port", "fangcheng city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            88 => 
-            array (
+            ],
+            88 => [
                 'id' => 830,
                 'name' => 'Foshan',
                 'code' => 'CNFOS',
@@ -1084,9 +992,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "foshan-cnfos-china", "foshan ,cn", "china: foshan", "foshan pt", "foshan port", "foshan city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            89 => 
-            array (
+            ],
+            89 => [
                 'id' => 831,
                 'name' => 'Fuzhou',
                 'code' => 'CNFOC',
@@ -1096,21 +1003,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fuzhou-cnfoc-china", "fuzhou ,cn", "china: fuzhou", "fuzhou pt", "fuzhou port", "fuzhou city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            90 => 
-            array (
+            ],
+            90 => [
                 'id' => 832,
                 'name' => 'Gaolan',
                 'code' => 'CNGLA',
                 'display_name' => 'Gaolan, CNGLA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "gaolan-cngla-china", "gaolan ,cn", "china: gaolan", "gaolan pt", "gaolan port", "gaolan city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            91 => 
-            array (
+            ],
+            91 => [
                 'id' => 833,
                 'name' => 'Gaoming',
                 'code' => 'CNGOM',
@@ -1120,21 +1025,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gaoming-cngom-china", "gaoming ,cn", "china: gaoming", "gaoming pt", "gaoming port", "gaoming city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            92 => 
-            array (
+            ],
+            92 => [
                 'id' => 834,
                 'name' => 'Gaoyao',
                 'code' => 'CNGAY',
                 'display_name' => 'Gaoyao, CNGAY',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "gaoyao-cngay-china", "gaoyao ,cn", "china: gaoyao", "gaoyao pt", "gaoyao port", "gaoyao city"]}',
                 'created_at' => '2018-09-05 19:34:13',
                 'updated_at' => '2018-09-05 19:34:13',
-            ),
-            93 => 
-            array (
+            ],
+            93 => [
                 'id' => 835,
                 'name' => 'Haikou',
                 'code' => 'CNHAK',
@@ -1144,9 +1047,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "haikou-cnhak-china", "haikou ,cn", "china: haikou", "haikou pt", "haikou port", "haikou city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            94 => 
-            array (
+            ],
+            94 => [
                 'id' => 836,
                 'name' => 'Haimen',
                 'code' => 'CNHME',
@@ -1156,21 +1058,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "haimen-cnhme-china", "haimen ,cn", "china: haimen", "haimen pt", "haimen port", "haimen city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            95 => 
-            array (
+            ],
+            95 => [
                 'id' => 837,
                 'name' => 'Huadu',
                 'code' => 'CNHDU',
                 'display_name' => 'Huadu, CNHDU',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "huadu-cnhdu-china", "huadu ,cn", "china: huadu", "huadu pt", "huadu port", "huadu city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            96 => 
-            array (
+            ],
+            96 => [
                 'id' => 838,
                 'name' => 'Huangpu',
                 'code' => 'CNHUA',
@@ -1180,21 +1080,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "huangpu-cnhua-china", "huangpu ,cn", "china: huangpu", "huangpu pt", "huangpu port", "huangpu city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            97 => 
-            array (
+            ],
+            97 => [
                 'id' => 839,
                 'name' => 'Huzhou',
                 'code' => 'CNHZH',
                 'display_name' => 'Huzhou, CNHZH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "huzhou-cnhzh-china", "huzhou ,cn", "china: huzhou", "huzhou pt", "huzhou port", "huzhou city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            98 => 
-            array (
+            ],
+            98 => [
                 'id' => 840,
                 'name' => 'Jiangmen',
                 'code' => 'CNJMN',
@@ -1204,9 +1102,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jiangmen-cnjmn-china", "jiangmen ,cn", "china: jiangmen", "jiangmen pt", "jiangmen port", "jiangmen city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            99 => 
-            array (
+            ],
+            99 => [
                 'id' => 841,
                 'name' => 'Jiangyin - Jiangsu',
                 'code' => 'CNJIA',
@@ -1216,21 +1113,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jiangyin - jiangsu-cnjia-china", "jiangyin - jiangsu ,cn", "china: jiangyin - jiangsu", "jiangyin - jiangsu pt", "jiangyin - jiangsu port", "jiangyin - jiangsu city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            100 => 
-            array (
+            ],
+            100 => [
                 'id' => 842,
                 'name' => 'Jiaxing',
                 'code' => 'CNJAX',
                 'display_name' => 'Jiaxing, CNJAX',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "jiaxing-cnjax-china", "jiaxing ,cn", "china: jiaxing", "jiaxing pt", "jiaxing port", "jiaxing city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            101 => 
-            array (
+            ],
+            101 => [
                 'id' => 843,
                 'name' => 'JIUJIANG',
                 'code' => 'CNJIU',
@@ -1240,33 +1135,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jiujiang-cnjiu-china", "jiujiang ,cn", "china: jiujiang", "jiujiang pt", "jiujiang port", "jiujiang city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            102 => 
-            array (
+            ],
+            102 => [
                 'id' => 844,
                 'name' => 'Lanshi',
                 'code' => 'CNLNS',
                 'display_name' => 'Lanshi, CNLNS',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "lanshi-cnlns-china", "lanshi ,cn", "china: lanshi", "lanshi pt", "lanshi port", "lanshi city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            103 => 
-            array (
+            ],
+            103 => [
                 'id' => 845,
                 'name' => 'Leliu',
                 'code' => 'CNLUU',
                 'display_name' => 'Leliu, CNLUU',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "leliu-cnluu-china", "leliu ,cn", "china: leliu", "leliu pt", "leliu port", "leliu city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            104 => 
-            array (
+            ],
+            104 => [
                 'id' => 846,
                 'name' => 'Lian Hua Shan',
                 'code' => 'CNLIH ',
@@ -1276,9 +1168,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lian hua shan-cnlih -china", "lian hua shan ,cn", "china: lian hua shan", "lian hua shan pt", "lian hua shan port", "lian hua shan city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            105 => 
-            array (
+            ],
+            105 => [
                 'id' => 847,
                 'name' => 'Lianyungang',
                 'code' => 'CNLYG',
@@ -1288,9 +1179,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lianyungang-cnlyg-china", "lianyungang ,cn", "china: lianyungang", "lianyungang pt", "lianyungang port", "lianyungang city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            106 => 
-            array (
+            ],
+            106 => [
                 'id' => 848,
                 'name' => 'Maanshan',
                 'code' => 'CNMAA',
@@ -1300,45 +1190,41 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "maanshan-cnmaa-china", "maanshan ,cn", "china: maanshan", "maanshan pt", "maanshan port", "maanshan city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            107 => 
-            array (
+            ],
+            107 => [
                 'id' => 849,
                 'name' => 'Mawei',
                 'code' => 'CNMAW',
                 'display_name' => 'Mawei, CNMAW',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "mawei-cnmaw-china", "mawei ,cn", "china: mawei", "mawei pt", "mawei port", "mawei city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            108 => 
-            array (
+            ],
+            108 => [
                 'id' => 850,
                 'name' => 'Nanchang',
                 'code' => 'CNNCH',
                 'display_name' => 'Nanchang, CNNCH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "nanchang-cnnch-china", "nanchang ,cn", "china: nanchang", "nanchang pt", "nanchang port", "nanchang city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            109 => 
-            array (
+            ],
+            109 => [
                 'id' => 851,
                 'name' => 'Nangang',
                 'code' => 'CNNGG',
                 'display_name' => 'Nangang, CNNGG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "nangang-cnngg-china", "nangang ,cn", "china: nangang", "nangang pt", "nangang port", "nangang city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            110 => 
-            array (
+            ],
+            110 => [
                 'id' => 852,
                 'name' => 'Nanjing',
                 'code' => 'CNNKG',
@@ -1348,9 +1234,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nanjing-cnnkg-china", "nanjing ,cn", "china: nanjing", "nanjing pt", "nanjing port", "nanjing city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            111 => 
-            array (
+            ],
+            111 => [
                 'id' => 853,
                 'name' => 'Nansha New Port',
                 'code' => 'CNNSA',
@@ -1360,9 +1245,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nansha new port-cnnsa-china", "nansha new port ,cn", "china: nansha new port", "nansha new port pt", "nansha new port port", "nansha new port city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            112 => 
-            array (
+            ],
+            112 => [
                 'id' => 854,
                 'name' => 'Nantong',
                 'code' => 'CNNTG',
@@ -1372,9 +1256,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nantong-cnntg-china", "nantong ,cn", "china: nantong", "nantong pt", "nantong port", "nantong city"]}',
                 'created_at' => '2018-09-05 19:34:14',
                 'updated_at' => '2018-09-05 19:34:14',
-            ),
-            113 => 
-            array (
+            ],
+            113 => [
                 'id' => 855,
                 'name' => 'Ningbo',
                 'code' => 'CNNGB',
@@ -1384,21 +1267,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ningbo-cnngb-china", "ningbo ,cn", "china: ningbo", "ningbo pt", "ningbo port", "ningbo city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            114 => 
-            array (
+            ],
+            114 => [
                 'id' => 856,
                 'name' => 'Putian',
                 'code' => 'CNPUT',
                 'display_name' => 'Putian, CNPUT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "putian-cnput-china", "putian ,cn", "china: putian", "putian pt", "putian port", "putian city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            115 => 
-            array (
+            ],
+            115 => [
                 'id' => 857,
                 'name' => 'Qingdao',
                 'code' => 'CNTAO',
@@ -1408,9 +1289,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "qingdao-cntao-china", "qingdao ,cn", "china: qingdao", "qingdao pt", "qingdao port", "qingdao city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            116 => 
-            array (
+            ],
+            116 => [
                 'id' => 858,
                 'name' => 'Qinhuangdao',
                 'code' => 'CNSHP',
@@ -1420,9 +1300,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "qinhuangdao-cnshp-china", "qinhuangdao ,cn", "china: qinhuangdao", "qinhuangdao pt", "qinhuangdao port", "qinhuangdao city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            117 => 
-            array (
+            ],
+            117 => [
                 'id' => 859,
                 'name' => 'Qinzhou',
                 'code' => 'CNQZH',
@@ -1432,45 +1311,41 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "qinzhou-cnqzh-china", "qinzhou ,cn", "china: qinzhou", "qinzhou pt", "qinzhou port", "qinzhou city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            118 => 
-            array (
+            ],
+            118 => [
                 'id' => 860,
                 'name' => 'Rongqi',
                 'code' => 'CNROQ',
                 'display_name' => 'Rongqi, CNROQ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "rongqi-cnroq-china", "rongqi ,cn", "china: rongqi", "rongqi pt", "rongqi port", "rongqi city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            119 => 
-            array (
+            ],
+            119 => [
                 'id' => 861,
                 'name' => 'San Shan',
                 'code' => 'CNNHS',
                 'display_name' => 'San Shan, CNNHS',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "san shan-cnnhs-china", "san shan ,cn", "china: san shan", "san shan pt", "san shan port", "san shan city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            120 => 
-            array (
+            ],
+            120 => [
                 'id' => 862,
                 'name' => 'Sanshui',
                 'code' => 'CNSJQ',
                 'display_name' => 'Sanshui, CNSJQ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "sanshui-cnsjq-china", "sanshui ,cn", "china: sanshui", "sanshui pt", "sanshui port", "sanshui city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            121 => 
-            array (
+            ],
+            121 => [
                 'id' => 863,
                 'name' => 'Shanghai',
                 'code' => 'CNSHA',
@@ -1480,9 +1355,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shanghai-cnsha-china", "shanghai ,cn", "china: shanghai", "shanghai pt", "shanghai port", "shanghai city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            122 => 
-            array (
+            ],
+            122 => [
                 'id' => 864,
                 'name' => 'Shantou',
                 'code' => 'CNSWA',
@@ -1492,21 +1366,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shantou-cnswa-china", "shantou ,cn", "china: shantou", "shantou pt", "shantou port", "shantou city"]}',
                 'created_at' => '2018-09-05 19:34:15',
                 'updated_at' => '2018-09-05 19:34:15',
-            ),
-            123 => 
-            array (
+            ],
+            123 => [
                 'id' => 865,
                 'name' => 'Shatian',
                 'code' => 'CNSTI',
                 'display_name' => 'Shatian, CNSTI',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "shatian-cnsti-china", "shatian ,cn", "china: shatian", "shatian pt", "shatian port", "shatian city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            124 => 
-            array (
+            ],
+            124 => [
                 'id' => 866,
                 'name' => 'Shekou',
                 'code' => 'CNSHK',
@@ -1516,9 +1388,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shekou-cnshk-china", "shekou ,cn", "china: shekou", "shekou pt", "shekou port", "shekou city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            125 => 
-            array (
+            ],
+            125 => [
                 'id' => 867,
                 'name' => 'Shidao',
                 'code' => 'CNSHD',
@@ -1528,9 +1399,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shidao-cnshd-china", "shidao ,cn", "china: shidao", "shidao pt", "shidao port", "shidao city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            126 => 
-            array (
+            ],
+            126 => [
                 'id' => 868,
                 'name' => 'Shuidong',
                 'code' => 'CNSDG',
@@ -1540,21 +1410,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shuidong-cnsdg-china", "shuidong ,cn", "china: shuidong", "shuidong pt", "shuidong port", "shuidong city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            127 => 
-            array (
+            ],
+            127 => [
                 'id' => 869,
                 'name' => 'Taicang',
                 'code' => 'CNTAC',
                 'display_name' => 'Taicang, CNTAC',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "taicang-cntac-china", "taicang ,cn", "china: taicang", "taicang pt", "taicang port", "taicang city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            128 => 
-            array (
+            ],
+            128 => [
                 'id' => 870,
                 'name' => 'Taizhou',
                 'code' => 'CNTZO',
@@ -1564,9 +1432,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "taizhou-cntzo-china", "taizhou ,cn", "china: taizhou", "taizhou pt", "taizhou port", "taizhou city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            129 => 
-            array (
+            ],
+            129 => [
                 'id' => 871,
                 'name' => 'Tongling',
                 'code' => 'CNTOL',
@@ -1576,9 +1443,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tongling-cntol-china", "tongling ,cn", "china: tongling", "tongling pt", "tongling port", "tongling city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            130 => 
-            array (
+            ],
+            130 => [
                 'id' => 872,
                 'name' => 'Weihai',
                 'code' => 'CNWEI',
@@ -1588,9 +1454,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "weihai-cnwei-china", "weihai ,cn", "china: weihai", "weihai pt", "weihai port", "weihai city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            131 => 
-            array (
+            ],
+            131 => [
                 'id' => 873,
                 'name' => 'Wenzhou',
                 'code' => 'CNWNZ',
@@ -1600,9 +1465,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wenzhou-cnwnz-china", "wenzhou ,cn", "china: wenzhou", "wenzhou pt", "wenzhou port", "wenzhou city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            132 => 
-            array (
+            ],
+            132 => [
                 'id' => 874,
                 'name' => 'Wuhan',
                 'code' => 'CNWUH',
@@ -1612,9 +1476,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wuhan-cnwuh-china", "wuhan ,cn", "china: wuhan", "wuhan pt", "wuhan port", "wuhan city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            133 => 
-            array (
+            ],
+            133 => [
                 'id' => 875,
                 'name' => 'Wuhu',
                 'code' => 'CNWHI',
@@ -1624,9 +1487,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wuhu-cnwhi-china", "wuhu ,cn", "china: wuhu", "wuhu pt", "wuhu port", "wuhu city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            134 => 
-            array (
+            ],
+            134 => [
                 'id' => 876,
                 'name' => 'Wuzhou',
                 'code' => 'CNWUZ',
@@ -1636,9 +1498,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wuzhou-cnwuz-china", "wuzhou ,cn", "china: wuzhou", "wuzhou pt", "wuzhou port", "wuzhou city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            135 => 
-            array (
+            ],
+            135 => [
                 'id' => 877,
                 'name' => 'Xiamen',
                 'code' => 'CNXMN',
@@ -1648,57 +1509,52 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "xiamen-cnxmn-china", "xiamen ,cn", "china: xiamen", "xiamen pt", "xiamen port", "xiamen city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            136 => 
-            array (
+            ],
+            136 => [
                 'id' => 878,
                 'name' => 'Xiaolan',
                 'code' => 'CNXAO',
                 'display_name' => 'Xiaolan, CNXAO',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "xiaolan-cnxao-china", "xiaolan ,cn", "china: xiaolan", "xiaolan pt", "xiaolan port", "xiaolan city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            137 => 
-            array (
+            ],
+            137 => [
                 'id' => 879,
                 'name' => 'Xingang',
                 'code' => 'CNXGA',
                 'display_name' => 'Xingang, CNXGA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "xingang-cnxga-china", "xingang ,cn", "china: xingang", "xingang pt", "xingang port", "xingang city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            138 => 
-            array (
+            ],
+            138 => [
                 'id' => 880,
                 'name' => 'Xinhui',
                 'code' => 'CNXIN',
                 'display_name' => 'Xinhui, CNXIN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "xinhui-cnxin-china", "xinhui ,cn", "china: xinhui", "xinhui pt", "xinhui port", "xinhui city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            139 => 
-            array (
+            ],
+            139 => [
                 'id' => 881,
                 'name' => 'Yangpu',
                 'code' => 'CNYGP',
                 'display_name' => 'Yangpu, CNYGP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "yangpu-cnygp-china", "yangpu ,cn", "china: yangpu", "yangpu pt", "yangpu port", "yangpu city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            140 => 
-            array (
+            ],
+            140 => [
                 'id' => 882,
                 'name' => 'Yangzhou',
                 'code' => 'CN YZH',
@@ -1708,21 +1564,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yangzhou-cn yzh-china", "yangzhou ,cn", "china: yangzhou", "yangzhou pt", "yangzhou port", "yangzhou city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            141 => 
-            array (
+            ],
+            141 => [
                 'id' => 883,
                 'name' => 'Yantai',
                 'code' => 'CNYNT',
                 'display_name' => 'Yantai, CNYNT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "yantai-cnynt-china", "yantai ,cn", "china: yantai", "yantai pt", "yantai port", "yantai city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            142 => 
-            array (
+            ],
+            142 => [
                 'id' => 884,
                 'name' => 'Yantian',
                 'code' => 'CNYTN',
@@ -1732,33 +1586,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yantian-cnytn-china", "yantian ,cn", "china: yantian", "yantian pt", "yantian port", "yantian city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            143 => 
-            array (
+            ],
+            143 => [
                 'id' => 885,
                 'name' => 'Yibin',
                 'code' => 'CNYIB',
                 'display_name' => 'Yibin, CNYIB',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "yibin-cnyib-china", "yibin ,cn", "china: yibin", "yibin pt", "yibin port", "yibin city"]}',
                 'created_at' => '2018-09-05 19:34:16',
                 'updated_at' => '2018-09-05 19:34:16',
-            ),
-            144 => 
-            array (
+            ],
+            144 => [
                 'id' => 886,
                 'name' => 'Yichang',
                 'code' => 'CNYIC',
                 'display_name' => 'Yichang, CNYIC',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "yichang-cnyic-china", "yichang ,cn", "china: yichang", "yichang pt", "yichang port", "yichang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            145 => 
-            array (
+            ],
+            145 => [
                 'id' => 887,
                 'name' => 'Yue Yang',
                 'code' => 'CN YYA',
@@ -1768,21 +1619,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yue yang-cn yya-china", "yue yang ,cn", "china: yue yang", "yue yang pt", "yue yang port", "yue yang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            146 => 
-            array (
+            ],
+            146 => [
                 'id' => 888,
                 'name' => 'Yun Fu',
                 'code' => 'CNYUF',
                 'display_name' => 'Yun Fu, CNYUF',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "yun fu-cnyuf-china", "yun fu ,cn", "china: yun fu", "yun fu pt", "yun fu port", "yun fu city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            147 => 
-            array (
+            ],
+            147 => [
                 'id' => 889,
                 'name' => 'Zhangjiagang',
                 'code' => 'CNZJG',
@@ -1792,9 +1641,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zhangjiagang-cnzjg-china", "zhangjiagang ,cn", "china: zhangjiagang", "zhangjiagang pt", "zhangjiagang port", "zhangjiagang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            148 => 
-            array (
+            ],
+            148 => [
                 'id' => 890,
                 'name' => 'Zhanjiang',
                 'code' => 'CNZHA',
@@ -1804,9 +1652,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zhanjiang-cnzha-china", "zhanjiang ,cn", "china: zhanjiang", "zhanjiang pt", "zhanjiang port", "zhanjiang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            149 => 
-            array (
+            ],
+            149 => [
                 'id' => 891,
                 'name' => 'Zhaoqing',
                 'code' => 'CNZQG',
@@ -1816,21 +1663,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zhaoqing-cnzqg-china", "zhaoqing ,cn", "china: zhaoqing", "zhaoqing pt", "zhaoqing port", "zhaoqing city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            150 => 
-            array (
+            ],
+            150 => [
                 'id' => 892,
                 'name' => 'Zhengzhou',
                 'code' => 'CNZGZ',
                 'display_name' => 'Zhengzhou, CNZGZ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "zhengzhou-cnzgz-china", "zhengzhou ,cn", "china: zhengzhou", "zhengzhou pt", "zhengzhou port", "zhengzhou city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            151 => 
-            array (
+            ],
+            151 => [
                 'id' => 893,
                 'name' => 'Zhenjiang',
                 'code' => 'CNZHE',
@@ -1840,21 +1685,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zhenjiang-cnzhe-china", "zhenjiang ,cn", "china: zhenjiang", "zhenjiang pt", "zhenjiang port", "zhenjiang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            152 => 
-            array (
+            ],
+            152 => [
                 'id' => 894,
                 'name' => 'Zhongshan',
                 'code' => 'CNZGA',
                 'display_name' => 'Zhongshan, CNZGA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "zhongshan-cnzga-china", "zhongshan ,cn", "china: zhongshan", "zhongshan pt", "zhongshan port", "zhongshan city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            153 => 
-            array (
+            ],
+            153 => [
                 'id' => 895,
                 'name' => 'Zhuhai',
                 'code' => 'CNZUH',
@@ -1864,9 +1707,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zhuhai-cnzuh-china", "zhuhai ,cn", "china: zhuhai", "zhuhai pt", "zhuhai port", "zhuhai city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            154 => 
-            array (
+            ],
+            154 => [
                 'id' => 896,
                 'name' => 'Dongguan',
                 'code' => 'CNDGG',
@@ -1876,21 +1718,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dongguan-cndgg-china", "dongguan ,cn", "china: dongguan", "dongguan pt", "dongguan port", "dongguan city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            155 => 
-            array (
+            ],
+            155 => [
                 'id' => 897,
                 'name' => 'Guangzhou',
                 'code' => 'CNGZG',
                 'display_name' => 'Guangzhou, CNGZG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 46,
                 'varation' => '{"type": ["", "", "guangzhou-cngzg-china", "guangzhou ,cn", "china: guangzhou", "guangzhou pt", "guangzhou port", "guangzhou city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            156 => 
-            array (
+            ],
+            156 => [
                 'id' => 898,
                 'name' => 'TIANJINXINGANG',
                 'code' => 'CNTXG',
@@ -1900,9 +1740,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tianjinxingang-cntxg-china", "tianjinxingang ,cn", "china: tianjinxingang", "tianjinxingang pt", "tianjinxingang port", "tianjinxingang city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            157 => 
-            array (
+            ],
+            157 => [
                 'id' => 899,
                 'name' => 'Barranquilla',
                 'code' => 'COBAQ',
@@ -1912,9 +1751,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "barranquilla-cobaq-colombia", "barranquilla ,co", "colombia: barranquilla", "barranquilla pt", "barranquilla port", "barranquilla city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            158 => 
-            array (
+            ],
+            158 => [
                 'id' => 900,
                 'name' => 'Buenaventura',
                 'code' => 'COBUN',
@@ -1924,9 +1762,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["cobue", "", "buenaventura-cobun-colombia", "buenaventura ,co", "colombia: buenaventura", "buenaventura pt", "buenaventura port", "buenaventura city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            159 => 
-            array (
+            ],
+            159 => [
                 'id' => 901,
                 'name' => 'Cartagena',
                 'code' => 'COCTG',
@@ -1936,9 +1773,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["cocta", "", "cartagena-coctg-colombia", "cartagena ,co", "colombia: cartagena", "cartagena pt", "cartagena port", "cartagena city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            160 => 
-            array (
+            ],
+            160 => [
                 'id' => 902,
                 'name' => 'Santa Marta-Magdalena',
                 'code' => 'COSMR',
@@ -1948,9 +1784,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santa marta-magdalena-cosmr-colombia", "santa marta-magdalena ,co", "colombia: santa marta-magdalena", "santa marta-magdalena pt", "santa marta-magdalena port", "santa marta-magdalena city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            161 => 
-            array (
+            ],
+            161 => [
                 'id' => 903,
                 'name' => 'TURBO',
                 'code' => 'COTRB',
@@ -1960,21 +1795,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "turbo-cotrb-colombia", "turbo ,co", "colombia: turbo", "turbo pt", "turbo port", "turbo city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            162 => 
-            array (
+            ],
+            162 => [
                 'id' => 904,
                 'name' => 'Puerto Caldera',
                 'code' => 'CRPTC',
                 'display_name' => 'Puerto Caldera, CRPTC',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 48,
                 'varation' => '{"type": ["", "", "puerto caldera-crptc-costa rica", "puerto caldera ,cr", "costa rica: puerto caldera", "puerto caldera pt", "puerto caldera port", "puerto caldera city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            163 => 
-            array (
+            ],
+            163 => [
                 'id' => 905,
                 'name' => 'Puerto Moin',
                 'code' => 'CRPMN',
@@ -1984,9 +1817,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto moin-crpmn-costa rica", "puerto moin ,cr", "costa rica: puerto moin", "puerto moin pt", "puerto moin port", "puerto moin city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            164 => 
-            array (
+            ],
+            164 => [
                 'id' => 906,
                 'name' => 'CALDERA',
                 'code' => 'CRCAL',
@@ -1996,9 +1828,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "caldera-crcal-costa rica", "caldera ,cr", "costa rica: caldera", "caldera pt", "caldera port", "caldera city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            165 => 
-            array (
+            ],
+            165 => [
                 'id' => 907,
                 'name' => 'MOIN',
                 'code' => 'CRMOB',
@@ -2008,9 +1839,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "moin-crmob-costa rica", "moin ,cr", "costa rica: moin", "moin pt", "moin port", "moin city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            166 => 
-            array (
+            ],
+            166 => [
                 'id' => 908,
                 'name' => 'PUERTO LIMON',
                 'code' => 'CRLIO',
@@ -2020,9 +1850,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto limon-crlio-costa rica", "puerto limon ,cr", "costa rica: puerto limon", "puerto limon pt", "puerto limon port", "puerto limon city"]}',
                 'created_at' => '2018-09-05 19:34:17',
                 'updated_at' => '2018-09-05 19:34:17',
-            ),
-            167 => 
-            array (
+            ],
+            167 => [
                 'id' => 909,
                 'name' => 'Mariel',
                 'code' => 'CUMAR',
@@ -2032,9 +1861,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mariel-cumar-cuba", "mariel ,cu", "cuba: mariel", "mariel pt", "mariel port", "mariel city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            168 => 
-            array (
+            ],
+            168 => [
                 'id' => 910,
                 'name' => 'Santiago',
                 'code' => 'CUSCU',
@@ -2044,9 +1872,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santiago-cuscu-cuba", "santiago ,cu", "cuba: santiago", "santiago pt", "santiago port", "santiago city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            169 => 
-            array (
+            ],
+            169 => [
                 'id' => 911,
                 'name' => 'LA HABANA',
                 'code' => 'CUHAV',
@@ -2056,9 +1883,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "la habana-cuhav-cuba", "la habana ,cu", "cuba: la habana", "la habana pt", "la habana port", "la habana city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            170 => 
-            array (
+            ],
+            170 => [
                 'id' => 912,
                 'name' => 'MINDELO',
                 'code' => 'CVMIN',
@@ -2068,9 +1894,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mindelo-cvmin-cape verde", "mindelo ,cv", "cape verde: mindelo", "mindelo pt", "mindelo port", "mindelo city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            171 => 
-            array (
+            ],
+            171 => [
                 'id' => 913,
                 'name' => 'PRAIA',
                 'code' => 'CVRAI',
@@ -2080,9 +1905,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "praia-cvrai-cape verde", "praia ,cv", "cape verde: praia", "praia pt", "praia port", "praia city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            172 => 
-            array (
+            ],
+            172 => [
                 'id' => 914,
                 'name' => 'Limassol',
                 'code' => 'CYLMS',
@@ -2092,9 +1916,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "limassol-cylms-cyprus", "limassol ,cy", "cyprus: limassol", "limassol pt", "limassol port", "limassol city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            173 => 
-            array (
+            ],
+            173 => [
                 'id' => 915,
                 'name' => 'Bremerhaven',
                 'code' => 'DEBRV',
@@ -2104,9 +1927,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bremerhaven-debrv-germany", "bremerhaven ,de", "germany: bremerhaven", "bremerhaven pt", "bremerhaven port", "bremerhaven city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            174 => 
-            array (
+            ],
+            174 => [
                 'id' => 916,
                 'name' => 'Hamburg',
                 'code' => 'DEHAM',
@@ -2116,9 +1938,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hamburg-deham-germany", "hamburg ,de", "germany: hamburg", "hamburg pt", "hamburg port", "hamburg city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            175 => 
-            array (
+            ],
+            175 => [
                 'id' => 917,
                 'name' => 'WILHELMSHAVEN',
                 'code' => 'DEWVN',
@@ -2128,9 +1949,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wilhelmshaven-dewvn-germany", "wilhelmshaven ,de", "germany: wilhelmshaven", "wilhelmshaven pt", "wilhelmshaven port", "wilhelmshaven city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            176 => 
-            array (
+            ],
+            176 => [
                 'id' => 918,
                 'name' => 'Djibouti',
                 'code' => 'DJJIB',
@@ -2140,9 +1960,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "djibouti-djjib-djibouti", "djibouti ,dj", "djibouti: djibouti", "djibouti pt", "djibouti port", "djibouti city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            177 => 
-            array (
+            ],
+            177 => [
                 'id' => 919,
                 'name' => 'Aarhus',
                 'code' => 'DKAAR',
@@ -2152,9 +1971,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aarhus-dkaar-denmark", "aarhus ,dk", "denmark: aarhus", "aarhus pt", "aarhus port", "aarhus city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            178 => 
-            array (
+            ],
+            178 => [
                 'id' => 920,
                 'name' => 'Copenhagen',
                 'code' => 'DKCPH',
@@ -2164,9 +1982,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "copenhagen-dkcph-denmark", "copenhagen ,dk", "denmark: copenhagen", "copenhagen pt", "copenhagen port", "copenhagen city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            179 => 
-            array (
+            ],
+            179 => [
                 'id' => 921,
                 'name' => 'Torshavn',
                 'code' => 'FOTOR',
@@ -2176,9 +1993,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "torshavn-fotor-denmark", "torshavn ,dk", "denmark: torshavn", "torshavn pt", "torshavn port", "torshavn city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            180 => 
-            array (
+            ],
+            180 => [
                 'id' => 922,
                 'name' => 'FREDERICIA',
                 'code' => 'DKFRC',
@@ -2188,9 +2004,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fredericia-dkfrc-denmark", "fredericia ,dk", "denmark: fredericia", "fredericia pt", "fredericia port", "fredericia city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            181 => 
-            array (
+            ],
+            181 => [
                 'id' => 923,
                 'name' => 'KALUNDBORG',
                 'code' => 'DKKAL',
@@ -2200,9 +2015,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kalundborg-dkkal-denmark", "kalundborg ,dk", "denmark: kalundborg", "kalundborg pt", "kalundborg port", "kalundborg city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            182 => 
-            array (
+            ],
+            182 => [
                 'id' => 924,
                 'name' => 'ROSEAU',
                 'code' => 'DMRSU',
@@ -2212,9 +2026,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "roseau-dmrsu-dominica", "roseau ,dm", "dominica: roseau", "roseau pt", "roseau port", "roseau city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            183 => 
-            array (
+            ],
+            183 => [
                 'id' => 925,
                 'name' => 'Caucedo',
                 'code' => 'DOCAU',
@@ -2224,21 +2037,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "caucedo-docau-dominican republic", "caucedo ,do", "dominican republic: caucedo", "caucedo pt", "caucedo port", "caucedo city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            184 => 
-            array (
+            ],
+            184 => [
                 'id' => 926,
                 'name' => 'MANZANILLO',
                 'code' => 'DOMAN',
                 'display_name' => 'MANZANILLO, DOMAN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 59,
                 'varation' => '{"type": ["", "", "manzanillo-doman-dominican republic", "manzanillo ,do", "dominican republic: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            185 => 
-            array (
+            ],
+            185 => [
                 'id' => 927,
                 'name' => 'RIO HAINA',
                 'code' => 'DOHAI',
@@ -2248,9 +2059,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["dorha", "", "rio haina-dohai-dominican republic", "rio haina ,do", "dominican republic: rio haina", "rio haina pt", "rio haina port", "rio haina city"]}',
                 'created_at' => '2018-09-05 19:34:18',
                 'updated_at' => '2018-09-05 19:34:18',
-            ),
-            186 => 
-            array (
+            ],
+            186 => [
                 'id' => 928,
                 'name' => 'ALGER',
                 'code' => 'DZALG',
@@ -2260,9 +2070,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "alger-dzalg-algeria", "alger ,dz", "algeria: alger", "alger pt", "alger port", "alger city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            187 => 
-            array (
+            ],
+            187 => [
                 'id' => 929,
                 'name' => 'ANNABA',
                 'code' => 'DZAAE',
@@ -2272,9 +2081,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "annaba-dzaae-algeria", "annaba ,dz", "algeria: annaba", "annaba pt", "annaba port", "annaba city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            188 => 
-            array (
+            ],
+            188 => [
                 'id' => 930,
                 'name' => 'BEJAIA',
                 'code' => 'DZBJA',
@@ -2284,9 +2092,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bejaia-dzbja-algeria", "bejaia ,dz", "algeria: bejaia", "bejaia pt", "bejaia port", "bejaia city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            189 => 
-            array (
+            ],
+            189 => [
                 'id' => 931,
                 'name' => 'DJEN-DJEN',
                 'code' => 'DZDJE',
@@ -2296,9 +2103,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "djen-djen-dzdje-algeria", "djen-djen ,dz", "algeria: djen-djen", "djen-djen pt", "djen-djen port", "djen-djen city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            190 => 
-            array (
+            ],
+            190 => [
                 'id' => 932,
                 'name' => 'ORAN',
                 'code' => 'DZORN',
@@ -2308,9 +2114,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "oran-dzorn-algeria", "oran ,dz", "algeria: oran", "oran pt", "oran port", "oran city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            191 => 
-            array (
+            ],
+            191 => [
                 'id' => 933,
                 'name' => 'SKIKDA',
                 'code' => 'DZSKI',
@@ -2320,9 +2125,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "skikda-dzski-algeria", "skikda ,dz", "algeria: skikda", "skikda pt", "skikda port", "skikda city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            192 => 
-            array (
+            ],
+            192 => [
                 'id' => 934,
                 'name' => 'Esmeraldas - Esmeraldas',
                 'code' => 'ECESM',
@@ -2332,9 +2136,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "esmeraldas - esmeraldas-ecesm-ecuador", "esmeraldas - esmeraldas ,ec", "ecuador: esmeraldas - esmeraldas", "esmeraldas - esmeraldas pt", "esmeraldas - esmeraldas port", "esmeraldas - esmeraldas city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            193 => 
-            array (
+            ],
+            193 => [
                 'id' => 935,
                 'name' => 'Guayaquil',
                 'code' => 'ECGYE',
@@ -2344,9 +2147,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["ecgyl", "", "guayaquil-ecgye-ecuador", "guayaquil ,ec", "ecuador: guayaquil", "guayaquil pt", "guayaquil port", "guayaquil city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            194 => 
-            array (
+            ],
+            194 => [
                 'id' => 936,
                 'name' => 'PUERTO BOLIVAR',
                 'code' => 'ECPBO',
@@ -2356,9 +2158,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto bolivar-ecpbo-ecuador", "puerto bolivar ,ec", "ecuador: puerto bolivar", "puerto bolivar pt", "puerto bolivar port", "puerto bolivar city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            195 => 
-            array (
+            ],
+            195 => [
                 'id' => 937,
                 'name' => 'Sillamae',
                 'code' => 'EESLM',
@@ -2368,9 +2169,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sillamae-eeslm-estonia", "sillamae ,ee", "estonia: sillamae", "sillamae pt", "sillamae port", "sillamae city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            196 => 
-            array (
+            ],
+            196 => [
                 'id' => 938,
                 'name' => 'Tallinn',
                 'code' => 'EETLL',
@@ -2380,9 +2180,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tallinn-eetll-estonia", "tallinn ,ee", "estonia: tallinn", "tallinn pt", "tallinn port", "tallinn city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            197 => 
-            array (
+            ],
+            197 => [
                 'id' => 939,
                 'name' => 'Alexandria',
                 'code' => 'EGALY',
@@ -2392,9 +2191,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["egale", "", "alexandria-egaly-egypt", "alexandria ,eg", "egypt: alexandria", "alexandria pt", "alexandria port", "alexandria city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            198 => 
-            array (
+            ],
+            198 => [
                 'id' => 940,
                 'name' => 'Damietta',
                 'code' => 'EGDAM',
@@ -2404,33 +2202,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "damietta-egdam-egypt", "damietta ,eg", "egypt: damietta", "damietta pt", "damietta port", "damietta city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            199 => 
-            array (
+            ],
+            199 => [
                 'id' => 941,
                 'name' => 'Port Said East',
                 'code' => 'EGPSE',
                 'display_name' => 'Port Said East, EGPSE',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 63,
                 'varation' => '{"type": ["", "", "port said east-egpse-egypt", "port said east ,eg", "egypt: port said east", "port said east pt", "port said east port", "port said east city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            200 => 
-            array (
+            ],
+            200 => [
                 'id' => 942,
                 'name' => 'Port Said West',
                 'code' => 'EGPSW',
                 'display_name' => 'Port Said West, EGPSW',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 63,
                 'varation' => '{"type": ["", "", "port said west-egpsw-egypt", "port said west ,eg", "egypt: port said west", "port said west pt", "port said west port", "port said west city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            201 => 
-            array (
+            ],
+            201 => [
                 'id' => 943,
                 'name' => 'ALEXANDRIA EL DEKHEILA',
                 'code' => 'EGEDK',
@@ -2440,9 +2235,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "alexandria el dekheila-egedk-egypt", "alexandria el dekheila ,eg", "egypt: alexandria el dekheila", "alexandria el dekheila pt", "alexandria el dekheila port", "alexandria el dekheila city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            202 => 
-            array (
+            ],
+            202 => [
                 'id' => 944,
                 'name' => 'SOKHNA PORT',
                 'code' => 'EGSOK',
@@ -2452,9 +2246,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sokhna port-egsok-egypt", "sokhna port ,eg", "egypt: sokhna port", "sokhna port pt", "sokhna port port", "sokhna port city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            203 => 
-            array (
+            ],
+            203 => [
                 'id' => 945,
                 'name' => 'MASSAWA',
                 'code' => 'ERMSW',
@@ -2464,9 +2257,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "massawa-ermsw-eritrea", "massawa ,er", "eritrea: massawa", "massawa pt", "massawa port", "massawa city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            204 => 
-            array (
+            ],
+            204 => [
                 'id' => 946,
                 'name' => 'ALGECIRAS',
                 'code' => 'ESALG',
@@ -2476,9 +2268,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "algeciras-esalg-spain", "algeciras ,es", "spain: algeciras", "algeciras pt", "algeciras port", "algeciras city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            205 => 
-            array (
+            ],
+            205 => [
                 'id' => 947,
                 'name' => 'ALICANTE',
                 'code' => 'ESALC',
@@ -2488,9 +2279,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "alicante-esalc-spain", "alicante ,es", "spain: alicante", "alicante pt", "alicante port", "alicante city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            206 => 
-            array (
+            ],
+            206 => [
                 'id' => 948,
                 'name' => 'ARRECIFE DE LANZAROTE',
                 'code' => 'ESACE',
@@ -2500,9 +2290,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "arrecife de lanzarote-esace-spain", "arrecife de lanzarote ,es", "spain: arrecife de lanzarote", "arrecife de lanzarote pt", "arrecife de lanzarote port", "arrecife de lanzarote city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            207 => 
-            array (
+            ],
+            207 => [
                 'id' => 949,
                 'name' => 'BARCELONA',
                 'code' => 'ESBCN',
@@ -2512,9 +2301,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "barcelona-esbcn-spain", "barcelona ,es", "spain: barcelona", "barcelona pt", "barcelona port", "barcelona city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            208 => 
-            array (
+            ],
+            208 => [
                 'id' => 950,
                 'name' => 'BILBAO',
                 'code' => 'ESBIO',
@@ -2524,9 +2312,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bilbao-esbio-spain", "bilbao ,es", "spain: bilbao", "bilbao pt", "bilbao port", "bilbao city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            209 => 
-            array (
+            ],
+            209 => [
                 'id' => 951,
                 'name' => 'CADIZ',
                 'code' => 'ESCAD',
@@ -2536,9 +2323,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cadiz-escad-spain", "cadiz ,es", "spain: cadiz", "cadiz pt", "cadiz port", "cadiz city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            210 => 
-            array (
+            ],
+            210 => [
                 'id' => 952,
                 'name' => 'CARTAGENA',
                 'code' => 'ESCAR',
@@ -2548,9 +2334,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cartagena-escar-spain", "cartagena ,es", "spain: cartagena", "cartagena pt", "cartagena port", "cartagena city"]}',
                 'created_at' => '2018-09-05 19:34:19',
                 'updated_at' => '2018-09-05 19:34:19',
-            ),
-            211 => 
-            array (
+            ],
+            211 => [
                 'id' => 953,
                 'name' => 'CASTELLON DE LA PLANA',
                 'code' => 'ESCAS',
@@ -2560,9 +2345,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "castellon de la plana-escas-spain", "castellon de la plana ,es", "spain: castellon de la plana", "castellon de la plana pt", "castellon de la plana port", "castellon de la plana city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            212 => 
-            array (
+            ],
+            212 => [
                 'id' => 954,
                 'name' => 'GIJON',
                 'code' => 'ESGIJ',
@@ -2572,9 +2356,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gijon-esgij-spain", "gijon ,es", "spain: gijon", "gijon pt", "gijon port", "gijon city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            213 => 
-            array (
+            ],
+            213 => [
                 'id' => 955,
                 'name' => 'LAS PALMAS',
                 'code' => 'ESLPA',
@@ -2584,9 +2367,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "las palmas-eslpa-spain", "las palmas ,es", "spain: las palmas", "las palmas pt", "las palmas port", "las palmas city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            214 => 
-            array (
+            ],
+            214 => [
                 'id' => 956,
                 'name' => 'MALAGA',
                 'code' => 'ESAGP',
@@ -2596,9 +2378,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "malaga-esagp-spain", "malaga ,es", "spain: malaga", "malaga pt", "malaga port", "malaga city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            215 => 
-            array (
+            ],
+            215 => [
                 'id' => 957,
                 'name' => 'MARIN',
                 'code' => 'ESMPG',
@@ -2608,9 +2389,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "marin-esmpg-spain", "marin ,es", "spain: marin", "marin pt", "marin port", "marin city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            216 => 
-            array (
+            ],
+            216 => [
                 'id' => 958,
                 'name' => 'MELILLA',
                 'code' => 'ESMLN',
@@ -2620,9 +2400,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "melilla-esmln-spain", "melilla ,es", "spain: melilla", "melilla pt", "melilla port", "melilla city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            217 => 
-            array (
+            ],
+            217 => [
                 'id' => 959,
                 'name' => 'PUERTO DEL ROSARIO-FUERTEVENTURA',
                 'code' => 'ESFUE',
@@ -2632,9 +2411,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto del rosario-fuerteventura-esfue-spain", "puerto del rosario-fuerteventura ,es", "spain: puerto del rosario-fuerteventura", "puerto del rosario-fuerteventura pt", "puerto del rosario-fuerteventura port", "puerto del rosario-fuerteventura city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            218 => 
-            array (
+            ],
+            218 => [
                 'id' => 960,
                 'name' => 'SANTA CRUZ DE TENERIFE',
                 'code' => 'ESSCT',
@@ -2644,9 +2422,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santa cruz de tenerife-essct-spain", "santa cruz de tenerife ,es", "spain: santa cruz de tenerife", "santa cruz de tenerife pt", "santa cruz de tenerife port", "santa cruz de tenerife city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            219 => 
-            array (
+            ],
+            219 => [
                 'id' => 961,
                 'name' => 'TARRAGONA',
                 'code' => 'ESTAR',
@@ -2656,9 +2433,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tarragona-estar-spain", "tarragona ,es", "spain: tarragona", "tarragona pt", "tarragona port", "tarragona city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            220 => 
-            array (
+            ],
+            220 => [
                 'id' => 962,
                 'name' => 'VALENCIA',
                 'code' => 'ESVLC',
@@ -2668,9 +2444,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "valencia-esvlc-spain", "valencia ,es", "spain: valencia", "valencia pt", "valencia port", "valencia city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            221 => 
-            array (
+            ],
+            221 => [
                 'id' => 963,
                 'name' => 'VIGO',
                 'code' => 'ESVGO',
@@ -2680,9 +2455,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vigo-esvgo-spain", "vigo ,es", "spain: vigo", "vigo pt", "vigo port", "vigo city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            222 => 
-            array (
+            ],
+            222 => [
                 'id' => 964,
                 'name' => 'Helsinki',
                 'code' => 'FIHEL',
@@ -2692,9 +2466,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "helsinki-fihel-finland", "helsinki ,fi", "finland: helsinki", "helsinki pt", "helsinki port", "helsinki city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            223 => 
-            array (
+            ],
+            223 => [
                 'id' => 965,
                 'name' => 'Kotka',
                 'code' => 'FIKTK',
@@ -2704,9 +2477,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kotka-fiktk-finland", "kotka ,fi", "finland: kotka", "kotka pt", "kotka port", "kotka city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            224 => 
-            array (
+            ],
+            224 => [
                 'id' => 966,
                 'name' => 'Oulu',
                 'code' => 'FIOUL',
@@ -2716,9 +2488,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "oulu-fioul-finland", "oulu ,fi", "finland: oulu", "oulu pt", "oulu port", "oulu city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            225 => 
-            array (
+            ],
+            225 => [
                 'id' => 967,
                 'name' => 'Rauma',
                 'code' => 'FIRAU',
@@ -2728,9 +2499,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rauma-firau-finland", "rauma ,fi", "finland: rauma", "rauma pt", "rauma port", "rauma city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            226 => 
-            array (
+            ],
+            226 => [
                 'id' => 968,
                 'name' => 'Tornio',
                 'code' => 'FITOR',
@@ -2740,9 +2510,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tornio-fitor-finland", "tornio ,fi", "finland: tornio", "tornio pt", "tornio port", "tornio city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            227 => 
-            array (
+            ],
+            227 => [
                 'id' => 969,
                 'name' => 'HAMINA',
                 'code' => 'FIHMN',
@@ -2752,9 +2521,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hamina-fihmn-finland", "hamina ,fi", "finland: hamina", "hamina pt", "hamina port", "hamina city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            228 => 
-            array (
+            ],
+            228 => [
                 'id' => 970,
                 'name' => 'KEMI',
                 'code' => 'FIKEM',
@@ -2764,9 +2532,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kemi-fikem-finland", "kemi ,fi", "finland: kemi", "kemi pt", "kemi port", "kemi city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            229 => 
-            array (
+            ],
+            229 => [
                 'id' => 971,
             'name' => 'KOKKOLA (KARLEBY)',
                 'code' => 'FIKOK',
@@ -2776,9 +2543,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "kokkola (karleby)-fikok-finland", "kokkola (karleby) ,fi", "finland: kokkola (karleby)", "kokkola (karleby) pt", "kokkola (karleby) port", "kokkola (karleby) city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            230 => 
-            array (
+            ],
+            230 => [
                 'id' => 972,
             'name' => 'RAAHE (BRAHESTAD)',
                 'code' => 'FIRAA',
@@ -2788,9 +2554,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "raahe (brahestad)-firaa-finland", "raahe (brahestad) ,fi", "finland: raahe (brahestad)", "raahe (brahestad) pt", "raahe (brahestad) port", "raahe (brahestad) city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            231 => 
-            array (
+            ],
+            231 => [
                 'id' => 973,
                 'name' => 'Lautoka',
                 'code' => 'FJLTK',
@@ -2800,9 +2565,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lautoka-fjltk-fiji", "lautoka ,fj", "fiji: lautoka", "lautoka pt", "lautoka port", "lautoka city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            232 => 
-            array (
+            ],
+            232 => [
                 'id' => 974,
                 'name' => 'Suva',
                 'code' => 'FJSUV',
@@ -2812,9 +2576,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "suva-fjsuv-fiji", "suva ,fj", "fiji: suva", "suva pt", "suva port", "suva city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            233 => 
-            array (
+            ],
+            233 => [
                 'id' => 975,
                 'name' => 'Dunkerque',
                 'code' => 'FRDKK',
@@ -2824,9 +2587,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dunkerque-frdkk-france", "dunkerque ,fr", "france: dunkerque", "dunkerque pt", "dunkerque port", "dunkerque city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            234 => 
-            array (
+            ],
+            234 => [
                 'id' => 976,
                 'name' => 'Le Havre',
                 'code' => 'FRLEH',
@@ -2836,9 +2598,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "le havre-frleh-france", "le havre ,fr", "france: le havre", "le havre pt", "le havre port", "le havre city"]}',
                 'created_at' => '2018-09-05 19:34:20',
                 'updated_at' => '2018-09-05 19:34:20',
-            ),
-            235 => 
-            array (
+            ],
+            235 => [
                 'id' => 977,
                 'name' => 'Montoir de Bretagne',
                 'code' => 'FRMTX',
@@ -2848,9 +2609,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "montoir de bretagne-frmtx-france", "montoir de bretagne ,fr", "france: montoir de bretagne", "montoir de bretagne pt", "montoir de bretagne port", "montoir de bretagne city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            236 => 
-            array (
+            ],
+            236 => [
                 'id' => 978,
                 'name' => 'BASSENS',
                 'code' => 'FRBAS',
@@ -2860,9 +2620,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bassens-frbas-france", "bassens ,fr", "france: bassens", "bassens pt", "bassens port", "bassens city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            237 => 
-            array (
+            ],
+            237 => [
                 'id' => 979,
                 'name' => 'BREST',
                 'code' => 'FRBES',
@@ -2872,9 +2631,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "brest-frbes-france", "brest ,fr", "france: brest", "brest pt", "brest port", "brest city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            238 => 
-            array (
+            ],
+            238 => [
                 'id' => 980,
                 'name' => 'FOS-SUR-MER',
                 'code' => 'FRFOS',
@@ -2884,9 +2642,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fos-sur-mer-frfos-france", "fos-sur-mer ,fr", "france: fos-sur-mer", "fos-sur-mer pt", "fos-sur-mer port", "fos-sur-mer city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            239 => 
-            array (
+            ],
+            239 => [
                 'id' => 981,
                 'name' => 'LE VERDON',
                 'code' => 'FRLVE',
@@ -2896,9 +2653,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "le verdon-frlve-france", "le verdon ,fr", "france: le verdon", "le verdon pt", "le verdon port", "le verdon city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            240 => 
-            array (
+            ],
+            240 => [
                 'id' => 982,
                 'name' => 'MARSEILLE',
                 'code' => 'FRMRS',
@@ -2908,9 +2664,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "marseille-frmrs-france", "marseille ,fr", "france: marseille", "marseille pt", "marseille port", "marseille city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            241 => 
-            array (
+            ],
+            241 => [
                 'id' => 983,
                 'name' => 'ROUEN',
                 'code' => 'FRURO',
@@ -2920,9 +2675,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rouen-fruro-france", "rouen ,fr", "france: rouen", "rouen pt", "rouen port", "rouen city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            242 => 
-            array (
+            ],
+            242 => [
                 'id' => 984,
                 'name' => 'LIBREVILLE',
                 'code' => 'GALBV',
@@ -2932,9 +2686,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "libreville-galbv-gabon", "libreville ,ga", "gabon: libreville", "libreville pt", "libreville port", "libreville city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            243 => 
-            array (
+            ],
+            243 => [
                 'id' => 985,
                 'name' => 'Belfast Northern Ireland',
                 'code' => 'GBBEL',
@@ -2944,9 +2697,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "belfast northern ireland-gbbel-united kingdom", "belfast northern ireland ,gb", "united kingdom: belfast northern ireland", "belfast northern ireland pt", "belfast northern ireland port", "belfast northern ireland city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            244 => 
-            array (
+            ],
+            244 => [
                 'id' => 986,
                 'name' => 'Felixstowe',
                 'code' => 'GBFXT',
@@ -2956,9 +2708,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "felixstowe-gbfxt-united kingdom", "felixstowe ,gb", "united kingdom: felixstowe", "felixstowe pt", "felixstowe port", "felixstowe city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            245 => 
-            array (
+            ],
+            245 => [
                 'id' => 987,
                 'name' => 'Grangemouth',
                 'code' => 'GBGRG',
@@ -2968,9 +2719,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "grangemouth-gbgrg-united kingdom", "grangemouth ,gb", "united kingdom: grangemouth", "grangemouth pt", "grangemouth port", "grangemouth city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            246 => 
-            array (
+            ],
+            246 => [
                 'id' => 988,
                 'name' => 'Immingham',
                 'code' => 'GBIMM',
@@ -2980,9 +2730,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "immingham-gbimm-united kingdom", "immingham ,gb", "united kingdom: immingham", "immingham pt", "immingham port", "immingham city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            247 => 
-            array (
+            ],
+            247 => [
                 'id' => 989,
                 'name' => 'Liverpool',
                 'code' => 'GBLIV',
@@ -2992,9 +2741,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "liverpool-gbliv-united kingdom", "liverpool ,gb", "united kingdom: liverpool", "liverpool pt", "liverpool port", "liverpool city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            248 => 
-            array (
+            ],
+            248 => [
                 'id' => 990,
                 'name' => 'London Gateway',
                 'code' => 'GBLGP',
@@ -3004,21 +2752,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "london gateway-gblgp-united kingdom", "london gateway ,gb", "united kingdom: london gateway", "london gateway pt", "london gateway port", "london gateway city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            249 => 
-            array (
+            ],
+            249 => [
                 'id' => 991,
                 'name' => 'South Shields',
                 'code' => 'GBSSH',
                 'display_name' => 'South Shields, GBSSH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 75,
                 'varation' => '{"type": ["", "", "south shields-gbssh-united kingdom", "south shields ,gb", "united kingdom: south shields", "south shields pt", "south shields port", "south shields city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            250 => 
-            array (
+            ],
+            250 => [
                 'id' => 992,
                 'name' => 'Teesport',
                 'code' => 'GBTEE',
@@ -3028,9 +2774,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "teesport-gbtee-united kingdom", "teesport ,gb", "united kingdom: teesport", "teesport pt", "teesport port", "teesport city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            251 => 
-            array (
+            ],
+            251 => [
                 'id' => 993,
                 'name' => 'GREENOCK',
                 'code' => 'GBGRK',
@@ -3040,9 +2785,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "greenock-gbgrk-united kingdom", "greenock ,gb", "united kingdom: greenock", "greenock pt", "greenock port", "greenock city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            252 => 
-            array (
+            ],
+            252 => [
                 'id' => 994,
                 'name' => 'HARTLEPOOL',
                 'code' => 'GBHTP',
@@ -3052,9 +2796,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hartlepool-gbhtp-united kingdom", "hartlepool ,gb", "united kingdom: hartlepool", "hartlepool pt", "hartlepool port", "hartlepool city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            253 => 
-            array (
+            ],
+            253 => [
                 'id' => 995,
                 'name' => 'PORTBURY',
                 'code' => 'GBPRU',
@@ -3064,9 +2807,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "portbury-gbpru-united kingdom", "portbury ,gb", "united kingdom: portbury", "portbury pt", "portbury port", "portbury city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            254 => 
-            array (
+            ],
+            254 => [
                 'id' => 996,
                 'name' => 'PORTLAND',
                 'code' => 'GBPTL',
@@ -3076,9 +2818,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "portland-gbptl-united kingdom", "portland ,gb", "united kingdom: portland", "portland pt", "portland port", "portland city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            255 => 
-            array (
+            ],
+            255 => [
                 'id' => 997,
                 'name' => 'SOUTHAMPTON',
                 'code' => 'GBSOU',
@@ -3088,9 +2829,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "southampton-gbsou-united kingdom", "southampton ,gb", "united kingdom: southampton", "southampton pt", "southampton port", "southampton city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            256 => 
-            array (
+            ],
+            256 => [
                 'id' => 998,
                 'name' => 'TILBURY',
                 'code' => 'GBTIL',
@@ -3100,9 +2840,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tilbury-gbtil-united kingdom", "tilbury ,gb", "united kingdom: tilbury", "tilbury pt", "tilbury port", "tilbury city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            257 => 
-            array (
+            ],
+            257 => [
                 'id' => 999,
                 'name' => 'SAINT GEORGE\'S',
                 'code' => 'GDSTG',
@@ -3112,9 +2851,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "saint george\'s-gdstg-grenada", "saint george\'s ,gd", "grenada: saint george\'s", "saint george\'s pt", "saint george\'s port", "saint george\'s city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            258 => 
-            array (
+            ],
+            258 => [
                 'id' => 1000,
                 'name' => 'Poti',
                 'code' => 'GEPTI',
@@ -3124,9 +2862,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "poti-gepti-georgia", "poti ,ge", "georgia: poti", "poti pt", "poti port", "poti city"]}',
                 'created_at' => '2018-09-05 19:34:21',
                 'updated_at' => '2018-09-05 19:34:21',
-            ),
-            259 => 
-            array (
+            ],
+            259 => [
                 'id' => 1001,
                 'name' => 'BATUMI',
                 'code' => 'GEBUS',
@@ -3136,9 +2873,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "batumi-gebus-georgia", "batumi ,ge", "georgia: batumi", "batumi pt", "batumi port", "batumi city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            260 => 
-            array (
+            ],
+            260 => [
                 'id' => 1002,
                 'name' => 'TAKORADI',
                 'code' => 'GHTKD',
@@ -3148,9 +2884,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "takoradi-ghtkd-ghana", "takoradi ,gh", "ghana: takoradi", "takoradi pt", "takoradi port", "takoradi city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            261 => 
-            array (
+            ],
+            261 => [
                 'id' => 1003,
                 'name' => 'TEMA',
                 'code' => 'GHTEM',
@@ -3160,9 +2895,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tema-ghtem-ghana", "tema ,gh", "ghana: tema", "tema pt", "tema port", "tema city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            262 => 
-            array (
+            ],
+            262 => [
                 'id' => 1004,
                 'name' => 'BANJUL',
                 'code' => 'GMBJL',
@@ -3172,9 +2906,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "banjul-gmbjl-gambia", "banjul ,gm", "gambia: banjul", "banjul pt", "banjul port", "banjul city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            263 => 
-            array (
+            ],
+            263 => [
                 'id' => 1005,
                 'name' => 'CONAKRY',
                 'code' => 'GNCKY',
@@ -3184,9 +2917,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "conakry-gncky-guinea", "conakry ,gn", "guinea: conakry", "conakry pt", "conakry port", "conakry city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            264 => 
-            array (
+            ],
+            264 => [
                 'id' => 1006,
                 'name' => 'POINTE-A-PITRE',
                 'code' => 'GPPTP',
@@ -3196,9 +2928,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pointe-a-pitre-gpptp-guadeloupe", "pointe-a-pitre ,gp", "guadeloupe: pointe-a-pitre", "pointe-a-pitre pt", "pointe-a-pitre port", "pointe-a-pitre city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            265 => 
-            array (
+            ],
+            265 => [
                 'id' => 1007,
                 'name' => 'MALABO',
                 'code' => 'GQSSG',
@@ -3208,9 +2939,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "malabo-gqssg-equatorial guinea", "malabo ,gq", "equatorial guinea: malabo", "malabo pt", "malabo port", "malabo city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            266 => 
-            array (
+            ],
+            266 => [
                 'id' => 1008,
                 'name' => 'Piraeus',
                 'code' => 'GRPIR',
@@ -3220,9 +2950,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "piraeus-grpir-greece", "piraeus ,gr", "greece: piraeus", "piraeus pt", "piraeus port", "piraeus city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            267 => 
-            array (
+            ],
+            267 => [
                 'id' => 1009,
                 'name' => 'Thessaloniki',
                 'code' => 'GRSKG',
@@ -3232,9 +2961,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "thessaloniki-grskg-greece", "thessaloniki ,gr", "greece: thessaloniki", "thessaloniki pt", "thessaloniki port", "thessaloniki city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            268 => 
-            array (
+            ],
+            268 => [
                 'id' => 1010,
                 'name' => 'HERAKLION',
                 'code' => 'GRHER',
@@ -3244,9 +2972,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "heraklion-grher-greece", "heraklion ,gr", "greece: heraklion", "heraklion pt", "heraklion port", "heraklion city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            269 => 
-            array (
+            ],
+            269 => [
                 'id' => 1011,
                 'name' => 'VOLOS',
                 'code' => 'GRVOL',
@@ -3256,9 +2983,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "volos-grvol-greece", "volos ,gr", "greece: volos", "volos pt", "volos port", "volos city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            270 => 
-            array (
+            ],
+            270 => [
                 'id' => 1012,
                 'name' => 'Puerto Quetzal',
                 'code' => 'GTPRQ',
@@ -3268,9 +2994,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto quetzal-gtprq-guatemala", "puerto quetzal ,gt", "guatemala: puerto quetzal", "puerto quetzal pt", "puerto quetzal port", "puerto quetzal city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            271 => 
-            array (
+            ],
+            271 => [
                 'id' => 1013,
                 'name' => 'Santo Tomas de Castilla',
                 'code' => 'GTSTC',
@@ -3280,9 +3005,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "santo tomas de castilla-gtstc-guatemala", "santo tomas de castilla ,gt", "guatemala: santo tomas de castilla", "santo tomas de castilla pt", "santo tomas de castilla port", "santo tomas de castilla city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            272 => 
-            array (
+            ],
+            272 => [
                 'id' => 1014,
                 'name' => 'PUERTO BARRIOS',
                 'code' => 'GTPBR',
@@ -3292,9 +3016,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto barrios-gtpbr-guatemala", "puerto barrios ,gt", "guatemala: puerto barrios", "puerto barrios pt", "puerto barrios port", "puerto barrios city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            273 => 
-            array (
+            ],
+            273 => [
                 'id' => 1015,
                 'name' => 'BISSAU',
                 'code' => 'GWOXB',
@@ -3304,9 +3027,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bissau-gwoxb-guinea-bissau", "bissau ,gw", "guinea-bissau: bissau", "bissau pt", "bissau port", "bissau city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            274 => 
-            array (
+            ],
+            274 => [
                 'id' => 1016,
                 'name' => 'Georgetown',
                 'code' => 'GYGEO',
@@ -3316,9 +3038,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "georgetown-gygeo-guyana", "georgetown ,gy", "guyana: georgetown", "georgetown pt", "georgetown port", "georgetown city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            275 => 
-            array (
+            ],
+            275 => [
                 'id' => 1017,
                 'name' => 'Hong Kong',
                 'code' => 'HKHKG',
@@ -3328,9 +3049,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hong kong-hkhkg-hong kong", "hong kong ,hk", "hong kong: hong kong", "hong kong pt", "hong kong port", "hong kong city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            276 => 
-            array (
+            ],
+            276 => [
                 'id' => 1018,
                 'name' => 'Puerto Cortes',
                 'code' => 'HNPCR',
@@ -3340,9 +3060,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["hnpco", "", "puerto cortes-hnpcr-honduras", "puerto cortes ,hn", "honduras: puerto cortes", "puerto cortes pt", "puerto cortes port", "puerto cortes city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            277 => 
-            array (
+            ],
+            277 => [
                 'id' => 1019,
                 'name' => 'PUERTO CASTILLA',
                 'code' => 'HNPCA',
@@ -3352,9 +3071,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto castilla-hnpca-honduras", "puerto castilla ,hn", "honduras: puerto castilla", "puerto castilla pt", "puerto castilla port", "puerto castilla city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            278 => 
-            array (
+            ],
+            278 => [
                 'id' => 1020,
                 'name' => 'ROATAN',
                 'code' => 'HNRTB',
@@ -3364,9 +3082,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "roatan-hnrtb-honduras", "roatan ,hn", "honduras: roatan", "roatan pt", "roatan port", "roatan city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            279 => 
-            array (
+            ],
+            279 => [
                 'id' => 1021,
                 'name' => 'PLOCE',
                 'code' => 'HRPLE',
@@ -3376,9 +3093,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ploce-hrple-croatia", "ploce ,hr", "croatia: ploce", "ploce pt", "ploce port", "ploce city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            280 => 
-            array (
+            ],
+            280 => [
                 'id' => 1022,
                 'name' => 'RIJEKA',
                 'code' => 'HRRJK',
@@ -3388,9 +3104,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rijeka-hrrjk-croatia", "rijeka ,hr", "croatia: rijeka", "rijeka pt", "rijeka port", "rijeka city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            281 => 
-            array (
+            ],
+            281 => [
                 'id' => 1023,
                 'name' => 'Port-au-Prince',
                 'code' => 'HTPAP',
@@ -3400,9 +3115,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port-au-prince-htpap-haiti", "port-au-prince ,ht", "haiti: port-au-prince", "port-au-prince pt", "port-au-prince port", "port-au-prince city"]}',
                 'created_at' => '2018-09-05 19:34:22',
                 'updated_at' => '2018-09-05 19:34:22',
-            ),
-            282 => 
-            array (
+            ],
+            282 => [
                 'id' => 1024,
                 'name' => 'Belawan',
                 'code' => 'IDBLW',
@@ -3412,9 +3126,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "belawan-idblw-indonesia", "belawan ,id", "indonesia: belawan", "belawan pt", "belawan port", "belawan city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            283 => 
-            array (
+            ],
+            283 => [
                 'id' => 1025,
                 'name' => 'Benoa',
                 'code' => 'IDBOA',
@@ -3424,9 +3137,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "benoa-idboa-indonesia", "benoa ,id", "indonesia: benoa", "benoa pt", "benoa port", "benoa city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            284 => 
-            array (
+            ],
+            284 => [
                 'id' => 1026,
                 'name' => 'Bitung',
                 'code' => 'IDBIT',
@@ -3436,9 +3148,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bitung-idbit-indonesia", "bitung ,id", "indonesia: bitung", "bitung pt", "bitung port", "bitung city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            285 => 
-            array (
+            ],
+            285 => [
                 'id' => 1027,
                 'name' => 'Jakarta',
                 'code' => 'IDJKT',
@@ -3448,9 +3159,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jakarta-idjkt-indonesia", "jakarta ,id", "indonesia: jakarta", "jakarta pt", "jakarta port", "jakarta city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            286 => 
-            array (
+            ],
+            286 => [
                 'id' => 1028,
                 'name' => 'Jambi',
                 'code' => 'IDDJB',
@@ -3460,9 +3170,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jambi-iddjb-indonesia", "jambi ,id", "indonesia: jambi", "jambi pt", "jambi port", "jambi city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            287 => 
-            array (
+            ],
+            287 => [
                 'id' => 1029,
                 'name' => 'Makassar',
                 'code' => 'IDUPG',
@@ -3472,9 +3181,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "makassar-idupg-indonesia", "makassar ,id", "indonesia: makassar", "makassar pt", "makassar port", "makassar city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            288 => 
-            array (
+            ],
+            288 => [
                 'id' => 1030,
                 'name' => 'Merak',
                 'code' => 'IDMRK',
@@ -3484,9 +3192,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "merak-idmrk-indonesia", "merak ,id", "indonesia: merak", "merak pt", "merak port", "merak city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            289 => 
-            array (
+            ],
+            289 => [
                 'id' => 1031,
                 'name' => 'Padang',
                 'code' => 'IDPDG',
@@ -3496,9 +3203,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "padang-idpdg-indonesia", "padang ,id", "indonesia: padang", "padang pt", "padang port", "padang city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            290 => 
-            array (
+            ],
+            290 => [
                 'id' => 1032,
                 'name' => 'Palembang',
                 'code' => 'IDPLM',
@@ -3508,9 +3214,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "palembang-idplm-indonesia", "palembang ,id", "indonesia: palembang", "palembang pt", "palembang port", "palembang city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            291 => 
-            array (
+            ],
+            291 => [
                 'id' => 1033,
                 'name' => 'Panjang Port',
                 'code' => 'IDPNJ',
@@ -3520,21 +3225,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "panjang port-idpnj-indonesia", "panjang port ,id", "indonesia: panjang port", "panjang port pt", "panjang port port", "panjang port city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            292 => 
-            array (
+            ],
+            292 => [
                 'id' => 1034,
                 'name' => 'Perawang',
                 'code' => 'IDPER',
                 'display_name' => 'Perawang, IDPER',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 98,
                 'varation' => '{"type": ["", "", "perawang-idper-indonesia", "perawang ,id", "indonesia: perawang", "perawang pt", "perawang port", "perawang city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            293 => 
-            array (
+            ],
+            293 => [
                 'id' => 1035,
                 'name' => 'Semarang',
                 'code' => 'IDSRG',
@@ -3544,9 +3247,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "semarang-idsrg-indonesia", "semarang ,id", "indonesia: semarang", "semarang pt", "semarang port", "semarang city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            294 => 
-            array (
+            ],
+            294 => [
                 'id' => 1036,
                 'name' => 'Surabaya',
                 'code' => 'IDSUB',
@@ -3556,33 +3258,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "surabaya-idsub-indonesia", "surabaya ,id", "indonesia: surabaya", "surabaya pt", "surabaya port", "surabaya city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            295 => 
-            array (
+            ],
+            295 => [
                 'id' => 1037,
                 'name' => 'Tebing Tinggi Jambi',
                 'code' => 'IDTTI',
                 'display_name' => 'Tebing Tinggi Jambi, IDTTI',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 98,
                 'varation' => '{"type": ["", "", "tebing tinggi jambi-idtti-indonesia", "tebing tinggi jambi ,id", "indonesia: tebing tinggi jambi", "tebing tinggi jambi pt", "tebing tinggi jambi port", "tebing tinggi jambi city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            296 => 
-            array (
+            ],
+            296 => [
                 'id' => 1038,
                 'name' => 'BATAM ISLAND',
                 'code' => 'IDBTM',
                 'display_name' => 'BATAM ISLAND, IDBTM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 98,
                 'varation' => '{"type": ["", "", "batam island-idbtm-indonesia", "batam island ,id", "indonesia: batam island", "batam island pt", "batam island port", "batam island city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            297 => 
-            array (
+            ],
+            297 => [
                 'id' => 1039,
                 'name' => 'MAKASSAR',
                 'code' => 'IDMAK',
@@ -3592,9 +3291,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "makassar-idmak-indonesia", "makassar ,id", "indonesia: makassar", "makassar pt", "makassar port", "makassar city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            298 => 
-            array (
+            ],
+            298 => [
                 'id' => 1040,
                 'name' => 'PONTIANAK, KALIMANTAN',
                 'code' => 'IDPNK',
@@ -3604,9 +3302,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pontianak, kalimantan-idpnk-indonesia", "pontianak, kalimantan ,id", "indonesia: pontianak, kalimantan", "pontianak, kalimantan pt", "pontianak, kalimantan port", "pontianak, kalimantan city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            299 => 
-            array (
+            ],
+            299 => [
                 'id' => 1041,
                 'name' => 'Cork Co Cork',
                 'code' => 'IEORK',
@@ -3616,9 +3313,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cork co cork-ieork-ireland", "cork co cork ,ie", "ireland: cork co cork", "cork co cork pt", "cork co cork port", "cork co cork city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            300 => 
-            array (
+            ],
+            300 => [
                 'id' => 1042,
                 'name' => 'Dublin',
                 'code' => 'IEDUB',
@@ -3628,9 +3324,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dublin-iedub-ireland", "dublin ,ie", "ireland: dublin", "dublin pt", "dublin port", "dublin city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            301 => 
-            array (
+            ],
+            301 => [
                 'id' => 1043,
                 'name' => 'Ashdod',
                 'code' => 'ILASH',
@@ -3640,9 +3335,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ashdod-ilash-israel", "ashdod ,il", "israel: ashdod", "ashdod pt", "ashdod port", "ashdod city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            302 => 
-            array (
+            ],
+            302 => [
                 'id' => 1044,
                 'name' => 'Haifa',
                 'code' => 'ILHFA',
@@ -3652,105 +3346,96 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "haifa-ilhfa-israel", "haifa ,il", "israel: haifa", "haifa pt", "haifa port", "haifa city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            303 => 
-            array (
+            ],
+            303 => [
                 'id' => 1045,
                 'name' => 'Agra',
                 'code' => 'INAGR',
                 'display_name' => 'Agra, INAGR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "agra-inagr-india", "agra ,in", "india: agra", "agra pt", "agra port", "agra city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            304 => 
-            array (
+            ],
+            304 => [
                 'id' => 1046,
                 'name' => 'Ahmedabad',
                 'code' => 'INAMD',
                 'display_name' => 'Ahmedabad, INAMD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ahmedabad-inamd-india", "ahmedabad ,in", "india: ahmedabad", "ahmedabad pt", "ahmedabad port", "ahmedabad city"]}',
                 'created_at' => '2018-09-05 19:34:23',
                 'updated_at' => '2018-09-05 19:34:23',
-            ),
-            305 => 
-            array (
+            ],
+            305 => [
                 'id' => 1047,
                 'name' => 'Amingaon',
                 'code' => 'INAMG',
                 'display_name' => 'Amingaon, INAMG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "amingaon-inamg-india", "amingaon ,in", "india: amingaon", "amingaon pt", "amingaon port", "amingaon city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            306 => 
-            array (
+            ],
+            306 => [
                 'id' => 1048,
                 'name' => 'Ankleshwar',
                 'code' => 'INAKV',
                 'display_name' => 'Ankleshwar, INAKV',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ankleshwar-inakv-india", "ankleshwar ,in", "india: ankleshwar", "ankleshwar pt", "ankleshwar port", "ankleshwar city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            307 => 
-            array (
+            ],
+            307 => [
                 'id' => 1049,
                 'name' => 'Aurangabad',
                 'code' => 'INAWM',
                 'display_name' => 'Aurangabad, INAWM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "aurangabad-inawm-india", "aurangabad ,in", "india: aurangabad", "aurangabad pt", "aurangabad port", "aurangabad city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            308 => 
-            array (
+            ],
+            308 => [
                 'id' => 1050,
                 'name' => 'Baroda',
                 'code' => 'INBRC',
                 'display_name' => 'Baroda, INBRC',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "baroda-inbrc-india", "baroda ,in", "india: baroda", "baroda pt", "baroda port", "baroda city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            309 => 
-            array (
+            ],
+            309 => [
                 'id' => 1051,
                 'name' => 'Boisar',
                 'code' => 'INPGR',
                 'display_name' => 'Boisar, INPGR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "boisar-inpgr-india", "boisar ,in", "india: boisar", "boisar pt", "boisar port", "boisar city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            310 => 
-            array (
+            ],
+            310 => [
                 'id' => 1052,
                 'name' => 'Chawapail',
                 'code' => 'INCPR',
                 'display_name' => 'Chawapail, INCPR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "chawapail-incpr-india", "chawapail ,in", "india: chawapail", "chawapail pt", "chawapail port", "chawapail city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            311 => 
-            array (
+            ],
+            311 => [
                 'id' => 1053,
                 'name' => 'Chennai',
                 'code' => 'INMAA',
@@ -3760,9 +3445,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chennai-inmaa-india", "chennai ,in", "india: chennai", "chennai pt", "chennai port", "chennai city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            312 => 
-            array (
+            ],
+            312 => [
                 'id' => 1054,
                 'name' => 'Cochin',
                 'code' => 'INCOK',
@@ -3772,93 +3456,85 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cochin-incok-india", "cochin ,in", "india: cochin", "cochin pt", "cochin port", "cochin city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            313 => 
-            array (
+            ],
+            313 => [
                 'id' => 1055,
                 'name' => 'Dadri',
                 'code' => 'INDRI',
                 'display_name' => 'Dadri, INDRI',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "dadri-indri-india", "dadri ,in", "india: dadri", "dadri pt", "dadri port", "dadri city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            314 => 
-            array (
+            ],
+            314 => [
                 'id' => 1056,
                 'name' => 'Dhannad',
                 'code' => 'INDHA',
                 'display_name' => 'Dhannad, INDHA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "dhannad-indha-india", "dhannad ,in", "india: dhannad", "dhannad pt", "dhannad port", "dhannad city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            315 => 
-            array (
+            ],
+            315 => [
                 'id' => 1057,
                 'name' => 'Durgapur',
                 'code' => 'INDUR',
                 'display_name' => 'Durgapur, INDUR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "durgapur-indur-india", "durgapur ,in", "india: durgapur", "durgapur pt", "durgapur port", "durgapur city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            316 => 
-            array (
+            ],
+            316 => [
                 'id' => 1058,
                 'name' => 'Faridabad',
                 'code' => 'INFBD',
                 'display_name' => 'Faridabad, INFBD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "faridabad-infbd-india", "faridabad ,in", "india: faridabad", "faridabad pt", "faridabad port", "faridabad city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            317 => 
-            array (
+            ],
+            317 => [
                 'id' => 1059,
                 'name' => 'Gautam Budhh Nagar',
                 'code' => 'INGNU',
                 'display_name' => 'Gautam Budhh Nagar, INGNU',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "gautam budhh nagar-ingnu-india", "gautam budhh nagar ,in", "india: gautam budhh nagar", "gautam budhh nagar pt", "gautam budhh nagar port", "gautam budhh nagar city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            318 => 
-            array (
+            ],
+            318 => [
                 'id' => 1060,
                 'name' => 'Greater Noida',
                 'code' => 'INGNO',
                 'display_name' => 'Greater Noida, INGNO',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "greater noida-ingno-india", "greater noida ,in", "india: greater noida", "greater noida pt", "greater noida port", "greater noida city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            319 => 
-            array (
+            ],
+            319 => [
                 'id' => 1061,
                 'name' => 'Gurgaon',
                 'code' => 'INGGN',
                 'display_name' => 'Gurgaon, INGGN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "gurgaon-inggn-india", "gurgaon ,in", "india: gurgaon", "gurgaon pt", "gurgaon port", "gurgaon city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            320 => 
-            array (
+            ],
+            320 => [
                 'id' => 1062,
                 'name' => 'Haldia',
                 'code' => 'INHAL',
@@ -3868,9 +3544,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "haldia-inhal-india", "haldia ,in", "india: haldia", "haldia pt", "haldia port", "haldia city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            321 => 
-            array (
+            ],
+            321 => [
                 'id' => 1063,
                 'name' => 'Hazira',
                 'code' => 'INHZR',
@@ -3880,33 +3555,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hazira-inhzr-india", "hazira ,in", "india: hazira", "hazira pt", "hazira port", "hazira city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            322 => 
-            array (
+            ],
+            322 => [
                 'id' => 1064,
                 'name' => 'Hyderabad',
                 'code' => 'INHYD',
                 'display_name' => 'Hyderabad, INHYD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "hyderabad-inhyd-india", "hyderabad ,in", "india: hyderabad", "hyderabad pt", "hyderabad port", "hyderabad city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            323 => 
-            array (
+            ],
+            323 => [
                 'id' => 1065,
                 'name' => 'Jaipur',
                 'code' => 'INJAI',
                 'display_name' => 'Jaipur, INJAI',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "jaipur-injai-india", "jaipur ,in", "india: jaipur", "jaipur pt", "jaipur port", "jaipur city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            324 => 
-            array (
+            ],
+            324 => [
                 'id' => 1066,
                 'name' => 'Jawaharlal Nehru',
                 'code' => 'INNSA',
@@ -3916,21 +3588,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jawaharlal nehru-innsa-india", "jawaharlal nehru ,in", "india: jawaharlal nehru", "jawaharlal nehru pt", "jawaharlal nehru port", "jawaharlal nehru city"]}',
                 'created_at' => '2018-09-05 19:34:24',
                 'updated_at' => '2018-09-05 19:34:24',
-            ),
-            325 => 
-            array (
+            ],
+            325 => [
                 'id' => 1067,
                 'name' => 'Jodhpur',
                 'code' => 'INJDH',
                 'display_name' => 'Jodhpur, INJDH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "jodhpur-injdh-india", "jodhpur ,in", "india: jodhpur", "jodhpur pt", "jodhpur port", "jodhpur city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            326 => 
-            array (
+            ],
+            326 => [
                 'id' => 1068,
                 'name' => 'Kakinada',
                 'code' => 'INKAK',
@@ -3940,33 +3610,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kakinada-inkak-india", "kakinada ,in", "india: kakinada", "kakinada pt", "kakinada port", "kakinada city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            327 => 
-            array (
+            ],
+            327 => [
                 'id' => 1069,
                 'name' => 'Kanpur',
                 'code' => 'INKNU',
                 'display_name' => 'Kanpur, INKNU',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kanpur-inknu-india", "kanpur ,in", "india: kanpur", "kanpur pt", "kanpur port", "kanpur city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            328 => 
-            array (
+            ],
+            328 => [
                 'id' => 1070,
                 'name' => 'Kathuwas',
                 'code' => 'INCML',
                 'display_name' => 'Kathuwas, INCML',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kathuwas-incml-india", "kathuwas ,in", "india: kathuwas", "kathuwas pt", "kathuwas port", "kathuwas city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            329 => 
-            array (
+            ],
+            329 => [
                 'id' => 1071,
                 'name' => 'Kattupalli',
                 'code' => 'INKAT',
@@ -3976,9 +3643,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kattupalli-inkat-india", "kattupalli ,in", "india: kattupalli", "kattupalli pt", "kattupalli port", "kattupalli city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            330 => 
-            array (
+            ],
+            330 => [
                 'id' => 1072,
                 'name' => 'Kolkata',
                 'code' => 'INCCU',
@@ -3988,21 +3654,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kolkata-inccu-india", "kolkata ,in", "india: kolkata", "kolkata pt", "kolkata port", "kolkata city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            331 => 
-            array (
+            ],
+            331 => [
                 'id' => 1073,
                 'name' => 'Kota',
                 'code' => 'INKTU',
                 'display_name' => 'Kota, INKTU',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kota-inktu-india", "kota ,in", "india: kota", "kota pt", "kota port", "kota city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            332 => 
-            array (
+            ],
+            332 => [
                 'id' => 1074,
                 'name' => 'Krishnapatnam',
                 'code' => 'INKRI',
@@ -4012,57 +3676,52 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "krishnapatnam-inkri-india", "krishnapatnam ,in", "india: krishnapatnam", "krishnapatnam pt", "krishnapatnam port", "krishnapatnam city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            333 => 
-            array (
+            ],
+            333 => [
                 'id' => 1075,
                 'name' => 'Loni',
                 'code' => 'INLNI',
                 'display_name' => 'Loni, INLNI',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "loni-inlni-india", "loni ,in", "india: loni", "loni pt", "loni port", "loni city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            334 => 
-            array (
+            ],
+            334 => [
                 'id' => 1076,
                 'name' => 'Ludhiana',
                 'code' => 'INLUH',
                 'display_name' => 'Ludhiana, INLUH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ludhiana-inluh-india", "ludhiana ,in", "india: ludhiana", "ludhiana pt", "ludhiana port", "ludhiana city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            335 => 
-            array (
+            ],
+            335 => [
                 'id' => 1077,
                 'name' => 'Malanpur',
                 'code' => 'INMPR',
                 'display_name' => 'Malanpur, INMPR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "malanpur-inmpr-india", "malanpur ,in", "india: malanpur", "malanpur pt", "malanpur port", "malanpur city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            336 => 
-            array (
+            ],
+            336 => [
                 'id' => 1078,
                 'name' => 'Mandideep',
                 'code' => 'INMNP',
                 'display_name' => 'Mandideep, INMNP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "mandideep-inmnp-india", "mandideep ,in", "india: mandideep", "mandideep pt", "mandideep port", "mandideep city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            337 => 
-            array (
+            ],
+            337 => [
                 'id' => 1079,
                 'name' => 'Mangalore',
                 'code' => 'INIXE',
@@ -4072,9 +3731,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mangalore-inixe-india", "mangalore ,in", "india: mangalore", "mangalore pt", "mangalore port", "mangalore city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            338 => 
-            array (
+            ],
+            338 => [
                 'id' => 1080,
                 'name' => 'Marmagao',
                 'code' => 'INMRM',
@@ -4084,21 +3742,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "marmagao-inmrm-india", "marmagao ,in", "india: marmagao", "marmagao pt", "marmagao port", "marmagao city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            339 => 
-            array (
+            ],
+            339 => [
                 'id' => 1081,
                 'name' => 'Moradabad',
                 'code' => 'INMOR',
                 'display_name' => 'Moradabad, INMOR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "moradabad-inmor-india", "moradabad ,in", "india: moradabad", "moradabad pt", "moradabad port", "moradabad city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            340 => 
-            array (
+            ],
+            340 => [
                 'id' => 1082,
                 'name' => 'Mundra',
                 'code' => 'INMUN',
@@ -4108,177 +3764,162 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mundra-inmun-india", "mundra ,in", "india: mundra", "mundra pt", "mundra port", "mundra city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            341 => 
-            array (
+            ],
+            341 => [
                 'id' => 1083,
                 'name' => 'Nagpur',
                 'code' => 'INNAG',
                 'display_name' => 'Nagpur, INNAG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "nagpur-innag-india", "nagpur ,in", "india: nagpur", "nagpur pt", "nagpur port", "nagpur city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            342 => 
-            array (
+            ],
+            342 => [
                 'id' => 1084,
                 'name' => 'New Delhi',
                 'code' => 'INICD',
                 'display_name' => 'New Delhi, INICD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "new delhi-inicd-india", "new delhi ,in", "india: new delhi", "new delhi pt", "new delhi port", "new delhi city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            343 => 
-            array (
+            ],
+            343 => [
                 'id' => 1085,
                 'name' => 'Panipat',
                 'code' => 'INPAP',
                 'display_name' => 'Panipat, INPAP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "panipat-inpap-india", "panipat ,in", "india: panipat", "panipat pt", "panipat port", "panipat city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            344 => 
-            array (
+            ],
+            344 => [
                 'id' => 1086,
                 'name' => 'Patli',
                 'code' => 'INPTL',
                 'display_name' => 'Patli, INPTL',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "patli-inptl-india", "patli ,in", "india: patli", "patli pt", "patli port", "patli city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            345 => 
-            array (
+            ],
+            345 => [
                 'id' => 1087,
                 'name' => 'Patparganj',
                 'code' => 'INPPG',
                 'display_name' => 'Patparganj, INPPG',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "patparganj-inppg-india", "patparganj ,in", "india: patparganj", "patparganj pt", "patparganj port", "patparganj city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            346 => 
-            array (
+            ],
+            346 => [
                 'id' => 1088,
                 'name' => 'Pipavav',
                 'code' => 'INPPV',
                 'display_name' => 'Pipavav, INPPV',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "pipavav-inppv-india", "pipavav ,in", "india: pipavav", "pipavav pt", "pipavav port", "pipavav city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            347 => 
-            array (
+            ],
+            347 => [
                 'id' => 1089,
                 'name' => 'Pithampur',
                 'code' => 'INPIR',
                 'display_name' => 'Pithampur, INPIR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "pithampur-inpir-india", "pithampur ,in", "india: pithampur", "pithampur pt", "pithampur port", "pithampur city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            348 => 
-            array (
+            ],
+            348 => [
                 'id' => 1090,
                 'name' => 'Piyala',
                 'code' => 'INPIY',
                 'display_name' => 'Piyala, INPIY',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "piyala-inpiy-india", "piyala ,in", "india: piyala", "piyala pt", "piyala port", "piyala city"]}',
                 'created_at' => '2018-09-05 19:34:25',
                 'updated_at' => '2018-09-05 19:34:25',
-            ),
-            349 => 
-            array (
+            ],
+            349 => [
                 'id' => 1091,
                 'name' => 'Raipur',
                 'code' => 'INRPR',
                 'display_name' => 'Raipur, INRPR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "raipur-inrpr-india", "raipur ,in", "india: raipur", "raipur pt", "raipur port", "raipur city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            350 => 
-            array (
+            ],
+            350 => [
                 'id' => 1092,
                 'name' => 'Ratlam',
                 'code' => 'INRTM',
                 'display_name' => 'Ratlam, INRTM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ratlam-inrtm-india", "ratlam ,in", "india: ratlam", "ratlam pt", "ratlam port", "ratlam city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            351 => 
-            array (
+            ],
+            351 => [
                 'id' => 1093,
                 'name' => 'Rewari',
                 'code' => 'INREA',
                 'display_name' => 'Rewari, INREA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "rewari-inrea-india", "rewari ,in", "india: rewari", "rewari pt", "rewari port", "rewari city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            352 => 
-            array (
+            ],
+            352 => [
                 'id' => 1094,
                 'name' => 'SAHNEWAL',
                 'code' => 'INSWA',
                 'display_name' => 'SAHNEWAL, INSWA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "sahnewal-inswa-india", "sahnewal ,in", "india: sahnewal", "sahnewal pt", "sahnewal port", "sahnewal city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            353 => 
-            array (
+            ],
+            353 => [
                 'id' => 1095,
                 'name' => 'Sanand',
                 'code' => 'INSAA',
                 'display_name' => 'Sanand, INSAA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "sanand-insaa-india", "sanand ,in", "india: sanand", "sanand pt", "sanand port", "sanand city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            354 => 
-            array (
+            ],
+            354 => [
                 'id' => 1096,
                 'name' => 'Shorajpur',
                 'code' => 'INSHJ',
                 'display_name' => 'Shorajpur, INSHJ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "shorajpur-inshj-india", "shorajpur ,in", "india: shorajpur", "shorajpur pt", "shorajpur port", "shorajpur city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            355 => 
-            array (
+            ],
+            355 => [
                 'id' => 1097,
                 'name' => 'Sonepat',
                 'code' => 'INSON ',
@@ -4288,21 +3929,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sonepat-inson -india", "sonepat ,in", "india: sonepat", "sonepat pt", "sonepat port", "sonepat city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            356 => 
-            array (
+            ],
+            356 => [
                 'id' => 1098,
                 'name' => 'THAR',
                 'code' => 'INTHA',
                 'display_name' => 'THAR, INTHA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "thar-intha-india", "thar ,in", "india: thar", "thar pt", "thar port", "thar city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            357 => 
-            array (
+            ],
+            357 => [
                 'id' => 1099,
                 'name' => 'Tuticorin',
                 'code' => 'INTUT',
@@ -4312,9 +3951,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tuticorin-intut-india", "tuticorin ,in", "india: tuticorin", "tuticorin pt", "tuticorin port", "tuticorin city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            358 => 
-            array (
+            ],
+            358 => [
                 'id' => 1100,
                 'name' => 'Visakhapatnam',
                 'code' => 'INVTZ',
@@ -4324,21 +3962,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "visakhapatnam-invtz-india", "visakhapatnam ,in", "india: visakhapatnam", "visakhapatnam pt", "visakhapatnam port", "visakhapatnam city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            359 => 
-            array (
+            ],
+            359 => [
                 'id' => 1101,
                 'name' => 'HAZIRA PORT/SURAT',
                 'code' => 'INHZA',
                 'display_name' => 'HAZIRA PORT/SURAT, INHZA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "hazira port/surat-inhza-india", "hazira port/surat ,in", "india: hazira port/surat", "hazira port/surat pt", "hazira port/surat port", "hazira port/surat city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            360 => 
-            array (
+            ],
+            360 => [
                 'id' => 1102,
                 'name' => 'KANDLA',
                 'code' => 'INIXY',
@@ -4348,9 +3984,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kandla-inixy-india", "kandla ,in", "india: kandla", "kandla pt", "kandla port", "kandla city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            361 => 
-            array (
+            ],
+            361 => [
                 'id' => 1103,
                 'name' => 'NEW MANGALORE',
                 'code' => 'INNML',
@@ -4360,9 +3995,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "new mangalore-innml-india", "new mangalore ,in", "india: new mangalore", "new mangalore pt", "new mangalore port", "new mangalore city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            362 => 
-            array (
+            ],
+            362 => [
                 'id' => 1104,
             'name' => 'PIPAVAV (VICTOR) PORT',
                 'code' => 'INPAV',
@@ -4372,9 +4006,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "pipavav (victor) port-inpav-india", "pipavav (victor) port ,in", "india: pipavav (victor) port", "pipavav (victor) port pt", "pipavav (victor) port port", "pipavav (victor) port city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            363 => 
-            array (
+            ],
+            363 => [
                 'id' => 1105,
                 'name' => 'Umm Qasr',
                 'code' => 'IQUQR',
@@ -4384,9 +4017,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "umm qasr-iquqr-iraq", "umm qasr ,iq", "iraq: umm qasr", "umm qasr pt", "umm qasr port", "umm qasr city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            364 => 
-            array (
+            ],
+            364 => [
                 'id' => 1106,
                 'name' => 'BASRA',
                 'code' => 'IQBSR',
@@ -4396,9 +4028,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "basra-iqbsr-iraq", "basra ,iq", "iraq: basra", "basra pt", "basra port", "basra city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            365 => 
-            array (
+            ],
+            365 => [
                 'id' => 1107,
                 'name' => 'BANDAR ABBAS SHAHID RAJAEE CONTAINER TERMINAL',
                 'code' => 'IRBND',
@@ -4408,9 +4039,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bandar abbas shahid rajaee container terminal-irbnd-iran, islamic republic of", "bandar abbas shahid rajaee container terminal ,ir", "iran, islamic republic of: bandar abbas shahid rajaee container terminal", "bandar abbas shahid rajaee container terminal pt", "bandar abbas shahid rajaee container terminal port", "bandar abbas shahid rajaee container terminal city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            366 => 
-            array (
+            ],
+            366 => [
                 'id' => 1108,
                 'name' => 'BUSHEHR',
                 'code' => 'IRBUZ',
@@ -4420,9 +4050,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bushehr-irbuz-iran, islamic republic of", "bushehr ,ir", "iran, islamic republic of: bushehr", "bushehr pt", "bushehr port", "bushehr city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            367 => 
-            array (
+            ],
+            367 => [
                 'id' => 1109,
                 'name' => 'ANCONA',
                 'code' => 'ITAOI',
@@ -4432,9 +4061,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ancona-itaoi-italy", "ancona ,it", "italy: ancona", "ancona pt", "ancona port", "ancona city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            368 => 
-            array (
+            ],
+            368 => [
                 'id' => 1110,
                 'name' => 'BARI',
                 'code' => 'ITBRI',
@@ -4444,9 +4072,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bari-itbri-italy", "bari ,it", "italy: bari", "bari pt", "bari port", "bari city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            369 => 
-            array (
+            ],
+            369 => [
                 'id' => 1111,
                 'name' => 'CAGLIARI',
                 'code' => 'ITCAG',
@@ -4456,9 +4083,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cagliari-itcag-italy", "cagliari ,it", "italy: cagliari", "cagliari pt", "cagliari port", "cagliari city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            370 => 
-            array (
+            ],
+            370 => [
                 'id' => 1112,
                 'name' => 'CATANIA',
                 'code' => 'ITCTA',
@@ -4468,9 +4094,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "catania-itcta-italy", "catania ,it", "italy: catania", "catania pt", "catania port", "catania city"]}',
                 'created_at' => '2018-09-05 19:34:26',
                 'updated_at' => '2018-09-05 19:34:26',
-            ),
-            371 => 
-            array (
+            ],
+            371 => [
                 'id' => 1113,
                 'name' => 'CIVITAVECCHIA',
                 'code' => 'ITCVV',
@@ -4480,9 +4105,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "civitavecchia-itcvv-italy", "civitavecchia ,it", "italy: civitavecchia", "civitavecchia pt", "civitavecchia port", "civitavecchia city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            372 => 
-            array (
+            ],
+            372 => [
                 'id' => 1114,
                 'name' => 'GENOA',
                 'code' => 'ITGOA',
@@ -4492,9 +4116,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "genoa-itgoa-italy", "genoa ,it", "italy: genoa", "genoa pt", "genoa port", "genoa city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            373 => 
-            array (
+            ],
+            373 => [
                 'id' => 1115,
                 'name' => 'GIOIA TAURO',
                 'code' => 'ITGIT',
@@ -4504,9 +4127,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gioia tauro-itgit-italy", "gioia tauro ,it", "italy: gioia tauro", "gioia tauro pt", "gioia tauro port", "gioia tauro city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            374 => 
-            array (
+            ],
+            374 => [
                 'id' => 1116,
                 'name' => 'LA SPEZIA',
                 'code' => 'ITSPE',
@@ -4516,9 +4138,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "la spezia-itspe-italy", "la spezia ,it", "italy: la spezia", "la spezia pt", "la spezia port", "la spezia city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            375 => 
-            array (
+            ],
+            375 => [
                 'id' => 1117,
                 'name' => 'LEGHORN',
                 'code' => 'ITLIV',
@@ -4528,9 +4149,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "leghorn-itliv-italy", "leghorn ,it", "italy: leghorn", "leghorn pt", "leghorn port", "leghorn city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            376 => 
-            array (
+            ],
+            376 => [
                 'id' => 1118,
                 'name' => 'NAPLES',
                 'code' => 'ITNAP',
@@ -4540,9 +4160,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "naples-itnap-italy", "naples ,it", "italy: naples", "naples pt", "naples port", "naples city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            377 => 
-            array (
+            ],
+            377 => [
                 'id' => 1119,
                 'name' => 'PALERMO',
                 'code' => 'ITPMO',
@@ -4552,9 +4171,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "palermo-itpmo-italy", "palermo ,it", "italy: palermo", "palermo pt", "palermo port", "palermo city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            378 => 
-            array (
+            ],
+            378 => [
                 'id' => 1120,
                 'name' => 'POZZALLO',
                 'code' => 'ITPZL',
@@ -4564,9 +4182,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pozzallo-itpzl-italy", "pozzallo ,it", "italy: pozzallo", "pozzallo pt", "pozzallo port", "pozzallo city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            379 => 
-            array (
+            ],
+            379 => [
                 'id' => 1121,
                 'name' => 'RAVENNA',
                 'code' => 'ITRAN',
@@ -4576,9 +4193,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ravenna-itran-italy", "ravenna ,it", "italy: ravenna", "ravenna pt", "ravenna port", "ravenna city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            380 => 
-            array (
+            ],
+            380 => [
                 'id' => 1122,
                 'name' => 'SALERNO',
                 'code' => 'ITSAL',
@@ -4588,9 +4204,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salerno-itsal-italy", "salerno ,it", "italy: salerno", "salerno pt", "salerno port", "salerno city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            381 => 
-            array (
+            ],
+            381 => [
                 'id' => 1123,
                 'name' => 'TRIESTE',
                 'code' => 'ITTRS',
@@ -4600,9 +4215,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "trieste-ittrs-italy", "trieste ,it", "italy: trieste", "trieste pt", "trieste port", "trieste city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            382 => 
-            array (
+            ],
+            382 => [
                 'id' => 1124,
                 'name' => 'VADO LIGURE',
                 'code' => 'ITVDL',
@@ -4612,9 +4226,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vado ligure-itvdl-italy", "vado ligure ,it", "italy: vado ligure", "vado ligure pt", "vado ligure port", "vado ligure city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            383 => 
-            array (
+            ],
+            383 => [
                 'id' => 1125,
                 'name' => 'VENIZIA',
                 'code' => 'ITVCE',
@@ -4624,9 +4237,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "venizia-itvce-italy", "venizia ,it", "italy: venizia", "venizia pt", "venizia port", "venizia city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            384 => 
-            array (
+            ],
+            384 => [
                 'id' => 1126,
                 'name' => 'Kingston',
                 'code' => 'JMKIN',
@@ -4636,9 +4248,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kingston-jmkin-jamaica", "kingston ,jm", "jamaica: kingston", "kingston pt", "kingston port", "kingston city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            385 => 
-            array (
+            ],
+            385 => [
                 'id' => 1127,
                 'name' => 'Aqaba',
                 'code' => 'JOAQJ',
@@ -4648,9 +4259,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aqaba-joaqj-jordan", "aqaba ,jo", "jordan: aqaba", "aqaba pt", "aqaba port", "aqaba city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            386 => 
-            array (
+            ],
+            386 => [
                 'id' => 1128,
                 'name' => 'Akita',
                 'code' => 'JPAXT',
@@ -4660,21 +4270,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "akita-jpaxt-japan", "akita ,jp", "japan: akita", "akita pt", "akita port", "akita city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            387 => 
-            array (
+            ],
+            387 => [
                 'id' => 1129,
                 'name' => 'Hakata',
                 'code' => 'JPHTD',
                 'display_name' => 'Hakata, JPHTD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "hakata-jphtd-japan", "hakata ,jp", "japan: hakata", "hakata pt", "hakata port", "hakata city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            388 => 
-            array (
+            ],
+            388 => [
                 'id' => 1130,
                 'name' => 'Hiroshima',
                 'code' => 'JPHIJ',
@@ -4684,9 +4292,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hiroshima-jphij-japan", "hiroshima ,jp", "japan: hiroshima", "hiroshima pt", "hiroshima port", "hiroshima city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            389 => 
-            array (
+            ],
+            389 => [
                 'id' => 1131,
                 'name' => 'Kobe',
                 'code' => 'JPUKB',
@@ -4696,9 +4303,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kobe-jpukb-japan", "kobe ,jp", "japan: kobe", "kobe pt", "kobe port", "kobe city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            390 => 
-            array (
+            ],
+            390 => [
                 'id' => 1132,
                 'name' => 'Moji',
                 'code' => 'JPMOJ',
@@ -4708,9 +4314,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "moji-jpmoj-japan", "moji ,jp", "japan: moji", "moji pt", "moji port", "moji city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            391 => 
-            array (
+            ],
+            391 => [
                 'id' => 1133,
                 'name' => 'Nagoya',
                 'code' => 'JPNGO',
@@ -4720,9 +4325,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nagoya-jpngo-japan", "nagoya ,jp", "japan: nagoya", "nagoya pt", "nagoya port", "nagoya city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            392 => 
-            array (
+            ],
+            392 => [
                 'id' => 1134,
                 'name' => 'Osaka',
                 'code' => 'JPOSA',
@@ -4732,9 +4336,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "osaka-jposa-japan", "osaka ,jp", "japan: osaka", "osaka pt", "osaka port", "osaka city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            393 => 
-            array (
+            ],
+            393 => [
                 'id' => 1135,
                 'name' => 'Sendai',
                 'code' => 'JPSGM',
@@ -4744,9 +4347,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sendai-jpsgm-japan", "sendai ,jp", "japan: sendai", "sendai pt", "sendai port", "sendai city"]}',
                 'created_at' => '2018-09-05 19:34:27',
                 'updated_at' => '2018-09-05 19:34:27',
-            ),
-            394 => 
-            array (
+            ],
+            394 => [
                 'id' => 1136,
                 'name' => 'Shimizu',
                 'code' => 'JPSMZ',
@@ -4756,9 +4358,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shimizu-jpsmz-japan", "shimizu ,jp", "japan: shimizu", "shimizu pt", "shimizu port", "shimizu city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            395 => 
-            array (
+            ],
+            395 => [
                 'id' => 1137,
                 'name' => 'Tokuyama',
                 'code' => 'JPTKY',
@@ -4768,9 +4369,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tokuyama-jptky-japan", "tokuyama ,jp", "japan: tokuyama", "tokuyama pt", "tokuyama port", "tokuyama city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            396 => 
-            array (
+            ],
+            396 => [
                 'id' => 1138,
                 'name' => 'Tokyo',
                 'code' => 'JPTYO',
@@ -4780,9 +4380,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tokyo-jptyo-japan", "tokyo ,jp", "japan: tokyo", "tokyo pt", "tokyo port", "tokyo city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            397 => 
-            array (
+            ],
+            397 => [
                 'id' => 1139,
                 'name' => 'Tomakomai',
                 'code' => 'JPTMK',
@@ -4792,9 +4391,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tomakomai-jptmk-japan", "tomakomai ,jp", "japan: tomakomai", "tomakomai pt", "tomakomai port", "tomakomai city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            398 => 
-            array (
+            ],
+            398 => [
                 'id' => 1140,
                 'name' => 'Toyama',
                 'code' => 'JPTOY',
@@ -4804,9 +4402,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "toyama-jptoy-japan", "toyama ,jp", "japan: toyama", "toyama pt", "toyama port", "toyama city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            399 => 
-            array (
+            ],
+            399 => [
                 'id' => 1141,
                 'name' => 'Yokkaichi',
                 'code' => 'JPYKK',
@@ -4816,9 +4413,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yokkaichi-jpykk-japan", "yokkaichi ,jp", "japan: yokkaichi", "yokkaichi pt", "yokkaichi port", "yokkaichi city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            400 => 
-            array (
+            ],
+            400 => [
                 'id' => 1142,
                 'name' => 'Yokohama',
                 'code' => 'JPYOK',
@@ -4828,9 +4424,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yokohama-jpyok-japan", "yokohama ,jp", "japan: yokohama", "yokohama pt", "yokohama port", "yokohama city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            401 => 
-            array (
+            ],
+            401 => [
                 'id' => 1143,
                 'name' => 'ABURATSU',
                 'code' => 'JPABU',
@@ -4840,9 +4435,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aburatsu-jpabu-japan", "aburatsu ,jp", "japan: aburatsu", "aburatsu pt", "aburatsu port", "aburatsu city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            402 => 
-            array (
+            ],
+            402 => [
                 'id' => 1144,
                 'name' => 'CHIBA',
                 'code' => 'JPCHB',
@@ -4852,9 +4446,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chiba-jpchb-japan", "chiba ,jp", "japan: chiba", "chiba pt", "chiba port", "chiba city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            403 => 
-            array (
+            ],
+            403 => [
                 'id' => 1145,
                 'name' => 'FUKUYAMA, HIROSHIMA',
                 'code' => 'JPFKY',
@@ -4864,9 +4457,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fukuyama, hiroshima-jpfky-japan", "fukuyama, hiroshima ,jp", "japan: fukuyama, hiroshima", "fukuyama, hiroshima pt", "fukuyama, hiroshima port", "fukuyama, hiroshima city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            404 => 
-            array (
+            ],
+            404 => [
                 'id' => 1146,
                 'name' => 'HACHINOHE, AOMORI',
                 'code' => 'JPHHE',
@@ -4876,9 +4468,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hachinohe, aomori-jphhe-japan", "hachinohe, aomori ,jp", "japan: hachinohe, aomori", "hachinohe, aomori pt", "hachinohe, aomori port", "hachinohe, aomori city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            405 => 
-            array (
+            ],
+            405 => [
                 'id' => 1147,
                 'name' => 'HAKATA, FUKUOKA',
                 'code' => 'JPHKT',
@@ -4888,9 +4479,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hakata, fukuoka-jphkt-japan", "hakata, fukuoka ,jp", "japan: hakata, fukuoka", "hakata, fukuoka pt", "hakata, fukuoka port", "hakata, fukuoka city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            406 => 
-            array (
+            ],
+            406 => [
                 'id' => 1148,
                 'name' => 'HAKODATE',
                 'code' => 'JPHKD',
@@ -4900,9 +4490,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hakodate-jphkd-japan", "hakodate ,jp", "japan: hakodate", "hakodate pt", "hakodate port", "hakodate city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            407 => 
-            array (
+            ],
+            407 => [
                 'id' => 1149,
                 'name' => 'HAMADA',
                 'code' => 'JPHMD',
@@ -4912,9 +4501,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hamada-jphmd-japan", "hamada ,jp", "japan: hamada", "hamada pt", "hamada port", "hamada city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            408 => 
-            array (
+            ],
+            408 => [
                 'id' => 1150,
                 'name' => 'HIBIKISHINKO',
                 'code' => 'JPHBK',
@@ -4924,9 +4512,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hibikishinko-jphbk-japan", "hibikishinko ,jp", "japan: hibikishinko", "hibikishinko pt", "hibikishinko port", "hibikishinko city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            409 => 
-            array (
+            ],
+            409 => [
                 'id' => 1151,
                 'name' => 'HITACHINAKA',
                 'code' => 'JPHIC',
@@ -4936,9 +4523,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hitachinaka-jphic-japan", "hitachinaka ,jp", "japan: hitachinaka", "hitachinaka pt", "hitachinaka port", "hitachinaka city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            410 => 
-            array (
+            ],
+            410 => [
                 'id' => 1152,
                 'name' => 'HOSOSHIMA',
                 'code' => 'JPHSM',
@@ -4948,9 +4534,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hososhima-jphsm-japan", "hososhima ,jp", "japan: hososhima", "hososhima pt", "hososhima port", "hososhima city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            411 => 
-            array (
+            ],
+            411 => [
                 'id' => 1153,
                 'name' => 'IMABARI',
                 'code' => 'JPIMB',
@@ -4960,9 +4545,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "imabari-jpimb-japan", "imabari ,jp", "japan: imabari", "imabari pt", "imabari port", "imabari city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            412 => 
-            array (
+            ],
+            412 => [
                 'id' => 1154,
                 'name' => 'IMARI',
                 'code' => 'JPIMI',
@@ -4972,9 +4556,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "imari-jpimi-japan", "imari ,jp", "japan: imari", "imari pt", "imari port", "imari city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            413 => 
-            array (
+            ],
+            413 => [
                 'id' => 1155,
                 'name' => 'ISHIKARI',
                 'code' => 'JPISI',
@@ -4984,9 +4567,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ishikari-jpisi-japan", "ishikari ,jp", "japan: ishikari", "ishikari pt", "ishikari port", "ishikari city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            414 => 
-            array (
+            ],
+            414 => [
                 'id' => 1156,
                 'name' => 'IWAKUNI',
                 'code' => 'JPIWK',
@@ -4996,21 +4578,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "iwakuni-jpiwk-japan", "iwakuni ,jp", "japan: iwakuni", "iwakuni pt", "iwakuni port", "iwakuni city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            415 => 
-            array (
+            ],
+            415 => [
                 'id' => 1157,
                 'name' => 'IYOMISHIMA',
                 'code' => 'JPIYM',
                 'display_name' => 'IYOMISHIMA, JPIYM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "iyomishima-jpiym-japan", "iyomishima ,jp", "japan: iyomishima", "iyomishima pt", "iyomishima port", "iyomishima city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            416 => 
-            array (
+            ],
+            416 => [
                 'id' => 1158,
                 'name' => 'KAMAISHI',
                 'code' => 'JPKIS',
@@ -5020,9 +4600,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kamaishi-jpkis-japan", "kamaishi ,jp", "japan: kamaishi", "kamaishi pt", "kamaishi port", "kamaishi city"]}',
                 'created_at' => '2018-09-05 19:34:28',
                 'updated_at' => '2018-09-05 19:34:28',
-            ),
-            417 => 
-            array (
+            ],
+            417 => [
                 'id' => 1159,
                 'name' => 'KANAZAWA',
                 'code' => 'JPKNZ',
@@ -5032,9 +4611,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kanazawa-jpknz-japan", "kanazawa ,jp", "japan: kanazawa", "kanazawa pt", "kanazawa port", "kanazawa city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            418 => 
-            array (
+            ],
+            418 => [
                 'id' => 1160,
                 'name' => 'KASHIMA, IBARAKI',
                 'code' => 'JPKSM',
@@ -5044,9 +4622,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kashima, ibaraki-jpksm-japan", "kashima, ibaraki ,jp", "japan: kashima, ibaraki", "kashima, ibaraki pt", "kashima, ibaraki port", "kashima, ibaraki city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            419 => 
-            array (
+            ],
+            419 => [
                 'id' => 1161,
                 'name' => 'KAWASAKI',
                 'code' => 'JPKWS',
@@ -5056,9 +4633,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kawasaki-jpkws-japan", "kawasaki ,jp", "japan: kawasaki", "kawasaki pt", "kawasaki port", "kawasaki city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            420 => 
-            array (
+            ],
+            420 => [
                 'id' => 1162,
                 'name' => 'KOCHI',
                 'code' => 'JPKCZ',
@@ -5068,9 +4644,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kochi-jpkcz-japan", "kochi ,jp", "japan: kochi", "kochi pt", "kochi port", "kochi city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            421 => 
-            array (
+            ],
+            421 => [
                 'id' => 1163,
                 'name' => 'KUMAMOTO',
                 'code' => 'JPKMJ',
@@ -5080,9 +4655,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kumamoto-jpkmj-japan", "kumamoto ,jp", "japan: kumamoto", "kumamoto pt", "kumamoto port", "kumamoto city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            422 => 
-            array (
+            ],
+            422 => [
                 'id' => 1164,
                 'name' => 'KUSHIRO',
                 'code' => 'JPKUH',
@@ -5092,9 +4666,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kushiro-jpkuh-japan", "kushiro ,jp", "japan: kushiro", "kushiro pt", "kushiro port", "kushiro city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            423 => 
-            array (
+            ],
+            423 => [
                 'id' => 1165,
                 'name' => 'MAIZURU',
                 'code' => 'JPMAI',
@@ -5104,9 +4677,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "maizuru-jpmai-japan", "maizuru ,jp", "japan: maizuru", "maizuru pt", "maizuru port", "maizuru city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            424 => 
-            array (
+            ],
+            424 => [
                 'id' => 1166,
                 'name' => 'MATSUYAMA',
                 'code' => 'JPMYJ',
@@ -5116,9 +4688,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "matsuyama-jpmyj-japan", "matsuyama ,jp", "japan: matsuyama", "matsuyama pt", "matsuyama port", "matsuyama city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            425 => 
-            array (
+            ],
+            425 => [
                 'id' => 1167,
                 'name' => 'MIIKE, FUKUOKA',
                 'code' => 'JPMII',
@@ -5128,9 +4699,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "miike, fukuoka-jpmii-japan", "miike, fukuoka ,jp", "japan: miike, fukuoka", "miike, fukuoka pt", "miike, fukuoka port", "miike, fukuoka city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            426 => 
-            array (
+            ],
+            426 => [
                 'id' => 1168,
                 'name' => 'MIZUSHIMA',
                 'code' => 'JPMIZ',
@@ -5140,9 +4710,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mizushima-jpmiz-japan", "mizushima ,jp", "japan: mizushima", "mizushima pt", "mizushima port", "mizushima city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            427 => 
-            array (
+            ],
+            427 => [
                 'id' => 1169,
                 'name' => 'MURORAN',
                 'code' => 'JPMUR',
@@ -5152,9 +4721,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "muroran-jpmur-japan", "muroran ,jp", "japan: muroran", "muroran pt", "muroran port", "muroran city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            428 => 
-            array (
+            ],
+            428 => [
                 'id' => 1170,
                 'name' => 'NAGASAKI',
                 'code' => 'JPNGS',
@@ -5164,9 +4732,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nagasaki-jpngs-japan", "nagasaki ,jp", "japan: nagasaki", "nagasaki pt", "nagasaki port", "nagasaki city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            429 => 
-            array (
+            ],
+            429 => [
                 'id' => 1171,
                 'name' => 'NAHA, OKINAWA',
                 'code' => 'JPNAH',
@@ -5176,9 +4743,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "naha, okinawa-jpnah-japan", "naha, okinawa ,jp", "japan: naha, okinawa", "naha, okinawa pt", "naha, okinawa port", "naha, okinawa city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            430 => 
-            array (
+            ],
+            430 => [
                 'id' => 1172,
                 'name' => 'NAKANOSEKI',
                 'code' => 'JPNAN',
@@ -5188,9 +4754,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nakanoseki-jpnan-japan", "nakanoseki ,jp", "japan: nakanoseki", "nakanoseki pt", "nakanoseki port", "nakanoseki city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            431 => 
-            array (
+            ],
+            431 => [
                 'id' => 1173,
                 'name' => 'NAOETSU',
                 'code' => 'JPNAO',
@@ -5200,9 +4765,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "naoetsu-jpnao-japan", "naoetsu ,jp", "japan: naoetsu", "naoetsu pt", "naoetsu port", "naoetsu city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            432 => 
-            array (
+            ],
+            432 => [
                 'id' => 1174,
                 'name' => 'NIIGATA',
                 'code' => 'JPKIJ',
@@ -5212,9 +4776,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "niigata-jpkij-japan", "niigata ,jp", "japan: niigata", "niigata pt", "niigata port", "niigata city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            433 => 
-            array (
+            ],
+            433 => [
                 'id' => 1175,
                 'name' => 'OITA',
                 'code' => 'JPOIT',
@@ -5224,9 +4787,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "oita-jpoit-japan", "oita ,jp", "japan: oita", "oita pt", "oita port", "oita city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            434 => 
-            array (
+            ],
+            434 => [
                 'id' => 1176,
                 'name' => 'OMAEZAKI',
                 'code' => 'JPOMZ',
@@ -5236,9 +4798,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "omaezaki-jpomz-japan", "omaezaki ,jp", "japan: omaezaki", "omaezaki pt", "omaezaki port", "omaezaki city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            435 => 
-            array (
+            ],
+            435 => [
                 'id' => 1177,
                 'name' => 'ONAHAMA',
                 'code' => 'JPONA',
@@ -5248,9 +4809,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "onahama-jpona-japan", "onahama ,jp", "japan: onahama", "onahama pt", "onahama port", "onahama city"]}',
                 'created_at' => '2018-09-05 19:34:29',
                 'updated_at' => '2018-09-05 19:34:29',
-            ),
-            436 => 
-            array (
+            ],
+            436 => [
                 'id' => 1178,
                 'name' => 'OTAKE',
                 'code' => 'JPOTK',
@@ -5260,9 +4820,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "otake-jpotk-japan", "otake ,jp", "japan: otake", "otake pt", "otake port", "otake city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            437 => 
-            array (
+            ],
+            437 => [
                 'id' => 1179,
                 'name' => 'SAKAIMINATO',
                 'code' => 'JPSMN',
@@ -5272,9 +4831,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sakaiminato-jpsmn-japan", "sakaiminato ,jp", "japan: sakaiminato", "sakaiminato pt", "sakaiminato port", "sakaiminato city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            438 => 
-            array (
+            ],
+            438 => [
                 'id' => 1180,
                 'name' => 'SAKATA',
                 'code' => 'JPSKT',
@@ -5284,21 +4842,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sakata-jpskt-japan", "sakata ,jp", "japan: sakata", "sakata pt", "sakata port", "sakata city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            439 => 
-            array (
+            ],
+            439 => [
                 'id' => 1181,
                 'name' => 'SATSUMASENDAI',
                 'code' => 'JPSTS',
                 'display_name' => 'SATSUMASENDAI, JPSTS',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "satsumasendai-jpsts-japan", "satsumasendai ,jp", "japan: satsumasendai", "satsumasendai pt", "satsumasendai port", "satsumasendai city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            440 => 
-            array (
+            ],
+            440 => [
                 'id' => 1182,
                 'name' => 'SENDAI, MIYAGI',
                 'code' => 'JPSDJ',
@@ -5308,9 +4864,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sendai, miyagi-jpsdj-japan", "sendai, miyagi ,jp", "japan: sendai, miyagi", "sendai, miyagi pt", "sendai, miyagi port", "sendai, miyagi city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            441 => 
-            array (
+            ],
+            441 => [
                 'id' => 1183,
                 'name' => 'SHIBUSHI',
                 'code' => 'JPSBS',
@@ -5320,9 +4875,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shibushi-jpsbs-japan", "shibushi ,jp", "japan: shibushi", "shibushi pt", "shibushi port", "shibushi city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            442 => 
-            array (
+            ],
+            442 => [
                 'id' => 1184,
                 'name' => 'TAKAMATSU',
                 'code' => 'JPTAK',
@@ -5332,9 +4886,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "takamatsu-jptak-japan", "takamatsu ,jp", "japan: takamatsu", "takamatsu pt", "takamatsu port", "takamatsu city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            443 => 
-            array (
+            ],
+            443 => [
                 'id' => 1185,
                 'name' => 'TOKUSHIMA',
                 'code' => 'JPTKS',
@@ -5344,9 +4897,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tokushima-jptks-japan", "tokushima ,jp", "japan: tokushima", "tokushima pt", "tokushima port", "tokushima city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            444 => 
-            array (
+            ],
+            444 => [
                 'id' => 1186,
                 'name' => 'TOYAMASHINKO',
                 'code' => 'JPTOS',
@@ -5356,9 +4908,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "toyamashinko-jptos-japan", "toyamashinko ,jp", "japan: toyamashinko", "toyamashinko pt", "toyamashinko port", "toyamashinko city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            445 => 
-            array (
+            ],
+            445 => [
                 'id' => 1187,
                 'name' => 'TOYOHASHI',
                 'code' => 'JPTHS',
@@ -5368,9 +4919,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "toyohashi-jpths-japan", "toyohashi ,jp", "japan: toyohashi", "toyohashi pt", "toyohashi port", "toyohashi city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            446 => 
-            array (
+            ],
+            446 => [
                 'id' => 1188,
                 'name' => 'TSURUGA',
                 'code' => 'JPTRG',
@@ -5380,9 +4930,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tsuruga-jptrg-japan", "tsuruga ,jp", "japan: tsuruga", "tsuruga pt", "tsuruga port", "tsuruga city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            447 => 
-            array (
+            ],
+            447 => [
                 'id' => 1189,
                 'name' => 'UBE',
                 'code' => 'JPUBJ',
@@ -5392,9 +4941,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ube-jpubj-japan", "ube ,jp", "japan: ube", "ube pt", "ube port", "ube city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            448 => 
-            array (
+            ],
+            448 => [
                 'id' => 1190,
                 'name' => 'WAKAYAMA',
                 'code' => 'JPWAK',
@@ -5404,9 +4952,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wakayama-jpwak-japan", "wakayama ,jp", "japan: wakayama", "wakayama pt", "wakayama port", "wakayama city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            449 => 
-            array (
+            ],
+            449 => [
                 'id' => 1191,
                 'name' => 'YATSUSHIRO',
                 'code' => 'JPYAT',
@@ -5416,9 +4963,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yatsushiro-jpyat-japan", "yatsushiro ,jp", "japan: yatsushiro", "yatsushiro pt", "yatsushiro port", "yatsushiro city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            450 => 
-            array (
+            ],
+            450 => [
                 'id' => 1192,
                 'name' => 'Mombasa',
                 'code' => 'KEMBA',
@@ -5428,9 +4974,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mombasa-kemba-kenya", "mombasa ,ke", "kenya: mombasa", "mombasa pt", "mombasa port", "mombasa city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            451 => 
-            array (
+            ],
+            451 => [
                 'id' => 1193,
                 'name' => 'Phnom Penh',
                 'code' => 'KHPNH',
@@ -5440,9 +4985,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["phnom pehn", "", "phnom pen-khpnh-cambodia", "phnom penh ,kh", "cambodia: phnom penh", "phnom penh pt", "phnom penh port", "phnom penh city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            452 => 
-            array (
+            ],
+            452 => [
                 'id' => 1194,
                 'name' => 'Sihanoukville',
                 'code' => 'KHSIH',
@@ -5452,9 +4996,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sihanoukville-khkos-cambodia", "sihanoukville ,kh", "cambodia: sihanoukville", "sihanoukville pt", "sihanoukville port", "sihanoukville city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            453 => 
-            array (
+            ],
+            453 => [
                 'id' => 1195,
                 'name' => 'Kampong Saom',
                 'code' => 'KHKOS',
@@ -5464,9 +5007,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kampong saom-khkos-cambodia", "kampong saom ,kh", "cambodia: kampong saom", "kampong saom pt", "kampong saom port", "kampong saom city"]}',
                 'created_at' => '2018-09-05 19:34:30',
                 'updated_at' => '2018-09-05 19:34:30',
-            ),
-            454 => 
-            array (
+            ],
+            454 => [
                 'id' => 1196,
                 'name' => 'MORONI',
                 'code' => 'KMYVA',
@@ -5476,9 +5018,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "moroni-kmyva-comoros", "moroni ,km", "comoros: moroni", "moroni pt", "moroni port", "moroni city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            455 => 
-            array (
+            ],
+            455 => [
                 'id' => 1197,
                 'name' => 'MUTSAMUDU',
                 'code' => 'KMMUT',
@@ -5488,9 +5029,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mutsamudu-kmmut-comoros", "mutsamudu ,km", "comoros: mutsamudu", "mutsamudu pt", "mutsamudu port", "mutsamudu city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            456 => 
-            array (
+            ],
+            456 => [
                 'id' => 1198,
                 'name' => 'Busan',
                 'code' => 'KRPUS',
@@ -5500,9 +5040,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "busan-krpus-korea, republic of", "busan ,kr", "korea, republic of: busan", "busan pt", "busan port", "busan city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            457 => 
-            array (
+            ],
+            457 => [
                 'id' => 1199,
                 'name' => 'Gwangyang',
                 'code' => 'KRKAN',
@@ -5512,9 +5051,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gwangyang-krkan-korea, republic of", "gwangyang ,kr", "korea, republic of: gwangyang", "gwangyang pt", "gwangyang port", "gwangyang city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            458 => 
-            array (
+            ],
+            458 => [
                 'id' => 1200,
                 'name' => 'Inchon',
                 'code' => 'KRINC',
@@ -5524,9 +5062,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "inchon-krinc-korea, republic of", "inchon ,kr", "korea, republic of: inchon", "inchon pt", "inchon port", "inchon city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            459 => 
-            array (
+            ],
+            459 => [
                 'id' => 1201,
                 'name' => 'Pohang',
                 'code' => 'KRKPO',
@@ -5536,9 +5073,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pohang-krkpo-korea, republic of", "pohang ,kr", "korea, republic of: pohang", "pohang pt", "pohang port", "pohang city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            460 => 
-            array (
+            ],
+            460 => [
                 'id' => 1202,
                 'name' => 'OKPO/GEOJE',
                 'code' => 'KROKP',
@@ -5548,9 +5084,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "okpo/geoje-krokp-korea, republic of", "okpo/geoje ,kr", "korea, republic of: okpo/geoje", "okpo/geoje pt", "okpo/geoje port", "okpo/geoje city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            461 => 
-            array (
+            ],
+            461 => [
                 'id' => 1203,
                 'name' => 'Shuaiba',
                 'code' => 'KWMIB',
@@ -5560,9 +5095,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shuaiba-kwmib-kuwait", "shuaiba ,kw", "kuwait: shuaiba", "shuaiba pt", "shuaiba port", "shuaiba city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            462 => 
-            array (
+            ],
+            462 => [
                 'id' => 1204,
                 'name' => 'Shuwaikh',
                 'code' => 'KWSWK',
@@ -5572,9 +5106,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shuwaikh-kwswk-kuwait", "shuwaikh ,kw", "kuwait: shuwaikh", "shuwaikh pt", "shuwaikh port", "shuwaikh city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            463 => 
-            array (
+            ],
+            463 => [
                 'id' => 1205,
                 'name' => 'SHUAIBA',
                 'code' => 'KWSAA',
@@ -5584,21 +5117,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "shuaiba-kwsaa-kuwait", "shuaiba ,kw", "kuwait: shuaiba", "shuaiba pt", "shuaiba port", "shuaiba city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            464 => 
-            array (
+            ],
+            464 => [
                 'id' => 1206,
                 'name' => 'GRAND CAYMAN',
                 'code' => 'KYGCM',
                 'display_name' => 'GRAND CAYMAN, KYGCM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 121,
                 'varation' => '{"type": ["", "", "grand cayman-kygcm-cayman islands", "grand cayman ,ky", "cayman islands: grand cayman", "grand cayman pt", "grand cayman port", "grand cayman city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            465 => 
-            array (
+            ],
+            465 => [
                 'id' => 1207,
                 'name' => 'Beirut',
                 'code' => 'LBBEY',
@@ -5608,9 +5139,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "beirut-lbbey-lebanon", "beirut ,lb", "lebanon: beirut", "beirut pt", "beirut port", "beirut city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            466 => 
-            array (
+            ],
+            466 => [
                 'id' => 1208,
                 'name' => 'CASTRIES',
                 'code' => 'LCCAS',
@@ -5620,9 +5150,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "castries-lccas-saint lucia", "castries ,lc", "saint lucia: castries", "castries pt", "castries port", "castries city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            467 => 
-            array (
+            ],
+            467 => [
                 'id' => 1209,
                 'name' => 'Colombo',
                 'code' => 'LKCMB',
@@ -5632,9 +5161,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "colombo-lkcmb-sri lanka", "colombo ,lk", "sri lanka: colombo", "colombo pt", "colombo port", "colombo city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            468 => 
-            array (
+            ],
+            468 => [
                 'id' => 1210,
                 'name' => 'MONROVIA',
                 'code' => 'LRMLW',
@@ -5644,9 +5172,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "monrovia-lrmlw-liberia", "monrovia ,lr", "liberia: monrovia", "monrovia pt", "monrovia port", "monrovia city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            469 => 
-            array (
+            ],
+            469 => [
                 'id' => 1211,
                 'name' => 'Klaipeda',
                 'code' => 'LTKLJ',
@@ -5656,9 +5183,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "klaipeda-ltklj-lithuania", "klaipeda ,lt", "lithuania: klaipeda", "klaipeda pt", "klaipeda port", "klaipeda city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            470 => 
-            array (
+            ],
+            470 => [
                 'id' => 1212,
                 'name' => 'Riga',
                 'code' => 'LVRIX',
@@ -5668,9 +5194,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "riga-lvrix-latvia", "riga ,lv", "latvia: riga", "riga pt", "riga port", "riga city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            471 => 
-            array (
+            ],
+            471 => [
                 'id' => 1213,
                 'name' => 'Al Khoms',
                 'code' => 'LYKHO',
@@ -5680,9 +5205,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "al khoms-lykho-libya", "al khoms ,ly", "libya: al khoms", "al khoms pt", "al khoms port", "al khoms city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            472 => 
-            array (
+            ],
+            472 => [
                 'id' => 1214,
                 'name' => 'Benghazi',
                 'code' => 'LYBEN',
@@ -5692,9 +5216,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "benghazi-lyben-libya", "benghazi ,ly", "libya: benghazi", "benghazi pt", "benghazi port", "benghazi city"]}',
                 'created_at' => '2018-09-05 19:34:31',
                 'updated_at' => '2018-09-05 19:34:31',
-            ),
-            473 => 
-            array (
+            ],
+            473 => [
                 'id' => 1215,
                 'name' => 'Misuratah',
                 'code' => 'LYMRA',
@@ -5704,9 +5227,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "misuratah-lymra-libya", "misuratah ,ly", "libya: misuratah", "misuratah pt", "misuratah port", "misuratah city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            474 => 
-            array (
+            ],
+            474 => [
                 'id' => 1216,
                 'name' => 'TRIPOLI',
                 'code' => 'LYTIP',
@@ -5716,9 +5238,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tripoli-lytip-libya", "tripoli ,ly", "libya: tripoli", "tripoli pt", "tripoli port", "tripoli city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            475 => 
-            array (
+            ],
+            475 => [
                 'id' => 1217,
                 'name' => 'AGADIR',
                 'code' => 'MAAGA',
@@ -5728,9 +5249,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "agadir-maaga-morocco", "agadir ,ma", "morocco: agadir", "agadir pt", "agadir port", "agadir city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            476 => 
-            array (
+            ],
+            476 => [
                 'id' => 1218,
                 'name' => 'CASABLANCA',
                 'code' => 'MACAS',
@@ -5740,9 +5260,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "casablanca-macas-morocco", "casablanca ,ma", "morocco: casablanca", "casablanca pt", "casablanca port", "casablanca city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            477 => 
-            array (
+            ],
+            477 => [
                 'id' => 1219,
                 'name' => 'NADOR',
                 'code' => 'MANDR',
@@ -5752,9 +5271,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nador-mandr-morocco", "nador ,ma", "morocco: nador", "nador pt", "nador port", "nador city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            478 => 
-            array (
+            ],
+            478 => [
                 'id' => 1220,
                 'name' => 'TANGER MEDITERRANEO',
                 'code' => 'MAPTM',
@@ -5764,9 +5282,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tanger mediterraneo-maptm-morocco", "tanger mediterraneo ,ma", "morocco: tanger mediterraneo", "tanger mediterraneo pt", "tanger mediterraneo port", "tanger mediterraneo city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            479 => 
-            array (
+            ],
+            479 => [
                 'id' => 1221,
                 'name' => 'TANGIER',
                 'code' => 'MATNG',
@@ -5776,9 +5293,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["port tangier mediterranee ,ma", "", "tangier-matng-morocco", "tangier ,ma", "morocco: tangier", "tangier pt", "tangier port", "tangier city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            480 => 
-            array (
+            ],
+            480 => [
                 'id' => 1222,
                 'name' => 'GIURGIULESTI',
                 'code' => 'MDGIU',
@@ -5788,9 +5304,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "giurgiulesti-mdgiu-moldova, republic of", "giurgiulesti ,md", "moldova, republic of: giurgiulesti", "giurgiulesti pt", "giurgiulesti port", "giurgiulesti city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            481 => 
-            array (
+            ],
+            481 => [
                 'id' => 1223,
                 'name' => 'BAR',
                 'code' => 'MEBAR',
@@ -5800,9 +5315,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bar-mebar-montenegro", "bar ,me", "montenegro: bar", "bar pt", "bar port", "bar city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            482 => 
-            array (
+            ],
+            482 => [
                 'id' => 1224,
                 'name' => 'DIEGO SUAREZ',
                 'code' => 'MGDIE',
@@ -5812,9 +5326,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "diego suarez-mgdie-madagascar", "diego suarez ,mg", "madagascar: diego suarez", "diego suarez pt", "diego suarez port", "diego suarez city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            483 => 
-            array (
+            ],
+            483 => [
                 'id' => 1225,
                 'name' => 'MAJUNGA',
                 'code' => 'MGMJN',
@@ -5824,9 +5337,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "majunga-mgmjn-madagascar", "majunga ,mg", "madagascar: majunga", "majunga pt", "majunga port", "majunga city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            484 => 
-            array (
+            ],
+            484 => [
                 'id' => 1226,
                 'name' => 'TAMATAVE',
                 'code' => 'MGTMM',
@@ -5836,9 +5348,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tamatave-mgtmm-madagascar", "tamatave ,mg", "madagascar: tamatave", "tamatave pt", "tamatave port", "tamatave city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            485 => 
-            array (
+            ],
+            485 => [
                 'id' => 1227,
                 'name' => 'THILAWA',
                 'code' => 'MMTLA',
@@ -5848,9 +5359,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "thilawa-mmtla-myanmar", "thilawa ,mm", "myanmar: thilawa", "thilawa pt", "thilawa port", "thilawa city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            486 => 
-            array (
+            ],
+            486 => [
                 'id' => 1228,
                 'name' => 'Yangon',
                 'code' => 'MMRGN',
@@ -5860,9 +5370,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["yangon-myanmar", "", "yangon-mmrgn-myanmar", "yangon ,mm", "myanmar: yangon", "yangon pt", "yangon port", "yangon city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            487 => 
-            array (
+            ],
+            487 => [
                 'id' => 1229,
                 'name' => 'NOUADHIBOU',
                 'code' => 'MRNDB',
@@ -5872,9 +5381,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nouadhibou-mrndb-mauritania", "nouadhibou ,mr", "mauritania: nouadhibou", "nouadhibou pt", "nouadhibou port", "nouadhibou city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            488 => 
-            array (
+            ],
+            488 => [
                 'id' => 1230,
                 'name' => 'NOUAKCHOTT',
                 'code' => 'MRNKC',
@@ -5884,9 +5392,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nouakchott-mrnkc-mauritania", "nouakchott ,mr", "mauritania: nouakchott", "nouakchott pt", "nouakchott port", "nouakchott city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            489 => 
-            array (
+            ],
+            489 => [
                 'id' => 1231,
                 'name' => 'MARSAXLOKK',
                 'code' => 'MTMAR',
@@ -5896,9 +5403,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "marsaxlokk-mtmar-malta", "marsaxlokk ,mt", "malta: marsaxlokk", "marsaxlokk pt", "marsaxlokk port", "marsaxlokk city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            490 => 
-            array (
+            ],
+            490 => [
                 'id' => 1232,
                 'name' => 'PORT LOUIS',
                 'code' => 'MUPLU',
@@ -5908,9 +5414,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port louis-muplu-mauritius", "port louis ,mu", "mauritius: port louis", "port louis pt", "port louis port", "port louis city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            491 => 
-            array (
+            ],
+            491 => [
                 'id' => 1233,
                 'name' => 'MALE',
                 'code' => 'MVMLE',
@@ -5920,9 +5425,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "male-mvmle-maldives", "male ,mv", "maldives: male", "male pt", "male port", "male city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            492 => 
-            array (
+            ],
+            492 => [
                 'id' => 1234,
                 'name' => 'Altamira',
                 'code' => 'MXATM',
@@ -5932,9 +5436,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "altamira-mxatm-mexico", "altamira ,mx", "mexico: altamira", "altamira pt", "altamira port", "altamira city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            493 => 
-            array (
+            ],
+            493 => [
                 'id' => 1235,
                 'name' => 'Ensenada',
                 'code' => 'MXESE',
@@ -5944,9 +5447,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ensenada-mxese-mexico", "ensenada ,mx", "mexico: ensenada", "ensenada pt", "ensenada port", "ensenada city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            494 => 
-            array (
+            ],
+            494 => [
                 'id' => 1236,
                 'name' => 'Lazaro Cardenas',
                 'code' => 'MXLZC',
@@ -5956,9 +5458,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lazaro cardenas-mxlzc-mexico", "lazaro cardenas ,mx", "mexico: lazaro cardenas", "lazaro cardenas pt", "lazaro cardenas port", "lazaro cardenas city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            495 => 
-            array (
+            ],
+            495 => [
                 'id' => 1237,
                 'name' => 'Manzanillo',
                 'code' => 'MXZLO',
@@ -5968,9 +5469,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "manzanillo-mxzlo-mexico", "manzanillo ,mx", "mexico: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            496 => 
-            array (
+            ],
+            496 => [
                 'id' => 1238,
                 'name' => 'Veracruz',
                 'code' => 'MXVER',
@@ -5980,9 +5480,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "veracruz-mxver-mexico", "veracruz ,mx", "mexico: veracruz", "veracruz pt", "veracruz port", "veracruz city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            497 => 
-            array (
+            ],
+            497 => [
                 'id' => 1239,
                 'name' => 'GUAYMAS',
                 'code' => 'MXGYM',
@@ -5992,9 +5491,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "guaymas-mxgym-mexico", "guaymas ,mx", "mexico: guaymas", "guaymas pt", "guaymas port", "guaymas city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            498 => 
-            array (
+            ],
+            498 => [
                 'id' => 1240,
                 'name' => 'MAZATLAN',
                 'code' => 'MXMZT',
@@ -6004,9 +5502,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mazatlan-mxmzt-mexico", "mazatlan ,mx", "mexico: mazatlan", "mazatlan pt", "mazatlan port", "mazatlan city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            499 => 
-            array (
+            ],
+            499 => [
                 'id' => 1241,
                 'name' => 'PUERTO MORELOS',
                 'code' => 'MXPMS',
@@ -6016,11 +5513,10 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto morelos-mxpms-mexico", "puerto morelos ,mx", "mexico: puerto morelos", "puerto morelos pt", "puerto morelos port", "puerto morelos city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-        ));
-        \DB::table('harbors_copy')->insert(array (
-            0 => 
-            array (
+            ],
+        ]);
+        \DB::table('harbors_copy')->insert([
+            0 => [
                 'id' => 1242,
                 'name' => 'Bintulu',
                 'code' => 'MYBTU',
@@ -6030,9 +5526,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bintulu-mybtu-malaysia", "bintulu ,my", "malaysia: bintulu", "bintulu pt", "bintulu port", "bintulu city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 1243,
                 'name' => 'Kota Kinabalu',
                 'code' => 'MYBKI',
@@ -6042,9 +5537,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kota kinabalu-mybki-malaysia", "kota kinabalu ,my", "malaysia: kota kinabalu", "kota kinabalu pt", "kota kinabalu port", "kota kinabalu city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            2 => 
-            array (
+            ],
+            2 => [
                 'id' => 1244,
                 'name' => 'Kuantan',
                 'code' => 'MYKUA',
@@ -6054,9 +5548,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kuantan-mykua-malaysia", "kuantan ,my", "malaysia: kuantan", "kuantan pt", "kuantan port", "kuantan city"]}',
                 'created_at' => '2018-09-05 19:34:32',
                 'updated_at' => '2018-09-05 19:34:32',
-            ),
-            3 => 
-            array (
+            ],
+            3 => [
                 'id' => 1245,
                 'name' => 'Kuching',
                 'code' => 'MYKCH',
@@ -6066,9 +5559,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kuching-mykch-malaysia", "kuching ,my", "malaysia: kuching", "kuching pt", "kuching port", "kuching city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            4 => 
-            array (
+            ],
+            4 => [
                 'id' => 1246,
                 'name' => 'Pasir Gudang',
                 'code' => 'MYPGU',
@@ -6078,9 +5570,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pasir gudang-mypgu-malaysia", "pasir gudang ,my", "malaysia: pasir gudang", "pasir gudang pt", "pasir gudang port", "pasir gudang city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            5 => 
-            array (
+            ],
+            5 => [
                 'id' => 1247,
                 'name' => 'Penang',
                 'code' => 'MYPEN',
@@ -6090,9 +5581,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "penang-mypen-malaysia", "penang ,my", "malaysia: penang", "penang pt", "penang port", "penang city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            6 => 
-            array (
+            ],
+            6 => [
                 'id' => 1248,
                 'name' => 'Port Klang',
                 'code' => 'MYPKG',
@@ -6102,9 +5592,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port klang-mypkg-malaysia", "port klang ,my", "malaysia: port klang", "port klang pt", "port klang port", "port klang city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            7 => 
-            array (
+            ],
+            7 => [
                 'id' => 1249,
                 'name' => 'Sandakan',
                 'code' => 'MYSDK',
@@ -6114,9 +5603,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sandakan-mysdk-malaysia", "sandakan ,my", "malaysia: sandakan", "sandakan pt", "sandakan port", "sandakan city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            8 => 
-            array (
+            ],
+            8 => [
                 'id' => 1250,
                 'name' => 'Tanjung Pelepas',
                 'code' => 'MYTPP',
@@ -6126,9 +5614,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tanjung pelepas-mytpp-malaysia", "tanjung pelepas ,my", "malaysia: tanjung pelepas", "tanjung pelepas pt", "tanjung pelepas port", "tanjung pelepas city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            9 => 
-            array (
+            ],
+            9 => [
                 'id' => 1251,
                 'name' => 'Tawau',
                 'code' => 'MYTWU',
@@ -6138,9 +5625,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tawau-mytwu-malaysia", "tawau ,my", "malaysia: tawau", "tawau pt", "tawau port", "tawau city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            10 => 
-            array (
+            ],
+            10 => [
                 'id' => 1252,
                 'name' => 'SIBU, SARAWAK',
                 'code' => 'MYSBW',
@@ -6150,9 +5636,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sibu, sarawak-mysbw-malaysia", "sibu, sarawak ,my", "malaysia: sibu, sarawak", "sibu, sarawak pt", "sibu, sarawak port", "sibu, sarawak city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            11 => 
-            array (
+            ],
+            11 => [
                 'id' => 1253,
                 'name' => 'BEIRA',
                 'code' => 'MZBEW',
@@ -6162,9 +5647,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "beira-mzbew-mozambique", "beira ,mz", "mozambique: beira", "beira pt", "beira port", "beira city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            12 => 
-            array (
+            ],
+            12 => [
                 'id' => 1254,
                 'name' => 'MAPUTO',
                 'code' => 'MZMPM',
@@ -6174,9 +5658,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "maputo-mzmpm-mozambique", "maputo ,mz", "mozambique: maputo", "maputo pt", "maputo port", "maputo city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            13 => 
-            array (
+            ],
+            13 => [
                 'id' => 1255,
                 'name' => 'NACALA',
                 'code' => 'MZMNC',
@@ -6186,9 +5669,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nacala-mzmnc-mozambique", "nacala ,mz", "mozambique: nacala", "nacala pt", "nacala port", "nacala city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            14 => 
-            array (
+            ],
+            14 => [
                 'id' => 1256,
                 'name' => 'WALVIS BAY',
                 'code' => 'NAWVB',
@@ -6198,9 +5680,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "walvis bay-nawvb-namibia", "walvis bay ,na", "namibia: walvis bay", "walvis bay pt", "walvis bay port", "walvis bay city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            15 => 
-            array (
+            ],
+            15 => [
                 'id' => 1257,
                 'name' => 'Noumea',
                 'code' => 'NCNOU',
@@ -6210,33 +5691,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "noumea-ncnou-new caledonia", "noumea ,nc", "new caledonia: noumea", "noumea pt", "noumea port", "noumea city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            16 => 
-            array (
+            ],
+            16 => [
                 'id' => 1258,
                 'name' => 'PRONY',
                 'code' => 'NCPNY',
                 'display_name' => 'PRONY, NCPNY',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 158,
                 'varation' => '{"type": ["", "", "prony-ncpny-new caledonia", "prony ,nc", "new caledonia: prony", "prony pt", "prony port", "prony city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            17 => 
-            array (
+            ],
+            17 => [
                 'id' => 1259,
                 'name' => 'APAPA',
                 'code' => 'NGAPP',
                 'display_name' => 'APAPA, NGAPP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 161,
                 'varation' => '{"type": ["", "", "apapa-ngapp-nigeria", "apapa ,ng", "nigeria: apapa", "apapa pt", "apapa port", "apapa city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            18 => 
-            array (
+            ],
+            18 => [
                 'id' => 1260,
                 'name' => 'PORT HARCOURT',
                 'code' => 'NGPHC',
@@ -6246,21 +5724,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port harcourt-ngphc-nigeria", "port harcourt ,ng", "nigeria: port harcourt", "port harcourt pt", "port harcourt port", "port harcourt city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            19 => 
-            array (
+            ],
+            19 => [
                 'id' => 1261,
                 'name' => 'TINCAN/LAGOS',
                 'code' => 'NGTIN',
                 'display_name' => 'TINCAN/LAGOS, NGTIN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 161,
                 'varation' => '{"type": ["", "", "tincan/lagos-ngtin-nigeria", "tincan/lagos ,ng", "nigeria: tincan/lagos", "tincan/lagos pt", "tincan/lagos port", "tincan/lagos city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            20 => 
-            array (
+            ],
+            20 => [
                 'id' => 1262,
                 'name' => 'Corinto',
                 'code' => 'NICIO',
@@ -6270,9 +5746,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "corinto-nicio-nicaragua", "corinto ,ni", "nicaragua: corinto", "corinto pt", "corinto port", "corinto city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            21 => 
-            array (
+            ],
+            21 => [
                 'id' => 1263,
                 'name' => 'Rotterdam',
                 'code' => 'NLRTM',
@@ -6282,9 +5757,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rotterdam-nlrtm-netherlands", "rotterdam ,nl", "netherlands: rotterdam", "rotterdam pt", "rotterdam port", "rotterdam city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            22 => 
-            array (
+            ],
+            22 => [
                 'id' => 1264,
                 'name' => 'AMSTERDAM',
                 'code' => 'NLAMS',
@@ -6294,9 +5768,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "amsterdam-nlams-netherlands", "amsterdam ,nl", "netherlands: amsterdam", "amsterdam pt", "amsterdam port", "amsterdam city"]}',
                 'created_at' => '2018-09-05 19:34:33',
                 'updated_at' => '2018-09-05 19:34:33',
-            ),
-            23 => 
-            array (
+            ],
+            23 => [
                 'id' => 1265,
                 'name' => 'MOERDIJK',
                 'code' => 'NLMOE',
@@ -6306,9 +5779,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "moerdijk-nlmoe-netherlands", "moerdijk ,nl", "netherlands: moerdijk", "moerdijk pt", "moerdijk port", "moerdijk city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            24 => 
-            array (
+            ],
+            24 => [
                 'id' => 1266,
                 'name' => 'Aalesund',
                 'code' => 'NOAES',
@@ -6318,9 +5790,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aalesund-noaes-norway", "aalesund ,no", "norway: aalesund", "aalesund pt", "aalesund port", "aalesund city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            25 => 
-            array (
+            ],
+            25 => [
                 'id' => 1267,
                 'name' => 'Bergen',
                 'code' => 'NOBGO',
@@ -6330,9 +5801,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bergen-nobgo-norway", "bergen ,no", "norway: bergen", "bergen pt", "bergen port", "bergen city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            26 => 
-            array (
+            ],
+            26 => [
                 'id' => 1268,
                 'name' => 'Drammen',
                 'code' => 'NODRM',
@@ -6342,9 +5812,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "drammen-nodrm-norway", "drammen ,no", "norway: drammen", "drammen pt", "drammen port", "drammen city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            27 => 
-            array (
+            ],
+            27 => [
                 'id' => 1269,
                 'name' => 'Fredrikstad',
                 'code' => 'NOFRK',
@@ -6354,9 +5823,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "fredrikstad-nofrk-norway", "fredrikstad ,no", "norway: fredrikstad", "fredrikstad pt", "fredrikstad port", "fredrikstad city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            28 => 
-            array (
+            ],
+            28 => [
                 'id' => 1270,
                 'name' => 'Kristiansand',
                 'code' => 'NOKRS',
@@ -6366,9 +5834,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kristiansand-nokrs-norway", "kristiansand ,no", "norway: kristiansand", "kristiansand pt", "kristiansand port", "kristiansand city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            29 => 
-            array (
+            ],
+            29 => [
                 'id' => 1271,
                 'name' => 'Larvik',
                 'code' => 'NOLAR',
@@ -6378,9 +5845,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "larvik-nolar-norway", "larvik ,no", "norway: larvik", "larvik pt", "larvik port", "larvik city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            30 => 
-            array (
+            ],
+            30 => [
                 'id' => 1272,
                 'name' => 'Maloy',
                 'code' => 'NOMAY',
@@ -6390,9 +5856,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["maaloey ,no", "", "maloy-nomay-norway", "maloy ,no", "norway: maloy", "maloy pt", "maloy port", "maloy city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            31 => 
-            array (
+            ],
+            31 => [
                 'id' => 1273,
                 'name' => 'Moss',
                 'code' => 'NOMSS',
@@ -6402,9 +5867,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "moss-nomss-norway", "moss ,no", "norway: moss", "moss pt", "moss port", "moss city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            32 => 
-            array (
+            ],
+            32 => [
                 'id' => 1274,
                 'name' => 'Oslo',
                 'code' => 'NOOSL',
@@ -6414,9 +5878,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "oslo-noosl-norway", "oslo ,no", "norway: oslo", "oslo pt", "oslo port", "oslo city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            33 => 
-            array (
+            ],
+            33 => [
                 'id' => 1275,
                 'name' => 'Stavanger',
                 'code' => 'NOSVG',
@@ -6426,9 +5889,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "stavanger-nosvg-norway", "stavanger ,no", "norway: stavanger", "stavanger pt", "stavanger port", "stavanger city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            34 => 
-            array (
+            ],
+            34 => [
                 'id' => 1276,
                 'name' => 'AUSTEVOLL',
                 'code' => 'NOASV',
@@ -6438,9 +5900,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "austevoll-noasv-norway", "austevoll ,no", "norway: austevoll", "austevoll pt", "austevoll port", "austevoll city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            35 => 
-            array (
+            ],
+            35 => [
                 'id' => 1277,
                 'name' => 'BREVIK',
                 'code' => 'NOBVK',
@@ -6450,9 +5911,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "brevik-nobvk-norway", "brevik ,no", "norway: brevik", "brevik pt", "brevik port", "brevik city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            36 => 
-            array (
+            ],
+            36 => [
                 'id' => 1278,
                 'name' => 'FLORO',
                 'code' => 'NOFRO',
@@ -6462,21 +5922,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "floro-nofro-norway", "floro ,no", "norway: floro", "floro pt", "floro port", "floro city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            37 => 
-            array (
+            ],
+            37 => [
                 'id' => 1279,
                 'name' => 'GJEMNES',
                 'code' => 'NOGJM',
                 'display_name' => 'GJEMNES, NOGJM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "gjemnes-nogjm-norway", "gjemnes ,no", "norway: gjemnes", "gjemnes pt", "gjemnes port", "gjemnes city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            38 => 
-            array (
+            ],
+            38 => [
                 'id' => 1280,
                 'name' => 'HALDEN',
                 'code' => 'NOHAL',
@@ -6486,9 +5944,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "halden-nohal-norway", "halden ,no", "norway: halden", "halden pt", "halden port", "halden city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            39 => 
-            array (
+            ],
+            39 => [
                 'id' => 1281,
                 'name' => 'HAUGESUND',
                 'code' => 'NOHAU',
@@ -6498,33 +5955,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "haugesund-nohau-norway", "haugesund ,no", "norway: haugesund", "haugesund pt", "haugesund port", "haugesund city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            40 => 
-            array (
+            ],
+            40 => [
                 'id' => 1282,
                 'name' => 'IKORNNES',
                 'code' => 'NOIKR',
                 'display_name' => 'IKORNNES, NOIKR',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "ikornnes-noikr-norway", "ikornnes ,no", "norway: ikornnes", "ikornnes pt", "ikornnes port", "ikornnes city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            41 => 
-            array (
+            ],
+            41 => [
                 'id' => 1283,
                 'name' => 'KVINESDAL',
                 'code' => 'NOKVD',
                 'display_name' => 'KVINESDAL, NOKVD',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "kvinesdal-nokvd-norway", "kvinesdal ,no", "norway: kvinesdal", "kvinesdal pt", "kvinesdal port", "kvinesdal city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            42 => 
-            array (
+            ],
+            42 => [
                 'id' => 1284,
                 'name' => 'ORKANGER',
                 'code' => 'NOORK',
@@ -6534,9 +5988,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "orkanger-noork-norway", "orkanger ,no", "norway: orkanger", "orkanger pt", "orkanger port", "orkanger city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            43 => 
-            array (
+            ],
+            43 => [
                 'id' => 1285,
                 'name' => 'SALTEN',
                 'code' => 'NOSAT',
@@ -6546,9 +5999,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salten-nosat-norway", "salten ,no", "norway: salten", "salten pt", "salten port", "salten city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            44 => 
-            array (
+            ],
+            44 => [
                 'id' => 1286,
                 'name' => 'SAUDA',
                 'code' => 'NOSAU',
@@ -6558,9 +6010,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sauda-nosau-norway", "sauda ,no", "norway: sauda", "sauda pt", "sauda port", "sauda city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            45 => 
-            array (
+            ],
+            45 => [
                 'id' => 1287,
                 'name' => 'SUNNDALSORA',
                 'code' => 'NOSUN',
@@ -6570,9 +6021,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sunndalsora-nosun-norway", "sunndalsora ,no", "norway: sunndalsora", "sunndalsora pt", "sunndalsora port", "sunndalsora city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            46 => 
-            array (
+            ],
+            46 => [
                 'id' => 1288,
                 'name' => 'SVELGEN',
                 'code' => 'NOSVE',
@@ -6582,9 +6032,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "svelgen-nosve-norway", "svelgen ,no", "norway: svelgen", "svelgen pt", "svelgen port", "svelgen city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            47 => 
-            array (
+            ],
+            47 => [
                 'id' => 1289,
                 'name' => 'Auckland',
                 'code' => 'NZAKL',
@@ -6594,9 +6043,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "auckland-nzakl-new zealand", "auckland ,nz", "new zealand: auckland", "auckland pt", "auckland port", "auckland city"]}',
                 'created_at' => '2018-09-05 19:34:34',
                 'updated_at' => '2018-09-05 19:34:34',
-            ),
-            48 => 
-            array (
+            ],
+            48 => [
                 'id' => 1290,
                 'name' => 'Christchurch Metroport',
                 'code' => 'NZCHC',
@@ -6606,9 +6054,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "christchurch metroport-nzchc-new zealand", "christchurch metroport ,nz", "new zealand: christchurch metroport", "christchurch metroport pt", "christchurch metroport port", "christchurch metroport city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            49 => 
-            array (
+            ],
+            49 => [
                 'id' => 1291,
                 'name' => 'Lyttelton',
                 'code' => 'NZLYT',
@@ -6618,9 +6065,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lyttelton-nzlyt-new zealand", "lyttelton ,nz", "new zealand: lyttelton", "lyttelton pt", "lyttelton port", "lyttelton city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            50 => 
-            array (
+            ],
+            50 => [
                 'id' => 1292,
                 'name' => 'Napier',
                 'code' => 'NZNPE',
@@ -6630,9 +6076,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "napier-nznpe-new zealand", "napier ,nz", "new zealand: napier", "napier pt", "napier port", "napier city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            51 => 
-            array (
+            ],
+            51 => [
                 'id' => 1293,
                 'name' => 'Nelson',
                 'code' => 'NZNSN',
@@ -6642,9 +6087,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nelson-nznsn-new zealand", "nelson ,nz", "new zealand: nelson", "nelson pt", "nelson port", "nelson city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            52 => 
-            array (
+            ],
+            52 => [
                 'id' => 1294,
                 'name' => 'Port Chalmers',
                 'code' => 'NZPOE',
@@ -6654,9 +6098,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port chalmers-nzpoe-new zealand", "port chalmers ,nz", "new zealand: port chalmers", "port chalmers pt", "port chalmers port", "port chalmers city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            53 => 
-            array (
+            ],
+            53 => [
                 'id' => 1295,
                 'name' => 'Tauranga',
                 'code' => 'NZTRG',
@@ -6666,9 +6109,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tauranga-nztrg-new zealand", "tauranga ,nz", "new zealand: tauranga", "tauranga pt", "tauranga port", "tauranga city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            54 => 
-            array (
+            ],
+            54 => [
                 'id' => 1296,
                 'name' => 'Timaru',
                 'code' => 'NZTIU',
@@ -6678,9 +6120,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "timaru-nztiu-new zealand", "timaru ,nz", "new zealand: timaru", "timaru pt", "timaru port", "timaru city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            55 => 
-            array (
+            ],
+            55 => [
                 'id' => 1297,
                 'name' => 'Wellington',
                 'code' => 'NZWLG',
@@ -6690,9 +6131,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "wellington-nzwlg-new zealand", "wellington ,nz", "new zealand: wellington", "wellington pt", "wellington port", "wellington city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            56 => 
-            array (
+            ],
+            56 => [
                 'id' => 1298,
                 'name' => 'BLUFF',
                 'code' => 'NZBLU',
@@ -6702,9 +6142,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bluff-nzblu-new zealand", "bluff ,nz", "new zealand: bluff", "bluff pt", "bluff port", "bluff city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            57 => 
-            array (
+            ],
+            57 => [
                 'id' => 1299,
                 'name' => 'MARSDEN POINT',
                 'code' => 'NZMAP',
@@ -6714,9 +6153,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "marsden point-nzmap-new zealand", "marsden point ,nz", "new zealand: marsden point", "marsden point pt", "marsden point port", "marsden point city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            58 => 
-            array (
+            ],
+            58 => [
                 'id' => 1300,
                 'name' => 'Salalah',
                 'code' => 'OMRAY',
@@ -6726,9 +6164,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salalah-omray-oman", "salalah ,om", "oman: salalah", "salalah pt", "salalah port", "salalah city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            59 => 
-            array (
+            ],
+            59 => [
                 'id' => 1301,
                 'name' => 'Sohar',
                 'code' => 'OMSOH',
@@ -6738,21 +6175,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sohar-omsoh-oman", "sohar ,om", "oman: sohar", "sohar pt", "sohar port", "sohar city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            60 => 
-            array (
+            ],
+            60 => [
                 'id' => 1302,
                 'name' => 'DUQM',
                 'code' => 'OMDQM',
                 'display_name' => 'DUQM, OMDQM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 169,
                 'varation' => '{"type": ["", "", "duqm-omdqm-oman", "duqm ,om", "oman: duqm", "duqm pt", "duqm port", "duqm city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            61 => 
-            array (
+            ],
+            61 => [
                 'id' => 1303,
                 'name' => 'SALALAH',
                 'code' => 'OMSLL',
@@ -6762,9 +6197,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salalah-omsll-oman", "salalah ,om", "oman: salalah", "salalah pt", "salalah port", "salalah city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            62 => 
-            array (
+            ],
+            62 => [
                 'id' => 1304,
                 'name' => 'Balboa',
                 'code' => 'PABLB',
@@ -6774,9 +6208,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "balboa-pablb-panama", "balboa ,pa", "panama: balboa", "balboa pt", "balboa port", "balboa city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            63 => 
-            array (
+            ],
+            63 => [
                 'id' => 1305,
                 'name' => 'Manzanillo',
                 'code' => 'PAMIT',
@@ -6786,9 +6219,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "manzanillo-pamit-panama", "manzanillo ,pa", "panama: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            64 => 
-            array (
+            ],
+            64 => [
                 'id' => 1306,
                 'name' => 'ALMIRANTE',
                 'code' => 'PAPAM',
@@ -6798,9 +6230,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "almirante-papam-panama", "almirante ,pa", "panama: almirante", "almirante pt", "almirante port", "almirante city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            65 => 
-            array (
+            ],
+            65 => [
                 'id' => 1307,
                 'name' => 'CRISTOBAL',
                 'code' => 'PACTB',
@@ -6810,9 +6241,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cristobal-pactb-panama", "cristobal ,pa", "panama: cristobal", "cristobal pt", "cristobal port", "cristobal city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            66 => 
-            array (
+            ],
+            66 => [
                 'id' => 1308,
                 'name' => 'RODMAN',
                 'code' => 'PAROD',
@@ -6822,9 +6252,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rodman-parod-panama", "rodman ,pa", "panama: rodman", "rodman pt", "rodman port", "rodman city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            67 => 
-            array (
+            ],
+            67 => [
                 'id' => 1309,
                 'name' => 'Callao',
                 'code' => 'PECLL',
@@ -6834,9 +6263,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "callao-pecll-peru", "callao ,pe", "peru: callao", "callao pt", "callao port", "callao city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            68 => 
-            array (
+            ],
+            68 => [
                 'id' => 1310,
                 'name' => 'Paita',
                 'code' => 'PEPAI',
@@ -6846,9 +6274,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "paita-pepai-peru", "paita ,pe", "peru: paita", "paita pt", "paita port", "paita city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            69 => 
-            array (
+            ],
+            69 => [
                 'id' => 1311,
                 'name' => 'CHIMBOTE',
                 'code' => 'PECHM',
@@ -6858,9 +6285,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chimbote-pechm-peru", "chimbote ,pe", "peru: chimbote", "chimbote pt", "chimbote port", "chimbote city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            70 => 
-            array (
+            ],
+            70 => [
                 'id' => 1312,
                 'name' => 'MATARANI',
                 'code' => 'PEMRI',
@@ -6870,9 +6296,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "matarani-pemri-peru", "matarani ,pe", "peru: matarani", "matarani pt", "matarani port", "matarani city"]}',
                 'created_at' => '2018-09-05 19:34:35',
                 'updated_at' => '2018-09-05 19:34:35',
-            ),
-            71 => 
-            array (
+            ],
+            71 => [
                 'id' => 1313,
                 'name' => 'SALAVERRY',
                 'code' => 'PESVY',
@@ -6882,9 +6307,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "salaverry-pesvy-peru", "salaverry ,pe", "peru: salaverry", "salaverry pt", "salaverry port", "salaverry city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            72 => 
-            array (
+            ],
+            72 => [
                 'id' => 1314,
                 'name' => 'PAPEETE',
                 'code' => 'PFPPT',
@@ -6894,9 +6318,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "papeete-pfppt-french polynesia", "papeete ,pf", "french polynesia: papeete", "papeete pt", "papeete port", "papeete city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            73 => 
-            array (
+            ],
+            73 => [
                 'id' => 1315,
                 'name' => 'Kimbe',
                 'code' => 'PGKIM',
@@ -6906,9 +6329,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kimbe-pgkim-papua new guinea", "kimbe ,pg", "papua new guinea: kimbe", "kimbe pt", "kimbe port", "kimbe city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            74 => 
-            array (
+            ],
+            74 => [
                 'id' => 1316,
                 'name' => 'Lae',
                 'code' => 'PGLAE',
@@ -6918,9 +6340,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lae-pglae-papua new guinea", "lae ,pg", "papua new guinea: lae", "lae pt", "lae port", "lae city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            75 => 
-            array (
+            ],
+            75 => [
                 'id' => 1317,
                 'name' => 'Port Moresby',
                 'code' => 'PGPOM',
@@ -6930,9 +6351,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port moresby-pgpom-papua new guinea", "port moresby ,pg", "papua new guinea: port moresby", "port moresby pt", "port moresby port", "port moresby city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            76 => 
-            array (
+            ],
+            76 => [
                 'id' => 1318,
                 'name' => 'Rabaul',
                 'code' => 'PGRAB',
@@ -6942,9 +6362,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "rabaul-pgrab-papua new guinea", "rabaul ,pg", "papua new guinea: rabaul", "rabaul pt", "rabaul port", "rabaul city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            77 => 
-            array (
+            ],
+            77 => [
                 'id' => 1319,
                 'name' => 'Batangas',
                 'code' => 'PHBTG',
@@ -6954,9 +6373,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "batangas-phbtg-philippines", "batangas ,ph", "philippines: batangas", "batangas pt", "batangas port", "batangas city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            78 => 
-            array (
+            ],
+            78 => [
                 'id' => 1320,
                 'name' => 'Cagayan de Oro',
                 'code' => 'PHCGY',
@@ -6966,9 +6384,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cagayan de oro-phcgy-philippines", "cagayan de oro ,ph", "philippines: cagayan de oro", "cagayan de oro pt", "cagayan de oro port", "cagayan de oro city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            79 => 
-            array (
+            ],
+            79 => [
                 'id' => 1321,
                 'name' => 'Cebu City',
                 'code' => 'PHCEB',
@@ -6978,9 +6395,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cebu city-phceb-philippines", "cebu city ,ph", "philippines: cebu city", "cebu city pt", "cebu city port", "cebu city city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            80 => 
-            array (
+            ],
+            80 => [
                 'id' => 1322,
                 'name' => 'General Santos City Dadiangas',
                 'code' => 'PHGES',
@@ -6990,9 +6406,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "general santos city dadiangas-phges-philippines", "general santos city dadiangas ,ph", "philippines: general santos city dadiangas", "general santos city dadiangas pt", "general santos city dadiangas port", "general santos city dadiangas city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            81 => 
-            array (
+            ],
+            81 => [
                 'id' => 1323,
                 'name' => 'Manila',
                 'code' => 'PHMNL',
@@ -7002,9 +6417,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "manila-phmnl-philippines", "manila ,ph", "philippines: manila", "manila pt", "manila port", "manila city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            82 => 
-            array (
+            ],
+            82 => [
                 'id' => 1324,
                 'name' => 'MANILA SOUTH',
                 'code' => 'PHMNS',
@@ -7014,21 +6428,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "manila south-phmns-philippines", "manila south ,ph", "philippines: manila south", "manila south pt", "manila south port", "manila south city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            83 => 
-            array (
+            ],
+            83 => [
                 'id' => 1325,
                 'name' => 'Panabo City',
                 'code' => 'PHPAN',
                 'display_name' => 'Panabo City, PHPAN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 174,
                 'varation' => '{"type": ["", "", "panabo city-phpan-philippines", "panabo city ,ph", "philippines: panabo city", "panabo city pt", "panabo city port", "panabo city city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            84 => 
-            array (
+            ],
+            84 => [
                 'id' => 1326,
                 'name' => 'Subic',
                 'code' => 'PHSFS',
@@ -7038,21 +6450,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "subic-phsfs-philippines", "subic ,ph", "philippines: subic", "subic pt", "subic port", "subic city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            85 => 
-            array (
+            ],
+            85 => [
                 'id' => 1327,
                 'name' => 'Manila North',
                 'code' => 'PHMNN',
                 'display_name' => 'Manila North, PHMNN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 174,
                 'varation' => '{"type": ["", "", "manila north-phmnn-philippines", "manila north ,ph", "philippines: manila north", "manila north pt", "manila north port", "manila north city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            86 => 
-            array (
+            ],
+            86 => [
                 'id' => 1328,
                 'name' => 'Karachi',
                 'code' => 'PKKHI',
@@ -7062,9 +6472,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "karachi-pkkhi-pakistan", "karachi ,pk", "pakistan: karachi", "karachi pt", "karachi port", "karachi city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            87 => 
-            array (
+            ],
+            87 => [
                 'id' => 1329,
                 'name' => 'Port Qasim',
                 'code' => 'PKBQM',
@@ -7074,9 +6483,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port qasim-pkbqm-pakistan", "port qasim ,pk", "pakistan: port qasim", "port qasim pt", "port qasim port", "port qasim city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            88 => 
-            array (
+            ],
+            88 => [
                 'id' => 1330,
                 'name' => 'Gdansk',
                 'code' => 'PLGDN',
@@ -7086,9 +6494,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gdansk-plgdn-poland", "gdansk ,pl", "poland: gdansk", "gdansk pt", "gdansk port", "gdansk city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            89 => 
-            array (
+            ],
+            89 => [
                 'id' => 1331,
                 'name' => 'Szczecin',
                 'code' => 'PLSZZ',
@@ -7098,9 +6505,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "szczecin-plszz-poland", "szczecin ,pl", "poland: szczecin", "szczecin pt", "szczecin port", "szczecin city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            90 => 
-            array (
+            ],
+            90 => [
                 'id' => 1332,
                 'name' => 'GDYNIA',
                 'code' => 'PLGDY',
@@ -7110,9 +6516,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gdynia-plgdy-poland", "gdynia ,pl", "poland: gdynia", "gdynia pt", "gdynia port", "gdynia city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            91 => 
-            array (
+            ],
+            91 => [
                 'id' => 1333,
                 'name' => 'SAN JUAN',
                 'code' => 'PRSJU',
@@ -7122,9 +6527,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "san juan-prsju-puerto rico", "san juan ,pr", "puerto rico: san juan", "san juan pt", "san juan port", "san juan city"]}',
                 'created_at' => '2018-09-05 19:34:36',
                 'updated_at' => '2018-09-05 19:34:36',
-            ),
-            92 => 
-            array (
+            ],
+            92 => [
                 'id' => 1334,
                 'name' => 'Leixoes',
                 'code' => 'PTLEI',
@@ -7134,9 +6538,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["ptlxs", "", "leixoes-ptlei-portugal", "leixoes ,pt", "portugal: leixoes", "leixoes pt", "leixoes port", "leixoes city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            93 => 
-            array (
+            ],
+            93 => [
                 'id' => 1335,
                 'name' => 'Lisbon',
                 'code' => 'PTLIS',
@@ -7146,9 +6549,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lisbon-ptlis-portugal", "lisbon ,pt", "portugal: lisbon", "lisbon pt", "lisbon port", "lisbon city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            94 => 
-            array (
+            ],
+            94 => [
                 'id' => 1336,
                 'name' => 'Sines',
                 'code' => 'PTSIE',
@@ -7158,9 +6560,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sines-ptsie-portugal", "sines ,pt", "portugal: sines", "sines pt", "sines port", "sines city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            95 => 
-            array (
+            ],
+            95 => [
                 'id' => 1337,
                 'name' => 'FIGUEIRA DA FOZ',
                 'code' => 'PTFDF',
@@ -7170,9 +6571,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "figueira da foz-ptfdf-portugal", "figueira da foz ,pt", "portugal: figueira da foz", "figueira da foz pt", "figueira da foz port", "figueira da foz city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            96 => 
-            array (
+            ],
+            96 => [
                 'id' => 1338,
                 'name' => 'SETUBAL',
                 'code' => 'PTSET',
@@ -7182,45 +6582,41 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "setubal-ptset-portugal", "setubal ,pt", "portugal: setubal", "setubal pt", "setubal port", "setubal city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            97 => 
-            array (
+            ],
+            97 => [
                 'id' => 1339,
                 'name' => 'CAACUPEMI ASUNCION',
                 'code' => 'PYBCM',
                 'display_name' => 'CAACUPEMI ASUNCION, PYBCM',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "caacupemi asuncion-pybcm-paraguay", "caacupemi asuncion ,py", "paraguay: caacupemi asuncion", "caacupemi asuncion pt", "caacupemi asuncion port", "caacupemi asuncion city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            98 => 
-            array (
+            ],
+            98 => [
                 'id' => 1340,
                 'name' => 'CAACUPEMI PILAR',
                 'code' => 'PYPIL',
                 'display_name' => 'CAACUPEMI PILAR, PYPIL',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "caacupemi pilar-pypil-paraguay", "caacupemi pilar ,py", "paraguay: caacupemi pilar", "caacupemi pilar pt", "caacupemi pilar port", "caacupemi pilar city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            99 => 
-            array (
+            ],
+            99 => [
                 'id' => 1341,
                 'name' => 'COLONIA MARIANO ROQUE ALONSO PUERTO SAN JOSE',
                 'code' => 'PYMRA',
                 'display_name' => 'COLONIA MARIANO ROQUE ALONSO PUERTO SAN JOSE, PYMRA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "colonia mariano roque alonso puerto san jose-pymra-paraguay", "colonia mariano roque alonso puerto san jose ,py", "paraguay: colonia mariano roque alonso puerto san jose", "colonia mariano roque alonso puerto san jose pt", "colonia mariano roque alonso puerto san jose port", "colonia mariano roque alonso puerto san jose city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            100 => 
-            array (
+            ],
+            100 => [
                 'id' => 1342,
                 'name' => 'ENCARNACION PUERTO SAN JUAN',
                 'code' => 'PYENO',
@@ -7230,21 +6626,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "encarnacion puerto san juan-pyeno-paraguay", "encarnacion puerto san juan ,py", "paraguay: encarnacion puerto san juan", "encarnacion puerto san juan pt", "encarnacion puerto san juan port", "encarnacion puerto san juan city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            101 => 
-            array (
+            ],
+            101 => [
                 'id' => 1343,
                 'name' => 'FENIX',
                 'code' => 'PYFNX',
                 'display_name' => 'FENIX, PYFNX',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "fenix-pyfnx-paraguay", "fenix ,py", "paraguay: fenix", "fenix pt", "fenix port", "fenix city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            102 => 
-            array (
+            ],
+            102 => [
                 'id' => 1344,
             'name' => 'PUERTO SEGURO FLUVIAL (VILLETA)',
                 'code' => 'PYVLL',
@@ -7254,9 +6648,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "puerto seguro fluvial (villeta)-pyvll-paraguay", "puerto seguro fluvial (villeta) ,py", "paraguay: puerto seguro fluvial (villeta)", "puerto seguro fluvial (villeta) pt", "puerto seguro fluvial (villeta) port", "puerto seguro fluvial (villeta) city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            103 => 
-            array (
+            ],
+            103 => [
                 'id' => 1345,
                 'name' => 'TERPORT',
                 'code' => 'PYTER',
@@ -7266,9 +6659,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "terport-pyter-paraguay", "terport ,py", "paraguay: terport", "terport pt", "terport port", "terport city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            104 => 
-            array (
+            ],
+            104 => [
                 'id' => 1346,
                 'name' => 'Doha',
                 'code' => 'QADOH',
@@ -7278,33 +6670,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "doha-qadoh-qatar", "doha ,qa", "qatar: doha", "doha pt", "doha port", "doha city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            105 => 
-            array (
+            ],
+            105 => [
                 'id' => 1347,
                 'name' => 'Qapco',
                 'code' => 'QAQAP',
                 'display_name' => 'Qapco, QAQAP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 184,
                 'varation' => '{"type": ["", "", "qapco-qaqap-qatar", "qapco ,qa", "qatar: qapco", "qapco pt", "qapco port", "qapco city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            106 => 
-            array (
+            ],
+            106 => [
                 'id' => 1348,
                 'name' => 'Qchem',
                 'code' => 'QAQCH',
                 'display_name' => 'Qchem, QAQCH',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 184,
                 'varation' => '{"type": ["", "", "qchem-qaqch-qatar", "qchem ,qa", "qatar: qchem", "qchem pt", "qchem port", "qchem city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            107 => 
-            array (
+            ],
+            107 => [
                 'id' => 1349,
                 'name' => 'HAMAD',
                 'code' => 'QAHMD',
@@ -7314,9 +6703,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hamad-qahmd-qatar", "hamad ,qa", "qatar: hamad", "hamad pt", "hamad port", "hamad city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            108 => 
-            array (
+            ],
+            108 => [
                 'id' => 1350,
                 'name' => 'MESAIEED',
                 'code' => 'QAMES',
@@ -7326,9 +6714,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mesaieed-qames-qatar", "mesaieed ,qa", "qatar: mesaieed", "mesaieed pt", "mesaieed port", "mesaieed city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            109 => 
-            array (
+            ],
+            109 => [
                 'id' => 1351,
                 'name' => 'POINTE DES GALETS',
                 'code' => 'REPDG',
@@ -7338,9 +6725,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pointe des galets-repdg-reunion", "pointe des galets ,re", "reunion: pointe des galets", "pointe des galets pt", "pointe des galets port", "pointe des galets city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            110 => 
-            array (
+            ],
+            110 => [
                 'id' => 1352,
                 'name' => 'Constanta',
                 'code' => 'ROCND',
@@ -7350,9 +6736,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "constanta-rocnd-romania", "constanta ,ro", "romania: constanta", "constanta pt", "constanta port", "constanta city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            111 => 
-            array (
+            ],
+            111 => [
                 'id' => 1353,
                 'name' => 'Azov',
                 'code' => 'RUAZO',
@@ -7362,33 +6747,30 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "azov-ruazo-russia", "azov ,ru", "russia: azov", "azov pt", "azov port", "azov city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            112 => 
-            array (
+            ],
+            112 => [
                 'id' => 1354,
                 'name' => 'DALZAVOD',
                 'code' => 'RUDAZ',
                 'display_name' => 'DALZAVOD, RUDAZ',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 188,
                 'varation' => '{"type": ["", "", "dalzavod-rudaz-russia", "dalzavod ,ru", "russia: dalzavod", "dalzavod pt", "dalzavod port", "dalzavod city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            113 => 
-            array (
+            ],
+            113 => [
                 'id' => 1355,
                 'name' => 'Fish Port Terminal',
                 'code' => 'RUFPT',
                 'display_name' => 'Fish Port Terminal, RUFPT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 188,
                 'varation' => '{"type": ["", "", "fish port terminal-rufpt-russia", "fish port terminal ,ru", "russia: fish port terminal", "fish port terminal pt", "fish port terminal port", "fish port terminal city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            114 => 
-            array (
+            ],
+            114 => [
                 'id' => 1356,
                 'name' => 'Kaliningrad',
                 'code' => 'RUKGD',
@@ -7398,9 +6780,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kaliningrad-rukgd-russia", "kaliningrad ,ru", "russia: kaliningrad", "kaliningrad pt", "kaliningrad port", "kaliningrad city"]}',
                 'created_at' => '2018-09-05 19:34:37',
                 'updated_at' => '2018-09-05 19:34:37',
-            ),
-            115 => 
-            array (
+            ],
+            115 => [
                 'id' => 1357,
                 'name' => 'Korsakov',
                 'code' => 'RUKOR',
@@ -7410,9 +6791,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "korsakov-rukor-russia", "korsakov ,ru", "russia: korsakov", "korsakov pt", "korsakov port", "korsakov city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            116 => 
-            array (
+            ],
+            116 => [
                 'id' => 1358,
                 'name' => 'Magadan',
                 'code' => 'RUGDX',
@@ -7422,9 +6802,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "magadan-rugdx-russia", "magadan ,ru", "russia: magadan", "magadan pt", "magadan port", "magadan city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            117 => 
-            array (
+            ],
+            117 => [
                 'id' => 1359,
                 'name' => 'Novorossiysk',
                 'code' => 'RUNVS',
@@ -7434,9 +6813,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "novorossiysk-runvs-russia", "novorossiysk ,ru", "russia: novorossiysk", "novorossiysk pt", "novorossiysk port", "novorossiysk city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            118 => 
-            array (
+            ],
+            118 => [
                 'id' => 1360,
                 'name' => 'St Petersburg',
                 'code' => 'RULED',
@@ -7446,9 +6824,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["st petersburg fct ,ru", "", "st petersburg-ruled-russia", "st petersburg ,ru", "russia: st petersburg", "st petersburg pt", "st petersburg port", "st petersburg city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            119 => 
-            array (
+            ],
+            119 => [
                 'id' => 1361,
                 'name' => 'Ust Luga',
                 'code' => 'RUULU',
@@ -7458,9 +6835,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ust luga-ruulu-russia", "ust luga ,ru", "russia: ust luga", "ust luga pt", "ust luga port", "ust luga city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            120 => 
-            array (
+            ],
+            120 => [
                 'id' => 1362,
                 'name' => 'Vladivostok',
                 'code' => 'RUVVO',
@@ -7470,9 +6846,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vladivostok-ruvvo-russia", "vladivostok ,ru", "russia: vladivostok", "vladivostok pt", "vladivostok port", "vladivostok city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            121 => 
-            array (
+            ],
+            121 => [
                 'id' => 1363,
                 'name' => 'Vostochniy Port',
                 'code' => 'RUVYP',
@@ -7482,9 +6857,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vostochniy port-ruvyp-russia", "vostochniy port ,ru", "russia: vostochniy port", "vostochniy port pt", "vostochniy port port", "vostochniy port city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            122 => 
-            array (
+            ],
+            122 => [
                 'id' => 1364,
                 'name' => 'Al Jubayl',
                 'code' => 'SAJUB',
@@ -7494,9 +6868,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "al jubayl-sajub-saudi arabia", "al jubayl ,sa", "saudi arabia: al jubayl", "al jubayl pt", "al jubayl port", "al jubayl city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            123 => 
-            array (
+            ],
+            123 => [
                 'id' => 1365,
                 'name' => 'Dammam',
                 'code' => 'SADMM',
@@ -7506,9 +6879,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dammam-sadmm-saudi arabia", "dammam ,sa", "saudi arabia: dammam", "dammam pt", "dammam port", "dammam city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            124 => 
-            array (
+            ],
+            124 => [
                 'id' => 1366,
                 'name' => 'Jeddah',
                 'code' => 'SAJED',
@@ -7518,9 +6890,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jeddah-sajed-saudi arabia", "jeddah ,sa", "saudi arabia: jeddah", "jeddah pt", "jeddah port", "jeddah city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            125 => 
-            array (
+            ],
+            125 => [
                 'id' => 1367,
                 'name' => 'King Abdullah Port',
                 'code' => 'SAKAC',
@@ -7530,9 +6901,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "king abdullah port-sakac-saudi arabia", "king abdullah port ,sa", "saudi arabia: king abdullah port", "king abdullah port pt", "king abdullah port port", "king abdullah port city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            126 => 
-            array (
+            ],
+            126 => [
                 'id' => 1368,
                 'name' => 'Port Noro',
                 'code' => 'SBNOR',
@@ -7542,9 +6912,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port noro-sbnor-solomon islands", "port noro ,sb", "solomon islands: port noro", "port noro pt", "port noro port", "port noro city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            127 => 
-            array (
+            ],
+            127 => [
                 'id' => 1369,
                 'name' => 'HONIARA, GUADALCANAL IS',
                 'code' => 'SBHIR',
@@ -7554,9 +6923,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "honiara, guadalcanal is-sbhir-solomon islands", "honiara, guadalcanal is ,sb", "solomon islands: honiara, guadalcanal is", "honiara, guadalcanal is pt", "honiara, guadalcanal is port", "honiara, guadalcanal is city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            128 => 
-            array (
+            ],
+            128 => [
                 'id' => 1370,
                 'name' => 'Port Sudan',
                 'code' => 'SDPZU',
@@ -7566,9 +6934,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port sudan-sdpzu-sudan", "port sudan ,sd", "sudan: port sudan", "port sudan pt", "port sudan port", "port sudan city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            129 => 
-            array (
+            ],
+            129 => [
                 'id' => 1371,
                 'name' => 'Gaevle',
                 'code' => 'SEGVX',
@@ -7578,9 +6945,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gaevle-segvx-sweden", "gaevle ,se", "sweden: gaevle", "gaevle pt", "gaevle port", "gaevle city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            130 => 
-            array (
+            ],
+            130 => [
                 'id' => 1372,
                 'name' => 'Gothenburg',
                 'code' => 'SEGOT',
@@ -7590,9 +6956,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gothenburg-segot-sweden", "gothenburg ,se", "sweden: gothenburg", "gothenburg pt", "gothenburg port", "gothenburg city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            131 => 
-            array (
+            ],
+            131 => [
                 'id' => 1373,
                 'name' => 'Halmstad',
                 'code' => 'SEHAD',
@@ -7602,9 +6967,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "halmstad-sehad-sweden", "halmstad ,se", "sweden: halmstad", "halmstad pt", "halmstad port", "halmstad city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            132 => 
-            array (
+            ],
+            132 => [
                 'id' => 1374,
                 'name' => 'Helsingborg',
                 'code' => 'SEHEL',
@@ -7614,9 +6978,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "helsingborg-sehel-sweden", "helsingborg ,se", "sweden: helsingborg", "helsingborg pt", "helsingborg port", "helsingborg city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            133 => 
-            array (
+            ],
+            133 => [
                 'id' => 1375,
                 'name' => 'Norrkoeping',
                 'code' => 'SENRK',
@@ -7626,9 +6989,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "norrkoeping-senrk-sweden", "norrkoeping ,se", "sweden: norrkoeping", "norrkoeping pt", "norrkoeping port", "norrkoeping city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            134 => 
-            array (
+            ],
+            134 => [
                 'id' => 1376,
                 'name' => 'Soedertaelje',
                 'code' => 'SESOE',
@@ -7638,9 +7000,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "soedertaelje-sesoe-sweden", "soedertaelje ,se", "sweden: soedertaelje", "soedertaelje pt", "soedertaelje port", "soedertaelje city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            135 => 
-            array (
+            ],
+            135 => [
                 'id' => 1377,
                 'name' => 'AHUS',
                 'code' => 'SEAHU',
@@ -7650,9 +7011,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ahus-seahu-sweden", "ahus ,se", "sweden: ahus", "ahus pt", "ahus port", "ahus city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            136 => 
-            array (
+            ],
+            136 => [
                 'id' => 1378,
                 'name' => 'PITEA',
                 'code' => 'SEPIT',
@@ -7662,9 +7022,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "pitea-sepit-sweden", "pitea ,se", "sweden: pitea", "pitea pt", "pitea port", "pitea city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            137 => 
-            array (
+            ],
+            137 => [
                 'id' => 1379,
                 'name' => 'STOCKHOLM',
                 'code' => 'SESTO',
@@ -7674,9 +7033,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "stockholm-sesto-sweden", "stockholm ,se", "sweden: stockholm", "stockholm pt", "stockholm port", "stockholm city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            138 => 
-            array (
+            ],
+            138 => [
                 'id' => 1380,
                 'name' => 'Singapore',
                 'code' => 'SGSIN',
@@ -7686,9 +7044,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "singapore-sgsin-singapore", "singapore ,sg", "singapore: singapore", "singapore pt", "singapore port", "singapore city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            139 => 
-            array (
+            ],
+            139 => [
                 'id' => 1381,
                 'name' => 'KOPER',
                 'code' => 'SIKOP',
@@ -7698,9 +7055,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "koper-sikop-slovenia", "koper ,si", "slovenia: koper", "koper pt", "koper port", "koper city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            140 => 
-            array (
+            ],
+            140 => [
                 'id' => 1382,
                 'name' => 'FREETOWN',
                 'code' => 'SLFNA',
@@ -7710,9 +7066,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "freetown-slfna-sierra leone", "freetown ,sl", "sierra leone: freetown", "freetown pt", "freetown port", "freetown city"]}',
                 'created_at' => '2018-09-05 19:34:38',
                 'updated_at' => '2018-09-05 19:34:38',
-            ),
-            141 => 
-            array (
+            ],
+            141 => [
                 'id' => 1383,
                 'name' => 'DAKAR',
                 'code' => 'SNDKR',
@@ -7722,9 +7077,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dakar-sndkr-senegal", "dakar ,sn", "senegal: dakar", "dakar pt", "dakar port", "dakar city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            142 => 
-            array (
+            ],
+            142 => [
                 'id' => 1384,
                 'name' => 'Berbera',
                 'code' => 'SOBBO',
@@ -7734,9 +7088,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "berbera-sobbo-somalia", "berbera ,so", "somalia: berbera", "berbera pt", "berbera port", "berbera city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            143 => 
-            array (
+            ],
+            143 => [
                 'id' => 1385,
                 'name' => 'KISMAYU',
                 'code' => 'SOKMU',
@@ -7746,9 +7099,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kismayu-sokmu-somalia", "kismayu ,so", "somalia: kismayu", "kismayu pt", "kismayu port", "kismayu city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            144 => 
-            array (
+            ],
+            144 => [
                 'id' => 1386,
                 'name' => 'MOGADISHU',
                 'code' => 'SOMGQ',
@@ -7758,9 +7110,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mogadishu-somgq-somalia", "mogadishu ,so", "somalia: mogadishu", "mogadishu pt", "mogadishu port", "mogadishu city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            145 => 
-            array (
+            ],
+            145 => [
                 'id' => 1387,
                 'name' => 'Paramaribo',
                 'code' => 'SRPBM',
@@ -7770,9 +7121,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "paramaribo-srpbm-suriname", "paramaribo ,sr", "suriname: paramaribo", "paramaribo pt", "paramaribo port", "paramaribo city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            146 => 
-            array (
+            ],
+            146 => [
                 'id' => 1388,
                 'name' => 'Acajutla',
                 'code' => 'SVAQJ',
@@ -7782,9 +7132,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "acajutla-svaqj-el salvador", "acajutla ,sv", "el salvador: acajutla", "acajutla pt", "acajutla port", "acajutla city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            147 => 
-            array (
+            ],
+            147 => [
                 'id' => 1389,
                 'name' => 'PHILIPSBURG',
                 'code' => 'SXPHI',
@@ -7794,9 +7143,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "philipsburg-sxphi-sint maarten (dutch part)", "philipsburg ,sx", "sint maarten (dutch part): philipsburg", "philipsburg pt", "philipsburg port", "philipsburg city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            148 => 
-            array (
+            ],
+            148 => [
                 'id' => 1390,
                 'name' => 'Latakia',
                 'code' => 'SYLTK',
@@ -7806,9 +7154,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "latakia-syltk-syrian arab republic", "latakia ,sy", "syrian arab republic: latakia", "latakia pt", "latakia port", "latakia city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            149 => 
-            array (
+            ],
+            149 => [
                 'id' => 1391,
                 'name' => 'TARTUS',
                 'code' => 'SYTTS',
@@ -7818,9 +7165,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tartus-sytts-syrian arab republic", "tartus ,sy", "syrian arab republic: tartus", "tartus pt", "tartus port", "tartus city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            150 => 
-            array (
+            ],
+            150 => [
                 'id' => 1392,
                 'name' => 'LOME',
                 'code' => 'TGLFW',
@@ -7830,9 +7176,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "lome-tglfw-togo", "lome ,tg", "togo: lome", "lome pt", "lome port", "lome city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            151 => 
-            array (
+            ],
+            151 => [
                 'id' => 1393,
                 'name' => 'Bangkok',
                 'code' => 'THBKK',
@@ -7842,9 +7187,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bangkok-thbkk-thailand", "bangkok ,th", "thailand: bangkok", "bangkok pt", "bangkok port", "bangkok city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            152 => 
-            array (
+            ],
+            152 => [
                 'id' => 1394,
                 'name' => 'Laem Chabang',
                 'code' => 'THLCH',
@@ -7854,21 +7198,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "laem chabang-thlch-thailand", "laem chabang ,th", "thailand: laem chabang", "laem chabang pt", "laem chabang port", "laem chabang city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            153 => 
-            array (
+            ],
+            153 => [
                 'id' => 1395,
                 'name' => 'Sahathai',
                 'code' => 'THSPS',
                 'display_name' => 'Sahathai, THSPS',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "sahathai-thsps-thailand", "sahathai ,th", "thailand: sahathai", "sahathai pt", "sahathai port", "sahathai city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            154 => 
-            array (
+            ],
+            154 => [
                 'id' => 1396,
                 'name' => 'Songkhla',
                 'code' => 'THSGZ',
@@ -7878,57 +7220,52 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "songkhla-thsgz-thailand", "songkhla ,th", "thailand: songkhla", "songkhla pt", "songkhla port", "songkhla city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            155 => 
-            array (
+            ],
+            155 => [
                 'id' => 1397,
                 'name' => 'BANGKOK MODERN TERMINALS/BANGKOK',
                 'code' => 'THBMT',
                 'display_name' => 'BANGKOK MODERN TERMINALS/BANGKOK, THBMT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "bangkok modern terminals/bangkok-thbmt-thailand", "bangkok modern terminals/bangkok ,th", "thailand: bangkok modern terminals/bangkok", "bangkok modern terminals/bangkok pt", "bangkok modern terminals/bangkok port", "bangkok modern terminals/bangkok city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            156 => 
-            array (
+            ],
+            156 => [
                 'id' => 1398,
                 'name' => 'PAT BANGKOK',
                 'code' => 'THPAT',
                 'display_name' => 'PAT BANGKOK, THPAT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "pat bangkok-thpat-thailand", "pat bangkok ,th", "thailand: pat bangkok", "pat bangkok pt", "pat bangkok port", "pat bangkok city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            157 => 
-            array (
+            ],
+            157 => [
                 'id' => 1399,
                 'name' => 'T S TRANSPORT AND LOGISTICS',
                 'code' => 'THI6C',
                 'display_name' => 'T S TRANSPORT AND LOGISTICS, THI6C',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "t s transport and logistics-thi6c-thailand", "t s transport and logistics ,th", "thailand: t s transport and logistics", "t s transport and logistics pt", "t s transport and logistics port", "t s transport and logistics city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            158 => 
-            array (
+            ],
+            158 => [
                 'id' => 1400,
                 'name' => 'THAI PROSPERITY TERMINAL',
                 'code' => 'THTPT',
                 'display_name' => 'THAI PROSPERITY TERMINAL, THTPT',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "thai prosperity terminal-thtpt-thailand", "thai prosperity terminal ,th", "thailand: thai prosperity terminal", "thai prosperity terminal pt", "thai prosperity terminal port", "thai prosperity terminal city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            159 => 
-            array (
+            ],
+            159 => [
                 'id' => 1401,
                 'name' => 'DILI',
                 'code' => 'TLDIL',
@@ -7938,21 +7275,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dili-tldil-timor-leste", "dili ,tl", "timor-leste: dili", "dili pt", "dili port", "dili city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            160 => 
-            array (
+            ],
+            160 => [
                 'id' => 1402,
                 'name' => 'TUNIS',
                 'code' => 'TNTUN',
                 'display_name' => 'TUNIS, TNTUN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 219,
                 'varation' => '{"type": ["", "", "tunis-tntun-tunisia", "tunis ,tn", "tunisia: tunis", "tunis pt", "tunis port", "tunis city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            161 => 
-            array (
+            ],
+            161 => [
                 'id' => 1403,
                 'name' => 'Nukualofa',
                 'code' => 'TOTBU',
@@ -7962,9 +7297,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nukualofa-totbu-tonga", "nukualofa ,to", "tonga: nukualofa", "nukualofa pt", "nukualofa port", "nukualofa city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            162 => 
-            array (
+            ],
+            162 => [
                 'id' => 1404,
                 'name' => 'Ambarli Port Istanbul',
                 'code' => 'TRIST',
@@ -7974,9 +7308,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ambarli port istanbul-trist-turkey", "ambarli port istanbul ,tr", "turkey: ambarli port istanbul", "ambarli port istanbul pt", "ambarli port istanbul port", "ambarli port istanbul city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            163 => 
-            array (
+            ],
+            163 => [
                 'id' => 1405,
                 'name' => 'Gemlik',
                 'code' => 'TRGEM',
@@ -7986,9 +7319,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gemlik-trgem-turkey", "gemlik ,tr", "turkey: gemlik", "gemlik pt", "gemlik port", "gemlik city"]}',
                 'created_at' => '2018-09-05 19:34:39',
                 'updated_at' => '2018-09-05 19:34:39',
-            ),
-            164 => 
-            array (
+            ],
+            164 => [
                 'id' => 1406,
                 'name' => 'Iskenderun',
                 'code' => 'TRISK',
@@ -7998,9 +7330,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "iskenderun-trisk-turkey", "iskenderun ,tr", "turkey: iskenderun", "iskenderun pt", "iskenderun port", "iskenderun city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            165 => 
-            array (
+            ],
+            165 => [
                 'id' => 1407,
                 'name' => 'Izmir',
                 'code' => 'TRIZM',
@@ -8010,9 +7341,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "izmir-trizm-turkey", "izmir ,tr", "turkey: izmir", "izmir pt", "izmir port", "izmir city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            166 => 
-            array (
+            ],
+            166 => [
                 'id' => 1408,
                 'name' => 'Izmit Korfezi',
                 'code' => 'TRIZT',
@@ -8022,9 +7352,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "izmit korfezi-trizt-turkey", "izmit korfezi ,tr", "turkey: izmit korfezi", "izmit korfezi pt", "izmit korfezi port", "izmit korfezi city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            167 => 
-            array (
+            ],
+            167 => [
                 'id' => 1409,
                 'name' => 'Mersin',
                 'code' => 'TRMER',
@@ -8034,9 +7363,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mersin-trmer-turkey", "mersin ,tr", "turkey: mersin", "mersin pt", "mersin port", "mersin city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            168 => 
-            array (
+            ],
+            168 => [
                 'id' => 1410,
                 'name' => 'ALIAGA',
                 'code' => 'TRALI',
@@ -8046,9 +7374,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aliaga-trali-turkey", "aliaga ,tr", "turkey: aliaga", "aliaga pt", "aliaga port", "aliaga city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            169 => 
-            array (
+            ],
+            169 => [
                 'id' => 1411,
                 'name' => 'ANTALYA',
                 'code' => 'TRAYT',
@@ -8058,9 +7385,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "antalya-trayt-turkey", "antalya ,tr", "turkey: antalya", "antalya pt", "antalya port", "antalya city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            170 => 
-            array (
+            ],
+            170 => [
                 'id' => 1412,
                 'name' => 'BANDIRMA',
                 'code' => 'TRBDM',
@@ -8070,9 +7396,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "bandirma-trbdm-turkey", "bandirma ,tr", "turkey: bandirma", "bandirma pt", "bandirma port", "bandirma city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            171 => 
-            array (
+            ],
+            171 => [
                 'id' => 1413,
                 'name' => 'EVYAP PORT',
                 'code' => 'TREYP',
@@ -8082,9 +7407,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "evyap port-treyp-turkey", "evyap port ,tr", "turkey: evyap port", "evyap port pt", "evyap port port", "evyap port city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            172 => 
-            array (
+            ],
+            172 => [
                 'id' => 1414,
                 'name' => 'GEBZE',
                 'code' => 'TRGEB',
@@ -8094,9 +7418,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gebze-trgeb-turkey", "gebze ,tr", "turkey: gebze", "gebze pt", "gebze port", "gebze city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            173 => 
-            array (
+            ],
+            173 => [
                 'id' => 1415,
                 'name' => 'LIMAS',
                 'code' => 'TRLMA',
@@ -8106,9 +7429,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "limas-trlma-turkey", "limas ,tr", "turkey: limas", "limas pt", "limas port", "limas city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            174 => 
-            array (
+            ],
+            174 => [
                 'id' => 1416,
                 'name' => 'SAMSUN',
                 'code' => 'TRSSX',
@@ -8118,9 +7440,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "samsun-trssx-turkey", "samsun ,tr", "turkey: samsun", "samsun pt", "samsun port", "samsun city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            175 => 
-            array (
+            ],
+            175 => [
                 'id' => 1417,
             'name' => 'TEKIRDAG (ASYAPORT)',
                 'code' => 'TRTEK',
@@ -8130,9 +7451,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "tekirdag (asyaport)-trtek-turkey", "tekirdag (asyaport) ,tr", "turkey: tekirdag (asyaport)", "tekirdag (asyaport) pt", "tekirdag (asyaport) port", "tekirdag (asyaport) city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            176 => 
-            array (
+            ],
+            176 => [
                 'id' => 1418,
                 'name' => 'TRABZON',
                 'code' => 'TRTZX',
@@ -8142,9 +7462,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "trabzon-trtzx-turkey", "trabzon ,tr", "turkey: trabzon", "trabzon pt", "trabzon port", "trabzon city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            177 => 
-            array (
+            ],
+            177 => [
                 'id' => 1419,
                 'name' => 'YARIMCA',
                 'code' => 'TRYAR',
@@ -8154,9 +7473,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yarimca-tryar-turkey", "yarimca ,tr", "turkey: yarimca", "yarimca pt", "yarimca port", "yarimca city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            178 => 
-            array (
+            ],
+            178 => [
                 'id' => 1420,
                 'name' => 'Point Lisas',
                 'code' => 'TTPTS',
@@ -8166,9 +7484,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "point lisas-ttpts-trinidad and tobago", "point lisas ,tt", "trinidad and tobago: point lisas", "point lisas pt", "point lisas port", "point lisas city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            179 => 
-            array (
+            ],
+            179 => [
                 'id' => 1421,
                 'name' => 'Port of Spain',
                 'code' => 'TTPOS',
@@ -8178,9 +7495,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port of spain-ttpos-trinidad and tobago", "port of spain ,tt", "trinidad and tobago: port of spain", "port of spain pt", "port of spain port", "port of spain city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            180 => 
-            array (
+            ],
+            180 => [
                 'id' => 1422,
                 'name' => 'Kaohsiung',
                 'code' => 'TWKHH',
@@ -8190,9 +7506,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "kaohsiung-twkhh-taiwan", "kaohsiung ,tw", "taiwan: kaohsiung", "kaohsiung pt", "kaohsiung port", "kaohsiung city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            181 => 
-            array (
+            ],
+            181 => [
                 'id' => 1423,
                 'name' => 'Keelung',
                 'code' => 'TWKEL',
@@ -8202,9 +7517,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "keelung-twkel-taiwan", "keelung ,tw", "taiwan: keelung", "keelung pt", "keelung port", "keelung city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            182 => 
-            array (
+            ],
+            182 => [
                 'id' => 1424,
                 'name' => 'Taichung',
                 'code' => 'TWTXG',
@@ -8214,21 +7528,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["taichung -twtxg-taiwan", "", "taichung-twtxg-taiwan", "taichung ,tw", "taiwan: taichung", "taichung pt", "taichung port", "taichung city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            183 => 
-            array (
+            ],
+            183 => [
                 'id' => 1425,
                 'name' => 'Tao Yuan',
                 'code' => 'TWTYN',
                 'display_name' => 'Tao Yuan, TWTYN',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 224,
                 'varation' => '{"type": ["", "", "tao yuan-twtyn-taiwan", "tao yuan ,tw", "taiwan: tao yuan", "tao yuan pt", "tao yuan port", "tao yuan city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            184 => 
-            array (
+            ],
+            184 => [
                 'id' => 1426,
                 'name' => 'Dar es Salaam',
                 'code' => 'TZDAR',
@@ -8238,9 +7550,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "dar es salaam-tzdar-tanzania, united republic of", "dar es salaam ,tz", "tanzania, united republic of: dar es salaam", "dar es salaam pt", "dar es salaam port", "dar es salaam city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            185 => 
-            array (
+            ],
+            185 => [
                 'id' => 1427,
                 'name' => 'Tanga',
                 'code' => 'TZTGT',
@@ -8250,9 +7561,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tanga-tztgt-tanzania, united republic of", "tanga ,tz", "tanzania, united republic of: tanga", "tanga pt", "tanga port", "tanga city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            186 => 
-            array (
+            ],
+            186 => [
                 'id' => 1428,
                 'name' => 'Zanzibar',
                 'code' => 'TZZNZ',
@@ -8262,9 +7572,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "zanzibar-tzznz-tanzania, united republic of", "zanzibar ,tz", "tanzania, united republic of: zanzibar", "zanzibar pt", "zanzibar port", "zanzibar city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            187 => 
-            array (
+            ],
+            187 => [
                 'id' => 1429,
                 'name' => 'Chornomorsk',
                 'code' => 'UAILK',
@@ -8274,9 +7583,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "chornomorsk-uailk-ukraine", "chornomorsk ,ua", "ukraine: chornomorsk", "chornomorsk pt", "chornomorsk port", "chornomorsk city"]}',
                 'created_at' => '2018-09-05 19:34:40',
                 'updated_at' => '2018-09-05 19:34:40',
-            ),
-            188 => 
-            array (
+            ],
+            188 => [
                 'id' => 1430,
                 'name' => 'Yuzhny',
                 'code' => 'UAYUZ',
@@ -8286,9 +7594,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "yuzhny-uayuz-ukraine", "yuzhny ,ua", "ukraine: yuzhny", "yuzhny pt", "yuzhny port", "yuzhny city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            189 => 
-            array (
+            ],
+            189 => [
                 'id' => 1431,
                 'name' => 'MARIUPOL',
                 'code' => 'UAMPW',
@@ -8298,9 +7605,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mariupol-uampw-ukraine", "mariupol ,ua", "ukraine: mariupol", "mariupol pt", "mariupol port", "mariupol city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            190 => 
-            array (
+            ],
+            190 => [
                 'id' => 1432,
                 'name' => 'ODESSA',
                 'code' => 'UAODS',
@@ -8310,9 +7616,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "odessa-uaods-ukraine", "odessa ,ua", "ukraine: odessa", "odessa pt", "odessa port", "odessa city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            191 => 
-            array (
+            ],
+            191 => [
                 'id' => 1433,
                 'name' => 'BALTIMORE',
                 'code' => 'USBAL',
@@ -8322,9 +7627,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "baltimore-usbal-united states", "baltimore ,us", "united states: baltimore", "baltimore pt", "baltimore port", "baltimore city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            192 => 
-            array (
+            ],
+            192 => [
                 'id' => 1434,
                 'name' => 'BOSTON',
                 'code' => 'USBOS',
@@ -8334,9 +7638,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "boston-usbos-united states", "boston ,us", "united states: boston", "boston pt", "boston port", "boston city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            193 => 
-            array (
+            ],
+            193 => [
                 'id' => 1435,
                 'name' => 'CHARLESTON',
                 'code' => 'USCHS',
@@ -8346,9 +7649,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "charleston-uschs-united states", "charleston ,us", "united states: charleston", "charleston pt", "charleston port", "charleston city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            194 => 
-            array (
+            ],
+            194 => [
                 'id' => 1436,
                 'name' => 'GULFPORT',
                 'code' => 'USGPT',
@@ -8358,9 +7660,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "gulfport-usgpt-united states", "gulfport ,us", "united states: gulfport", "gulfport pt", "gulfport port", "gulfport city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            195 => 
-            array (
+            ],
+            195 => [
                 'id' => 1437,
                 'name' => 'HOUSTON',
                 'code' => 'USHOU',
@@ -8370,9 +7671,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "houston-ushou-united states", "houston ,us", "united states: houston", "houston pt", "houston port", "houston city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            196 => 
-            array (
+            ],
+            196 => [
                 'id' => 1438,
                 'name' => 'JACKSONVILLE',
                 'code' => 'USJAX',
@@ -8382,9 +7682,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "jacksonville-usjax-united states", "jacksonville ,us", "united states: jacksonville", "jacksonville pt", "jacksonville port", "jacksonville city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            197 => 
-            array (
+            ],
+            197 => [
                 'id' => 1439,
                 'name' => 'LONG BEACH',
                 'code' => 'USLGB',
@@ -8394,9 +7693,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "long beach-uslgb-united states", "long beach ,us", "united states: long beach", "long beach pt", "long beach port", "long beach city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            198 => 
-            array (
+            ],
+            198 => [
                 'id' => 1440,
                 'name' => 'LOS ANGELES',
                 'code' => 'USLAX',
@@ -8406,9 +7704,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "los angeles-uslax-united states", "los angeles ,us", "united states: los angeles", "los angeles pt", "los angeles port", "los angeles city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            199 => 
-            array (
+            ],
+            199 => [
                 'id' => 1441,
                 'name' => 'MIAMI',
                 'code' => 'USMIA',
@@ -8418,9 +7715,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "miami-usmia-united states", "miami ,us", "united states: miami", "miami pt", "miami port", "miami city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            200 => 
-            array (
+            ],
+            200 => [
                 'id' => 1442,
                 'name' => 'MOBILE',
                 'code' => 'USMOB',
@@ -8430,9 +7726,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mobile-usmob-united states", "mobile ,us", "united states: mobile", "mobile pt", "mobile port", "mobile city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            201 => 
-            array (
+            ],
+            201 => [
                 'id' => 1443,
                 'name' => 'NEW ORLEANS',
                 'code' => 'USMSY',
@@ -8442,9 +7737,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "new orleans-usmsy-united states", "new orleans ,us", "united states: new orleans", "new orleans pt", "new orleans port", "new orleans city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            202 => 
-            array (
+            ],
+            202 => [
                 'id' => 1444,
                 'name' => 'NEW YORK',
                 'code' => 'USNYC',
@@ -8454,9 +7748,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "new york-usnyc-united states", "new york ,us", "united states: new york", "new york pt", "new york port", "new york city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            203 => 
-            array (
+            ],
+            203 => [
                 'id' => 1445,
                 'name' => 'NORFOLK',
                 'code' => 'USORF',
@@ -8466,9 +7759,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "norfolk-usorf-united states", "norfolk ,us", "united states: norfolk", "norfolk pt", "norfolk port", "norfolk city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            204 => 
-            array (
+            ],
+            204 => [
                 'id' => 1446,
                 'name' => 'OAKLAND',
                 'code' => 'USOAK',
@@ -8478,9 +7770,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "oakland-usoak-united states", "oakland ,us", "united states: oakland", "oakland pt", "oakland port", "oakland city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            205 => 
-            array (
+            ],
+            205 => [
                 'id' => 1447,
                 'name' => 'PHILADELPHIA',
                 'code' => 'USPHL',
@@ -8490,9 +7781,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "philadelphia-usphl-united states", "philadelphia ,us", "united states: philadelphia", "philadelphia pt", "philadelphia port", "philadelphia city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            206 => 
-            array (
+            ],
+            206 => [
                 'id' => 1448,
                 'name' => 'PORT EVERGLADES',
                 'code' => 'USPEF',
@@ -8502,9 +7792,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port everglades-uspef-united states", "port everglades ,us", "united states: port everglades", "port everglades pt", "port everglades port", "port everglades city"]}',
                 'created_at' => '2018-09-05 19:34:41',
                 'updated_at' => '2018-09-05 19:34:41',
-            ),
-            207 => 
-            array (
+            ],
+            207 => [
                 'id' => 1449,
                 'name' => 'PORTSMOUTH',
                 'code' => 'USPTM',
@@ -8514,9 +7803,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "portsmouth-usptm-united states", "portsmouth ,us", "united states: portsmouth", "portsmouth pt", "portsmouth port", "portsmouth city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            208 => 
-            array (
+            ],
+            208 => [
                 'id' => 1450,
                 'name' => 'SAVANNAH',
                 'code' => 'USSAV',
@@ -8526,9 +7814,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "savannah-ussav-united states", "savannah ,us", "united states: savannah", "savannah pt", "savannah port", "savannah city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            209 => 
-            array (
+            ],
+            209 => [
                 'id' => 1451,
                 'name' => 'SEATTLE',
                 'code' => 'USSEA',
@@ -8538,9 +7825,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "seattle-ussea-united states", "seattle ,us", "united states: seattle", "seattle pt", "seattle port", "seattle city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            210 => 
-            array (
+            ],
+            210 => [
                 'id' => 1452,
                 'name' => 'TAMPA',
                 'code' => 'USTPA',
@@ -8550,9 +7836,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "tampa-ustpa-united states", "tampa ,us", "united states: tampa", "tampa pt", "tampa port", "tampa city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            211 => 
-            array (
+            ],
+            211 => [
                 'id' => 1453,
             'name' => 'WILMINGTON (DE)',
                 'code' => 'USILG',
@@ -8562,9 +7847,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "wilmington (de)-usilg-united states", "wilmington (de) ,us", "united states: wilmington (de)", "wilmington (de) pt", "wilmington (de) port", "wilmington (de) city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            212 => 
-            array (
+            ],
+            212 => [
                 'id' => 1454,
             'name' => 'WILMINGTON (NC)',
                 'code' => 'USILM',
@@ -8574,9 +7858,8 @@ class HarborsCopyTableSeeder extends Seeder
             'varation' => '{"type": ["", "", "wilmington (nc)-usilm-united states", "wilmington (nc) ,us", "united states: wilmington (nc)", "wilmington (nc) pt", "wilmington (nc) port", "wilmington (nc) city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            213 => 
-            array (
+            ],
+            213 => [
                 'id' => 1455,
                 'name' => 'MONTEVIDEO',
                 'code' => 'UYMVD',
@@ -8586,9 +7869,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "montevideo-uymvd-uruguay", "montevideo ,uy", "uruguay: montevideo", "montevideo pt", "montevideo port", "montevideo city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            214 => 
-            array (
+            ],
+            214 => [
                 'id' => 1456,
                 'name' => 'NUEVA PALMIRA',
                 'code' => 'UYNVP',
@@ -8598,21 +7880,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "nueva palmira-uynvp-uruguay", "nueva palmira ,uy", "uruguay: nueva palmira", "nueva palmira pt", "nueva palmira port", "nueva palmira city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            215 => 
-            array (
+            ],
+            215 => [
                 'id' => 1457,
                 'name' => 'CAMPDEN PARK',
                 'code' => 'VCCRP',
                 'display_name' => 'CAMPDEN PARK, VCCRP',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 233,
                 'varation' => '{"type": ["", "", "campden park-vccrp-saint vincent and the grenadines", "campden park ,vc", "saint vincent and the grenadines: campden park", "campden park pt", "campden park port", "campden park city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            216 => 
-            array (
+            ],
+            216 => [
                 'id' => 1458,
                 'name' => 'Guanta',
                 'code' => 'VEGUT',
@@ -8622,21 +7902,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "guanta-vegut-venezuela", "guanta ,ve", "venezuela: guanta", "guanta pt", "guanta port", "guanta city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            217 => 
-            array (
+            ],
+            217 => [
                 'id' => 1459,
                 'name' => 'Guaranao',
                 'code' => 'VEGUA',
                 'display_name' => 'Guaranao, VEGUA',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 234,
                 'varation' => '{"type": ["", "", "guaranao-vegua-venezuela", "guaranao ,ve", "venezuela: guaranao", "guaranao pt", "guaranao port", "guaranao city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            218 => 
-            array (
+            ],
+            218 => [
                 'id' => 1460,
                 'name' => 'La Guaira',
                 'code' => 'VELAG',
@@ -8646,9 +7924,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "la guaira-velag-venezuela", "la guaira ,ve", "venezuela: la guaira", "la guaira pt", "la guaira port", "la guaira city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            219 => 
-            array (
+            ],
+            219 => [
                 'id' => 1461,
                 'name' => 'Maracaibo',
                 'code' => 'VEMAR',
@@ -8658,9 +7935,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "maracaibo-vemar-venezuela", "maracaibo ,ve", "venezuela: maracaibo", "maracaibo pt", "maracaibo port", "maracaibo city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            220 => 
-            array (
+            ],
+            220 => [
                 'id' => 1462,
                 'name' => 'Puerto Cabello',
                 'code' => 'VEPBL',
@@ -8670,9 +7946,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "puerto cabello-vepbl-venezuela", "puerto cabello ,ve", "venezuela: puerto cabello", "puerto cabello pt", "puerto cabello port", "puerto cabello city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            221 => 
-            array (
+            ],
+            221 => [
                 'id' => 1463,
                 'name' => 'GUARANAO BAY',
                 'code' => 'VEGUB',
@@ -8682,9 +7957,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "guaranao bay-vegub-venezuela", "guaranao bay ,ve", "venezuela: guaranao bay", "guaranao bay pt", "guaranao bay port", "guaranao bay city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            222 => 
-            array (
+            ],
+            222 => [
                 'id' => 1464,
                 'name' => 'Can Tho',
                 'code' => 'VNVCA',
@@ -8694,9 +7968,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "can tho-vnvca-vietnam", "can tho ,vn", "vietnam: can tho", "can tho pt", "can tho port", "can tho city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            223 => 
-            array (
+            ],
+            223 => [
                 'id' => 1465,
                 'name' => 'Da Nang',
                 'code' => 'VNDAD',
@@ -8706,9 +7979,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "da-nang-vndad-vietnam", "da nang ,vn", "vietnam: da nang", "da nang pt", "da nang port", "da nang city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            224 => 
-            array (
+            ],
+            224 => [
                 'id' => 1466,
                 'name' => 'Hai Phong',
                 'code' => 'VNHPH',
@@ -8718,9 +7990,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hai phong-vnhph-vietnam", "hai phong ,vn", "vietnam: hai phong", "hai phong pt", "hai phong port", "hai phong city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            225 => 
-            array (
+            ],
+            225 => [
                 'id' => 1467,
                 'name' => 'Ho Chi Minh City',
                 'code' => 'VNSGN',
@@ -8730,9 +8001,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "ho chi minh city-vnsgn-viet nam", "ho chi minh city ,vn", "vietnam: ho chi minh city", "ho chi minh city pt", "ho chi minh city port", "ho chi minh city city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            226 => 
-            array (
+            ],
+            226 => [
                 'id' => 1468,
                 'name' => 'Qui Nhon',
                 'code' => 'VNUIH',
@@ -8742,9 +8012,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "quinhon-vnuih-viet nam", "qui nhon ,vn", "vietnam: qui nhon", "qui nhon pt", "qui nhon port", "qui nhon city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            227 => 
-            array (
+            ],
+            227 => [
                 'id' => 1469,
                 'name' => 'Vung Tau',
                 'code' => 'VNVUT',
@@ -8754,21 +8023,19 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "vung tau-vnvut-vietnam", "vung tau ,vn", "vietnam: vung tau", "vung tau pt", "vung tau port", "vung tau city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            228 => 
-            array (
+            ],
+            228 => [
                 'id' => 1470,
                 'name' => 'HO CHI MINH, VICT',
                 'code' => 'VNVIC',
                 'display_name' => 'HO CHI MINH, VICT, VNVIC',
-                'coordinates' => NULL,
+                'coordinates' => null,
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "ho chi minh, vict-vnvic-viet nam", "ho chi minh, vict ,vn", "viet nam: ho chi minh, vict", "ho chi minh, vict pt", "ho chi minh, vict port", "ho chi minh, vict city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            229 => 
-            array (
+            ],
+            229 => [
                 'id' => 1471,
                 'name' => 'PORT VILA',
                 'code' => 'VUVLI',
@@ -8778,9 +8045,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port vila-vuvli-vanuatu", "port vila ,vu", "vanuatu: port vila", "port vila pt", "port vila port", "port vila city"]}',
                 'created_at' => '2018-09-05 19:34:42',
                 'updated_at' => '2018-09-05 19:34:42',
-            ),
-            230 => 
-            array (
+            ],
+            230 => [
                 'id' => 1472,
                 'name' => 'Apia',
                 'code' => 'WSAPW',
@@ -8790,9 +8056,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "apia-wsapw-samoa", "apia ,ws", "samoa: apia", "apia pt", "apia port", "apia city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            231 => 
-            array (
+            ],
+            231 => [
                 'id' => 1473,
                 'name' => 'Aden',
                 'code' => 'YEADE',
@@ -8802,9 +8067,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "aden-yeade-yemen", "aden ,ye", "yemen: aden", "aden pt", "aden port", "aden city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            232 => 
-            array (
+            ],
+            232 => [
                 'id' => 1474,
                 'name' => 'HODEIDAH',
                 'code' => 'YEHOD',
@@ -8814,9 +8078,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "hodeidah-yehod-yemen", "hodeidah ,ye", "yemen: hodeidah", "hodeidah pt", "hodeidah port", "hodeidah city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            233 => 
-            array (
+            ],
+            233 => [
                 'id' => 1475,
                 'name' => 'MUKALLA',
                 'code' => 'YEMKX',
@@ -8826,9 +8089,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "mukalla-yemkx-yemen", "mukalla ,ye", "yemen: mukalla", "mukalla pt", "mukalla port", "mukalla city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            234 => 
-            array (
+            ],
+            234 => [
                 'id' => 1476,
                 'name' => 'LONGONI',
                 'code' => 'YTLON',
@@ -8838,9 +8100,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "longoni-ytlon-mayotte", "longoni ,yt", "mayotte: longoni", "longoni pt", "longoni port", "longoni city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            235 => 
-            array (
+            ],
+            235 => [
                 'id' => 1477,
                 'name' => 'CAPE TOWN',
                 'code' => 'ZACPT',
@@ -8850,9 +8111,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "cape town-zacpt-south africa", "cape town ,za", "south africa: cape town", "cape town pt", "cape town port", "cape town city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            236 => 
-            array (
+            ],
+            236 => [
                 'id' => 1478,
                 'name' => 'COEGA',
                 'code' => 'ZAZBA',
@@ -8862,9 +8122,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "coega-zazba-south africa", "coega ,za", "south africa: coega", "coega pt", "coega port", "coega city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            237 => 
-            array (
+            ],
+            237 => [
                 'id' => 1479,
                 'name' => 'DURBAN',
                 'code' => 'ZADUR',
@@ -8874,9 +8133,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "durban-zadur-south africa", "durban ,za", "south africa: durban", "durban pt", "durban port", "durban city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            238 => 
-            array (
+            ],
+            238 => [
                 'id' => 1480,
                 'name' => 'EAST LONDON',
                 'code' => 'ZAELS',
@@ -8886,9 +8144,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "east london-zaels-south africa", "east london ,za", "south africa: east london", "east london pt", "east london port", "east london city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            239 => 
-            array (
+            ],
+            239 => [
                 'id' => 1481,
                 'name' => 'PORT ELIZABETH',
                 'code' => 'ZAPLZ',
@@ -8898,9 +8155,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "port elizabeth-zaplz-south africa", "port elizabeth ,za", "south africa: port elizabeth", "port elizabeth pt", "port elizabeth port", "port elizabeth city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            240 => 
-            array (
+            ],
+            240 => [
                 'id' => 1482,
                 'name' => 'Algiers',
                 'code' => 'DZALG',
@@ -8910,9 +8166,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["algiers port ,dz", "", "algiers-dzalg-algeria", "algiers ,dz", "algeria: algiers", "algiers pt", "algiers port", "algiers city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            241 => 
-            array (
+            ],
+            241 => [
                 'id' => 1483,
                 'name' => 'Fos sur Mer',
                 'code' => 'FRFOS',
@@ -8922,9 +8177,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["fos sur mer ,fr", "", "fos sur mer-frfos-francia", "fos sur mer ,fr", "francia: fos sur mer", "fos sur mer pt", "fos sur mer port", "fos sur mer city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            242 => 
-            array (
+            ],
+            242 => [
                 'id' => 1484,
                 'name' => 'Sfax',
                 'code' => 'TNSFA',
@@ -8934,9 +8188,8 @@ class HarborsCopyTableSeeder extends Seeder
                 'varation' => '{"type": ["", "", "sfax-tnsfa-tunisia", "sfax ,tn", "tunisia: sfax", "sfax pt", "sfax port", "sfax city"]}',
                 'created_at' => '2018-09-05 19:34:43',
                 'updated_at' => '2018-09-05 19:34:43',
-            ),
-            243 => 
-            array (
+            ],
+            243 => [
                 'id' => 1485,
                 'name' => 'ALL',
                 'code' => 'ALL',
@@ -8944,11 +8197,9 @@ class HarborsCopyTableSeeder extends Seeder
                 'coordinates' => '',
                 'country_id' => 1,
                 'varation' => '{"type": ["", ""]}',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-        ));
-        
-        
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+        ]);
     }
 }

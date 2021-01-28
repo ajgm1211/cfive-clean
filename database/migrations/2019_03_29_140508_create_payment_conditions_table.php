@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePaymentConditionsTable extends Migration
 {
@@ -17,7 +17,7 @@ class CreatePaymentConditionsTable extends Migration
             $table->increments('id');
             $table->integer('quote_id')->unsigned();
             $table->foreign('quote_id')->references('id')->on('quote_v2s')->onDelete('cascade');
-            $table->string('content',5000);
+            $table->string('content', 5000);
             $table->timestamps();
         });
     }

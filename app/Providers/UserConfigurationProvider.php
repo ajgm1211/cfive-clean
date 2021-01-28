@@ -23,6 +23,6 @@ class UserConfigurationProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/Configurations/HelperUserConfiguracion.php';
+        require_once app_path().'/Helpers/Configurations/HelperUserConfiguracion.php';
     }
 }

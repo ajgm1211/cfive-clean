@@ -2,36 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+use App\User;
+use HelperAll;
+use PrvRequest;
 use App\Carrier;
-use App\CompanyUser;
-use App\Container;
 use App\Contract;
-use App\ContractCarrier;
+use EventIntercom;
 use App\Direction;
+use App\Container;
+use \Carbon\Carbon;
+use App\CompanyUser;
 use App\GroupContainer;
-use App\Jobs\ExportRequestsJob;
+use App\ContractCarrier;
+use App\RequetsCarrierFcl;
+use App\NewContractRequest;
+use Illuminate\Http\Request;
 use App\Jobs\NotificationsJob;
+use App\Jobs\ExportRequestsJob;
+use Yajra\Datatables\Datatables;
+use App\Notifications\N_general;
+use App\Jobs\ValidateTemplateJob;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\SelectionAutoImportJob;
 use App\Jobs\SendEmailRequestFclJob;
-use App\NewContractRequest;
-use App\Notifications\N_general;
-use App\Notifications\SlackNotification;
-use App\RequetsCarrierFcl;
-use App\User;
-use EventIntercom;
-use Excel;
-use HelperAll;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\SlackNotification;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer as Writer;
-use PrvRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Yajra\Datatables\Datatables;
-use \Carbon\Carbon;
 
 class RequestFclV2Controller extends Controller
 {
@@ -98,7 +99,7 @@ class RequestFclV2Controller extends Controller
                 }
             })
             ->addColumn('carrier', function ($Ncontracts) {
-                if (count($Ncontracts->carriers) >= 1) {
+                if (count((array)$Ncontracts->carriers) >= 1) {
                     return $Ncontracts->carriers;
                 } else {
                     return " -------- ";
@@ -294,8 +295,10 @@ class RequestFclV2Controller extends Controller
                 strnatcasecmp($ext_at_sl, 'csv') == 0) {
                 if (env('APP_VIEW') == 'operaciones') {
                     SelectionAutoImportJob::dispatch($Ncontract->id, 'fcl')->onQueue('operaciones');
+                    ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
                 } else {
                     SelectionAutoImportJob::dispatch($Ncontract->id, 'fcl');
+                    ValidateTemplateJob::dispatch($Ncontract->id);
                 }
             }
 

@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalCharCarrierLcl extends Model
 {
-  protected $table    = "globalcharcarriers_lcl";
-  protected $fillable =   ['carrier_id','globalchargelcl_id'];
-  public $timestamps = false;
-  public function globalchargelcl()
-  {
+    protected $table = 'globalcharcarriers_lcl';
+    protected $fillable = ['carrier_id', 'globalchargelcl_id'];
+    public $timestamps = false;
 
-    return $this->belongsTo('App\GlobalChargeLcl');
-  }
-  public function carrier(){
+    public function globalchargelcl()
+    {
+        return $this->belongsTo('App\GlobalChargeLcl');
+    }
 
-    return $this->belongsTo('App\Carrier');
-
-  }
+    public function carrier()
+    {
+        return $this->belongsTo('App\Carrier');
+    }
 }

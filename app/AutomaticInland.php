@@ -11,7 +11,7 @@ class AutomaticInland extends Model
 {
     protected $casts = [
         'markup' => 'array',
-        'rate' => 'array',
+        'rate' => 'array'
     ];
 
     protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 
@@ -56,7 +56,7 @@ class AutomaticInland extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         foreach ($array as $k => $amount_value) {
             if ($k == 'c20') {
@@ -72,8 +72,8 @@ class AutomaticInland extends Model
             } else {
                 $containers = Container::all();
                 foreach ($containers as $container) {
-                    if ($k == 'c' . $container->code) {
-                        $value['c' . $container->code] = $amount_value;
+                    if ($k == 'c'.$container->code) {
+                        $value['c'.$container->code] = $amount_value;
                     }
                 }
             }
@@ -106,7 +106,7 @@ class AutomaticInland extends Model
 
     public function scopeSelectFields($query)
     {
-        return $query->select('id', 'provider_id', 'inland_address_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'rate as price', 'markup as profit', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+        return $query->select('id', 'provider_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'rate as price', 'markup as profit', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
     }
 
     public function scopeGetPortRelation($query)

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateGlobalcharcarrierTable extends Migration
 {
@@ -19,7 +19,6 @@ class CreateGlobalcharcarrierTable extends Migration
             $table->integer('globalcharge_id')->unsigned();
             $table->foreign('carrier_id')->references('id')->on('carriers');
             $table->foreign('globalcharge_id')->references('id')->on('globalcharges')->onDelete('cascade');
-          
         });
     }
 
