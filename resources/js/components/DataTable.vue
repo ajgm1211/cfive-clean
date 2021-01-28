@@ -1332,16 +1332,20 @@ export default {
                                     }
                                 }else if(typeof filteredArray == "object"){
                                     component.filtered[filterKey].forEach(function (arrayObject){
-                                        if(arrayObject.id == filteredArray.id && !filteredList.includes(listElement)){
-                                            filteredList.push(listElement);
+                                        if(arrayObject != null && filteredArray != null){
+                                            if(arrayObject.id == filteredArray.id && !filteredList.includes(listElement)){
+                                                filteredList.push(listElement);
+                                            }
                                         }
                                     });
                                 }
                             });
                         }else{
                             component.filtered[filterKey].forEach(function (filteredObject){
-                                if(filteredObject.id == listElement[filterKey].id && !filteredList.includes(listElement)){
-                                    filteredList.push(listElement);
+                                if(filteredObject != null && listElement[filterKey] != null){
+                                    if(filteredObject.id == listElement[filterKey].id && !filteredList.includes(listElement)){
+                                        filteredList.push(listElement);
+                                    }
                                 }
                             });
                         }
@@ -1382,8 +1386,10 @@ export default {
                                 var objectMatch = false;
     
                                 component.filtered[filterKey].forEach(function (filteredObjectPurge){
-                                    if(filteredElement[filterKey].id == filteredObjectPurge.id){
-                                        objectMatch = true;
+                                    if(filteredElement[filterKey] != null && filteredObjectPurge != null){
+                                        if(filteredElement[filterKey].id == filteredObjectPurge.id){
+                                            objectMatch = true;
+                                        }
                                     }
                                 });
                                 if(!objectMatch){
@@ -1400,8 +1406,10 @@ export default {
                                     }
                                 }else if(typeof filteredArrayPurge == "object"){
                                     component.filtered[filterKey].forEach(function (filtering){
-                                        if(filtering.id == filteredArrayPurge.id){
-                                            arrayMatch = true;
+                                        if(filtering != null && filteredArrayPurge != null){
+                                            if(filtering.id == filteredArrayPurge.id){
+                                                arrayMatch = true;
+                                            }
                                         }
                                     });
                                 }

@@ -90,6 +90,7 @@
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
                                 :currentQuoteData="currentData"
+                                @chargesUpdated="setInitialData"
                             ></Local>
                         </b-tab>
 
@@ -101,6 +102,7 @@
                             :actions="actions"
                             :datalists="datalists"
                             :freights="freights"
+                            :localCharges="currentData.local_charges"
                             ></Inland>
                         </b-tab>
 
@@ -152,6 +154,7 @@ export default {
             loaded: false,
             ocean: false,
             locals: false,
+            currentLocalCharges: [],
             inlands: false,
             totals: false,
             tabs_loaded: false,
@@ -401,7 +404,7 @@ export default {
                 setTimeout(function() {
                     component.totals=true
                 },100);
-            }
+            }            
         },
 
         changeView(val){
