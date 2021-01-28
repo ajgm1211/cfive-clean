@@ -1788,15 +1788,16 @@ input.data-provider {
     width: 180px !important;
 }
 
-.data-profit {
-    input {
-        width: 60px !important;
-        margin-right: 3px !important;
-    }
+.data-profit.form-control {
+    float: left !important;
+    width: 40px !important;
+    padding: 0.15rem 0.3rem !important;
+    margin-right: 3px !important;
 }
+
 
 @media (min-width: 1200px) {
     .modal-xl {
-        max-width: 1320px !important;
+        max-width: 1330px !important;
     }
 }
