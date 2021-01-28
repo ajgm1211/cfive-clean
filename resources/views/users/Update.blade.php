@@ -8,7 +8,6 @@
     padding: 13px 30px;
     border-radius: 50px !important;
 }
-
 </style>
 
 <div class="container m-content">
