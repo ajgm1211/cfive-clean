@@ -137,19 +137,27 @@
                 </div>
 
                 <!-- Checkbox Group Action -->
-                <div class="col-12 d-flex">
-                    <b-form-checkbox value="carrier" class="mr-4"
+                <div 
+                    class="col-12 d-flex"
+                    v-if="
+                        currentAddress != undefined
+                    "
+                >
+                    <b-form-checkbox v-model="groupInlands" class="mr-4" @input="updatePdfOptions('checkbox')"
                         ><span>Group as:</span>
                     </b-form-checkbox>
 
                     <multiselect
-                        v-model="value"
-                        :options="options"
+                        v-model="groupedAs"
+                        :options="currentPortLocalCharges"
                         :searchable="true"
-                        :close-on-select="false"
+                        :close-on-select="true"
                         :show-labels="false"
-                        placeholder="Forfait"
-                        style="width: 8%"
+                        label="charge"
+                        track-by="charge"
+                        placeholder="Local Charge"
+                        style="width: 20%"
+                        @input="updatePdfOptions('select')"
                     ></multiselect>
                 </div>
                 <!-- End Checkbox Group Action -->
@@ -529,10 +537,12 @@ export default {
         equipment: Object,
         quoteEquip: Array,
         actions: Object,
+        localCharges: Array,
     },
     watch: {
         currentPort: function (newVal, oldVal) {
             this.setAddresses();
+            this.setGroupingOptions();
         },
 
         currentAddress: function (newVal, oldVal) {
@@ -545,24 +555,12 @@ export default {
             vdata: {},
             value: "",
             ids: [],
+            groupedAs: {},
+            groupInlands: false,
+            currentPortLocalCharges: [],
             imageFolder: "/images/flags/1x1/",
             loaded: false,
             isBusy: false,
-            options: [
-                "Select option",
-                "options",
-                "selected",
-                "mulitple",
-                "label",
-                "searchable",
-                "clearOnSelect",
-                "hideSelected",
-                "maxHeight",
-                "allowEmpty",
-                "showLabels",
-                "onChange",
-                "touched",
-            ],
             port_options: [],
             currentPort: "",
             address_options: [],
@@ -646,6 +644,7 @@ export default {
         this.setPorts();
 
         this.setTotalsFields();
+
     },
     methods: {
         showModal() {
@@ -716,6 +715,7 @@ export default {
                     if(component.modalOpen){
                         component.changeModalAddress();
                     }
+                    component.getPdfOptions();
                 })
                 .catch((data) => {
                     component.$refs.observer.setErrors(data.data.errors);
@@ -734,6 +734,7 @@ export default {
                     component.inlandAddRequested = false;
                 }
             }
+
         },
 
         setTotalsFields() {
@@ -1331,6 +1332,74 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
             }
+        },
+
+        setGroupingOptions(){
+            let component = this;
+
+            component.currentPortLocalCharges = [];
+
+            component.localCharges.forEach(function (charge){
+                if(charge.port_id == component.currentPort.id){
+                    component.currentPortLocalCharges.push(charge);
+                }
+            });
+        },
+
+        getPdfOptions(){
+            let component = this;
+
+            if(component.currentAddress != undefined || Object.keys(component.currentAddress).length != 0){
+                let portAddressCombo = [
+                    component.currentPort.id + ";" + component.currentAddress.id,
+                ];
+    
+                component.inlandActions
+                    .retrieveTotals(portAddressCombo, component.$route)
+                    .then((response) => {
+                        component.groupInlands = response.data.data.pdf_options.grouped;
+                        component.currentPortLocalCharges.forEach(function(chargeOption){
+                            if(response.data.data.pdf_options.groupId == chargeOption.id){
+                                component.groupedAs = chargeOption;
+                            }
+                        })
+                    })
+                    .catch((data) => {
+                        component.$refs.observer.setErrors(data.data.errors);
+                    });
+            }
+        },
+
+        updatePdfOptions(source){
+            if(!this.groupInlands){
+                if(source == "checkbox"){
+                    this.groupedAs = {};
+                }else if(source == "select"){
+                    this.groupInlands = true;
+                }
+            }else if(this.groupInlands && Object.keys(this.groupedAs).length == 0){
+                if(Object.keys(this.currentPortLocalCharges).length == 0){
+                    this.groupInlands = false;
+                }else{
+                    this.groupedAs = this.currentPortLocalCharges[0];
+                }
+            }
+            
+            let pdfOptions = {
+                pdf_options: {
+                    grouped: this.groupInlands,
+                    groupId: this.groupedAs.id ? this.groupedAs.id : this.groupedAs,
+                },
+            };
+
+            this.inlandActions
+                .updatePdfOptions(this.currentPort.id, pdfOptions, this.$route)
+                .then((response) => {
+                    console.log("Done!")
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         },
     },
 };
