@@ -71,7 +71,8 @@
         },
         props: {
             datalists: Object,
-            actions: Object
+            actions: Object,
+            contractData: Object,
         },
         data() {
             return {
@@ -99,7 +100,7 @@
                     origin: { label: 'Origin', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'ori_dynamical_ports', initial: [] },
                     destination: { label: 'Destination', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'des_dynamical_ports', initial: [] },
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
-                    carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
+                    carriers: { label: 'Carriers', searchable: true, type: 'multiselect_data', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers',values: this.contractData.carriers, },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
                     amount: { label: 'Amount', type: 'text', rules: 'required', placeholder: 'Amount' },
                     currency: { label: 'Currency', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Select option', options: 'currencies' },
