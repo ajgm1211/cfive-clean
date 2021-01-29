@@ -295,11 +295,15 @@ class RequestFclV2Controller extends Controller
                 strnatcasecmp($ext_at_sl, 'csv') == 0) {
                 if (env('APP_VIEW') == 'operaciones') {
                     SelectionAutoImportJob::dispatch($Ncontract->id, 'fcl')->onQueue('operaciones');
-                    ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
                 } else {
                     SelectionAutoImportJob::dispatch($Ncontract->id, 'fcl');
-                    ValidateTemplateJob::dispatch($Ncontract->id);
                 }
+            }
+
+            if (env('APP_VIEW') == 'operaciones') {
+                ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
+            } else {
+                ValidateTemplateJob::dispatch($Ncontract->id);
             }
 
             $user = User::find($request->user);
@@ -552,10 +556,10 @@ class RequestFclV2Controller extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $spreadsheet->getActiveSheet()
             ->fromArray(
-                $columns, // The data to set
-                null, // Array values with this value will not be set
-                'A1' // Top left coordinate of the worksheet range where
-            );
+            $columns, // The data to set
+            null, // Array values with this value will not be set
+            'A1' // Top left coordinate of the worksheet range where
+        );
         $sheet->getColumnDimension('A')->setWidth(20);
         $sheet->getColumnDimension('B')->setWidth(20);
         $sheet->getColumnDimension('C')->setWidth(10);
