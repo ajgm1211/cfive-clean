@@ -183,6 +183,15 @@ class SearchApiController extends Controller
         //Retrieving global charges with search data
         $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rates);
 
+        //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
+        $charges = $this->groupChargesByType($local_charges, $global_charges);
+
+        //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
+        $this->setChargesPerContainer($charges,$new_search_data['containers']);
+
+        //SEARCH TRAIT - Join charges (within group) if Surcharge and Carrier match
+        $this->joinCharges($charges);
+
         //Retrieving and calculating inlands from search data, only if door delivery indicated
         if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
             $inlands = $this->searchInlands($new_search_data_ids);
@@ -245,9 +254,7 @@ class SearchApiController extends Controller
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
     public function searchRates($search_data)
-    {
-        //Setting current company
-        
+    {       
         //setting variables for query
         $company_user_id = $search_data['company'];
         $company_user = Company::where('id',$search_data['company'])->first();
@@ -338,7 +345,6 @@ class SearchApiController extends Controller
             //Creating empty collection for storing charges
             $local_charges = collect([]);
             //Pulling necessary data from the search IDs array
-            $carriers = $search_data['carriers'];
             $origin_ports = $search_data['originPorts'];
             $destination_ports = $search_data['destinationPorts'];
             $origin_countries = [];
@@ -362,6 +368,10 @@ class SearchApiController extends Controller
 
             //Looping through rates
             foreach($rates as $rate){
+                //creating carriers array with only rates carrier
+                $carriers = Array($rate->carrier->id);
+                //Including "ALL" column of carriers table
+                array_push($carriers,26);
                 //Checking if contract comes from API
                 if ($rate->contract->status != 'api') {
                     //Querying NON API contract local charges
@@ -386,24 +396,30 @@ class SearchApiController extends Controller
                         });
                     })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
                 }
-            }
 
-            //Looping through Local Charges found, including in final collection if not there
-            foreach($local_charge as $charge){
-                if(!$local_charges->contains($charge)){
-                    $local_charges->push($charge);
+                //Looping through Local Charges found, including in final collection if not there
+                foreach($local_charge as $charge){
+                    if(!$local_charges->contains($charge)){
+                        $local_charges->push($charge);
+                    }
                 }
             }
-            
         }
 
         return $local_charges;        
     }
 
+    //Finds global charges matching search data
     public function searchGlobalCharges($search_data, $rates)
     {
         //Checking that there are rates returned by the search
         if(count($rates) != 0){
+            //building Carriers array from rates
+            $carriers = [];
+            foreach($rates as $rate){
+                array_push($carriers,$rate->carrier->id);
+            }
+            array_push($carriers,26);
             //Creating empty collection for storing charges
             $global_charges = collect([]);
             //Pulling necessary data from the search IDs array
@@ -432,11 +448,11 @@ class SearchApiController extends Controller
             array_push($origin_countries,250);
             array_push($destination_countries,250);
 
-            $contractStatus = 'NOT API'; //CHANGE THIS LATER
+            $contractStatus = 'NOT API'; //*************** CHANGE THIS LATER ************
         
             if ($contractStatus != 'api') {
     
-                $global_charge = GlobalCharge::where('validity', '<=', $validity_start)->where('expire', '>=', $validity_end)->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+                $global_charge = GlobalCharge::where('validity', '<=', $validity_end)->where('expire', '>=', $validity_start)->whereHas('globalcharcarrier', function ($q) use ($carriers) {
                     $q->whereIn('carrier_id', $carriers);
                 })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                     $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
@@ -452,7 +468,7 @@ class SearchApiController extends Controller
                     $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
                 })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
-                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
+                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm','globalcharport')->get();
             }
 
             //Looping through Global Charges found, including in final collection if not there
@@ -463,9 +479,9 @@ class SearchApiController extends Controller
             }
         }
 
-        dd($global_charges);
+        return $global_charges;
     }
-    
+
     //Retrieves and cleans markups from price levels
     public function searchPriceLevels($search_data)
     {

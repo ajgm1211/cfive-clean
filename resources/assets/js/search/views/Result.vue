@@ -492,16 +492,19 @@
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <label>
-                                <date-range-picker 
-                                        :startDate="startDate" 
-                                        :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
-                                        :endDate="endDate" 
-                                        v-model="dateRange"
-                                        :singleDatePicker="false"
-                                        :opens="opens"       
-                                        class="input-h"
-                                    >
-                                </date-range-picker>
+                                <date-range-picker
+                                :opens="'center'"
+                                :locale-data="{
+                                    firstDay: 1,
+                                    format: 'yyyy/mm/dd',
+                                    }"
+                                :singleDatePicker="false"
+                                :autoApply="true"
+                                :timePicker="false"
+                                v-model="dateRange"
+                                :linkedCalendars="true"
+                                class="input-h"
+                                ></date-range-picker>
                            </label>
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
@@ -948,20 +951,13 @@ export default {
             isCompleteThree: false,
             isCompleteFour: false,
 
-            //Datepicker Options
-            dateRange: '2017-09-05',
-            startDate: '2017-09-05',
-            endDate: '2017-09-15',
-            opens: "center",//which way the picker opens, default "center", can be "left"/"right"
-            /* dropzoneOptions: {
-                url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`, 
-                url: `/api/v2/contracts/storeMedia`, 
-                thumbnailWidth: 150,
-                maxFilesize: 0.5,
-                headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
-                addRemoveLinks: true,
-                previewTemplate: this.template()
-            } */
+            //DATEPICKER
+            locale: 'en-US',
+            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
+            dateRange: {
+                startDate: '',
+                endDate: '',
+            },
         }
     },
     methods: {
