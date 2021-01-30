@@ -941,4 +941,179 @@ trait SearchTrait
         return $country;
     }
 
+    //groups local + global charges by type (Origin, Destination, Freight)
+    public function groupChargesByType($local_charges, $global_charges)
+    {
+        //Creating arrays for every type
+        $origin = [];
+        $destination = [];
+        $freight = [];
+
+        //Creating collection for charges
+        $charges = collect([]);
+
+        //Joining local and global charges to loop through all
+        $all_charges = $local_charges->concat($global_charges);
+        
+        //Looping through charges and including them in the corresponding array
+        foreach($all_charges as $charge){
+            if($charge->typedestiny_id == 1){
+                array_push($origin,$charge);
+            }elseif($charge->typedestiny_id == 2){
+                array_push($destination,$charge);
+            }elseif($charge->typedestiny_id == 3){
+                array_push($freight,$charge);
+            }
+        }
+
+        //Forming final collection
+        $charges->put('origin',$origin);
+        $charges->put('destination',$destination);
+        $charges->put('freight',$freight);
+        
+        return $charges;
+    }
+
+    //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
+    public function setChargesPerContainer($charges, $containers)
+    {
+        //Looping through charges collection
+        foreach($charges as $charges_direction){
+            foreach($charges_direction as $charge){
+
+                //Getting calculation info from calculation type id
+                $calculation = CalculationType::where('id',$charge->calculationtype_id)->first();
+
+                //Setting arrays for different calculation types, for matching when building final arrays
+                $single_containers = ['40','20','40HC','40NOR','45','20R','40RF','40HCRF','20OT','40OT','20FR','40FR'];
+                $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];
+                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP'];
+
+                //Empty array for storing final charges
+                $container_charges = [];
+
+                //Checking through the different types of calculation
+                if(in_array($calculation->code,$single_containers)){
+                    //Catching poorly formatted calculation codes
+                    if($calculation->code == '40'){
+                        $container_charges['C40DV'] = $charge->ammount; 
+                    }elseif($calculation->code == '20'){
+                        $container_charges['C20DV'] = $charge->ammount; 
+                    }elseif($calculation->code == '45'){
+                        $container_charges['C45HC'] = $charge->ammount; 
+                    }elseif($calculation->code == '20R'){
+                        $container_charges['C20RF'] = $charge->ammount;
+                    //Catching when calculation codes match container codes 
+                    }else{
+                        $container_charges['C'.$calculation->code] = $charge->ammount;
+                    }
+                }elseif(in_array($calculation->code,$teu_calculations)){
+                    foreach($containers as $container){
+                        if(str_contains($container['name'],'20')){
+                            $container_charges['C'.$container['code']] = $charge->ammount;
+                        }else{
+                            $container_charges['C'.$container['code']] = 2 * $charge->ammount;
+                        }
+                    }
+                }elseif(in_array($calculation->code,$container_calculations)){
+                    foreach($containers as $container){
+                        $container_charges['C'.$container['code']] = $charge->ammount;
+                    }
+                }
+                
+                $charge->setAttribute('containers',$container_charges);
+            }
+        }
+    }
+
+    //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
+    public function joinCharges($charges)
+    {
+        //Empty array for joint charges
+        $joint_charges = Array();
+
+        //Looping through top charges array (Origin, Destination, Freight)
+        foreach($charges as $direction=>$charges_direction){
+            //Empty array for final charges with original array structure
+            $joint_charges[$direction] = Array();
+            //If there's only one charge in one of the directions, add that charge directly to the final array
+            if(count($charges_direction) == 1){
+                $joint_charges[$direction] = $charges_direction;
+            //If there's more, begin comparison and join routine
+            }elseif(count($charges_direction) > 1){
+                //Duplicating original array for comparing and joining
+                $comparing_array = $charges_direction;
+                //Control array for already joint charges
+                $compared_and_joint = Array();
+                //Looping through charges in direction
+                foreach($charges_direction as $charge){
+                    //Index of present charge in its array, for control purposes
+                    $original_charge_index = array_search($charge,$charges_direction);
+                    //Control variable that indicates whether a charge has been matched and joint
+                    $charge_matched = false;
+                    //Looping through duplicate array
+                    foreach($comparing_array as $comparing_charge){
+                        //Index of present compared change in its array, for control purposes
+                        $comparing_charge_index = array_search($comparing_charge,$comparing_array);
+                        //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
+                            //Original index 0 only compares with 1,2,3...
+                            //Original index 1 only compares with 2,3,4...
+                            //Original index 2 only compares with 3,4,5... And so on
+                        if($original_charge_index < $comparing_charge_index){
+                            //Extracting comparison variables from collections (origin vs compared)
+                            $original_charge_carrier = is_a($charge,'App\GlobalCharge') ? $charge->globalcharcarrier[0] : $charge->localcharcarriers[0];
+                            $comparing_charge_carrier = is_a($comparing_charge,'App\GlobalCharge') ? $comparing_charge->globalcharcarrier[0] : $comparing_charge->localcharcarriers[0];
+                            $original_charge_ports = is_a($charge,'App\GlobalCharge') ? $charge->globalcharport[0] : $charge->localcharports[0];
+                            $comparing_charge_ports = is_a($comparing_charge,'App\GlobalCharge') ? $comparing_charge->globalcharport[0] : $comparing_charge->localcharports[0];
+                            //Checking if charge needs to be joint
+                                //Surcharges must match
+                                //Ports (origin and destination) must match
+                                //Carriers must match
+                                //Index of compared charge must not be in the compared control array (compared_and_joint)
+                            if($charge->surcharge_id == $comparing_charge->surcharge_id &&
+                                (in_array($original_charge_carrier->carrier_id,[$comparing_charge_carrier->carrier_id, 26]) || $comparing_charge_carrier->carrier_id == 26) &&
+                                (in_array($original_charge_ports->port_orig,[$comparing_charge_ports->port_orig, 1485]) || $comparing_charge_ports->port_orig == 1485) &&
+                                (in_array($original_charge_ports->port_dest,[$comparing_charge_ports->port_dest, 1485]) || $comparing_charge_ports->port_dest == 1485) &&
+                                !in_array($comparing_charge_index,$compared_and_joint) ){
+                                    //Converting compared array container rates into original charge array currency
+                                    $joint_containers = $charge->containers;
+                                    $comparing_charge_converted = $this->convertToCurrency($comparing_charge->currency,$charge->currency,$comparing_charge->containers);
+                                    //Adding container rates together
+                                    foreach($comparing_charge_converted as $code => $container){
+                                        if(!isset($joint_containers[$code])){
+                                            $joint_containers[$code] = 0;
+                                        }
+                                        $joint_containers[$code] += $comparing_charge->containers[$code];
+                                        $charge->containers = $joint_containers;
+                                    }
+                                    //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
+                                        //EXAMPLE
+                                        //Original charge index 0 is joint with compared charge index 1, original index 0 is included in final array
+                                        //Original charge index 0 is joint with compared charge index 2, original index 0 is included in final array -> DUPLICATE
+                                        //SOLUTION -> Original charge index must be pulled from final array if present
+                                    foreach($joint_charges[$direction] as $j_charge){
+                                        if($j_charge->id == $charge->id){
+                                            unset($j_charge);
+                                        }
+                                    }
+                                    //Include joint charge in final array
+                                    array_push($joint_charges[$direction],$charge);
+                                    //Include comparing charge in control array, indicating it has been joint already
+                                    array_push($compared_and_joint,$comparing_charge_index);
+                                    //Indicating original charge has been matched with at least one comparin charge
+                                    $charge_matched = true;
+                            }
+                        }
+                    }
+                    //Checking if original charge hasnt been matched and joint
+                    if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
+                        //Including unjoint charge in final array
+                        array_push($joint_charges[$direction],$charge);
+                    }
+                }
+            }
+        }
+
+        dd($joint_charges);
+    }
 }

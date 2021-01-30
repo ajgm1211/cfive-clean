@@ -524,6 +524,7 @@ import Search from './Search';
 import Multiselect from "vue-multiselect";
 import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
 import actions from "../../actions";
 
 export default {
