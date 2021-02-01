@@ -159,7 +159,7 @@ class AutomaticInlandController extends Controller
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
             'provider'=> 'Inland',
-            'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
+            'provider_id' => count((array)$validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
@@ -398,7 +398,7 @@ class AutomaticInlandController extends Controller
                     "type"=>"Origin",
                     "code"=>$port->code
                 ];
-                if(count($inlands)!=0){
+                if(count((array)$inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);
@@ -415,7 +415,7 @@ class AutomaticInlandController extends Controller
                     "type"=>"Destination",
                     "code"=>$port->code
                 ];
-                if(count($inlands)!=0){
+                if(count((array)$inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);
