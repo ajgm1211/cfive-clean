@@ -264,7 +264,7 @@ class AutomaticInlandLclController extends Controller
         
         $ports_sorted = [];
         
-        if(count((array)$origin_ports!=0)){
+        if(count((array)$origin_ports)!=0){
             foreach($origin_ports as $port){
                 $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -281,7 +281,7 @@ class AutomaticInlandLclController extends Controller
             }
         }
         
-        if(count((array)$destination_ports!=0)){
+        if(count((array)$destination_ports)!=0){
             foreach($destination_ports as $port){
                 $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
