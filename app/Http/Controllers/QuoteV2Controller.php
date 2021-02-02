@@ -3764,7 +3764,9 @@ class QuoteV2Controller extends Controller
                 $colores = '';
                 if ($data->contract->is_manual == 1) {
                     $colores = 'bg-manual';
-                } else {
+                } elseif($data->contract->is_manual == 2) {
+                    $colores = 'bg-express';
+                }else{
                     $colores = 'bg-api';
                 }
 
