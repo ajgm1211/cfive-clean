@@ -1975,7 +1975,7 @@ class ImportationController extends Controller
             ->where('ammount', $ammountVar)
             ->where('currency_id', $currencyVar)
             ->first();
-        if (count($SurchargeId) == 0) {
+        if (empty($SurchargeId)) {
             $SurchargeId = LocalCharge::create([
                 'surcharge_id' => $surchargeVar,
                 'typedestiny_id' => $typedestinyVar,
@@ -1996,7 +1996,7 @@ class ImportationController extends Controller
                         ->where('port_dest', $destinationVar)
                         ->where('localcharge_id', $SurchargeId->id)
                         ->first();
-                    if (count($existsLP) == 0) {
+                    if (empty($existsLP)) {
                         LocalCharPort::create([
                             'port_orig' => $originVar,
                             'port_dest' => $destinationVar,
@@ -2016,7 +2016,7 @@ class ImportationController extends Controller
                         ->where('country_dest', $destinationCounVar)
                         ->where('localcharge_id', $SurchargeId->id)
                         ->first();
-                    if (count($existsLC) == 0) {
+                    if (empty($existsLC) == 0) {
                         LocalCharCountry::create([
                             'country_orig' => $originCounVar,
                             'country_dest' => $destinationCounVar,
@@ -2030,7 +2030,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (count($localcharcarriersV) == 0) {
+            if (empty($localcharcarriersV) == 0) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2078,7 +2078,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (count($localcharcarriersV) == 0) {
+            if (empty($localcharcarriersV) == 0) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2547,7 +2547,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', '=', $company_user_id)
                                 ->where('owner', '=', $ownerVal)
                                 ->get();
-                            if (count($existe) == 0) {
+                            if (empty($existe)) {
                                 Company::create([
                                     'business_name' => $businessnameVal,
                                     'phone' => $phoneVal,
@@ -2833,8 +2833,7 @@ class ImportationController extends Controller
 
                         $companies = Company::where('business_name', $companyVal)->get();
 
-                        if (count($companies) == 1) {
-                            $companyBol = true;
+                        if (count($companies) == 1) { // !empty 
                             foreach ($companies as $companyobj) {
                                 $companyVal = $companyobj->id;
                             }
@@ -2883,7 +2882,7 @@ class ImportationController extends Controller
                                 ->where('company_id', $companyVal)
                                 ->get();
 
-                            if (count($contactexits) == 0) {
+                            if (empty($contactexits)) {
                                 Contact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
@@ -2903,7 +2902,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', \Auth::user()->company_user_id)
                                 ->get();
 
-                            if (count($failcontactexits) == 0) {
+                            if (empty($failcontactexits) ) {
                                 Failedcontact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
@@ -3141,6 +3140,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'The conatct was updated');
 
+        //Revisar 
         $countfail = Failedcontact::where('company_user_id', $id)->count();
         if (count($countfail) > 0) {
             return redirect()->route('contacts.index');
