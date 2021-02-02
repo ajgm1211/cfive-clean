@@ -19,9 +19,9 @@ class QuotationLocalChargeResource extends JsonResource
             'charge' => $this->charge,
             'calculation_type' => $this->calculation_type->name ?? null,
             'port' => $this->port->display_name ?? null,
-            'price' => $this->arrayToString($this->price) ?? null,
-            'profit' => $this->arrayToString($this->profit) ?? null,
-            'total' => $this->arrayToString($this->total) ?? null,
+            'price' => $this->arrayToString($this->price) ?? [],
+            'profit' => $this->arrayToString($this->profit) ?? [],
+            'total' => $this->arrayToString($this->total) ?? [],
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
         ];
@@ -32,7 +32,7 @@ class QuotationLocalChargeResource extends JsonResource
 
         $new_array = [];
 
-        foreach($array as $key=>$item){
+        foreach((array)$array as $key=>$item){
             $new_array[$key] = (string) $item;
         }
 
