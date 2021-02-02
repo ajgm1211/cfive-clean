@@ -1975,7 +1975,7 @@ class ImportationController extends Controller
             ->where('ammount', $ammountVar)
             ->where('currency_id', $currencyVar)
             ->first();
-        if (empty($SurchargeId)) {
+        if (empty($SurchargeId) == 0) {
             $SurchargeId = LocalCharge::create([
                 'surcharge_id' => $surchargeVar,
                 'typedestiny_id' => $typedestinyVar,
@@ -1996,7 +1996,7 @@ class ImportationController extends Controller
                         ->where('port_dest', $destinationVar)
                         ->where('localcharge_id', $SurchargeId->id)
                         ->first();
-                    if (empty($existsLP)) {
+                    if (empty($existsLP) == 0) {
                         LocalCharPort::create([
                             'port_orig' => $originVar,
                             'port_dest' => $destinationVar,
@@ -2547,7 +2547,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', '=', $company_user_id)
                                 ->where('owner', '=', $ownerVal)
                                 ->get();
-                            if (empty($existe)) {
+                            if (empty($existe) == 0) {
                                 Company::create([
                                     'business_name' => $businessnameVal,
                                     'phone' => $phoneVal,
@@ -2882,7 +2882,7 @@ class ImportationController extends Controller
                                 ->where('company_id', $companyVal)
                                 ->get();
 
-                            if (empty($contactexits)) {
+                            if (empty($contactexits) == 0) {
                                 Contact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
@@ -2902,7 +2902,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', \Auth::user()->company_user_id)
                                 ->get();
 
-                            if (empty($failcontactexits) ) {
+                            if (empty($failcontactexits) == 0 ) {
                                 Failedcontact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
@@ -3245,7 +3245,7 @@ class ImportationController extends Controller
         $company = CompanyUser::find($account->company_user_id);
         $extObj = new \SplFileInfo($account->namefile);
         $ext = $extObj->getExtension();
-        if (empty($account->namefile)) {
+        if (empty($account->namefile) == 0) {
             $mediaItem = $account->getFirstMedia('document');
             $name = explode('_', $mediaItem->file_name);
             $name = str_replace($name[0] . '_', '', $mediaItem->file_name);
