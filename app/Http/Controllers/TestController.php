@@ -250,4 +250,30 @@ class TestController extends Controller
 
     }*/
     }
+
+
+
+
+    public function intercom($client, $user)
+    {
+        try {
+            $cliente = $client->users->getUsers(['email' => $user->email]);
+        } catch (Exception $e) {
+            echo $user->email;
+        }
+        dd($cliente->total_count);
+        if ($cliente->total_count > 1) {
+            echo "Mas de uno " . $user->email . "<BR>";
+            foreach ($cliente->users as $u) {
+                if ($u->type == 'user') {
+                    if ($u->user_id != $user->id) {
+
+                        //$client->users->archiveUser($u->id);
+                        echo "Diferente id " . $user->email . "<BR>";
+                    }
+                }
+            }
+        }
+
+    }
 }
