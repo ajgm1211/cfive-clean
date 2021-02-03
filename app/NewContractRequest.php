@@ -31,6 +31,7 @@ class NewContractRequest extends Model implements HasMedia
         'sentemail',
         'contract_id',
         'data',
+        'manage_app',
         'username_load'
     ];
 
