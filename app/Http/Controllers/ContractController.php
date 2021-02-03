@@ -689,6 +689,7 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
+        $contract->is_manual = 2;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
