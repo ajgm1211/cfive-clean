@@ -187,17 +187,20 @@ class SearchApiController extends Controller
         $charges = $this->groupChargesByType($local_charges, $global_charges);
 
         //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-        $this->setChargesPerContainer($charges,$new_search_data['containers']);
+        $this->setChargesPerContainer($charges,$new_search_data['containers'], $company_user_id);
 
-        //SEARCH TRAIT - Join charges (within group) if Surcharge and Carrier match
-        $this->joinCharges($charges);
+        //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+        $charges = $this->joinCharges($charges);
 
-        //Retrieving and calculating inlands from search data, only if door delivery indicated
+        /**Retrieving and calculating inlands from search data, only if door delivery indicated
         if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
             $inlands = $this->searchInlands($new_search_data_ids);
         }else{
             $inlands = [];
-        }
+        }**/
+
+        //Appending Rate Id to Charges
+        $this->addRateId($rates, $charges, 'charges', $company_user_id);
 
         //Getting price levels if requested
         if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
@@ -208,6 +211,9 @@ class SearchApiController extends Controller
 
         if(count($price_level_markups) != 0){
             $this->addMarkups($price_level_markups,$rates);
+            foreach($charges as $charge){
+                $this->addMarkups($price_level_markups,$charge);
+            }
         }
 
         $data = [
@@ -257,7 +263,7 @@ class SearchApiController extends Controller
     {       
         //setting variables for query
         $company_user_id = $search_data['company'];
-        $company_user = Company::where('id',$search_data['company'])->first();
+        $company_user = CompanyUser::where('id',$search_data['company'])->first();
         $user_id = $search_data['user'];
         $container_group = $search_data['selectedContainerGroup'];
         $company_id = $search_data['company'];
@@ -284,7 +290,7 @@ class SearchApiController extends Controller
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
-                        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                        $query->where('validity', '>=', $dateSince)->where('expire', '>=', $dateUntil);
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
                 }
             });
@@ -317,6 +323,14 @@ class SearchApiController extends Controller
 
         //If the container rates come separate (twuenty,forty,etc) joins them under the "containers" field for iteration purposes
         $this->joinRateContainers($rates_array);
+
+        //Setting attribute to totalize adding charges, inlands, markups, etc. Totals are shown in the client default currency
+        foreach($rates_array as $rate){
+            //Converting rates to client currency
+            $client_currency = $company_user->currency;
+            $containers_client_currency = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
+            $rate->setAttribute('totals',$containers_client_currency);
+        }
 
         return $rates_array;
     }
@@ -452,7 +466,7 @@ class SearchApiController extends Controller
         
             if ($contractStatus != 'api') {
     
-                $global_charge = GlobalCharge::where('validity', '<=', $validity_end)->where('expire', '>=', $validity_start)->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+                $global_charge = GlobalCharge::where([['validity', '>=', $validity_start],['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
                     $q->whereIn('carrier_id', $carriers);
                 })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                     $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
@@ -482,6 +496,54 @@ class SearchApiController extends Controller
         return $global_charges;
     }
 
+    //appending charges to corresponding Rates
+    public function addRateId($rates, $target, $target_type, $company_user_id)
+    {
+        //Setting customer currency to convert if necessary
+        $company_user = CompanyUser::where('id',$company_user_id)->first();
+        $client_currency = $company_user->currency;
+
+        if($target_type = 'charges'){
+            //Looping through rates
+            foreach($rates as $rate){
+                //Empty array for each Rate Charges
+                $rate_charges = [];
+                //Looping through charges type (Origin, Destination, Freight)
+                foreach($target as $direction => $charge_direction){
+                    //Looping through charges by type
+                    foreach($charge_direction as $charge){
+                        //Checking type of charge to set control variables
+                        if(is_a($charge,'App\LocalCharge')){
+                            $charge_origin_port = $charge->localcharports[0]->port_orig;
+                            $charge_destination_port = $charge->localcharports[0]->port_dest;
+                            $charge_carrier = $charge->localcharcarriers[0]->carrier_id;
+                        }elseif(is_a($charge,'App\GlobalCharge')){
+                            $charge_origin_port = $charge->globalcharport[0]->port_orig;
+                            $charge_destination_port = $charge->globalcharport[0]->port_dest;
+                            $charge_carrier = $charge->globalcharcarrier[0]->carrier_id;
+                        }
+                        //Checking if charge control variables match rate properties. "ALL" ports and carriers included (ids 1485 for ports, 26 for carriers)
+                        if((in_array($rate->origin_port, [$charge_origin_port, 1485]) || $charge_destination_port == 1485) && 
+                            (in_array($rate->destiny_port, [$charge_destination_port, 1485]) || $charge_destination_port == 1485) &&
+                            (in_array($rate->carrier_id, [$charge_carrier, 26]) || $charge_carrier == 26)){
+                                if($direction == 'freight'){
+                                    $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
+                                }
+                                $totals_array = $rate->totals;
+                                foreach($totals_array as $code => $total){
+                                    if(isset($charge->containers_client_currency[$code])){
+                                        $totals_array[$code] += $charge->containers_client_currency[$code];
+                                    }
+                                }
+                                $rate->totals = $totals_array;
+                                $charge->setAttribute('rate_id',$rate->id);
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
     //Retrieves and cleans markups from price levels
     public function searchPriceLevels($search_data)
     {
@@ -499,17 +561,10 @@ class SearchApiController extends Controller
     
         return $markups;
     }
-
-    public function storeExpressContract(Request $request)
-    {
-        
-    }
     
     //Adds PriceLevels markups to target collection
     public function addMarkups($markups,$target_array)
     {
-        //dd($markups['freight']);
-
         if(count($target_array) != 0){
             foreach($target_array as $target_element){
 
