@@ -2,6 +2,7 @@
 namespace App\Http\Traits;
 
 use App\CalculationType;
+use App\CompanyUser;
 use App\Currency;
 use App\Inland;
 use App\Price;
@@ -975,8 +976,14 @@ trait SearchTrait
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers)
+    public function setChargesPerContainer($charges, $containers, $company_user_id)
     {
+        //Retrieving current company
+        $company_user = CompanyUser::where('id',$company_user_id)->first();
+    
+        //getting client profile currency
+        $client_currency = $company_user->currency;
+
         //Looping through charges collection
         foreach($charges as $charges_direction){
             foreach($charges_direction as $charge){
@@ -1007,6 +1014,7 @@ trait SearchTrait
                     }else{
                         $container_charges['C'.$calculation->code] = $charge->ammount;
                     }
+                //TEU calculations -> if a container code starts with "20", amount is the same, if not it is doubled
                 }elseif(in_array($calculation->code,$teu_calculations)){
                     foreach($containers as $container){
                         if(str_contains($container['name'],'20')){
@@ -1015,11 +1023,19 @@ trait SearchTrait
                             $container_charges['C'.$container['code']] = 2 * $charge->ammount;
                         }
                     }
+                //Calculations that apply to ALL containers
                 }elseif(in_array($calculation->code,$container_calculations)){
                     foreach($containers as $container){
                         $container_charges['C'.$container['code']] = $charge->ammount;
                     }
                 }
+
+                //Setting rates per container
+                    //In unmodified currency, for general use
+                    //In client currency to show in overall totals
+                $client_currency_charges = $this->convertToCurrency($charge->currency,$client_currency,$container_charges);
+
+                $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
                 $charge->setAttribute('containers',$container_charges);
             }
@@ -1075,16 +1091,33 @@ trait SearchTrait
                                 (in_array($original_charge_ports->port_orig,[$comparing_charge_ports->port_orig, 1485]) || $comparing_charge_ports->port_orig == 1485) &&
                                 (in_array($original_charge_ports->port_dest,[$comparing_charge_ports->port_dest, 1485]) || $comparing_charge_ports->port_dest == 1485) &&
                                 !in_array($comparing_charge_index,$compared_and_joint) ){
-                                    //Converting compared array container rates into original charge array currency
-                                    $joint_containers = $charge->containers;
-                                    $comparing_charge_converted = $this->convertToCurrency($comparing_charge->currency,$charge->currency,$comparing_charge->containers);
+                                    //Converting compared array container rates into corresponding currency:
+                                        //If currencies don't match, join must be done in client currency
+                                    if($charge->currency != $comparing_charge->currency){
+                                        $joint_containers = $charge->containers_client_currency;
+                                        //Marking charge as joint under client currency
+                                        $charge->setAttribute('joint_as','client_currency');
+                                        $comparing_charge_containers = $comparing_charge->containers_client_currency;
+                                        //If currencies match, sum is direct
+                                    }else{
+                                        $joint_containers = $charge->containers;
+                                        //Marking as joint under charge currency
+                                        $charge->setAttribute('joint_as','charge_currency');
+                                        $comparing_charge_containers = $comparing_charge->containers;
+                                    }
                                     //Adding container rates together
-                                    foreach($comparing_charge_converted as $code => $container){
+                                    foreach($comparing_charge_containers as $code => $container){
                                         if(!isset($joint_containers[$code])){
                                             $joint_containers[$code] = 0;
                                         }
-                                        $joint_containers[$code] += $comparing_charge->containers[$code];
-                                        $charge->containers = $joint_containers;
+                                        $joint_containers[$code] += $container;
+                                        //Checking join type and using corresponding container array
+                                        if($charge->joint_as == 'client_currency'){
+                                            $charge->containers_client_currency = $joint_containers;
+                                        }elseif($charge->joint_as == 'charge_currency'){
+                                            $charge->containers = $joint_containers;
+                                        }
+                                        
                                     }
                                     //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
                                         //EXAMPLE
@@ -1113,7 +1146,7 @@ trait SearchTrait
                 }
             }
         }
-
-        dd($joint_charges);
+        
+        return($joint_charges);
     }
 }
