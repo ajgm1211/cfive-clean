@@ -218,6 +218,7 @@ class SearchApiController extends Controller
 
         $data = [
             'rates' => $rates,
+            'charges' => $charges,
             'pricelevels' => $price_level_markups
         ];
 
