@@ -992,7 +992,6 @@ trait SearchTrait
                 $calculation = CalculationType::where('id',$charge->calculationtype_id)->first();
 
                 //Setting arrays for different calculation types, for matching when building final arrays
-                $single_containers = ['40','20','40HC','40NOR','45','20R','40RF','40HCRF','20OT','40OT','20FR','40FR'];
                 $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];
                 $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP'];
 
@@ -1000,7 +999,23 @@ trait SearchTrait
                 $container_charges = [];
 
                 //Checking through the different types of calculation
-                if(in_array($calculation->code,$single_containers)){
+                    //TEU calculations -> if a container's 'is_teu' option is true, rates are doubled 
+                if(in_array($calculation->code,$teu_calculations)){
+                    foreach($containers as $container){
+                        $options = json_decode($container['options'],true);
+                        if(!$options['is_teu']){
+                            $container_charges['C'.$container['code']] = $charge->ammount;
+                        }else{
+                            $container_charges['C'.$container['code']] = 2 * $charge->ammount;
+                        }
+                    }
+                }elseif(in_array($calculation->code,$container_calculations)){
+                //Calculations that apply to ALL containers
+                    foreach($containers as $container){
+                        $container_charges['C'.$container['code']] = $charge->ammount;
+                    }
+                //Individual container calculations
+                }else{
                     //Catching poorly formatted calculation codes
                     if($calculation->code == '40'){
                         $container_charges['C40DV'] = $charge->ammount; 
@@ -1013,20 +1028,6 @@ trait SearchTrait
                     //Catching when calculation codes match container codes 
                     }else{
                         $container_charges['C'.$calculation->code] = $charge->ammount;
-                    }
-                //TEU calculations -> if a container code starts with "20", amount is the same, if not it is doubled
-                }elseif(in_array($calculation->code,$teu_calculations)){
-                    foreach($containers as $container){
-                        if(str_contains($container['name'],'20')){
-                            $container_charges['C'.$container['code']] = $charge->ammount;
-                        }else{
-                            $container_charges['C'.$container['code']] = 2 * $charge->ammount;
-                        }
-                    }
-                //Calculations that apply to ALL containers
-                }elseif(in_array($calculation->code,$container_calculations)){
-                    foreach($containers as $container){
-                        $container_charges['C'.$container['code']] = $charge->ammount;
                     }
                 }
 
