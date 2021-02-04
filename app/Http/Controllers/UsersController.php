@@ -175,7 +175,6 @@ class UsersController extends Controller
     {
 
         $request->validate([
-<<<<<<< HEAD
           'name' => 'required',
           'lastname' => 'required',
           'email' => [
@@ -189,38 +188,6 @@ class UsersController extends Controller
     $requestForm = $request->all();
     $user = User::findOrFail($id);
     $user->update($requestForm);
-=======
-            'name' => 'required',
-            'lastname' => 'required',
-            'email' => [
-                'required',
-                Rule::unique('users')->ignore($id),
-            ],
-            'password' => 'sometimes|confirmed',
-            'password_confirmation' => 'required_with:password',
-        ]);
-
-        $requestForm = $request->all();
-        $user = User::findOrFail($id);
-        $roles = $user->getRoleNames();
-
-        if (!$roles->isEmpty()) {
-            $user->removeRole($roles[0]);
-        }
-
-        if ($request->type == "admin") {
-            $user->assignRole('administrator');
-        }
-        if ($request->type == "subuser") {
-            $user->assignRole('subuser');
-        }
-        if ($request->type == "company") {
-            $user->assignRole('company');
-        }
-        if ($request->type == "data_entry") {
-            $user->assignRole('data_entry');
-        }
->>>>>>> fef58d6bfa892ab6869680c51cdf2957ef32e6e3
 
         $user->update($requestForm);
 
