@@ -86,6 +86,12 @@
                         <li class="nav-item">
                             <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-envelope"></i> &nbsp;Emails</a>
                         </li>
+                        @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
+                        <li class="nav-item">
+                            <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-sitemap"></i> &nbsp;Delegations</a>
+                            <!-- <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-users"></i> &nbsp;Delegations</a> -->
+                        </li>
+                        @endif
                     </ul>
                 </div>
                 <!-- /.col-md-4 -->
@@ -503,6 +509,36 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="delegation" role="tabpanel" aria-labelledby="delegations-tab">
+                                <div class="m--align-right">
+                                    <a  id="newRate" class="">  
+                                        <button type="button" class="btn btn-primary m--align-right" style="background-color: #006BFA !important;" onclick="AbrirModal('add',0)">
+                                            Add New
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </a>
+                                </div>    
+                                <br>
+                                <table class="m-datatable" id="delegationstable" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($delegations as $data)
+                                            <tr>
+                                                <td>{{ $data->name }}</td>
+                                                <td>{{ $data->address }}</td>
+                                                <td>{{ $data->phone }}</td>
+                                            </tr> 
+                                        @endforeach
+                                    </tbody>
+                                </table>                               
+                            </div>
                         </div>
                     </form>
                     @endif
@@ -515,12 +551,14 @@
 @endsection
 @section('js')
 @parent
+<script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/settings.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
+
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",
