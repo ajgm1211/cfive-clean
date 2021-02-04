@@ -490,8 +490,8 @@ export default {
                 },
             })
                 .then((response) => {
-                    this.forceFileDownload(response, data);
-                    this.close();
+                    //this.forceFileDownload(response, data);
+                    this.$emit("success",true);
                     this.downloading = false;
                 })
                 .catch(() => console.log("error"));

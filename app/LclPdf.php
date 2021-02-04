@@ -73,12 +73,23 @@ class LclPdf
                 },
 
             ]);
-            
+
             foreach ($localcharges as $value) {
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
-
+                
                 foreach ($inlands as $inland) {
-                    $value->push($inland);
+                    if($inland->pdf_options['grouped']){
+                        foreach($value as $charge){
+                            if($inland->pdf_options['groupId'] == $charge->id){
+                                $inland_total = json_decode($inland->totals, true);
+                                $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
+                                $grouped_total = intval($charge->total) + intval($inland_total['lcl_totals']);
+                                $charge->total = $grouped_total;
+                            }
+                        }
+                    }else{
+                        $value->push($inland);
+                    }
                 }
             }
         } else {
@@ -111,7 +122,7 @@ class LclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id')
+        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
         return $inlands;

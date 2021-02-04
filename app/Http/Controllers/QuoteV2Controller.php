@@ -2238,14 +2238,14 @@ class QuoteV2Controller extends Controller
                             ['price_id', $quote->price_id],
                             ['percent_markup', '!=', '0'],
                             ['price_type_id', 1]])->first();
-                        
-                        if($priceLevelMarkups){
+
+                        if ($priceLevelMarkups) {
                             $input = Currency::where('id', $priceLevelMarkups->currency)->first();
-    
+
                             $output = Currency::where('id', $info_D->currency->id)->first();
-    
+
                             $priceLevelMarkupsArray = [];
-    
+
                             foreach ($rateO->markups as $key => $value) {
                                 $priceLevelMarkupsArray[$key] = $value;
                             }
@@ -2257,10 +2257,10 @@ class QuoteV2Controller extends Controller
                                     $priceLevelMarkupsFinal[$key] = isDecimal($price, true);
                                 }
                             }
-                        }else{
+                        } else {
                             $priceLevelMarkupsFinal = null;
                         }
-                    }else{
+                    } else {
                         $priceLevelMarkupsFinal = null;
                     }
 
@@ -2807,7 +2807,7 @@ class QuoteV2Controller extends Controller
 
     public function search()
     {
-
+        
         $company_user_id = \Auth::user()->company_user_id;
         //variables del modal contract
         $group_containerC = GroupContainer::pluck('name', 'id');
@@ -4518,11 +4518,11 @@ class QuoteV2Controller extends Controller
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id);
+                })->where('company_user_id', '=', $company_user_id)->where('carrier_id','59');
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id);
+                })->where('company_user_id', '=', $company_user_id)->where('carrier_id','59');
             }
         })->get();
 
@@ -5205,7 +5205,7 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
-
+                
                 if (in_array($local->calculationtypelcl_id, $arrayPerKG)) {
 
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
@@ -5217,7 +5217,7 @@ class QuoteV2Controller extends Controller
                                     $totalAmmount = ($totalW * $local->ammount) / $rateMount;
                                     $mont = $local->ammount;
                                     $unidades = $totalW;
-
+                                    
                                     if ($subtotal_local < $local->minimum) {
                                         $subtotal_local = $local->minimum;
                                         $totalAmmount = ($totalW * $subtotal_local) / $rateMount;
@@ -6160,13 +6160,15 @@ class QuoteV2Controller extends Controller
                                     $totalAmmount = ($totalWeight * $global->ammount) / $rateMountG;
                                     $mont = "";
                                     $unidades = $totalWeight;
+                                   // dd($subtotal_global,$global->minimum);
 
                                     if ($subtotal_global < $global->minimum) {
                                         $subtotal_global = $global->minimum;
-                                        $totalAmmount = ($totalWeight * $subtotal_global) / $rateMountG;
+                                        $totalAmmount = $subtotal_global / $rateMountG;
                                         $unidades = $subtotal_global / $totalWeight;
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
+                                     
 
                                     // MARKUP
                                     $markupKG = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
@@ -7028,13 +7030,13 @@ class QuoteV2Controller extends Controller
                             ['price_id', $quote->price_id],
                             ['percent_markup', '!=', '0'],
                             ['price_type_id', 2]])->first();
-                        
-                        if($priceLevelMarkups){
+
+                        if ($priceLevelMarkups) {
 
                             $input = Currency::where('id', $priceLevelMarkups->currency)->first();
-    
+
                             $output = Currency::where('id', $info_D->currency->id)->first();
-    
+
                             if ($priceLevelMarkups->fixed_markup != 0) {
                                 $priceLevelMarkupsAmount = array($priceLevelMarkups->fixed_markup);
                                 $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsAmount);
@@ -7049,7 +7051,7 @@ class QuoteV2Controller extends Controller
                                 $priceLevelMarkupsFinal = 0;
                                 $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                             }
-                        }else{
+                        } else {
                             $priceLevelMarkupsFinal = 0;
                             $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                         }

@@ -2,23 +2,20 @@
 
 namespace App;
 
+use App\ContractCarrier;
+use App\ContractCompanyRestriction;
+use App\ContractUserRestriction;
+use App\Http\Filters\ContractFilter;
+use App\Http\Traits\SearchTraitApi;
+use App\Http\Traits\UtilTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Filters\ContractFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use App\ContractCarrier;
-use App\ContractUserRestriction;
-use App\ContractCompanyRestriction;
-use Illuminate\Support\Facades\DB;
-use App\Http\Traits\SearchTraitApi;
-use App\Http\Traits\UtilTrait;
-use App\Jobs\GetRatesByContractId;
-use Carbon\Carbon;
-use Illuminate\Support\Collection as Collection;
 
 class Contract extends Model implements HasMedia, Auditable
 {
@@ -27,7 +24,7 @@ class Contract extends Model implements HasMedia, Auditable
     use UtilTrait;
     use \OwenIt\Auditing\Auditable;
     protected $guard = 'web';
-    protected $table    = "contracts";
+    protected $table = "contracts";
 
     protected $fillable = ['id', 'name', 'number', 'company_user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code', 'is_manual', 'result_validator', 'validator', 'is_api'];
 
@@ -165,8 +162,8 @@ class Contract extends Model implements HasMedia, Auditable
 
         foreach ($carriers as $carrier_id) {
             ContractCarrier::create([
-                'carrier_id'    => $carrier_id,
-                'contract_id'   => $this->id
+                'carrier_id' => $carrier_id,
+                'contract_id' => $this->id,
             ]);
         }
     }
@@ -183,8 +180,8 @@ class Contract extends Model implements HasMedia, Auditable
         DB::table('contracts_carriers')->where('contract_id', '=', $this->id)->delete();
 
         ContractCarrier::create([
-            'carrier_id'    => $carrier_id,
-            'contract_id'   => $this->id
+            'carrier_id' => $carrier_id,
+            'contract_id' => $this->id,
         ]);
     }
 
@@ -198,8 +195,8 @@ class Contract extends Model implements HasMedia, Auditable
     {
         \Storage::disk('FclRequest')->put($name, \File::get($file));
         /*$this->addMedia($file)->addCustomHeaders([
-            'ACL' => 'public-read'
-        ])->toMediaCollection('document', 'FclRequest');*/
+    'ACL' => 'public-read'
+    ])->toMediaCollection('document', 'FclRequest');*/
     }
 
     /**
@@ -214,8 +211,8 @@ class Contract extends Model implements HasMedia, Auditable
 
         foreach ($users as $user_id) {
             ContractUserRestriction::create([
-                'user_id'    => $user_id,
-                'contract_id'   => $this->id
+                'user_id' => $user_id,
+                'contract_id' => $this->id,
             ]);
         }
     }
@@ -232,8 +229,8 @@ class Contract extends Model implements HasMedia, Auditable
 
         foreach ($companies as $company_id) {
             ContractCompanyRestriction::create([
-                'company_id'    => $company_id,
-                'contract_id'   => $this->id
+                'company_id' => $company_id,
+                'contract_id' => $this->id,
             ]);
         }
     }
@@ -272,9 +269,9 @@ class Contract extends Model implements HasMedia, Auditable
         foreach ($relations as $relation) {
             foreach ($relation as $relationRecord) {
 
-                if ($relationRecord instanceof \App\LocalCharge)
+                if ($relationRecord instanceof \App\LocalCharge) {
                     $relationRecord->duplicate($new_contract->id);
-                else {
+                } else {
                     $newRelationship = $relationRecord->replicate();
                     $newRelationship->contract_id = $new_contract->id;
                     $newRelationship->save();
@@ -294,7 +291,7 @@ class Contract extends Model implements HasMedia, Auditable
     public function processSearchByIdFcl()
     {
         $rates = ContractRateFclApi::where('contract_id', $this->id)->get();
-        if(count($rates)==0){
+        if (count($rates) == 0) {
             return response()->json(['message' => 'The requested contract is pending processing', 'state' => 'CONVERSION_PENDING'], 200);
         }
         $rates = $this->transformToArray($rates);
@@ -316,7 +313,7 @@ class Contract extends Model implements HasMedia, Auditable
                 }
             }
             array_push($detalle, $data->currency, $data->transit_time, $data->remarks);
-            array_push($arr,$detalle);
+            array_push($arr, $detalle);
         }
 
         return $arr;

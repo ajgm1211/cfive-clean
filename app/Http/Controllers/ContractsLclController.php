@@ -856,13 +856,13 @@ class ContractsLclController extends Controller
 
         return \DataTables::collection($contractG)
             ->addColumn('carrier', function (ContractLcl $contractG) {
-                if (count($contractG->carriers->pluck('carrier')->pluck('name')) != 0) {
+                if (count((array)$contractG->carriers->pluck('carrier')->pluck('name')) != 0) {
                     return str_replace(['[', ']', '"'], ' ', $contractG->carriers->pluck('carrier')->pluck('name'));
                 }
                 return '-----------------';
             })
             ->addColumn('direction', function (ContractLcl $contractG) {
-                if (count($contractG->direction) != 0) {
+                if (count((array)$contractG->direction) != 0) {
                     return $contractG->direction->name;
                 } else {
                     return '-----------------';

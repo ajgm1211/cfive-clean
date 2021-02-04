@@ -2,15 +2,11 @@
 
 namespace App\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\SendQuotesJob;
-use App\Jobs\ProcessExpiredContractsJob;
 use App\Jobs\SaveFclRatesByContractJob;
 use App\Jobs\SyncCompaniesEvery30Job;
 use App\Jobs\SyncCompaniesJob;
-use App\Jobs\UpdateCurrenciesJob;
-use App\Jobs\UpdateCurrenciesEurJob;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
