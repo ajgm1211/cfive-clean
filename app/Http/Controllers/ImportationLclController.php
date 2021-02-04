@@ -230,14 +230,17 @@ class ImportationLclController extends Controller
             }
         } elseif ($selector == 2) {
             $contract = ContractLcl::find($id);
-            $contract->load('carriers');
-            if (count($contract->carriers) == 1) {
-                foreach ($contract->carriers as $carrier_uniq) {
-                    if ($carrier_uniq->id != $carrier_exec) {
-                        $load_carrier = true;
+            if(isset($contract)){
+                $contract->load('carriers');
+                if (count($contract->carriers) == 1) {
+                    foreach ($contract->carriers as $carrier_uniq) {
+                        if ($carrier_uniq->id != $carrier_exec) {
+                            $load_carrier = true;
+                        }
                     }
                 }
             }
+          
         }
         //dd($requestlcl);
         $harbor = harbor::all()->pluck('display_name', 'id');
