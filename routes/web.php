@@ -1313,5 +1313,6 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
+    Route::get('contable', 'TestController@contable')->name('teste.intercom');
 
 });
