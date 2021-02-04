@@ -426,9 +426,10 @@
                     </span>
                 </div>
 
-                <div class="col-12 mt-5" style="overflow-y: auto">
+                <div class="col-12 mt-5">
                     <!-- DataTable -->
-                    <b-table-simple hover small responsive="sm" borderless>
+                    <b-table-simple small responsive="sm" borderless>
+
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
@@ -484,11 +485,15 @@
                         </b-thead>
 
                         <b-tbody>
+
+                            <!-- Fijo -->
                             <b-tr
                                 class="q-tr"
                                 v-for="(localcharge, key) in this.localcharges"
                                 :key="key"
                             >
+
+                                <!-- Checkboxes -->
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedCharges"
@@ -497,6 +502,7 @@
                                     ></b-form-checkbox>
                                 </b-td>
 
+                                <!-- Surcharges -->
                                 <b-td>
                                     <multiselect
                                         v-model="localcharge.surcharge"
@@ -505,7 +511,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a surcharge"
+                                        placeholder="Surcharge"
+                                        class="data-surcharge"
                                         label="name"
                                         track-by="name"
                                         @input="
@@ -519,6 +526,7 @@
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Detail -->
                                 <b-td>
                                     <multiselect
                                         v-if="currentQuoteData.type == 'FCL'"
@@ -528,7 +536,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Calculation Type"
+                                        class="data-detail"
                                         label="name"
                                         track-by="name"
                                         @input="
@@ -550,7 +559,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Calculation Type"
+                                        class="data-detail"
                                         label="name"
                                         track-by="name"
                                         @input="
@@ -564,6 +574,7 @@
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Show As -->
                                 <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="localcharge.sale_codes"
@@ -572,12 +583,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a sale code"
+                                        placeholder="Sale Code"
+                                        class="data-showas"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Provider -->
                                 <b-td>
                                     <multiselect
                                         v-model="
@@ -590,7 +603,8 @@
                                         :close-on-select="true"
                                         :preserve-search="true"
                                         :disabled="true"
-                                        placeholder="Choose a provider"
+                                        placeholder="Provider"
+                                        class="data-provider"
                                         label="name"
                                         track-by="name"
                                         @input="
@@ -611,6 +625,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profit -->
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -618,7 +633,7 @@
                                     <b-form-input
                                         placeholder
                                         v-model="localcharge.price['c' + item]"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -632,7 +647,7 @@
                                     <b-form-input
                                         placeholder
                                         v-model="localcharge.markup['m' + item]"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -645,6 +660,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profit -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.units"
@@ -662,6 +678,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profit -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.price_per_unit"
@@ -679,6 +696,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profit -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="localcharge.markup"
@@ -696,6 +714,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profit -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         :value="
@@ -711,6 +730,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Currency -->
                                 <b-td>
                                     <multiselect
                                         v-model="localcharge.currency"
@@ -719,7 +739,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a currency"
+                                        placeholder="Currency"
+                                        class="data-currency"
                                         label="alphacode"
                                         track-by="alphacode"
                                         @input="
@@ -747,12 +768,15 @@
                                 </b-td>
                             </b-tr>
 
+                            <!-- Dinamico -->
                             <b-tr
                                 class="q-tr"
                                 v-for="(input, counter) in inputs"
                                 :key="counter"
                             >
                                 <b-td></b-td>
+
+                                <!-- Surcharges -->
                                 <b-td>
                                     <multiselect
                                         v-model="input.surcharge"
@@ -761,12 +785,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a surcharge"
+                                        placeholder="Surcharge"
+                                        class="data-surcharge"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Detail -->
                                 <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="input.calculation_type"
@@ -775,12 +801,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Calculation Type"
+                                        class="data-detail"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Detail -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <multiselect
                                         v-model="input.calculation_type"
@@ -791,12 +819,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Calculation Type"
+                                        class="data-detail"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Show As -->
                                 <b-td v-if="currentQuoteData.type == 'FCL'">
                                     <multiselect
                                         v-model="input.sale_codes"
@@ -805,12 +835,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a sale code"
+                                        placeholder="Sale Code"
+                                        class="data-showas"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Provider -->
                                 <b-td>
                                     <multiselect
                                         v-model="input.carrier"
@@ -819,12 +851,14 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a provider"
+                                        placeholder="Provider"
+                                        class="data-provider"
                                         label="name"
                                         track-by="name"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Profits -->
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -833,24 +867,27 @@
                                         placeholder
                                         v-model="input.price['c' + item]"
                                         @keypress="isNumber($event)"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                     ></b-form-input>
+
                                     <b-form-input
                                         placeholder
                                         v-model="input.markup['m' + item]"
                                         @keypress="isNumber($event)"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.units"
                                         style="width:80px;"
-                                        class="q-input"
+                                        class="q-input data-profit"
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.price"
@@ -859,6 +896,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.profit"
@@ -867,6 +905,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="input.total"
@@ -876,6 +915,7 @@
                                     ></b-form-input>
                                 </b-td>
 
+                                <!-- Currency -->
                                 <b-td>
                                     <multiselect
                                         v-model="input.currency"
@@ -884,14 +924,16 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a currency"
+                                        placeholder="Currency"
+                                        class="data-currency"
                                         label="alphacode"
                                         track-by="alphacode"
                                     ></multiselect>
                                 </b-td>
 
+                                <!-- Botones -->
                                 <b-td>
-                                    <button
+                                    <!-- <button
                                         type="button"
                                         class="btn-save"
                                         v-on:click="onSubmitCharge(counter)"
@@ -900,7 +942,7 @@
                                             class="fa fa-check"
                                             aria-hidden="true"
                                         ></i>
-                                    </button>
+                                    </button> -->
                                     <button
                                         type="button"
                                         class="btn-delete"
@@ -913,6 +955,7 @@
                                     </button>
                                 </b-td>
                             </b-tr>
+                            
                         </b-tbody>
                     </b-table-simple>
                     <!-- End DataTable -->
@@ -960,9 +1003,7 @@ export default {
     },
     created() {
         let id = this.$route.params.id;
-
         this.getHarbors(id);
-
         this.getRemarks(id);
     },
     props: {
@@ -1174,7 +1215,6 @@ export default {
                 port_id: this.value.id,
                 type: this.value.type,
             };
-
             if (this.currentQuoteData.type == "FCL") {
                 actions.localcharges
                     .localcharges(data)
@@ -1234,7 +1274,6 @@ export default {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
             }
-
             this.charges = this.charges.filter(function (item) {
                 return id != item.id;
             });
@@ -1253,7 +1292,6 @@ export default {
                     port_id: this.value.id,
                     type_id: this.value.type,
                 };
-
                 if (this.currentQuoteData.type == "FCL") {
                     actions.localcharges
                         .create(data)
@@ -1295,7 +1333,6 @@ export default {
                 type_id: this.value.type,
                 quote_type: this.currentQuoteData.type,
             };
-
             if (data.quote_type == "FCL") {
                 actions.localcharges
                     .createCharge(data)
@@ -1351,7 +1388,6 @@ export default {
         },
         updateRemarks(remarks) {
             let quote_id = this.$route.params.id;
-
             actions.localcharges
                 .updateRemarks(remarks, quote_id)
                 .then((response) => {
