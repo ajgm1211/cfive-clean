@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Container extends Model
 {
     protected $table    = "containers";
-    protected $fillable = ['id','name','code','gp_container_id'];
+    protected $fillable = ['id','name','code','gp_container_id','options'];
     
     public function groupContainer(){
         return $this->belongsTo('App\GroupContainer','gp_container_id');
