@@ -6,8 +6,8 @@ use App\AutoImportation;
 use App\Jobs\SendEmailAutoImporJob;
 use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
-use App\NewContractRequest;
 use App\LocalCharge;
+use App\NewContractRequest;
 use App\User;
 use Goutte\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
@@ -252,9 +252,6 @@ class TestController extends Controller
     }*/
     }
 
-
-
-
     public function intercom2($client, $user)
     {
         try {
@@ -278,13 +275,13 @@ class TestController extends Controller
 
     }
 
-    public function contable(){
-
+    public function contable()
+    {
 
         $localcharge = LocalCharge::where('id', 1)->first();
 
         //dd($localcharge);
-        if(empty($localcharge) ){
+        if (empty($localcharge)) {
             dd("hola");
         }
         var_dump(
@@ -292,8 +289,16 @@ class TestController extends Controller
             count(array(1)), // integers no son contables
             count(array('abc')), // strings no son contables
             //count(new stdclass), // objetos que no implementen la interfaz Countable no son contables
-            count([1,2]) // arrays son contables
+            count([1, 2]) // arrays son contables
         );
+        $variable = "SAN JOSE  R50    50     EUR     DIRECTO                             SEMANAL               17
+            DIRECTO                             SEMANAL               18_E_E";
+
+            $variable2 = Quitar_Espacios($variable);
+
+            dd($variable,$variable2);
 
     }
+
+  
 }

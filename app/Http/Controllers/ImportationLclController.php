@@ -828,8 +828,8 @@ class ImportationLclController extends Controller
                                                 }
                                             }
                                             $ratesArre = FailRateLcl::create([
-                                                'origin_port'    => $originVal,
-                                                'destiny_port'   => $destinyVal,
+                                                'origin_port'    => Quitar_Espacios($originVal),
+                                                'destiny_port'   => Quitar_Espacios($destinyVal),
                                                 'carrier_id'     => $carrierVal,
                                                 'contractlcl_id' => $contractIdVal,
                                                 'uom'            => $wmVal,
@@ -851,8 +851,8 @@ class ImportationLclController extends Controller
                                         }
 
                                         $ratesArre = FailRateLcl::create([
-                                            'origin_port'    => $originVal,
-                                            'destiny_port'   => $destinyVal,
+                                            'origin_port'    => Quitar_Espacios($originVal),
+                                            'destiny_port'   => Quitar_Espacios($destinyVal),
                                             'carrier_id'     => $carrierVal,
                                             'contractlcl_id' => $contractIdVal,
                                             'uom'            => $wmVal,
