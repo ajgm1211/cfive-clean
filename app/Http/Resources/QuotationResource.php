@@ -78,6 +78,7 @@ class QuotationResource extends JsonResource
             'origin' => $origin_array ?? '--',
             'destiny' => $destiny_array ?? '--',
             'decimals' => $this->company_user()->first()->decimals,
+            'local_charges' => $this->type == 'FCL' ? $this->local_charges : $this->local_charges_lcl
         ];
     }
 
