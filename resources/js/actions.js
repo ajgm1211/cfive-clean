@@ -476,6 +476,10 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${combo}/delete_full`, {})
         },
+        updatePdfOptions(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${port_id}/update_pdf_options`, data)
+        },
     },
     automaticinlandslcl: {
         list(combo, params, callback, route) {
@@ -526,6 +530,10 @@ export default {
         deleteFull(combo, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${combo}/delete_full`, {})
+        },
+        updatePdfOptions(port_id, data, route) {
+            let quote_id = route.params.id;
+            return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${port_id}/update_pdf_options`, data)
         },
     },
     localcharges: {

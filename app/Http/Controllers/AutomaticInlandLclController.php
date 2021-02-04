@@ -115,6 +115,14 @@ class AutomaticInlandLclController extends Controller
                 'inland_address_id' => $inland_address->id,
                 'currency_id' => $user_currency
             ]);
+
+            $pdfOptions = [
+                "grouped" =>false, 
+                "groupId"=>null
+                ];
+                
+            $totals->pdf_options = $pdfOptions;
+            $totals->save();
         }
 
         $inland = AutomaticInlandLclAir::create([
@@ -206,6 +214,15 @@ class AutomaticInlandLclController extends Controller
         $total->totalize();
     }
 
+    public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
+    {
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id]])->get();
+
+        foreach($totals as $total){
+            $total->update(['pdf_options'=>$request->input('pdf_options')]);
+        }
+    }
+
     public function retrieve(QuoteV2 $quote, $combo)
     {   
         $combo_array = explode(';',$combo);
@@ -247,7 +264,7 @@ class AutomaticInlandLclController extends Controller
         
         $ports_sorted = [];
         
-        if(count($origin_ports!=0)){
+        if(count((array)$origin_ports!=0)){
             foreach($origin_ports as $port){
                 $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -256,7 +273,7 @@ class AutomaticInlandLclController extends Controller
                     "type"=>"Origin",
                     "code"=>$port->code
                 ];
-                if(count($inlands)!=0){
+                if(count((array)$inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);
@@ -264,7 +281,7 @@ class AutomaticInlandLclController extends Controller
             }
         }
         
-        if(count($destination_ports!=0)){
+        if(count((array)$destination_ports!=0)){
             foreach($destination_ports as $port){
                 $inlands = AutomaticInlandLclAir::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -273,7 +290,7 @@ class AutomaticInlandLclController extends Controller
                     "type"=>"Destination",
                     "code"=>$port->code
                 ];
-                if(count($inlands)!=0){
+                if(count((array)$inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);

@@ -43,7 +43,7 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function find($id)
     {
         if (null == $company = $this->model->find($id)) {
-            throw new ModelNotFoundException("Company not found");
+            throw new ModelNotFoundException('Company not found');
         }
 
         return $company;

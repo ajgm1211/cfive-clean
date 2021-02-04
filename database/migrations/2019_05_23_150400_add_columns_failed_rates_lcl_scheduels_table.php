@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnsFailedRatesLclScheduelsTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnsFailedRatesLclScheduelsTable extends Migration
      */
     public function up()
     {
-        Schema::table('failes_rate_lcl', function(Blueprint $table){
+        Schema::table('failes_rate_lcl', function (Blueprint $table) {
             $table->string('schedule_type')->nullable()->after('currency_id');
             $table->string('transit_time')->nullable()->after('schedule_type');
             $table->string('via')->nullable()->after('transit_time');
@@ -27,7 +27,7 @@ class AddColumnsFailedRatesLclScheduelsTable extends Migration
      */
     public function down()
     {
-        Schema::table('failes_rate_lcl', function($table) {
+        Schema::table('failes_rate_lcl', function ($table) {
             $table->dropColumn('schedule_type');
             $table->dropColumn('transit_time');
             $table->dropColumn('via');

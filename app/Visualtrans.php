@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesJob;
 use GuzzleHttp\Client;
 

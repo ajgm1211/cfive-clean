@@ -3,14 +3,15 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NewRequestGlobalChargeLclToUsernMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $user,$contract;
+    public $user;
+    public $contract;
 
     /**
      * Create a new message instance.
@@ -19,7 +20,7 @@ class NewRequestGlobalChargeLclToUsernMail extends Mailable
      */
     public function __construct($user, $contract)
     {
-        $this->user     = $user;
+        $this->user = $user;
         $this->contract = $contract;
     }
 
@@ -31,7 +32,7 @@ class NewRequestGlobalChargeLclToUsernMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.RequestGlobalchargersLcl.ToUserMailabel')->with(['user'=>$this->user,
-                                                                                        'contract' => $this->contract])
+                                                                                        'contract' => $this->contract, ])
             ->from('info@cargofive.com')
             ->subject('The contract '.$this->contract['name'].' importation was completed');
     }
