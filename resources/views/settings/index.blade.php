@@ -512,7 +512,8 @@
                             <div class="tab-pane fade" id="delegation" role="tabpanel" aria-labelledby="delegations-tab">
                                 <div class="m--align-right">
                                     <a  id="newRate" class="">  
-                                        <button type="button" class="btn btn-primary m--align-right" style="background-color: #006BFA !important;" onclick="AbrirModal('add',0)">
+                                        <button type="button" class="btn btn-primary m--align-right" style="background-color: #006BFA !important;" data-toggle="modal"
+                                            data-target="#AddDelegationModal">
                                             Add New
                                             <i class="fa fa-plus"></i>
                                         </button>
@@ -596,4 +597,7 @@
 
     tinymce.init(editor_config);
 </script>
+@include('settings.add_D', ['company' => @$company])
+
+
 @stop

@@ -530,5 +530,21 @@ class SettingController extends Controller
 
         return redirect()->back();
     }
+    public function store_d(Request $request)
+    {
+        $delegation = new delegation();
+        $delegation->name            = $request->name;
+        $delegation->phone           = $request->phone;
+        $delegation->address         = $request->address;
+        $delegation->company_user_id = $request->company_user_id;
+        $delegation->save();
+
+        $request->session()->flash('message.content', 'Record saved successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
+ 
 
 }
