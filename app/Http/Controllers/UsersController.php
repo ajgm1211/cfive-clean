@@ -162,25 +162,6 @@ class UsersController extends Controller
 
     $requestForm = $request->all();
     $user = User::findOrFail($id);
-    $roles = $user->getRoleNames();
-
-    if (!$roles->isEmpty()) {
-    $user->removeRole($roles[0]);
-    }
-
-    if ($request->type == "admin") {
-    $user->assignRole('administrator');
-    }
-    if ($request->type == "subuser") {
-    $user->assignRole('subuser');
-    }
-    if ($request->type == "company") {
-    $user->assignRole('company');
-    }
-    if ($request->type == "data_entry") {
-    $user->assignRole('data_entry');
-    }
-
     $user->update($requestForm);
 
     if ($request->ajax()) {
