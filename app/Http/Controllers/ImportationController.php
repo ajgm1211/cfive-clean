@@ -3244,7 +3244,7 @@ class ImportationController extends Controller
         $company = CompanyUser::find($account->company_user_id);
         $extObj = new \SplFileInfo($account->namefile);
         $ext = $extObj->getExtension();
-        if (empty($account->namefile) == 0) {
+        if (empty($account->namefile)) {
             $mediaItem = $account->getFirstMedia('document');
             $name = explode('_', $mediaItem->file_name);
             $name = str_replace($name[0] . '_', '', $mediaItem->file_name);
