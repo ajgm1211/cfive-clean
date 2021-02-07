@@ -4,7 +4,7 @@
         <div class="modal-content" style="min-width: 700px; right: 100px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
-                    <b>Delegation</b>
+                    <b>Add Delegation</b>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -18,12 +18,12 @@
                     {{ Form::hidden('company_user_id', @$company->companyUser->id,['placeholder' => 'Please enter a name','class'=>'form-control']) }}
                 </div>
                 <div class="form-group m-form__group">
-                    <label style="letter-spacing: 0.7px"><b>phone</b></label>
-                    {{ Form::text('phone', null,['placeholder' => 'Please enter an URL','class'=>'form-control','required']) }}
+                    <label style="letter-spacing: 0.7px"><b>Phone</b></label>
+                    {{ Form::text('phone', null,['placeholder' => 'Please enter a phone','class'=>'form-control','required']) }}
                 </div>
                 <div class="form-group m-form__group">
-                    <label style="letter-spacing: 0.7px"><b>address</b></label>
-                    {{ Form::text('address', null,['placeholder' => 'Please enter an API Key','class'=>'form-control','required']) }}
+                    <label style="letter-spacing: 0.7px"><b>Address</b></label>
+                    {{ Form::text('address', null,['placeholder' => 'Please enter an address','class'=>'form-control','required']) }}
                 </div>
                 <br>
                 <hr>
