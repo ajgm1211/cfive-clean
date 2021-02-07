@@ -546,5 +546,39 @@ class SettingController extends Controller
         return redirect()->back();
     }
  
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_d($id)
+    {
+        return response()->json([
+            'data' => Delegation::find($id),
+        ]);
+    }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_d(Request $request)
+    {
+        $delegation = Delegation::find($request->id);
+
+        $delegation->name=$request->name;
+        $delegation->phone=$request->phone;
+        $delegation->address=$request->address;
+        $delegation->update();
+
+        $request->session()->flash('message.content', 'Record updated successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
 }

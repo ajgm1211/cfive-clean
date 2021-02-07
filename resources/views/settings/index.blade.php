@@ -523,6 +523,7 @@
                                 <table class="m-datatable" id="delegationstable" width="100%">
                                     <thead>
                                         <tr>
+                                            <th>id</th>
                                             <th>Name</th>
                                             <th>Address</th>
                                             <th>Phone</th>
@@ -530,11 +531,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($delegations as $data)
+                                        @foreach($delegations as $items)
                                             <tr>
-                                                <td>{{ $data->name }}</td>
-                                                <td>{{ $data->address }}</td>
-                                                <td>{{ $data->phone }}</td>
+                                                <td>{{ $items->id }}</td>
+                                                <td>{{ $items->name }}</td>                                              
+                                                <td>{{ $items->phone }}</td>
+                                                <td>{{ $items->address }}</td>
+                                                <td>
+                                                <input name="del_id" type="hidden" value="{{$items->id}}" class="del_id"/>
+                                                <a href="#" class="open_edit_modal" data-toggle="modal"
+                                                data-target="#EditDelegationModal"><i class="fa fa-edit"></i></a> 
+                                                &nbsp; 
+                                                <a href="#" class=""><i class="fa fa-trash"></i></a>
+                                                </td>
                                             </tr> 
                                         @endforeach
                                     </tbody>
@@ -598,6 +607,5 @@
     tinymce.init(editor_config);
 </script>
 @include('settings.add_D', ['company' => @$company])
-
-
+@include('settings.edit_D')
 @stop

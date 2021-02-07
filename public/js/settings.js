@@ -121,3 +121,50 @@ $('#pdf_template').select2({
 $('#signature_type').select2({
     placeholder: "Select an option"
 });
+
+$(document).on('click', '.delete-api-integration', function() {
+    var id = $(this).closest("td").find(".api_id").val();
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/delete/' + id,
+                success: function(data) {
+                    if (data.message == 'Ok') {
+                        swal(
+                            'Well done!',
+                            'The record has been deleted.',
+                            'success'
+                        )
+                    }
+                    $(theElement).closest('tr').remove();
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.open_edit_modal', function(e) {
+    var id = $(this).closest("td").find(".del_id").val();
+    $.ajax({
+        type: 'get',
+        url: '/settings/edit/' + id,
+        success: function(data) {
+
+            console.log(data);
+            $('#EditDelegationModal').modal('show');
+            $('#id').val(data.data.id);
+            $('#name').val(data.data.name);
+            $('#phone').val(data.data.phone);
+            $('#address').val(data.data.address);
+
+        }
+    });
+})
