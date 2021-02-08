@@ -14,17 +14,17 @@
             <div class="modal-body">
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Name</b></label>
-                    {{ Form::text('name', null,['placeholder' => 'Please enter a name','class'=>'form-control','required','id'=>'name']) }}
+                    {{ Form::text('name', null,['placeholder' => 'Please enter a name','class'=>'form-control name','required','id'=>'name']) }}
                     {{ Form::hidden('id', null,['class'=>'form-control','id'=>'id']) }}
 
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Phone</b></label>
-                    {{ Form::text('phone', null,['placeholder' => 'Please enter a phone','class'=>'form-control','required','id'=>'phone']) }}
+                    {{ Form::text('phone', null,['placeholder' => 'Please enter a phone','class'=>'form-control phone','required','id'=>'phone']) }}
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Address</b></label>
-                    {{ Form::text('address',null,['placeholder' => 'Please enter an address','class'=>'form-control','required','id'=>'address']) }}
+                    {{ Form::text('address',null,['placeholder' => 'Please enter an address','class'=>'form-control address','required','id'=>'address']) }}
                 </div>
                 <hr>
                 <div class="form-group m-form__group">

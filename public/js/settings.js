@@ -161,9 +161,9 @@ $(document).on('click', '.open_edit_modal', function(e) {
             console.log(data);
             $('#EditDelegationModal').modal('show');
             $('#id').val(data.data.id);
-            $('#name').val(data.data.name);
-            $('#phone').val(data.data.phone);
-            $('#address').val(data.data.address);
+            $('.name').val(data.data.name);
+            $('.phone').val(data.data.phone);
+            $('.address').val(data.data.address);
 
         }
     });

@@ -25,12 +25,28 @@
                 <option value="data_entry">Data entry</option>
             </select>
         </div>
+        <div class="form-group m-form__group">
+            <select class="form-control" name="Delegation">
+                <option value="">Choose a delegation</option>
+                @foreach($delegation as $data)
+                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                @endforeach    
+            </select>
+        </div>
     @else
         <div class="form-group m-form__group">
             <select class="form-control" name="type">
                 <option value="">Choose a type</option>
                 <option value="company">Company</option>
                 <option value="subuser">Subuser</option>
+            </select>
+        </div>
+        <div class="form-group m-form__group">
+            <select class="form-control" name="delegation_id">
+                <option value="">Choose a delegation</option>
+                @foreach($delegation as $data)
+                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                @endforeach    
             </select>
         </div>
     @endif
@@ -45,12 +61,28 @@
                 <option value="data_entry" {{$user->type=='data_entry' ? 'selected':''}}>Data entry</option>
             </select>
         </div>
+        <div class="form-group m-form__group">
+            <select class="form-control" name="Delegation">
+                <option value="">Choose a delegation</option>
+                @foreach($delegation as $data)
+                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                @endforeach    
+            </select>
+        </div>
     @else
         <div class="form-group m-form__group">
             <select class="form-control" name="type">
                 <option value="">Choose a type</option>
                 <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
                 <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
+            </select>
+        </div>
+        <div class="form-group m-form__group">
+            <select class="form-control" name="Delegation">
+                <option value="">Choose a delegation</option>
+                @foreach($delegation as $data)
+                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                @endforeach    
             </select>
         </div>
     @endif
