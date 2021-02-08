@@ -122,8 +122,8 @@ $('#signature_type').select2({
     placeholder: "Select an option"
 });
 
-$(document).on('click', '.delete-api-integration', function() {
-    var id = $(this).closest("td").find(".api_id").val();
+$(document).on('click', '.delete-delegation', function() {
+    var id = $(this).closest("td").find(".del_id").val();
     var theElement = $(this);
     swal({
         title: 'Are you sure?',
@@ -135,7 +135,7 @@ $(document).on('click', '.delete-api-integration', function() {
         if (result.value) {
             $.ajax({
                 type: 'GET',
-                url: '/api/delete/' + id,
+                url: '/settings/delete/' + id,
                 success: function(data) {
                     if (data.message == 'Ok') {
                         swal(

@@ -546,12 +546,6 @@ class SettingController extends Controller
         return redirect()->back();
     }
  
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit_d($id)
     {
         return response()->json([
@@ -559,13 +553,6 @@ class SettingController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update_d(Request $request)
     {
         $delegation = Delegation::find($request->id);
@@ -580,5 +567,13 @@ class SettingController extends Controller
         $request->session()->flash('message.title', 'Well done!');
 
         return redirect()->back();
+    }
+    public function destroy($id)
+    {
+        $delegation = delegation::find($id)->delete();
+
+        return response()->json([
+            'message' => 'Ok',
+        ]);
     }
 }

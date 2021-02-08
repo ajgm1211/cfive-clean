@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Address</b></label>
-                    {{ Form::text('address',@$data->address,['placeholder' => 'Please enter an address','class'=>'form-control','required','id'=>'address']) }}
+                    {{ Form::text('address',null,['placeholder' => 'Please enter an address','class'=>'form-control','required','id'=>'address']) }}
                 </div>
                 <hr>
                 <div class="form-group m-form__group">
