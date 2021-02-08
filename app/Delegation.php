@@ -13,4 +13,9 @@ class Delegation extends Model
     {
         return $this->belongsTo('App\CompanyUser');
     }
+
+    public function Users()
+    {
+        return $this->belongsToMany('App\Users');
+    }
 }

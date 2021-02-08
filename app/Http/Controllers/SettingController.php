@@ -548,6 +548,7 @@ class SettingController extends Controller
  
     public function edit_d($id)
     {
+
         return response()->json([
             'data' => Delegation::find($id),
         ]);

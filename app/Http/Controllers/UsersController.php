@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Delegation;
+use App\UserDelegation;
 use App\Http\Requests\StoreUsers;
 use App\Mail\VerifyMail;
 use App\Notifications\SlackNotification;
@@ -59,6 +61,12 @@ class UsersController extends Controller
             $user = new User($request->all());
             $user->password = $request->password;
             $user->save();
+
+            $delegation= new UserDelegation();
+            $delegation->users_id=$user->id;
+            $delegation->delegations_id=$request->delegation_id;
+            $delegation->save();
+
             if ($request->type == "subuser") {
                 $user->assignRole('subuser');
             }
@@ -80,6 +88,8 @@ class UsersController extends Controller
             ]);
 
             \Mail::to($user->email)->send(new VerifyMail($user));
+
+
 
             // INTERCOM CLIENTE
 
@@ -142,7 +152,8 @@ class UsersController extends Controller
 
     public function add()
     {
-        return view('users.add');
+        $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
+        return view('users.add',compact('delegation'));
     }
 
     public function resetPass(Request $request, $user)
@@ -166,8 +177,9 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-
-        return view('users.edit', compact('user'));
+        $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
+ 
+        return view('users.edit', compact('user','delegation'));
     }
 
     /**
