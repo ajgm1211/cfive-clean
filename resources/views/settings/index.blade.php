@@ -542,7 +542,7 @@
                                                 <a href="#" class="open_edit_modal" data-toggle="modal"
                                                 data-target="#EditDelegationModal"><i class="fa fa-edit"></i></a> 
                                                 &nbsp; 
-                                                <a href="#" class=""><i class="fa fa-trash"></i></a>
+                                                <a href="#" class="delete-delegation"><i class="fa fa-trash"></i></a>
                                                 </td>
                                             </tr> 
                                         @endforeach
