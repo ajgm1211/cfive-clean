@@ -933,7 +933,7 @@
 
                                 <!-- Botones -->
                                 <b-td>
-                                    <!-- <button
+                                    <button
                                         type="button"
                                         class="btn-save"
                                         v-on:click="onSubmitCharge(counter)"
@@ -942,7 +942,7 @@
                                             class="fa fa-check"
                                             aria-hidden="true"
                                         ></i>
-                                    </button> -->
+                                    </button>
                                     <button
                                         type="button"
                                         class="btn-delete"
