@@ -612,6 +612,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store', 'SettingController@store_d')->name('delegation.store');
     Route::get('edit/{id}', 'SettingController@edit_d')->name('settings.edit');
     Route::put('update','SettingController@update_d')->name('settings.updateD');
+    Route::get('delete/{id}', 'SettingController@destroy')->name('settings.delete');
     Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
