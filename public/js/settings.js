@@ -142,9 +142,17 @@ $(document).on('click', '.delete-delegation', function() {
                             'Well done!',
                             'The record has been deleted.',
                             'success'
+                        )  
+                        $(theElement).closest('tr').remove();
+                    }else{
+                        swal(
+                            'Error!',
+                            'This delegation has associated user. You can not delete delegations with associated users.',
+                            'error'
                         )
+                        console.log(data.message);
                     }
-                    $(theElement).closest('tr').remove();
+                    
                 }
             });
         }

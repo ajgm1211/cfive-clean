@@ -306,7 +306,14 @@ class UsersController extends Controller
             $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id', '<>', $id)->pluck('name', 'id');
         }
 
-        return view('users/message', ['userid' => $id, 'users' => $users]);
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
+        if($id_ud==null){
+            $delegation=false;
+        }else{
+            $delegation=true;
+        }
+
+        return view('users/message', ['userid' => $id, 'users' => $users, 'delegation'=>$delegation]);
     }
     public function resetmsg($id)
     {

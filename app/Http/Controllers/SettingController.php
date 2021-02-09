@@ -26,6 +26,7 @@ use App\Surcharge;
 use App\TermAndCondition;
 use App\User;
 use App\Delegation;
+use App\UserDelegation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -535,7 +536,7 @@ class SettingController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required',
-            'addres' => 'required'
+            'address' => 'required'
         ]);
         
         $delegation = new delegation();
@@ -564,7 +565,7 @@ class SettingController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required',
-            'addres' => 'required'
+            'address' => 'required'
         ]);
 
         $delegation = Delegation::find($request->id);
@@ -582,10 +583,17 @@ class SettingController extends Controller
     }
     public function destroy($id)
     {
-        $delegation = delegation::find($id)->delete();
+        $id_ud=UserDelegation::where('delegations_id','=',$id)->first();
 
-        return response()->json([
-            'message' => 'Ok',
-        ]);
+        if ($id_ud != null)  {
+            return response()->json(['message' => 'error',]);
+
+        }else{
+            $delegation = delegation::find($id)->delete();
+
+            return response()->json([
+                'message' => 'Ok',
+            ]);
+            }
     }
 }
