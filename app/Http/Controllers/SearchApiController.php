@@ -199,22 +199,22 @@ class SearchApiController extends Controller
             $inlands = [];
         }**/
 
-        //Appending Rate Id to Charges
-        $this->addRateId($rates, $charges, 'charges', $company_user_id);
-
-        //Getting price levels if requested
-        if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
+         //Getting price levels if requested
+         if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
             $price_level_markups = $this->searchPriceLevels($new_search_data_ids);
         }else{
             $price_level_markups = [];
         }
 
-        if(count($price_level_markups) != 0){
-            $this->addMarkups($price_level_markups,$rates);
+        if($price_level_markups != null && count($price_level_markups) != 0){
+            $this->addMarkups($price_level_markups, $rates, $company_user_id);
             foreach($charges as $charge){
-                $this->addMarkups($price_level_markups,$charge);
+                $this->addMarkups($price_level_markups, $charge, $company_user_id);
             }
         }
+
+        //Appending Rate Id to Charges
+        $this->addRateId($rates, $charges, 'charges', $company_user_id);
 
         $data = [
             'rates' => $rates,
@@ -497,6 +497,106 @@ class SearchApiController extends Controller
         return $global_charges;
     }
 
+    //Retrieves and cleans markups from price levels
+    public function searchPriceLevels($search_data)
+    {
+        //Retrieving current company
+        $company_user = CompanyUser::where('id',$search_data['company'])->first();
+    
+        //getting client profile currency
+        $client_currency = $company_user->currency;
+    
+        //SEARCH TRAIT - Markups are organized in a collection containing
+            //Freight markups (fixed & percent)
+            //Local Charge markups (fixed & percent)
+            //Inland markups (fixed & percent)
+        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $client_currency, $search_data['direction'], $search_data['type']);
+    
+        return $markups;
+    }
+    
+    //Adds PriceLevels markups to target collection
+    public function addMarkups($markups,$target_array, $company_user_id)
+    {
+        $company_user = CompanyUser::where('id',$company_user_id)->first();
+        $client_currency = $company_user->currency;
+
+        if($target_array != null && count($target_array) != 0){
+            foreach($target_array as $target_element){
+
+                if(is_a($target_element, 'App\Rate')){
+                    $markups_to_add = $markups['freight'];
+                    $fixed = $markups_to_add['freight_amount'];
+                    $percent = $markups_to_add['freight_percentage'];
+                    $markups_currency = $markups_to_add['freight_currency'];
+                    $target_containers = json_decode($target_element->containers, true);
+                    $target_totals = $target_element->totals;
+                }elseif(is_a($target_element, 'App\LocalCharge') || is_a($target_element, 'App\GlobalCharge')){
+                    $markups_to_add = $markups['local_charges'];
+                    $fixed = $markups_to_add['local_charge_amount'];
+                    $percent = $markups_to_add['local_charge_percentage'];
+                    $markups_currency = $markups_to_add['local_charge_currency'];
+                    $target_totals = $target_element->containers_client_currency;
+                    $target_containers = $target_element->containers;
+                }
+                
+                $containers_with_markups = [];
+                $totals_with_markups = [];
+                if($fixed != 0){
+                    $fixed_target_currency = $this->convertToCurrency($markups_currency, $client_currency, Array($fixed));
+                    $fixed_client_currency = $this->convertToCurrency($markups_currency, $target_element->currency, Array($fixed));
+
+                    $markups_array = [
+                        'type' => 'fixed',
+                        'amount' => $fixed_target_currency[0]
+                    ];
+
+                    $markups_client_currency = [
+                        'type' => 'fixed',
+                        'amount' => $fixed_client_currency[0]
+                    ];
+
+
+                    foreach($target_containers as $code => $cost){
+                        $containers_with_markups[$code] = $cost + $fixed_target_currency[0];
+                    }
+                    
+                    foreach($target_totals as $code => $cost){
+                        $totals_with_markups[$code] = $cost + $fixed_client_currency[0];
+                    }
+
+                }elseif($percent != 0){
+                    $percent_target_currency = $this->calculatePercentage($percent,$target_containers);
+                    $percent_client_currency = $this->calculatePercentage($percent,$target_totals);
+
+                    $markups_array = [
+                        'type' => 'percentage',
+                        'amount' => $percent_target_currency
+                    ];
+
+                    $markups_client_currency = [
+                        'type' => 'percent',
+                        'amount' => $percent_client_currency
+                    ];
+
+                    foreach($target_containers as $code => $cost){
+                        $containers_with_markups[$code] = $cost + $percent_target_currency[$code];
+                    }
+
+                    foreach($target_totals as $code => $cost){
+                        $totals_with_markups[$code] = $cost + $percent_client_currency[$code];
+                    }
+                }
+                
+                $target_element->setAttribute('container_markups',$markups_array);
+                $target_element->setAttribute('totals_markups',$markups_client_currency);
+                $target_element->setAttribute('containers_with_markups',$containers_with_markups);
+                $target_element->setAttribute('totals_with_markups',$totals_with_markups);
+
+            }  
+        }
+    }
+
     //appending charges to corresponding Rates
     public function addRateId($rates, $target, $target_type, $company_user_id)
     {
@@ -530,13 +630,32 @@ class SearchApiController extends Controller
                                 if($direction == 'freight'){
                                     $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
                                 }
-                                $totals_array = $rate->totals;
+
+                                if(isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
+                                    $to_update = 'totals_with_markups';
+                                    $totals_array = $rate->totals_with_markups;
+                                    $charges_to_add = $charge->totals_with_markups;
+                                }elseif(!isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
+                                    $to_update = 'totals';
+                                    $totals_array = $rate->totals;
+                                    $charges_to_add = $charge->totals_with_markups;
+                                }elseif(isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
+                                    $to_update = 'totals_with_markups';
+                                    $totals_array = $rate->totals_with_markups;
+                                    $charges_to_add = $charge->containers_client_currency;
+                                }elseif(!isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
+                                    $to_update = 'totals';
+                                    $totals_array = $rate->totals;
+                                    $charges_to_add = $charge->containers_client_currency;
+                                }
+
                                 foreach($totals_array as $code => $total){
                                     if(isset($charge->containers_client_currency[$code])){
-                                        $totals_array[$code] += $charge->containers_client_currency[$code];
+                                        $totals_array[$code] += $charges_to_add[$code];
                                     }
                                 }
-                                $rate->totals = $totals_array;
+
+                                $rate->$to_update = $totals_array;
                                 $charge->setAttribute('rate_id',$rate->id);
                             }
                         }
@@ -544,67 +663,4 @@ class SearchApiController extends Controller
             }
         }
     }
-
-    //Retrieves and cleans markups from price levels
-    public function searchPriceLevels($search_data)
-    {
-        //Retrieving current company
-        $company_user = CompanyUser::where('id',$search_data['company'])->first();
-    
-        //getting client profile currency
-        $client_currency = $company_user->currency;
-    
-        //SEARCH TRAIT - Markups are organized in a collection containing
-            //Freight markups (fixed & percent)
-            //Local Charge markups (fixed & percent)
-            //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $client_currency, $search_data['direction'], $search_data['type']);
-    
-        return $markups;
-    }
-    
-    //Adds PriceLevels markups to target collection
-    public function addMarkups($markups,$target_array)
-    {
-        if(count($target_array) != 0){
-            foreach($target_array as $target_element){
-
-                if(is_a($target_element, 'App\Rate')){
-                    $markups_to_add = $markups['freight'];
-                    $fixed = $markups_to_add['freight_amount'];
-                    $percent = $markups_to_add['freight_percentage'];
-                    $totals_with_markups = [];
-                    if($fixed != 0){
-                        $fixed_target = json_decode($target_element->containers,true);
-                        $fixed = $this->convertToCurrency($markups_to_add['freight_currency'],$target_element->currency,Array($fixed));
-
-                        $final_array = [
-                            'type' => 'fixed',
-                            'amount' => $fixed[0]
-                        ];
-
-                        foreach($fixed_target as $code => $cost){
-                            $totals_with_markups[$code] = $cost + $fixed[0];
-                        }
-
-                    }elseif($percent != 0){
-                        $percent_target = json_decode($target_element->containers,true);
-                        $percent = $this->calculatePercentage($percent,$percent_target);
-
-                        $final_array = [
-                            'type' => 'percentage',
-                            'amount' => $percent
-                        ];
-
-                        foreach($percent_target as $code => $cost){
-                            $totals_with_markups[$code] = $cost + $percent[$code];
-                        }
-                    }
-                    $target_element->setAttribute('markups',$final_array);
-                    $target_element->setAttribute('totals',$totals_with_markups);
-                }
-            }  
-        }
-    }
-
 }
