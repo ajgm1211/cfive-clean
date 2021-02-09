@@ -55,7 +55,7 @@ class User extends Authenticatable implements Auditable
     }
     public function delegation()
     {
-        return $this->belongsToMany('App\Delegation');
+        return $this->belongsTo('App\Delegation');
     }
 
     public function userToken()

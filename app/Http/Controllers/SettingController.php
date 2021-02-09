@@ -532,6 +532,12 @@ class SettingController extends Controller
     }
     public function store_d(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'addres' => 'required'
+        ]);
+        
         $delegation = new delegation();
         $delegation->name            = $request->name;
         $delegation->phone           = $request->phone;
@@ -547,8 +553,7 @@ class SettingController extends Controller
     }
  
     public function edit_d($id)
-    {
-
+    {   
         return response()->json([
             'data' => Delegation::find($id),
         ]);
@@ -556,6 +561,12 @@ class SettingController extends Controller
 
     public function update_d(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'addres' => 'required'
+        ]);
+
         $delegation = Delegation::find($request->id);
 
         $delegation->name=$request->name;
