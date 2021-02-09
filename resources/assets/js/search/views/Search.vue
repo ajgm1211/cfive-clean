@@ -661,7 +661,7 @@ export default {
                             rate.containers = JSON.parse(rate.containers)
                         }
                     });
-                    this.$emit("searchSuccess",response.data.rates,this.searchRequest);
+                    this.$emit("searchSuccess",response.data,this.searchRequest);
                     this.searching = false;
                     })
                 .catch((data) => {

@@ -313,7 +313,7 @@
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b>{{ rate.markups ? rate.totals['C'+container.code] : rate.containers['C'+container.code]}}</b>{{rate.currency.alphacode}}</p>
+                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code] : rate.totals['C'+container.code]}}</b>{{rate.currency.alphacode}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -351,8 +351,8 @@
 
                    <div class="row">
                    
-                        <b-collapse id="detailed2" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                        
+                        <b-collapse id="detail" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
+                            <div>
                                 <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
@@ -400,9 +400,9 @@
                                     </b-tbody>
                                 
                                 </b-table-simple>
-
+                            </div>
                         </b-collapse>
-                        <b-collapse id="remarks2" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                        <b-collapse id="markups" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
                                 
@@ -904,6 +904,7 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 export default {
     props: {
         rates: Array,
+        charges: Object,
         pricelevels: Array,
         request: Object,
         datalists: Object,
@@ -1064,7 +1065,7 @@ export default {
                 this.isCompleteTwo = !this.isCompleteTwo;
                 return
             }
-        }
+        },
 
     },
     watch: {
@@ -1106,6 +1107,8 @@ export default {
 
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
+            rate.detailCollapse = false;
+            rate.remarksCollapse = false;
         });
 
         window.document.onscroll = () => {
