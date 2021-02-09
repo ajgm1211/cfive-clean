@@ -1,7 +1,7 @@
 <div class="modal fade" id="EditDelegationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content" style="min-width: 700px; right: 100px;">
+        <div class="modal-content" style="min-width: 400px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
                     <b>Edit Delegation</b>
