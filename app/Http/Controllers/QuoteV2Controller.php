@@ -2201,6 +2201,9 @@ class QuoteV2Controller extends Controller
                     $arregloNull = array();
 
                     $remarks = $info_D->remarks . "<br>";
+                    if(isset($info_D->remarksG)){
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
 
                     //NEW REMARKS FOR QUOTE
                     $quote_language = $company->companyUser->pdf_language;
@@ -7028,6 +7031,10 @@ class QuoteV2Controller extends Controller
                     $remarks = $info_D->remarks . "<br>";
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->service, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
 
+                    if(isset($info_D->remarksG)){
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
+                    
                     $rate = AutomaticRate::create($request->all());
 
                     if ($quote->price_id) {
