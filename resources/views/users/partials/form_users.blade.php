@@ -26,10 +26,10 @@
             </select>
         </div>
         <div class="form-group m-form__group">
-            <select class="form-control" name="Delegation">
+            <select class="form-control" name="delegation_id">
                 <option value="">Choose a delegation</option>
                 @foreach($delegation as $data)
-                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                    <option value="{{$data['id']}}">{{$data['name']}}</option> 
                 @endforeach    
             </select>
         </div>
@@ -45,7 +45,7 @@
             <select class="form-control" name="delegation_id">
                 <option value="">Choose a delegation</option>
                 @foreach($delegation as $data)
-                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                    <option value="{{$data['id']}}">{{$data['name']}}</option> 
                 @endforeach    
             </select>
         </div>
@@ -62,10 +62,14 @@
             </select>
         </div>
         <div class="form-group m-form__group">
-            <select class="form-control" name="Delegation">
-                <option value="">Choose a delegation</option>
+            <select class="form-control" name="delegation_id">
+                @if($userd!= null)
+                    <option value="{{$userd->id }}">{{$userd->name}}</option>
+                @else
+                    <option value="">Choose a delegation</option>
+                @endif
                 @foreach($delegation as $data)
-                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                    <option value="{{$data['id']}}">{{$data['name']}}</option> 
                 @endforeach    
             </select>
         </div>
@@ -77,11 +81,16 @@
                 <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
             </select>
         </div>
+        
         <div class="form-group m-form__group">
-            <select class="form-control" name="Delegation">
-                <option value="">Choose a delegation</option>
+            <select class="form-control" name="delegation_id">
+                @if($userd!=null)
+                    <option value="{{$userd->id}}">{{$userd->name}}</option>
+                @else
+                    <option value="">Choose a delegation</option>
+                @endif
                 @foreach($delegation as $data)
-                <option value="{{$data['id']}}">{{$data['name']}}</option> 
+                    <option value="{{$data['id']}}">{{$data['name']}}</option> 
                 @endforeach    
             </select>
         </div>

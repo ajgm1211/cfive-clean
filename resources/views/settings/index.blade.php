@@ -523,7 +523,6 @@
                                 <table class="m-datatable" id="delegationstable" width="100%">
                                     <thead>
                                         <tr>
-                                            <th>id</th>
                                             <th>Name</th>
                                             <th>Address</th>
                                             <th>Phone</th>
@@ -533,7 +532,6 @@
                                     <tbody>
                                         @foreach($delegations as $items)
                                             <tr>
-                                                <td>{{ $items->id }}</td>
                                                 <td>{{ $items->name }}</td>                                              
                                                 <td>{{ $items->phone }}</td>
                                                 <td>{{ $items->address }}</td>

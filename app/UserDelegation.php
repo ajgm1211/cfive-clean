@@ -13,5 +13,9 @@ class UserDelegation extends Model
     {
         return $this->belongsTo('App\User', 'users_id');
     }
+    public function delegation()
+    {
+        return $this->belongsTo('App\Delagation', 'delegations_id');
+    }
 
 }

@@ -177,9 +177,18 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
+
+        if($id_ud==null){
+            $userd=null;
+        }else{
+            $userd=Delegation::find($id_ud->delegations_id);
+        }
+        
         $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
- 
-        return view('users.edit', compact('user','delegation'));
+
+        return view('users.edit', compact('user','userd','delegation'));
     }
 
     /**
@@ -202,11 +211,22 @@ class UsersController extends Controller
             'password' => 'sometimes|confirmed',
             'password_confirmation' => 'required_with:password',
         ]);
-
         $requestForm = $request->all();
         $user = User::findOrFail($id);
-        $roles = $user->getRoleNames();
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
 
+        if($id_ud == null && $request->delegation_id!=null){
+            $delegation= new UserDelegation();
+            $delegation->users_id=$user->id;
+            $delegation->delegations_id=$request->delegation_id;
+            $delegation->save();
+        }elseif($id_ud != null){
+            $delegation = UserDelegation::find($id_ud->id);
+            $delegation ->delegations_id =$request->delegation_id;
+            $delegation->update();
+        }
+
+        $roles = $user->getRoleNames();
         if (!$roles->isEmpty()) {
             $user->removeRole($roles[0]);
         }
