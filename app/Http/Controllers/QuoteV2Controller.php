@@ -2211,7 +2211,7 @@ class QuoteV2Controller extends Controller
                     }
 
                     //NEW REMARKS FOR QUOTE
-                    $quote_language = $company->companyUser->pdf_language;
+                    $quote_language = $company->companyUser->pdf_language ?? 1;
 
                     if ($quote_language == 1) {
                         $quote->remarks_english = $remarks;
