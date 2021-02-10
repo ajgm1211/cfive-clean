@@ -23,11 +23,13 @@ use App\LocalCharPort;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\Notifications\SlackNotification;
+use App\Providers\EventIntercomServiceProvider;
 use App\Rate;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\User;
 use Exception;
+use EventIntercom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -689,7 +691,7 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
-        $contract->is_manual = 2;
+        $contract->is_manual = 1;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
@@ -733,6 +735,7 @@ class ContractController extends Controller
         $typeC = $request->input('type');
         $currencyC = $request->input('currency');
         $amountC = $request->input('amount');
+        
 
         if (count((array)$calculation_type) > 0) {
             foreach ($calculation_type as $ct => $ctype) {
@@ -764,6 +767,10 @@ class ContractController extends Controller
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
         }
+            //EVENT INTERCOM
+            $event= new EventIntercom();
+            $event->event_add_contract_express();
+
 
         return response()->json([
             //'data' => $localcharge->toJson(),
