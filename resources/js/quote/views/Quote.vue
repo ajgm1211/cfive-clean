@@ -291,7 +291,14 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     options: "incoterms",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-1",
+                },
+                custom_incoterm: {
+                    label: "CUSTOM INCOTERM",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom incoterm",
+                    colClass: "col-lg-2",
                 },
                 language_id: {
                     label: "LANGUAGE",

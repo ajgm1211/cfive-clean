@@ -376,6 +376,11 @@ class QuotationController extends Controller
             }
             $quote->update([$key=>$data[$key]]);
         }
+        if($request->input('custom_incoterm') != null){
+            $quote->update(['custom_incoterm'=>$request->input('custom_incoterm')]);
+        }else{
+            $quote->update(['custom_incoterm'=> null]);
+        }
         if($request->input('custom_quote_id') != null){
             $quote->update(['custom_quote_id'=>$request->input('custom_quote_id')]);
         }else{
