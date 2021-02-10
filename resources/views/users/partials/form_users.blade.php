@@ -64,7 +64,8 @@
         <div class="form-group m-form__group">
             <select class="form-control" name="delegation_id">
                 @if($userd!= null)
-                    <option value="{{$userd->id }}">{{$userd->name}}</option>
+                    <option value="{{$userd->id}}">{{$userd->name}}</option>
+                    <option value="">Choose a delegation</option>
                 @else
                     <option value="">Choose a delegation</option>
                 @endif
@@ -86,6 +87,7 @@
             <select class="form-control" name="delegation_id">
                 @if($userd!=null)
                     <option value="{{$userd->id}}">{{$userd->name}}</option>
+                    <option value="">Choose a delegation</option>
                 @else
                     <option value="">Choose a delegation</option>
                 @endif
