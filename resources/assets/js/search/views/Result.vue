@@ -332,8 +332,20 @@
 
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <b-button v-b-toggle.remarks2 class="rs-btn"><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
-                                    <b-button v-b-toggle.detailed2 class="rs-btn"><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        :class="rate.remarksCollapse ? null : 'collapsed'"
+                                        :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"
+                                        aria-controls="remarks"
+                                        @click="rate.remarksCollapse = !rate.remarksCollapse"
+                                    ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        :class="rate.detailCollapse ? null : 'collapsed'"
+                                        :aria-expanded="rate.detailCollapse ? 'true' : 'false'"
+                                        aria-controls="remarks"
+                                        @click="rate.detailCollapse = !rate.detailCollapse"
+                                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
                                 </div>
 
                             </div>
@@ -351,9 +363,12 @@
 
                    <div class="row">
                    
-                        <b-collapse id="detail" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
-                            <div>
-                                <h5><b>Freight</b></h5>
+                        <b-collapse id="details" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
+                            <div 
+                                v-for="(chargeArray,chargeType) in rate.charges"
+                                :key="chargeType"
+                            >
+                                <h5><b>{{ chargeType }}</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -363,31 +378,33 @@
                                             <b-th>Detail</b-th>
                                             <b-th></b-th>
                                             <b-th></b-th>
-                                            <b-th>20DV</b-th>
-                                            <b-th>40DV</b-th>
-                                            <b-th>40HC</b-th>
+                                            <b-th
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            >
+                                            {{container.code}}
+                                            </b-th>
                                         </b-tr>
                                     </b-thead>
 
                                     <b-tbody>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
+                                        <b-tr 
+                                            v-for="(charge,chargeKey) in chargeArray"
+                                            :key="chargeKey"
+                                        >
+                                            <b-td><b>{{ charge.surcharge.name }}</b></b-td>
+                                            <b-td>{{ charge.calculationtype.name }}</b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                            <b-td
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            >
+                                            {{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}
+                                            <span v-if="typeof charge.container_markups!=='undefined'" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups.amount['C'+container.code] : charge.container_markups.amount['C'+container.code]}}</span><b>USD 200</b>
+                                            </b-td>
                                         </b-tr>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                        </b-tr>
+                
                                         <b-tr>
                                             <b-td></b-td>
                                             <b-td></b-td>
@@ -402,7 +419,7 @@
                                 </b-table-simple>
                             </div>
                         </b-collapse>
-                        <b-collapse id="markups" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
+                        <b-collapse id="remarks" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
                                 
@@ -904,7 +921,6 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 export default {
     props: {
         rates: Array,
-        charges: Object,
         pricelevels: Array,
         request: Object,
         datalists: Object,
@@ -916,6 +932,7 @@ export default {
     },
     data() {
         return {
+            //GENE DEFINED
             checked1: false,
             checked2: false,
             isActive: false,
@@ -965,7 +982,7 @@ export default {
 
         deleteSurcharger(index){
             this.dataSurcharger.splice(index, 1);
-            console.log(this.dataSurcharger);
+            //console.log(this.dataSurcharger);
         },
 
         addSurcharger() {
@@ -1066,7 +1083,6 @@ export default {
                 return
             }
         },
-
     },
     watch: {
         valueEq: function() {
@@ -1103,12 +1119,11 @@ export default {
         //console.log(component.request);
         //console.log(component.datalists);
 
-        //console.log(component.rates);
+        console.log(component.rates);
 
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
-            rate.detailCollapse = false;
-            rate.remarksCollapse = false;
+            console.log(rate.charges);
         });
 
         window.document.onscroll = () => {

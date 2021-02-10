@@ -14,7 +14,6 @@
         <Result 
             v-if="Object.keys(foundRates).length != 0"
             :rates="foundRates"
-            :charges="foundCharges"
             :request="searchRequest"
             :datalists="datalists"
         ></Result>
@@ -54,7 +53,6 @@ export default {
 
         setSearchData(searchData,searchRequest){
             this.searching = false;
-            this.foundCharges = searchData.charges;
             this.foundRates = searchData.rates;
             this.searchRequest = searchRequest;
         },
