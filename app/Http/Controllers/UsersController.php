@@ -180,6 +180,7 @@ class UsersController extends Controller
         
         $id_ud=UserDelegation::where('users_id','=',$id)->first();
 
+
         if($id_ud==null){
             $userd=null;
         }else{
@@ -220,10 +221,13 @@ class UsersController extends Controller
             $delegation->users_id=$user->id;
             $delegation->delegations_id=$request->delegation_id;
             $delegation->save();
-        }elseif($id_ud != null){
+        }elseif($id_ud != null && $request->delegation_id!=null){
             $delegation = UserDelegation::find($id_ud->id);
             $delegation ->delegations_id =$request->delegation_id;
             $delegation->update();
+        }else{
+            $id_ud=UserDelegation::where('users_id','=',$id)->first();
+            $id_ud->delete();
         }
 
         $roles = $user->getRoleNames();
