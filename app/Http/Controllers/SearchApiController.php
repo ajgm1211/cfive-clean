@@ -214,11 +214,10 @@ class SearchApiController extends Controller
         }
 
         //Appending Rate Id to Charges
-        $this->addRateId($rates, $charges, 'charges', $company_user_id);
+        $this->addToRates($rates, $charges, 'charges', $company_user_id);
 
         $data = [
             'rates' => $rates,
-            'charges' => $charges,
             'pricelevels' => $price_level_markups
         ];
 
@@ -398,7 +397,7 @@ class SearchApiController extends Controller
                         })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
                             $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
                         });
-                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
                 } else {
                     //Querying API contract local charges
                     $local_charge = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
@@ -409,7 +408,7 @@ class SearchApiController extends Controller
                         })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
                             $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
                         });
-                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
                 }
 
                 //Looping through Local Charges found, including in final collection if not there
@@ -483,7 +482,7 @@ class SearchApiController extends Controller
                     $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
                 })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
-                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm','globalcharport')->get();
+                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm','globalcharport','calculationtype')->get();
             }
 
             //Looping through Global Charges found, including in final collection if not there
@@ -598,7 +597,7 @@ class SearchApiController extends Controller
     }
 
     //appending charges to corresponding Rates
-    public function addRateId($rates, $target, $target_type, $company_user_id)
+    public function addToRates($rates, $target, $target_type, $company_user_id)
     {
         //Setting customer currency to convert if necessary
         $company_user = CompanyUser::where('id',$company_user_id)->first();
@@ -611,6 +610,7 @@ class SearchApiController extends Controller
                 $rate_charges = [];
                 //Looping through charges type (Origin, Destination, Freight)
                 foreach($target as $direction => $charge_direction){
+                    $rate_charges[$direction] = [];
                     //Looping through charges by type
                     foreach($charge_direction as $charge){
                         //Checking type of charge to set control variables
@@ -627,9 +627,6 @@ class SearchApiController extends Controller
                         if((in_array($rate->origin_port, [$charge_origin_port, 1485]) || $charge_destination_port == 1485) && 
                             (in_array($rate->destiny_port, [$charge_destination_port, 1485]) || $charge_destination_port == 1485) &&
                             (in_array($rate->carrier_id, [$charge_carrier, 26]) || $charge_carrier == 26)){
-                                if($direction == 'freight'){
-                                    $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                                }
 
                                 if(isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
                                     $to_update = 'totals_with_markups';
@@ -656,11 +653,32 @@ class SearchApiController extends Controller
                                 }
 
                                 $rate->$to_update = $totals_array;
-                                $charge->setAttribute('rate_id',$rate->id);
+                                array_push($rate_charges[$direction], $charge);
+
+                                if($direction == 'freight'){
+                                    $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
+
+                                    $ocean_freight_array = [
+                                        'surcharge' => ['name' => 'Ocean Freight'],
+                                        'containers' => json_decode($rate->containers,true),
+                                        'calculationtype' => ['name' => 'Per Container'],
+                                        'currency' => ['alphacode' => $client_currency->alphacode]
+                                    ];
+                                    
+                                    $ocean_freight_collection = collect($ocean_freight_array);
+            
+                                    array_push($rate_charges[$direction], $ocean_freight_collection);
+                                }
                             }
-                        }
                     }
+                    
+                    if(count($rate_charges[$direction]) == 0){
+                        unset($rate_charges[$direction]);
+                    };
+                }
+                $rate->setAttribute('charges',$rate_charges);
             }
         }
     }
+    
 }
