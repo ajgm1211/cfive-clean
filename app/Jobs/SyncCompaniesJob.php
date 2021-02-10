@@ -66,6 +66,7 @@ class SyncCompaniesJob implements ShouldQueue
                 if ($invoice) {
                     Company::updateOrCreate([
                         'api_id' => $item['codigo'],
+                        'company_user_id' => $setting->company_user_id,
                     ], [
                         'business_name' => $item['nombre-fiscal'],
                         'tax_number' => $item['cif-nif'],
@@ -77,7 +78,7 @@ class SyncCompaniesJob implements ShouldQueue
             }
             $page += 1;
         } while ($page <= $max_page);
-        \Log::info('Syncronization with '.$setting->partner->name.' completed successfully!');
+        \Log::info('Syncronization with ' . $setting->partner->name . ' completed successfully!');
     }
 
     /**
@@ -91,28 +92,29 @@ class SyncCompaniesJob implements ShouldQueue
         $data = new Connection();
         $page = 1;
         do {
-            $uri = $setting->url . '&p=' . $page;
-
+            
+            $uri = $setting->url . $page;
+            
             $response = $data->getData($uri);
-            $max_page = ceil($response['count'] / 1000);
+            $max_page = ceil($response['total_count'] / 1000);
+            
             foreach ($response['ent_m'] as $item) {
-                sleep(1);
-                if ($response['es_emp']) {
-                    Company::updateOrCreate([
-                        'api_id' => $item['id'],
-                    ], [
-                        'business_name' => $item['nom_com'],
-                        'tax_number' => $item['cif'],
-                        'address' => $item['address'],
-                        'phone' => $item['tlf'],
-                        'company_user_id' => $setting->company_user_id,
-                        'api_id' => $item['id'],
-                        'api_status' => 'created',
-                    ]);
-                }
+                Company::updateOrCreate([
+                    'api_id' => $item['id'],
+                    'company_user_id' => $setting->company_user_id,
+                ], [
+                    'business_name' => $item['nom_com'],
+                    'tax_number' => $item['cif'],
+                    'address' => $item['address'],
+                    'phone' => $item['tlf'],
+                    'company_user_id' => $setting->company_user_id,
+                    'api_id' => $item['id'],
+                    'api_status' => 'created',
+                ]);
             }
             $page += 1;
         } while ($page <= $max_page);
-        \Log::info('Syncronization with '.$setting->partner->name.' completed successfully!');
+
+        \Log::info('Syncronization with ' . $setting->partner->name . ' completed successfully!');
     }
 }
