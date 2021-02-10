@@ -167,6 +167,13 @@ export default {
                     placeholder: "Quote ID",
                     colClass: "col-lg-3",
                 },
+                custom_quote_id: {
+                    label: "CUSTOM QUOTE ID",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom Quote ID",
+                    colClass: "col-lg-3",
+                },
                 delivery_type: {
                     label: "SERVICE",
                     searchable: true,

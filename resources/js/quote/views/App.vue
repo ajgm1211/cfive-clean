@@ -88,7 +88,7 @@ export default {
                     filterTrackBy: "name",
                     trackLabel: "name"
                 },
-                { key: "validity_start", label: "Created at", filterIsOpen: false,},
+                { key: "created_at", label: "Created at", filterIsOpen: false,},
             ],
         };
     },

@@ -9,6 +9,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
+use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -40,6 +41,10 @@ class LclPdf
         $pdf = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+
+        // EVENTO INTERCOM
+        $event = new EventIntercom();
+        $event->event_pdfLcl();
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }

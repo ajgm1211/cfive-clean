@@ -58,6 +58,8 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
+    Route::get('info', 'UsersController@show')->name('user.info');
+    Route::post('update/{id}','UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
     Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');

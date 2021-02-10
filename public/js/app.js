@@ -46466,7 +46466,7 @@ var BSkeletonIcon = /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__utils_vue__["a" /*
 
 "use strict";
 /* unused harmony export iconNames */
-/* unused harmony export IconsPlugin */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return IconsPlugin; });
 /* unused harmony export BootstrapVueIcons */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_plugins__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__icon__ = __webpack_require__(46);
@@ -86200,7 +86200,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 "use strict";
 /* unused harmony export install */
 /* unused harmony export NAME */
-/* unused harmony export BootstrapVue */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BootstrapVue; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_plugins__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components__ = __webpack_require__(312);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__directives__ = __webpack_require__(341);
@@ -86212,14 +86212,14 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_toast_helpers_bv_toast__ = __webpack_require__(274);
 /* unused harmony reexport BVToastPlugin */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__icons_plugin__ = __webpack_require__(249);
-/* unused harmony reexport IconsPlugin */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_6__icons_plugin__["a"]; });
 /* unused harmony reexport BootstrapVueIcons */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__icons_icon__ = __webpack_require__(46);
 /* unused harmony reexport BIcon */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__icons_iconstack__ = __webpack_require__(115);
 /* unused harmony reexport BIconstack */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__icons_icons__ = __webpack_require__(27);
-/* unused harmony reexport namespace */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_alert__ = __webpack_require__(139);
 /* unused harmony reexport AlertPlugin */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__components_alert_alert__ = __webpack_require__(140);
@@ -91389,17 +91389,183 @@ if (false) {
 
 /***/ }),
 /* 442 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\laragon\\www\\cargofive\\resources\\js\\components\\quotes\\Show.vue'");
+var disposed = false
+var normalizeComponent = __webpack_require__(41)
+/* script */
+var __vue_script__ = __webpack_require__(443)
+/* template */
+var __vue_template__ = __webpack_require__(444)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/quotes/Show.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d6017d8c", Component.options)
+  } else {
+    hotAPI.reload("data-v-d6017d8c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
-/* 443 */,
-/* 444 */,
+/* 443 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      isBusy: true, // Loader
+      data: null,
+
+      fields: [{ key: "name", label: "Reference", sortable: true }, {
+        key: "carriers",
+        label: "Carriers",
+        formatter: function formatter(value) {
+          var $carriers = [];
+
+          value.forEach(function (val) {
+            $carriers.push(val.name);
+          });
+          return $carriers.join(", ");
+        }
+      }, {
+        key: "direction",
+        label: "Direction",
+        formatter: function formatter(value) {
+          return value.name;
+        }
+      }]
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    var id = 1;
+    api.getData({}, "/api/v2/quotes/" + id, function (err, data) {
+      _this.setData(err, data);
+    });
+  },
+
+  methods: {
+    setData: function setData(err, _ref) {
+      var records = _ref.data,
+          links = _ref.links,
+          meta = _ref.meta;
+
+      this.isBusy = false;
+
+      if (err) {
+        this.error = err.toString();
+      } else {
+        this.data = records;
+        console.log(this.data);
+      }
+    }
+  }
+});
+
+/***/ }),
+/* 444 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container-fluid bg-container" }, [
+    _c("div", { staticClass: "row mt-5" }, [
+      _c(
+        "div",
+        { staticClass: "container-fluid" },
+        [
+          _c(
+            "b-card-group",
+            { attrs: { deck: "" } },
+            [
+              _c("b-card", {
+                attrs: {
+                  "border-variant": "secondary",
+                  header: "Quote's details",
+                  "header-border-variant": "secondary",
+                  "header-bg-variant": "transparent",
+                  align: "justify"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d6017d8c", module.exports)
+  }
+}
+
+/***/ }),
 /* 445 */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: ModuleBuildError: Module build failed: Error: ENOENT: no such file or directory, open 'C:\\laragon\\www\\cargofive\\resources\\sass\\app.scss'\n    at C:\\laragon\\www\\cargofive\\node_modules\\webpack\\lib\\NormalModule.js:195:19\n    at C:\\laragon\\www\\cargofive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:367:11\n    at C:\\laragon\\www\\cargofive\\node_modules\\loader-runner\\lib\\LoaderRunner.js:203:19\n    at C:\\laragon\\www\\cargofive\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:70:14\n    at processTicksAndRejections (internal/process/task_queues.js:72:11)");
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

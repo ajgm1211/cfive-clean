@@ -23,51 +23,45 @@ class PdfController extends Controller
         switch ($quote->type) {
             case "FCL":
                 $pdf = new FclPdf();
-                return $pdf->generate($quote);
-                // EVENTO INTERCOM
-                $event = new EventIntercom();
-                $event->event_pdfFcl();
+                return $pdf->generate($quote);               
                 break;
             case "LCL":
                 $pdf = new LclPdf();
                 return $pdf->generate($quote);
-                // EVENTO INTERCOM
-                $event = new EventIntercom();
-                $event->event_pdfLcl();
                 break;
         }
     }
 
-    public function generateFclPdf($quote)
-    {
-        $containers = Container::all();
+    // public function generateFclPdf($quote)
+    // {
+    //     $containers = Container::all();
 
-        $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
+    //     $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
-        $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
+    //     $freight_charges = AutomaticRate::GetCharge(3)->GetQuote($quote->id)->with('charge')->get();
 
-        $inlands = $quote->load('inland');
+    //     $inlands = $quote->load('inland');
 
-        $inlands = $this->processInland($inlands->inland, $containers);
+    //     $inlands = $this->processInland($inlands->inland, $containers);
 
-        $origin_charges = $this->localCharges($quote, 1);
+    //     $origin_charges = $this->localCharges($quote, 1);
 
-        $destination_charges = $this->localCharges($quote, 2);
+    //     $destination_charges = $this->localCharges($quote, 2);
 
-        $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
+    //     $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
 
-        $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
+    //     $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
-        $quote_totals = $this->quoteTotals($quote, $containers);
+    //     $quote_totals = $this->quoteTotals($quote, $containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+    //     $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
-        $pdf = \App::make('dompdf.wrapper');
+    //     $pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+    //     $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
-        return $pdf->stream('quote-' . $quote->id . '.pdf');
-    }
+    //     return $pdf->stream('quote-' . $quote->id . '.pdf');
+    // }
 
     public function localCharges($quote, $type)
     {
