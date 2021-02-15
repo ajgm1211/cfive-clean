@@ -59,13 +59,14 @@ class SyncCompaniesJob implements ShouldQueue
             $uri = $setting->url . '&k=' . $setting->api_key . '&p=' . $page;
             $response = $data->getData($uri);
             $max_page = ceil($response['count'] / 100);
+        
             foreach ($response['entidades'] as $item) {
-                sleep(1);
+
                 $data = new Connection();
                 $invoice = $data->getInvoices($item['codigo']);
                 if ($invoice) {
                     Company::updateOrCreate([
-                        'api_id' => $item['codigo'],
+                        'tax_number' => $item['cif-nif'],
                         'company_user_id' => $setting->company_user_id,
                     ], [
                         'business_name' => $item['nombre-fiscal'],
@@ -73,6 +74,7 @@ class SyncCompaniesJob implements ShouldQueue
                         'company_user_id' => $setting->company_user_id,
                         'api_id' => $item['codigo'],
                         'api_status' => 'created',
+                        'options->vs_code' => $item['codigo'],
                     ]);
                 }
             }
@@ -100,7 +102,7 @@ class SyncCompaniesJob implements ShouldQueue
             
             foreach ($response['ent_m'] as $item) {
                 Company::updateOrCreate([
-                    'api_id' => $item['id'],
+                    'tax_number' => $item['cif'],
                     'company_user_id' => $setting->company_user_id,
                 ], [
                     'business_name' => $item['nom_com'],
@@ -110,6 +112,7 @@ class SyncCompaniesJob implements ShouldQueue
                     'company_user_id' => $setting->company_user_id,
                     'api_id' => $item['id'],
                     'api_status' => 'created',
+                    'options->vf_code' => $item['id'],
                 ]);
             }
             $page += 1;
