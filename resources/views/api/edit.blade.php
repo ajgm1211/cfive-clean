@@ -31,6 +31,10 @@
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Associated to</b></label>
+                    {!! Form::select('company_user_id', $companies, null, ['placeholder'=>'Select an option','class' => 'form-control','required','id'=>'company_user_id_input']) !!}
+                </div>
+                <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>Partner</b></label>
                     {!! Form::select('partner_id', $partners, null, ['placeholder'=>'Select an option','class' => 'form-control','required','id'=>'partner_id']) !!}
                 </div>
                 <div class="form-group m-form__group">

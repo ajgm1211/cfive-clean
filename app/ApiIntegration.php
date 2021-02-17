@@ -13,7 +13,8 @@ class ApiIntegration extends Model
         'module',
         'partner_id',
         'url',
-        'status'
+        'status',
+        'company_user_id'
     ];
 
     protected $modules = ['Contacts', 'Companies'];
@@ -26,5 +27,10 @@ class ApiIntegration extends Model
     public function partner()
     {
         return $this->belongsTo('App\Partner');
+    }
+
+    public function companyUser()
+    {
+        return $this->belongsTo('App\CompanyUser');
     }
 }

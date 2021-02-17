@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\SaveFclRatesByContractJob;
-use App\Jobs\SyncCompaniesEvery30Job;
+use App\Jobs\SyncCompaniesPerHourJob;
 use App\Jobs\SyncCompaniesJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
         //$schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SyncCompaniesEvery30Job)->hourly()->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesPerHourJob)->hourly()->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')

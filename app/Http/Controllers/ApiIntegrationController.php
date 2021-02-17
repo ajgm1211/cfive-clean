@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
+use App\CompanyUser;
 use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesEvery30Job;
 use App\Partner;
@@ -19,10 +20,11 @@ class ApiIntegrationController extends Controller
      */
     public function index()
     {
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->with('api_integration')->first();
+        $api = ApiIntegrationSetting::with('api_integration')->first();
         $partners = Partner::pluck('name', 'id');
+        $companies = CompanyUser::pluck('name', 'id');
 
-        return view('api.index', compact('api', 'partners'));
+        return view('api.index', compact('api', 'partners', 'companies'));
     }
 
     /**
