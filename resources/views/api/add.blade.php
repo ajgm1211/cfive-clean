@@ -18,7 +18,7 @@
                     {{ Form::hidden('api_integration_setting_id', @$api->id,['placeholder' => 'Please enter a name','class'=>'form-control','id'=>'api_integration_setting_id']) }}
                 </div>
                 <div class="form-group m-form__group">
-                    <label style="letter-spacing: 0.7px"><b>URL</b></label>
+                    <label style="letter-spacing: 0.7px"><b>URL (Enter entire URL)</b></label>
                     {{ Form::text('url', null,['placeholder' => 'Please enter an URL','class'=>'form-control','required']) }}
                 </div>
                 <div class="form-group m-form__group">
@@ -27,6 +27,10 @@
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Associated to</b></label>
+                    {!! Form::select('company_user_id', $companies, null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
+                </div>
+                <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>Partner</b></label>
                     {!! Form::select('partner_id', $partners, null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
                 </div>
                 <div class="form-group m-form__group">
