@@ -55,6 +55,7 @@ export default {
             actions: actions,
             fields: [
                 { key: "quote_id", label: "Quote ID", filterIsOpen: false, },
+                { key: "status", label: "status",formatter: (value)=> { return value.name}, filterIsOpen: false, },
                 {
                     key: "company_id",
                     label: "Client",
