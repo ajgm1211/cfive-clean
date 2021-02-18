@@ -440,12 +440,18 @@ class QuotationController extends Controller
                         'origin_port_id' => $rate->origin_port_id,
                         'destination_port_id' => $rate->destination_port_id,
                         'automatic_rate_id' => $rate->id,
+                        'carrier_id' => $rate->carrier_id,
                         'totals' => null,
                         'markups' => null                    
                     ]);
 
                     $newRateTotal->totalize($currency->id);
                 }else{
+                    if($rateTotal->carrier_id == null){
+                        $rateTotal->carrier_id = $rate->carrier_id;
+
+                        $rateTotal->save();
+                    }
                     $currency = $rate->currency()->first();
 
                     $rateTotal->totalize($currency->id);
