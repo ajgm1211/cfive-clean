@@ -2292,6 +2292,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinal;
@@ -7103,6 +7104,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $rateO->idCurrency;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinalArray;
