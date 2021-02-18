@@ -273,8 +273,14 @@ class AutomaticRate extends Model
 
     public function getProfitAttribute($value)
     {
+        $json = json_decode($value);
 
-        return json_decode(json_decode($value));
+        if (!is_object($json)) {
+            return json_decode($json);
+        }else{
+            return $json;
+        }
+        
     }
 
     /*public function getTotalAttribute($value)

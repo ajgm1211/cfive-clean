@@ -129,11 +129,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             $sheetData = $spreadsheetJob->getActiveSheet()->toArray();
             //dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray());
 
-            $originExc = $final_columns['ORIGIN']; // lectura de excel
-            $destinyExc = $final_columns['DESTINY']; // lectura de excel
-            $chargeExc = $final_columns['CHARGE']; // lectura de excel
-            $calculationtypeExc = $final_columns['CALCULATION TYPE']; // lectura de excel
-            $chargeExc = $final_columns['CHARGE']; // lectura de excel
+            $originExc = @$final_columns['ORIGIN']; // lectura de excel
+            $destinyExc = @$final_columns['DESTINY']; // lectura de excel
+            $chargeExc = @$final_columns['CHARGE']; // lectura de excel
+            $calculationtypeExc = @$final_columns['CALCULATION TYPE']; // lectura de excel
+            $chargeExc = @$final_columns['CHARGE']; // lectura de excel
 
             $company_user_id = $valuesSelecteds['company_user_id'];
             $statusPortCountry = $valuesSelecteds['select_portCountryRegion'];
@@ -823,7 +823,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             ->where('country_dest', $destinyVal)
                                                             ->where('localcharge_id', $surchargeObj->id)
                                                             ->first();
-                                                        if (count($existCount) == 0) {
+                                                        if (count((array)$existCount) == 0) {
                                                             $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
                                                                 'country_orig' => $originVal,
                                                                 'country_dest' => $destinyVal,

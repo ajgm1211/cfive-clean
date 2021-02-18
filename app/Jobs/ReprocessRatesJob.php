@@ -179,7 +179,7 @@ class ReprocessRatesJob implements ShouldQueue
                 if ($originB == true && $destinyB == true &&
                    $scheduleTBol == true && $curreExitBol == true && $carriExitBol == true) {
                     $collecciont = '';
-                    $exists = null;
+                    $exists = [];
                     $exists = Rate::where('origin_port', $originV)
                         ->where('destiny_port', $destinationV)
                         ->where('carrier_id', $carrierVal)
@@ -195,7 +195,7 @@ class ReprocessRatesJob implements ShouldQueue
                         ->where('transit_time', (int) $failrate['transit_time'])
                         ->where('via', $failrate['via'])
                         ->first();
-                    if (count($exists) == 0) {
+                    if (count((array)$exists) == 0) {
                         $collecciont = Rate::create([
                             'origin_port'       => $originV,
                             'destiny_port'      => $destinationV,

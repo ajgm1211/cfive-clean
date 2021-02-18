@@ -168,3 +168,8 @@ function floatvalue($val){
     $val = preg_replace('/\.(?=.*\.)/', '', $val);
     return floatval($val);
 }
+
+function Quitar_Espacios($cadena)
+{
+    return implode(' ', array_filter(explode(' ', $cadena)));
+}
