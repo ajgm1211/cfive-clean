@@ -46,21 +46,23 @@ class ForwardRequestAutoImportJob implements ShouldQueue
             $status = 'Pending';
             $requets = NewContractRequest::whereBetween('created', [$dateStart, $dateEnd])->get();
             foreach ($requets as $requet) {
-                $existsS3 = Storage::disk('s3_upload')->exists('Request/FCL/'.$requet->namefile);
-                if ($existsS3 == true && $requet->status == $status) {
+                //$existsS3 = Storage::disk('s3_upload')->exists('Request/FCL/'.$requet->namefile);
+                //if ($existsS3 == true && $requet->status == $status) {
+                if ($requet->status == $status) {
                     SelectionAutoImportJob::dispatch($requet->id, 'fcl');
-                } else {
-                    $existsLocal = Storage::disk('FclRequest')->exists($requet->namefile);
-                    if ($existsLocal) {
-                        $name = $requet->namefile;
-                        $s3 = Storage::disk('s3_upload');
-                        $file = File::get(storage_path('app/public/Request/Fcl/'.$name));
-                        $s3 = $s3->put('Request/FCL/'.$name, $file, 'public');
-                        if ($s3 == true && $requet->status == $status) {
-                            SelectionAutoImportJob::dispatch($requet->id, 'fcl');
-                        }
-                    }
-                }
+                } 
+//                else {
+//                    $existsLocal = Storage::disk('FclRequest')->exists($requet->namefile);
+//                    if ($existsLocal) {
+//                        $name = $requet->namefile;
+//                        $s3 = Storage::disk('s3_upload');
+//                        $file = File::get(storage_path('app/public/Request/Fcl/'.$name));
+//                        $s3 = $s3->put('Request/FCL/'.$name, $file, 'public');
+//                        if ($s3 == true && $requet->status == $status) {
+//                            SelectionAutoImportJob::dispatch($requet->id, 'fcl');
+//                        }
+//                    }
+//                }
             }
         }
     }

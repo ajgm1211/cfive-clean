@@ -370,7 +370,10 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        $media->delete();
+        if(!empty($media) == 0){
+            $media->delete();
+        }
+        
 
         return response()->json(null, 204);
     }
@@ -686,7 +689,7 @@ class ContractController extends Controller
         $contract->expire = $validation[1];
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
-        $contract->is_manual = 1;
+        $contract->is_manual = 2;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
@@ -732,7 +735,7 @@ class ContractController extends Controller
         $amountC = $request->input('amount');
         
 
-        if (count($calculation_type) > 0) {
+        if (count((array)$calculation_type) > 0) {
             foreach ($calculation_type as $ct => $ctype) {
 
                 if (!empty($request->input('amount'))) {

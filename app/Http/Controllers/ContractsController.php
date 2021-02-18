@@ -605,7 +605,7 @@ class ContractsController extends Controller
         return \DataTables::collection($contractG)
 
             ->addColumn('direction', function (Contract $contractG) {
-                if (count($contractG->direction) != 0) {
+                if (count((array)$contractG->direction) != 0) {
                     return $contractG->direction->name;
                 } else {
                     return '-----------------';
@@ -1515,6 +1515,7 @@ class ContractsController extends Controller
             $requestFc->time_star = $now2;
             $requestFc->time_star_one = true;
         }
+        $requestFc->manage_app = 'Duplicated';
         $requestFc->update();
         $data = ['id'=> $id, 'data' => $requestArray];
         if (env('APP_VIEW') == 'operaciones') {

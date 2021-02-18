@@ -11,9 +11,11 @@ class AutomaticInlandTotal extends Model
 {
     use QuoteV2Trait;
 
+    protected $casts = ['pdf_options' => 'array'];
+
     protected $appends = ['calculation_type' => 1];
 
-    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id'];
+    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id','pdf_options'];
 
     public function quotev2()
     {

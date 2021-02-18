@@ -71,7 +71,7 @@ class QuoteAutomaticController extends Controller
 
         $prices = Price::all()->pluck('name', 'id');
         $company_user = User::where('id', \Auth::id())->first();
-        if (count($company_user->companyUser) > 0) {
+        if (count((array)$company_user->companyUser) > 0) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         } else {
             $currency_name = '';
