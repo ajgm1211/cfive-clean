@@ -391,6 +391,14 @@
                                 </a>
                             </li>
                             @endrole
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('user.info') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-user"></i>
+                                    <span class="m-menu__link-text">
+                                        My profile 
+                                    </span>
+                                </a>
+                            </li>
                             @role('administrator')
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">

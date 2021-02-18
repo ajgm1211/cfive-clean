@@ -159,12 +159,19 @@ export default {
             totals: false,
             tabs_loaded: false,
             form_fields: {
-                custom_quote_id: {
+                quote_id: {
                     label: "QUOTE ID",
                     type: "text",
                     rules: "required",
-                    disabled: false,
+                    disabled: true,
                     placeholder: "Quote ID",
+                    colClass: "col-lg-3",
+                },
+                custom_quote_id: {
+                    label: "CUSTOM QUOTE ID",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom Quote ID",
                     colClass: "col-lg-3",
                 },
                 delivery_type: {
@@ -284,7 +291,14 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     options: "incoterms",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-1",
+                },
+                custom_incoterm: {
+                    label: "CUSTOM INCOTERM",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom incoterm",
+                    colClass: "col-lg-2",
                 },
                 language_id: {
                     label: "LANGUAGE",

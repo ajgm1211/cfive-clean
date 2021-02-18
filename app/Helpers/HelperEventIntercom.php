@@ -326,6 +326,21 @@ $obj->events->create([
 }
  */
     // REQUEST CONTRACT
+    public static function event_add_contract_express()
+    {
+        $obj = self::$client;
+
+        if (self::isExist(\Auth::user()->email)) {
+            $obj->events->create([
+                "event_name" => "ADD CONTRACT EXPRESS",
+                "created_at" => strtotime("now"),
+                "email" => \Auth::user()->email,
+                "metadata" => [
+                    "order_date" => strtotime("now"),
+                ],
+            ]);
+        }
+    }
 
     public static function event_newRequest()
     {
