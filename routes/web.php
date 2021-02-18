@@ -58,6 +58,8 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
+    Route::get('info', 'UsersController@show')->name('user.info');
+    Route::post('update/{id}','UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
     Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
@@ -1069,6 +1071,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands/search', 'AutomaticInlandController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands/harbors', 'AutomaticInlandController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland/{combo}/delete_full', 'AutomaticInlandController@deleteFull');
+    Route::post('/api/quotes/{quote}/automatic_inland/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
     /**LCL **/
     Route::get('api/quotes/{quote}/port/{combo}/automatic_inlands_lcl', 'AutomaticInlandLclController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/store', 'AutomaticInlandLclController@store')->middleware('check_company:quote');
@@ -1081,6 +1084,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/search', 'AutomaticInlandLclController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/{combo}/delete_full', 'AutomaticInlandLclController@deleteFull');
+    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
 
     /** Local charges routes */
     Route::get('/api/quote/local/data/{quote}', 'LocalChargeQuotationController@harbors');
