@@ -314,7 +314,7 @@ class QuotationController extends Controller
 
         if($form_keys!=null){
             if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id') == null){
-                $data = $request->validate([
+                $data = $request->validate([                   
                     'delivery_type' => 'required',
                     'equipment' => 'required',
                     'status' => 'required',
@@ -375,6 +375,16 @@ class QuotationController extends Controller
                 }
             }
             $quote->update([$key=>$data[$key]]);
+        }
+        if($request->input('custom_incoterm') != null){
+            $quote->update(['custom_incoterm'=>$request->input('custom_incoterm')]);
+        }else{
+            $quote->update(['custom_incoterm'=> null]);
+        }
+        if($request->input('custom_quote_id') != null){
+            $quote->update(['custom_quote_id'=>$request->input('custom_quote_id')]);
+        }else{
+            $quote->update(['custom_quote_id'=> null]);
         }
 
         if($request->input('pdf_options') != null){
@@ -489,9 +499,18 @@ class QuotationController extends Controller
 
                 $totals->totalize();
             }
-        }else if(count($inlandTotals)!=0){
+        }elseif(count($inlandTotals)!=0){
             foreach($inlandTotals as $total){
                 $total->totalize();
+                if($total->pdf_options == null){
+                    $pdfOptions = [
+                        "grouped" =>false, 
+                        "groupId"=>null
+                        ];
+                    
+                    $total->pdf_options = $pdfOptions;
+                    $total->save();
+                }
                 if($quote->type == 'FCL'){
                     $inlands = $total->inlands()->get();
                 }else if($quote->type == 'LCL'){

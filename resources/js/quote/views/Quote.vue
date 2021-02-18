@@ -90,6 +90,7 @@
                                 :quoteEquip="quoteEquip"
                                 :datalists="datalists"
                                 :currentQuoteData="currentData"
+                                @chargesUpdated="setInitialData"
                             ></Local>
                         </b-tab>
 
@@ -101,6 +102,7 @@
                             :actions="actions"
                             :datalists="datalists"
                             :freights="freights"
+                            :localCharges="currentData.local_charges"
                             ></Inland>
                         </b-tab>
 
@@ -152,6 +154,7 @@ export default {
             loaded: false,
             ocean: false,
             locals: false,
+            currentLocalCharges: [],
             inlands: false,
             totals: false,
             tabs_loaded: false,
@@ -162,6 +165,13 @@ export default {
                     rules: "required",
                     disabled: true,
                     placeholder: "Quote ID",
+                    colClass: "col-lg-3",
+                },
+                custom_quote_id: {
+                    label: "CUSTOM QUOTE ID",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom Quote ID",
                     colClass: "col-lg-3",
                 },
                 delivery_type: {
@@ -281,7 +291,14 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     options: "incoterms",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-1",
+                },
+                custom_incoterm: {
+                    label: "CUSTOM INCOTERM",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom incoterm",
+                    colClass: "col-lg-2",
                 },
                 language_id: {
                     label: "LANGUAGE",
@@ -401,7 +418,7 @@ export default {
                 setTimeout(function() {
                     component.totals=true
                 },100);
-            }
+            }            
         },
 
         changeView(val){
