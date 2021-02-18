@@ -20,6 +20,9 @@ class QuotationResource extends JsonResource
     public function toArray($request)
     {
 
+        $created_at=$this->created_at;
+        $fecha=$this->formatear($created_at);
+
         $origin_ports = $this->origin_harbor()->get();
         $destiny_ports = $this->destination_harbor()->get();
         $origin_array = [];
@@ -44,6 +47,7 @@ class QuotationResource extends JsonResource
             'status' => $this->status_quote()->first(),
             'type' => $this->type,
             'remarks' => $this->remarks,
+            'created_at'=> $fecha,
             'remarks_spanish' => $this->remarks_spanish,
             'remarks_english' => $this->remarks_english,
             'remarks_portuguese' => $this->remarks_portuguese,
@@ -68,6 +72,7 @@ class QuotationResource extends JsonResource
             'pdf_options' => $this->pdf_options,
             'language_id' => $this->language()->first(),
             'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : $this->incoterm()->first(),
+            'custom_incoterm' => $this->custom_incoterm,
             'rates' => $this->rates_v2()->get(),
             'gp_container' => $this->getContainerCodes($this->equipment, true),
             'client_currency' => $this->user()->first()->companyUser()->first()->currency()->first(),
@@ -76,5 +81,14 @@ class QuotationResource extends JsonResource
             'decimals' => $this->company_user()->first()->decimals,
             'local_charges' => $this->type == 'FCL' ? $this->local_charges : $this->local_charges_lcl
         ];
+    }
+
+    public function formatear($created_at){
+
+        $fecha=date('Y-m-d H:m:s', strtotime($created_at));
+
+        return $fecha;
+
+
     }
 }

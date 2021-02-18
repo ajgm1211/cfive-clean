@@ -13,7 +13,6 @@ use App\GlobalChargeLcl;
 use App\GlobalCharPortLcl;
 use App\Harbor;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
-use App\Rate;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\ViewGlobalchargeLcl;
@@ -38,7 +37,7 @@ class GlobalChargesLclController extends Controller
 
     public function show($id)
     {
-        $globalcharges = DB::select('call  select_for_company_globalcharger_lcl('.$id.')');
+        $globalcharges = DB::select('call  select_for_company_globalcharger_lcl(' . $id . ')');
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges) {
@@ -71,20 +70,20 @@ class GlobalChargesLclController extends Controller
                 return $globalcharges->carrier;
             })
             ->editColumn('validitylb', function ($globalcharges) {
-                return $globalcharges->validity.'/'.$globalcharges->expire;
+                return $globalcharges->validity . '/' . $globalcharges->expire;
             })
             ->addColumn('action', function ($globalcharges) {
                 return '
 
-                    <a  id="edit_l{{$loop->index}}" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                    <a  id="edit_l{{$loop->index}}" onclick="AbrirModal(' . "'editGlobalCharge'" . ',' . $globalcharges->id . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                       <i class="la la-edit"></i>
-                    </a>    
-
-                    <a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
-                      <i id="rm_l'.$globalcharges->id.'" class="la la-times-circle"></i>
                     </a>
 
-                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges->id.')">
+                    <a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
+                      <i id="rm_l' . $globalcharges->id . '" class="la la-times-circle"></i>
+                    </a>
+
+                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal(' . "'duplicateGlobalCharge'" . ',' . $globalcharges->id . ')">
                       <i class="la la-plus"></i>
                     </a>';
             })
@@ -118,7 +117,7 @@ class GlobalChargesLclController extends Controller
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
         $globalcharges = GlobalChargeLcl::find($id);
-        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
+        $validation_expire = $globalcharges->validity . ' / ' . $globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
 
         return view('globalchargeslcl.edit', compact('globalcharges', 'harbor', 'carrier', 'currency', 'calculationT', 'typedestiny', 'surcharge', 'countries'));
@@ -217,7 +216,7 @@ class GlobalChargesLclController extends Controller
         if ($typerate == 'port') {
             $port_orig = $request->input('port_orig');
             $port_dest = $request->input('port_dest');
-            foreach ($port_orig as  $orig => $valueorig) {
+            foreach ($port_orig as $orig => $valueorig) {
                 foreach ($port_dest as $dest => $valuedest) {
                     $detailport = new GlobalCharPortLcl();
                     $detailport->port_orig = $valueorig;
@@ -260,7 +259,7 @@ class GlobalChargesLclController extends Controller
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
         $globalcharges = GlobalChargeLcl::find($id);
-        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
+        $validation_expire = $globalcharges->validity . ' / ' . $globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
 
         return view('globalchargeslcl.duplicate', compact('globalcharges', 'harbor', 'carrier', 'currency', 'calculationT', 'typedestiny', 'surcharge', 'countries'));
@@ -269,10 +268,10 @@ class GlobalChargesLclController extends Controller
     public function destroyGlobalCharges($id)
     {
         $global = GlobalChargeLcl::find($id);
-        if(!empty($global) == 0){
+        if (!empty($global) == 0) {
             $global->delete();
         }
-        
+
     }
 
     public function destroyArr(Request $request)
@@ -334,21 +333,21 @@ class GlobalChargesLclController extends Controller
                 return $globalcharges->carrier;
             })
             ->editColumn('validitylb', function ($globalcharges) {
-                return $globalcharges->validity.'/'.$globalcharges->expire;
+                return $globalcharges->validity . '/' . $globalcharges->expire;
             })
             ->addColumn('action', function ($globalcharges) {
                 return '
 
-                    <a  id="edit_l{{$loop->index}}" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                    <a  id="edit_l{{$loop->index}}" onclick="AbrirModal(' . "'editGlobalCharge'" . ',' . $globalcharges->id . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                       <i class="la la-edit"></i>
-                    </a>    
+                    </a>
 
-                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges->id.')">
+                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal(' . "'duplicateGlobalCharge'" . ',' . $globalcharges->id . ')">
                       <i class="la la-plus"></i>
                     </a>';
             })
-            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-            //->rawColumns(['checkbox','action'])
+        //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+        //->rawColumns(['checkbox','action'])
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
@@ -367,15 +366,15 @@ class GlobalChargesLclController extends Controller
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
         $company_usersO = CompanyUser::all();
-        $company_users = ['null'=>'Please Select'];
+        $company_users = ['null' => 'Please Select'];
         foreach ($company_usersO as $d) {
             $company_users[$d['id']] = $d->name;
         }
 
-        return view('globalchargesLclAdm.add', compact('harbor','carrier','company_users','currency',
-                                                       'calculationT','typedestiny','surcharge',
-                                                       'countries','currency_cfg','company_user_id_selec',
-                                                       'carrier_id_selec', 'reload_DT'));
+        return view('globalchargesLclAdm.add', compact('harbor', 'carrier', 'company_users', 'currency',
+            'calculationT', 'typedestiny', 'surcharge',
+            'countries', 'currency_cfg', 'company_user_id_selec',
+            'carrier_id_selec', 'reload_DT'));
     }
 
     public function typeChargeAdm(Request $request, $id)
@@ -471,7 +470,7 @@ class GlobalChargesLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name', 'id');
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
+        $validation_expire = $globalcharges->validity . ' / ' . $globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
         $company_users = CompanyUser::pluck('name', 'id');
 
@@ -514,7 +513,7 @@ class GlobalChargesLclController extends Controller
         if ($typerate == 'port') {
             $port_orig = $request->input('port_orig');
             $port_dest = $request->input('port_dest');
-            foreach ($port_orig as  $orig => $valueorig) {
+            foreach ($port_orig as $orig => $valueorig) {
                 foreach ($port_dest as $dest => $valuedest) {
                     $detailport = new GlobalCharPortLcl();
                     $detailport->port_orig = $valueorig;
@@ -561,7 +560,7 @@ class GlobalChargesLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name', 'id');
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
+        $validation_expire = $globalcharges->validity . ' / ' . $globalcharges->expire;
         $company_users = CompanyUser::pluck('name', 'id');
         $globalcharges->setAttribute('validation_expire', $validation_expire);
 

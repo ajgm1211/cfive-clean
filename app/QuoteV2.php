@@ -37,7 +37,7 @@ class QuoteV2 extends Model implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks','custom_quote_id', 'cargo_type_id'
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 'cargo_type_id',
     ];
 
     public function company()
@@ -824,7 +824,8 @@ class QuoteV2 extends Model implements HasMedia
                 $equipment[$index] = "3";
             } else if ($eq == "45") {
                 $equipment[$index] = "4";
-            }if ($eq == "40NOR") {
+            }
+            if ($eq == "40NOR") {
                 $equipment[$index] = "5";
             } else if ($eq == "20RF") {
                 $equipment[$index] = "6";
