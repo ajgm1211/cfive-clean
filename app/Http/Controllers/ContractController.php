@@ -239,7 +239,7 @@ class ContractController extends Controller
             'carriers' => 'required',
         ]);
 
-        $status = $this->updateStatus($contract);
+        $status = $this->updateStatus($contract , $data);
 
         $contract->update([
             'name' => $data['name'],
@@ -255,13 +255,13 @@ class ContractController extends Controller
         return new ContractResource($contract);
     }
 
-    public function updateStatus($data)
+    public function updateStatus($contract , $data)
     {
 
         $date = date('Y-m-d');
         $expire = date('Y-m-d', strtotime($data['expire']));
         
-        if($data['status'] != 'incomplete'){
+        if($contract->status != 'incomplete'){
             if ($date <= $expire) {
                 $status = 'publish';
             } else {

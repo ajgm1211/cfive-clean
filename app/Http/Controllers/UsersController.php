@@ -109,7 +109,6 @@ class UsersController extends Controller
                         ],
                     ],
                 ]);
-
             } else {
 
                 $client->users->create([
@@ -146,8 +145,10 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
+        $user = user::find(\Auth::user()->id);
+        return view('users.update', compact('user'));
     }
 
     public function add()
@@ -190,6 +191,37 @@ class UsersController extends Controller
         $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
 
         return view('users.edit', compact('user','userd','delegation'));
+    }
+
+    public function UpdateUser(Request $request, $id)
+    {
+
+        $request->validate([
+          'name' => 'required',
+          'lastname' => 'required',
+          'email' => [
+              'required',
+              Rule::unique('users')->ignore($id),
+          ],
+          'password' => 'sometimes|confirmed',
+          'password_confirmation' => 'required_with:password',
+      ]);
+
+    $requestForm = $request->all();
+    $user = User::findOrFail($id);
+    $user->update($requestForm);
+
+        $user->update($requestForm);
+
+        if ($request->ajax()) {
+            return response()->json('User updated successfully!');
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Record updated successfully ');
+
+        return redirect()->route('user.info');
     }
 
     /**

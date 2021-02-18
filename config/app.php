@@ -260,6 +260,7 @@ return [
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
     'EventCrisp' => App\Helpers\EventCrisp::class,
     'HelperAll' => App\Helpers\HelperAll::class,
+    
 
   ],
 

@@ -22,6 +22,7 @@
                         <DataTable
                             :fields="fields"
                             :actions="actions.quotes"
+                            :filter="true"
                             @onEdit="onEdit"
                         ></DataTable>
                     </b-card>
@@ -53,23 +54,29 @@ export default {
             activeOcean: false,
             actions: actions,
             fields: [
-                { key: "quote_id", label: "#" },
+                { key: "quote_id", label: "Quote ID", filterIsOpen: false, },
+                { key: "status", label: "status",formatter: (value)=> { return value.name}, filterIsOpen: false, },
                 {
                     key: "company_id",
                     label: "Client",
                     formatter: (value) => {
                         return this.setClient(value);
                     },
+                    filterIsOpen: false,
+                    filterTrackBy: "business_name",
+                    trackLabel: "business_name"
                 },
-                { key: "type", label: "Type" },
+                { key: "type", label: "Type", filterIsOpen: false, },
                 {
                     key: "origin",
                     label: "Origin",
+                    filterIsOpen: false,
                     collapse: "Show origins",
                 },
                 {
                     key: "destiny",
                     label: "Destiny",
+                    filterIsOpen: false,
                     collapse: "Show destinations",
                 },
                 {
@@ -78,8 +85,11 @@ export default {
                     formatter: (value) => {
                         return value.name;
                     },
+                    filterIsOpen: false,
+                    filterTrackBy: "name",
+                    trackLabel: "name"
                 },
-                { key: "validity_start", label: "Created at" },
+                { key: "created_at", label: "Created at", filterIsOpen: false,},
             ],
         };
     },

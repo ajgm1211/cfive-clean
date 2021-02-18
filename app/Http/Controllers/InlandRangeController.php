@@ -14,8 +14,7 @@ use Validator;
 
 class InlandRangeController extends Controller
 {
-    public function list(Request $request, Inland $inland)
-    {
+    function list(Request $request, Inland $inland) {
         $results = InlandRange::filterByInland($inland->id)->filter($request);
 
         return InlandRangeResource::collection($results);
@@ -80,12 +79,12 @@ class InlandRangeController extends Controller
 
         if (isset($data['per_container'])) {
             foreach ($available_containers as $code) {
-                $containers['C'.$code] = number_format(floatval($data['per_container']), 2, '.', '');
+                $containers['C' . $code] = number_format(floatval($data['per_container']), 2, '.', '');
             }
         } else {
             foreach ($available_containers as $code) {
-                $value = isset($data['rates_'.$code]) ? number_format(floatval($data['rates_'.$code]), 2, '.', '') : 0;
-                $containers['C'.$code] = $value;
+                $value = isset($data['rates_' . $code]) ? number_format(floatval($data['rates_' . $code]), 2, '.', '') : 0;
+                $containers['C' . $code] = $value;
             }
         }
 
@@ -113,19 +112,19 @@ class InlandRangeController extends Controller
         ];
 
         foreach ($available_containers as $container) {
-            $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_' . $container] = 'sometimes|nullable';
         }
 
         $validator = Validator::make($request->all(), $vdata);
 
-        $lower=$request->input('lower');
-        if(is_null($lower)){
-            $lower=0;
+        $lower = $request->input('lower');
+        if (is_null($lower)) {
+            $lower = 0;
         }
 
-        $upper=$request->input('upper');
-        if(is_null($upper)){
-            $upper=0;
+        $upper = $request->input('upper');
+        if (is_null($upper)) {
+            $upper = 0;
         }
         $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $lower)->where('upper', '>=', $lower)->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
