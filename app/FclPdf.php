@@ -10,6 +10,7 @@ use App\LocalChargeQuoteTotal;
 use App\AutomaticRateTotal;
 use App\AutomaticInlandTotal;
 use App\QuoteV2;
+use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -20,6 +21,7 @@ class FclPdf
 
     public function generate($quote)
     {
+        
         $containers = Container::all();
 
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
@@ -45,6 +47,10 @@ class FclPdf
         $pdf = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+
+        // EVENTO INTERCOM
+        $event = new EventIntercom();
+        $event->event_pdfFcl();
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
