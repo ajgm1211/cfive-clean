@@ -1,11 +1,26 @@
 <template>
     <div class="pr-5 pl-5">
-
-        <div class="row mt-5 mb-3">
+        
+        <!-- FILTERS -->
+        <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center">
-                <h2 class="mr-2 t-recent">results found: <b>10</b></h2>
-                <div>
-                    <b>filter by</b>
+                <h2 class="mr-5 t-recent">results found: <b>10</b></h2>
+                <div class="d-flex filter-search">
+                    <b>filter by:</b>
+                    <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
+                            <multiselect
+                                v-model="filterBy"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"
+                                :options="optionsFilter"
+                                placeholder="Select Filter"
+                                class="s-input no-select-style "
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                    </div>
                 </div>
             </div>
 
@@ -18,246 +33,284 @@
             </div>
         </div>
 
-        <div class="row mt-4 mb-4 result-header">
+        <!-- HEADER FCL -->
+        <div class="row mt-4 mb-4 result-header" v-if="false">
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
-            <div class="col-12 col-sm-3"></div>
-            <div class="row col-12 col-sm-5 d-flex align-items-center justify-content-end">
-                <div class="col-12 col-sm-2"><b>20DV</b></div>
-                <div class="col-12 col-sm-2"><b>40DV</b></div>
-                <div class="col-12 col-sm-2"><b>40HC</b></div>
+            <div class="row col-12 col-sm-4"></div>
+            <div class="row col-12 col-sm-4 d-flex align-items-center justify-content-end">
+                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>20DV</b></div>
+                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40DV</b></div>
+                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40HC</b></div>
+                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>45HC</b></div>
+                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40NOR</b></div>
             </div>
 
         </div>
 
+        <!-- HEADER LCL -->
+        <div class="row mt-4 mb-4 result-header" v-if="true">
+
+            <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
+            <div class="row col-12 col-sm-8 d-flex align-items-center justify-content-between">
+                <div class="col-12 col-sm-3"><b>ORIGEN</b></div>
+                <div class="col-12 col-sm-3 d-flex justify-content-end"><b>DESTINO</b></div>
+                <div class="col-12 col-sm-6 d-flex justify-content-center"><b>PRICE</b></div>
+            </div>
+
+        </div>
+
+        <!-- RESULTS -->
         <div class="row" id="top-results">
 
-            <div class="col-12 mb-4">
+            <!-- LCL CARD -->
+            <div class="col-12 mb-4" >
+
                 <div class="result-search">
 
-                   <div class="row">
+                    <!-- CONTENT MAIN CARD -->
+                    <div class="row">
 
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
-                       </div>
+                        <!-- CARRIER -->
+                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                            <img src="/images/maersk.png" alt="logo" width="160px">
+                        </div>
 
-                       <div class="row col-12 col-sm-8">
+                        <!-- NAME, ORIGEN AND DESTINATION INFO -->
+                        <div class="row col-12 col-sm-8">
 
-                           <div class="col-12">
-                               <h6 class="mt-4 mb-5">contact reference title</h6>
-                           </div>
+                            <!-- NAME -->
+                            <div class="col-12">
+                               <h6 class="mt-4 mb-5">contract reference title</h6>
+                            </div>
 
-                           <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
+                            <!-- INFO CONTRACT -->
+                            <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
-                               <div class="col-12 col-sm-5 d-flex">
+                                <!-- INFO CONTRACT -->
+                                <div class="col-12 col-sm-6 d-flex">
+
+                                        <!-- ORIGEN -->
+                                        <div class="origin mr-4">
+
+                                            <span>origin</span>
+                                            <p>Lisboa, Lis</p>
+
+                                        </div>
+
+                                        <!-- TT -->
+                                        <div class="via d-flex flex-column justify-content-center align-items-center">
+
+                                            <div class="direction-form">
+
+                                                <img src="/images/logo-ship-blue.svg" alt="bote">
+
+                                                <div class="line-route-direct">
+                                                    <div class="circle mr-2"></div>
+                                                    <div class="line"></div>
+                                                    <div class="circle fill-circle ml-2"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="direction-desc">
+
+                                                <b>direct</b>
+                                                <p><b>TT:</b> 45 Days</p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DESTINATION -->
+                                        <div class="destination ml-4">
+
+                                            <span>destination</span>
+                                            <p>Buenos Aires, Arg</p>
+
+                                        </div>
+                                </div>
+
+                                <!-- PRICE -->
+                                <div class="col-12 col-sm-6">
+                                    <div class="row justify-content-center card-amount">
+                                        <div class="col-12 col-sm-2"><p><b>50.00</b>USD</p></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- OPTIONS AND VALIDITY -->
+                            <div class="col-12 mt-3 mb-3  result-action d-flex justify-content-between align-items-center">
+
+                                    <!-- VALIDITY -->
+                                    <div class="d-flex align-items-center">
+                                        <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
+                                        <a href="#">download contract</a>
+                                    </div>
+
+                                    <!-- OPTIONS -->
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <b-button v-b-toggle.remarks1 class="rs-btn">remarks <b-icon icon="caret-down-fill"></b-icon></b-button>
+                                        <b-button v-b-toggle.detailed1 class="rs-btn">detailed cost <b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ADD QUOTE BTN -->
+                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
+
+                                <b-form-checkbox v-model="checked1" class="btn-add-quote" name="check-button" button>
+                                    <b>add to quote</b>
+                                </b-form-checkbox>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                    
+                            <b-collapse id="detailed1" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                            
+                                    <h5><b>Freight</b></h5>
+
+                                    <b-table-simple hover small class="sc-table">
+
+                                        <b-thead>
+                                            <b-tr>
+                                                <b-th>Charge</b-th>
+                                                <b-th></b-th>
+                                                <b-th></b-th>
+                                                <b-th>Units</b-th>
+                                                <b-th>Price Per Units</b-th>
+                                                <b-th>Amount</b-th>
+                                                <b-th>Markup</b-th>
+                                                <b-th>Total</b-th>
+                                            </b-tr>
+                                        </b-thead>
+
+                                        <b-tbody>
+                                            <b-tr>
+                                                <b-td>
+                                                    <b>Ocean Freight</b>
+                                                    <p>W/M</p>
+                                                </b-td>
+                                                <b-td></b-td>
+                                                <b-td></b-td>
+                                                <b-td>1.00</b-td>
+                                                <b-td><b>20.00</b> EUR</b-td>
+                                                <b-td>20</b-td>
+                                                <b-td>0.00</b-td>
+                                                <b-td><b>20.00</b> EUR</b-td>
+                                            </b-tr>
+                                        </b-tbody>
+                                    
+                                    </b-table-simple>
+
+                            </b-collapse>
+                            <b-collapse id="remarks1" class="pt-5 pb-5 pl-5 pr-5 col-12">
+
+                                    <h5><b>Remarks</b></h5>
+                                    
+                                    <b-card>
+                                        <p>esos son los remarks</p>
+                                    </b-card>
+                                
+                            </b-collapse>
+                    
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FCL CARD -->
+            <div class="col-12 mb-4" v-if="false">
+
+                <div class="result-search">
+
+                    <!-- CONTENT MAIN CARD -->
+                    <div class="row">
+
+                       <!-- CARRIER -->
+                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                            <img src="/images/maersk.png" alt="logo" width="160px">
+                        </div>
+
+                        <!-- INFO CARD -->
+                        <div class="row col-12 col-sm-8">
+
+                            <!-- CONTRACT NAME -->
+                            <div class="col-12">
+                                <h6 class="mt-4 mb-5">contact reference title</h6>
+                            </div>
+
+                            <!-- INFO AND PRICE -->
+                            <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
+
+                                <!-- INFO -->
+                                <div class="col-12 col-sm-6 d-flex">
+
+                                    <!-- ORIGIN -->
                                     <div class="origin mr-4">
 
                                         <span>origin</span>
                                         <p>Lisboa, Lis</p>
 
                                     </div>
+
+                                    <!-- TT -->
                                     <div class="via d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form">
+                                        <div class="direction-form route-indirect">
 
-                                            <img src="/images/logo-ship-blue.svg" alt="bote">
+                                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
 
                                             <div class="line-route-direct">
-                                                <div class="circle mr-2"></div>
-                                                <div class="line"></div>
-                                                <div class="circle fill-circle ml-2"></div>
+                                            <div class="circle mr-2"></div>
+                                            <div class="line"></div>
+                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                            <div class="line line-blue"></div>
+                                            <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
+
+                                    
                                         <div class="direction-desc">
 
-                                            <b>direct</b>
+                                            <b>madrid españa</b>
                                             <p><b>TT:</b> 45 Days</p>
 
                                         </div>
 
                                     </div>
+
+                                    <!-- DESTINATION -->
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
                                         <p>Buenos Aires, Arg</p>
 
                                     </div>
-                               </div>
-
-                               <div class="col-12 col-sm-7">
-                                   <div class="row justify-content-end card-amount">
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                   </div>
-                               </div>
-
-                           </div>
-
-                           <div class="col-12 mt-3 mb-3  result-action d-flex justify-content-between align-items-center">
-
-                                <div class="d-flex align-items-center">
-
-                                    <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
-                                    <a href="#">download contract</a>
 
                                 </div>
 
-
-                                <div class="d-flex justify-content-end align-items-center">
-                                    <b-button v-b-toggle.remarks1 class="rs-btn">remarks <b-icon icon="caret-down-fill"></b-icon></b-button>
-                                    <b-button v-b-toggle.detailed1 class="rs-btn">detailed cost <b-icon icon="caret-down-fill"></b-icon></b-button>
+                                <!-- PRICES -->
+                                <div class="col-12 col-sm-6">
+                                    <div class="row justify-content-end card-amount">
+                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                    </div>
                                 </div>
 
                             </div>
 
-                        </div>
-
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
-
-                            <b-form-checkbox v-model="checked1" class="btn-add-quote" name="check-button" button>
-                                <b>add to quote</b>
-                            </b-form-checkbox>
-
-                       </div>
-
-                   </div>
-
-                   <div class="row">
-                   
-                        <b-collapse id="detailed1" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                        
-                                <h5><b>freight</b></h5>
-
-                                <b-table-simple hover small class="sc-table">
-
-                                    <b-thead>
-                                        <b-tr>
-                                            <b-th>Charge</b-th>
-                                            <b-th>Detail</b-th>
-                                            <b-th></b-th>
-                                            <b-th></b-th>
-                                            <b-th>20DV</b-th>
-                                            <b-th>40DV</b-th>
-                                            <b-th>40HC</b-th>
-                                        </b-tr>
-                                    </b-thead>
-
-                                    <b-tbody>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                        </b-tr>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                        </b-tr>
-                                        <b-tr>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td><b>Total Freight</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                        </b-tr>
-                                    </b-tbody>
-                                
-                                </b-table-simple>
-
-                        </b-collapse>
-                        <b-collapse id="remarks1" class="pt-5 pb-5 pl-5 pr-5 col-12">
-
-                                <h5><b>remarks</b></h5>
-                                
-                                <b-card>
-                                    <p>esos son los remarks</p>
-                                </b-card>
-                            
-                        </b-collapse>
-                   
-                   </div>
-
-                </div>
-            </div>
-
-            <div class="col-12 mb-4">
-                <div class="result-search">
-
-                   <div class="row">
-
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
-                       </div>
-
-                       <div class="row col-12 col-sm-8">
-
-                           <div class="col-12">
-                               <h6 class="mt-4 mb-5">contact reference title</h6>
-                           </div>
-
-                           <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
-
-                               <div class="col-12 col-sm-5 d-flex">
-                                   <div class="origin mr-4">
-
-                                   <span>origin</span>
-                                   <p>Lisboa, Lis</p>
-
-                               </div>
-                               <div class="via d-flex flex-column justify-content-center align-items-center">
-
-                                   <div class="direction-form route-indirect">
-
-                                       <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
-
-                                       <div class="line-route-direct">
-                                           <div class="circle mr-2"></div>
-                                           <div class="line"></div>
-                                           <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                           <div class="line line-blue"></div>
-                                           <div class="circle fill-circle ml-2"></div>
-                                       </div>
-
-                                   </div>
-                                   <div class="direction-desc">
-
-                                       <b>madrid españa</b>
-                                       <p><b>TT:</b> 45 Days</p>
-
-                                   </div>
-
-                               </div>
-                               <div class="destination ml-4">
-
-                                   <span>destination</span>
-                                   <p>Buenos Aires, Arg</p>
-
-                               </div>
-                               </div>
-
-                               <div class="col-12 col-sm-7">
-                                   <div class="row justify-content-end card-amount">
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                   </div>
-                               </div>
-
-                           </div>
-
-                           <div class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center">
+                            <!-- OPTIONS -->
+                            <div class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center">
 
                                 <div class="d-flex align-items-center">
 
@@ -276,13 +329,12 @@
 
                         </div>
 
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
-
-                            <b-form-checkbox v-model="checked2" class="btn-add-quote" name="check-button" button>
-                                <b>add to quote</b>
-                            </b-form-checkbox>
-
-                       </div>
+                        <!-- ADD QUOTE BTN -->
+                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
+                                <b-form-checkbox v-model="checked2" class="btn-add-quote" name="check-button" button>
+                                    <b>add to quote</b>
+                                </b-form-checkbox>
+                        </div>
 
                    </div>
 
@@ -290,7 +342,7 @@
                    
                         <b-collapse id="detailed2" class="pt-5 pb-5 pl-5 pr-5 col-12">
                         
-                                <h5><b>freight</b></h5>
+                                <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -341,167 +393,7 @@
                         </b-collapse>
                         <b-collapse id="remarks2" class="pt-5 pb-5 pl-5 pr-5 col-12">
 
-                                <h5><b>remarks</b></h5>
-                                
-                                <b-card>
-                                    <p>esos son los remarks</p>
-                                </b-card>
-                            
-                        </b-collapse>
-                   
-                   </div>
-
-                </div>
-            </div>
-
-            <div class="col-12 mb-4">
-                <div class="result-search">
-
-                   <div class="row">
-
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                        <img src="/images/altius.png" alt="logo">
-                       </div>
-
-                       <div class="row col-12 col-sm-8">
-
-                           <div class="col-12">
-                               <h6 class="mt-4 mb-5">contact reference title</h6>
-                           </div>
-
-                           <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
-
-                               <div class="col-12 col-sm-5 d-flex">
-                                    <div class="origin mr-4">
-
-                                        <span>origin</span>
-                                        <p>Lisboa, Lis</p>
-
-                                    </div>
-                                    <div class="via d-flex flex-column justify-content-center align-items-center">
-
-                                        <div class="direction-form">
-
-                                            <img src="/images/logo-ship-blue.svg" alt="bote">
-
-                                            <div class="line-route-direct">
-                                                <div class="circle mr-2"></div>
-                                                <div class="line"></div>
-                                                <div class="circle fill-circle ml-2"></div>
-                                            </div>
-
-                                        </div>
-                                        <div class="direction-desc">
-
-                                            <b>direct</b>
-                                            <p><b>TT:</b> 45 Days</p>
-
-                                        </div>
-
-                                    </div>
-                                    <div class="destination ml-4">
-
-                                        <span>destination</span>
-                                        <p>Buenos Aires, Arg</p>
-
-                                    </div>
-                               </div>
-
-                               <div class="col-12 col-sm-7">
-                                   <div class="row justify-content-end card-amount">
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                       <div class="col-12 col-sm-2"><p><b>1.00</b><sub>USD</sub></p></div>
-                                   </div>
-                               </div>
-
-                           </div>
-
-                           <div class="col-12 mt-3 mb-3  result-action d-flex justify-content-between align-items-center">
-
-                                <div class="d-flex align-items-center">
-
-                                    <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
-                                    <a href="#">download contract</a>
-
-                                </div>
-
-
-                                <div class="d-flex justify-content-end align-items-center">
-                                    <b-button v-b-toggle.remarks3 class="rs-btn">remarks <b-icon icon="caret-down-fill"></b-icon></b-button>
-                                    <b-button v-b-toggle.detailed3 class="rs-btn">detailed cost <b-icon icon="caret-down-fill"></b-icon></b-button>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                       <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
-
-                            <b-form-checkbox v-model="checked3" class="btn-add-quote" name="check-button" button>
-                                <b>add to quote</b>
-                            </b-form-checkbox>
-
-                       </div>
-
-                   </div>
-
-                   <div class="row">
-                   
-                        <b-collapse id="detailed3" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                        
-                                <h5><b>freight</b></h5>
-
-                                <b-table-simple hover small class="sc-table">
-
-                                    <b-thead>
-                                        <b-tr>
-                                            <b-th>Charge</b-th>
-                                            <b-th>Detail</b-th>
-                                            <b-th></b-th>
-                                            <b-th></b-th>
-                                            <b-th>20DV</b-th>
-                                            <b-th>40DV</b-th>
-                                            <b-th>40HC</b-th>
-                                        </b-tr>
-                                    </b-thead>
-
-                                    <b-tbody>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                        </b-tr>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                            <b-td>USD 1.00</b-td>
-                                        </b-tr>
-                                        <b-tr>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td><b>Total Freight</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                        </b-tr>
-                                    </b-tbody>
-                                
-                                </b-table-simple>
-
-                        </b-collapse>
-                        <b-collapse id="remarks3" class="pt-5 pb-5 pl-5 pr-5 col-12">
-
-                                <h5><b>remarks</b></h5>
+                                <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
                                     <p>esos son los remarks</p>
@@ -516,6 +408,7 @@
 
         </div>
 
+        <!-- STICKY HEADER -->
         <div id="sticky-header-results" v-bind:class="{ activeSticky: isActive }">
             <div class="container-fluid">
                 <div class="row result-header">
@@ -537,8 +430,10 @@
             </div>
         </div>
 
+        <!-- MODAL ADD CONTRACT -->
         <b-modal  id="add-contract" size="lg" centered title="Created Contract" ref="my-modal" hide-footer>
 
+            <!-- STEPS -->
             <div class="row add-contract-form-steps pt-5 pb-5">
 
                 <div class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteOne }">
@@ -565,8 +460,7 @@
 
             <form action="/action_page.php" class="add-contract-form">
 
-                
-
+                <!-- CONTRACT -->
                 <fieldset v-if="stepOne">
 
                     <div class="row">
@@ -650,6 +544,7 @@
                     </div>
                 </fieldset>
     
+                <!-- OCEAN FREIGHT -->
                 <fieldset v-if="stepTwo">
 
                         <div v-if="invalidInput" class="col-12 mt-3 mb-3">
@@ -738,6 +633,7 @@
                     
                 </fieldset>
 
+                <!-- SURCHARGES -->
                 <fieldset v-if="stepThree">
 
                     <div class="row">
@@ -824,6 +720,7 @@
                     
                 </fieldset>
 
+                <!-- FILES -->
                 <fieldset v-if="stepFour">
                     <vue-dropzone
                         ref="myVueDropzone"
@@ -1020,6 +917,7 @@ export default {
             typeContract: '',
             calculationType: '',
             dataSurcharger: [],
+            filterBy: 'LOWEST PRICE',
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
@@ -1027,6 +925,7 @@ export default {
             optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
             optionsTypeContract: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
             optionsCalculationType: ['Calculation 1', 'Calculation 2', 'Calculation 3', 'Calculation 4'],
+            optionsFilter: ['LOWEST PRICE', 'HIGH PRICE', 'LAST DATE', 'OLD DATE'],
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -1196,3 +1095,4 @@ export default {
     }
 }
 </script>
+

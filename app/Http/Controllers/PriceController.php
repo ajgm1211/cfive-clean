@@ -45,7 +45,7 @@ class PriceController extends Controller
         $price->company_user_id = \Auth::user()->company_user_id;
         $price->save();
 
-        if (count($request->input('companies')) > 0) {
+        if (count((array)$request->input('companies')) > 0) {
             foreach ($request->input('companies') as $v) {
                 $company_price = new CompanyPrice();
                 $company_price->company_id = $v;
@@ -146,7 +146,7 @@ class PriceController extends Controller
         $price = Price::find($id);
         $price->update($request->all());
 
-        if (count($request->input('companies')) > 0) {
+        if ($request->input('companies') != null) {
             CompanyPrice::where('price_id', $price->id)->delete();
             foreach ($request->input('companies') as $v) {
                 $company_price = new CompanyPrice();

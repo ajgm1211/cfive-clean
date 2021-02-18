@@ -35,13 +35,23 @@ class SyncCompaniesJob implements ShouldQueue
             $integrations = ApiIntegration::where(['module' => 'Companies', 'status' => 1])->with('partner')->get();
 
             foreach ($integrations as $setting) {
-                $this->setData($setting);
+                if ($setting->partner->name == 'Visualtrans') {
+                    $this->setDataVisual($setting);
+                } elseif ($setting->partner->name == 'VForwarding') {
+                    $this->setDataVf($setting);
+                }
             }
         } catch (\Exception $e) {
             $e->getMessage();
         }
     }
-    public function setData($setting)
+    /**
+     * setDataVisual
+     *
+     * @param  mixed $setting
+     * @return void
+     */
+    public function setDataVisual($setting)
     {
         $data = new Connection();
         $page = 1;
@@ -67,6 +77,42 @@ class SyncCompaniesJob implements ShouldQueue
             }
             $page += 1;
         } while ($page <= $max_page);
-        \Log::info('Syncronization with vForwarding completed successfully!');
+        \Log::info('Syncronization with '.$setting->partner->name.' completed successfully!');
+    }
+
+    /**
+     * setDataVf
+     *
+     * @param  mixed $setting
+     * @return void
+     */
+    public function setDataVf($setting)
+    {
+        $data = new Connection();
+        $page = 1;
+        do {
+            $uri = $setting->url . '&p=' . $page;
+
+            $response = $data->getData($uri);
+            $max_page = ceil($response['count'] / 1000);
+            foreach ($response['ent_m'] as $item) {
+                sleep(1);
+                if ($response['es_emp']) {
+                    Company::updateOrCreate([
+                        'api_id' => $item['id'],
+                    ], [
+                        'business_name' => $item['nom_com'],
+                        'tax_number' => $item['cif'],
+                        'address' => $item['address'],
+                        'phone' => $item['tlf'],
+                        'company_user_id' => $setting->company_user_id,
+                        'api_id' => $item['id'],
+                        'api_status' => 'created',
+                    ]);
+                }
+            }
+            $page += 1;
+        } while ($page <= $max_page);
+        \Log::info('Syncronization with '.$setting->partner->name.' completed successfully!');
     }
 }
