@@ -58,6 +58,8 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
+    Route::get('info', 'UsersController@show')->name('user.info');
+    Route::post('update/{id}','UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
     Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
@@ -609,6 +611,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+    Route::post('store', 'SettingController@store_d')->name('delegation.store');
+    Route::get('edit/{id}', 'SettingController@edit_d')->name('settings.edit');
+    Route::put('update','SettingController@update_d')->name('settings.updateD');
+    Route::get('delete/{id}', 'SettingController@destroy')->name('settings.delete');
     Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
