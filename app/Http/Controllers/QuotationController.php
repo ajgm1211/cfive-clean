@@ -526,7 +526,7 @@ class QuotationController extends Controller
             }
         }
 
-        if($quote->pdf_options==null || count($quote->pdf_options) != 4){            
+        if($quote->pdf_options==null || count($quote->pdf_options) != 6){            
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
@@ -535,7 +535,10 @@ class QuotationController extends Controller
                 "allIn" =>true, 
                 "showCarrier"=>true, 
                 "showTotals"=>false, 
-                "totalsCurrency" =>$currency];
+                "totalsCurrency" =>$currency,
+                "convertFrom" =>null,
+                "exchangeRate" =>null
+            ];
             
             $quote->pdf_options = $pdfOptions;
             $quote->save();
