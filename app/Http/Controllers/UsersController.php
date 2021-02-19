@@ -257,7 +257,7 @@ class UsersController extends Controller
             $delegation = UserDelegation::find($id_ud->id);
             $delegation ->delegations_id =$request->delegation_id;
             $delegation->update();
-        }else{
+        }elseif($id_ud != null && $request->delegation_id==null){
             $id_ud=UserDelegation::where('users_id','=',$id)->first();
             $id_ud->delete();
         }
