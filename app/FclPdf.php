@@ -477,11 +477,14 @@ class FclPdf
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
             }
-
-            
+ 
             $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
             
-            $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
+            if($quote->pdf_options['convertFrom'] != null && $quote->pdf_options['exchangeRate'] != null){
+                $totalsCurrencyInput = Currency::where('id',$quote->pdf_options['convertFrom']['id'])->first();
+            }else{
+                $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
+            }
             
             $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
             

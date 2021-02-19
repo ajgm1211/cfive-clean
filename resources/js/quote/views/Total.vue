@@ -7,13 +7,13 @@
             </h4>
         </div>
         <div v-else>
-            <!-- Show Totals Checkbox-->
             <div class="card" style="width: 100%">
                 <div class="card-body row" style="overflow: inherit">
+                    <!-- Show Totals Checkbox-->
                     <div class="col-12 col-lg-2 col-sm-2 d-flex mt-5 mb-3">
                         <b-form-checkbox
                             v-model="showTotals"
-                            @input="updatePdfOptions()"
+                            @input="updatePdfOptions('totalsCheck')"
                         >
                             <span>Show Totals</span>
                         </b-form-checkbox>
@@ -36,14 +36,58 @@
                             label="alphacode"
                             track-by="alphacode"
                             placeholder="Select Currency"
-                            @input="updatePdfOptions()"
+                            @input="updatePdfOptions('showAs')"
                         >
                         </multiselect>
                     </div>
+                    <!-- Currency Multiselect End-->
+
+                    <!-- Convert from Multiselect-->
+                    <div class="col-12">
+                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
+                            <span>Convert from:</span>
+                            <multiselect
+                                v-model="convertFrom"
+                                :multiple="false"
+                                :options="datalists['currency']"
+                                :searchable="true"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"
+                                :hide-selected="true"
+                                :allow-empty="false"
+                                label="alphacode"
+                                track-by="alphacode"
+                                placeholder="Select Currency"
+                                @input="updatePdfOptions('currency')"
+                            >
+                            </multiselect>
+                        </div>
+                        <div
+                            v-if="exchangeSet"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            There will be conversion errors if the totals of each tab are not set to this currency!
+                        </div>
+                    </div>
+                    <!-- Convert from Multiselect End-->
+
+                    <!-- Exchange rate input-->
+                    <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
+                        <span>Exchange rate:</span>
+                        <b-form-input
+                            placeholder="Insert rate"
+                            v-model="exchangeRate"
+                            type="number"
+                            class="q-input"
+                            @blur="updatePdfOptions('exchange')"
+                        ></b-form-input>
+                    </div>
+                    <!-- Exchange rate input End-->
                 </div>
             </div>
 
-            <!-- Currency Multiselect End-->
         </div>
     </div>
 </template>
@@ -65,7 +109,10 @@ export default {
         return {
             showTotals: false,
             totalsCurrency: {},
+            convertFrom: {},
+            exchangeRate: null,
             loaded: false,
+            exchangeSet: false,
             pdfOptions: {},
         };
     },
@@ -80,16 +127,30 @@ export default {
 
         this.totalsCurrency = this.pdfOptions["totalsCurrency"];
 
+        this.convertFrom = this.pdfOptions["convertFrom"];
+
+        this.exchangeRate = this.pdfOptions["exchangeRate"];
+
+        if(this.exchangeRate != null && this.exchangeRate != undefined && this.convertFrom != null && this.convertFrom != undefined){
+            this.exchangeSet = true;
+        }
+
         this.loaded = true;
     },
     methods: {
-        updatePdfOptions() {
+        updatePdfOptions(updateType) {
+            if(updateType == "currency"){
+                this.exchangeSet = true;
+            }
+
             let pdfOptions = {
                 pdf_options: {
                     allIn: this.pdfOptions["allIn"],
                     showCarrier: this.pdfOptions["showCarrier"],
                     showTotals: this.showTotals,
                     totalsCurrency: this.totalsCurrency,
+                    convertFrom: this.convertFrom,
+                    exchangeRate: this.exchangeRate,
                 },
             };
 
