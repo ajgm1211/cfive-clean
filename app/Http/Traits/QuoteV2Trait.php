@@ -1706,22 +1706,29 @@ trait QuoteV2Trait
         return false;
     }
 
-    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, array $amounts)
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, array $amounts, $exchangeRate = null)
     {
-        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
-            $inputConversion = $fromCurrency->rates;
-            foreach ($amounts as $container => $price) {
-                $convertedPrice = $price / $inputConversion;
-                $amounts[$container] = isDecimal($convertedPrice, true);
-            }
-            if ($toCurrency->alphacode == 'USD') {
-                return $amounts;
-            } else {
-                $outputConversion = $toCurrency->rates;
+        if($exchangeRate == null){
+            if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+                $inputConversion = $fromCurrency->rates;
                 foreach ($amounts as $container => $price) {
-                    $convertedPrice = $price * $outputConversion;
+                    $convertedPrice = $price / $inputConversion;
                     $amounts[$container] = isDecimal($convertedPrice, true);
                 }
+                if ($toCurrency->alphacode == 'USD') {
+                    return $amounts;
+                } else {
+                    $outputConversion = $toCurrency->rates;
+                    foreach ($amounts as $container => $price) {
+                        $convertedPrice = $price * $outputConversion;
+                        $amounts[$container] = isDecimal($convertedPrice, true);
+                    }
+                }
+            }
+        }else{
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $exchangeRate;
+                $amounts[$container] = isDecimal($convertedPrice, true);
             }
         }
 
