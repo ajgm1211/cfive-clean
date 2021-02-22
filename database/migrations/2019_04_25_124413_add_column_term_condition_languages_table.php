@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnTermConditionLanguagesTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnTermConditionLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::table('termsAndConditions', function(Blueprint $table){
+        Schema::table('termsAndConditions', function (Blueprint $table) {
             $table->integer('language_id')->unsigned()->nullable()->after('company_user_id');
             $table->foreign('language_id')->references('id')->on('languages');
         });
@@ -26,7 +26,7 @@ class AddColumnTermConditionLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('termsAndConditions', function($table) {
+        Schema::table('termsAndConditions', function ($table) {
             $table->dropColumn('language_id');
         });
     }

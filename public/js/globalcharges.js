@@ -547,6 +547,263 @@ function activarCountry(act, notchange = true) {
 
 }
 
+function activarCountry2(act, notchange = true) {
+    var divCountry = $(".divcountry");
+    var divport = $(".divport");
+    var divportcountry = $(".divportcountry");
+    var divcountryport = $(".divcountryport");
+
+
+
+    var idPortOrig = $("#port_orig");
+    var idCountryOrig = $("#country_orig");
+
+
+    var idPortDest = $("#port_dest");
+    var idCountryDest = $("#country_dest");
+
+
+    var portcountry_orig = $("#portcountry_orig");
+    var portcountry_dest = $("#portcountry_dest");
+
+    var countryport_orig = $("#countryport_orig");
+    var countryport_dest = $("#countryport_dest");
+
+    if (notchange != true) {
+        $("#exceptionPortOrig").select2().val('').trigger('change.select2');
+        $("#exceptionPortDest").select2().val('').trigger('change.select2');
+        $("#exceptionCountryOrig").select2().val('').trigger('change.select2');
+        $("#exceptionCountryDest").select2().val('').trigger('change.select2');
+
+
+        $('#allOriginPort').prop('checked', false);
+        $('#allOriginCountry').prop('checked', false);
+        $('#allOriginCountryPort').prop('checked', false);
+        $('#allOriginPortCountry').prop('checked', false);
+
+        $('#allDestinationPort').prop('checked', false);
+        $('#allDestinationCountry').prop('checked', false);
+        $('#allDestinationPortCountry').prop('checked', false);
+        $('#allDestinationCountryPort').prop('checked', false);
+
+        $("#port_orig").select2().val('').trigger('change.select2');
+        $("#country_orig").select2().val('').trigger('change.select2');
+        $("#countryport_orig").select2().val('').trigger('change.select2');
+        $("#portcountry_orig").select2().val('').trigger('change.select2');
+
+        $("#port_dest").select2().val('').trigger('change.select2');
+        $("#country_dest").select2().val('').trigger('change.select2');
+        $("#portcountry_dest").select2().val('').trigger('change.select2');
+        $("#countryport_dest").select2().val('').trigger('change.select2');
+
+
+
+    }
+
+    if (act == 'divcountry') {
+        divport.attr('hidden', 'true');
+        divportcountry.attr('hidden', 'true');
+        divcountryport.attr('hidden', 'true');
+
+        divCountry.removeAttr('hidden');
+
+        idCountryOrig.attr('required', 'true');
+        idCountryDest.attr('required', 'true');
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+        $('.excepcionCountryOrig').attr('hidden', 'true');
+        $('.excepcionCountryDest').attr('hidden', 'true');
+        $('.excepcionPortOrig').attr('hidden', 'true');
+        $('.excepcionPortDest').attr('hidden', 'true');
+
+
+
+
+    } else if (act == 'divport') {
+        divCountry.attr('hidden', 'true');
+        divportcountry.attr('hidden', 'true');
+        divcountryport.attr('hidden', 'true');
+
+        divport.removeAttr('hidden');
+
+        idPortOrig.attr('required', 'true');
+        idPortDest.attr('required', 'true');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+        $('.excepcionCountryOrig').attr('hidden', 'true');
+        $('.excepcionCountryDest').attr('hidden', 'true');
+        $('.excepcionPortOrig').attr('hidden', 'true');
+        $('.excepcionPortDest').attr('hidden', 'true');
+
+
+
+    } else if (act == 'divportcountry') {
+        divCountry.attr('hidden', 'true');
+        divport.attr('hidden', 'true');
+        divcountryport.attr('hidden', 'true');
+        // Activo
+        divportcountry.removeAttr('hidden');
+        // Required
+        portcountry_orig.attr('required', 'true');
+        portcountry_dest.attr('required', 'true');
+        // No required 
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        countryport_orig.removeAttr('required');
+        countryport_dest.removeAttr('required');
+
+
+        $('.excepcionCountryOrig').attr('hidden', 'true');
+        $('.excepcionCountryDest').attr('hidden', 'true');
+        $('.excepcionPortOrig').attr('hidden', 'true');
+        $('.excepcionPortDest').attr('hidden', 'true');
+
+
+
+
+
+    } else if (act == 'divcountryport') {
+        divCountry.attr('hidden', 'true');
+        divport.attr('hidden', 'true');
+        divportcountry.attr('hidden', 'true');
+        // Activo
+        divcountryport.removeAttr('hidden');
+        // Required
+        countryport_orig.attr('required', 'true');
+        countryport_dest.attr('required', 'true');
+        // No required 
+
+        idPortOrig.removeAttr('required');
+        idPortDest.removeAttr('required');
+
+        idCountryOrig.removeAttr('required');
+        idCountryDest.removeAttr('required');
+
+        portcountry_orig.removeAttr('required');
+        portcountry_dest.removeAttr('required');
+
+
+
+
+        $('.excepcionCountryOrig').attr('hidden', 'true');
+        $('.excepcionCountryDest').attr('hidden', 'true');
+        $('.excepcionPortOrig').attr('hidden', 'true');
+        $('.excepcionPortDest').attr('hidden', 'true');
+
+
+
+
+    }
+
+
+
+    // Exepciones 
+
+    if (notchange == true) {
+
+        $port_orig = $("#port_orig").val();
+        if ($port_orig == '1485') {
+
+            $('#allOriginPort').prop('checked', true);
+            $('.excepcionPortOrig').removeAttr('hidden');
+
+            $('#port_orig').attr('disabled', 'true');
+            $("#port_orig").select2().val('1485').trigger('change.select2');
+        }
+
+
+        $country_orig = $("#country_orig").val();
+        if ($country_orig == '250') {
+
+            $('#allOriginCountry').prop('checked', true);
+            $('.excepcionCountryOrig').removeAttr('hidden');
+            $('#country_orig').attr('disabled', 'true');
+            $("#country_orig").select2().val('250').trigger('change.select2');
+        }
+
+        $countryport_orig = $("#countryport_orig").val();
+        if ($countryport_orig == '250') {
+
+            $('#allOriginCountryPort').prop('checked', true);
+            $('.excepcionCountryOrig').removeAttr('hidden');
+            $('#countryport_orig').attr('disabled', 'true');
+            $("#countryport_orig").select2().val('250').trigger('change.select2');
+
+        }
+        $portcountry_orig = $("#portcountry_orig").val();
+        if ($portcountry_orig == '1485') {
+
+            $('#allOriginPortCountry').prop('checked', true);
+            $('.excepcionPortOrig').removeAttr('hidden');
+
+
+            $('#portcountry_orig').attr('disabled', 'true');
+            $("#portcountry_orig").select2().val('1485').trigger('change.select2');
+        }
+
+
+
+
+        // DESTINATION************************
+        $port_dest = $("#port_dest").val();
+        if ($port_dest == '1485') {
+
+            $('#allDestinationPort').prop('checked', true);
+            $('.excepcionPortDest').removeAttr('hidden');
+            $('#port_dest').attr('disabled', 'true');
+            $("#port_dest").select2().val('1485').trigger('change.select2');
+        }
+        $country_dest = $("#country_dest").val();
+        if ($country_dest == '250') {
+
+            $('#allDestinationCountry').prop('checked', true);
+            $('.excepcionCountryDest').removeAttr('hidden');
+            $('#country_dest').attr('disabled', 'true');
+            $("#country_dest").select2().val('250').trigger('change.select2');
+
+        }
+        $portcountry_dest = $("#portcountry_dest").val();
+        if ($portcountry_dest == '250') {
+            $('.excepcionCountryDest').removeAttr('hidden');
+            $('#portcountry_dest').attr('disabled', 'true');
+            $("#portcountry_dest").select2().val('250').trigger('change.select2');
+            $('#allDestinationPortCountry').prop('checked', true);
+        }
+        $countryport_dest = $("#countryport_dest").val();
+        if ($countryport_dest == '1485') {
+
+            $('#allDestinationCountryPort').prop('checked', true);
+            $('.excepcionPortDest').removeAttr('hidden');
+            $('#countryport_dest').attr('disabled', 'true');
+            $("#countryport_dest").select2().val('1485').trigger('change.select2');
+        }
+
+    }
+
+
+}
+
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"

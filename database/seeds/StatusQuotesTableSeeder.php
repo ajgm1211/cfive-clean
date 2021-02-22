@@ -15,42 +15,37 @@ class StatusQuotesTableSeeder extends Seeder
 
         \DB::table('status_quotes')->delete();
 
-        \DB::table('status_quotes')->insert(array (
-            0 =>
-                array (
+        \DB::table('status_quotes')->insert([
+            0 => [
                     'id' => 1,
                     'name' => 'Draft',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-            1 =>
-                array (
+                ],
+            1 => [
                     'id' => 2,
                     'name' => 'Sent',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-            2 =>
-                array (
+                ],
+            2 => [
                     'id' => 3,
                     'name' => 'Negotiated',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-            3 =>
-                array (
+                ],
+            3 => [
                     'id' => 4,
                     'name' => 'Lost',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-            4 =>
-                array (
+                ],
+            4 => [
                     'id' => 5,
                     'name' => 'Win',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-        ));
+                ],
+        ]);
     }
 }

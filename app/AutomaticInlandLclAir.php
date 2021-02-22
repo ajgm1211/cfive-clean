@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class AutomaticInlandLclAir extends Model
 
-{
+{	
 	protected $fillable = [
 		'quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','units','price_per_unit','markup','total','currency_id',
 		'provider_id','inland_totals_id','charge'];
@@ -60,7 +60,7 @@ class AutomaticInlandLclAir extends Model
 
     public function scopeSelectFields($query)
     {
-        return $query->select('id', 'provider_id', 'inland_address_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'units', 'price_per_unit as price', 'markup as profit', 'total', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+        return $query->select('id', 'provider_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'units', 'price_per_unit as price', 'markup as profit', 'total', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
     }
 
     public function scopeGetPortRelation($query)

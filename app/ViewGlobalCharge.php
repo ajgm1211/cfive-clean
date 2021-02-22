@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Carrier;
+use Illuminate\Database\Eloquent\Model;
 
 class ViewGlobalCharge extends Model
 {
@@ -16,19 +16,20 @@ class ViewGlobalCharge extends Model
 
     public function origin_harbor()
     {
-        return $this->hasOne('App\Harbor','id','orig_port');
+        return $this->hasOne('App\Harbor', 'id', 'orig_port');
     }
 
     public function destination_harbor()
     {
-        return $this->hasOne('App\Harbor','id','dest_port');
+        return $this->hasOne('App\Harbor', 'id', 'dest_port');
     }
 
     public function scopeCarrier($query, $carrier)
     {
         if ($carrier != '') {
             $carrier = Carrier::find($carrier);
-            return $query->where('carrier','like','%'.$carrier->name.'%');
+
+            return $query->where('carrier', 'like', '%'.$carrier->name.'%');
         }
     }
 
@@ -37,5 +38,5 @@ class ViewGlobalCharge extends Model
         if ($companyUser != '') {
             return $query->where('company_user_id', $companyUser);
         }
-    }    
+    }
 }

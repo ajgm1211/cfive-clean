@@ -46,7 +46,7 @@
 
                             @foreach($item as $rate)
                                 <?php
-                                    $total_freight= 0;
+                                    $total_freight= 0;                                   
                                 ?>
                                     
                                 @foreach($rate as $r)
@@ -54,6 +54,8 @@
                                         @if($v->type_id==3)
                                             <?php
                                                 $total_freight+=@$v->total_freight;
+                                                $total_w_profit = $v->surcharge_id != '' ? $v->rate:$v->rate+$r->total_rate->markups['total'];
+                                                $price_w_profit = $v->surcharge_id != '' ? $v->price_per_unit:$total_w_profit/$v->units;
                                             ?>
                                             <tr class="text-center color-table">
                                                 <td>{{$v->surcharge->name ?? 'Ocean Freight'}}</td>
@@ -61,8 +63,8 @@
                                                 <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td >{{$v->units}}</td>
                                                 <td >{{$v->minimum}}</td>
-                                                <td >{{isDecimal($v->price_per_unit,true)}}</td>
-                                                <td >{{isDecimal($v->rate,true).' '.$v->currency->alphacode}}</td>
+                                                <td >{{isDecimal($price_w_profit,true)}}</td>
+                                                <td >{{isDecimal($total_w_profit,true).' '.$v->currency->alphacode}}</td>
                                                 @if($service)
                                                     <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                     <td>{{@$r->via!='' ? @$r->via:'-'}}</td>

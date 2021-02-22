@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use App\Contract;
 use App\ContractLcl;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ProcessExpiredContractsJob implements ShouldQueue
 {
@@ -31,16 +31,16 @@ class ProcessExpiredContractsJob implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $contracts=Contract::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
-            foreach ($contracts as $contract){
-                Contract::where('id',$contract->id)->update(['status' => 'expired']);
+        try {
+            $contracts = Contract::where('status', 'publish')->where('expire', '<=', date('Y-m-d'))->get();
+            foreach ($contracts as $contract) {
+                Contract::where('id', $contract->id)->update(['status' => 'expired']);
             }
-            $contracts_lcl=ContractLcl::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
-            foreach ($contracts_lcl as $contract){
-                ContractLcl::where('id',$contract->id)->update(['status' => 'expired']);
+            $contracts_lcl = ContractLcl::where('status', 'publish')->where('expire', '<=', date('Y-m-d'))->get();
+            foreach ($contracts_lcl as $contract) {
+                ContractLcl::where('id', $contract->id)->update(['status' => 'expired']);
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $e->getMessage();
         }
     }
