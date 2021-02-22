@@ -85,6 +85,7 @@ class AutomaticRateController extends Controller
                 'origin_port_id' => $rate->origin_port_id,
                 'destination_port_id' => $rate->destination_port_id,
                 'automatic_rate_id' => $rate->id,
+                'carrier_id' => $rate->carrier_id,
                 'totals' => null,
                 'markups' => null                    
             ]);

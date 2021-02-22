@@ -9,7 +9,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title mt-3">
-                            <b>{{currentData.type}} Quote</b>
+                            <b>{{currentData.type}} Quote | {{currentData.quote_id}}</b>
                         </h4>
                         <div>
                             <a :href="'/api/quote/pdf/' + this.quote_id" target="_blank" class="btn btn-primary btn-bg">+ PDF</a>
@@ -167,6 +167,13 @@ export default {
                     placeholder: "Quote ID",
                     colClass: "col-lg-3",
                 },
+                custom_quote_id: {
+                    label: "CUSTOM QUOTE ID",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom Quote ID",
+                    colClass: "col-lg-3",
+                },
                 delivery_type: {
                     label: "SERVICE",
                     searchable: true,
@@ -284,7 +291,14 @@ export default {
                     trackby: "name",
                     placeholder: "Select options",
                     options: "incoterms",
-                    colClass: "col-lg-3",
+                    colClass: "col-lg-1",
+                },
+                custom_incoterm: {
+                    label: "CUSTOM INCOTERM",
+                    type: "text",                    
+                    disabled: false,
+                    placeholder: "Custom incoterm",
+                    colClass: "col-lg-2",
                 },
                 language_id: {
                     label: "LANGUAGE",

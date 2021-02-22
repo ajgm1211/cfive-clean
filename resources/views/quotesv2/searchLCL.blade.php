@@ -1398,7 +1398,7 @@
                                                 <div class="m-widget5">
                                                     <div class="m-widget5__item no-padding no-margin">
                                                         <div class="m-widget5__pic">
-                                                            <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
+                                                            <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
                                                                 alt="" title="" />
                                                         </div>
                                                     </div>
