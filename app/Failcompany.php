@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Failcompany extends Model
 {
-    protected $table    = "fail_companies";
+    protected $table = 'fail_companies';
     protected $fillable = ['business_name',
                            'phone',
                            'address',
@@ -15,6 +15,6 @@ class Failcompany extends Model
                            'logo',
                            'associated_quotes',
                            'company_user_id',
-                           'owner'
+                           'owner',
                           ];
 }

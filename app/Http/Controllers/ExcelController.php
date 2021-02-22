@@ -791,8 +791,7 @@ class ExcelController extends Controller
         ]);
 
         //dd($request->input('validity'));
-        SendExcelFile::dispatch('Excel File','Body', \Auth::user()->email, \Auth::user()->email,$data, \Auth::user()->company_user_id , \Auth::user()->id );
-
+        SendExcelFile::dispatch('Excel File', 'Body', \Auth::user()->email, \Auth::user()->email, $data, \Auth::user()->company_user_id, \Auth::user()->id);
         return response()->json(['msg' => "Succesfull"]);
     }
 

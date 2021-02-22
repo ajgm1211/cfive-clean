@@ -1050,7 +1050,7 @@
                                 </div>
                             </div>
                             <!-- By packing -->
-                            <div class="tab-pane fade {{ $paquete }} " id="tab_1_2">
+                            <div class="tab-pane fade {{ @$paquete }} " id="tab_1_2">
                                 <input type="hidden" value="@$form['total_pallets']" id="total_pallets"
                                     name="total_pallets" />
                                 <input type="hidden" value="@$form['total_packages']" id="total_packages"
@@ -1398,7 +1398,7 @@
                                                 <div class="m-widget5">
                                                     <div class="m-widget5__item no-padding no-margin">
                                                         <div class="m-widget5__pic">
-                                                            <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
+                                                            <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
                                                                 alt="" title="" />
                                                         </div>
                                                     </div>

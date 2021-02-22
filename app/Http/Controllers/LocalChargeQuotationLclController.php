@@ -138,14 +138,16 @@ class LocalChargeQuotationLclController extends Controller
         $selectedCharges = $request->selectedCharges;
 
         foreach ($selectedCharges as $localcharge) {
-
+            
             $charge = $localcharge['surcharge']['name'];
 
+            $units = $localcharge['units'] == 0 ? 1:$localcharge['units'];
+
             $local_charge_lcl = LocalChargeQuoteLcl::create([
-                'price' => (((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup']) / (float)$localcharge['units'],
-                'units' => $localcharge['units'],
+                'price' => (((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup']) / (float)$units,
+                'units' => $units,
                 'profit' => $localcharge['markup'],
-                'total' => ((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'],
+                'total' => ((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup'],
                 'charge' => $charge,
                 'surcharge_id' => $localcharge['surcharge_id'],
                 'calculation_type_id' => $localcharge['calculation_type_id'],

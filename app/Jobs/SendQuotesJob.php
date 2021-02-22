@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\SendQuotePdf;
 use App\QuoteV2;
 use App\SendQuote;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 
 class SendQuotesJob implements ShouldQueue
 {
@@ -33,17 +33,17 @@ class SendQuotesJob implements ShouldQueue
      */
     public function handle()
     {
-        try{
-            $notifications=SendQuote::where('status',0)->get();
+        try {
+            $notifications = SendQuote::where('status', 0)->get();
             foreach ($notifications as $item) {
-                $quote=QuoteV2::findOrFail($item->quote_id);
-                $send_notification=SendQuote::find($item->id);
-                $send_notification->status=1;
+                $quote = QuoteV2::findOrFail($item->quote_id);
+                $send_notification = SendQuote::find($item->id);
+                $send_notification->status = 1;
                 $send_notification->update();
 
-                Mail::to($item->to)->bcc($item->from)->send(new SendQuotePdf($item->subject,$item->body,$quote,$item->from,$item->sign,$item->sign_type));
+                Mail::to($item->to)->bcc($item->from)->send(new SendQuotePdf($item->subject, $item->body, $quote, $item->from, $item->sign, $item->sign_type));
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $e->getMessage();
         }
     }

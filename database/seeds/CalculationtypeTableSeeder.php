@@ -4,261 +4,233 @@ use Illuminate\Database\Seeder;
 
 class CalculationtypeTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('calculationtype')->delete();
-        
-        \DB::table('calculationtype')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('calculationtype')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Per 40 "',
                 'code' => '40',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:41:57',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'Per 20 "',
                 'code' => '20',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:18:20',
-            ),
-            2 => 
-            array (
+            ],
+            2 => [
                 'id' => 3,
                 'name' => 'Per 40 HC',
                 'code' => '40HC',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:42:20',
-            ),
-            3 => 
-            array (
+            ],
+            3 => [
                 'id' => 4,
                 'name' => 'Per TEU Dry',
                 'code' => 'TEU',
                 'options' => '{"name": "PER_TEU", "group": true, "isteu": true}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:38:26',
-            ),
-            4 => 
-            array (
+            ],
+            4 => [
                 'id' => 5,
                 'name' => 'Per Container DRY',
                 'code' => 'CONT',
                 'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:57:10',
-            ),
-            5 => 
-            array (
+            ],
+            5 => [
                 'id' => 6,
                 'name' => 'Per Shipment',
                 'code' => 'SHIP',
                 'options' => '{"name": "PER_SHIPMENT", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:39:43',
-            ),
-            6 => 
-            array (
+            ],
+            6 => [
                 'id' => 7,
                 'name' => 'Per 40 NOR',
                 'code' => '40NOR',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:42:45',
-            ),
-            7 => 
-            array (
+            ],
+            7 => [
                 'id' => 8,
                 'name' => 'Per 45',
                 'code' => '45',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:43:14',
-            ),
-            8 => 
-            array (
+            ],
+            8 => [
                 'id' => 9,
                 'name' => 'Per BL',
                 'code' => 'BL',
                 'options' => '{"name": "PER_BL", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:40:41',
-            ),
-            9 => 
-            array (
+            ],
+            9 => [
                 'id' => 10,
                 'name' => 'Per TON',
                 'code' => 'TON',
                 'options' => '{"name": "PER_TON", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:40:12',
-            ),
-            10 => 
-            array (
+            ],
+            10 => [
                 'id' => 11,
                 'name' => 'Per Invoice',
                 'code' => 'INV',
                 'options' => '{"name": "N\\\\A", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:43:48',
-            ),
-            11 => 
-            array (
+            ],
+            11 => [
                 'id' => 12,
                 'name' => 'Per 20Refeer',
                 'code' => '20R',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:44:45',
-            ),
-            12 => 
-            array (
+            ],
+            12 => [
                 'id' => 13,
                 'name' => 'Per 40Refeer',
                 'code' => '40RF',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:44:53',
-            ),
-            13 => 
-            array (
+            ],
+            13 => [
                 'id' => 14,
                 'name' => 'Per 40HCRef',
                 'code' => '40HCRF',
                 'options' => '{"name": "N\\\\A", "group": false, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:45:18',
-            ),
-            14 => 
-            array (
+            ],
+            14 => [
                 'id' => 15,
                 'name' => 'ModidicacionBL',
                 'code' => 'MBL',
                 'options' => '{"name": "N\\\\A", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:45:47',
-            ),
-            15 => 
-            array (
+            ],
+            15 => [
                 'id' => 16,
                 'name' => 'Per 20 OT',
                 'code' => '20OT',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-31 20:47:26',
-            ),
-            16 => 
-            array (
+            ],
+            16 => [
                 'id' => 17,
                 'name' => 'Per Tracking',
                 'code' => 'TRCK',
                 'options' => '{"name": "N\\\\A", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-04-06 17:46:08',
-            ),
-            17 => 
-            array (
+            ],
+            17 => [
                 'id' => 18,
                 'name' => 'Per 40 OT',
                 'code' => '40OT',
                 'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-31 20:47:34',
-            ),
-            18 => 
-            array (
+            ],
+            18 => [
                 'id' => 19,
                 'name' => 'Per container Reefer',
                 'code' => 'CONT RF',
                 'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:20:55',
-            ),
-            19 => 
-            array (
+            ],
+            19 => [
                 'id' => 20,
                 'name' => 'Per container OT',
                 'code' => 'CONT OT',
                 'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:19:57',
-            ),
-            20 => 
-            array (
+            ],
+            20 => [
                 'id' => 21,
                 'name' => 'Per container FR',
                 'code' => 'CONT FR',
                 'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:19:45',
-            ),
-            21 => 
-            array (
+            ],
+            21 => [
                 'id' => 22,
                 'name' => 'Per TEU Reefer',
                 'code' => 'TEU RF',
                 'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:38:59',
-            ),
-            22 => 
-            array (
+            ],
+            22 => [
                 'id' => 23,
                 'name' => 'Per TEU OT',
                 'code' => 'TEU OT',
                 'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:38:50',
-            ),
-            23 => 
-            array (
+            ],
+            23 => [
                 'id' => 24,
                 'name' => 'Per TEU FR',
                 'code' => 'TEU FR',
                 'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2020-03-27 15:38:37',
-            ),
-            24 => 
-            array (
+            ],
+            24 => [
                 'id' => 25,
                 'name' => 'Per 20 FR',
                 'code' => '20FR',
@@ -266,9 +238,8 @@ class CalculationtypeTableSeeder extends Seeder
                 'gp_pcontainer' => 1,
                 'created_at' => '2020-03-31 20:32:56',
                 'updated_at' => '2020-03-31 20:32:56',
-            ),
-            25 => 
-            array (
+            ],
+            25 => [
                 'id' => 26,
                 'name' => 'Per 40 FR',
                 'code' => '40FR',
@@ -276,9 +247,7 @@ class CalculationtypeTableSeeder extends Seeder
                 'gp_pcontainer' => 1,
                 'created_at' => '2020-03-31 20:33:28',
                 'updated_at' => '2020-03-31 20:34:19',
-            ),
-        ));
-        
-        
+            ],
+        ]);
     }
 }
