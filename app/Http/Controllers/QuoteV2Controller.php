@@ -1976,7 +1976,8 @@ class QuoteV2Controller extends Controller
             $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => $form->origin_address, 'destination_address' => $form->destination_address]);
 
             $quote = QuoteV2::create($request->all());
-
+            $quote ->custom_quote_id = $quote->quote_id;
+            
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
@@ -2200,10 +2201,18 @@ class QuoteV2Controller extends Controller
                     $markups = json_encode($rateO->markups);
                     $arregloNull = array();
 
-                    $remarks = $info_D->remarks . "<br>";
+                    if(isset( $info_D->remarks)){
+                        $remarks = $info_D->remarks . "<br>";
+                    }else{
+                        $remarks = '';
+                    }
+                    
+                    if(isset($info_D->remarksG)){
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
 
                     //NEW REMARKS FOR QUOTE
-                    $quote_language = $company->companyUser->pdf_language;
+                    $quote_language = $company->companyUser->pdf_language ?? 1;
 
                     if ($quote_language == 1) {
                         $quote->remarks_english = $remarks;
@@ -2283,6 +2292,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinal;
@@ -2854,8 +2864,21 @@ class QuoteV2Controller extends Controller
         $currencies = Currency::all()->pluck('alphacode', 'id');
         $hideO = 'hide';
         $hideD = 'hide';
-        $chargeOrigin = 'true';
-        $chargeDestination = 'true';
+
+        $charge = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        if($charge->origincharge!=null){
+            $chargeOrigin = 'true';
+        }else{
+            $chargeOrigin = '';
+        }
+        if($charge->destinationcharge!=null){
+            $chargeDestination = 'true';
+        }else{
+            $chargeDestination ='' ;
+        }
+        
+        
         $chargeFreight = 'true';
         $chargeAPI = 'true';
         $chargeAPI_M = 'false';
@@ -3860,6 +3883,7 @@ class QuoteV2Controller extends Controller
 
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
         $chargeDestination = ($chargesDestination != null) ? true : false;
+        
         $chargeFreight = ($chargesFreight != null) ? true : false;
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
@@ -7025,8 +7049,16 @@ class QuoteV2Controller extends Controller
                 foreach ($info_D->rates as $rateO) {
 
                     $arregloNull = array();
-                    $remarks = $info_D->remarks . "<br>";
+                    if(isset( $info_D->remarks)){
+                        $remarks = $info_D->remarks . "<br>";
+                    }else{
+                        $remarks = '';
+                    }
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->service, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+
+                    if(isset($info_D->remarksG)){
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
 
                     $rate = AutomaticRate::create($request->all());
 
@@ -7086,6 +7118,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $rateO->idCurrency;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinalArray;

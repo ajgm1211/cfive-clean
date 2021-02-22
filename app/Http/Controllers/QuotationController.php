@@ -314,7 +314,7 @@ class QuotationController extends Controller
 
         if($form_keys!=null){
             if(array_intersect($terms_keys,$form_keys)==[] && $request->input('cargo_type_id') == null){
-                $data = $request->validate([
+                $data = $request->validate([                   
                     'delivery_type' => 'required',
                     'equipment' => 'required',
                     'status' => 'required',
@@ -375,6 +375,16 @@ class QuotationController extends Controller
                 }
             }
             $quote->update([$key=>$data[$key]]);
+        }
+        if($request->input('custom_incoterm') != null){
+            $quote->update(['custom_incoterm'=>$request->input('custom_incoterm')]);
+        }else{
+            $quote->update(['custom_incoterm'=> null]);
+        }
+        if($request->input('custom_quote_id') != null){
+            $quote->update(['custom_quote_id'=>$request->input('custom_quote_id')]);
+        }else{
+            $quote->update(['custom_quote_id'=> null]);
         }
 
         if($request->input('pdf_options') != null){
@@ -439,12 +449,18 @@ class QuotationController extends Controller
                         'origin_port_id' => $rate->origin_port_id,
                         'destination_port_id' => $rate->destination_port_id,
                         'automatic_rate_id' => $rate->id,
+                        'carrier_id' => $rate->carrier_id,
                         'totals' => null,
                         'markups' => null                    
                     ]);
 
                     $newRateTotal->totalize($currency->id);
                 }else{
+                    if($rateTotal->carrier_id == null){
+                        $rateTotal->carrier_id = $rate->carrier_id;
+
+                        $rateTotal->save();
+                    }
                     $currency = $rate->currency()->first();
 
                     $rateTotal->totalize($currency->id);
