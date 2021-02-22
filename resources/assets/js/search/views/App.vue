@@ -8,7 +8,7 @@
         ></Search>
 
         <Recent 
-            v-if="Object.keys(foundRates).length == 0 && !searching"
+            v-if="(Object.keys(foundRates).length == 0 || foundRates.length == 0) && !searching"
         ></Recent>
 
         <Result 
@@ -41,6 +41,9 @@ export default {
             datalists: {},
         }
     },
+    created() {
+        console.log()
+    },
     methods :
     {
         setDatalists(initialData){
@@ -52,8 +55,9 @@ export default {
         },
 
         setSearchData(searchData,searchRequest){
+            console.log(this.searchData);
             this.searching = false;
-            this.foundRates = searchData.rates;
+            this.foundRates = searchData;
             this.searchRequest = searchRequest;
         },
     },

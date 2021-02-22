@@ -86,6 +86,7 @@
                     >
                     </multiselect>
                     <img src="/images/port.svg" class="img-icon img-icon-left" alt="port">
+                    <span v-if="errorsExist && 'originPorts' in responseErrors">The Origin Port field is required!</span>
                 </div>
 
                 <!-- Destination Port -->
@@ -104,6 +105,7 @@
                         >
                         </multiselect>
                         <img src="/images/port.svg" class="img-icon" alt="port">
+                        <span v-if="errorsExist && 'destinationPorts' in responseErrors">The Destination Port field is required!</span>
                 </div>
                 
                 <!-- Date Picker-->
@@ -111,7 +113,7 @@
                         <date-range-picker
                             :opens="'center'"
                             :locale-data="{
-                                firstDay: 1,
+                                firstDay: 0,
                                 format: 'yyyy/mm/dd',
                             }"
                             :singleDatePicker="false"
@@ -122,6 +124,7 @@
                             class="s-input"
                         ></date-range-picker>
                         <img src="/images/calendario.svg" class="img-icon" alt="calendario">
+                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors">Please pick a date</span>
                 </div>
 
                 <!-- Containers -->
@@ -146,6 +149,7 @@
                             </b-dropdown-form>
                         </b-dropdown>
                         <img src="/images/container.svg" class="img-icon" alt="port">
+                        <span v-if="errorsExist && 'containers' in responseErrors">Choose at least one container</span>
                 </div>
 
             </div>
@@ -495,6 +499,16 @@
 				<!-- End Tabs Section -->
             </div>
 
+            <div class="col-lg-4">
+                <div
+                v-if="Array.isArray(foundRates) && foundRates.length == 0"
+                class="alert alert-danger"
+                role="alert"
+                >
+                    No results for this particular route. Create a manual quote or try another search
+                </div>
+            </div>
+
             <div class="row justify-content-center mr-0 ml-0">
                 <div class="col-2 d-flex justify-content-center">
                     <button
@@ -556,10 +570,7 @@ export default {
                 carriers: [],
                 originAddress: [],
                 destinationAddress: [],
-                dateRange: {
-                    "validity_start":"2021-01-08",
-                    "validity_end":"2021-02-15"
-                },
+                dateRange: {},
             },
             selectedContainerGroup: {},
             containers: [],
@@ -580,6 +591,9 @@ export default {
             containerText: [],
             allCarriers: false,
             carrierText: 'All Carriers Selected',
+            errorsExist: false,
+            responseErrors: {},
+            foundRates: {},
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -601,6 +615,7 @@ export default {
         }
     },
     created() {
+        //console.log("watching");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
             this.setSearchDisplay();
@@ -646,32 +661,37 @@ export default {
 
         //Send Search Request to Controller
         requestSearch() {
-            console.log(this.deliveryType)
             this.$emit("searchRequest");
             this.searching = true;
             this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
             this.searchRequest.containers = this.containers;
             this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
+            this.errorsExist = false;
             actions.search
                 .process(this.searchRequest)
                 .then((response) => {
-                    response.data.rates.forEach(function (rate){
+                    response.data.data.forEach(function (rate){
                         if(typeof rate.containers == "string"){
                             rate.containers = JSON.parse(rate.containers)
                         }
                     });
-                    this.$emit("searchSuccess",response.data,this.searchRequest);
+                    this.foundRates = response.data.data;
                     this.searching = false;
+                    this.$emit("searchSuccess",response.data.data,this.searchRequest);
                     })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                    });
+                .catch(error => {
+                    this.errorsExist = true;
+                    this.searching = false;
+                    if(error.status === 422) {
+                        this.responseErrors = error.data.errors;
+                    }
+                })
         },
 
         deleteSurcharger(index){
-                    this.dataPackaging.splice(index, 1);
-                    console.log(this.dataPackaging);
+            this.dataPackaging.splice(index, 1);
+            console.log(this.dataPackaging);
         },
 
         addSurcharger() {

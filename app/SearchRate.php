@@ -6,20 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class SearchRate extends Model
 {
+  protected $casts = ['equipment' => 'array'];
 
-  protected $fillable =   ['id','pick_up_date','user_id'];
+  protected $fillable =   ['id','pick_up_date','user_id', 'equipment', 'delivery', 'direction', 'type', 'company_user_id', 'user_id'];
 
   public function search_ports(){
     return $this->hasMany('App\SearchPort');
   }
+
   public function user()
   {
     return $this->belongsTo('App\User');
   }
+
   public function company()
   {
     return $this->belongsTo('App\CompanyUser','company_user_id');
   }
+
   public function incoterm()
   {
     return $this->belongsTo('App\Incoterm','incoterm_id');
