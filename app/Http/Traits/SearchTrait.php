@@ -804,10 +804,8 @@ trait SearchTrait
             $freight_currency = $this->cleanJsonData($freight_markup->pluck('currency'));
             //Querying currency model
             $freight_currency = Currency::find($freight_currency);
-            //Converting fixed markup to client currency
-            $freight_amount = $this->convertToCurrency($freight_currency,$client_currency,Array($freight_amount));
             //Formatting to client decimal settings
-            $freight_amount = isDecimal($freight_amount[0], true);
+            $freight_amount = isDecimal($freight_amount, true);
 
             // Filtering Local Charges markups by search type
             if($type == 'FCL'){
@@ -825,10 +823,8 @@ trait SearchTrait
                 $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_export'));
                 //Querying currency model
                 $local_charge_currency = Currency::find($local_charge_currency);
-                //Converting fixed markup to client currency
-                $local_charge_amount = $this->convertToCurrency($local_charge_currency, $client_currency, Array($local_charge_amount));
                 //Formatting to client decimal settings
-                $local_charge_markup = isDecimal($local_charge_amount[0], true);
+                $local_charge_amount = isDecimal($local_charge_amount[0], true);
             } elseif($direction == 1) {
                 //Percent markup
                 $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_import')));
@@ -838,10 +834,8 @@ trait SearchTrait
                 $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_import'));
                 //Querying currency model
                 $local_charge_currency = Currency::find($local_charge_currency);
-                //Converting fixed markup to client currency
-                $local_charge_amount = $this->convertToCurrency($local_charge_currency, $client_currency, Array($local_charge_amount));
                 //Formatting to client decimal settings
-                $local_charge_amount = isDecimal($local_charge_amount[0], true);
+                $local_charge_amount = isDecimal($local_charge_amount, true);
             }
 
             // Filtering Inland markups by search type
@@ -860,8 +854,6 @@ trait SearchTrait
                 $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_export'));
                 //Querying currency model
                 $inland_currency = Currency::find($inland_currency);
-                //Converting fixed markup to client currency
-                $inland_amount = $this->convertToCurrency($inland_currency, $client_currency, Array($inland_amount));
                 //Formatting to client decimal settings
                 $inland_markup = isDecimal($inland_amount[0], true);
             } elseif($direction == 1) {
@@ -873,10 +865,8 @@ trait SearchTrait
                 $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_import'));
                 //Querying currency model
                 $inland_currency = Currency::find($inland_currency);
-                //Converting fixed markup to client currency
-                $inland_amount = $this->convertToCurrency($inland_currency, $client_currency, Array($inland_amount));
                 //Formatting to client decimal settings
-                $inland_amount = isDecimal($inland_amount[0], true);
+                $inland_amount = isDecimal($inland_amount, true);
             }
         }
         $markup_array['freight'] = array('freight_amount' => $freight_amount, 'freight_percentage' => $freight_percentage, 'freight_currency' => $freight_currency);
@@ -1031,6 +1021,12 @@ trait SearchTrait
                     }
                 }
 
+                foreach($containers as $code => $container){
+                    if(!isset($container_charges['C'.$container['code']])){
+                        $container_charges['C'.$container['code']] = 0;
+                    }
+                }
+
                 //Setting rates per container
                     //In unmodified currency, for general use
                     //In client currency to show in overall totals
@@ -1056,6 +1052,7 @@ trait SearchTrait
             //If there's only one charge in one of the directions, add that charge directly to the final array
             if(count($charges_direction) == 1){
                 $joint_charges[$direction] = $charges_direction;
+                $charges_direction[0]->setAttribute('joint_as','charge_currency');
             //If there's more, begin comparison and join routine
             }elseif(count($charges_direction) > 1){
                 //Duplicating original array for comparing and joining

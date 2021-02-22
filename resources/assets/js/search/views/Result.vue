@@ -28,7 +28,7 @@
 
                 <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                 
-                <b-button class="btn-create-quote">Create Quote</b-button>
+                <b-button b-button variant="primary" @click="createQuote">Create Quote</b-button>
 
             </div>
         </div>
@@ -63,7 +63,7 @@
         </div>
 
         <!-- RESULTS -->
-        <div class="row" id="top-results">
+        <div v-if="rates.length != 0" class="row" id="top-results">
 
             <!-- LCL CARD -->
             <div class="col-12 mb-4" v-if="false">
@@ -313,7 +313,7 @@
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code] : rate.totals['C'+container.code]}}</b>{{rate.currency.alphacode}}</p>
+                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code].toFixed(2) }}</b>{{rate.currency.alphacode}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -336,14 +336,14 @@
                                         class="rs-btn"
                                         :class="rate.remarksCollapse ? null : 'collapsed'"
                                         :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"
-                                        aria-controls="remarks"
+                                        :aria-controls="'remarks_' + + String(rate.id)"
                                         @click="rate.remarksCollapse = !rate.remarksCollapse"
                                     ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
                                     <b-button 
                                         class="rs-btn"
                                         :class="rate.detailCollapse ? null : 'collapsed'"
                                         :aria-expanded="rate.detailCollapse ? 'true' : 'false'"
-                                        aria-controls="remarks"
+                                        :aria-controls="'remarks_' + + String(rate.id)"
                                         @click="rate.detailCollapse = !rate.detailCollapse"
                                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
                                 </div>
@@ -363,7 +363,7 @@
 
                    <div class="row">
                    
-                        <b-collapse id="details" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
+                        <b-collapse :id="'details_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
                             <div 
                                 v-for="(chargeArray,chargeType) in rate.charges"
                                 :key="chargeType"
@@ -401,7 +401,10 @@
                                                 :key="contKey"
                                             >
                                             {{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}
-                                            <span v-if="typeof charge.container_markups!=='undefined'" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups.amount['C'+container.code] : charge.container_markups.amount['C'+container.code]}}</span><b>USD 200</b>
+                                            <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
+                                            <b>{{ charge.joint_as=='client_currency' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
+                                            <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
+                                            <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
                                             </b-td>
                                         </b-tr>
                 
@@ -410,16 +413,17 @@
                                             <b-td></b-td>
                                             <b-td></b-td>
                                             <b-td><b>Total Freight</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
+                                            <b-td 
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            ><b>{{ rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
                                 </b-table-simple>
                             </div>
                         </b-collapse>
-                        <b-collapse id="remarks" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
+                        <b-collapse :id="'remarks_' + + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
                                 
@@ -436,6 +440,8 @@
 
         </div>
 
+        <div v-else><h1><b>No rates found for this particular route</b></h1></div>
+
         <!-- STICKY HEADER -->
         <div id="sticky-header-results" v-bind:class="{ activeSticky: isActive }">
             <div class="container-fluid">
@@ -451,7 +457,7 @@
 
                         <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                         
-                        <b-button class="btn-create-quote">Create Quote</b-button>
+                        <b-button @click="createQuote">Create Quote</b-button>
 
                     </div>
                 </div>
@@ -917,6 +923,7 @@ import Multiselect from "vue-multiselect";
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import actions from "../../actions";
 
 export default {
     props: {
@@ -932,6 +939,7 @@ export default {
     },
     data() {
         return {
+            actions: actions,
             //GENE DEFINED
             checked1: false,
             checked2: false,
@@ -1083,6 +1091,26 @@ export default {
                 return
             }
         },
+        
+        createQuote() {
+            let component = this;
+            let ratesForQuote = [];
+
+            component.rates.forEach(function (rate){
+                if(rate.addToQuote){
+                    ratesForQuote.push(rate);
+                }
+            })
+
+            if(ratesForQuote.length == 0){
+                component.noRatesAdded = true;
+            }else{
+                component.actions.quotes.create(ratesForQuote)
+                .then ((response) => {
+
+                })
+            }
+        },
     },
     watch: {
         valueEq: function() {
@@ -1123,7 +1151,6 @@ export default {
 
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
-            console.log(rate.charges);
         });
 
         window.document.onscroll = () => {

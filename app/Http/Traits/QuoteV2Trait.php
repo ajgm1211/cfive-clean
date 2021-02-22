@@ -1770,9 +1770,28 @@ trait QuoteV2Trait
     public function calculatePercentage(int $percentage, $amounts)
     {       
         foreach($amounts as $key => $amount){
-            $amounts[$key] = $amount * $percentage / 100;
+            $amounts[$key] = isDecimal($amount * $percentage / 100,true);
         }
 
         return $amounts;
+    }
+
+    public function formatContainersForQuote(Array $container_codes)
+    {
+        $container_array = [];
+
+        if(count($container_codes) == 0){
+            return "[]";
+        }else{
+            foreach($container_codes as $code){
+                $container = Container::where('code',$code)->first();
+                
+                array_push($container_array, $container->id);
+            }
+    
+            $container_string = "[\"".implode("\",\"",$container_array)."\"]";
+    
+            return $container_string;
+        }
     }
 }
