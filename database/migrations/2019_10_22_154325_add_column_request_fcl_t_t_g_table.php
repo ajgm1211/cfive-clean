@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnRequestFclTTGTable extends Migration
 {
@@ -13,14 +13,13 @@ class AddColumnRequestFclTTGTable extends Migration
      */
     public function up()
     {
-        Schema::table('newcontractrequests',function (Blueprint $table) {
+        Schema::table('newcontractrequests', function (Blueprint $table) {
             $table->string('time_manager')->nullable()->after('time_total');
         });
-        
-        Schema::table('new_contract_request_lcl',function (Blueprint $table) {
+
+        Schema::table('new_contract_request_lcl', function (Blueprint $table) {
             $table->string('time_manager')->nullable()->after('time_total');
         });
-        
     }
 
     /**

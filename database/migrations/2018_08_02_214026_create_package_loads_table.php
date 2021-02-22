@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePackageLoadsTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreatePackageLoadsTable extends Migration
             $table->float('total_weight');
             $table->float('volume');
             $table->integer('quote_id')->unsigned();
-            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');            
+            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');
             $table->timestamps();
         });
     }

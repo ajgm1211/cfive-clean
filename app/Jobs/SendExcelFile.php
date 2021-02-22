@@ -178,53 +178,56 @@ class SendExcelFile implements ShouldQueue
                         $contractId = $data->contract->id;
                         $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
 
-                        for ($i = 0; $i < count($data1); $i++) {
-                            //'country_orig' =>  $data1[$i]->country_orig,
-                            //  'country_dest' =>   $data1[$i]->country_dest,
-                            $montosLocal = array();
-                            $montosLocal2 = array();
-                            $arrayFirstPartLocal = array(
-                                'Contract' => $data->contract->name,
-                                'Reference' => $data->contract->id,
-                                'Carrier' => $data1[$i]->carrier,
-                                'Direction' => $data->contract->direction->name,
-                                'Origin' => $data1[$i]->port_orig,
-                                'Destination' => $data1[$i]->port_dest,
-                                'Charge' => $data1[$i]->surcharge,
+                        if ($data1 != null) {
+                            for ($i = 0; $i < count($data1); $i++) {
+                                //'country_orig' =>  $data1[$i]->country_orig,
+                                //  'country_dest' =>   $data1[$i]->country_dest,
+                                $montosLocal = array();
+                                $montosLocal2 = array();
+                                $arrayFirstPartLocal = array(
+                                    'Contract' => $data->contract->name,
+                                    'Reference' => $data->contract->id,
+                                    'Carrier' => $data1[$i]->carrier,
+                                    'Direction' => $data->contract->direction->name,
+                                    'Origin' => $data1[$i]->port_orig,
+                                    'Destination' => $data1[$i]->port_dest,
+                                    'Charge' => $data1[$i]->surcharge,
 
-                            );
+                                );
 
-                            $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
-                            $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
+                                $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+                                $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
 
-                            foreach ($containers as $cont) {
-                                $name_arreglo = 'array' . $cont->code;
-                                $name_rate = 'rate' . $cont->code;
-                                if (in_array($calculationID->id, $$name_arreglo)) {
-                                    $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
-                                    $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
-                                    $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
-                                    $montosAllInTot[$cont->code] = $$name_rate;
-                                    $montosLocal2 = array($cont->code => $monto);
-                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
-                                } else {
-                                    $montosLocal2 = array($cont->code => '0');
+                                foreach ($containers as $cont) {
+                                    $name_arreglo = 'array' . $cont->code;
+                                    $name_rate = 'rate' . $cont->code;
+                                    if (in_array($calculationID->id, $$name_arreglo)) {
+                                        $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
+                                        $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
+                                        $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
+                                        $montosAllInTot[$cont->code] = $$name_rate;
+                                        $montosLocal2 = array($cont->code => $monto);
+                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                    } else {
+                                        $montosLocal2 = array($cont->code => '0');
 
-                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                    }
                                 }
+                                $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
+
+                                $arraySecondPartLocal = array(
+                                    'Currency' => $data1[$i]->currency,
+                                    'From' => $data->contract->validity,
+                                    'Until' => $data->contract->expire,
+                                );
+                                $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+
+                                $sheet->row($a, $arrayCompleteLocal);
+                                $a++;
                             }
-                            $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
-
-                            $arraySecondPartLocal = array(
-                                'Currency' => $data1[$i]->currency,
-                                'From' => $data->contract->validity,
-                                'Until' => $data->contract->expire,
-                            );
-                            $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
-
-                            $sheet->row($a, $arrayCompleteLocal);
-                            $a++;
                         }
+
                     }
 
                     // MONTOS ALL IN

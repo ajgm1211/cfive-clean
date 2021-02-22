@@ -14,7 +14,8 @@ class ApiIntegrationSetting extends Model
         'status'
     ];
 
-    public function api_integration(){
+    public function api_integration()
+    {
         return $this->HasMany('App\ApiIntegration');
     }
 }

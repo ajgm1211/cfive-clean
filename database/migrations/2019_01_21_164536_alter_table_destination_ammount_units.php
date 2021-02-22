@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AlterTableDestinationAmmountUnits extends Migration
 {
@@ -13,7 +13,7 @@ class AlterTableDestinationAmmountUnits extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE destination_ammounts CHANGE units units DOUBLE NOT NULL");
+        DB::statement('ALTER TABLE destination_ammounts CHANGE units units DOUBLE NOT NULL');
     }
 
     /**

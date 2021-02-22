@@ -1,8 +1,8 @@
 2<?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSurchargesTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateSurchargesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->integer('sale_term_id')->unsigned()->nullable();
-            $table->foreign('sale_term_id')->references('id')->on('sale_terms')->onDelete('cascade');           
+            $table->foreign('sale_term_id')->references('id')->on('sale_terms')->onDelete('cascade');
             $table->integer('company_user_id')->unsigned()->nullable();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
