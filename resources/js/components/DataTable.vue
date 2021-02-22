@@ -128,6 +128,7 @@
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields) && addTableInsert">
                     <b-td v-if="firstEmpty"></b-td>
+                    
 
                     <b-td
                         v-for="(item, key) in inputFields"
@@ -136,7 +137,7 @@
                     >
                         <!-- Text Input -->
                         <div v-if="item.type == 'text'">
-
+ssss
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -192,6 +193,7 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
+                                :class="item.class"
                                 @select="cleanInput(key)"
                             >
                             </multiselect>
@@ -468,6 +470,7 @@
                                 v-on:blur="onSubmitTotals()"
                             >
                             </b-form-input>
+                            asdsad
                             <span
                                 :id="'id_f_table_' + key"
                                 class="invalid-feedback"
@@ -503,6 +506,7 @@
 
                         <!-- Span field -->
                         <div v-if="item.type == 'span'">
+                            hbhjhh
                             <span style="font-weight: bold">{{
                                 totalsData[key]
                             }}</span>

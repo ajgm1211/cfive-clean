@@ -650,6 +650,7 @@ export default {
                         trackby: "alphacode",
                         placeholder: "Select Currency",
                         options: "currency",
+                        class: "pruebas"
                     },
                 }
             } else {
