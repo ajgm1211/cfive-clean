@@ -7,6 +7,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
+use App\Http\Resources\RateResource;
 
 use App\InlandDistance;
 use App\Harbor;
@@ -143,21 +144,27 @@ class SearchApiController extends Controller
     //Validates search request data
     public function processSearch(Request $request)
     {   
+        //dd($request);
         //Validating request data from form
         $new_search_data = $request->validate([
-            'originPorts.*.id' => 'required',
-            'destinationPorts.*.id' => 'required',
-            'dateRange' => 'required',
-            'containers.*.id' => 'required', 
+            'originPorts' => 'required|array|min:1',
+            'destinationPorts' => 'required|array|min:1',
+            'dateRange.startDate' => 'required',
+            'dateRange.endDate' => 'required',
+            'containers' => 'required|array|min:1', 
             'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required', 
             'direction' => 'required',
-            'carriers.*.id' => 'required',
+            'carriers' => 'required|array|min:1',
             'type' => 'required',
             'company' => 'sometimes',
             'contact' => 'sometimes',
             'pricelevel' => 'sometimes'
         ]);
+
+        //Stripping time stamp from date
+        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
+        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
 
         //Setting current company and user
         $user = \Auth::user();
@@ -166,96 +173,140 @@ class SearchApiController extends Controller
 
         //Including company and user in search data array
         $new_search_data['user'] = $user_id;
-        $new_search_data['company'] = $company_user_id; 
-                
+        $new_search_data['company'] = $company_user_id;
+
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromSearchRequest($new_search_data);
+
+        //Setting recent searches
+        $recent_searches = $this->recentSearch($new_search_data_ids);
         
-        //Storing new search with request data
-        //$this->store($new_search_data_ids);
+        //Storing search history
+        $search = $this->store($new_search_data_ids, $recent_searches);
         
         //Retrieving rates with search data
         $rates = $this->searchRates($new_search_data_ids);
 
-        //Retrieving local charges with search data
-        $local_charges = $this->searchLocalCharges($new_search_data_ids, $rates);
+        if(isset($rates) && count($rates) != 0){
+            //Retrieving local charges with search data
+            $local_charges = $this->searchLocalCharges($new_search_data_ids, $rates);
+    
+            //Retrieving global charges with search data
+            $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rates);
+    
+            //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
+            $charges = $this->groupChargesByType($local_charges, $global_charges);
+    
+            //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
+            $this->setChargesPerContainer($charges,$new_search_data['containers'], $company_user_id);
+    
+            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+            $charges = $this->joinCharges($charges);
+    
+            /**Retrieving and calculating inlands from search data, only if door delivery indicated
+            if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
+                $inlands = $this->searchInlands($new_search_data_ids);
+            }else{
+                $inlands = [];
+            }**/
+    
+             //Getting price levels if requested
+             if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
+                $price_level_markups = $this->searchPriceLevels($new_search_data_ids);
+            }else{
+                $price_level_markups = [];
+            }
+    
+            if($price_level_markups != null && count($price_level_markups) != 0){
+                $this->addMarkups($price_level_markups, $rates, $company_user_id);
+                foreach($charges as $charge){
+                    $this->addMarkups($price_level_markups, $charge, $company_user_id);
+                }
+            }
+    
+            //Appending Rate Id to Charges
+            $this->addToRates($rates, $charges, 'charges', $company_user_id);
 
-        //Retrieving global charges with search data
-        $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rates);
-
-        //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-        $charges = $this->groupChargesByType($local_charges, $global_charges);
-
-        //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-        $this->setChargesPerContainer($charges,$new_search_data['containers'], $company_user_id);
-
-        //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-        $charges = $this->joinCharges($charges);
-
-        /**Retrieving and calculating inlands from search data, only if door delivery indicated
-        if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
-            $inlands = $this->searchInlands($new_search_data_ids);
-        }else{
-            $inlands = [];
-        }**/
-
-         //Getting price levels if requested
-         if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
-            $price_level_markups = $this->searchPriceLevels($new_search_data_ids);
-        }else{
-            $price_level_markups = [];
-        }
-
-        if($price_level_markups != null && count($price_level_markups) != 0){
-            $this->addMarkups($price_level_markups, $rates, $company_user_id);
-            foreach($charges as $charge){
-                $this->addMarkups($price_level_markups, $charge, $company_user_id);
+            if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
+                $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
+            }
+            
+            foreach($rates as $rate){
+                $rate->SetAttribute('search', $search);
             }
         }
 
-        //Appending Rate Id to Charges
-        $this->addToRates($rates, $charges, 'charges', $company_user_id);
+        return RateResource::collection($rates);
+    }
 
-        $data = [
-            'rates' => $rates,
-            'pricelevels' => $price_level_markups
-        ];
+    public function recentSearch($data)
+    {
+        //Formatting date
+        $pick_up_date = $data['dateRange']['startDate'].' / '.$data['dateRange']['endDate'];
 
-        return $data; 
+        $container_array = [];
+         
+        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
+        foreach($data['containers'] as $container_id){
+            $container = Container::where('id',$container_id)->first();
+
+            array_push($container_array, $container->code);
+        }
+
+        //Querying for an exact match
+        $recent = SearchRate::where([
+            ['company_user_id', $data['company']],
+            ['pick_up_date', $pick_up_date],
+            ['delivery', $data['deliveryType']],
+            ['direction', $data['direction']],
+            ['type', $data['type']],
+            //['equipment', $container_array], 
+            ['user_id', $data['user']]
+        ])->get();
+
+        return SearchApiResource::collection($recent); 
     }
 
     //Stores current search if its different from other searches
-    public function store($data)
+    public function store($data, $recent)
     {
-        $user = \Auth::user();
-        $company_user_id = $user->company_user_id;
+        //Formatting date
+        $pick_up_date = $data['dateRange']['startDate'].' / '.$data['dateRange']['endDate'];
 
-        //Generating carriers codes json for searchrate query
-        $equipment_json = $this->idsToProperty();
+        //formatting containers
+        $container_array = [];
 
-        //Querying for an exact match
-        $new_search = SearchRate::where([
-            ['company_user_id', $company_user_id],
-            //['pick_up_date' => $data['pick_up_date']],
-            ['delivery_type' => $data['deliveryType']],
-            ['direction', $data['direction']],
-            ['type' => $data['type']],
-            ['equipment', $data['equipment']], 
-            ['user' => $user]
-        ])->first();
+        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
+        foreach($data['containers'] as $container_id){
+            $container = Container::where('id',$container_id)->first();
+
+            array_push($container_array, $container->code);
+        }
+
+        $matches = false;
 
         //Checking for matches and creating new search registry if none
-        if($new_search == null){
+        if($recent != null && count($recent) != 0){
+            foreach($recent as $rc){
+                if($rc->equipment == $container_array){
+                    return $rc;
+                }
+            }
+        }
+        
+        if(!$matches){
             $new_search = SearchRate::create([
-                'company_user_id' => $company_user_id,
+                'company_user_id' => $data['company'],
                 'pick_up_date' => $pick_up_date,
-                'equipment' => $data['equipment'], 
-                'delivery_type' => $data['delivery_type'],
+                'equipment' => $container_array, 
+                'delivery' => $data['deliveryType'],
                 'direction' => $data['direction'],
                 'type' => $data['type'],
-                'user' => $user
+                'user_id' => $data['user']
             ]);
-        }       
+        }
+        
+        return $new_search;
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
@@ -270,8 +321,8 @@ class SearchApiController extends Controller
         $origin_ports = $search_data['originPorts'];
         $destiny_ports = $search_data['destinationPorts'];
         $arregloCarrier = $search_data['carriers'];
-        $dateSince = $search_data['dateRange']['validity_start'];
-        $dateUntil = $search_data['dateRange']['validity_end'];
+        $dateSince = $search_data['dateRange']['startDate'];
+        $dateUntil = $search_data['dateRange']['endDate'];
     
         //Querying rates database
         if ($company_id != null || $company_id != 0) {
@@ -330,6 +381,7 @@ class SearchApiController extends Controller
             $client_currency = $company_user->currency;
             $containers_client_currency = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
             $rate->setAttribute('totals',$containers_client_currency);
+            $rate->setAttribute('client_currency',$client_currency);
         }
 
         return $rates_array;
@@ -437,8 +489,8 @@ class SearchApiController extends Controller
             //Creating empty collection for storing charges
             $global_charges = collect([]);
             //Pulling necessary data from the search IDs array
-            $validity_start = $search_data['dateRange']['validity_start'];
-            $validity_end = $search_data['dateRange']['validity_end'];
+            $validity_start = $search_data['dateRange']['startDate'];
+            $validity_end = $search_data['dateRange']['endDate'];
             $carriers = $search_data['carriers'];
             $origin_ports = $search_data['originPorts'];
             $destination_ports = $search_data['destinationPorts'];
@@ -542,48 +594,49 @@ class SearchApiController extends Controller
                 $containers_with_markups = [];
                 $totals_with_markups = [];
                 if($fixed != 0){
-                    $fixed_target_currency = $this->convertToCurrency($markups_currency, $client_currency, Array($fixed));
-                    $fixed_client_currency = $this->convertToCurrency($markups_currency, $target_element->currency, Array($fixed));
+                    $fixed_target_currency = $this->convertToCurrency($markups_currency, $target_element->currency, Array($fixed));
+                    $fixed_client_currency = $this->convertToCurrency($markups_currency, $client_currency, Array($fixed));
 
-                    $markups_array = [
-                        'type' => 'fixed',
-                        'amount' => $fixed_target_currency[0]
-                    ];
+                    $markups_array = [];
 
-                    $markups_client_currency = [
-                        'type' => 'fixed',
-                        'amount' => $fixed_client_currency[0]
-                    ];
-
+                    $markups_client_currency = [];
 
                     foreach($target_containers as $code => $cost){
-                        $containers_with_markups[$code] = $cost + $fixed_target_currency[0];
+                        if($cost != 0){
+                            $markups_array[$code] = $fixed_target_currency[0];
+                            $containers_with_markups[$code] = $cost + isDecimal($fixed_target_currency[0], true);
+                        }else{
+                            $containers_with_markups[$code] = $cost;
+                        }
                     }
                     
                     foreach($target_totals as $code => $cost){
-                        $totals_with_markups[$code] = $cost + $fixed_client_currency[0];
+                        if($cost != 0){
+                            $markups_client_currency[$code] = $fixed_client_currency[0];
+                            $totals_with_markups[$code] = $cost + isDecimal($fixed_client_currency[0], true);
+                        }else{
+                            $totals_with_markups[$code] = $cost;
+                        }
                     }
 
                 }elseif($percent != 0){
-                    $percent_target_currency = $this->calculatePercentage($percent,$target_containers);
-                    $percent_client_currency = $this->calculatePercentage($percent,$target_totals);
-
-                    $markups_array = [
-                        'type' => 'percentage',
-                        'amount' => $percent_target_currency
-                    ];
-
-                    $markups_client_currency = [
-                        'type' => 'percent',
-                        'amount' => $percent_client_currency
-                    ];
+                    $markups_array = $this->calculatePercentage($percent,$target_containers);
+                    $markups_client_currency = $this->calculatePercentage($percent,$target_totals);
 
                     foreach($target_containers as $code => $cost){
-                        $containers_with_markups[$code] = $cost + $percent_target_currency[$code];
+                        if($cost != 0){
+                            $containers_with_markups[$code] = $cost + isDecimal($markups_array[$code], true);
+                        }else{
+                            $containers_with_markups[$code] = $cost;
+                        }
                     }
 
                     foreach($target_totals as $code => $cost){
-                        $totals_with_markups[$code] = $cost + $percent_client_currency[$code];
+                        if($cost != 0){
+                            $totals_with_markups[$code] = $cost + isDecimal($markups_client_currency[$code], true);
+                        }else{
+                            $totals_with_markups[$code] = $cost;
+                        }
                     }
                 }
                 
@@ -591,9 +644,9 @@ class SearchApiController extends Controller
                 $target_element->setAttribute('totals_markups',$markups_client_currency);
                 $target_element->setAttribute('containers_with_markups',$containers_with_markups);
                 $target_element->setAttribute('totals_with_markups',$totals_with_markups);
-
             }  
         }
+
     }
 
     //appending charges to corresponding Rates
@@ -602,15 +655,16 @@ class SearchApiController extends Controller
         //Setting customer currency to convert if necessary
         $company_user = CompanyUser::where('id',$company_user_id)->first();
         $client_currency = $company_user->currency;
-
         if($target_type = 'charges'){
             //Looping through rates
             foreach($rates as $rate){
                 //Empty array for each Rate Charges
                 $rate_charges = [];
+                $charge_type_totals = [];
                 //Looping through charges type (Origin, Destination, Freight)
                 foreach($target as $direction => $charge_direction){
                     $rate_charges[$direction] = [];
+                    $charge_type_totals[$direction] = [];
                     //Looping through charges by type
                     foreach($charge_direction as $charge){
                         //Checking type of charge to set control variables
@@ -648,29 +702,56 @@ class SearchApiController extends Controller
 
                                 foreach($totals_array as $code => $total){
                                     if(isset($charge->containers_client_currency[$code])){
-                                        $totals_array[$code] += $charges_to_add[$code];
+                                        $totals_array[$code] += isDecimal($charges_to_add[$code],true);
+                                        if(!isset($charge_type_totals[$direction][$code])){
+                                            $charge_type_totals[$direction][$code] = 0;
+                                        }
+                                        $charge_type_totals[$direction][$code] += $charges_to_add[$code];
                                     }
                                 }
 
                                 $rate->$to_update = $totals_array;
+                                $rate->$to_update = $this->convertToCurrency($client_currency, $rate->currency, $rate->$to_update);
                                 array_push($rate_charges[$direction], $charge);
-
-                                if($direction == 'freight'){
-                                    $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-
-                                    $ocean_freight_array = [
-                                        'surcharge' => ['name' => 'Ocean Freight'],
-                                        'containers' => json_decode($rate->containers,true),
-                                        'calculationtype' => ['name' => 'Per Container'],
-                                        'currency' => ['alphacode' => $client_currency->alphacode]
-                                    ];
-                                    
-                                    $ocean_freight_collection = collect($ocean_freight_array);
-            
-                                    array_push($rate_charges[$direction], $ocean_freight_collection);
-                                }
+                            }
+                            
+                            if($direction == 'freight'){
+                                $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
                             }
                     }
+
+                    if($direction == 'freight'){
+                        $ocean_freight_array = [
+                            'surcharge' => ['name' => 'Ocean Freight'],
+                            'containers' => json_decode($rate->containers,true),
+                            'calculationtype' => ['name' => 'Per Container'],
+                            'currency' => ['alphacode' => $rate->currency->alphacode]
+                        ];
+                        
+                        if(isset($rate->container_markups)){
+                            $ocean_freight_array['container_markups'] = $rate->container_markups;
+                            $ocean_freight_array['totals_markups'] = $rate->totals_markups;
+                            $ocean_freight_array['containers_with_markups'] = $rate->containers_with_markups;
+                            $ocean_freight_array['totals_with_markups'] = $rate->totals_with_markups;
+
+                            $totals_array = $this->convertToCurrency($rate->currency, $client_currency, $rate->containers_with_markups);
+                        }else{
+                            $totals_array = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
+                        }
+
+                        foreach($totals_array as $code => $total){
+                            if(!isset($charge_type_totals[$direction][$code])){
+                                $charge_type_totals[$direction][$code] = 0;
+                            }
+                            $charge_type_totals[$direction][$code] += $total;
+                        }
+
+                        $ocean_freight_collection = collect($ocean_freight_array);
+
+                        array_push($rate_charges[$direction], $ocean_freight_collection);
+                    }
+                    
+                    $rate->setAttribute('charge_totals_by_type',$charge_type_totals);
                     
                     if(count($rate_charges[$direction]) == 0){
                         unset($rate_charges[$direction]);
@@ -679,6 +760,5 @@ class SearchApiController extends Controller
                 $rate->setAttribute('charges',$rate_charges);
             }
         }
-    }
-    
+    }    
 }
