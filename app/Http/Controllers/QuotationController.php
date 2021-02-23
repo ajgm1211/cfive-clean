@@ -233,15 +233,28 @@ class QuotationController extends Controller
                 'destination_port_id' => $rate['destiny_port'],
                 'carrier_id' => $rate['carrier_id']
             ]);
+
+            foreach($rate['charges'] as $charge_direction){
+                foreach($charge_direction as $charge){
+                    
+                    $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
+                    $charge = $this->formatChargeForQuote($charge);
+    
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $newRate->id,
+                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                        'type_id' => $charge['typedestiny_id'],
+                        'calculation_type_id' => $charge['calculationtype']['id'],
+                        'currency_id' => $currency_id,
+                        'amount' => json_encode($charge['amount']),
+                        'markups' => json_encode($charge['markups']),
+                        'total' => json_encode($charge['total'])
+                    ]);
+                }
+
+            }
             
-            $freight = Charge::create([
-                'automatic_rate_id' => $newRate->id,
-                'type_id' => '3',
-                'calculation_type_id' => '5',
-                'currency_id' => $newRate->currency_id,
-            ]);
                                 
-            $freight->setCalculationType($rate['contract']['gp_container_id']);
         }
 
         return redirect()->action('QuotationController@edit', $quote);
@@ -251,6 +264,7 @@ class QuotationController extends Controller
     {
         $autorates = $quote->rate()->get();
         foreach($autorates as $auto){
+            dd($autorates);
             $auto->totalize($auto->currency_id);
         }
         return view('quote.edit');
