@@ -27,6 +27,8 @@
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
+        @onOpenModalHarborOrigView="openModalHarborOrigView"
+        @onOpenModalHarborDestView="openModalHarborDestView"
         ref="table"
         >
     </DataTable>
@@ -310,6 +312,14 @@
             
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
+            },
+
+            openModalHarborOrigView(ids){
+                this.$emit('onOpenModalHarborOrig', ids);
+            },
+
+            openModalHarborDestView(ids){
+                this.$emit('onOpenModalHarborDest', ids);
             },
             
             refreshTable(){

@@ -24,14 +24,63 @@
                 :datalists="datalists"
                 :equipment="equipment"
                 :actions="actions"
-                :massiveactions="['openmodalcontainer', 'delete']"
+                :massiveactions="['openmodalcontainer','openmodalharbororigin','openmodalharbordestination', 'delete']"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"
                 @onOpenModalContainer="openModalContainer"
+                @onOpenModalHarborOrig="openModalHarborOrig"
+                @onOpenModalHarborDest="openModalHarborDest"
             ></DynamicalDataTable>
+            
         </b-card>
 
         <!-- Edit Form -->
+        <b-modal
+            id="editHarborsOrig"
+            size="lg"
+            cancel-title="Cancel"
+            hide-header-close
+            title="Edit Harbors"
+            hide-footer
+        >
+            <FormView
+             :data="{}"
+                :massivedata="ids_selected"
+                :fields="origin_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Harbors"
+                @exit="closeModal('editHarborsOrig')"
+                @success="closeModal('editHarborsOrig')"
+                :actions="actions"
+                :update="true"
+                :massivechange="true"
+            >
+            </FormView>
+        </b-modal>
+
+                <b-modal
+            id="editHarborsDest"
+            size="lg"
+            cancel-title="Cancel"
+            hide-header-close
+            title="Edit Harbors"
+            hide-footer
+        >
+            <FormView
+             :data="{}"
+                :massivedata="ids_selected"
+                :fields="destination_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Harbors"
+                @exit="closeModal('editHarborsDest')"
+                @success="closeModal('editHarborsDest')"
+                :actions="actions"
+                :update="true"
+                :massivechange="true"
+            >
+            </FormView>
+        </b-modal>
+
         <b-modal
             id="editOFreight"
             size="lg"
@@ -124,6 +173,8 @@ export default {
             form_fields: {},
             input_form_fields: {},
             containers_fields: {},
+            origin_fields: {},
+            destination_fields: {},
             ids_selected: [],
 
             /* Table headers */
@@ -157,6 +208,34 @@ export default {
                     },
                 },
             ],
+
+
+
+            origin_fields: {
+                origin: {
+                    label: "Origin Port",
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "display_name",
+                    placeholder: "Select Origin Port",
+                    options: "harbors",
+                },
+            },
+
+
+            destination_fields: {
+             destination: {
+                    label: "Destination Port",
+                    searchable: true,
+                    type: "select",
+                    rules: "required",
+                    trackby: "display_name",
+                    placeholder: "Select Destination Port",
+                    options: "harbors",
+                },
+            },
+
 
             input_fields: {
                 origin: {
@@ -260,6 +339,17 @@ export default {
             console.log("test modal");
             this.ids_selected = ids;
             this.$bvModal.show("editContainers");
+        },
+
+      openModalHarborOrig(ids) {
+            console.log("test modal");
+            this.ids_selected = ids;
+            this.$bvModal.show("editHarborsOrig");
+        },
+        openModalHarborDest(ids) {
+            console.log("test modal");
+            this.ids_selected = ids;
+            this.$bvModal.show("editHarborsDest");
         },
 
         /* Close modal form by modal name */
