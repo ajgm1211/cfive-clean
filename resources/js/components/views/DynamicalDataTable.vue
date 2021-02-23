@@ -28,6 +28,7 @@
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
         ref="table"
+        :view="view"
         >
     </DataTable>
 
@@ -43,6 +44,7 @@
             FormView,
         },
         props: {
+            view: String,
             equipment: Object,
             datalists: Object,
             quoteEquip: Array,

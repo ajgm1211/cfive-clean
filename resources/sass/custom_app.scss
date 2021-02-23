@@ -1795,6 +1795,55 @@ input.data-provider {
     margin-right: 3px !important;
 }
 
+#origin, #destination {
+    .oceanfreight {
+        .multiselect__tags {
+            width: 190px;
+        }
+    }
+}
+
+#origin, #destination {
+    .surcharges {
+        .multiselect__tags {
+            width: 150px;
+        }
+    }
+}
+
+#carrier, #carriers {
+    .oceanfreight, .surcharges {
+        .multiselect__tags {
+            width: 150px;
+        }
+    }
+}
+
+#currency {
+    .oceanfreight, .currency {
+        .multiselect__tags {
+            width: 100px;
+        }
+    }
+}
+
+#surcharge, #destination_type, #calculation_type {
+    .surcharges {
+        .multiselect__tags {
+            width: 130px;
+        }
+    }
+}
+
+#destination_type {
+    .surcharges {
+        .multiselect__tags {
+            width: 110px;
+        }
+    }
+}
+
+
 @media (min-width: 1200px) {
     .modal-xl {
         max-width: 1330px !important;
