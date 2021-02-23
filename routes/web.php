@@ -1162,6 +1162,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
     Route::post('ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
     Route::post('{contract}/ocean_freight/massiveContainerChange', 'OceanFreightController@massiveContainerChange');
+    Route::post('{contract}/ocean_freight/massiveHarborChange', 'OceanFreightController@massiveHarborChange');
     /* End API Contracts Ocean Freights EndPoints **/
 
     /* API Contracts LocalCharge EndPoints **/
