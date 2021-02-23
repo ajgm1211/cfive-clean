@@ -105,6 +105,28 @@
                             >
                                 Edit Multiple Containers
                             </button>
+                           <button
+                                v-if="
+                                    massiveactions.includes(
+                                        'openmodalharbororigin'
+                                    )
+                                "
+                                class="btn-action"
+                                v-on:click="onOpenModalHarborOrig()"
+                            >
+                                Edit Multiple Origin Harbors
+                            </button>
+                            <button
+                                v-if="
+                                    massiveactions.includes(
+                                        'openmodalharbordestination'
+                                    )
+                                "
+                                class="btn-action"
+                                v-on:click="onOpenModalHarborDest()"
+                            >
+                                Edit Multiple Destination Harbors
+                            </button>
                         </b-popover>
                     </b-th>
                 </b-tr>
@@ -1255,6 +1277,16 @@ export default {
             let ids = this.selected.map((item) => item.id);
             this.$emit("onOpenModalContainerView", ids);
         },
+
+        onOpenModalHarborOrig() {
+            let ids = this.selected.map((item) => item.id);
+            this.$emit("onOpenModalHarborOrigView", ids);
+        },
+        onOpenModalHarborDest() {
+            let ids = this.selected.map((item) => item.id);
+            this.$emit("onOpenModalHarborDestView", ids);
+        },
+
 
         addInsert() {
             this.autoAddRequested = !this.autoAddRequested;
