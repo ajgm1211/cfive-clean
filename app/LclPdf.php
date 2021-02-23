@@ -13,6 +13,8 @@ use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Delegation;
+use App\UserDelegation;
 
 class LclPdf
 {
@@ -35,8 +37,10 @@ class LclPdf
         $destination_charges = $this->localCharges($quote, 2);
 
         $quote_totals = $this->quoteTotals($quote);
+        
+        $delegation= $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote,'delegation'=>$delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -47,6 +51,17 @@ class LclPdf
         $event->event_pdfLcl();
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
+    }
+    public function Delegation($quote){
+        
+        $id_ud=UserDelegation::where('users_id','=',$quote->user_id)->first();
+        if($id_ud==null)
+            $delegation= '';
+        else{
+            $delegation= Delegation::where('id', '=', $id_ud->delegations_id)->first();
+        }
+
+        return $delegation;
     }
 
     public function localCharges($quote, $type)
