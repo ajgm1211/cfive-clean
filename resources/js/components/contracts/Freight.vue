@@ -53,7 +53,10 @@
                 @success="closeModal('editHarborsOrig')"
                 :actions="actions"
                 :update="true"
-                :massivechange="true"
+                :massivechangeHarborOrig="true"
+
+                
+
             >
             </FormView>
         </b-modal>
@@ -76,7 +79,7 @@
                 @success="closeModal('editHarborsDest')"
                 :actions="actions"
                 :update="true"
-                :massivechange="true"
+                :massivechangeHarborDest="true"
             >
             </FormView>
         </b-modal>
@@ -342,7 +345,7 @@ export default {
         },
 
       openModalHarborOrig(ids) {
-            console.log("test modal");
+            
             this.ids_selected = ids;
             this.$bvModal.show("editHarborsOrig");
         },
