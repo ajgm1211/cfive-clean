@@ -182,6 +182,8 @@
                 </div>
             </div>
         </b-form>
+ 
+ 
     </div>
 </template>
 
@@ -226,6 +228,16 @@ export default {
             default: false,
         },
         massivechange: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        massivechangeHarborOrig: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        massivechangeHarborDest: {
             type: Boolean,
             required: false,
             default: false,
@@ -402,9 +414,14 @@ export default {
                 }
 
                 data["keys"] = fields_keys;
-
+                
                 if (component.massivechange)
+                    data["ids"] = component.massivedata; 
+                if (component.massivechangeHarborOrig){
                     data["ids"] = component.massivedata;
+          
+                }
+                    
             });
 
             return data;
@@ -415,8 +432,16 @@ export default {
         onSubmit() {
             if (this.validateForm()) {
                 let data = this.prepareData();
-
-                if (this.massivechange) {
+                
+                if (this.massivechangeHarborOrig) {
+                    this.actions
+                        .massiveChangeHarborOrig(data, this.$route)
+                        .then((response) => {
+                            this.$emit("success", true);
+                            this.vdata = {};
+                        })
+                        .catch((data) => {});
+                } else if (this.massivechange) {
                     this.actions
                         .massiveChange(data, this.$route)
                         .then((response) => {
