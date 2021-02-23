@@ -137,7 +137,6 @@
                     >
                         <!-- Text Input -->
                         <div v-if="item.type == 'text'">
-ssss
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -179,7 +178,7 @@ ssss
                         <!-- Based Dinamycal Select -->
 
                         <!-- Select Input -->
-                        <div v-if="item.type == 'select'">
+                        <div v-if="item.type == 'select'" :id="key">
                             <multiselect
                                 v-model="fdata[key]"
                                 :id="key"
@@ -193,10 +192,11 @@ ssss
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
-                                :class="item.class"
+                                :class="view"
                                 @select="cleanInput(key)"
                             >
                             </multiselect>
+                            <!-- :class="item.class" -->
                             <span
                                 :id="'id_f_table_' + key"
                                 class="invalid-feedback"
@@ -206,7 +206,7 @@ ssss
                         <!-- End Select -->
 
                         <!-- MultiSelect Input -->
-                        <div v-if="item.type == 'multiselect' && refresh">
+                        <div v-if="item.type == 'multiselect' && refresh" :id="key">
                             <multiselect
                                 v-model="fdata[key]"
                                 :multiple="true"
@@ -216,6 +216,7 @@ ssss
                                 :clear-on-select="true"
                                 track-by="id"
                                 :id="key"
+                                :class="view"
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
@@ -229,7 +230,9 @@ ssss
                                 style="margin-top: -4px"
                             ></span>
                         </div>
-                        <div v-if="item.type == 'multiselect_data' && refresh" class="multiselect-height">
+
+                        <div v-if="item.type == 'multiselect_data' && refresh"  :id="key" >
+               
                             <multiselect
                                 v-model="item.values"
                                 :multiple="true"
@@ -239,6 +242,7 @@ ssss
                                 :clear-on-select="true"
                                 track-by="id"
                                 :id="key"
+                                :class="view"
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
@@ -303,6 +307,7 @@ ssss
 
                         <!-- Select field -->
                         <div v-if="item.type == 'extraSelect'">
+                           
                             <multiselect
                                 v-model="fixedData[key]"
                                 :id="key"
@@ -519,7 +524,7 @@ ssss
             <!-- Profits and Totals end -->
         </b-table-simple>
         <!-- End DataTable -->
-
+{{view}}
         <!-- Pagination -->
         <paginate
             v-if="paginated"
@@ -550,6 +555,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        view: String,
         filter: {
             type: Boolean,
             required: false,
