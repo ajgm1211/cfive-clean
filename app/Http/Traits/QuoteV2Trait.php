@@ -1794,4 +1794,52 @@ trait QuoteV2Trait
             return $container_string;
         }
     }
+
+    public function formatChargeForQuote(Array $charge)
+    {
+        $formattedAmount = [];
+        $formattedMarkups = [];
+        $formattedTotal = [];
+
+        if(isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency'){
+            $amount = $charge['containers_client_currency'];
+            if(isset($charge['container_markups'])){
+                $markups = $charge['total_markups'];
+                $total = $charge['totals_with_markups'];
+            }else{
+                $markups = [];
+                $total = $charge['containers_client_currency'];
+            }
+        }else{
+            $amount = $charge['containers'];
+            if(isset($charge['container_markups'])){
+                $markups = $charge['container_markups'];
+                $total = $charge['containers_with_markups'];
+            }else{
+                $markups = [];
+                $total = $charge['containers'];
+            }
+        }
+
+        foreach($amount as $code => $price){
+            $newCode = 'c'.ltrim($code, 'C');
+            $formattedAmount[$newCode] = $price;
+        }
+
+        foreach($total as $code => $price){
+            $newCode = 'c'.ltrim($code,'C');
+            $formattedTotal[$newCode] = $price;
+        }
+
+        foreach($markups as $code => $price){
+            $newCode = 'm'.ltrim($code, 'C');
+            $formattedMarkups[$newCode] = $price;
+        }
+
+        $charge['amount'] = $formattedAmount;
+        $charge['markups'] = $formattedMarkups;
+        $charge['total'] = $formattedTotal;
+
+        return $charge;
+    }
 }

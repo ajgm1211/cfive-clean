@@ -230,7 +230,7 @@ class SearchApiController extends Controller
             if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
                 $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
             }
-            
+
             foreach($rates as $rate){
                 $rate->SetAttribute('search', $search);
             }
@@ -724,8 +724,9 @@ class SearchApiController extends Controller
                         $ocean_freight_array = [
                             'surcharge' => ['name' => 'Ocean Freight'],
                             'containers' => json_decode($rate->containers,true),
-                            'calculationtype' => ['name' => 'Per Container'],
-                            'currency' => ['alphacode' => $rate->currency->alphacode]
+                            'calculationtype' => ['name' => 'Per Container', 'id' => '5'], //CHANGE ID LATER
+                            'typedestiny_id' => 3,
+                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
                         ];
                         
                         if(isset($rate->container_markups)){
