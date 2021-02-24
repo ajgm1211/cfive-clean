@@ -32,7 +32,7 @@ class UploadContractFile extends FormRequest
             ],
             'direction' => [
                 'required',
-                Rule::in(['IMPORT', 'import', 'EXPORT', 'export','BOTH','both']),
+                Rule::in(['IMPORT', 'import', 'EXPORT', 'export', 'BOTH', 'both']),
             ],
             'file' => 'required|file',
             'valid_from' => 'required',

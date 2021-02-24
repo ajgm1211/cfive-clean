@@ -81,9 +81,10 @@ Add Company
                             <button id="delete-company-user" data-company-id="{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                                 <i class="la la-eraser"></i>
                             </button>
+                            <!--
                             <button data-toggle="modal" data-target="#companyUserModal{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate">
                                 <i class="la la-plus"></i>
-                            </button>
+                            </button>-->
                             <!--<a href="{{route('settings.duplicate',setearRouteKey($company->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
                                 <i class="la la-plus"></i>
                             </a>-->

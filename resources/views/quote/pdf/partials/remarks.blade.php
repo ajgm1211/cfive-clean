@@ -25,7 +25,5 @@
                     @endif
                 @break
             @endswitch
-
     </div>
 @endif
-<br>

@@ -2,21 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
-use GuzzleHttp\Client;
-use GuzzleHttp\Message\Request as ClienteR;
-use GuzzleHttp\Message\Response;
-use App\Company;
-use App\Connection;
-use App\Contact;
-use App\Jobs\SyncCompaniesJob;
-use App\Partner;
 use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesEvery30Job;
-use App\Visualtrans;
-use App\Vforwarding;
+use App\Partner;
+use Illuminate\Support\Facades\DB;
 
 class ApiIntegrationController extends Controller
 {
@@ -29,6 +20,7 @@ class ApiIntegrationController extends Controller
     {
         $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->with('api_integration')->first();
         $partners = Partner::pluck('name', 'id');
+
         return view('api.index', compact('api', 'partners'));
     }
 
@@ -42,16 +34,36 @@ class ApiIntegrationController extends Controller
         $api = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
 
         if (!empty($api)) {
-            $api->enable = $request->enable;
-            $api->update();
+            DB::table('api_integration_settings')->update(['status' => $request->enable]);
+            DB::table('api_integrations')->update(['status' => $request->enable]);
         } else {
             $api = new ApiIntegrationSetting();
             $api->company_user_id = $request->company_user_id;
-            $api->enable = $request->enable;
+            $api->status = $request->enable;
             $api->save();
         }
 
         return response()->json(['data' => $api]);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function status(Request $request)
+    {
+        $apiU = ApiIntegration::where('id', $request->id)->first();
+
+        if (!empty($apiU)) {
+            $apiU->status = $request->status;
+            $apiU->update();
+        } else {
+            $apiU = new ApiIntegration();
+            $apiU->status = $request->status;
+            $apiU->save();
+        }
+
+        return response()->json(['data' => $apiU]);
     }
 
     /**
@@ -72,7 +84,9 @@ class ApiIntegrationController extends Controller
      */
     public function store(StoreApiIntegration $request)
     {
-        ApiIntegration::create($request->all());
+        $ap = new ApiIntegration($request->all());
+        $ap->status = 0;
+        $ap->save();
 
         $request->session()->flash('message.content', 'Record saved successfully');
         $request->session()->flash('message.nivel', 'success');
@@ -101,7 +115,7 @@ class ApiIntegrationController extends Controller
     public function edit($id)
     {
         return response()->json([
-            'data' => ApiIntegration::find($id)
+            'data' => ApiIntegration::find($id),
         ]);
     }
 
@@ -136,7 +150,7 @@ class ApiIntegrationController extends Controller
         $api = ApiIntegration::find($id)->delete();
 
         return response()->json([
-            'message' => 'Ok'
+            'message' => 'Ok',
         ]);
     }
 
@@ -149,26 +163,25 @@ class ApiIntegrationController extends Controller
     {
         $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
 
-        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D=" . $company_id . "&api_key=" . $api->api_key;
+        $endpoint = 'https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D=' . $company_id . '&api_key=' . $api->api_key;
 
         $client = new Client([
             'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
         ]);
 
         try {
-
             $response = $client->get($endpoint, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'X-Requested-With' => 'XMLHttpRequest',
-                ]
+                ],
             ]);
 
             $api_response = json_decode($response->getBody());
 
             return $api_response;
         } catch (\Exception $e) {
-            return "Error: " . $e;
+            return 'Error: ' . $e;
         }
     }
 }

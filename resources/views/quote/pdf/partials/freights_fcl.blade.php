@@ -1,7 +1,7 @@
                     <!-- Section Title -->
                     <div>
                                     
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
+                        <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
                         
                        
 
@@ -62,7 +62,7 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{$hide}}>{{ @$total->${'c'.$c->code} }}&nbsp;{{$quote->pdf_option->grouped_freight_charges==1 ? $quote->pdf_option->freight_charges_currency:$rate->currency->alphacode}}</td>
+                                                <td {{$hide}}>{{ isDecimal(@$total->${'c'.$c->code}, true) }}&nbsp;{{@$rate->currency->alphacode}}</td>
                                             @endif
                                         @endforeach
                                     @endforeach

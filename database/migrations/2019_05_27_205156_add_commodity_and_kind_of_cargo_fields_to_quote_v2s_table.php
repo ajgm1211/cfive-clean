@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddCommodityAndKindOfCargoFieldsToQuoteV2sTable extends Migration
 {
@@ -15,7 +15,7 @@ class AddCommodityAndKindOfCargoFieldsToQuoteV2sTable extends Migration
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
             $table->string('commodity')->nullable()->after('validity_end');
-            $table->enum('kind_of_cargo',['General','Perishable','Dangerous','Valuable Cargo','All Live Animals','Human Remains','Pharma'])->nullable()->after('commodity');
+            $table->enum('kind_of_cargo', ['General', 'Perishable', 'Dangerous', 'Valuable Cargo', 'All Live Animals', 'Human Remains', 'Pharma'])->nullable()->after('commodity');
         });
     }
 

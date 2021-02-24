@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddExtraFieldsCompaniesTable extends Migration
 {
@@ -26,7 +26,7 @@ class AddExtraFieldsCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function($table) {
+        Schema::table('companies', function ($table) {
             $table->dropColumn('tax_number');
             $table->dropColumn('logo');
         });

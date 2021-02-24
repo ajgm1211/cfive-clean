@@ -15,32 +15,19 @@
 
 
     <main>
-        <!-- HEADER -->
-        @include('quote.pdf.partials.header')
-        <!-- DETAILS -->
-        @include('quote.pdf.partials.details_fcl')
-        <!-- FREIGHTS -->
-        @if($freight_charges->count()>1 || ($freight_charges->count()==1 && @$quote->pdf_options['allIn']))
-            @include('quote.pdf.partials.freights_fcl')
-        @else
-            @include('quote.pdf.partials.detail_freights_fcl')
-        @endif
-        <!-- REMARKS -->
-        @include('quote.pdf.partials.remarks')
-        <!-- ORIGIN -->
-        @include('quote.pdf.partials.origins_fcl')
-        <!-- INLANDS ORIGIN-->
-        @include('quote.pdf.partials.inlands_fcl_origin')
-        <!-- DESTINY -->
-        @include('quote.pdf.partials.destinations_fcl')
-        <!-- INLANDS DESTINY-->
-        @include('quote.pdf.partials.inlands_fcl_destination')
-        <!-- LOCALCHARGE REMARKS -->
-        @include('quote.pdf.partials.localcharge_remarks')
-        <!-- TERMS -->
-        @include('quote.pdf.partials.terms')
-        <!-- PAYMENTS CONDITIONS -->
-        @include('quote.pdf.partials.payments_conditions')
+        @switch(@$user->companyUser->pdf_template_id)
+            @case(1)
+                @include('quote.pdf.templates.FCL.freight')
+            @break
+
+            @case(2)
+                @include('quote.pdf.templates.FCL.origin')
+            @break
+
+            @default
+                @include('quote.pdf.templates.FCL.freight')
+
+        @endswitch
     </main>
 
 

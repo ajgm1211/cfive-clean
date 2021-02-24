@@ -2,22 +2,20 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
-class PriceLevelTest extends DuskTestCase
+class PriceLeveTest extends DuskTestCase
 {
-
     public function testAddPriceLevel()
     {
         $this->browse(function (Browser $browser) {
-
             $browser->visit('/login')
                 ->type('email', 'admin@example.com')
                 ->type('password', 'secret')
                 ->press('Login')
-                ->visit("/prices/add")
+                ->visit('/prices/add')
                 ->type('name', 'Price Level 1')
                 ->type('description', 'Testing')
                 ->type('freight_percent_markup[]', '10')
@@ -26,8 +24,7 @@ class PriceLevelTest extends DuskTestCase
                 ->type('inland_percent_markup_import[]', '10')
                 ->type('inland_percent_markup_export[]', '10')
                 ->press('Submit')
-                ->assertPathIs("/prices");
+                ->assertPathIs('/prices');
         });
     }
-
 }

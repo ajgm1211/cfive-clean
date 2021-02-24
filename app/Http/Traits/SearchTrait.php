@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Traits;
 
 use App\CalculationType;
@@ -26,10 +27,8 @@ trait SearchTrait
         $typeCurrency = $inlandParams['typeCurrency'];
 
         if ($type == 'destino') {
-
             $textType = 'Destination';
         } elseif ($type == 'origen') {
-
             $textType = 'Origin';
         }
 
@@ -56,22 +55,17 @@ trait SearchTrait
 
         // se agregan los aditional km
         foreach ($inlands as $inlandsValue) {
-
             foreach ($contain as $cont) {
-
                 $km = 'km' . $cont->code;
                 $$km = true;
-
             }
 
-            $inlandDetails = array();
+            $inlandDetails = [];
             foreach ($inlandsValue->inlandports as $ports) {
 
                 $monto = 0;
                 if (in_array($ports->ports->id, $port)) {
-
                     if ($distancia == 0) {
-
                         if ($type == 'destino') {
                             $origin = $ports->ports->coordinates;
                             $destination = $inlandParams['destination_address'];
@@ -93,9 +87,8 @@ trait SearchTrait
                         //Google MAPS
                         foreach ($var->routes as $resp) {
                             foreach ($resp->legs as $dist) {
-
-                                $km = explode(" ", $dist->distance->text);
-                                $distancia = str_replace(".", "", $km[0]);
+                                $km = explode(' ', $dist->distance->text);
+                                $distancia = str_replace('.', '', $km[0]);
                                 $distancia = floatval($distancia);
                                 if ($distancia < 1) {
                                     $distancia = 1;
@@ -112,7 +105,6 @@ trait SearchTrait
                         $json = json_decode($jsonContainer);
 
                         foreach ($contain as $cont) {
-
                             $km = 'km' . $cont->code;
                             //$$km = true;
                             /* $options = json_decode($cont->options);
@@ -123,17 +115,13 @@ trait SearchTrait
                             }
                              */
                             if (in_array($cont->id, $equipment)) {
-
                                 if ($distancia >= $range->lower && $distancia <= $range->upper) {
-
                                     if (isset($json->{'C' . $cont->code})) {
-
                                         $rateMount = $json->{'C' . $cont->code};
                                         $sub_20 = number_format($rateMount / $rateI, 2, '.', '');
                                         $amount_inland = number_format($rateMount, 2, '.', '');
                                         $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
                                     } else {
-
                                         $rateMount = 0;
                                         $amount_inland = 0;
                                         $price_per_unit = 0;
@@ -145,7 +133,7 @@ trait SearchTrait
                                     $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
                                     // FIN CALCULO MARKUPS
-                                    $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, 'amount' => $amount_inland, 'currency' => $range->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
+                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $range->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
                                     $inlandDetails[] = $arrayInland20;
                                 }
@@ -155,80 +143,67 @@ trait SearchTrait
                     // KILOMETROS ADICIONALES
 
                     if (isset($inlandsValue->inlandkms)) {
-
                         foreach ($inlandsValue->inlandkms as $inlandk) {
-
                             $rateGeneral = $this->ratesCurrency($inlandk->currency_id, $typeCurrency);
                             $jsonContainerkm = json_encode($inlandk->json_containers, JSON_FORCE_OBJECT);
                             $jsonkm = json_decode($jsonContainerkm);
 
                             foreach ($contain as $cont) {
-
                                 $km = 'km' . $cont->code;
                                 $texto20 = 'Inland ' . $cont->code . ' x 1';
 
                                 //  if (isset($options->field_inland)) {
 
                                 if ($$km && in_array($cont->id, $equipment)) {
-
                                     if (isset($jsonkm->{'C' . $cont->code})) {
-
                                         $rateMount = $jsonkm->{'C' . $cont->code};
                                         $montoKm = ($distancia * $rateMount) / $rateGeneral;
                                         // dd($distancia,$rateGeneral,$rateMount,$montoKm);
-                                        
+
                                         $sub_20 = number_format($montoKm, 2, '.', '');
                                         $monto += $sub_20;
                                         $amount_inland = $distancia * $rateMount;
-                                        
-                                        
+
                                         $amount_inland = number_format($amount_inland, 2, '.', '');
                                         $price_per_unit = number_format($rateMount / $distancia, 2, '.', '');
-
                                     } else {
-
                                         $rateMount = 0;
                                         $amount_inland = 0;
                                         $price_per_unit = 0;
                                         $sub_20 = 0;
                                         $montoKm = 0;
-                                        
                                     }
-     
+
                                     // CALCULO MARKUPS
                                     $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
                                     // FIN CALCULO MARKUPS
                                     $sub_20 = number_format($sub_20, 2, '.', '');
-                                    $arrayInland20 = array("cant_cont" => '1', "sub_in" => $sub_20, "des_in" => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code);
+                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'des_in' => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
-                                   
+
                                     $inlandDetails[] = $arrayInland20;
                                 }
                                 // }
                             }
                         }
-
                     }
 
                     $monto = number_format($monto, 2, '.', '');
 
-
                     if ($monto > 0) {
                         $inlandDetails = Collection::make($inlandDetails);
-                        
-                        $arregloInland = array("prov_id" => $inlandsValue->id, "provider" => "Inland Haulage", "providerName" => $inlandsValue->provider, "port_id" => $ports->ports->id, "port_name" => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, "km" => $distancia, "monto" => $monto, 'type' => $textType, 'type_currency' => $inlandDetails->first()['currency'], 'idCurrency' => $typeCurrency);
-                        $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) use($arregloInland) {
+
+                        $arregloInland = ['prov_id' => $inlandsValue->id, 'provider' => 'Inland Haulage', 'providerName' => $inlandsValue->provider, 'port_id' => $ports->ports->id, 'port_name' => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, 'km' => $distancia, 'monto' => $monto, 'type' => $textType, 'type_currency' => $inlandDetails->first()['currency'], 'idCurrency' => $typeCurrency];
+                        $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) use ($arregloInland) {
                             $minimoD = $item->where('sub_in', '>', 0);
                             $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
+
                             return $minimoDetails;
                         });
 
-
-
                         $dataDest[] = $arregloInland;
                     }
-
                 }
             }
         }
@@ -237,15 +212,14 @@ trait SearchTrait
     }
 
     // Metodos para los rates
-    public function rates($equipment, $markup, $data, $rateC, $typeCurrency, $contain,$rateFreight  = 1)
+    public function rates($equipment, $markup, $data, $rateC, $typeCurrency, $contain, $rateFreight = 1)
     {
-
-        $arreglo = array();
-        $arregloRate = array();
-        $arregloSaveR = array();
-        $arregloSaveM = array();
-        $arregloSum  = array();
-        $equipmentFilter = array();
+        $arreglo = [];
+        $arregloRate = [];
+        $arregloSaveR = [];
+        $arregloSaveM = [];
+        $arregloSum = [];
+        $equipmentFilter = [];
         foreach ($contain as $cont) {
             foreach ($equipment as $containers) {
                 if ($containers == $cont->id) {
@@ -258,11 +232,10 @@ trait SearchTrait
                         } else {
                             $rateMount = 0;
                         }
-
                     } else {
                         $rateMount = $data->{$options->field_rate};
                     }
-                    $arreglo = $this->detailRate($markup, $rateMount, $data, $rateC, $typeCurrency, $cont->code,$rateFreight);
+                    $arreglo = $this->detailRate($markup, $rateMount, $data, $rateC, $typeCurrency, $cont->code, $rateFreight);
                     $arregloRate = array_merge($arreglo['arregloRate'], $arregloRate);
                     $arregloSaveR = array_merge($arreglo['arregloRateSaveR'], $arregloSaveR);
                     $arregloSaveM = array_merge($arreglo['arregloRateSaveM'], $arregloSaveM);
@@ -270,7 +243,6 @@ trait SearchTrait
                     if ($rateMount != 0) {
                         array_push($equipmentFilter, $containers);
                     }
-
                 }
             }
         }
@@ -280,9 +252,10 @@ trait SearchTrait
         
         return $arregloG;
 
+        return $arregloG;
     }
 
-    public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers,$rateFreight  = 1)
+    public function detailRate($markup, $amount, $data, $rateC, $typeCurrency, $containers, $rateFreight = 1)
     {
      
         $arregloRateSave['rate'] = array();
@@ -298,30 +271,23 @@ trait SearchTrait
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');
 
-
-
-        $arrayDetail = array('price' . $containers => $amount, 'currency' . $containers => $data->currency->alphacode, 'idCurrency' . $containers => $data->currency_id, 'total' . $containers => $tot_F);
+        $arrayDetail = ['price' . $containers => $amount, 'currency' . $containers => $data->currency->alphacode, 'idCurrency' . $containers => $data->currency_id, 'total' . $containers => $tot_F];
 
         // Arreglos para guardar los rates
-        $array_save = array('c' . $containers => $amount);
-        $array_sum = array('c' . $containers => $tot_R);
-
+        $array_save = ['c' . $containers => $amount];
+        $array_sum = ['c' . $containers => $tot_R];
 
         $arregloRateSave['rate'] = array_merge($array_save, $arregloRateSave['rate']);
         $arregloRateSave['rateSum'] = array_merge($array_sum, $arregloRateSave['rateSum']);
 
-        
-        
         // Markups
-        $array_markup = array('m' . $containers => $markup['markup' . $containers]);
+        $array_markup = ['m' . $containers => $markup['markup' . $containers]];
         $arregloRateSave['markups'] = array_merge($array_markup, $arregloRateSave['markups']);
 
         $array = array_merge($arrayDetail, $markup);
         $arregloRate = array_merge($array, $arregloRate);
 
-        $arreglo = array('arregloRate' => $arregloRate, 'arregloRateSaveR' => $arregloRateSave['rate'], 'arregloRateSum' => $arregloRateSave['rateSum'], 'arregloRateSaveM' => $arregloRateSave['markups']);
-        
-    
+        $arreglo = ['arregloRate' => $arregloRate, 'arregloRateSaveR' => $arregloRateSave['rate'], 'arregloRateSum' => $arregloRateSave['rateSum'], 'arregloRateSaveM' => $arregloRateSave['markups']];
 
         return $arreglo;
     }
@@ -330,57 +296,48 @@ trait SearchTrait
 
     public function ChargesArray($params, $monto, $montoOrig, $type)
     {
-
         $local = $params['local'];
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('surcharge_terms' => $params['terminos'], 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name, 'contract_id' => $data->contract_id, 'carrier_id' => $localCarrier->carrier_id, 'type' => $type, 'rate_id' => $data->id, 'montoOrig' => $montoOrig, 'typecurrency' => $params['typeCurrency'], 'currency_id' => $local->currency->id, 'currency_orig_id' => $params['idCurrency']);
+        $arreglo = ['surcharge_terms' => $params['terminos'], 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name, 'contract_id' => $data->contract_id, 'carrier_id' => $localCarrier->carrier_id, 'type' => $type, 'rate_id' => $data->id, 'montoOrig' => $montoOrig, 'typecurrency' => $params['typeCurrency'], 'currency_id' => $local->currency->id, 'currency_orig_id' => $params['idCurrency']];
+
         return $arreglo;
     }
 
     public function ChargesArray99($params, $calculation_id, $calculation_name)
     {
-
         $local = $params['local'];
         $data = $params['data'];
         $localCarrier = $params['localCarrier'];
 
-        $arreglo = array('surcharge_terms' => $params['terminos'], 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'montoMarkupO' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $calculation_name, 'contract_id' => $data->contract_id, 'carrier_id' => $localCarrier->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $calculation_id, 'montoOrig' => 0.00, 'typecurrency' => $params['typeCurrency'], 'currency_id' => $local->currency->id, 'currency_orig_id' => $params['idCurrency'], 'markupConvert' => 0.00);
+        $arreglo = ['surcharge_terms' => $params['terminos'], 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'montoMarkupO' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $calculation_name, 'contract_id' => $data->contract_id, 'carrier_id' => $localCarrier->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $calculation_id, 'montoOrig' => 0.00, 'typecurrency' => $params['typeCurrency'], 'currency_id' => $local->currency->id, 'currency_orig_id' => $params['idCurrency'], 'markupConvert' => 0.00];
 
         return $arreglo;
     }
 
     public function asociarPerCont($calculation_id)
     {
-
         $calculation = CalculationType::get();
-        $valor = array();
+        $valor = [];
         $gp_id = $calculation->where('id', $calculation_id)->first();
         if ($gp_id->group_container_id != 0) {
-
             $grupo = $calculation->where('group_container_id', $gp_id->group_container_id);
             foreach ($grupo as $val) {
-
                 $options = json_decode($val->options);
                 if (@$options->iscont == 'true') {
-
-                    $valor = array('id' => $val->id, 'name' => $val->name);
-
+                    $valor = ['id' => $val->id, 'name' => $val->name];
                 }
             }
 
             if (empty($valor)) {
-                $valor = array('id' => $gp_id->id, 'name' => $gp_id->name);
+                $valor = ['id' => $gp_id->id, 'name' => $gp_id->name];
             }
-
         } else {
-            $valor = array('id' => $gp_id->id, 'name' => $gp_id->name);
-
+            $valor = ['id' => $gp_id->id, 'name' => $gp_id->name];
         }
 
         return $valor;
-
     }
 
     // Metodos Calculo de markups
@@ -407,11 +364,9 @@ trait SearchTrait
             $q->where('price_id', '=', $price_id);
         })->with('freight_markup', 'local_markup', 'inland_markup')->get();
 
-        if($fclMarkup->isEmpty()){
-            $fclMarkup = Price::where('id',$price_id)->with('freight_markup', 'local_markup', 'inland_markup')->get();
+        if ($fclMarkup->isEmpty()) {
+            $fclMarkup = Price::where('id', $price_id)->with('freight_markup', 'local_markup', 'inland_markup')->get();
         }
-        
-   
 
         foreach ($fclMarkup as $freight) {
             // Freight
@@ -464,7 +419,6 @@ trait SearchTrait
                 // monto aplicado al currency
                 $localMarkup = $localAmmount / $localMarkup;
                 $localMarkup = number_format($localMarkup, 2, '.', '');
-
             }
 
             //$collectionMarkup = new Collection();
@@ -502,16 +456,17 @@ trait SearchTrait
                 $inlandMarkup = number_format($inlandMarkup, 2, '.', '');
             }
         }
-        $markup_array['freight'] = array('markupFreightCurre' => $markupFreightCurre, 'freighMarkup' => $freighMarkup, 'freighPercentage' => $freighPercentage, 'freighAmmount' => $freighAmmount);
+        $markup_array['freight'] = ['markupFreightCurre' => $markupFreightCurre, 'freighMarkup' => $freighMarkup, 'freighPercentage' => $freighPercentage, 'freighAmmount' => $freighAmmount];
 
-        $markup_array['charges'] = array('markupLocalCurre' => $markupLocalCurre, 'localMarkup' => $localMarkup, 'localPercentage' => $localPercentage, 'localAmmount' => $localAmmount);
+        $markup_array['charges'] = ['markupLocalCurre' => $markupLocalCurre, 'localMarkup' => $localMarkup, 'localPercentage' => $localPercentage, 'localAmmount' => $localAmmount];
 
-        $markup_array['inland'] = array('markupInlandCurre' => $markupInlandCurre, 'inlandMarkup' => $inlandMarkup, 'inlandPercentage' => $inlandPercentage, 'inlandAmmount' => $inlandAmmount);
+        $markup_array['inland'] = ['markupInlandCurre' => $markupInlandCurre, 'inlandMarkup' => $inlandMarkup, 'inlandPercentage' => $inlandPercentage, 'inlandAmmount' => $inlandAmmount];
 
         $collectionMarkup = new Collection($markup_array);
 
         return $collectionMarkup;
     }
+
 
     public function freightMarkupsTrait($freighPercentage, $freighAmmount, $freighMarkup, $monto, $typeCurrency, $type,$rateFreight)
     {
@@ -522,9 +477,8 @@ trait SearchTrait
             $markup = number_format($markup, 2, '.', '');
             $monto += $markup;
             number_format($monto, 2, '.', '');
-            $arraymarkup = array("markup" . $type => $markup, "markupConvert" . $type => $markup, "typemarkup" . $type => "$typeCurrency ($freighPercentage%)", "monto" . $type => $monto, 'montoMarkupO' => $markup);
+            $arraymarkup = ['markup' . $type => $markup, 'markupConvert' . $type => $markup, 'typemarkup' . $type => "$typeCurrency ($freighPercentage%)", 'monto' . $type => $monto, 'montoMarkupO' => $markup];
         } else {
-
             
             $markup = trim($freighAmmount);
            
@@ -538,10 +492,41 @@ trait SearchTrait
         }
 
         return $arraymarkup;
-
     }
 
-    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
+    public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency, $rateFreight)
+    {
+
+        if ($localPercentage != 0) {
+
+            // Monto original
+            $markupO = ($montoOrig * $localPercentage) / 100;
+            $montoOrig += $markupO;
+            $montoOrig = number_format($montoOrig, 2, '.', '');
+
+            $markup = ($monto * $localPercentage) / 100;
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $markup;
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
+        } else { // oki
+
+            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
+
+            $markupOrig = $localMarkup * $valor;
+
+            $monto = $monto / $rateFreight;
+            $markup = trim($localMarkup);
+            $markup = number_format($markup, 2, '.', '');
+            $monto += $localMarkup;
+            $monto = number_format($monto, 2, '.', '');
+
+            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
+        }
+
+        return $arraymarkup;
+    }
+
+    /*public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
     {
         
         if ($localPercentage != 0) {
@@ -574,27 +559,24 @@ trait SearchTrait
         }
 
         return $arraymarkup;
-    }
+    }*/
 
     public function inlandMarkup($inlandPercentage, $inlandAmmount, $inlandMarkup, $monto, $typeCurrency, $markupInlandCurre)
     {
-
         if ($inlandPercentage != 0) {
             $markup = ($monto * $inlandPercentage) / 100;
             $markup = number_format($markup, 2, '.', '');
             $monto += $markup;
             $monto = number_format($monto, 2, '.', '');
-            $arraymarkupI = array("markup" => $markup, "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)", 'montoInlandT' => $monto, 'montoMarkupO' => $markup);
+            $arraymarkupI = ['markup' => $markup, 'markupConvert' => $markup, 'typemarkup' => "$typeCurrency ($inlandPercentage%)", 'montoInlandT' => $monto, 'montoMarkupO' => $markup];
         } else {
-
             $markup = $inlandAmmount;
             $markup = number_format($markup, 2, '.', '');
             $monto += number_format($inlandMarkup, 2, '.', '');
-            $arraymarkupI = array("markup" => $markup, "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre, 'montoInlandT' => $monto, 'montoMarkupO' => $markup);
-
+            $arraymarkupI = ['markup' => $markup, 'markupConvert' => $inlandMarkup, 'typemarkup' => $markupInlandCurre, 'montoInlandT' => $monto, 'montoMarkupO' => $markup];
         }
-        return $arraymarkupI;
 
+        return $arraymarkupI;
     }
 
     public function validateEquipment($equipmentForm, $container)
@@ -612,46 +594,40 @@ trait SearchTrait
 
         $equipment->values()->all();
 
-        $array = array("gpId" => $equipment[0], "count" => $equipment->count());
+        $array = ['gpId' => $equipment[0], 'count' => $equipment->count()];
 
         return $array;
-
     }
 
     public function filtrarRate($arreglo, $equipmentForm, $gpId = null, $container)
     {
-
         $arreglo->where(function ($query) use ($container, $equipmentForm) {
             foreach ($container as $cont) {
                 foreach ($equipmentForm as $val) {
-
                     $options = json_decode($cont->options);
 
                     if ($val == $cont->id) {
                         
                         if ($options->field_rate != 'containers') {
-                            $query->orwhere(@$options->field_rate, '!=', "0");
+                            $query->orwhere(@$options->field_rate, '!=', '0');
                         } else {
                             $query->contain($cont->code);
                         }
                     }
                 }
             }
-
         });
 
         return $arreglo;
-
     }
 
     public function divideCarriers($array)
     {
-
-        $carrier['carriers'] = array();
-        $carrier['api'] = array();
+        $carrier['carriers'] = [];
+        $carrier['api'] = [];
         foreach ($array as $element) {
             if (is_numeric($element)) {
-                $carriers = array($element);
+                $carriers = [$element];
                 $carrier['carriers'] = array_merge($carrier['carriers'], $carriers);
             } else {
                 $api[$element] = $element;
@@ -660,12 +636,10 @@ trait SearchTrait
         }
 
         return $carrier;
-
     }
 
     public function contratoFuturo($contractStart, $starDate, $contractExpire, $endDate)
     {
-
         $contractStart = trim($contractStart);
         $starDate = trim($starDate);
         $endDate = trim($endDate);
@@ -679,15 +653,12 @@ trait SearchTrait
         }
 
         return $contratoFuturo;
-
     }
 
     public function transitTime($port_orig, $port_dest, $carrier, $status)
     {
-
-        $transitArray = array();
+        $transitArray = [];
         if ($status != 'api') {
-
             $transit = TransitTime::where('origin_id', $port_orig)->where('destination_id', $port_dest)->where('carrier_id', $carrier)->first();
 
             if (!empty($transit)) {
@@ -701,29 +672,23 @@ trait SearchTrait
                 }**/
 
             } else {
-                $transitArray['via'] = "";
-                $transitArray['transit_time'] = "";
-                $transitArray['service'] = "";
+                $transitArray['via'] = '';
+                $transitArray['transit_time'] = '';
+                $transitArray['service'] = '';
             }
-
         } else {
-
-            $transitArray['via'] = "";
-            $transitArray['transit_time'] = "";
-            $transitArray['service'] = "";
-
+            $transitArray['via'] = '';
+            $transitArray['transit_time'] = '';
+            $transitArray['service'] = '';
         }
-        return $transitArray;
 
+        return $transitArray;
     }
 
-    public function getTypeCurrency($chargesOrigin, $chargesDestination,$data,$typeCurrency)
+    public function getTypeCurrency($chargesOrigin, $chargesDestination, $data, $typeCurrency)
     {
-
         if ($chargesDestination == null && $chargesOrigin == null) {
-
             $typeCurrencyI = $data->currency->alphacode;
-
         } else {
             $typeCurrencyI = $typeCurrency;
         }
@@ -993,10 +958,10 @@ trait SearchTrait
                 if(in_array($calculation->code,$teu_calculations)){
                     foreach($containers as $container){
                         $options = json_decode($container['options'],true);
-                        if(!$options['is_teu']){
-                            $container_charges['C'.$container['code']] = $charge->ammount;
-                        }else{
+                        if(isset($options['is_teu']) && $options['is_teu']){
                             $container_charges['C'.$container['code']] = 2 * $charge->ammount;
+                        }else{
+                            $container_charges['C'.$container['code']] = $charge->ammount;
                         }
                     }
                 }elseif(in_array($calculation->code,$container_calculations)){
@@ -1039,6 +1004,10 @@ trait SearchTrait
         }
     }
 
+    public function compare(){
+        
+    }
+
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
     public function joinCharges($charges)
     {
@@ -1075,10 +1044,10 @@ trait SearchTrait
                             //Original index 2 only compares with 3,4,5... And so on
                         if($original_charge_index < $comparing_charge_index){
                             //Extracting comparison variables from collections (origin vs compared)
-                            $original_charge_carrier = is_a($charge,'App\GlobalCharge') ? $charge->globalcharcarrier[0] : $charge->localcharcarriers[0];
-                            $comparing_charge_carrier = is_a($comparing_charge,'App\GlobalCharge') ? $comparing_charge->globalcharcarrier[0] : $comparing_charge->localcharcarriers[0];
-                            $original_charge_ports = is_a($charge,'App\GlobalCharge') ? $charge->globalcharport[0] : $charge->localcharports[0];
-                            $comparing_charge_ports = is_a($comparing_charge,'App\GlobalCharge') ? $comparing_charge->globalcharport[0] : $comparing_charge->localcharports[0];
+                            $original_charge_carrier = is_a($charge,'App\GlobalCharge') ?? $charge->globalcharcarrier[0] ?? $charge->localcharcarriers[0] ?? [];
+                            $comparing_charge_carrier = is_a($comparing_charge,'App\GlobalCharge') ?? $comparing_charge->globalcharcarrier[0] ?? $comparing_charge->localcharcarriers[0] ?? [];
+                            $original_charge_ports = is_a($charge,'App\GlobalCharge') ?? $charge->globalcharport[0] ?? $charge->localcharports[0] ?? [];
+                            $comparing_charge_ports = is_a($comparing_charge,'App\GlobalCharge') ?? $comparing_charge->globalcharport[0] ?? $comparing_charge->localcharports[0] ?? [];
                             //Checking if charge needs to be joint
                                 //Surcharges must match
                                 //Ports (origin and destination) must match
