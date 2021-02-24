@@ -25,6 +25,8 @@ use App\SaleTerm;
 use App\Surcharge;
 use App\TermAndCondition;
 use App\User;
+use App\Delegation;
+use App\UserDelegation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -36,6 +38,7 @@ class SettingController extends Controller
         $company = User::where('id', \Auth::id())->with('companyUser')->first();
         if ($company->companyUser) {
             $email_settings = EmailSetting::where('company_user_id', $company->companyUser->id)->first();
+            $delegations = Delegation::where('company_user_id', $company->companyUser->id)->get();
             if ($company->companyUser->decimals == '1') {
                 $selectedTrue = "checked='true'";
                 $selectedFalse = '';
@@ -72,7 +75,7 @@ class SettingController extends Controller
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'color_pdf'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'color_pdf','delegations'));
     }
 
     public function store(StoreSettings $request)
@@ -527,5 +530,70 @@ class SettingController extends Controller
         $request->session()->flash('message.content', 'Company duplicated successfully!');
 
         return redirect()->back();
+    }
+    public function store_d(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+        
+        $delegation = new delegation();
+        $delegation->name            = $request->name;
+        $delegation->phone           = $request->phone;
+        $delegation->address         = $request->address;
+        $delegation->company_user_id = $request->company_user_id;
+        $delegation->save();
+
+        $request->session()->flash('message.content', 'Record saved successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
+ 
+    public function edit_d($id)
+    {   
+        return response()->json([
+            'data' => Delegation::find($id),
+        ]);
+    }
+
+    public function update_d(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+
+        $delegation = Delegation::find($request->id);
+
+        $delegation->name=$request->name;
+        $delegation->phone=$request->phone;
+        $delegation->address=$request->address;
+        $delegation->update();
+
+        $request->session()->flash('message.content', 'Record updated successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
+    public function destroy($id)
+    {
+        $id_ud=UserDelegation::where('delegations_id','=',$id)->first();
+
+        if ($id_ud != null)  {
+            return response()->json(['message' => 'error',]);
+
+        }else{
+            $delegation = delegation::find($id)->delete();
+
+            return response()->json([
+                'message' => 'Ok',
+            ]);
+            }
     }
 }

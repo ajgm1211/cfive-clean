@@ -101,9 +101,11 @@ class CarriersController extends Controller
 
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
-        foreach ($request->variation as $variation) {
-            $variation = str_replace($caracteres, '', $variation);
-            $arreglo[] = trim(strtolower($variation));
+        if($request->variation){
+            foreach ($request->variation as $variation) {
+                $variation = str_replace($caracteres, '', $variation);
+                $arreglo[] = trim(strtolower($variation));
+            }
         }
 
         $type['type'] = $arreglo;
