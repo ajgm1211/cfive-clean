@@ -236,5 +236,13 @@ class OceanFreightController extends Controller
 
         return response()->json($request);
     }
+    public function massiveHarborChangeDest(Request $request, Contract $contract)
+    {
+        $prepared_data = [
+            'destiny_port' => $request->input('destination'),
+        ];
+        DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
+        return response()->json($request);
+    }
 
 }
