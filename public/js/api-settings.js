@@ -96,6 +96,7 @@ $(document).on('click', '.open_edit_modal', function(e) {
             $('#url').val(data.data.url);
             $('#api_key').val(data.data.api_key);
             $('#company_user_id_input').val(data.data.company_user_id);
+            $('#is_daily_input').val(data.data.is_daily);
             $('#partner_id').val(data.data.partner_id);
             $('#module').val(data.data.module);
             $('#api_integration_id').val(data.data.id);

@@ -45,6 +45,10 @@
                         <option value="Companies">Companies</option>
                     </select>
                 </div>
+                <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>Type</b></label>
+                    {!! Form::select('is_daily', [0=>'Not daily',1=>'Daily'], null, ['placeholder'=>'Select an option','class' => 'form-control','required','id'=>'is_daily_input']) !!}
+                </div>
                 <br>
                 <hr>
                 <div class="form-group m-form__group">
