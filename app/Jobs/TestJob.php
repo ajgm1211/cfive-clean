@@ -2,14 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Rate;
-use App\Harbor;
 use App\Country;
+use App\Harbor;
+use App\Rate;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class TestJob implements ShouldQueue
 {
@@ -32,14 +32,13 @@ class TestJob implements ShouldQueue
      */
     public function handle()
     {
-
-        $ratesCh = Rate::where('containers','!=','null')->where('containers','!=',"[]")->get()->chunk(200);
+        $ratesCh = Rate::where('containers', '!=', 'null')->where('containers', '!=', '[]')->get()->chunk(200);
         //$containerRates = [];
-        foreach($ratesCh as $rates){
-            foreach($rates as $rate){
-                if(is_string($rate->containers)){
-                    $containers = json_decode($rate->containers,true);
-                    if(is_string($containers)){
+        foreach ($ratesCh as $rates) {
+            foreach ($rates as $rate) {
+                if (is_string($rate->containers)) {
+                    $containers = json_decode($rate->containers, true);
+                    if (is_string($containers)) {
                         //$containerRates[$rate->id] = json_decode($containers,true);
                         $rate->containers = $containers;
                     } else {
@@ -51,7 +50,6 @@ class TestJob implements ShouldQueue
             }
         }
         //dd($containerRates);
-
 
         /*$harbors = Harbor::all();
         $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];

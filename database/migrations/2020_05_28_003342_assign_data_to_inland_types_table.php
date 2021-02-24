@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AssignDataToInlandTypesTable extends Migration
 {
@@ -15,20 +15,18 @@ class AssignDataToInlandTypesTable extends Migration
     {
         \DB::table('inland_types')->delete();
 
-        \DB::table('inland_types')->insert(array (
-            0 => 
-            array (
+        \DB::table('inland_types')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Per KM',
                 'code' => 'KM',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'Per Location',
                 'code' => 'LOCATION',
-            )
-        ));
+            ],
+        ]);
     }
 
     /**

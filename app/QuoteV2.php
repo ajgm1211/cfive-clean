@@ -2,16 +2,16 @@
 
 namespace App;
 
+use App\Http\Filters\QuotationFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use App\Http\Filters\QuotationFilter;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
-class QuoteV2 extends Model  implements HasMedia
+class QuoteV2 extends Model implements HasMedia
 {
     use SoftDeletes;
     use HasMediaTrait;
@@ -25,12 +25,11 @@ class QuoteV2 extends Model  implements HasMedia
 
     protected $casts = [
         'equipment' => 'array',
-        'pdf_options' => 'json'
+        'pdf_options' => 'json',
     ];
 
     protected $attributes = [
-        'pdf_options' => '{"allIn": true, "showCarrier": true}',
-        'language_id' => 1
+        'language_id' => 1,
     ];
 
     protected $fillable = [
@@ -38,12 +37,17 @@ class QuoteV2 extends Model  implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'cargo_type_id'
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 'cargo_type_id',
     ];
 
     public function company()
     {
         return $this->hasOne('App\Company', 'id', 'company_id');
+    }
+
+    public function company_user()
+    {
+        return $this->belongsTo('App\CompanyUser');
     }
 
     public function contact()
@@ -93,7 +97,7 @@ class QuoteV2 extends Model  implements HasMedia
 
     /*public function terms()
     {
-        return $this->hasMany('App\TermsAndCondition','id','quote_id');
+    return $this->hasMany('App\TermsAndCondition','id','quote_id');
     }*/
 
     public function rate()
@@ -114,6 +118,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function inland()
     {
         return $this->hasMany('App\AutomaticInland', 'quote_id', 'id');
+    }
+
+    public function inland_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir', 'quote_id', 'id');
     }
 
     public function charge()
@@ -198,8 +207,8 @@ class QuoteV2 extends Model  implements HasMedia
 
     /*public function getEquipmentAttribute($value)
     {
-        $a = json_decode($value);
-        return json_decode($a);
+    $a = json_decode($value);
+    return json_decode($a);
     }*/
 
     public function scopeQuoteSelect($q)
@@ -252,6 +261,7 @@ class QuoteV2 extends Model  implements HasMedia
             'commodity',
             'kind_of_cargo',
             'gdp',
+            'status',
             'risk_level',
             'date_issued',
             'remarks_spanish',
@@ -287,6 +297,11 @@ class QuoteV2 extends Model  implements HasMedia
         return $q->whereHas('user', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         });
+    }
+
+    public function scopeFilterByType($q)
+    {
+        return $q->where('type', 'FCL')->orWhere('type', 'LCL');
     }
 
     public function scopeUserRelation($q)
@@ -607,12 +622,22 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function inland_addresses()
     {
-        return $this->hasMany('App\InlandAddress','quote_id','id');
+        return $this->hasMany('App\InlandAddress', 'quote_id', 'id');
     }
 
     public function automatic_inland_totals()
     {
-        return $this->hasMany('App\AutomaticInlandTotal','quote_id','id');
+        return $this->hasMany('App\AutomaticInlandTotal', 'quote_id', 'id');
+    }
+
+    public function automatic_inland_address()
+    {
+        return $this->hasMany('App\InlandAddress', 'quote_id', 'id');
+    }
+
+    public function automatic_rate_totals()
+    {
+        return $this->hasMany('App\AutomaticRateTotal', 'quote_id', 'id');
     }
 
     public function integration_quote_statuses()
@@ -635,37 +660,65 @@ class QuoteV2 extends Model  implements HasMedia
         $this->hasMany('App\SaleTermV2');
     }
 
+    public function local_charges()
+    {
+        return $this->hasMany('App\LocalChargeQuote', 'quote_id', 'id');
+    }
+
+    public function local_charges_totals()
+    {
+        return $this->hasMany('App\LocalChargeQuoteTotal', 'quote_id', 'id');
+    }
+
+    public function local_charges_lcl()
+    {
+        return $this->hasMany('App\LocalChargeQuoteLcl', 'quote_id', 'id');
+    }
+
+    public function local_charges_lcl_totals()
+    {
+        return $this->hasMany('App\LocalChargeQuoteLclTotal', 'quote_id', 'id');
+    }
+
     public function duplicate()
     {
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
-        
+
         $new_quote = $this->replicate();
         $new_quote->quote_id = $newq_id;
         $new_quote->save();
 
-        if($new_quote->type == 'FCL'){
+        if ($new_quote->type == 'FCL') {
             $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges',
+                'local_charges_totals',
+                'pdf_option'
             );
-        }else if($new_quote->type == 'LCL'){
-            $this->with(
+        } else if ($new_quote->type == 'LCL') {
+            $this->load(
                 'rates_v2',
-                'inland_addresses'
+                'inland_addresses',
+                'local_charges_lcl',
+                'local_charges_lcl_totals'
             );
         }
 
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
-            foreach ($relation as $relationRecord) {
-
-                $newRelationship = $relationRecord->duplicate($new_quote);
+            if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+                $relation->duplicate($new_quote);
+            } else {
+                foreach ($relation as $relationRecord) {
+                    $newRelationship = $relationRecord->duplicate($new_quote);
+                }
             }
-        }    
+        }
 
         return $new_quote;
     }
@@ -689,10 +742,11 @@ class QuoteV2 extends Model  implements HasMedia
     public function getContainerCodes($equip, $getGroup = false)
     {
 
-        $size = count((array)$equip);
+        $size = count((array) $equip);
 
         if ($size != 0 && $equip != "[]") {
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equip));
+            $equip_array = $this->validateEquipment($equip_array);
             $full_equip = "";
 
             foreach ($equip_array as $eq) {
@@ -713,7 +767,7 @@ class QuoteV2 extends Model  implements HasMedia
 
     public function getContainerArray($equip)
     {
-        if($equip != '[]'){
+        if ($equip != '[]') {
             $cont_ids = [];
             $cont_array = explode(",", $equip);
             foreach ($cont_array as $cont) {
@@ -723,9 +777,9 @@ class QuoteV2 extends Model  implements HasMedia
                 }
             }
             $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
-    
+
             return $conts;
-        }else{
+        } else {
             return $equip;
         }
     }
@@ -740,20 +794,55 @@ class QuoteV2 extends Model  implements HasMedia
         return $ports;
     }
 
-    public function getDeliveryAttribute($value){
+    public function getDeliveryAttribute($value)
+    {
 
-        if($value == 1){
+        if ($value == 1) {
             $value = 'Port to Port';
-        }elseif($value == 2){
+        } elseif ($value == 2) {
             $value = 'Port to Door';
-        }elseif($value == 3){
+        } elseif ($value == 3) {
             $value = 'Door to Port';
-        }elseif($value == 4){
+        } elseif ($value == 4) {
             $value = 'Door to Door';
-        }else{
+        } else {
             $value = 'Port to Port';
         }
-        
+
         return $value;
+    }
+
+    public function validateEquipment(array $equipment)
+    {
+
+        foreach ($equipment as $index => $eq) {
+            if ($eq == "20") {
+                $equipment[$index] = "1";
+            } else if ($eq == "40") {
+                $equipment[$index] = "2";
+            } else if ($eq == "40HC") {
+                $equipment[$index] = "3";
+            } else if ($eq == "45") {
+                $equipment[$index] = "4";
+            }
+            if ($eq == "40NOR") {
+                $equipment[$index] = "5";
+            } else if ($eq == "20RF") {
+                $equipment[$index] = "6";
+            } else if ($eq == "40RF") {
+                $equipment[$index] = "7";
+            } else if ($eq == "40HCRF") {
+                $equipment[$index] = "8";
+            } else if ($eq == "20OT") {
+                $equipment[$index] = "9";
+            } else if ($eq == "40OT") {
+                $equipment[$index] = "10";
+            } else if ($eq == "20FR") {
+                $equipment[$index] = "11";
+            } else if ($eq == "40FR") {
+                $equipment[$index] = "12";
+            }
+        }
+        return $equipment;
     }
 }

@@ -42,27 +42,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /*  public function userCrisp($user)
-    {
-
-    //Evento Crisp
-    $CrispClient = new EventCrisp();
-    $exist =  $CrispClient->checkIfExist($user->email);
-    if ($exist != 'true') { //Creamos el perfil
-    $params = array('email' => $user->email, 'person' => array('nickname' => $user->name . " " . $user->lastname));
-    if ($user->company_user_id != '') {
-    $params['company'] = array('name' => $user->companyUser->name);
-    }
-    $people = $CrispClient->createProfile($params);
-    } else { //validamos que tenga compañia si no lo actualizamos
-    $people = $CrispClient->findByEmail($user->email);
-    if (isset($people['company']['name'])) {
-    $params = array('company' => array('name' => $user->companyUser->name));
-    $people = $CrispClient->updateProfile($params, $user->email);
-    }
-    }
-    }
-     */
 
     public function intercom($client, $user)
     {
@@ -72,7 +51,14 @@ class LoginController extends Controller
             foreach ($cliente->users as $u) {
                 if ($u->type == "user") {
                     if ($u->user_id != $user->id) {
-                        $client->users->archiveUser($u->id);
+                        try {
+
+                            $client->users->archiveUser($u->id);
+
+                        } catch (\Intercom\Exception\IntercomException $e) {
+                            \Log::error("Ocurrio un  error intercom con el siguiente usuario" . $u->email);
+                            return false;
+                        }
                     }
                 }
             }

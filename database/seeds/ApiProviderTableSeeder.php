@@ -12,32 +12,29 @@ class ApiProviderTableSeeder extends Seeder
     public function run()
     {
         \DB::table('api_provider')->delete();
-        
-        \DB::table('api_provider')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('api_provider')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'CMA CGM',
                 'code' => 'CMACGM',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ), 
-            1 => 
-            array (
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'MAERSK',
                 'code' => 'MAERSK',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ), 
-            2 => 
-            array (
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            2 => [
                 'id' => 3,
                 'name' => 'SAFMARINE',
                 'code' => 'SAFMARINE',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ), 
-        ));
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+        ]);
     }
 }

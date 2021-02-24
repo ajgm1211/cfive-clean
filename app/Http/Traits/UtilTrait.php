@@ -8,13 +8,12 @@ use Illuminate\Support\Collection as Collection;
 
 trait UtilTrait
 {
-
     public function transformEquipment($quotes)
     {
         $containers = Container::select('id', 'code')->get();
 
         foreach ($quotes as $quote) {
-            $array = array();
+            $array = [];
             foreach (json_decode($quote->equipment) as $val) {
                 if ($val == '20') {
                     $val = 1;
@@ -42,7 +41,7 @@ trait UtilTrait
     {
         $containers = Container::select('id', 'code')->get();
 
-        $array = array();
+        $array = [];
         foreach (json_decode($quote->equipment) as $val) {
             if ($val == '20') {
                 $val = 1;
@@ -120,12 +119,13 @@ trait UtilTrait
     {
         $rates = Currency::where('id', '=', $id)->get();
         foreach ($rates as $rate) {
-            if ($typeCurrency == "USD") {
+            if ($typeCurrency == 'USD') {
                 $rateC = $rate->rates;
             } else {
                 $rateC = $rate->rates_eur;
             }
         }
+
         return $rateC;
     }
     

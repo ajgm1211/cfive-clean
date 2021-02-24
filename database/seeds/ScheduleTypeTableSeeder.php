@@ -4,35 +4,28 @@ use Illuminate\Database\Seeder;
 
 class ScheduleTypeTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('schedule_type')->delete();
-        
-        \DB::table('schedule_type')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('schedule_type')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Direct',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-            1 => 
-            array (
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'Transfer',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-            ),
-        ));
-        
-        
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+        ]);
     }
 }

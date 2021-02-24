@@ -669,13 +669,13 @@ class SearchApiController extends Controller
                     foreach($charge_direction as $charge){
                         //Checking type of charge to set control variables
                         if(is_a($charge,'App\LocalCharge')){
-                            $charge_origin_port = $charge->localcharports[0]->port_orig;
-                            $charge_destination_port = $charge->localcharports[0]->port_dest;
-                            $charge_carrier = $charge->localcharcarriers[0]->carrier_id;
+                            $charge_origin_port = $charge->localcharports[0]->port_orig ?? [];
+                            $charge_destination_port = $charge->localcharports[0]->port_dest ?? [];
+                            $charge_carrier = $charge->localcharcarriers[0]->carrier_id ?? [];
                         }elseif(is_a($charge,'App\GlobalCharge')){
-                            $charge_origin_port = $charge->globalcharport[0]->port_orig;
-                            $charge_destination_port = $charge->globalcharport[0]->port_dest;
-                            $charge_carrier = $charge->globalcharcarrier[0]->carrier_id;
+                            $charge_origin_port = $charge->globalcharport[0]->port_orig ?? [];
+                            $charge_destination_port = $charge->globalcharport[0]->port_dest ?? [];
+                            $charge_carrier = $charge->globalcharcarrier[0]->carrier_id ?? [];
                         }
                         //Checking if charge control variables match rate properties. "ALL" ports and carriers included (ids 1485 for ports, 26 for carriers)
                         if((in_array($rate->origin_port, [$charge_origin_port, 1485]) || $charge_destination_port == 1485) && 

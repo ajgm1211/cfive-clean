@@ -14,6 +14,7 @@ use App\SaleTermV3;
 use App\Surcharge;
 use App\SaleTermCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SaleTermV3Controller extends Controller
 {
@@ -57,7 +58,7 @@ class SaleTermV3Controller extends Controller
             return $currency->only(['id', 'name']);
         });
 
-        $sale_term_codes = SaleTermCode::get()->map(function ($currency) {
+        $sale_term_codes = SaleTermCode::filterByCurrentCompany()->orderBy('name','asc')->get()->map(function ($currency) {
             return $currency->only(['id', 'name']);
         });
 
@@ -185,5 +186,16 @@ class SaleTermV3Controller extends Controller
         $new_saleterm = $saleterm->duplicate();
 
         return new SaleTermResource($new_saleterm);
+    }
+    /**
+     * Remove all the resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('sale_term_v3s')->whereIn('id', $request->input('ids'))->delete();
+
+        return response()->json(null, 204);
     }
 }

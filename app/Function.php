@@ -5,19 +5,17 @@ use App\Currency;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-
 function extraerWith($patron, $cadena)
 {
-
     $valor = explode($patron, $cadena);
+
     return $valor[1];
 }
 
-
 function setHashID()
 {
-    $user =  User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->first();
-    if (!empty($user)) {
+    $user = User::where('company_user_id', '=', Auth::user()->company_user_id)->with('companyUser')->first();
+    if (! empty($user)) {
         $hash = $user->companyUser->hash;
     } else {
         $hash = 'cargofivepapa';
@@ -28,12 +26,12 @@ function setHashID()
 function getHashID()
 {
     $value = session('hash');
+
     return $value;
 }
 
 function setearRouteKey($key)
 {
-
 
     /*$user =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->first();
 
@@ -71,23 +69,20 @@ function obtenerRouteKey($keyP)
     }
 }
 
-
-
-
 function isDecimal($monto, $quote = false)
 {
-
     $isDecimal = optional(Auth::user()->companyUser)->decimals;
-    
+
     if ($isDecimal != null && $isDecimal == 1) {
-        if (!$quote) {
-            if (is_string($monto))
+        if (! $quote) {
+            if (is_string($monto)) {
                 return $monto;
-            else if (is_float($monto))
+            } elseif (is_float($monto)) {
                 return $monto;
-            else
+            } else {
                 return number_format($monto, 2, '.', '');
-        }else{
+            }
+        } else {
             return number_format($monto, 2, '.', '');
         }
     } else {
@@ -96,7 +91,7 @@ function isDecimal($monto, $quote = false)
 }
 
 /**
- * ratesCurrencyFunction
+ * ratesCurrencyFunction.
  *
  * @param  mixed $id
  * @param  mixed $typeCurrency
@@ -106,18 +101,19 @@ function ratesCurrencyFunction($id, $typeCurrency)
 {
     $rates = Currency::where('id', '=', $id)->get();
     foreach ($rates as $rate) {
-        if ($typeCurrency == "USD") {
+        if ($typeCurrency == 'USD') {
             $rateC = $rate->rates;
         } else {
             $rateC = $rate->rates_eur;
         }
     }
+
     return $rateC;
 }
 
 function processOldDryContainers($array, $type)
 {
-    if (!empty($array)) {
+    if (! empty($array)) {
         switch ($type) {
             case 'amounts':
                 foreach ($array as $k => $amount_value) {
@@ -138,6 +134,7 @@ function processOldDryContainers($array, $type)
                         unset($array['c45hc']);
                     }
                 }
+
                 return $array;
                 break;
             case 'markups':
@@ -159,8 +156,20 @@ function processOldDryContainers($array, $type)
                         unset($array['m45hc']);
                     }
                 }
+
                 return $array;
                 break;
         }
     }
+}
+
+function floatvalue($val){
+    $val = str_replace(",",".",$val);
+    $val = preg_replace('/\.(?=.*\.)/', '', $val);
+    return floatval($val);
+}
+
+function Quitar_Espacios($cadena)
+{
+    return implode(' ', array_filter(explode(' ', $cadena)));
 }
