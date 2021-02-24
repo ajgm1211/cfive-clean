@@ -62,10 +62,9 @@ class UsersController extends Controller
             $user->password = $request->password;
             $user->save();
 
-            $delegation= new UserDelegation();
-            $delegation->users_id=$user->id;
-            $delegation->delegations_id=$request->delegation_id;
-            $delegation->save();
+            if($request->delegation_id != null){
+                $user->storeDelegation($request->delegation_id,$user->id);
+            }
 
             if ($request->type == "subuser") {
                 $user->assignRole('subuser');
