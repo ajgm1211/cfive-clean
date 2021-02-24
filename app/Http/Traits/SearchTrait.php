@@ -1004,10 +1004,6 @@ trait SearchTrait
         }
     }
 
-    public function compare(){
-        
-    }
-
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
     public function joinCharges($charges)
     {
