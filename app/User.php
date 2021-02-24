@@ -2,67 +2,77 @@
 
 namespace App;
 
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\MailResetPasswordNotification as MailResetPasswordNotification;
-use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
+use Laravel\Passport\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements Auditable
-{   
+{
     use HasApiTokens, Notifiable;
     use HasRoles;
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access'
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access',
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     public function subuser()
     {
-
         return $this->hasOne('App\Subuser');
     }
+
     public function contracts()
     {
-
         return $this->hasMany('App\Contract');
     }
+
     public function surcharges()
     {
-
         return $this->hasMany('App\Surcharge');
     }
+
     public function emailsTemplates()
     {
-
         return $this->hasMany('App\EmailTemplate');
     }
+
     public function verifyUser()
     {
         return $this->hasOne('App\VerifyUser');
     }
+
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
     }
+    public function delegation()
+    {
+        return $this->belongsTo('App\Delegation');
+    }
+
     public function userToken()
     {
         return $this->hasOne('App\OauthAccessToken');
     }
+
     public function NewContractRequests()
     {
         return $this->hasMany('App\NewContractRequest');
     }
+
     public function userConfiguration()
     {
         return $this->hasOne('App\UserConfiguration');
     }
+
     public function scopeIsAdmin($query)
     {
         return $query->where('type', 'admin');
@@ -83,6 +93,7 @@ class User extends Authenticatable implements Auditable
     {
         $this->notify(new MailResetPasswordNotification($token));
     }
+
     public function routeNotificationForSlack()
     {
         return 'https://hooks.slack.com/services/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';
@@ -93,5 +104,10 @@ class User extends Authenticatable implements Auditable
         {
             $this->attributes['password'] = bcrypt($password);
         }
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->lastname}";
     }
 }

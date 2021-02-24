@@ -24,6 +24,9 @@ background-color: #969cc0;
 
 background-color: #36A3F7;
 }
+.bg-express{
+background-color: #5ce4a4;   
+}
 .m-portlet {
     box-shadow: none;
     border-radius: 5px;
@@ -649,6 +652,23 @@ background-color: #36A3F7;
 .hida {
     display: none;
 }
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--done .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: #0072fc;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--current .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: rgba(0, 114, 252, 0.70);
+}
+
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span {
+    width: 3rem;
+    height: 3rem;
+}
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span > span {
+    font-size: 16px;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__progress .progress .progress-bar:after {
+    background-color: #0172fc;
+}
 /* estilos */
 </style>
 @endsection
@@ -656,10 +676,8 @@ background-color: #36A3F7;
 @section('title', 'Quotes')
 @section('content')
 <br>
-
+{!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 <div class="padding">
-    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
-
     <div class="col-lg-12">
         @if ($errors->any())
         <div class="alert alert-danger">
@@ -1181,14 +1199,6 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-  <div class="row">
-                            <div class="col-lg-12">
-                                <a  data-toggle="modal" data-target="#createContractModal">
-                                
-                                    <span  style="color:blue;"> + Add Contract</span>
-                                 </a>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
@@ -1200,23 +1210,30 @@ background-color: #36A3F7;
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual" data-type="1">Create
-                                        Manual</span></button>
+                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1"><i class="fa fa-plus"></i> Add Contract</span></button>
                                 </center>
                             </div>
                         </div>
-
-                      
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {!! Form::close() !!}
-
-
 </div>
+
+<div class="padding">
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-lg-12" align='right'>
+                    <button type="button" class="btn btn-link quote_man"><i class="fa fa-plus"></i> Create Quote Manually</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{!! Form::close() !!}
 
 
 
@@ -1258,8 +1275,8 @@ background-color: #36A3F7;
                                     </div>
                                 </div>
                                 <div class="col-lg-6" align='right'> 
-                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)"><b>Create Quote</b></button>
-                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">
+                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')" title="New Feature">
                                         Create FCL Quote
                                     </button>
                                 </div>
@@ -1313,7 +1330,7 @@ background-color: #36A3F7;
                                     <div class="m-widget5">
                                         <div class="m-widget5__item no-padding no-margin">
                                             <div class="m-widget5__pic">
-                                                <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
+                                                <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
                                                     title="" />
                                             </div>
                                         </div>
@@ -2432,8 +2449,9 @@ var uploadedDocumentMap = {}
     'X-CSRF-TOKEN': "{{ csrf_token() }}"
   },
     success: function (file, response) {
-      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
+      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">');
       uploadedDocumentMap[file.name] = response.name
+      $('#m_form').find('input[name="existsFile"]').val(1);
     },
       removedfile: function (file) {
         file.previewElement.remove()
@@ -2443,7 +2461,9 @@ var uploadedDocumentMap = {}
         } else {
           name = uploadedDocumentMap[file.name]
         }
-        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove()
+        $
+        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove();
+        $('#m_form').find('input[name="existsFile"]').val('');
       },
         init: function () {
           @if(isset($project) && $project->document)

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RemarkCondition extends Model
 {
-    protected $table = "remark_conditions";
+    protected $table = 'remark_conditions';
     protected $fillable = [
         'id',
         'user_id',
@@ -15,7 +15,7 @@ class RemarkCondition extends Model
         'export',
         'mode',
         'company_user_id',
-        'language_id'
+        'language_id',
     ];
 
     public function user()

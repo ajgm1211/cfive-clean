@@ -671,7 +671,7 @@ $(document).on('click', '#delete-company', function() {
                             text: "There are " + data.message + " clients associated with this company. If you delete it, those contacts will be deleted.",
                             type: 'warning',
                             showCancelButton: true,
-                            confirmButtonText: 'Yes, delete it!'
+                            confirmButtonText: 'Ok'
                         }).then(function(result) {
                             if (result.value) {
                                 $.ajax({

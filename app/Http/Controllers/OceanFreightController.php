@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Rate;
 use App\Container;
 use App\Contract;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OceanFreightResource;
+use App\Rate;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OceanFreightController extends Controller
 {
-   	/**
+    /**
      * Display the specified resource collection.
      *
      * @param  Illuminate\Http\Request  $request
@@ -22,7 +22,7 @@ class OceanFreightController extends Controller
     {
         $results = Rate::filterByContract($contract->id)->filter($request);
 
-    	return OceanFreightResource::collection($results);
+        return OceanFreightResource::collection($results);
     }
 
     /**
@@ -77,7 +77,7 @@ class OceanFreightController extends Controller
             'currency_id' => $data['currency'],
             'schedule_type_id' => isset($data['schedule_type']) ? $data['schedule_type'] : null,
             'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
-            'via' => isset($data['via']) ? $data['via'] : null
+            'via' => isset($data['via']) ? $data['via'] : null,
         ];
     
         $prepared_data = $this->prepareContainer($prepared_data, $data, $contract);
@@ -88,17 +88,14 @@ class OceanFreightController extends Controller
     public function prepareContainer($prepared_data, $data, $contract)
     {
         $containers = [];
-        
-        if($contract->isDRY()){
 
+        if ($contract->isDRY()) {
             $prepared_data['twuenty'] = isset($data['rates_20DV']) ? $data['rates_20DV'] : 0;
             $prepared_data['forty'] = isset($data['rates_40DV']) ? $data['rates_40DV'] : 0;
             $prepared_data['fortyhc'] = isset($data['rates_40HC']) ? $data['rates_40HC'] : 0;
             $prepared_data['fortynor'] = isset($data['rates_40NOR']) ? $data['rates_40NOR'] : 0;
             $prepared_data['fortyfive'] = isset($data['rates_45HC']) ? $data['rates_45HC'] : 0;
-
         } else {
-
             $prepared_data['twuenty'] = 0;
             $prepared_data['forty'] = 0;
             $prepared_data['fortyhc'] = 0;
@@ -106,9 +103,9 @@ class OceanFreightController extends Controller
             $prepared_data['fortyfive'] = 0;
 
             foreach ($data as $key => $value) {
-
-                if(strpos($key, "rates_") === 0 and !empty($value))
+                if (strpos($key, 'rates_') === 0 and ! empty($value)) {
                     $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
+                }
             }
         }
 
@@ -126,17 +123,16 @@ class OceanFreightController extends Controller
             'currency' => 'required',
             'schedule_type' => 'sometimes|nullable',
             'transit_time' => 'sometimes|nullable',
-            'via' => 'sometimes|nullable'
+            'via' => 'sometimes|nullable',
         ];
-    	
+
         $available_containers = Container::all()->pluck('code');
 
         foreach ($available_containers as $container) {
-           $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_'.$container] = 'sometimes|nullable';
         }
 
-    	return $request->validate($vdata);
-
+        return $request->validate($vdata);
     }
 
     /**
@@ -175,8 +171,7 @@ class OceanFreightController extends Controller
      */
     public function duplicate(Rate $rate)
     {
-        
-        $new_rate = $rate->duplicate(); 
+        $new_rate = $rate->duplicate();
 
         return new OceanFreightResource($new_rate, true);
     }
@@ -202,12 +197,12 @@ class OceanFreightController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('rates')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('rates')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
 
-        /**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
@@ -216,11 +211,11 @@ class OceanFreightController extends Controller
     public function massiveContainerChange(Request $request, Contract $contract)
     {
         $vdata = [];
-        
+
         $available_containers = Container::where('gp_container_id', $contract->gpContainer->id)->get()->pluck('code');
 
         foreach ($available_containers as $container) {
-           $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_'.$container] = 'sometimes|nullable';
         }
 
         $data = $request->validate($vdata);
@@ -231,6 +226,4 @@ class OceanFreightController extends Controller
 
         return response()->json(null, 204);
     }
-
-    
 }

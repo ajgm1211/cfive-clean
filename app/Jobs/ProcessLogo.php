@@ -2,16 +2,15 @@
 
 namespace App\Jobs;
 
+use App\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\User;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-
 
 class ProcessLogo implements ShouldQueue
 {
@@ -20,14 +19,15 @@ class ProcessLogo implements ShouldQueue
     protected $filepath;
     protected $name;
     protected $type;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id,$filepath,$name,$type)
+    public function __construct($id, $filepath, $name, $type)
     {
-        $this->id  = $id;
+        $this->id = $id;
         $this->name = $name;
         $this->filepath = $filepath;
         $this->type = $type;
@@ -41,7 +41,7 @@ class ProcessLogo implements ShouldQueue
     public function handle()
     {
         $name = $this->name;
-        $file=File::get(storage_path('app/logos/'.$name));
+        $file = File::get(storage_path('app/logos/'.$name));
         $filePath = $this->filepath;
         //$file = Storage::disk('logos')->get($name);
         $s3 = Storage::disk('s3_upload');

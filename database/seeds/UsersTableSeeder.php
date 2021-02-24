@@ -15,9 +15,8 @@ class UsersTableSeeder extends Seeder
 
         \DB::table('users')->delete();
 
-        \DB::table('users')->insert(array (
-            0 =>
-            array (
+        \DB::table('users')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Admin',
                 'lastname' => 'Admin',
@@ -30,7 +29,7 @@ class UsersTableSeeder extends Seeder
                 'state' => 1,
                 'created_at' => $date,
                 'updated_at' => $date,
-            )
-        ));
+            ],
+        ]);
     }
 }
