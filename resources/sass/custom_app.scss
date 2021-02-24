@@ -1795,7 +1795,11 @@ input.data-provider {
     margin-right: 3px !important;
 }
 
-#origin, #destination {
+
+/* Tablas */
+
+#origin,
+#destination {
     .oceanfreight {
         .multiselect__tags {
             width: 190px;
@@ -1803,7 +1807,8 @@ input.data-provider {
     }
 }
 
-#origin, #destination {
+#origin,
+#destination {
     .surcharges {
         .multiselect__tags {
             width: 150px;
@@ -1811,8 +1816,10 @@ input.data-provider {
     }
 }
 
-#carrier, #carriers {
-    .oceanfreight, .surcharges {
+#carrier,
+#carriers {
+    .oceanfreight,
+    .surcharges {
         .multiselect__tags {
             width: 150px;
         }
@@ -1820,14 +1827,25 @@ input.data-provider {
 }
 
 #currency {
-    .oceanfreight, .currency {
+    .oceanfreight,
+    .currency {
         .multiselect__tags {
             width: 100px;
         }
     }
 }
 
-#surcharge, #destination_type, #calculation_type {
+
+/* 
+.local_calculation_type {
+    .multiselect__tags {
+        width: 180px;
+    }
+} */
+
+#surcharge,
+#destination_type,
+#calculation_type {
     .surcharges {
         .multiselect__tags {
             width: 130px;
@@ -1843,9 +1861,29 @@ input.data-provider {
     }
 }
 
+#id_incoterm_id {
+    .multiselect__tags {
+        padding-right: 25px !important;
+    }
+    .multiselect__select {
+        width: 25px;
+    }
+}
 
 @media (min-width: 1200px) {
     .modal-xl {
         max-width: 1330px !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .incoterm {
+        padding-right: 0.25rem !important;
+        legend {
+            white-space: nowrap !important;
+        }
+    }
+    .custom_incoterm {
+        padding-left: 0px !important;
     }
 }
