@@ -37,6 +37,10 @@
                     <label style="letter-spacing: 0.7px"><b>Module</b></label>
                     {!! Form::select('module', ['Contacts'=>'Contacts','Companies'=>'Companies'], null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
                 </div>
+                <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>Type</b></label>
+                    {!! Form::select('is_daily', [0=>'Not daily',1=>'Daily'], null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
+                </div>
                 <br>
                 <hr>
                 <div class="form-group m-form__group">
