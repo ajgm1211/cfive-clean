@@ -417,10 +417,12 @@ export default {
                 
                 if (component.massivechange)
                     data["ids"] = component.massivedata; 
-                if (component.massivechangeHarborOrig){
+                if (component.massivechangeHarborOrig)
+                    data["ids"] = component.massivedata;
+                if (component.massivechangeHarborDest)
                     data["ids"] = component.massivedata;
           
-                }
+                
                     
             });
 
@@ -432,8 +434,16 @@ export default {
         onSubmit() {
             if (this.validateForm()) {
                 let data = this.prepareData();
-                
-                if (this.massivechangeHarborOrig) {
+
+                if (this.massivechangeHarborDest) {
+                    this.actions 
+                        .massiveChangeHarborDest(data, this.$route)
+                        .then((response) => {
+                            this.$emit("success", true);
+                            this.vdata = {};
+                        })
+                        .catch((data) => {});
+                } else   if (this.massivechangeHarborOrig) {
                     this.actions
                         .massiveChangeHarborOrig(data, this.$route)
                         .then((response) => {
