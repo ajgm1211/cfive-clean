@@ -17,7 +17,7 @@
         <!-- End Search Input -->
 
         <!-- DataTable -->
-        <b-table-simple hover small responsive borderless>
+        <b-table-simple small responsive borderless>
             <!-- Header table -->
             <b-thead>
                 <b-tr>
@@ -126,7 +126,7 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy" style="border-bottom: 1px solid #eee">
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields) && addTableInsert">
+                <b-tr v-if="!isEmpty(inputFields) && addTableInsert" :id="key">
                     <b-td v-if="firstEmpty"></b-td>
                     
 
@@ -322,6 +322,7 @@
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
                                 @input="onSubmitFixed()"
+                                :class="item.class"
                             >
                             </multiselect>
                             <span
@@ -336,7 +337,7 @@
                 <!-- Extra form end -->
 
                 <!-- Data List -->
-                <b-tr v-for="(item, key) in data" :key="key">
+                <b-tr v-for="(item, key) in data" :key="key" :id="key">
                     <!-- Checkbox column -->
                     <b-td>
                         <b-form-checkbox-group>
@@ -475,7 +476,7 @@
                                 v-on:blur="onSubmitTotals()"
                             >
                             </b-form-input>
-                            asdsad
+                         sssss
                             <span
                                 :id="'id_f_table_' + key"
                                 class="invalid-feedback"
@@ -511,7 +512,7 @@
 
                         <!-- Span field -->
                         <div v-if="item.type == 'span'">
-                            hbhjhh
+hhhh
                             <span style="font-weight: bold">{{
                                 totalsData[key]
                             }}</span>
