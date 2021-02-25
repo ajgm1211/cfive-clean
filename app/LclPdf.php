@@ -252,13 +252,13 @@ class LclPdf
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
             }
-            
+
+            $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
+
             $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
-
-            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-
+                        
             if($totalsArrayInput){
-                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+                $totalsArrayInput = $this->convertToCurrencyPDF($totalsCurrencyInput,$totalsArrayInput,$quote);
             }
 
             foreach($totalsArrayOutput as $key=>$route){

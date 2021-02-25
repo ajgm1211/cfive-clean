@@ -845,4 +845,30 @@ class QuoteV2 extends Model implements HasMedia
         }
         return $equipment;
     }
+
+    public function exchangeRates()
+    {
+        $exchange = [];
+        $client = $this->company_user->first();
+
+        $rateTotals = $this->automatic_rate_totals()->get();
+        $inlandTotals = $this->automatic_inland_totals()->get();
+        
+        if($this->type == 'FCL'){
+            $localchargeTotals = $this->local_charges_totals()->get();
+        }else if($this->type == 'LCL'){
+            $localchargeTotals = $this->local_charges_lcl_totals()->get();
+        }
+
+        $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals);
+
+        foreach($allTotals as $total){
+            $currency = Currency::where('id', $total->currency_id)->first();
+            $currencyExchange = [ 'alphacode' => $currency->alphacode, 'exchangeUSD' => $currency->rates, 'exchangeEUR' => $currency->rates_eur];
+
+            array_push($exchange, $currencyExchange);
+        }
+
+        return $exchange;
+    }
 }
