@@ -312,7 +312,7 @@ export default {
                     callback(error, error.response.data);
                 });
         },
-        create(data) {
+        create(data, route) {
             return api.call('post', `/api/quote/store`, data);
         },
         update(id, data) {

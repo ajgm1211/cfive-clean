@@ -29,6 +29,8 @@ use App\Price;
 use App\CompanyUser;
 use App\LocalCharge;
 use App\GlobalCharge;
+use App\TransitTime;
+use App\RemarkCondition;
 
 use Illuminate\Http\Request;
 
@@ -183,57 +185,52 @@ class SearchApiController extends Controller
         
         //Storing search history
         $search = $this->store($new_search_data_ids, $recent_searches);
+
+        if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
+            $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
+        }
         
         //Retrieving rates with search data
         $rates = $this->searchRates($new_search_data_ids);
-
-        if(isset($rates) && count($rates) != 0){
+        
+        foreach($rates as $rate){
             //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($new_search_data_ids, $rates);
-    
+            $local_charges = $this->searchLocalCharges($new_search_data_ids, $rate);
+        
             //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rates);
-    
+            $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rate);
+
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
             $charges = $this->groupChargesByType($local_charges, $global_charges);
-    
+            
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->setChargesPerContainer($charges,$new_search_data['containers'], $company_user_id);
     
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges);
     
-            /**Retrieving and calculating inlands from search data, only if door delivery indicated
-            if(array_key_exists('deliveryType',$new_search_data) && in_array($new_search_data_ids['deliveryType'],[2,3,4])){
-                $inlands = $this->searchInlands($new_search_data_ids);
-            }else{
-                $inlands = [];
-            }**/
-    
-             //Getting price levels if requested
-             if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
+            //Appending Rate Id to Charges
+            $this->addToRate($rate, $charges, 'charges', $company_user_id);    
+
+            //Getting price levels if requested
+            if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
                 $price_level_markups = $this->searchPriceLevels($new_search_data_ids);
             }else{
                 $price_level_markups = [];
             }
     
             if($price_level_markups != null && count($price_level_markups) != 0){
-                $this->addMarkups($price_level_markups, $rates, $company_user_id);
+                $this->addMarkups($price_level_markups, $rate, $company_user_id);
                 foreach($charges as $charge){
                     $this->addMarkups($price_level_markups, $charge, $company_user_id);
                 }
             }
+            
+            $transit_times = $this->searchTransitTime($new_search_data_ids);
     
-            //Appending Rate Id to Charges
-            $this->addToRates($rates, $charges, 'charges', $company_user_id);
-
-            if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
-                $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
-            }
-
-            foreach($rates as $rate){
-                $rate->SetAttribute('search', $search);
-            }
+            $this->addToRate($rate, $transit_times, 'transit_times', $company_user_id);
+    
+            $rate->SetAttribute('search', $search);
         }
 
         return RateResource::collection($rates);
@@ -404,145 +401,129 @@ class SearchApiController extends Controller
     }
     
     //Finds local charges matching contracts
-    public function searchLocalCharges($search_data, $rates)
+    public function searchLocalCharges($search_data, $rate)
     {
-        //Checking that there are rates returned by the search
-        if(count($rates) != 0){
-            //Creating empty collection for storing charges
-            $local_charges = collect([]);
-            //Pulling necessary data from the search IDs array
-            $origin_ports = $search_data['originPorts'];
-            $destination_ports = $search_data['destinationPorts'];
-            $origin_countries = [];
-            $destination_countries = [];
-            //SEARCH API - Getting countries from port arrays and building countries array
-            foreach($origin_ports as $origin_port){
-                $origin_country = $this->getPortCountry($origin_port);
-                array_push($origin_countries,$origin_country);
-            }
-            foreach($destination_ports as $destination_port){
-                $destination_country = $this->getPortCountry($destination_port);
-                array_push($destination_countries,$destination_country);
-            }
+        //Creating empty collection for storing charges
+        $local_charges = collect([]);
+        //Pulling necessary data from the search IDs array
+        $origin_ports = $search_data['originPorts'];
+        $destination_ports = $search_data['destinationPorts'];
+        $origin_countries = [];
+        $destination_countries = [];
+        //SEARCH API - Getting countries from port arrays and building countries array
+        foreach($origin_ports as $origin_port){
+            $origin_country = $this->getPortCountry($origin_port);
+            array_push($origin_countries,$origin_country);
+        }
+        foreach($destination_ports as $destination_port){
+            $destination_country = $this->getPortCountry($destination_port);
+            array_push($destination_countries,$destination_country);
+        }
 
-            //Including "ALL" columns for querying LocalCharges with such option marked
-                //IDS: On Harbors: 1485; On Countries: 250
-            array_push($origin_ports,1485);
-            array_push($destination_ports,1485);
-            array_push($origin_countries,250);
-            array_push($destination_countries,250);
+        //Including "ALL" columns for querying LocalCharges with such option marked
+            //IDS: On Harbors: 1485; On Countries: 250
+        array_push($origin_ports,1485);
+        array_push($destination_ports,1485);
+        array_push($origin_countries,250);
+        array_push($destination_countries,250);
 
-            //Looping through rates
-            foreach($rates as $rate){
-                //creating carriers array with only rates carrier
-                $carriers = Array($rate->carrier->id);
-                //Including "ALL" column of carriers table
-                array_push($carriers,26);
-                //Checking if contract comes from API
-                if ($rate->contract->status != 'api') {
-                    //Querying NON API contract local charges
-                    $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
-                        $q->whereIn('carrier_id', $carriers);
-                    })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
-                        $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
-                            $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
-                        })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
-                            $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
-                        });
-                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
-                } else {
-                    //Querying API contract local charges
-                    $local_charge = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
-                        $q->whereIn('carrier_id', $carriers);
-                    })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
-                        $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
-                            $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
-                        })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
-                            $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
-                        });
-                    })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
-                }
+        //creating carriers array with only rates carrier
+        $carriers = Array($rate->carrier->id);
+        //Including "ALL" column of carriers table
+        array_push($carriers,26);
+        //Checking if contract comes from API
+        if ($rate->contract->status != 'api') {
+            //Querying NON API contract local charges
+            $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+                $q->whereIn('carrier_id', $carriers);
+            })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
+                    $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
+                    $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                });
+            })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+        } else {
+            //Querying API contract local charges
+            $local_charge = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+                $q->whereIn('carrier_id', $carriers);
+            })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
+                    $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
+                    $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                });
+            })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm','calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+        }
 
-                //Looping through Local Charges found, including in final collection if not there
-                foreach($local_charge as $charge){
-                    if(!$local_charges->contains($charge)){
-                        $local_charges->push($charge);
-                    }
-                }
-            }
+        //Looping through Local Charges found, including in final collection if not there
+        foreach($local_charge as $charge){
+            $local_charges->push($charge);
         }
 
         return $local_charges;        
     }
 
     //Finds global charges matching search data
-    public function searchGlobalCharges($search_data, $rates)
+    public function searchGlobalCharges($search_data, $rate)
     {
-        //Checking that there are rates returned by the search
-        if(count($rates) != 0){
-            //building Carriers array from rates
-            $carriers = [];
-            foreach($rates as $rate){
-                array_push($carriers,$rate->carrier->id);
-            }
-            array_push($carriers,26);
-            //Creating empty collection for storing charges
-            $global_charges = collect([]);
-            //Pulling necessary data from the search IDs array
-            $validity_start = $search_data['dateRange']['startDate'];
-            $validity_end = $search_data['dateRange']['endDate'];
-            $carriers = $search_data['carriers'];
-            $origin_ports = $search_data['originPorts'];
-            $destination_ports = $search_data['destinationPorts'];
-            $company_user_id = $search_data['company'];
-            $origin_countries = [];
-            $destination_countries = [];
-            //SEARCH API - Getting countries from port arrays and building countries array
-            foreach($origin_ports as $origin_port){
-                $origin_country = $this->getPortCountry($origin_port);
-                array_push($origin_countries,$origin_country);
-            }
-            foreach($destination_ports as $destination_port){
-                $destination_country = $this->getPortCountry($destination_port);
-                array_push($destination_countries,$destination_country);
-            }
+        //building Carriers array from rates
+        $carriers = [];
+        array_push($carriers, $rate->carrier->id);
+        array_push($carriers, 26);
+        //Creating empty collection for storing charges
+        $global_charges = collect([]);
+        //Pulling necessary data from the search IDs array
+        $validity_start = $search_data['dateRange']['startDate'];
+        $validity_end = $search_data['dateRange']['endDate'];
+        $origin_ports = $search_data['originPorts'];
+        $destination_ports = $search_data['destinationPorts'];
+        $company_user_id = $search_data['company'];
+        $origin_countries = [];
+        $destination_countries = [];
+        //SEARCH API - Getting countries from port arrays and building countries array
+        foreach($origin_ports as $origin_port){
+            $origin_country = $this->getPortCountry($origin_port);
+            array_push($origin_countries,$origin_country);
+        }
+        foreach($destination_ports as $destination_port){
+            $destination_country = $this->getPortCountry($destination_port);
+            array_push($destination_countries,$destination_country);
+        }
 
-            //Including "ALL" columns for querying GlobalCharges with such option marked
-                //IDS: On Harbors: 1485; On Countries: 250
-            array_push($origin_ports,1485);
-            array_push($destination_ports,1485);
-            array_push($origin_countries,250);
-            array_push($destination_countries,250);
+        //Including "ALL" columns for querying GlobalCharges with such option marked
+            //IDS: On Harbors: 1485; On Countries: 250
+        array_push($origin_ports,1485);
+        array_push($destination_ports,1485);
+        array_push($origin_countries,250);
+        array_push($destination_countries,250);
 
-            $contractStatus = 'NOT API'; //*************** CHANGE THIS LATER ************
-        
-            if ($contractStatus != 'api') {
+        $contractStatus = 'NOT API'; //*************** CHANGE THIS LATER ************
     
-                $global_charge = GlobalCharge::where([['validity', '>=', $validity_start],['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
-                    $q->whereIn('carrier_id', $carriers);
-                })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
-                    $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
-                        $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
-                    })->orwhereHas('globalcharcountry', function ($q) use ($origin_countries, $destination_countries) {
-                        $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
-                    })->orwhereHas('globalcharportcountry', function ($q) use ($origin_ports, $destination_countries) {
-                        $q->whereIn('port_orig', $origin_ports)->whereIn('country_dest', $destination_countries);
-                    })->orwhereHas('globalcharcountryport', function ($q) use ($origin_countries, $destination_ports) {
-                        $q->whereIn('country_orig', $origin_countries)->whereIn('port_dest', $destination_ports);
-                    });
-                })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_countries, $destination_countries) {
-                    $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
-                })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
-                    $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
-                })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm','globalcharport','calculationtype')->get();
-            }
+        if ($contractStatus != 'api') {
 
-            //Looping through Global Charges found, including in final collection if not there
-            foreach($global_charge as $charge){
-                if(!$global_charges->contains($charge)){
-                    $global_charges->push($charge);
-                }
-            }
+            $global_charges_found = GlobalCharge::where([['validity', '>=', $validity_start],['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+                $q->whereIn('carrier_id', $carriers);
+            })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+                $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
+                    $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+                })->orwhereHas('globalcharcountry', function ($q) use ($origin_countries, $destination_countries) {
+                    $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+                })->orwhereHas('globalcharportcountry', function ($q) use ($origin_ports, $destination_countries) {
+                    $q->whereIn('port_orig', $origin_ports)->whereIn('country_dest', $destination_countries);
+                })->orwhereHas('globalcharcountryport', function ($q) use ($origin_countries, $destination_ports) {
+                    $q->whereIn('country_orig', $origin_countries)->whereIn('port_dest', $destination_ports);
+                });
+            })->whereDoesntHave('globalexceptioncountry', function ($q) use ($origin_countries, $destination_countries) {
+                $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
+            })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
+                $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
+            })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm', 'calculationtype')->get();
+        }
+
+        //Looping through Global Charges found, including in final collection if not there
+        foreach($global_charges_found as $charge){
+            $global_charges->push($charge);
         }
 
         return $global_charges;
@@ -564,6 +545,26 @@ class SearchApiController extends Controller
         $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $client_currency, $search_data['direction'], $search_data['type']);
     
         return $markups;
+    }
+
+    //Retrieves Global Remarks
+    public function searchRemarks($search_data)
+    {
+        
+    }
+
+    //Retrives global Transit Times
+    public function searchTransitTime($search_data)
+    {
+        //Setting values fo query
+        $origin_ports = $search_data['originPorts'];
+        $destination_ports = $search_data['destinationPorts'];
+        $carriers = $search_data['carriers'];
+
+        //Querying
+        $transit_times = TransitTime::whereIn('origin_id',$origin_ports)->whereIn('destination_id',$destination_ports)->whereIn('carrier_id',$carriers)->get();
+
+        return $transit_times;
     }
     
     //Adds PriceLevels markups to target collection
@@ -649,116 +650,106 @@ class SearchApiController extends Controller
 
     }
 
-    //appending charges to corresponding Rates
-    public function addToRates($rates, $target, $target_type, $company_user_id)
+    //appending charges to corresponding Rate
+    public function addToRate($rate, $target, $target_type, $company_user_id)
     {
         //Setting customer currency to convert if necessary
         $company_user = CompanyUser::where('id',$company_user_id)->first();
         $client_currency = $company_user->currency;
-        if($target_type = 'charges'){
-            //Looping through rates
-            foreach($rates as $rate){
-                //Empty array for each Rate Charges
-                $rate_charges = [];
-                $charge_type_totals = [];
-                //Looping through charges type (Origin, Destination, Freight)
-                foreach($target as $direction => $charge_direction){
-                    $rate_charges[$direction] = [];
-                    $charge_type_totals[$direction] = [];
-                    //Looping through charges by type
-                    foreach($charge_direction as $charge){
-                        //Checking type of charge to set control variables
-                        if(is_a($charge,'App\LocalCharge')){
-                            $charge_origin_port = $charge->localcharports[0]->port_orig ?? [];
-                            $charge_destination_port = $charge->localcharports[0]->port_dest ?? [];
-                            $charge_carrier = $charge->localcharcarriers[0]->carrier_id ?? [];
-                        }elseif(is_a($charge,'App\GlobalCharge')){
-                            $charge_origin_port = $charge->globalcharport[0]->port_orig ?? [];
-                            $charge_destination_port = $charge->globalcharport[0]->port_dest ?? [];
-                            $charge_carrier = $charge->globalcharcarrier[0]->carrier_id ?? [];
-                        }
-                        //Checking if charge control variables match rate properties. "ALL" ports and carriers included (ids 1485 for ports, 26 for carriers)
-                        if((in_array($rate->origin_port, [$charge_origin_port, 1485]) || $charge_destination_port == 1485) && 
-                            (in_array($rate->destiny_port, [$charge_destination_port, 1485]) || $charge_destination_port == 1485) &&
-                            (in_array($rate->carrier_id, [$charge_carrier, 26]) || $charge_carrier == 26)){
 
-                                if(isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
-                                    $to_update = 'totals_with_markups';
-                                    $totals_array = $rate->totals_with_markups;
-                                    $charges_to_add = $charge->totals_with_markups;
-                                }elseif(!isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
-                                    $to_update = 'totals';
-                                    $totals_array = $rate->totals;
-                                    $charges_to_add = $charge->totals_with_markups;
-                                }elseif(isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
-                                    $to_update = 'totals_with_markups';
-                                    $totals_array = $rate->totals_with_markups;
-                                    $charges_to_add = $charge->containers_client_currency;
-                                }elseif(!isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
-                                    $to_update = 'totals';
-                                    $totals_array = $rate->totals;
-                                    $charges_to_add = $charge->containers_client_currency;
-                                }
+        if($target_type == 'charges'){
+            $rate_charges = [];
+            $charge_type_totals = [];
+            //Looping through charges type (Origin, Destination, Freight)
+            foreach($target as $direction => $charge_direction){
+                $rate_charges[$direction] = [];
+                $charge_type_totals[$direction] = [];
 
-                                foreach($totals_array as $code => $total){
-                                    if(isset($charge->containers_client_currency[$code])){
-                                        $totals_array[$code] += isDecimal($charges_to_add[$code],true);
-                                        if(!isset($charge_type_totals[$direction][$code])){
-                                            $charge_type_totals[$direction][$code] = 0;
-                                        }
-                                        $charge_type_totals[$direction][$code] += $charges_to_add[$code];
-                                    }
-                                }
+                //Looping through charges by type
+                foreach($charge_direction as $charge){
 
-                                $rate->$to_update = $totals_array;
-                                $rate->$to_update = $this->convertToCurrency($client_currency, $rate->currency, $rate->$to_update);
-                                array_push($rate_charges[$direction], $charge);
-                            }
-                            
-                            if($direction == 'freight'){
-                                $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                            }
+                    if(isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
+                        $to_update = 'totals_with_markups';
+                        $totals_array = $rate->totals_with_markups;
+                        $charges_to_add = $charge->totals_with_markups;
+                    }elseif(!isset($rate->totals_with_markups) && isset($charge->totals_with_markups)){
+                        $to_update = 'totals';
+                        $totals_array = $rate->totals;
+                        $charges_to_add = $charge->totals_with_markups;
+                    }elseif(isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
+                        $to_update = 'totals_with_markups';
+                        $totals_array = $rate->totals_with_markups;
+                        $charges_to_add = $charge->containers_client_currency;
+                    }elseif(!isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)){
+                        $to_update = 'totals';
+                        $totals_array = $rate->totals;
+                        $charges_to_add = $charge->containers_client_currency;
                     }
 
-                    if($direction == 'freight'){
-                        $ocean_freight_array = [
-                            'surcharge' => ['name' => 'Ocean Freight'],
-                            'containers' => json_decode($rate->containers,true),
-                            'calculationtype' => ['name' => 'Per Container', 'id' => '5'], //CHANGE ID LATER
-                            'typedestiny_id' => 3,
-                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                        ];
-                        
-                        if(isset($rate->container_markups)){
-                            $ocean_freight_array['container_markups'] = $rate->container_markups;
-                            $ocean_freight_array['totals_markups'] = $rate->totals_markups;
-                            $ocean_freight_array['containers_with_markups'] = $rate->containers_with_markups;
-                            $ocean_freight_array['totals_with_markups'] = $rate->totals_with_markups;
-
-                            $totals_array = $this->convertToCurrency($rate->currency, $client_currency, $rate->containers_with_markups);
-                        }else{
-                            $totals_array = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
-                        }
-
-                        foreach($totals_array as $code => $total){
+                    foreach($totals_array as $code => $total){
+                        if(isset($charge->containers_client_currency[$code])){
+                            $totals_array[$code] += isDecimal($charges_to_add[$code],true);
                             if(!isset($charge_type_totals[$direction][$code])){
                                 $charge_type_totals[$direction][$code] = 0;
                             }
-                            $charge_type_totals[$direction][$code] += $total;
+                            $charge_type_totals[$direction][$code] += $charges_to_add[$code];
                         }
-
-                        $ocean_freight_collection = collect($ocean_freight_array);
-
-                        array_push($rate_charges[$direction], $ocean_freight_collection);
                     }
-                    
-                    $rate->setAttribute('charge_totals_by_type',$charge_type_totals);
-                    
-                    if(count($rate_charges[$direction]) == 0){
-                        unset($rate_charges[$direction]);
-                    };
+
+                    $rate->$to_update = $totals_array;
+                    $rate->$to_update = $this->convertToCurrency($client_currency, $rate->currency, $rate->$to_update);
+                    array_push($rate_charges[$direction], $charge);
+                        
+                    if($direction == 'freight'){
+                        $charge->containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
+                        $charge->currency = $rate->currency;
+                    }
                 }
-                $rate->setAttribute('charges',$rate_charges);
+
+                if($direction == 'freight'){
+                    $ocean_freight_array = [
+                        'surcharge' => ['name' => 'Ocean Freight'],
+                        'containers' => json_decode($rate->containers,true),
+                        'calculationtype' => ['name' => 'Per Container', 'id' => '5'], //CHANGE ID LATER
+                        'typedestiny_id' => 3,
+                        'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                    ];
+                    
+                    if(isset($rate->container_markups)){
+                        $ocean_freight_array['container_markups'] = $rate->container_markups;
+                        $ocean_freight_array['totals_markups'] = $rate->totals_markups;
+                        $ocean_freight_array['containers_with_markups'] = $rate->containers_with_markups;
+                        $ocean_freight_array['totals_with_markups'] = $rate->totals_with_markups;
+
+                        $totals_array = $this->convertToCurrency($rate->currency, $client_currency, $rate->containers_with_markups);
+                    }else{
+                        $totals_array = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
+                    }
+
+                    foreach($totals_array as $code => $total){
+                        if(!isset($charge_type_totals[$direction][$code])){
+                            $charge_type_totals[$direction][$code] = 0;
+                        }
+                        $charge_type_totals[$direction][$code] += $total;
+                    }
+
+                    $ocean_freight_collection = collect($ocean_freight_array);
+
+                    array_push($rate_charges[$direction], $ocean_freight_collection);
+                }
+                
+                $rate->setAttribute('charge_totals_by_type',$charge_type_totals);
+                
+                if(count($rate_charges[$direction]) == 0){
+                    unset($rate_charges[$direction]);
+                };
+            }
+            $rate->setAttribute('charges',$rate_charges);
+            
+        }else if($target_type == 'transit_times'){
+            foreach($target as $tt){                   
+                
+                $rate->setAttribute('transit_time', $tt);
             }
         }
     }    
