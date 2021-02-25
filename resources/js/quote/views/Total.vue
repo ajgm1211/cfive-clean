@@ -26,7 +26,7 @@
                         <multiselect
                             v-model="totalsCurrency"
                             :multiple="false"
-                            :options="datalists['currency']"
+                            :options="datalists['filtered_currencies']"
                             :searchable="true"
                             :close-on-select="true"
                             :clear-on-select="false"
@@ -42,49 +42,58 @@
                     </div>
                     <!-- Currency Multiselect End-->
 
-                    <!-- Convert from Multiselect-->
-                    <div class="col-12">
-                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                            <span>Convert from:</span>
-                            <multiselect
-                                v-model="convertFrom"
-                                :multiple="false"
-                                :options="datalists['currency']"
-                                :searchable="true"
-                                :close-on-select="true"
-                                :clear-on-select="false"
-                                :show-labels="false"
-                                :hide-selected="true"
-                                :allow-empty="false"
-                                label="alphacode"
-                                track-by="alphacode"
-                                placeholder="Select Currency"
-                                @input="updatePdfOptions('currency')"
-                            >
-                            </multiselect>
-                        </div>
-                        <div
-                            v-if="exchangeSet"
-                            class="alert alert-warning"
-                            role="alert"
-                        >
-                            There will be conversion errors if the totals of each tab are not set to this currency!
-                        </div>
-                    </div>
-                    <!-- Convert from Multiselect End-->
-
-                    <!-- Exchange rate input-->
+                    <!-- Exchange rate table-->
                     <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                        <span>Exchange rate:</span>
-                        <b-form-input
-                            placeholder="Insert rate"
-                            v-model="exchangeRate"
-                            type="number"
-                            class="q-input"
-                            @blur="updatePdfOptions('exchange')"
-                        ></b-form-input>
+                        <span>Exchange rates:</span>
+
+                        <b-table-simple
+                            hover
+                            small
+                            responsive="sm"
+                            borderless
+                        >
+                            <!-- Header table -->
+                            <b-thead class="q-thead">
+                                <b-tr>
+                                    <b-th>
+                                        <span class="label-text">Currency</span>
+                                    </b-th>
+
+                                    <b-th>
+                                        <span class="label-text">Exchange Rate {{totalsCurrency.alphacode}}</span>
+                                    </b-th>
+
+                                </b-tr>
+                            </b-thead>
+
+                            <b-tbody>
+                                <b-tr
+                                    v-for="(currency,key) in exchangeRates"
+                                    :key = key
+                                    class="q-tr"
+                                >
+                                    <b-td>
+                                        <span>
+                                            <b>{{
+                                                currency.alphacode
+                                            }}</b>
+                                        </span>
+                                    </b-td>
+                                    <b-td>
+                                        <b-form-input v-if="totalsCurrency.alphacode=='USD'"
+                                            v-model="currency.exchangeUSD"
+                                            @blur="updatePdfOptions"
+                                        ></b-form-input>
+                                        <b-form-input v-else-if="totalsCurrency.alphacode=='EUR'"
+                                            v-model="currency.exchangeEUR"
+                                            @blur="updatePdfOptions"
+                                        ></b-form-input>
+                                    </b-td>
+                                </b-tr>
+                            </b-tbody>
+                        </b-table-simple>
                     </div>
-                    <!-- Exchange rate input End-->
+                    <!-- Exchange rate table End-->
                 </div>
             </div>
 
@@ -109,10 +118,8 @@ export default {
         return {
             showTotals: false,
             totalsCurrency: {},
-            convertFrom: {},
-            exchangeRate: null,
+            exchangeRates: null,
             loaded: false,
-            exchangeSet: false,
             pdfOptions: {},
         };
     },
@@ -127,30 +134,20 @@ export default {
 
         this.totalsCurrency = this.pdfOptions["totalsCurrency"];
 
-        this.convertFrom = this.pdfOptions["convertFrom"];
-
-        this.exchangeRate = this.pdfOptions["exchangeRate"];
-
-        if(this.exchangeRate != null && this.exchangeRate != undefined && this.convertFrom != null && this.convertFrom != undefined){
-            this.exchangeSet = true;
-        }
+        this.exchangeRates = this.pdfOptions["exchangeRates"];
 
         this.loaded = true;
     },
     methods: {
-        updatePdfOptions(updateType) {
-            if(updateType == "currency"){
-                this.exchangeSet = true;
-            }
 
+        updatePdfOptions(updateType) {
             let pdfOptions = {
                 pdf_options: {
                     allIn: this.pdfOptions["allIn"],
                     showCarrier: this.pdfOptions["showCarrier"],
                     showTotals: this.showTotals,
                     totalsCurrency: this.totalsCurrency,
-                    convertFrom: this.convertFrom,
-                    exchangeRate: this.exchangeRate,
+                    exchangeRates: this.exchangeRates,
                 },
             };
 
@@ -165,6 +162,7 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
+
     },
 };
 </script>

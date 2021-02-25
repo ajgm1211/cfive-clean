@@ -1706,30 +1706,43 @@ trait QuoteV2Trait
         return false;
     }
 
-    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, array $amounts, $exchangeRate = null)
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, array $amounts)
     {
-        if($exchangeRate == null){
-            if ($fromCurrency->alphacode != $toCurrency->alphacode) {
-                $inputConversion = $fromCurrency->rates;
-                foreach ($amounts as $container => $price) {
-                    $convertedPrice = $price / $inputConversion;
-                    $amounts[$container] = isDecimal($convertedPrice, true);
-                }
-                if ($toCurrency->alphacode == 'USD') {
-                    return $amounts;
-                } else {
-                    $outputConversion = $toCurrency->rates;
-                    foreach ($amounts as $container => $price) {
-                        $convertedPrice = $price * $outputConversion;
-                        $amounts[$container] = isDecimal($convertedPrice, true);
-                    }
-                }
-            }
-        }else{
+        if ($fromCurrency->alphacode != $toCurrency->alphacode) {
+            $inputConversion = $fromCurrency->rates;
             foreach ($amounts as $container => $price) {
-                $convertedPrice = $price / $exchangeRate;
+                $convertedPrice = $price / $inputConversion;
                 $amounts[$container] = isDecimal($convertedPrice, true);
             }
+            if ($toCurrency->alphacode == 'USD') {
+                return $amounts;
+            } else {
+                $outputConversion = $toCurrency->rates;
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice, true);
+                }
+            }
+        }
+
+        return $amounts;
+    }
+
+    public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
+    {
+        foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
+            if($toCurrency['alphacode'] == $fromCurrency->alphacode){
+                if($quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
+                    $exchangeRate = $toCurrency['exchangeUSD'];
+                }elseif($quote->pdf_options['totalsCurrency']['alphacode'] == 'EUR'){
+                    $exchangeRate = $toCurrency['exchangeEUR'];
+                }
+            }
+        }
+
+        foreach ($amounts as $container => $price) {
+            $convertedPrice = $price / $exchangeRate;
+            $amounts[$container] = isDecimal($convertedPrice, true);
         }
 
         return $amounts;
