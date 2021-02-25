@@ -1039,21 +1039,11 @@ trait SearchTrait
                             //Original index 1 only compares with 2,3,4...
                             //Original index 2 only compares with 3,4,5... And so on
                         if($original_charge_index < $comparing_charge_index){
-                            //Extracting comparison variables from collections (origin vs compared)
-                            $original_charge_carrier = is_a($charge,'App\GlobalCharge') ?? $charge->globalcharcarrier[0] ?? $charge->localcharcarriers[0] ?? [];
-                            $comparing_charge_carrier = is_a($comparing_charge,'App\GlobalCharge') ?? $comparing_charge->globalcharcarrier[0] ?? $comparing_charge->localcharcarriers[0] ?? [];
-                            $original_charge_ports = is_a($charge,'App\GlobalCharge') ?? $charge->globalcharport[0] ?? $charge->localcharports[0] ?? [];
-                            $comparing_charge_ports = is_a($comparing_charge,'App\GlobalCharge') ?? $comparing_charge->globalcharport[0] ?? $comparing_charge->localcharports[0] ?? [];
                             //Checking if charge needs to be joint
                                 //Surcharges must match
-                                //Ports (origin and destination) must match
-                                //Carriers must match
                                 //Index of compared charge must not be in the compared control array (compared_and_joint)
                             if($charge->surcharge_id == $comparing_charge->surcharge_id &&
-                                (in_array($original_charge_carrier->carrier_id,[$comparing_charge_carrier->carrier_id, 26]) || $comparing_charge_carrier->carrier_id == 26) &&
-                                (in_array($original_charge_ports->port_orig,[$comparing_charge_ports->port_orig, 1485]) || $comparing_charge_ports->port_orig == 1485) &&
-                                (in_array($original_charge_ports->port_dest,[$comparing_charge_ports->port_dest, 1485]) || $comparing_charge_ports->port_dest == 1485) &&
-                                !in_array($comparing_charge_index,$compared_and_joint) ){
+                                count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
                                     //Converting compared array container rates into corresponding currency:
                                         //If currencies don't match, join must be done in client currency
                                     if($charge->currency != $comparing_charge->currency){
@@ -1084,12 +1074,12 @@ trait SearchTrait
                                     }
                                     //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
                                         //EXAMPLE
-                                        //Original charge index 0 is joint with compared charge index 1, original index 0 is included in final array
-                                        //Original charge index 0 is joint with compared charge index 2, original index 0 is included in final array -> DUPLICATE
-                                        //SOLUTION -> Original charge index must be pulled from final array if present
-                                    foreach($joint_charges[$direction] as $j_charge){
+                                        //Original charge 0 is joint with compared charge 1, original 0 is included in final array
+                                        //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
+                                        //SOLUTION -> Original charge must be pulled from final array if present
+                                    foreach($joint_charges[$direction] as $key => $j_charge){
                                         if($j_charge->id == $charge->id){
-                                            unset($j_charge);
+                                            unset($joint_charges[$direction][$key]);
                                         }
                                     }
                                     //Include joint charge in final array
@@ -1109,7 +1099,7 @@ trait SearchTrait
                 }
             }
         }
-        
+
         return($joint_charges);
     }
 }

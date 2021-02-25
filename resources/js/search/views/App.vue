@@ -42,7 +42,7 @@ export default {
         }
     },
     created() {
-        console.log()
+        //console.log()
     },
     methods :
     {
@@ -55,7 +55,7 @@ export default {
         },
 
         setSearchData(searchData,searchRequest){
-            console.log(this.searchData);
+            //console.log(this.searchData);
             this.searching = false;
             this.foundRates = searchData;
             this.searchRequest = searchRequest;

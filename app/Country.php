@@ -13,4 +13,9 @@ class Country extends Model
                            'continent',
                            'variation',
                           ];
+
+    public function ports()
+    {
+        return $this->hasMany('App\Harbor', 'country_id');
+    }
 }
