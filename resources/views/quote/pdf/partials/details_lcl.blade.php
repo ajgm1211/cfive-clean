@@ -73,6 +73,17 @@
 
                 <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
 
+                @if($delegation != null)
+                    <br>
+                    <p><b>{{__('pdf.delegation')}}:</b></p>
+
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
+
+                    <p style="line-height:10px;">{{@$delegation->address}}</p>
+
+                    <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                @endif
+
             </div>
             <!-- End only Client -->
 
@@ -98,6 +109,17 @@
                 <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
                     
                 <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+
+                @if($delegation != null)
+                    <br>
+                    <p><b>{{__('pdf.delegation')}}:</b></p>
+                    
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
+
+                    <p style="line-height:10px;">{{@$delegation->address}}</p>
+
+                    <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                @endif
                 
             </div>
             <!-- End Client -->
