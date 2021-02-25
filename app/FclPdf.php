@@ -480,18 +480,10 @@ class FclPdf
  
             $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
 
-            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-            
-            if($quote->pdf_options['convertFrom'] != null && $quote->pdf_options['exchangeRate'] != null){
-                $totalsCurrencyInput = Currency::where('id',$quote->pdf_options['convertFrom']['id'])->first();
-                if($totalsArrayInput){
-                    $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput,$quote->pdf_options['exchangeRate']);
-                }
-            }else{
-                $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
-                if($totalsArrayInput){
-                    $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
-                }
+            $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
+                        
+            if($totalsArrayInput){
+                $totalsArrayInput = $this->convertToCurrencyPDF($totalsCurrencyInput,$totalsArrayInput,$quote);
             }
 
             foreach($totalsArrayOutput as $key=>$route){

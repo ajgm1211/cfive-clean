@@ -55,7 +55,6 @@ class AutomaticInlandController extends Controller
                     'address'=>$request->input('address')
                 ]);
         }
-
         $vdata = [
             'charge' => 'nullable|sometimes',
             'provider_id' => 'nullable',
