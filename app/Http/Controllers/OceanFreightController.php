@@ -132,6 +132,14 @@ class OceanFreightController extends Controller
         return $request->validate($vdata);
     }
 
+    public function validateDataOrigin($request, $contract)
+    {
+        $vdata = [
+            'origin' => 'required',
+         ];
+        return $request->validate($vdata);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -226,15 +234,15 @@ class OceanFreightController extends Controller
 
     public function massiveHarborChange(Request $request, Contract $contract)
     {
-        //$data = $this->validateData($request, $contract);
+        $data = $this->validateDataOrigin($request, $contract);
 
         $prepared_data = [
-            'origin_port' => $request->input('origin'),
-        ];
+            'origin_port' => $data['origin'],
+        ];  
 
         DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
 
-        return response()->json($request);
+        return response()->json(null, 204);
     }
     public function massiveHarborChangeDest(Request $request, Contract $contract)
     {
@@ -242,7 +250,7 @@ class OceanFreightController extends Controller
             'destiny_port' => $request->input('destination'),
         ];
         DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
-        return response()->json($request);
+        return response()->json(null, 204);
     }
 
 }

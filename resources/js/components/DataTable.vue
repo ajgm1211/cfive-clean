@@ -111,7 +111,7 @@
                                         'openmodalharbororigin'
                                     )
                                 "
-                                class="btn-action"
+                                class="btn-action-harbor"
                                 v-on:click="onOpenModalHarborOrig()"
                             >
                                 Edit Multiple Origin Harbors
@@ -122,7 +122,7 @@
                                         'openmodalharbordestination'
                                     )
                                 "
-                                class="btn-action"
+                                class="btn-action-harbor"
                                 v-on:click="onOpenModalHarborDest()"
                             >
                                 Edit Multiple Destination Harbors
