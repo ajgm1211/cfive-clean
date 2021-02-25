@@ -7,13 +7,13 @@
             </h4>
         </div>
         <div v-else>
-            <!-- Show Totals Checkbox-->
             <div class="card" style="width: 100%">
                 <div class="card-body row" style="overflow: inherit">
+                    <!-- Show Totals Checkbox-->
                     <div class="col-12 col-lg-2 col-sm-2 d-flex mt-5 mb-3">
                         <b-form-checkbox
                             v-model="showTotals"
-                            @input="updatePdfOptions()"
+                            @input="updatePdfOptions('totalsCheck')"
                         >
                             <span>Show Totals</span>
                         </b-form-checkbox>
@@ -26,7 +26,7 @@
                         <multiselect
                             v-model="totalsCurrency"
                             :multiple="false"
-                            :options="datalists['currency']"
+                            :options="datalists['filtered_currencies']"
                             :searchable="true"
                             :close-on-select="true"
                             :clear-on-select="false"
@@ -36,14 +36,67 @@
                             label="alphacode"
                             track-by="alphacode"
                             placeholder="Select Currency"
-                            @input="updatePdfOptions()"
+                            @input="updatePdfOptions('showAs')"
                         >
                         </multiselect>
                     </div>
+                    <!-- Currency Multiselect End-->
+
+                    <!-- Exchange rate table-->
+                    <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
+                        <span>Exchange rates:</span>
+
+                        <b-table-simple
+                            hover
+                            small
+                            responsive="sm"
+                            borderless
+                        >
+                            <!-- Header table -->
+                            <b-thead class="q-thead">
+                                <b-tr>
+                                    <b-th>
+                                        <span class="label-text">Currency</span>
+                                    </b-th>
+
+                                    <b-th>
+                                        <span class="label-text">Exchange Rate {{totalsCurrency.alphacode}}</span>
+                                    </b-th>
+
+                                </b-tr>
+                            </b-thead>
+
+                            <b-tbody>
+                                <b-tr
+                                    v-for="(currency,key) in exchangeRates"
+                                    :key = key
+                                    class="q-tr"
+                                >
+                                    <b-td>
+                                        <span>
+                                            <b>{{
+                                                currency.alphacode
+                                            }}</b>
+                                        </span>
+                                    </b-td>
+                                    <b-td>
+                                        <b-form-input v-if="totalsCurrency.alphacode=='USD'"
+                                            v-model="currency.exchangeUSD"
+                                            @blur="updatePdfOptions"
+                                        ></b-form-input>
+                                        <b-form-input v-else-if="totalsCurrency.alphacode=='EUR'"
+                                            v-model="currency.exchangeEUR"
+                                            @blur="updatePdfOptions"
+                                        ></b-form-input>
+                                    </b-td>
+                                </b-tr>
+                            </b-tbody>
+                        </b-table-simple>
+                    </div>
+                    <!-- Exchange rate table End-->
                 </div>
             </div>
 
-            <!-- Currency Multiselect End-->
         </div>
     </div>
 </template>
@@ -65,6 +118,7 @@ export default {
         return {
             showTotals: false,
             totalsCurrency: {},
+            exchangeRates: null,
             loaded: false,
             pdfOptions: {},
         };
@@ -80,16 +134,20 @@ export default {
 
         this.totalsCurrency = this.pdfOptions["totalsCurrency"];
 
+        this.exchangeRates = this.pdfOptions["exchangeRates"];
+
         this.loaded = true;
     },
     methods: {
-        updatePdfOptions() {
+
+        updatePdfOptions(updateType) {
             let pdfOptions = {
                 pdf_options: {
                     allIn: this.pdfOptions["allIn"],
                     showCarrier: this.pdfOptions["showCarrier"],
                     showTotals: this.showTotals,
                     totalsCurrency: this.totalsCurrency,
+                    exchangeRates: this.exchangeRates,
                 },
             };
 
@@ -104,6 +162,7 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
+
     },
 };
 </script>
