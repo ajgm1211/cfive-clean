@@ -9,7 +9,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title mt-3">
-                            <b>{{currentData.type}} Quote</b>
+                            <b>{{currentData.type}} Quote | {{currentData.quote_id}}</b>
                         </h4>
                         <div>
                             <a :href="'/api/quote/pdf/' + this.quote_id" target="_blank" class="btn btn-primary btn-bg">+ PDF</a>

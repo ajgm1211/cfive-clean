@@ -458,7 +458,7 @@ class FclPdf
         foreach($freightTotals as $frTotal){
             $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name ?? "--";
             $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name ?? "--";
-            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->rate()->first()->carrier()->first()->name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->carrier()->first()->name ?? "--";
             $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
             $routeId++;
         }
@@ -476,8 +476,10 @@ class FclPdf
                 $totalsArrayInput = json_decode($total->totals,true);
                 $portArray['origin'] = $total->origin_port()->first()->display_name;
                 $portArray['destination'] = $total->destination_port()->first()->display_name;
+                $portArray['carrier'] = $total->carrier()->first()->name;
             }else if(is_a($total, 'App\AutomaticInlandTotal')){
                 $totalsArrayInput = json_decode($total->totals,true);
+                $portArray['carrier'] = 'local';
                 if($total->type == 'Origin'){
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
@@ -487,6 +489,7 @@ class FclPdf
                 }
             }else if(is_a($total, 'App\LocalChargeQuoteTotal')){
                 $totalsArrayInput = $total->total;
+                $portArray['carrier'] = 'local';
                 if($total->get_type()->first()->description == 'origin'){
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
@@ -496,18 +499,20 @@ class FclPdf
                 }
             }
 
+            
             $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
             
             $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
-
+            
             $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-
+            
             if($totalsArrayInput){
                 $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
             }
 
             foreach($totalsArrayOutput as $key=>$route){
-                if($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']){
+                if(($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) && 
+                    ($portArray['carrier'] == 'local' || $portArray['carrier'] == $route['carrier'])){
                     foreach ($containers as $c) {
                         if (isset($totalsArrayInput['c' . $c->code])) {
                             $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
