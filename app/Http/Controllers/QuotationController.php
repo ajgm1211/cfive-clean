@@ -536,16 +536,20 @@ class QuotationController extends Controller
             }
         }
 
-        if($quote->pdf_options==null || count($quote->pdf_options) != 4){            
+        if($quote->pdf_options==null || count($quote->pdf_options) != 5){            
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $currency_id = $company->companyUser->currency_id;
             $currency = Currency::find($currency_id);
+
+            $exchangeRates = $quote->exchangeRates();
     
             $pdfOptions = [
                 "allIn" =>true, 
                 "showCarrier"=>true, 
                 "showTotals"=>false, 
-                "totalsCurrency" =>$currency];
+                "totalsCurrency" =>$currency,
+                "exchangeRates" => $exchangeRates
+            ];
             
             $quote->pdf_options = $pdfOptions;
             $quote->save();
