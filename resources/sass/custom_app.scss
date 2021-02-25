@@ -366,6 +366,25 @@ td.actions-add-fcl {
     color: #ff6464;
 }
 
+.btn-action-harbor {
+    width: 100%;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+    color: #525f7e;
+    border: none;
+    background: transparent;
+}
+
+.btn-action-harbor:hover {
+    text-decoration: underline;
+}
+
+.btn-action-harbor:focus {
+    outline: none;
+}
+
 
 /**** Modal Add Contract ***/
 

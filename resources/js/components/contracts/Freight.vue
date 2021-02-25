@@ -44,7 +44,7 @@
             hide-footer
         >
             <FormView
-             :data="{}"
+                :data="origin_fields"
                 :massivedata="ids_selected"
                 :fields="origin_fields"
                 :vdatalists="datalists"
@@ -61,7 +61,7 @@
             </FormView>
         </b-modal>
 
-                <b-modal
+        <b-modal
             id="editHarborsDest"
             size="lg"
             cancel-title="Cancel"
