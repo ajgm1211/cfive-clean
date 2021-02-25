@@ -20,80 +20,81 @@
                     </div>
                     <!-- Show Totals Checkbox End-->
 
-                    <!-- Currency Multiselect-->
-                    <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                        <span>Show in:</span>
-                        <multiselect
-                            v-model="totalsCurrency"
-                            :multiple="false"
-                            :options="datalists['filtered_currencies']"
-                            :searchable="true"
-                            :close-on-select="true"
-                            :clear-on-select="false"
-                            :show-labels="false"
-                            :hide-selected="true"
-                            :allow-empty="false"
-                            label="alphacode"
-                            track-by="alphacode"
-                            placeholder="Select Currency"
-                            @input="updatePdfOptions('showAs')"
-                        >
-                        </multiselect>
-                    </div>
-                    <!-- Currency Multiselect End-->
+                    <div class="col">
+                        <!-- Currency Multiselect-->
+                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
+                            <span>Show in:</span>
+                            <multiselect
+                                v-model="totalsCurrency"
+                                :multiple="false"
+                                :options="datalists['filtered_currencies']"
+                                :searchable="true"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"
+                                :hide-selected="true"
+                                :allow-empty="false"
+                                label="alphacode"
+                                track-by="alphacode"
+                                placeholder="Select Currency"
+                                @input="updatePdfOptions('showAs')"
+                            >
+                            </multiselect>
+                        </div>
+                        <!-- Currency Multiselect End-->
+                        <!-- Exchange rate table-->
+                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
+                            <span>Exchange rates:</span>
 
-                    <!-- Exchange rate table-->
-                    <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                        <span>Exchange rates:</span>
+                            <b-table-simple
+                                hover
+                                small
+                                responsive="sm"
+                                borderless
+                            >
+                                <!-- Header table -->
+                                <b-thead class="q-thead">
+                                    <b-tr>
+                                        <b-th>
+                                            <span class="label-text">Currency</span>
+                                        </b-th>
 
-                        <b-table-simple
-                            hover
-                            small
-                            responsive="sm"
-                            borderless
-                        >
-                            <!-- Header table -->
-                            <b-thead class="q-thead">
-                                <b-tr>
-                                    <b-th>
-                                        <span class="label-text">Currency</span>
-                                    </b-th>
+                                        <b-th>
+                                            <span class="label-text">Exchange Rate {{totalsCurrency.alphacode}}</span>
+                                        </b-th>
 
-                                    <b-th>
-                                        <span class="label-text">Exchange Rate {{totalsCurrency.alphacode}}</span>
-                                    </b-th>
+                                    </b-tr>
+                                </b-thead>
 
-                                </b-tr>
-                            </b-thead>
-
-                            <b-tbody>
-                                <b-tr
-                                    v-for="(currency,key) in exchangeRates"
-                                    :key = key
-                                    class="q-tr"
-                                >
-                                    <b-td>
-                                        <span>
-                                            <b>{{
-                                                currency.alphacode
-                                            }}</b>
-                                        </span>
-                                    </b-td>
-                                    <b-td>
-                                        <b-form-input v-if="totalsCurrency.alphacode=='USD'"
-                                            v-model="currency.exchangeUSD"
-                                            @blur="updatePdfOptions"
-                                        ></b-form-input>
-                                        <b-form-input v-else-if="totalsCurrency.alphacode=='EUR'"
-                                            v-model="currency.exchangeEUR"
-                                            @blur="updatePdfOptions"
-                                        ></b-form-input>
-                                    </b-td>
-                                </b-tr>
-                            </b-tbody>
-                        </b-table-simple>
-                    </div>
-                    <!-- Exchange rate table End-->
+                                <b-tbody>
+                                    <b-tr
+                                        v-for="(currency,key) in exchangeRates"
+                                        :key = key
+                                        class="q-tr"
+                                    >
+                                        <b-td>
+                                            <span>
+                                                <b>{{
+                                                    currency.alphacode
+                                                }}</b>
+                                            </span>
+                                        </b-td>
+                                        <b-td>
+                                            <b-form-input v-if="totalsCurrency.alphacode=='USD'"
+                                                v-model="currency.exchangeUSD"
+                                                @blur="updatePdfOptions"
+                                            ></b-form-input>
+                                            <b-form-input v-else-if="totalsCurrency.alphacode=='EUR'"
+                                                v-model="currency.exchangeEUR"
+                                                @blur="updatePdfOptions"
+                                            ></b-form-input>
+                                        </b-td>
+                                    </b-tr>
+                                </b-tbody>
+                            </b-table-simple>
+                        </div>
+                        <!-- Exchange rate table End-->
+                    </div>                    
                 </div>
             </div>
 
