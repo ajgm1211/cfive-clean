@@ -691,7 +691,7 @@ export default {
 
         deleteSurcharger(index){
             this.dataPackaging.splice(index, 1);
-            console.log(this.dataPackaging);
+            //console.log(this.dataPackaging);
         },
 
         addSurcharger() {
@@ -714,7 +714,7 @@ export default {
                 weight: this.weight,
                 total: this.totalPackging,
             };
-            console.log(packaging);
+            //console.log(packaging);
             this.dataPackaging.push(packaging);
             
             this.pallets = ""; this.quantity = ""; this.height = ""; 

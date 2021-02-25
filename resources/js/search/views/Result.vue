@@ -288,8 +288,8 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b>{{rate.via ? rate.via : "Direct"}}</b>
-                                            <p><b>TT:</b> {{rate.transit_time ? rate.transit_time : "None"}}</p>
+                                            <b>{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
+                                            <p><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p>
 
                                         </div>
 
@@ -313,7 +313,7 @@
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code].toFixed(2) }}</b>{{rate.currency.alphacode}}</p>
+                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }}</b>{{rate.client_currency.alphacode}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -412,11 +412,11 @@
                                             <b-td></b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td><b>Total Freight</b></b-td>
+                                            <b-td><b>Total {{ chargeType }}</b></b-td>
                                             <b-td 
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
-                                            ><b>{{ rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
+                                            ><b>{{ rate.currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
@@ -1105,9 +1105,11 @@ export default {
             if(ratesForQuote.length == 0){
                 component.noRatesAdded = true;
             }else{
-                component.actions.quotes.create(ratesForQuote)
+                component.actions.quotes
+                .create(ratesForQuote, this.$route)
                 .then ((response) => {
-
+                    console.log(response)
+                    //window.location.href = "/quote/" + ratesForQuote[0].id + "/edit";
                 })
             }
         },
@@ -1147,7 +1149,7 @@ export default {
         //console.log(component.request);
         //console.log(component.datalists);
 
-        console.log(component.rates);
+        //console.log(component.rates);
 
         component.rates.forEach(function (rate){
             rate.addToQuote = false;

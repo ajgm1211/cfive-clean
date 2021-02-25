@@ -265,7 +265,7 @@ class QuotationController extends Controller
                                 
         }
 
-        return redirect()->action('QuotationController@edit', $quote);
+        return new QuotationResource($quote);
     }
 
     public function edit (Request $request, QuoteV2 $quote)
