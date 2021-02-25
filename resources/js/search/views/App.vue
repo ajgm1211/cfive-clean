@@ -3,22 +3,22 @@
         
         <Search></Search>
 
-        <!--<Recent></Recent>-->
+        <Recent v-if="false" ></Recent>
 
-        <Result></Result>
+        <Result v-if="true"></Result>
 
     </div>
 </template>
 
 <script>
 import Search from './Search'; 
-/*import Recent from './Recent'; */
+import Recent from './Recent';
 import Result from './Result'; 
 
 export default {
     components: {
         Search,
-        /*Recent,*/
+        Recent,
         Result
     }
 }
