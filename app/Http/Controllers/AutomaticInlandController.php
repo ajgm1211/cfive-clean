@@ -135,15 +135,12 @@ class AutomaticInlandController extends Controller
         $totals = $inland_address->inland_totals()->first();
 
         if($totals == null){
-            
-            $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
-
             $totals = AutomaticInlandTotal::create([
                 'quote_id' => $quote->id,
                 'port_id' => $port_id,
                 'type' => $type,
                 'inland_address_id' => $inland_address->id,
-                'currency_id' => $user_currency
+                'currency_id' => $validate['currency_id']['id']
             ]);
             
             $pdfOptions = [
@@ -159,7 +156,7 @@ class AutomaticInlandController extends Controller
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
             'provider'=> 'Inland',
-            'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
+            'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
@@ -422,7 +419,6 @@ class AutomaticInlandController extends Controller
                 }
             }
         }
-
 
         return $ports_sorted;
     }

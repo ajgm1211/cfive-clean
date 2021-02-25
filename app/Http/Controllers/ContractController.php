@@ -370,7 +370,10 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        $media->delete();
+        if(!empty($media) == 0){
+            $media->delete();
+        }
+        
 
         return response()->json(null, 204);
     }

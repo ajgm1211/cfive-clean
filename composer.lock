@@ -147,16 +147,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.172.2",
+            "version": "3.173.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "47a4f005e51ffe158526f7ef7b5723b4313f823c"
+                "reference": "539d5235443368a34e98b8f0f434f2146a8ddb32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/47a4f005e51ffe158526f7ef7b5723b4313f823c",
-                "reference": "47a4f005e51ffe158526f7ef7b5723b4313f823c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/539d5235443368a34e98b8f0f434f2146a8ddb32",
+                "reference": "539d5235443368a34e98b8f0f434f2146a8ddb32",
                 "shasum": ""
             },
             "require": {
@@ -228,7 +228,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2021-01-27T19:14:10+00:00"
+            "time": "2021-02-17T19:12:46+00:00"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -1336,16 +1336,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v5.2.0",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "feb0e820b8436873675fd3aca04f3728eb2185cb"
+                "reference": "f42c9110abe98dd6cfe9053c49bc86acc70b2d23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/feb0e820b8436873675fd3aca04f3728eb2185cb",
-                "reference": "feb0e820b8436873675fd3aca04f3728eb2185cb",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/f42c9110abe98dd6cfe9053c49bc86acc70b2d23",
+                "reference": "f42c9110abe98dd6cfe9053c49bc86acc70b2d23",
                 "shasum": ""
             },
             "require": {
@@ -1382,7 +1382,7 @@
                 "jwt",
                 "php"
             ],
-            "time": "2020-03-25T18:49:23+00:00"
+            "time": "2021-02-12T00:02:00+00:00"
         },
         {
             "name": "greggilbert/recaptcha",
@@ -2186,6 +2186,20 @@
                 }
             ],
             "description": "Update helper",
+            "funding": [
+                {
+                    "url": "https://github.com/kylekatarnls",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/Carbon",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-04-07T20:44:10+00:00"
         },
         {
@@ -4566,16 +4580,16 @@
         },
         {
             "name": "php-http/message",
-            "version": "1.10.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/message.git",
-                "reference": "39db36d5972e9e6d00ea852b650953f928d8f10d"
+                "reference": "fb0dbce7355cad4f4f6a225f537c34d013571f29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message/zipball/39db36d5972e9e6d00ea852b650953f928d8f10d",
-                "reference": "39db36d5972e9e6d00ea852b650953f928d8f10d",
+                "url": "https://api.github.com/repos/php-http/message/zipball/fb0dbce7355cad4f4f6a225f537c34d013571f29",
+                "reference": "fb0dbce7355cad4f4f6a225f537c34d013571f29",
                 "shasum": ""
             },
             "require": {
@@ -4591,15 +4605,15 @@
                 "ergebnis/composer-normalize": "^2.6",
                 "ext-zlib": "*",
                 "guzzlehttp/psr7": "^1.0",
+                "laminas/laminas-diactoros": "^2.0",
                 "phpspec/phpspec": "^5.1 || ^6.3",
-                "slim/slim": "^3.0",
-                "zendframework/zend-diactoros": "^1.0"
+                "slim/slim": "^3.0"
             },
             "suggest": {
                 "ext-zlib": "Used with compressor/decompressor streams",
                 "guzzlehttp/psr7": "Used with Guzzle PSR-7 Factories",
-                "slim/slim": "Used with Slim Framework PSR-7 implementation",
-                "zendframework/zend-diactoros": "Used with Diactoros Factories"
+                "laminas/laminas-diactoros": "Used with Diactoros Factories",
+                "slim/slim": "Used with Slim Framework PSR-7 implementation"
             },
             "type": "library",
             "extra": {
@@ -4632,7 +4646,7 @@
                 "message",
                 "psr-7"
             ],
-            "time": "2020-11-11T10:19:56+00:00"
+            "time": "2021-02-01T08:54:58+00:00"
         },
         {
             "name": "php-http/message-factory",
@@ -7246,7 +7260,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -7322,16 +7336,16 @@
         },
         {
             "name": "symfony/polyfill-iconv",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-iconv.git",
-                "reference": "b34bfb8c4c22650ac080d2662ae3502e5f2f4ae6"
+                "reference": "06fb361659649bcfd6a208a0f1fcaf4e827ad342"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/b34bfb8c4c22650ac080d2662ae3502e5f2f4ae6",
-                "reference": "b34bfb8c4c22650ac080d2662ae3502e5f2f4ae6",
+                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/06fb361659649bcfd6a208a0f1fcaf4e827ad342",
+                "reference": "06fb361659649bcfd6a208a0f1fcaf4e827ad342",
                 "shasum": ""
             },
             "require": {
@@ -7395,20 +7409,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "0eb8293dbbcd6ef6bf81404c9ce7d95bcdf34f44"
+                "reference": "2d63434d922daf7da8dd863e7907e67ee3031483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/0eb8293dbbcd6ef6bf81404c9ce7d95bcdf34f44",
-                "reference": "0eb8293dbbcd6ef6bf81404c9ce7d95bcdf34f44",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/2d63434d922daf7da8dd863e7907e67ee3031483",
+                "reference": "2d63434d922daf7da8dd863e7907e67ee3031483",
                 "shasum": ""
             },
             "require": {
@@ -7479,20 +7493,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "6e971c891537eb617a00bb07a43d182a6915faba"
+                "reference": "43a0283138253ed1d48d352ab6d0bdb3f809f248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/6e971c891537eb617a00bb07a43d182a6915faba",
-                "reference": "6e971c891537eb617a00bb07a43d182a6915faba",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/43a0283138253ed1d48d352ab6d0bdb3f809f248",
+                "reference": "43a0283138253ed1d48d352ab6d0bdb3f809f248",
                 "shasum": ""
             },
             "require": {
@@ -7560,20 +7574,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T17:09:11+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
@@ -7637,7 +7651,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -7706,7 +7720,7 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
@@ -7779,7 +7793,7 @@
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php73.git",
@@ -7855,7 +7869,7 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -9221,6 +9235,72 @@
             "time": "2020-11-10T18:47:58+00:00"
         },
         {
+            "name": "facebook/webdriver",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-webdriver/php-webdriver.git",
+                "reference": "262ea0d209c292e0330be1041424887bbbffef04"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/262ea0d209c292e0330be1041424887bbbffef04",
+                "reference": "262ea0d209c292e0330be1041424887bbbffef04",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-zip": "*",
+                "php": "^5.6 || ~7.0",
+                "symfony/polyfill-mbstring": "^1.12",
+                "symfony/process": "^2.8 || ^3.1 || ^4.0 || ^5.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "php-coveralls/php-coveralls": "^2.0",
+                "php-mock/php-mock-phpunit": "^1.1",
+                "phpunit/phpunit": "^5.7",
+                "sebastian/environment": "^1.3.4 || ^2.0 || ^3.0",
+                "sminnee/phpunit-mock-objects": "^3.4",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/var-dumper": "^3.3 || ^4.0 || ^5.0"
+            },
+            "suggest": {
+                "ext-SimpleXML": "For Firefox profile creation"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\WebDriver\\": "lib/"
+                },
+                "files": [
+                    "lib/Exception/TimeoutException.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A PHP client for Selenium WebDriver. Previously facebook/webdriver.",
+            "homepage": "https://github.com/php-webdriver/php-webdriver",
+            "keywords": [
+                "Chromedriver",
+                "geckodriver",
+                "php",
+                "selenium",
+                "webdriver"
+            ],
+            "abandoned": "php-webdriver/webdriver",
+            "time": "2020-02-17T08:14:38+00:00"
+        },
+        {
             "name": "filp/whoops",
             "version": "2.9.2",
             "source": {
@@ -9901,73 +9981,6 @@
                 "tests"
             ],
             "time": "2018-12-27T10:40:48+00:00"
-        },
-        {
-            "name": "php-webdriver/webdriver",
-            "version": "1.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-webdriver/php-webdriver.git",
-                "reference": "e3633154554605274cc9d59837f55a7427d72003"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/e3633154554605274cc9d59837f55a7427d72003",
-                "reference": "e3633154554605274cc9d59837f55a7427d72003",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-zip": "*",
-                "php": "^5.6 || ~7.0 || ^8.0",
-                "symfony/polyfill-mbstring": "^1.12",
-                "symfony/process": "^2.8 || ^3.1 || ^4.0 || ^5.0"
-            },
-            "replace": {
-                "facebook/webdriver": "*"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.0",
-                "ondram/ci-detector": "^2.1 || ^3.5",
-                "php-coveralls/php-coveralls": "^2.4",
-                "php-mock/php-mock-phpunit": "^1.1 || ^2.0",
-                "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpunit/phpunit": "^5.7 || ^7 || ^8 || ^9",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symfony/var-dumper": "^3.3 || ^4.0 || ^5.0"
-            },
-            "suggest": {
-                "ext-SimpleXML": "For Firefox profile creation"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.8.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Facebook\\WebDriver\\": "lib/"
-                },
-                "files": [
-                    "lib/Exception/TimeoutException.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A PHP client for Selenium WebDriver. Previously facebook/webdriver.",
-            "homepage": "https://github.com/php-webdriver/php-webdriver",
-            "keywords": [
-                "Chromedriver",
-                "geckodriver",
-                "php",
-                "selenium",
-                "webdriver"
-            ],
-            "time": "2020-11-19T15:21:05+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

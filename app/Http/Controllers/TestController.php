@@ -6,6 +6,7 @@ use App\AutoImportation;
 use App\Jobs\SendEmailAutoImporJob;
 use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
+use App\LocalCharge;
 use App\NewContractRequest;
 use App\User;
 use Goutte\Client;
@@ -250,4 +251,54 @@ class TestController extends Controller
 
     }*/
     }
+
+    public function intercom2($client, $user)
+    {
+        try {
+            $cliente = $client->users->getUsers(['email' => $user->email]);
+        } catch (Exception $e) {
+            echo $user->email;
+        }
+        dd($cliente->total_count);
+        if ($cliente->total_count > 1) {
+            echo "Mas de uno " . $user->email . "<BR>";
+            foreach ($cliente->users as $u) {
+                if ($u->type == 'user') {
+                    if ($u->user_id != $user->id) {
+
+                        //$client->users->archiveUser($u->id);
+                        echo "Diferente id " . $user->email . "<BR>";
+                    }
+                }
+            }
+        }
+
+    }
+
+    public function contable()
+    {
+
+        $localcharge = LocalCharge::where('id', 1)->first();
+
+        //dd($localcharge);
+        if (empty($localcharge)) {
+            dd("hola");
+        }
+        var_dump(
+            count(array(null)), // NULL si no es contable
+            count(array(1)), // integers no son contables
+            count(array('abc')), // strings no son contables
+            //count(new stdclass), // objetos que no implementen la interfaz Countable no son contables
+            count([1, 2]) // arrays son contables
+        );
+        $variable = "SAN JOSE  R50    50     EUR     DIRECTO                             SEMANAL               17
+            DIRECTO                             SEMANAL               18_E_E";
+
+            $variable2 = Quitar_Espacios($variable);
+
+            dd($variable,$variable2);
+
+    }
+
+  
 }

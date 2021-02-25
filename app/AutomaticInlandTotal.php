@@ -54,6 +54,7 @@ class AutomaticInlandTotal extends Model
 
     public function totalize()
     {
+
         $quote = $this->quotev2()->first();
 
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -69,6 +70,13 @@ class AutomaticInlandTotal extends Model
             array_splice($equip_array,-1,1);
         
             $inlands = $this->inlands()->get();
+
+            $single = false;
+
+            if($inlands != null && count($inlands) == 1){
+                $this->update(['currency_id' => $inlands[0]->currency_id]);
+                $single = true;
+            }
     
             $markups = [];
             $totals = [];
@@ -85,7 +93,9 @@ class AutomaticInlandTotal extends Model
                     $amount_array[$key] = $value;
                 }
                 $inland_currency = $inland->currency()->first();
-                $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
+                if(!$single){
+                    $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
+                }
                 foreach($amount_array as $key=>$value){
                     $totals[$key] += isDecimal($value,true);
                 }
@@ -95,11 +105,25 @@ class AutomaticInlandTotal extends Model
                     foreach($markup_object as $key=>$value){
                         $markup_array[$key] = $value;
                     }
-                    $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
+                    if(!$single){
+                        $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
+                    }
                     foreach($markup_array as $key=>$value){
                         $markups[$key] += isDecimal($value,true);
-                        $totals['c'.str_replace('m','',$key)] += $value;
+                        $totals['c'.str_replace('m','',$key)] += isDecimal($value, true);
                     }
+                }
+            }
+
+            if(!$single){
+                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
+                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
+            }elseif($single){
+                foreach($totals as $code => $price){
+                    $totals[$code] = isDecimal($price, true);
+                }
+                foreach($markups as $code => $price){
+                    $markups[$code] = isDecimal($price, true);
                 }
             }
     
@@ -110,6 +134,13 @@ class AutomaticInlandTotal extends Model
         }else if($quote->type=='LCL'){
         
             $inlands = $this->inlands_lcl()->get();
+
+            $single = false;
+
+            if($inlands != null && count($inlands) == 1){
+                $this->update(['currency_id' => $inlands[0]->currency_id]);
+                $single = true;
+            }
     
             $totals['lcl_totals'] = 0;
             $markups['profit'] = 0;
@@ -123,10 +154,24 @@ class AutomaticInlandTotal extends Model
                 }else{
                     $inlandCharges[1] = 0;
                 }
-                $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                if(!$single){
+                    $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                }
                 $full = $inlandCharges[0] + $inlandCharges[1];
                 $totals['lcl_totals'] += isDecimal($full,true);
                 $markups['profit'] += isDecimal($inlandCharges[1],true);
+            }
+
+            if(!$single){
+                $totalsPrice = $this->convertToCurrency($currency, $this->currency()->first(), $totalsPrice);
+                $totalsMarkup = $this->convertToCurrency($currency, $this->currency()->first(), $totalsMarkup);
+            }elseif($single){
+                foreach($totals as $code => $price){
+                    $totals[$code] = isDecimal($price, true);
+                }
+                foreach($markups as $code => $price){
+                    $markups[$code] = isDecimal($price, true);
+                }
             }
     
             $totalsPrice = json_encode($totals);
