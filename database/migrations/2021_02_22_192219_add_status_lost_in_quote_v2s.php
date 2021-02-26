@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddStatusLostInQuoteV2s extends Migration
 {
@@ -13,7 +14,7 @@ class AddStatusLostInQuoteV2s extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE quote_v2s MODIFY COLUMN status ENUM('Draft', 'Won', 'Sent','Lost')NOT NULL");
+        //DB::statement("ALTER TABLE quote_v2s MODIFY COLUMN status ENUM('Draft', 'Won', 'Sent','Lost')NOT NULL");
     }
 
     /**
