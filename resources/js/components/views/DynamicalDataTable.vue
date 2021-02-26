@@ -30,6 +30,7 @@
         @onOpenModalHarborOrigView="openModalHarborOrigView"
         @onOpenModalHarborDestView="openModalHarborDestView"
         ref="table"
+        :view="view"
         >
     </DataTable>
 
@@ -45,6 +46,7 @@
             FormView,
         },
         props: {
+            view: String,
             equipment: Object,
             datalists: Object,
             quoteEquip: Array,

@@ -852,7 +852,7 @@ class QuoteV2 extends Model implements HasMedia
         $included = [];
         $client = $this->company_user->first();
 
-        if($this->pdf_options['exchangeRates'] != null){
+        if(isset($this->pdf_options['exchangeRates']) && $this->pdf_options['exchangeRates'] != null){
             $options = $this->pdf_options['exchangeRates'];
 
             foreach($options as $opt){
