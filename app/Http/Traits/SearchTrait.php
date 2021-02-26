@@ -923,9 +923,9 @@ trait SearchTrait
         }
 
         //Forming final collection
-        $charges->put('origin',$origin);
-        $charges->put('destination',$destination);
-        $charges->put('freight',$freight);
+        $charges->put('Origin',$origin);
+        $charges->put('Destination',$destination);
+        $charges->put('Freight',$freight);
         
         return $charges;
     }
@@ -1008,12 +1008,12 @@ trait SearchTrait
     public function joinCharges($charges)
     {
         //Empty array for joint charges
-        $joint_charges = Array();
+        $joint_charges = [];
 
         //Looping through top charges array (Origin, Destination, Freight)
         foreach($charges as $direction=>$charges_direction){
             //Empty array for final charges with original array structure
-            $joint_charges[$direction] = Array();
+            $joint_charges[$direction] = [];
             //If there's only one charge in one of the directions, add that charge directly to the final array
             if(count($charges_direction) == 1){
                 $joint_charges[$direction] = $charges_direction;
@@ -1023,7 +1023,7 @@ trait SearchTrait
                 //Duplicating original array for comparing and joining
                 $comparing_array = $charges_direction;
                 //Control array for already joint charges
-                $compared_and_joint = Array();
+                $compared_and_joint = [];
                 //Looping through charges in direction
                 foreach($charges_direction as $charge){
                     //Index of present charge in its array, for control purposes
@@ -1044,15 +1044,15 @@ trait SearchTrait
                                 //Index of compared charge must not be in the compared control array (compared_and_joint)
                             if($charge->surcharge_id == $comparing_charge->surcharge_id &&
                                 count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
-                                    //Converting compared array container rates into corresponding currency:
-                                        //If currencies don't match, join must be done in client currency
-                                    if($charge->currency != $comparing_charge->currency){
+                                //Converting compared array container rates into corresponding currency:
+                                    //If currencies don't match, join must be done in client currency
+                                    if($charge->currency->id != $comparing_charge->currency->id){
                                         $joint_containers = $charge->containers_client_currency;
                                         //Marking charge as joint under client currency
                                         $charge->setAttribute('joint_as','client_currency');
                                         $comparing_charge_containers = $comparing_charge->containers_client_currency;
-                                        //If currencies match, sum is direct
-                                    }else{
+                                    //If currencies match, sum is direct
+                                    }elseif($charge->currency->id == $comparing_charge->currency->id){
                                         $joint_containers = $charge->containers;
                                         //Marking as joint under charge currency
                                         $charge->setAttribute('joint_as','charge_currency');
@@ -1094,6 +1094,7 @@ trait SearchTrait
                     //Checking if original charge hasnt been matched and joint
                     if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
                         //Including unjoint charge in final array
+                        $charge->setAttribute('joint_as', 'charge_currency');
                         array_push($joint_charges[$direction],$charge);
                     }
                 }
