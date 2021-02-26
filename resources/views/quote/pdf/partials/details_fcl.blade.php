@@ -134,15 +134,14 @@
                 </div>
             </div>
 
-
-            @if($quote->incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='')
+            @if($quote->incoterm_id !='' || $quote->custom_incoterm !='' || $quote->kind_of_cargo !='' || $quote->commodity !='' || $quote->risk_level !='')
 
                 <div style="margin-top: 10px; height: 50px" class="incoterm" >
 
                     <div style="float: left">
-                        @if($quote->incoterm_id!='')
+                        @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
                             
-                            <p><span><b>Incoterm:</b> </span>{{@$quote->incoterm->name}}</p>
+                            <p><span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}}</p>
                         
                         @endif
                     
