@@ -426,12 +426,24 @@ export default {
 
             if(val == 'freight'){
                 component.ocean = true;
+                component.locals = false;
+                component.totals = false;
+                component.inlands = false;
             } else if(val == 'locals'){
                 component.locals = true;
+                component.ocean = false;
+                component.totals = false;
+                component.inlands = false;
             } else if(val == 'inlands'){
                 component.inlands = true;
+                component.locals = false;
+                component.totals = false;
+                component.ocean = false;
             } else if(val == 'totals'){
                 component.totals = true;
+                component.locals = false;
+                component.ocean = false;
+                component.inlands = false;
             }
         },
 
