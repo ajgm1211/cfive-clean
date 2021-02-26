@@ -30,6 +30,7 @@
                 @onOpenModalContainer="openModalContainer"
                 @onOpenModalHarborOrig="openModalHarborOrig"
                 @onOpenModalHarborDest="openModalHarborDest"
+                :view="'oceanfreight'"
             ></DynamicalDataTable>
             
         </b-card>
@@ -247,7 +248,7 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "display_name",
-                    placeholder: "Select Origin Port",
+                    placeholder: "Origin Port",
                     options: "harbors",
                 },
                 destination: {
@@ -256,7 +257,7 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "display_name",
-                    placeholder: "Select Destination Port",
+                    placeholder: "Destination Port",
                     options: "harbors",
                 },
                 carrier: {
@@ -273,7 +274,7 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "alphacode",
-                    placeholder: "Select Currency Port",
+                    placeholder: "Currency",
                     options: "currencies",
                 },
             },
@@ -285,7 +286,7 @@ export default {
                     type: "multiselect",
                     rules: "required",
                     trackby: "display_name",
-                    placeholder: "Select Origin Port",
+                    placeholder: "Origin Port",
                     options: "harbors",
                 },
                 destination: {
@@ -294,7 +295,7 @@ export default {
                     type: "multiselect",
                     rules: "required",
                     trackby: "display_name",
-                    placeholder: "Select Destination Port",
+                    placeholder: "Destination Port",
                     options: "harbors",
                 },
                 carrier: {
@@ -303,7 +304,7 @@ export default {
                     type: "multiselect_data",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select Carrier Port",
+                    placeholder: "Carrier Port",
                     options: "carriers",
                     values: this.contractData.carriers,
                 },
@@ -313,7 +314,7 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "alphacode",
-                    placeholder: "Select Currency Port",
+                    placeholder: "Currency",
                     options: "currencies",
                 },
             },

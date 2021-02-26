@@ -17,7 +17,7 @@
         <!-- End Search Input -->
 
         <!-- DataTable -->
-        <b-table-simple hover small responsive borderless>
+        <b-table-simple small responsive borderless>
             <!-- Header table -->
             <b-thead>
                 <b-tr>
@@ -148,8 +148,9 @@
             <!-- Body table -->
             <b-tbody v-if="!isBusy" style="border-bottom: 1px solid #eee">
                 <!-- Form add new item -->
-                <b-tr v-if="!isEmpty(inputFields) && addTableInsert">
+                <b-tr v-if="!isEmpty(inputFields) && addTableInsert" :id="key">
                     <b-td v-if="firstEmpty"></b-td>
+                    
 
                     <b-td
                         v-for="(item, key) in inputFields"
@@ -158,7 +159,6 @@
                     >
                         <!-- Text Input -->
                         <div v-if="item.type == 'text'">
-
                             <b-form-input
                                 v-model="fdata[key]"
                                 :placeholder="item.placeholder"
@@ -200,7 +200,7 @@
                         <!-- Based Dinamycal Select -->
 
                         <!-- Select Input -->
-                        <div v-if="item.type == 'select'">
+                        <div v-if="item.type == 'select'" :id="key">
                             <multiselect
                                 v-model="fdata[key]"
                                 :id="key"
@@ -214,9 +214,11 @@
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
+                                :class="view"
                                 @select="cleanInput(key)"
                             >
                             </multiselect>
+                            <!-- :class="item.class" -->
                             <span
                                 :id="'id_f_table_' + key"
                                 class="invalid-feedback"
@@ -226,7 +228,7 @@
                         <!-- End Select -->
 
                         <!-- MultiSelect Input -->
-                        <div v-if="item.type == 'multiselect' && refresh">
+                        <div v-if="item.type == 'multiselect' && refresh" :id="key">
                             <multiselect
                                 v-model="fdata[key]"
                                 :multiple="true"
@@ -236,6 +238,7 @@
                                 :clear-on-select="true"
                                 track-by="id"
                                 :id="key"
+                                :class="view"
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
@@ -249,7 +252,9 @@
                                 style="margin-top: -4px"
                             ></span>
                         </div>
-                        <div v-if="item.type == 'multiselect_data' && refresh" class="multiselect-height">
+
+                        <div v-if="item.type == 'multiselect_data' && refresh"  :id="key" >
+               
                             <multiselect
                                 v-model="item.values"
                                 :multiple="true"
@@ -259,6 +264,7 @@
                                 :clear-on-select="true"
                                 track-by="id"
                                 :id="key"
+                                :class="view"
                                 :label="item.trackby"
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
@@ -323,6 +329,7 @@
 
                         <!-- Select field -->
                         <div v-if="item.type == 'extraSelect'">
+                           
                             <multiselect
                                 v-model="fixedData[key]"
                                 :id="key"
@@ -337,6 +344,7 @@
                                 :show-labels="false"
                                 :placeholder="item.placeholder"
                                 @input="onSubmitFixed()"
+                                :class="item.class"
                             >
                             </multiselect>
                             <span
@@ -351,7 +359,7 @@
                 <!-- Extra form end -->
 
                 <!-- Data List -->
-                <b-tr v-for="(item, key) in data" :key="key">
+                <b-tr v-for="(item, key) in data" :key="key" :id="key">
                     <!-- Checkbox column -->
                     <b-td>
                         <b-form-checkbox-group>
@@ -490,6 +498,7 @@
                                 v-on:blur="onSubmitTotals()"
                             >
                             </b-form-input>
+                         sssss
                             <span
                                 :id="'id_f_table_' + key"
                                 class="invalid-feedback"
@@ -525,6 +534,7 @@
 
                         <!-- Span field -->
                         <div v-if="item.type == 'span'">
+hhhh
                             <span style="font-weight: bold">{{
                                 totalsData[key]
                             }}</span>
@@ -537,7 +547,7 @@
             <!-- Profits and Totals end -->
         </b-table-simple>
         <!-- End DataTable -->
-
+{{view}}
         <!-- Pagination -->
         <paginate
             v-if="paginated"
@@ -568,6 +578,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        view: String,
         filter: {
             type: Boolean,
             required: false,

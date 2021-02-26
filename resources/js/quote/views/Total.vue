@@ -9,21 +9,23 @@
         <div v-else>
             <div class="card" style="width: 100%">
                 <div class="card-body row" style="overflow: inherit">
-                    <!-- Show Totals Checkbox-->
-                    <div class="col-12 col-lg-2 col-sm-2 d-flex mt-5 mb-3">
-                        <b-form-checkbox
-                            v-model="showTotals"
-                            @input="updatePdfOptions('totalsCheck')"
-                        >
-                            <span>Show Totals</span>
-                        </b-form-checkbox>
-                    </div>
-                    <!-- Show Totals Checkbox End-->
-
-                    <div class="col">
+                    <div class="col-lg-12">
+                        <!-- Show Totals Checkbox-->
+                        <div class="col-12 col-lg-2 col-sm-2 d-flex mt-5 mb-5">
+                            <b-form-checkbox
+                                v-model="showTotals"
+                                @input="updatePdfOptions('totalsCheck')"
+                            >
+                                <span>Show Totals</span>
+                            </b-form-checkbox>
+                        </div>
+                        <hr>
+                        <!-- Show Totals Checkbox End-->
                         <!-- Currency Multiselect-->
-                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                            <span>Show in:</span>
+                        <div class="col-2 col-lg-2 col-sm-2 d-flex mb-2">
+                            <span>Show totals in:</span>
+                        </div>
+                        <div class="col-12 col-lg-2 col-sm-3 d-flex mb-3">
                             <multiselect
                                 v-model="totalsCurrency"
                                 :multiple="false"
@@ -42,10 +44,9 @@
                             </multiselect>
                         </div>
                         <!-- Currency Multiselect End-->
+                        <hr />
                         <!-- Exchange rate table-->
-                        <div class="col-12 col-lg-2 col-sm-4 d-flex mt-5 mb-3">
-                            <span>Exchange rates:</span>
-
+                        <div class="col-12 col-lg-4 col-sm-4 d-flex mt-2 mb-3">
                             <b-table-simple
                                 hover
                                 small
@@ -56,35 +57,47 @@
                                 <b-thead class="q-thead">
                                     <b-tr>
                                         <b-th>
-                                            <span class="label-text">Currency</span>
+                                            <span class="label-text"
+                                                >Currency</span
+                                            >
                                         </b-th>
 
                                         <b-th>
-                                            <span class="label-text">Exchange Rate {{totalsCurrency.alphacode}}</span>
+                                            <span class="label-text"
+                                                >Exchange Rate
+                                                {{
+                                                    totalsCurrency.alphacode
+                                                }}</span
+                                            >
                                         </b-th>
-
                                     </b-tr>
                                 </b-thead>
 
                                 <b-tbody>
                                     <b-tr
-                                        v-for="(currency,key) in exchangeRates"
-                                        :key = key
+                                        v-for="(currency, key) in exchangeRates"
+                                        :key="key"
                                         class="q-tr"
                                     >
                                         <b-td>
                                             <span>
-                                                <b>{{
-                                                    currency.alphacode
-                                                }}</b>
+                                                <b>{{ currency.alphacode }}</b>
                                             </span>
                                         </b-td>
                                         <b-td>
-                                            <b-form-input v-if="totalsCurrency.alphacode=='USD'"
+                                            <b-form-input
+                                                v-if="
+                                                    totalsCurrency.alphacode ==
+                                                    'USD'
+                                                "
                                                 v-model="currency.exchangeUSD"
                                                 @blur="updatePdfOptions"
                                             ></b-form-input>
-                                            <b-form-input v-else-if="totalsCurrency.alphacode=='EUR'"
+                                            <b-form-input
+                                                v-else-if="
+                                                    totalsCurrency.alphacode ==
+                                                    'EUR'
+                                                "
                                                 v-model="currency.exchangeEUR"
                                                 @blur="updatePdfOptions"
                                             ></b-form-input>
@@ -94,10 +107,9 @@
                             </b-table-simple>
                         </div>
                         <!-- Exchange rate table End-->
-                    </div>                    
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -140,7 +152,6 @@ export default {
         this.loaded = true;
     },
     methods: {
-
         updatePdfOptions(updateType) {
             let pdfOptions = {
                 pdf_options: {
@@ -163,7 +174,6 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
-
     },
 };
 </script>
