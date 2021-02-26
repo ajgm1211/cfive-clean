@@ -36,6 +36,7 @@
                                                 @success="setTermsField"
                                             ></FormInlineView>
                                         </div>
+                                        
                                     </div>
                                 </b-card>
                                 <!-- End Quote inputs -->
@@ -289,16 +290,16 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select options",
+                    placeholder: "Select",
                     options: "incoterms",
-                    colClass: "col-lg-1",
+                    colClass: "col-lg-1 incoterm",
                 },
                 custom_incoterm: {
                     label: "CUSTOM INCOTERM",
                     type: "text",                    
                     disabled: false,
                     placeholder: "Custom incoterm",
-                    colClass: "col-lg-2",
+                    colClass: "col-lg-2 custom_incoterm",
                 },
                 language_id: {
                     label: "LANGUAGE",
