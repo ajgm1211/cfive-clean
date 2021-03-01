@@ -27,7 +27,10 @@
         @onEdit="onEdit"
         @onChangeContainersView="onChangeContainersView"
         @onOpenModalContainerView="openModalContainerView"
+        @onOpenModalHarborOrigView="openModalHarborOrigView"
+        @onOpenModalHarborDestView="openModalHarborDestView"
         ref="table"
+        :view="view"
         >
     </DataTable>
 
@@ -43,6 +46,7 @@
             FormView,
         },
         props: {
+            view: String,
             equipment: Object,
             datalists: Object,
             quoteEquip: Array,
@@ -310,6 +314,14 @@
             
             openModalContainerView(ids){
                 this.$emit('onOpenModalContainer', ids);
+            },
+
+            openModalHarborOrigView(ids){
+                this.$emit('onOpenModalHarborOrig', ids);
+            },
+
+            openModalHarborDestView(ids){
+                this.$emit('onOpenModalHarborDest', ids);
             },
             
             refreshTable(){
