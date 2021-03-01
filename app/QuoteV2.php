@@ -896,7 +896,7 @@ class QuoteV2 extends Model implements HasMedia
 
     public function updatePdfOptions($option = null)
     {
-        if($this->pdf_options==null || count($this->pdf_options) != 5){            
+        if(($this->pdf_options==null || count($this->pdf_options)) != 5 && $option == null){            
             $client = $this->company_user()->first();
             $client_currency = Currency::find($client->currency_id);
 
