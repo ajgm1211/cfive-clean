@@ -1100,7 +1100,7 @@ export default {
                 if(rate.addToQuote){
                     ratesForQuote.push(rate);
                 }
-            })
+            });
 
             if(ratesForQuote.length == 0){
                 component.noRatesAdded = true;
@@ -1108,8 +1108,8 @@ export default {
                 component.actions.quotes
                 .create(ratesForQuote, this.$route)
                 .then ((response) => {
-                    console.log(response)
-                    //window.location.href = "/quote/" + ratesForQuote[0].id + "/edit";
+                    console.log(response)ñ
+                    //window.location.href = "/quote/" + response.data.data.id + "/edit";
                 })
             }
         },

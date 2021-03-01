@@ -260,11 +260,9 @@ class QuotationController extends Controller
                     ]);
                 }
 
-            }
-            
-                                
+            }                                
         }
-
+        
         return new QuotationResource($quote);
     }
 
