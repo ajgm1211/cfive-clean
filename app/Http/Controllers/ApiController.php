@@ -752,8 +752,8 @@ class ApiController extends Controller
             // id de los carrier ALL
             array_push($carrier, $carrier_all);
             // Id de los paises
-            array_push($origin_country, $country_all);
-            array_push($destiny_country, $country_all);
+            array_push($origin_country, $country_all->id);
+            array_push($destiny_country, $country_all->id);
 
             // ################### Calculos local  Charges #############################
             if ($contractStatus != 'api') {
