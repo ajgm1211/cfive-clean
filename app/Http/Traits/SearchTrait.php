@@ -714,7 +714,7 @@ trait SearchTrait
     }
 
     //Returns only ids from a 2-levels deep array containing ids, names, etc
-    public function getIdsFromSearchRequest(Array $search_request)
+    public function getIdsFromArray(Array $search_request)
     {
         //Copying original array for structure purposes
         $ids_array = $search_request;
