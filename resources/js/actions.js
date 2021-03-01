@@ -69,6 +69,16 @@ export default {
             let contract_id = route.params.id;
             return api.call('post', `/api/v2/contracts/${contract_id}/ocean_freight/massiveContainerChange`, data);
         },
+        massiveChangeHarborOrig(data, route) {
+            let contract_id = route.params.id;
+
+            return api.call('post', `/api/v2/contracts/${contract_id}/ocean_freight/massiveHarborChange`, data);
+        },
+        massiveChangeHarborDest(data, route) {
+            let contract_id = route.params.id;
+
+            return api.call('post', `/api/v2/contracts/${contract_id}/ocean_freight/massiveHarborChangeDest`, data);
+        },
     },
     surcharges: {
         list(params, callback, route) {
