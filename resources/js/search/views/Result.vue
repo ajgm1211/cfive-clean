@@ -1108,8 +1108,8 @@ export default {
                 component.actions.quotes
                 .create(ratesForQuote, this.$route)
                 .then ((response) => {
-                    console.log(response)ñ
-                    //window.location.href = "/quote/" + response.data.data.id + "/edit";
+                    console.log(response)
+                    window.location.href = "/api/quote/" + response.data.data.id + "/edit";
                 })
             }
         },

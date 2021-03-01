@@ -577,7 +577,7 @@ export default {
             deliveryType: {},
             carriers: [],
             containerOptions: [],
-            typeOptions: ['FCL', 'LCL', 'AIR'],
+            typeOptions: ['FCL', 'LCL'],
             deliveryTypeOptions: {},
             directionOptions: {},
             originPortOptions: {},
