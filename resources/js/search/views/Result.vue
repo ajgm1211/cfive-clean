@@ -1108,7 +1108,7 @@ export default {
                 component.actions.quotes
                 .create(ratesForQuote, this.$route)
                 .then ((response) => {
-                    console.log(response)ñ
+                    console.log(response);
                     //window.location.href = "/quote/" + response.data.data.id + "/edit";
                 })
             }

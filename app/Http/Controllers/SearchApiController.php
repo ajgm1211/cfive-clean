@@ -178,7 +178,7 @@ class SearchApiController extends Controller
         $new_search_data['company'] = $company_user_id;
 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
-        $new_search_data_ids = $this->getIdsFromSearchRequest($new_search_data);
+        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
 
         //Setting recent searches
         $recent_searches = $this->recentSearch($new_search_data_ids);
@@ -232,9 +232,13 @@ class SearchApiController extends Controller
             //Appending Rate Id to Charges
             $this->addToRate($rate, $charges, 'charges', $company_user_id);    
 
-            $transit_times = $this->searchTransitTime($new_search_data_ids);
+            $transit_time = $this->searchTransitTime($rate);
     
-            $this->addToRate($rate, $transit_times, 'transit_times', $company_user_id);
+            $rate->setAttribute('transit_time', $transit_time);
+            
+            $remarks = $this->searchRemarks($rate, $new_search_data_ids);
+
+            $rate->setAttribute('remarks', $remarks);
     
             $rate->SetAttribute('search', $search);
         }
@@ -554,23 +558,67 @@ class SearchApiController extends Controller
     }
 
     //Retrieves Global Remarks
-    public function searchRemarks($search_data)
+    public function searchRemarks($rate,$search_data)
     {
+        //Retrieving current companyto filter remarks
+        $company_user = CompanyUser::where('id',$search_data['company'])->first();
+
+        $remarks = RemarkCondition::where([['company_user_id', $company_user->id], ['type',$search_data['type']]])->get();
+
+        $final_remarks = "";
+
+        $rate_origin_port = $rate->origin_port;
+        $rate_destination_port = $rate->destiny_port;
+        $rate_carrier = $rate->carrier_id;
+
+        foreach($remarks as $remark){
+            $carriers = $remark->remarksCarriers()->get()->toArray();
+
+            if($remark->mode == 'port'){
+                $ports = $remark->remarksHarbors()->get()->toArray();
+            }else if($remark->mode == 'country'){
+                $ports = [];
+                $countries = $remark->remarksCountries()->get();
+
+                foreach($countries as $country){
+                    $country_ports = $country->ports()->get()->toArray();
+
+                    foreach($country_ports as $port){
+                        array_push($ports, $port);
+                    }
+                }
+            }
+
+            $carrier_ids = $this->getIdsFromArray($carriers);
+
+            $port_ids = $this->getIdsFromArray($ports);
+
+            if(((in_array($rate_origin_port, $port_ids) || in_array($rate_destination_port, $port_ids)) && in_array($rate_carrier, $carrier_ids)) ||
+                in_array(26,$carrier_ids) || in_array(1485,$port_ids)) {
+                if($search_data['direction'] == 1){
+                    $final_remarks .= $remark->import . "<br>";
+                }elseif($search_data['direction'] == 2){
+                    $final_remarks .= $remark->export . "<br>";
+                }
+            }
+        }
         
+        return $final_remarks;
+
     }
 
     //Retrives global Transit Times
-    public function searchTransitTime($search_data)
+    public function searchTransitTime($rate)
     {
         //Setting values fo query
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
-        $carriers = $search_data['carriers'];
+        $origin_port = $rate->origin_port;
+        $destination_port = $rate->destiny_port;
+        $carrier = $rate->carrier_id;
 
         //Querying
-        $transit_times = TransitTime::whereIn('origin_id',$origin_ports)->whereIn('destination_id',$destination_ports)->whereIn('carrier_id',$carriers)->get();
+        $transit_time = TransitTime::where('origin_id',$origin_port)->where('destination_id',$destination_port)->whereIn('carrier_id',[$carrier,26])->first();
 
-        return $transit_times;
+        return $transit_time;
     }
     
     //Adds PriceLevels markups to target collection
@@ -802,11 +850,6 @@ class SearchApiController extends Controller
             }
             $rate->setAttribute('charges',$rate_charges);
             
-        }else if($target_type == 'transit_times'){
-            foreach($target as $tt){                   
-                
-                $rate->setAttribute('transit_time', $tt);
-            }
         }
     }    
 }
