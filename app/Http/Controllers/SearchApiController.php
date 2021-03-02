@@ -26,6 +26,7 @@ use App\Country;
 use App\Rate;
 use App\Contract;
 use App\Price;
+use App\Contact;
 use App\CompanyUser;
 use App\LocalCharge;
 use App\GlobalCharge;
@@ -68,16 +69,20 @@ class SearchApiController extends Controller
             return $company->only(['id','business_name']);
         });
 
-        $comps = Company::where('company_user_id','=',$company_user_id)->get();
+        $fullCompanies = Company::where('company_user_id','=',$company_user_id)->get();
+
         $contacts = [];
-        $languages = [];
-        foreach ($comps as $comp) {
-            array_push($languages,['company_id'=>$comp->id,'name'=>$comp->pdf_language]);
-            $cts = $comp->contact()->get();
-            foreach ($cts as $ct) {
-                array_push($contacts,['id'=>$ct->id,'company_id'=>$ct->company_id,'name'=>$ct->getFullName()]);
-            } 
-        };
+
+        foreach($fullCompanies as $comp){
+            $newContacts = $comp->contact()->get();
+
+            foreach($newContacts as $cont){
+                if(!in_array($cont,$contacts)){
+                    $cont->setAttribute('name',$cont->getFullName());
+                    array_push($contacts,$cont);
+                }
+            }
+        }
 
         $harbors = Harbor::get()->map(function ($harbor) {
           return $harbor->only(['id', 'display_name','country_id','code','harbor_parent']);
@@ -129,7 +134,6 @@ class SearchApiController extends Controller
             'common_currencies',
             'containers',
             'container_groups',
-            'comps',
             'countries',
             'delivery_types',
             'directions',
@@ -163,7 +167,7 @@ class SearchApiController extends Controller
             'contact' => 'sometimes',
             'pricelevel' => 'sometimes'
         ]);
-
+        
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
@@ -175,7 +179,7 @@ class SearchApiController extends Controller
 
         //Including company and user in search data array
         $new_search_data['user'] = $user_id;
-        $new_search_data['company'] = $company_user_id;
+        $new_search_data['company_user'] = $company_user_id;
 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromArray($new_search_data);
@@ -189,13 +193,24 @@ class SearchApiController extends Controller
         if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
             $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
         }
+
+        if(array_key_exists('company',$new_search_data) && $new_search_data['company'] != null){
+            $search->SetAttribute('company_id', $new_search_data_ids['company']);
+        }
+
+        if(array_key_exists('contact',$new_search_data) && $new_search_data['contact'] != null){
+            $search->SetAttribute('contact_id', $new_search_data_ids['contact']);
+        }       
         
         //Retrieving rates with search data
         $rates = $this->searchRates($new_search_data_ids);
+
+        $remarks = $this->searchRemarks($rates, $new_search_data_ids);
         
         //$rateNo = 0;
         foreach($rates as $rate){
             //$rateNo += 1;
+            //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
             //Retrieving local charges with search data
             $local_charges = $this->searchLocalCharges($new_search_data_ids, $rate);
@@ -235,8 +250,6 @@ class SearchApiController extends Controller
             $transit_time = $this->searchTransitTime($rate);
     
             $rate->setAttribute('transit_time', $transit_time);
-            
-            $remarks = $this->searchRemarks($rate, $new_search_data_ids);
 
             $rate->setAttribute('remarks', $remarks);
     
@@ -262,7 +275,7 @@ class SearchApiController extends Controller
 
         //Querying for an exact match
         $recent = SearchRate::where([
-            ['company_user_id', $data['company']],
+            ['company_user_id', $data['company_user']],
             ['pick_up_date', $pick_up_date],
             ['delivery', $data['deliveryType']],
             ['direction', $data['direction']],
@@ -303,7 +316,7 @@ class SearchApiController extends Controller
         
         if(!$matches){
             $new_search = SearchRate::create([
-                'company_user_id' => $data['company'],
+                'company_user_id' => $data['company_user'],
                 'pick_up_date' => $pick_up_date,
                 'equipment' => $container_array, 
                 'delivery' => $data['deliveryType'],
@@ -320,11 +333,11 @@ class SearchApiController extends Controller
     public function searchRates($search_data)
     {       
         //setting variables for query
-        $company_user_id = $search_data['company'];
-        $company_user = CompanyUser::where('id',$search_data['company'])->first();
+        $company_user_id = $search_data['company_user'];
+        $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
         $user_id = $search_data['user'];
         $container_group = $search_data['selectedContainerGroup'];
-        $company_id = $search_data['company'];
+        $company_id = $search_data['company_user'];
         $origin_ports = $search_data['originPorts'];
         $destiny_ports = $search_data['destinationPorts'];
         $arregloCarrier = $search_data['carriers'];
@@ -488,7 +501,7 @@ class SearchApiController extends Controller
         $validity_end = $search_data['dateRange']['endDate'];
         $origin_ports = $search_data['originPorts'];
         $destination_ports = $search_data['destinationPorts'];
-        $company_user_id = $search_data['company'];
+        $company_user_id = $search_data['company_user'];
         $origin_countries = [];
         $destination_countries = [];
         //SEARCH API - Getting countries from port arrays and building countries array
@@ -543,7 +556,7 @@ class SearchApiController extends Controller
     public function searchPriceLevels($search_data)
     {
         //Retrieving current company
-        $company_user = CompanyUser::where('id',$search_data['company'])->first();
+        $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
     
         //getting client profile currency
         $client_currency = $company_user->currency;
@@ -558,50 +571,59 @@ class SearchApiController extends Controller
     }
 
     //Retrieves Global Remarks
-    public function searchRemarks($rate,$search_data)
+    public function searchRemarks($rates,$search_data)
     {
         //Retrieving current companyto filter remarks
-        $company_user = CompanyUser::where('id',$search_data['company'])->first();
+        $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
 
         $remarks = RemarkCondition::where([['company_user_id', $company_user->id], ['type',$search_data['type']]])->get();
 
-        $final_remarks['remarks'] = "";
-        $final_remarks['language'] = null;
+        $final_remarks = "";
+        $included_contracts = [];
+        $included_global_remarks = [];
 
-        $rate_origin_port = $rate->origin_port;
-        $rate_destination_port = $rate->destiny_port;
-        $rate_carrier = $rate->carrier_id;
-
-        foreach($remarks as $remark){
-            $carriers = $remark->remarksCarriers()->get()->toArray();
-
-            if($remark->mode == 'port'){
-                $ports = $remark->remarksHarbors()->get()->toArray();
-            }else if($remark->mode == 'country'){
-                $ports = [];
-                $countries = $remark->remarksCountries()->get();
-
-                foreach($countries as $country){
-                    $country_ports = $country->ports()->get()->toArray();
-
-                    foreach($country_ports as $port){
-                        array_push($ports, $port);
+        foreach($rates as $rate){
+            $rate_origin_port = $rate->origin_port;
+            $rate_destination_port = $rate->destiny_port;
+            $rate_carrier = $rate->carrier_id;
+    
+            foreach($remarks as $remark){
+                $carriers = $remark->remarksCarriers()->get()->toArray();
+    
+                if($remark->mode == 'port'){
+                    $ports = $remark->remarksHarbors()->get()->toArray();
+                }else if($remark->mode == 'country'){
+                    $ports = [];
+                    $countries = $remark->remarksCountries()->get();
+    
+                    foreach($countries as $country){
+                        $country_ports = $country->ports()->get()->toArray();
+    
+                        foreach($country_ports as $port){
+                            array_push($ports, $port);
+                        }
+                    }
+                }
+    
+                $carrier_ids = $this->getIdsFromArray($carriers);
+    
+                $port_ids = $this->getIdsFromArray($ports);
+    
+                if(((in_array($rate_origin_port, $port_ids) || in_array($rate_destination_port, $port_ids)) && in_array($rate_carrier, $carrier_ids)) ||
+                    in_array(26,$carrier_ids) || in_array(1485,$port_ids)) {
+                    if($search_data['direction'] == 1 && !in_array($remark->id,$included_global_remarks)){
+                        $final_remarks .= $remark->import . "<br>";
+                        array_push($included_global_remarks,$remark->id);
+                    }elseif($search_data['direction'] == 2 && !in_array($remark->id,$included_global_remarks)){
+                        $final_remarks .= $remark->export . "<br>";
+                        array_push($included_global_remarks,$remark->id);
                     }
                 }
             }
 
-            $carrier_ids = $this->getIdsFromArray($carriers);
-
-            $port_ids = $this->getIdsFromArray($ports);
-
-            if(((in_array($rate_origin_port, $port_ids) || in_array($rate_destination_port, $port_ids)) && in_array($rate_carrier, $carrier_ids)) ||
-                in_array(26,$carrier_ids) || in_array(1485,$port_ids)) {
-                $final_remarks['language'] = $remark->language_id;
-                if($search_data['direction'] == 1){
-                    $final_remarks['remarks'] .= $remark->import . "<br>";
-                }elseif($search_data['direction'] == 2){
-                    $final_remarks['remarks'] .= $remark->export . "<br>";
-                }
+            if(!in_array($rate->contract_id,$included_contracts)){
+                $final_remarks .= $rate->contract->remarks . '<br>';
+                array_push($included_contracts, $rate->contract->id);
             }
         }
         

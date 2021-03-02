@@ -23,6 +23,8 @@ class SearchApiResource extends JsonResource
             'direction' => $this->direction,
             'company_user_id' => $this->company_user_id,
             'user_id' => $this->user_id,
+            'contact_id' => $this->contact_id,
+            'company_id' => $this->company_id,
         ];
     }
 }

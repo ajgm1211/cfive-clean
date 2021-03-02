@@ -115,7 +115,6 @@
                         @onOpenModalContainer="openModalContainer"
                         @onEditSuccess="onEdit"
                         :ref="freight.id"
-                        :view="'oceanfreight'"
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
