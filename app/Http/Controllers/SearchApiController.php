@@ -565,7 +565,8 @@ class SearchApiController extends Controller
 
         $remarks = RemarkCondition::where([['company_user_id', $company_user->id], ['type',$search_data['type']]])->get();
 
-        $final_remarks = "";
+        $final_remarks['remarks'] = "";
+        $final_remarks['language'] = null;
 
         $rate_origin_port = $rate->origin_port;
         $rate_destination_port = $rate->destiny_port;
@@ -595,10 +596,11 @@ class SearchApiController extends Controller
 
             if(((in_array($rate_origin_port, $port_ids) || in_array($rate_destination_port, $port_ids)) && in_array($rate_carrier, $carrier_ids)) ||
                 in_array(26,$carrier_ids) || in_array(1485,$port_ids)) {
+                $final_remarks['language'] = $remark->language_id;
                 if($search_data['direction'] == 1){
-                    $final_remarks .= $remark->import . "<br>";
+                    $final_remarks['remarks'] .= $remark->import . "<br>";
                 }elseif($search_data['direction'] == 2){
-                    $final_remarks .= $remark->export . "<br>";
+                    $final_remarks['remarks'] .= $remark->export . "<br>";
                 }
             }
         }
