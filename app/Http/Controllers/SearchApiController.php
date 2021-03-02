@@ -380,7 +380,7 @@ class SearchApiController extends Controller
         $rates_array = $rates_query->get();
 
         //If the container rates come separate (twuenty,forty,etc) joins them under the "containers" field for iteration purposes
-        $this->joinRateContainers($rates_array);
+        $this->joinRateContainers($rates_array,$search_data['containers']);
 
         //Setting attribute to totalize adding charges, inlands, markups, etc. Totals are shown in the client default currency
         foreach($rates_array as $rate){

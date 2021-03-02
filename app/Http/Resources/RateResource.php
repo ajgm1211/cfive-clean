@@ -40,6 +40,7 @@ class RateResource extends JsonResource
             'containers_with_markups' => isset($this->containers_with_markups) ? $this->containers_with_markups : null,
             'search' => $this->search,
             'price_level' => isset($this->price_level) ? $this->price_level : null,
+            'remarks' => isset($this->remarks) ? $this->remarks : null,
         ];
     }
 }
