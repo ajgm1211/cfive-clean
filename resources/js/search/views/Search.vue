@@ -615,7 +615,7 @@ export default {
         }
     },
     created() {
-        console.log("watching");
+        //console.log("watching");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
             this.setSearchDisplay();

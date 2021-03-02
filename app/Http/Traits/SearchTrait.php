@@ -854,25 +854,32 @@ trait SearchTrait
 
     //If rate data comes separate from mode (twuenty, forty, etc) joins them under the "containers" field 
     //ONLY FOR DRY CONTAINERS
-    public function joinRateContainers($rates)
+    public function joinRateContainers($rates, $search_containers)
     {
         foreach($rates as $rate){
             $container_array = [];
             $container_group_id = $rate->contract->gp_container_id;
+            $group_containers = Container::where('gp_container_id',$container_group_id)->get();
+            $requested_containers = [];
 
             if($container_group_id == 1){
-                if($rate->twuenty != null){
+                foreach($group_containers as $cont){
+                    if(in_array($cont->id,$search_containers)){
+                        array_push($requested_containers, $cont->code);
+                    }
+                }
+                if($rate->twuenty != null && in_array('20DV',$requested_containers)){
                     $container_array['C20DV'] = $rate->twuenty;
-                }if($rate->forty != null){
+                }if($rate->forty != null && in_array('40DV',$requested_containers)){
                     $container_array['C40DV'] = $rate->forty;
-                }if($rate->fortyhc != null){
+                }if($rate->fortyhc != null && in_array('40HC',$requested_containers)){
                     $container_array['C40HC'] = $rate->fortyhc;
-                }if($rate->fortynor != null){
+                }if($rate->fortynor != null && in_array('40NOR',$requested_containers)){
                     $container_array['C40NOR'] = $rate->fortynor;
-                }if($rate->fortyfive != null){
+                }if($rate->fortyfive != null && in_array('45HC',$requested_containers)){
                     $container_array['C45HC'] = $rate->fortyfive;
-                }      
-            
+                }
+
                 $rate->containers = json_encode($container_array);
                 $rate->save();
             }

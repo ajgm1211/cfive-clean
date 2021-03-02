@@ -216,7 +216,7 @@
                                     <h5><b>Remarks</b></h5>
                                     
                                     <b-card>
-                                        <p>esos son los remarks</p>
+                                        <p v-html="rate.remarks"></p>
                                     </b-card>
                                 
                             </b-collapse>
@@ -423,12 +423,12 @@
                                 </b-table-simple>
                             </div>
                         </b-collapse>
-                        <b-collapse :id="'remarks_' + + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
+                        <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
-                                    <p>esos son los remarks</p>
+                                    <p v-html="rate.remarks"></p>
                                 </b-card>
                             
                         </b-collapse>
@@ -935,7 +935,7 @@ export default {
     components: {
         Multiselect,
         DateRangePicker,
-        vueDropzone: vue2Dropzone
+        vueDropzone: vue2Dropzone,
     },
     data() {
         return {
@@ -1108,7 +1108,6 @@ export default {
                 component.actions.quotes
                 .create(ratesForQuote, this.$route)
                 .then ((response) => {
-                    console.log(response)
                     window.location.href = "/api/quote/" + response.data.data.id + "/edit";
                 })
             }
