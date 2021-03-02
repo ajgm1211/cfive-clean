@@ -86,7 +86,7 @@
                     >
                     </multiselect>
                     <img src="/images/port.svg" class="img-icon img-icon-left" alt="port">
-                    <span v-if="errorsExist && 'originPorts' in responseErrors">The Origin Port field is required!</span>
+                    <span v-if="errorsExist && 'originPorts' in responseErrors" style="color:red">The Origin Port field is required!</span>
                 </div>
 
                 <!-- Destination Port -->
@@ -105,7 +105,7 @@
                         >
                         </multiselect>
                         <img src="/images/port.svg" class="img-icon" alt="port">
-                        <span v-if="errorsExist && 'destinationPorts' in responseErrors">The Destination Port field is required!</span>
+                        <span v-if="errorsExist && 'destinationPorts' in responseErrors" style="color:red">The Destination Port field is required!</span>
                 </div>
                 
                 <!-- Date Picker-->
@@ -124,7 +124,7 @@
                             class="s-input"
                         ></date-range-picker>
                         <img src="/images/calendario.svg" class="img-icon" alt="calendario">
-                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors">Please pick a date</span>
+                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
                 </div>
 
                 <!-- Containers -->
@@ -149,7 +149,7 @@
                             </b-dropdown-form>
                         </b-dropdown>
                         <img src="/images/container.svg" class="img-icon" alt="port">
-                        <span v-if="errorsExist && 'containers' in responseErrors">Choose at least one container</span>
+                        <span v-if="errorsExist && 'containers' in responseErrors" style="color:red">Choose at least one container</span>
                 </div>
 
             </div>
@@ -555,7 +555,7 @@ export default {
             datalists: {},
             IDRequest: {},
             searchRequest: {
-                direction: 1,
+                direction: 2,
                 type: 'FCL',
                 destinationChargesCheckbox: false,
                 originChargesCheckbox: false,
@@ -637,7 +637,6 @@ export default {
             component.directionOptions = [
                 { text: component.datalists.directions[0].name, value: component.datalists.directions[0].id },
                 { text: component.datalists.directions[1].name, value: component.datalists.directions[1].id }
-                //{ text: component.datalists.directions[2].name, value: component.datalists.directions[2].id }
             ];
             component.containerGroupOptions =  [
                 { text: component.datalists.container_groups[0].name, value: component.datalists.container_groups[0] },
@@ -656,6 +655,7 @@ export default {
             component.deliveryTypeOptions = component.datalists.delivery_types;
             component.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
+            component.getNow();
             component.loaded = true;
         },
 
@@ -720,6 +720,16 @@ export default {
             this.pallets = ""; this.quantity = ""; this.height = ""; 
             this.width = "";   this.large = "";    this.weight = ""; 
             this.total = "";
+        },
+
+        getNow() {
+            const today = new Date();
+            const date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            const dateTime = date +' '+ time;
+            
+            this.searchRequest.dateRange.startDate = dateTime;
+            this.searchRequest.dateRange.endDate = dateTime;
         },
           
     },
