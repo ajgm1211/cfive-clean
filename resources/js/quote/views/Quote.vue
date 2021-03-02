@@ -109,11 +109,12 @@
 
                         <b-tab title="Totals" @click="changeView('totals')">
                             <Total v-if="totals"
-                            :currentQuoteData="currentData"
                             :freights="freights"
                             :datalists="datalists"
                             :actions="actions"
                             @freightAdded="setInitialData"
+                            @totalsLoaded="setInitialData"
+                            ref="totalsTab"
                             ></Total>
                         </b-tab>
 
@@ -413,13 +414,11 @@ export default {
                 setTimeout(function() {
                     component.inlands=true
                 },100);
-            }
+            }    
+            
             if(component.totals){
-                component.totals=false;
-                setTimeout(function() {
-                    component.totals=true
-                },100);
-            }            
+                this.$refs.totalsTab.setInitialOptions(data)
+            }
         },
 
         changeView(val){
