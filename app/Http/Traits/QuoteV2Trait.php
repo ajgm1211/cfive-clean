@@ -1765,7 +1765,7 @@ trait QuoteV2Trait
         if(isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency'){
             $amount = $charge['containers_client_currency'];
             if(isset($charge['container_markups'])){
-                $markups = $charge['total_markups'];
+                $markups = $charge['totals_markups'];
                 $total = $charge['totals_with_markups'];
             }else{
                 $markups = [];
@@ -1792,16 +1792,25 @@ trait QuoteV2Trait
             $formattedTotal[$newCode] = $price;
         }
 
-        foreach($markups as $code => $price){
-            $newCode = 'm'.ltrim($code, 'C');
-            $formattedMarkups[$newCode] = $price;
-        }
+        $this->formatMarkupsForQuote($markups);
 
         $charge['amount'] = $formattedAmount;
         $charge['markups'] = $formattedMarkups;
         $charge['total'] = $formattedTotal;
 
         return $charge;
+    }
+
+    public function formatMarkupsForQuote(Array $markups)
+    {
+        $formattedMarkups = [];
+
+        foreach($markups as $code => $price){
+            $newCode = 'm'.ltrim($code, 'C');
+            $formattedMarkups[$newCode] = $price;
+        }
+
+        return $formattedMarkups;
     }
     
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)

@@ -262,6 +262,19 @@ class QuotationController extends Controller
                     ]);
                 }
             }
+            
+            $rateTotals = AutomaticRateTotal::create([
+                "quote_id" => $quote->id,
+                'automatic_rate_id' => $newRate->id,
+                'origin_port_id' => $newRate->origin_port_id,
+                'destination_port_id' => $newRate->destination_port_id,
+                'carrier_id' => $newRate->carrier_id,
+                'currency_id' => $rate['currency_id'],
+                'totals' => null,
+                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null 
+            ]);
+                
+            $rateTotals->totalize($rate['currency_id']);
         }
 
         return new QuotationResource($quote);
