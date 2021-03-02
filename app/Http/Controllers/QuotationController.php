@@ -241,7 +241,10 @@ class QuotationController extends Controller
                 'currency_id' => $rate['currency_id'],
                 'origin_port_id' => $rate['origin_port'],
                 'destination_port_id' => $rate['destiny_port'],
-                'carrier_id' => $rate['carrier_id']
+                'carrier_id' => $rate['carrier_id'],
+                'remarks_english' => $rate['remarks']['language'] == 1 ? $rate['remarks']['remarks'] : null,
+                'remarks_spanish' => $rate['remarks']['language'] == 2 ? $rate['remarks']['remarks'] : null,
+                'remarks_portuguese' => $rate['remarks']['language'] == 3 ? $rate['remarks']['remarks'] : null
             ]);
 
             foreach ($rate['charges'] as $charge_direction) {
