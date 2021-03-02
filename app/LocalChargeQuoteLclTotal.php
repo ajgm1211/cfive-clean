@@ -67,6 +67,8 @@ class LocalChargeQuoteLclTotal extends Model
             'total' => $totals,
         ]);
 
+        $quote = $this->quote()->first();
+
         $quote->updatePdfOptions('exchangeRates');
     }
 
