@@ -66,6 +66,8 @@ class LocalChargeQuoteLclTotal extends Model
         $this->update([
             'total' => $totals,
         ]);
+
+        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function duplicate($quote)
