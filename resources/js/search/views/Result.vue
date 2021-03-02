@@ -216,7 +216,7 @@
                                     <h5><b>Remarks</b></h5>
                                     
                                     <b-card>
-                                        <p v-html="rate.remarks"></p>
+                                        <p v-html="rate.remarks.remarks"></p>
                                     </b-card>
                                 
                             </b-collapse>
@@ -428,7 +428,7 @@
                                 <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
-                                    <p v-html="rate.remarks"></p>
+                                    <p v-html="rate.remarks.remarks"></p>
                                 </b-card>
                             
                         </b-collapse>
