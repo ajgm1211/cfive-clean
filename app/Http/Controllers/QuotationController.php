@@ -217,8 +217,8 @@ class QuotationController extends Controller
             'delivery_type' => $search_data['delivery'],
             'user_id' => $search_data['user_id'],
             'company_user_id' => $company_user->id,
-            //'company_id' => isset($data['company_id_quote']) ? $data['company_id_quote'] : null,
-            //'contact_id' => isset($data['contact_id']) ? $data['contact_id'] : null,
+            'company_id' => isset($search_data['company_id']) ? $search_data['company_id'] : null,
+            'contact_id' => isset($search_data['contact_id']) ? $search_data['contact_id'] : null,
             'price_id' => isset($search_data['price_level']) ? $search_data['price_level'] : null,
             'equipment' => $equipment,
             //'origin_address' => $data['origin_address'],
@@ -226,7 +226,8 @@ class QuotationController extends Controller
             'date_issued' => explode("/", $search_data['pick_up_date'])[0],
             'validity_start' => explode("/", $search_data['pick_up_date'])[0],
             'validity_end' => explode("/", $search_data['pick_up_date'])[1],
-            'status' => 'Draft'
+            'status' => 'Draft',
+            'remarks_english' => $rate_data[0]['remarks']
         ]);
 
         $quote = $quote->fresh();
@@ -241,10 +242,7 @@ class QuotationController extends Controller
                 'currency_id' => $rate['currency_id'],
                 'origin_port_id' => $rate['origin_port'],
                 'destination_port_id' => $rate['destiny_port'],
-                'carrier_id' => $rate['carrier_id'],
-                'remarks_english' => $rate['remarks']['language'] == 1 ? $rate['remarks']['remarks'] : null,
-                'remarks_spanish' => $rate['remarks']['language'] == 2 ? $rate['remarks']['remarks'] : null,
-                'remarks_portuguese' => $rate['remarks']['language'] == 3 ? $rate['remarks']['remarks'] : null
+                'carrier_id' => $rate['carrier_id']
             ]);
 
             foreach ($rate['charges'] as $charge_direction) {
