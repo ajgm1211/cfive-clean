@@ -597,7 +597,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCountries"
+                                    :options="request.harbors"
+                                    label="display_name"
+                                    track-by="display_name"
                                     placeholder="Origin"
                                     class="input-modal"
                                 >
@@ -613,7 +615,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCountries"
+                                    :options="request.harbors"
+                                    label="display_name"
+                                    track-by="display_name"
                                     placeholder="Destination"
                                     class="input-modal"
                                 >

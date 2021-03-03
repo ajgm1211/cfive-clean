@@ -292,8 +292,8 @@ class SearchApiController extends Controller
 
         $matches = false;
 
-        //Checking for matches and creating new search registry if none
-        if($recent != null && count($recent) != 0){
+        // Checking for matches and creating new search registry if none
+        if($recent != null && count((array) $recent) != 0){
             foreach($recent as $rc){
                 if($rc->equipment == $container_array){
                     return $rc;
