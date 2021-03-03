@@ -668,6 +668,7 @@ export default {
             this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
             this.searchRequest.harbors = this.datalists.harbors;
+            this.searchRequest.surcharges = this.datalists.surcharges;
             this.errorsExist = false;
             actions.search
                 .process(this.searchRequest)

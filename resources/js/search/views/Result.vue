@@ -693,7 +693,9 @@
                                             :close-on-select="true"
                                             :clear-on-select="true"
                                             :show-labels="false"
-                                            :options="optionsTypeContract"
+                                            :options="request.surcharges"
+                                            label="name"
+                                            track-by="name"
                                             placeholder="Type"
                                             class="input-modal surcharge-input"
                                             >
