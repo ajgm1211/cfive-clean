@@ -217,6 +217,7 @@
                             track-by="business_name"
                             placeholder="Company" 
                             class="s-input"
+                            @input="unlockContacts()"
                             >
                             </multiselect>
                             <img src="/images/empresa.svg" class="img-icon" alt="port">
@@ -231,6 +232,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="contactOptions"
+                            :disabled="!companyChosen"
                             label="name"
                             track-by="name"
                             placeholder="Contact" 
@@ -570,7 +572,10 @@ export default {
                 carriers: [],
                 originAddress: [],
                 destinationAddress: [],
-                dateRange: {},
+                dateRange: {
+                    startDate: new Date().toISOString(),
+                    endDate: new Date().toISOString(),
+                },
             },
             selectedContainerGroup: {},
             containers: [],
@@ -585,7 +590,7 @@ export default {
             originAddressOptions: [],
             destinationAddressOptions: [],
             companyOptions: {},
-            contactOptions: {},
+            contactOptions: [],
             priceLevelOptions: {},
             carrierOptions: [],
             containerText: [],
@@ -594,6 +599,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
+            companyChosen: false,
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -655,7 +661,6 @@ export default {
             component.deliveryTypeOptions = component.datalists.delivery_types;
             component.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
-            component.getNow();
             component.loaded = true;
         },
 
@@ -691,6 +696,25 @@ export default {
                 })
         },
 
+        unlockContacts() {
+            let component = this;
+            let dlist = this.datalists;
+            
+            if(component.searchRequest.company != null){
+                component.contactOptions = [];
+                
+                dlist.contacts.forEach(function (contact){
+                    if(contact.company_id == component.searchRequest.company.id){
+                        component.contactOptions.push(contact);
+                    }
+                });
+                component.companyChosen = true;
+            }else{
+                component.companyChosen = false;
+            }
+            
+        },
+
         deleteSurcharger(index){
             this.dataPackaging.splice(index, 1);
             //console.log(this.dataPackaging);
@@ -722,16 +746,6 @@ export default {
             this.pallets = ""; this.quantity = ""; this.height = ""; 
             this.width = "";   this.large = "";    this.weight = ""; 
             this.total = "";
-        },
-
-        getNow() {
-            const today = new Date();
-            const date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();
-            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            const dateTime = date +' '+ time;
-            
-            this.searchRequest.dateRange.startDate = dateTime;
-            this.searchRequest.dateRange.endDate = dateTime;
         },
           
     },
