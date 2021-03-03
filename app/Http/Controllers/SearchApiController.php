@@ -31,7 +31,7 @@ use App\LocalCharge;
 use App\GlobalCharge;
 use App\TransitTime;
 use App\RemarkCondition;
-
+use App\Surcharge;
 use Illuminate\Http\Request;
 
 class SearchApiController extends Controller
@@ -80,7 +80,7 @@ class SearchApiController extends Controller
         };
 
         $harbors = Harbor::get()->map(function ($harbor) {
-          return $harbor->only(['id', 'display_name','country_id','code','harbor_parent']);
+            return $harbor->only(['id', 'display_name','country_id','code','harbor_parent']);
         });
 
         $terms_and_conditions = TermAndConditionV2::get()->map(function ($term_and_condition){
@@ -116,6 +116,10 @@ class SearchApiController extends Controller
         $price_levels = Price::where('company_user_id',$company_user_id)->get()->map(function ($price){
             return $price->only(['id','name']);
         });
+        
+        $surcharges = Surcharge::where('company_user_id','=',$company_user_id)->get()->map(function ($surcharges){
+            return $surcharges->only(['id','name',]);
+        });
 
         $type_destiny = TypeDestiny::all();
 
@@ -137,7 +141,8 @@ class SearchApiController extends Controller
             'price_levels',
             'schedule_types',
             'terms_and_conditions',
-            'type_destiny'
+            'type_destiny',
+            'surcharges'
         );
 
         return response()->json(['data'=>$data]);
