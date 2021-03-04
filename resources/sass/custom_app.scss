@@ -1355,6 +1355,11 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
+.filter-search {
+    position: relative;
+    top: 4px;
+}
+
 .filter-search b {
     text-transform: uppercase;
 }
@@ -1448,7 +1453,7 @@ input.multiselect__input:focus {
     img {
         width: 30px;
         top: -25px;
-        left: 160px;
+        left: 123px;
         color: #051b4e;
         position: absolute;
     }
@@ -1466,7 +1471,7 @@ input.multiselect__input:focus {
         background-color: transparent;
     }
     .line {
-        width: 300px;
+        width: 100px;
         height: 2px;
         background-color: #dddddd;
     }
@@ -1484,7 +1489,7 @@ input.multiselect__input:focus {
 }
 
 .result-search .via .direction-form.route-indirect .line {
-    width: 136px !important;
+    width: 100px !important;
 }
 
 .direction-desc {
