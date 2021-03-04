@@ -75,7 +75,7 @@
 
                         <!-- CARRIER -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                            <img src="/images/maersk.png" alt="logo" width="160px">
+                            <img src="/images/maersk.png" alt="logo" width="115px">
                         </div>
 
                         <!-- NAME, ORIGEN AND DESTINATION INFO -->
@@ -243,7 +243,7 @@
                             <img 
                                 :src="'/imgcarrier/' + rate.carrier.image"  
                                 alt="logo" 
-                                width="160px">
+                                width="115px">
                         </div>
 
                         <!-- INFO CARD -->
