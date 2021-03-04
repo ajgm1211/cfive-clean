@@ -3005,6 +3005,7 @@ class QuoteV2Controller extends Controller
 
         foreach ($request->input('originport') as $origP) {
 
+            
             $infoOrig = explode("-", $origP);
             if ($infoOrig[2] == null) {
                 $origin_port[] = $infoOrig[0];
@@ -3555,6 +3556,7 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
+
                 // ################## Fin local Charges        #############################
                 //################## Calculos Global Charges #################################
 
@@ -3852,7 +3854,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('color', $color);
                 $data->setAttribute('contract_color', $colores);
             }
-
+            
             // Ordenar por Monto Total  de contenedor de menor a mayor
 
             foreach ($containers as $cont) {
@@ -3894,8 +3896,15 @@ class QuoteV2Controller extends Controller
         // EVENTO INTERCOM
         $event = new EventIntercom();
         $event->event_searchRate();
+        
+        $finalReturn = compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 
+            'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 
+            'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 
+            'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 
+            'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 
+            'directionC', 'harborsR', 'surchargesS', 'calculationTypeS'); //aqui
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS')); //aqui
+        return view('quotesv2/search', $finalReturn); 
     }
 
     public function perTeu($monto, $calculation_type, $code)

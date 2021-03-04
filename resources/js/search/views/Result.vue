@@ -4,7 +4,7 @@
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center">
-                <h2 class="mr-5 t-recent">results found: <b>10</b></h2>
+                <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
                 <div class="d-flex filter-search">
                     <b>filter by:</b>
                     <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
@@ -28,28 +28,30 @@
 
                 <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                 
-                <b-button class="btn-create-quote">Create Quote</b-button>
+                <b-button b-button variant="primary" @click="createQuote">Create Quote</b-button>
 
             </div>
         </div>
 
         <!-- HEADER FCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="false">
+        <div class="row mt-4 mb-4 result-header" >
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-4"></div>
             <div class="row col-12 col-sm-4 d-flex align-items-center justify-content-end">
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>20DV</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40DV</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40HC</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>45HC</b></div>
-                <div class="col-12 col-sm-2 d-flex justify-content-end"><b>40NOR</b></div>
+                <div 
+                    class="col-12 col-sm-2 d-flex justify-content-end"
+                    v-for="(container,requestKey) in request.containers"
+                    :key="requestKey"
+                ><b>
+                    {{container.code}}
+                </b></div>
             </div>
 
         </div>
 
         <!-- HEADER LCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="true">
+        <div class="row mt-4 mb-4 result-header" v-if="false">
 
             <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
             <div class="row col-12 col-sm-8 d-flex align-items-center justify-content-between">
@@ -61,10 +63,10 @@
         </div>
 
         <!-- RESULTS -->
-        <div class="row" id="top-results">
+        <div v-if="rates.length != 0" class="row" id="top-results">
 
             <!-- LCL CARD -->
-            <div class="col-12 mb-4" >
+            <div class="col-12 mb-4" v-if="false">
 
                 <div class="result-search">
 
@@ -161,7 +163,7 @@
                         <!-- ADD QUOTE BTN -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
 
-                                <b-form-checkbox v-model="checked1" class="btn-add-quote" name="check-button" button>
+                                <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
 
@@ -214,7 +216,7 @@
                                     <h5><b>Remarks</b></h5>
                                     
                                     <b-card>
-                                        <p>esos son los remarks</p>
+                                        <p v-html="rate.remarks"></p>
                                     </b-card>
                                 
                             </b-collapse>
@@ -225,7 +227,11 @@
             </div>
 
             <!-- FCL CARD -->
-            <div class="col-12 mb-4" v-if="false">
+            <div 
+                class="col-12 mb-4" 
+                v-for="(rate,key) in rates"
+                :key="key"
+            >
 
                 <div class="result-search">
 
@@ -234,7 +240,10 @@
 
                        <!-- CARRIER -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                            <img src="/images/maersk.png" alt="logo" width="160px">
+                            <img 
+                                :src="'/imgcarrier/' + rate.carrier.image"  
+                                alt="logo" 
+                                width="160px">
                         </div>
 
                         <!-- INFO CARD -->
@@ -242,7 +251,7 @@
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
-                                <h6 class="mt-4 mb-5">contact reference title</h6>
+                                <h6 class="mt-4 mb-5">{{rate.contract.name}}</h6>
                             </div>
 
                             <!-- INFO AND PRICE -->
@@ -255,7 +264,7 @@
                                     <div class="origin mr-4">
 
                                         <span>origin</span>
-                                        <p>Lisboa, Lis</p>
+                                        <p>{{rate.port_origin.display_name}}</p>
 
                                     </div>
 
@@ -279,8 +288,8 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b>madrid españa</b>
-                                            <p><b>TT:</b> 45 Days</p>
+                                            <b>{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
+                                            <p><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p>
 
                                         </div>
 
@@ -290,7 +299,7 @@
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
-                                        <p>Buenos Aires, Arg</p>
+                                        <p>{{rate.port_destiny.display_name}}</p>
 
                                     </div>
 
@@ -299,11 +308,13 @@
                                 <!-- PRICES -->
                                 <div class="col-12 col-sm-6">
                                     <div class="row justify-content-end card-amount">
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
-                                        <div class="col-12 col-sm-2"><p><b>1.00</b>USD</p></div>
+                                        <div 
+                                            class="col-12 col-sm-2"
+                                            v-for="(container,contKey) in request.containers"
+                                            :key="contKey"
+                                        >
+                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }}</b>{{rate.client_currency.alphacode}}</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -314,15 +325,27 @@
 
                                 <div class="d-flex align-items-center">
 
-                                    <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
+                                    <p class="mr-4 mb-0"><b>Validity:</b> {{rate.contract.validity + " / " + rate.contract.expire}}</p>
                                     <a href="#">download contract</a>
 
                                 </div>
 
 
                                 <div class="d-flex justify-content-end align-items-center">
-                                    <b-button v-b-toggle.remarks2 class="rs-btn"><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
-                                    <b-button v-b-toggle.detailed2 class="rs-btn"><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        :class="rate.remarksCollapse ? null : 'collapsed'"
+                                        :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"
+                                        :aria-controls="'remarks_' + + String(rate.id)"
+                                        @click="rate.remarksCollapse = !rate.remarksCollapse"
+                                    ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        :class="rate.detailCollapse ? null : 'collapsed'"
+                                        :aria-expanded="rate.detailCollapse ? 'true' : 'false'"
+                                        :aria-controls="'remarks_' + + String(rate.id)"
+                                        @click="rate.detailCollapse = !rate.detailCollapse"
+                                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
                                 </div>
 
                             </div>
@@ -331,7 +354,7 @@
 
                         <!-- ADD QUOTE BTN -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
-                                <b-form-checkbox v-model="checked2" class="btn-add-quote" name="check-button" button>
+                                <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
                         </div>
@@ -340,9 +363,12 @@
 
                    <div class="row">
                    
-                        <b-collapse id="detailed2" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                        
-                                <h5><b>Freight</b></h5>
+                        <b-collapse :id="'details_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
+                            <div 
+                                v-for="(chargeArray,chargeType) in rate.charges"
+                                :key="chargeType"
+                            >
+                                <h5><b>{{ chargeType }}</b></h5>
 
                                 <b-table-simple hover small class="sc-table">
 
@@ -352,51 +378,57 @@
                                             <b-th>Detail</b-th>
                                             <b-th></b-th>
                                             <b-th></b-th>
-                                            <b-th>20DV</b-th>
-                                            <b-th>40DV</b-th>
-                                            <b-th>40HC</b-th>
+                                            <b-th
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            >
+                                            {{container.code}}
+                                            </b-th>
                                         </b-tr>
                                     </b-thead>
 
                                     <b-tbody>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
+                                        <b-tr 
+                                            v-for="(charge,chargeKey) in chargeArray"
+                                            :key="chargeKey"
+                                        >
+                                            <b-td><b>{{ charge.surcharge.name }}</b></b-td>
+                                            <b-td>{{ charge.calculationtype.name }}</b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
+                                            <b-td
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            >
+                                            <p v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</p>
+                                            <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
+                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
+                                            <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
+                                            <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
+                                            </b-td>
                                         </b-tr>
-                                        <b-tr>
-                                            <b-td><b>Ocean Freight</b></b-td>
-                                            <b-td>Per Container</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                            <b-td>100<span class="profit">+100</span><b>USD 200</b></b-td>
-                                        </b-tr>
+                
                                         <b-tr>
                                             <b-td></b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td><b>Total Freight</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
-                                            <b-td><b>USD 5000</b></b-td>
+                                            <b-td><b>Total {{ chargeType }}</b></b-td>
+                                            <b-td 
+                                                v-for="(container,contKey) in request.containers"
+                                                :key="contKey"
+                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
                                 </b-table-simple>
-
+                            </div>
                         </b-collapse>
-                        <b-collapse id="remarks2" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                        <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
                                 
                                 <b-card>
-                                    <p>esos son los remarks</p>
+                                    <p v-html="rate.remarks"></p>
                                 </b-card>
                             
                         </b-collapse>
@@ -407,6 +439,8 @@
             </div>
 
         </div>
+
+        <div v-else><h1><b>No rates found for this particular route</b></h1></div>
 
         <!-- STICKY HEADER -->
         <div id="sticky-header-results" v-bind:class="{ activeSticky: isActive }">
@@ -423,7 +457,7 @@
 
                         <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                         
-                        <b-button class="btn-create-quote">Create Quote</b-button>
+                        <b-button @click="createQuote">Create Quote</b-button>
 
                     </div>
                 </div>
@@ -481,16 +515,19 @@
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <label>
-                                <date-range-picker 
-                                        :startDate="startDate" 
-                                        :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
-                                        :endDate="endDate" 
-                                        v-model="dateRange"
-                                        :singleDatePicker="false"
-                                        :opens="opens"       
-                                        class="input-h"
-                                    >
-                                </date-range-picker>
+                                <date-range-picker
+                                :opens="'center'"
+                                :locale-data="{
+                                    firstDay: 1,
+                                    format: 'yyyy/mm/dd',
+                                    }"
+                                :singleDatePicker="false"
+                                :autoApply="true"
+                                :timePicker="false"
+                                v-model="dateRange"
+                                :linkedCalendars="true"
+                                class="input-h"
+                                ></date-range-picker>
                            </label>
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
@@ -560,7 +597,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCountries"
+                                    :options="request.harbors"
+                                    label="display_name"
+                                    track-by="display_name"
                                     placeholder="Origin"
                                     class="input-modal"
                                 >
@@ -576,7 +615,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCountries"
+                                    :options="request.harbors"
+                                    label="display_name"
+                                    track-by="display_name"
                                     placeholder="Destination"
                                     class="input-modal"
                                 >
@@ -652,7 +693,9 @@
                                             :close-on-select="true"
                                             :clear-on-select="true"
                                             :show-labels="false"
-                                            :options="optionsTypeContract"
+                                            :options="request.surcharges"
+                                            label="name"
+                                            track-by="name"
                                             placeholder="Type"
                                             class="input-modal surcharge-input"
                                             >
@@ -886,18 +929,26 @@ import Multiselect from "vue-multiselect";
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import actions from "../../actions";
 
 export default {
+    props: {
+        rates: Array,
+        pricelevels: Array,
+        request: Object,
+        datalists: Object,
+    },
     components: {
         Multiselect,
         DateRangePicker,
-        vueDropzone: vue2Dropzone
+        vueDropzone: vue2Dropzone,
     },
     data() {
         return {
+            actions: actions,
+            //GENE DEFINED
             checked1: false,
             checked2: false,
-            checked3: false,
             isActive: false,
             stepOne: true,
             stepTwo: false,
@@ -932,27 +983,20 @@ export default {
             isCompleteThree: false,
             isCompleteFour: false,
 
-            //Datepicker Options
-            dateRange: '2017-09-05',
-            startDate: '2017-09-05',
-            endDate: '2017-09-15',
-            opens: "center",//which way the picker opens, default "center", can be "left"/"right"
-            /* dropzoneOptions: {
-                url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`, 
-                url: `/api/v2/contracts/storeMedia`, 
-                thumbnailWidth: 150,
-                maxFilesize: 0.5,
-                headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
-                addRemoveLinks: true,
-                previewTemplate: this.template()
-            } */
+            //DATEPICKER
+            locale: 'en-US',
+            dateFormat: { 'year': 'numeric', 'month': 'long', 'day': 'numeric'},
+            dateRange: {
+                startDate: '',
+                endDate: '',
+            },
         }
     },
     methods: {
 
         deleteSurcharger(index){
             this.dataSurcharger.splice(index, 1);
-            console.log(this.dataSurcharger);
+            //console.log(this.dataSurcharger);
         },
 
         addSurcharger() {
@@ -990,17 +1034,18 @@ export default {
 					url_tags[i].setAttribute('href', media.url);
 					i+=1;
 				});	
-			},
-			removeThisFile(file){
-				let id = this.$route.params.id;
-				
-				this.actions.removefile(id, { 'id': file.id })
-				.then( ( response ) => {
-				})
-				.catch(( data ) => {
+        },
+            
+        removeThisFile(file){
+            let id = this.$route.params.id;
+            
+            this.actions.removefile(id, { 'id': file.id })
+            .then( ( response ) => {
+            })
+            .catch(( data ) => {
 
-				});
-			},
+            });
+        },
 
         nextStep() {
             if ( this.stepOne ) {
@@ -1051,8 +1096,28 @@ export default {
                 this.isCompleteTwo = !this.isCompleteTwo;
                 return
             }
-        }
+        },
+        
+        createQuote() {
+            let component = this;
+            let ratesForQuote = [];
 
+            component.rates.forEach(function (rate){
+                if(rate.addToQuote){
+                    ratesForQuote.push(rate);
+                }
+            });
+
+            if(ratesForQuote.length == 0){
+                component.noRatesAdded = true;
+            }else{
+                component.actions.quotes
+                .create(ratesForQuote, this.$route)
+                .then ((response) => {
+                    window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                })
+            }
+        },
     },
     watch: {
         valueEq: function() {
@@ -1084,12 +1149,23 @@ export default {
         }
     },
     mounted(){
+        let component = this;
+
+        //console.log(component.request);
+        //console.log(component.datalists);
+
+        //console.log(component.rates);
+
+        component.rates.forEach(function (rate){
+            rate.addToQuote = false;
+        });
+
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
             if(window.scrollY > navBar.offsetTop){
-                this.isActive = true;
-                } else {
-                this.isActive = false;
+                component.isActive = true;
+            } else {
+                component.isActive = false;
             }
         }
     }

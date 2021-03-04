@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SearchRate extends Model
 {
-    protected $fillable = ['id', 'pick_up_date', 'user_id'];
+    protected $casts = ['equipment' => 'array'];
+
+    protected $fillable =   ['id', 'pick_up_date', 'user_id', 'equipment', 'delivery', 'direction', 'type', 'company_user_id', 'user_id'];
 
     public function search_ports()
     {
