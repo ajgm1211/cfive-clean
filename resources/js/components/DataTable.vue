@@ -481,6 +481,13 @@
                             </button>
                             <button
                                 class="btn-action"
+                                v-if="singleActions.includes('specialduplicate')"
+                                v-on:click="onSpecialDuplicate(item.id)"
+                            >
+                                Duplicate +
+                            </button>
+                            <button
+                                class="btn-action"
                                 v-if="singleActions.includes('delete')"
                                 v-on:click="onDelete(item.id)"
                             >
@@ -1235,6 +1242,19 @@ export default {
         },
 
         onDuplicate(id) {
+            this.isBusy = true;
+
+            this.actions
+                .duplicate(id, {})
+                .then((response) => {
+                    this.refreshData();
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
+        
+        onSpecialDuplicate(id) {
             this.isBusy = true;
 
             this.actions
