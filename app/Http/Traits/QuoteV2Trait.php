@@ -1730,6 +1730,10 @@ trait QuoteV2Trait
 
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
     {
+        if(!array_key_exists('exchangeRates',$quote->pdf_options)){
+            $quote->updatePdfOptions('exchangeRates');
+        }
+
         foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
             if($toCurrency['alphacode'] == $fromCurrency->alphacode){
                 if($quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
