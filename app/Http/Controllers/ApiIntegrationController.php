@@ -7,6 +7,7 @@ use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesEvery30Job;
 use App\Partner;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ApiIntegrationController extends Controller
