@@ -45,11 +45,12 @@ class CarriersController extends Controller
     public function store(Request $request)
     {
         $file = $request->file('file');
-        $fillbooll = Storage::disk('carriers')->put($request->image, \File::get($file));
+        $nameimg=mb_strtolower($request->name.'.png','UTF-8');
+        $fillbooll = Storage::disk('carriers')->put($nameimg, \File::get($file));
         if ($fillbooll) {
             $carrier = new Carrier();
             $carrier->name = $request->name;
-            $carrier->image = $request->image;
+            $carrier->image = $nameimg;
             $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
             foreach ($request->variation as $variation) {
@@ -61,7 +62,7 @@ class CarriersController extends Controller
             $json = json_encode($type);
             $carrier->varation = $json;
             $carrier->save();
-            ProcessContractFile::dispatch($carrier->id, $request->image, 'n/a', 'carrier');
+            ProcessContractFile::dispatch($carrier->id, $nameimg, 'n/a', 'carrier');
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was created');

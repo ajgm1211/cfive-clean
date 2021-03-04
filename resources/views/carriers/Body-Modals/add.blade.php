@@ -6,12 +6,6 @@
         </label>
         <input type="text" name="name" value="" required="required" class="form-control"  id="NameMD">
     </div>
-    <div class="col-lg-3">
-        <label for="number" class="form-control-label">
-            Name of the Image:
-        </label>
-        <input type="text" name="image" value="" required="required" class="form-control"  id="Number">
-    </div>
     <div class="col-lg-4">
         <label><br></label>
         <br>
