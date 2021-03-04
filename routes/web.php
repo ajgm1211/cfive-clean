@@ -1020,8 +1020,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
 
-    /** Search V2 **/
-    Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+    /** New Search **/
+    //Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+    Route::get('/api/search/{search_parameters?}', 'SearchApiController@index')->name('searchV2.index');
+    Route::get('/api/search/list', 'SearchApiController@list')->name('searchV2.list');
+    Route::get('/api/search/data', 'SearchApiController@data')->name('searchV2.data');
+    Route::post('/api/search/process', 'SearchApiController@processSearch');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');

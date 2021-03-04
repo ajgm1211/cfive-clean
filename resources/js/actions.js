@@ -322,7 +322,7 @@ export default {
                     callback(error, error.response.data);
                 });
         },
-        create(data) {
+        create(data, route) {
             return api.call('post', `/api/quote/store`, data);
         },
         update(id, data) {
@@ -642,5 +642,10 @@ export default {
             return api.call('post', `/contracts/export`, data);
         }
 
+    },
+    search: {
+        process(data) {
+            return api.call('post', `/api/search/process`, data);
+        },
     },
 };
