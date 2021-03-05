@@ -7,7 +7,6 @@ use App\Contract;
 use App\Http\Resources\OceanFreightResource;
 use App\Rate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OceanFreightController extends Controller
@@ -18,8 +17,7 @@ class OceanFreightController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function list(Request $request, Contract $contract)
-    {
+    function list(Request $request, Contract $contract) {
         $results = Rate::filterByContract($contract->id)->filter($request);
 
         return OceanFreightResource::collection($results);
@@ -37,32 +35,31 @@ class OceanFreightController extends Controller
 
         $prepared_data = $this->prepareData($data, $contract);
         $origin = $data['origin'];
-        $destination =$data['destination'];
+        $destination = $data['destination'];
         $carriers = $data['carrier'];
-        
-        foreach($carriers as $carrier){
-            foreach($origin as $origi){  
-                foreach($destination as $destiny){  
-                    $rate = Rate::create([    
-                        'origin_port'=>$origi,
-                        'destiny_port'=>$destiny,
-                        'carrier_id'=>$carrier,
-                        'contract_id'=>$contract->id,
-                        'twuenty'=>  $prepared_data['twuenty'],
-                        'forty'=>$prepared_data['forty'],
-                        'fortyhc'=>$prepared_data['fortyhc'],
-                        'fortynor'=> $prepared_data['fortynor'],
-                        'fortyfive'=>$prepared_data['fortyfive'],
-                        'containers'=>$prepared_data['containers'],
+
+        foreach ($carriers as $carrier) {
+            foreach ($origin as $origi) {
+                foreach ($destination as $destiny) {
+                    $rate = Rate::create([
+                        'origin_port' => $origi,
+                        'destiny_port' => $destiny,
+                        'carrier_id' => $carrier,
+                        'contract_id' => $contract->id,
+                        'twuenty' => $prepared_data['twuenty'],
+                        'forty' => $prepared_data['forty'],
+                        'fortyhc' => $prepared_data['fortyhc'],
+                        'fortynor' => $prepared_data['fortynor'],
+                        'fortyfive' => $prepared_data['fortyfive'],
+                        'containers' => $prepared_data['containers'],
                         'currency_id' => $data['currency'],
                         'schedule_type_id' => isset($data['schedule_type']) ? $data['schedule_type'] : null,
                         'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
-                        'via' => isset($data['via']) ? $data['via'] : null
-                        ]);
-                }        
-            } 
+                        'via' => isset($data['via']) ? $data['via'] : null,
+                    ]);
+                }
+            }
         }
-        
 
         return new OceanFreightResource($rate);
     }
@@ -79,7 +76,7 @@ class OceanFreightController extends Controller
             'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
             'via' => isset($data['via']) ? $data['via'] : null,
         ];
-    
+
         $prepared_data = $this->prepareContainer($prepared_data, $data, $contract);
 
         return $prepared_data;
@@ -103,8 +100,8 @@ class OceanFreightController extends Controller
             $prepared_data['fortyfive'] = 0;
 
             foreach ($data as $key => $value) {
-                if (strpos($key, 'rates_') === 0 and ! empty($value)) {
-                    $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
+                if (strpos($key, 'rates_') === 0 and !empty($value)) {
+                    $containers['C' . substr($key, 6)] = number_format(floatval($value), 2, '.', '');
                 }
             }
         }
@@ -129,9 +126,17 @@ class OceanFreightController extends Controller
         $available_containers = Container::all()->pluck('code');
 
         foreach ($available_containers as $container) {
-            $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_' . $container] = 'sometimes|nullable';
         }
 
+        return $request->validate($vdata);
+    }
+
+    public function validateDataOrigin($request, $contract)
+    {
+        $vdata = [
+            'origin' => 'required',
+         ];
         return $request->validate($vdata);
     }
 
@@ -215,7 +220,7 @@ class OceanFreightController extends Controller
         $available_containers = Container::where('gp_container_id', $contract->gpContainer->id)->get()->pluck('code');
 
         foreach ($available_containers as $container) {
-            $vdata['rates_'.$container] = 'sometimes|nullable';
+            $vdata['rates_' . $container] = 'sometimes|nullable';
         }
 
         $data = $request->validate($vdata);
@@ -226,4 +231,26 @@ class OceanFreightController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function massiveHarborChange(Request $request, Contract $contract)
+    {
+        $data = $this->validateDataOrigin($request, $contract);
+
+        $prepared_data = [
+            'origin_port' => $data['origin'],
+        ];  
+
+        DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
+
+        return response()->json(null, 204);
+    }
+    public function massiveHarborChangeDest(Request $request, Contract $contract)
+    {
+        $prepared_data = [
+            'destiny_port' => $request->input('destination'),
+        ];
+        DB::table('rates')->whereIn('id', $request->input('ids'))->update($prepared_data);
+        return response()->json(null, 204);
+    }
+
 }

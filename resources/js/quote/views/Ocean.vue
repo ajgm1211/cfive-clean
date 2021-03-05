@@ -115,6 +115,7 @@
                         @onOpenModalContainer="openModalContainer"
                         @onEditSuccess="onEdit"
                         :ref="freight.id"
+                        :view="'oceanfreight'"
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
@@ -648,8 +649,9 @@ export default {
                         type: "extraSelect",
                         rules: "required",
                         trackby: "alphacode",
-                        placeholder: "Select Currency",
+                        placeholder: "Currency",
                         options: "currency",
+                        class: "fixed_currency_oceanfreight"
                     },
                 }
             } else {

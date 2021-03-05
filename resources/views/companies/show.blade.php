@@ -548,7 +548,7 @@
                         sort: 'timestamp'
                     }
                 },
-                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'origin', name: 'origin'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },

@@ -262,10 +262,10 @@ class SendExcelFile implements ShouldQueue
                     });
                 }
             });
-        })->store('csv', storage_path('excel/exports'));
+        })->store('xls', storage_path('excel/exports'));
 
-        $path = storage_path('excel/exports') . '/' . $nameFile . '.csv'; // or storage_path() if needed
-        $nameFile = $nameFile . '.csv';
+        $path = storage_path('excel/exports') . '/' . $nameFile . '.xls'; // or storage_path() if needed
+        $nameFile = $nameFile . '.xls';
 
         try {
             if ($this->to != '') {
