@@ -1730,12 +1730,18 @@ trait QuoteV2Trait
 
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
     {
+        if(!array_key_exists('exchangeRates',$quote->pdf_options)){
+            $quote->updatePdfOptions('exchangeRates');
+        }
+
         foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
             if($toCurrency['alphacode'] == $fromCurrency->alphacode){
-                if($quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
+                if(isset($quote->pdf_options['totalsCurrency']) && $quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
                     $exchangeRate = $toCurrency['exchangeUSD'];
-                }elseif($quote->pdf_options['totalsCurrency']['alphacode'] == 'EUR'){
+                }elseif(isset($quote->pdf_options['totalsCurrency']) && $quote->pdf_options['totalsCurrency']['alphacode'] == 'EUR'){
                     $exchangeRate = $toCurrency['exchangeEUR'];
+                }else{
+                    $exchangeRate = 1;
                 }
             }
         }

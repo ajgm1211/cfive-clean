@@ -91,8 +91,6 @@ class AutomaticRateController extends Controller
             ]);
 
             $totals->totalize($currency->id);
-
-            $quote->updatePdfOptions('exchangeRates');
             
         }
     }
