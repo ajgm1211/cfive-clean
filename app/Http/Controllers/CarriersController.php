@@ -45,7 +45,8 @@ class CarriersController extends Controller
     public function store(Request $request)
     {
         $file = $request->file('file');
-        $nameimg=mb_strtolower($request->name.'.png','UTF-8');
+        $nameimg=preg_replace('([^A-Za-z0-9.])', '',mb_strtolower($request->name.'.png','UTF-8'));
+
         $fillbooll = Storage::disk('carriers')->put($nameimg, \File::get($file));
         if ($fillbooll) {
             $carrier = new Carrier();
@@ -90,30 +91,31 @@ class CarriersController extends Controller
     {
         //dd($request->all());
         $carrier = Carrier::find($id);
-        $carrier->name = $request->name;
-        if ($request->DatImag) {
-            Storage::disk('carriers')->delete($carrier->image);
-            $file = $request->file('file');
-            $fillbool = Storage::disk('carriers')->put($request->image, \File::get($file));
-            if ($fillbool) {
-                ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
-            }
-        }
 
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
-        if($request->variation){
+        if($request->variation!=null){
             foreach ($request->variation as $variation) {
                 $variation = str_replace($caracteres, '', $variation);
                 $arreglo[] = trim(strtolower($variation));
             }
+            $type['type'] = $arreglo;
+            $json = json_encode($type);
+            $carrier->varation = $json;
+            
         }
+        
+        $carrier->name = $request->name;
+        $carrier->update(); 
 
-        $type['type'] = $arreglo;
-        $json = json_encode($type);
-        $carrier->varation = $json;
-        $carrier->image = $request->image;
-        $carrier->save();
+        if ($request->DatImag) {
+                Storage::disk('carriers')->delete($carrier->image);
+                $file = $request->file('file');
+                $fillbool = Storage::disk('carriers')->put($request->image, \File::get($file));
+            if ($fillbool) {
+                ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
+            }
+        }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was updated');
