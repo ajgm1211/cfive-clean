@@ -129,6 +129,8 @@ class AutomaticRateTotal extends Model
             $this->update(['totals' => $totalsJson, 'markups' => $markups]);
             $rate->update(['total' => $totalsJson]);
 
+            $quote->updatePdfOptions('exchangeRates');
+
         } else if ($quote->type == 'LCL') {
 
             $charges = $rate->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
@@ -198,6 +200,8 @@ class AutomaticRateTotal extends Model
 
             $this->update(['totals' => $totals, 'markups' => $markups]);
             $rate->update(['total' => $totals]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }
     }
 }

@@ -62,11 +62,6 @@ class UsersController extends Controller
             $user->password = $request->password;
             $user->save();
 
-            $delegation= new UserDelegation();
-            $delegation->users_id=$user->id;
-            $delegation->delegations_id=$request->delegation_id;
-            $delegation->save();
-
             if ($request->type == "subuser") {
                 $user->assignRole('subuser');
             }
@@ -79,6 +74,11 @@ class UsersController extends Controller
             if ($request->type == "data_entry") {
                 $user->assignRole('data_entry');
             }
+            
+            if($request->delegation_id != null){
+                $user->storeDelegation($request->delegation_id,$user->id);
+            }
+
             $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
             $user->notify(new SlackNotification($message));
 
@@ -88,8 +88,6 @@ class UsersController extends Controller
             ]);
 
             \Mail::to($user->email)->send(new VerifyMail($user));
-
-
 
             // INTERCOM CLIENTE
 

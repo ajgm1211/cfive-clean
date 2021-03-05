@@ -60,4 +60,5 @@ return [
     "minimum" => "Mínimo",
     "totals" => "Totales",
     "price" => "Precio",
+    "delegation" => "Delegación",
 ];
