@@ -168,8 +168,6 @@ class AutomaticRateController extends Controller
 
             $totals->totalize($request->input('profits_currency'));
         }
-
-        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)
