@@ -121,7 +121,6 @@ export default {
     props: {
         freights: Array,
         datalists: {},
-        currentQuoteData: Object,
         actions: Object,
     },
     components: {
@@ -134,24 +133,33 @@ export default {
             exchangeRates: null,
             loaded: false,
             pdfOptions: {},
+            currentQuoteData: {},
         };
     },
     created() {
-        if (typeof this.currentQuoteData.pdf_options == "string") {
-            this.pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
-        } else {
-            this.pdfOptions = this.currentQuoteData.pdf_options;
-        }
-
-        this.showTotals = this.pdfOptions["showTotals"];
-
-        this.totalsCurrency = this.pdfOptions["totalsCurrency"];
-
-        this.exchangeRates = this.pdfOptions["exchangeRates"];
-
-        this.loaded = true;
+        let id = this.$route.params.id;
+    
+        this.$emit('totalsLoaded', id);
     },
     methods: {
+        setInitialOptions(quoteData){
+            this.currentQuoteData = quoteData;
+
+            if (typeof this.currentQuoteData.pdf_options == "string") {
+                this.pdfOptions = JSON.parse(this.currentQuoteData.pdf_options);
+            } else {
+                this.pdfOptions = this.currentQuoteData.pdf_options;
+            }
+
+            this.showTotals = this.pdfOptions["showTotals"];
+
+            this.totalsCurrency = this.pdfOptions["totalsCurrency"];
+
+            this.exchangeRates = this.pdfOptions["exchangeRates"];
+        
+            this.loaded = true;
+        },
+
         updatePdfOptions(updateType) {
             let pdfOptions = {
                 pdf_options: {
