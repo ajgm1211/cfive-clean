@@ -21,6 +21,7 @@
                 :actions="actions"
                 @onEdit="onEdit"
                 :firstEmpty="false"
+                :view="'surcharges'"
                 ></DataTable>
 
 
@@ -103,7 +104,7 @@
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect_data', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers',values: this.contractData.carriers, },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
                     amount: { label: 'Amount', type: 'text', rules: 'required', placeholder: 'Amount' },
-                    currency: { label: 'Currency', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Select option', options: 'currencies' },
+                    currency: { label: 'Currency', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Currency', options: 'currencies' },
                 },
 
             }

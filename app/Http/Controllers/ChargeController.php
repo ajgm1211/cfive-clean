@@ -122,6 +122,8 @@ class ChargeController extends Controller
         }  
         
         $totals->totalize($autorate->currency_id);
+        
+        $quote = $totals->quote()->first();
 
         return new ChargeResource($charge);
         

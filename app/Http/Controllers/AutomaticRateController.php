@@ -91,6 +91,7 @@ class AutomaticRateController extends Controller
             ]);
 
             $totals->totalize($currency->id);
+            
         }
     }
  
@@ -167,6 +168,8 @@ class AutomaticRateController extends Controller
 
             $totals->totalize($request->input('profits_currency'));
         }
+
+        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)
@@ -207,6 +210,8 @@ class AutomaticRateController extends Controller
         $totals->delete();
 
         $autorate->delete();
+
+        $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204);
     }

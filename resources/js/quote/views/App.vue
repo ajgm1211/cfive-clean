@@ -60,6 +60,8 @@ export default {
             return value.name;
           },
           filterIsOpen: false,
+          filterTrackBy: "name",
+          trackLabel: "name",
         },
         {
           key: "company_id",
