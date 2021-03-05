@@ -75,7 +75,7 @@ class QuotationResource extends JsonResource
             'custom_incoterm' => $this->custom_incoterm,
             'rates' => $this->rates_v2()->get(),
             'gp_container' => $this->getContainerCodes($this->equipment, true),
-            'client_currency' => $this->user()->first()->companyUser()->first()->currency()->first(),
+            'client_currency' => $this->user()->first()->companyUser()->first()->currency ?? null,
             'origin' => $origin_array ?? '--',
             'destiny' => $destiny_array ?? '--',
             'decimals' => $this->company_user()->first()->decimals,
