@@ -121,8 +121,6 @@ class AutomaticInlandLclController extends Controller
                 
             $totals->pdf_options = $pdfOptions;
             $totals->save();
-
-            $quote->updatePdfOptions('exchangeRates');
         }
 
         $inland = AutomaticInlandLclAir::create([
@@ -212,8 +210,6 @@ class AutomaticInlandLclController extends Controller
         $total->update(['markups'=>$markups_json]);
 
         $total->totalize();
-
-        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
@@ -313,8 +309,6 @@ class AutomaticInlandLclController extends Controller
         $autoinland->delete();
         
         $total->totalize();
-
-        $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204); 
     }
