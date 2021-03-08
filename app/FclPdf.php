@@ -508,8 +508,8 @@ class FclPdf
             }
 
             foreach($totalsArrayOutput as $key=>$route){
-                if(($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) && 
-                    ($portArray['carrier'] == 'local' || $portArray['carrier'] == $route['carrier'])){
+                if(($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
+                    ($portArray['carrier'] == 'local' && ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']))){
                     foreach ($containers as $c) {
                         if (isset($totalsArrayInput['c' . $c->code])) {
                             $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
