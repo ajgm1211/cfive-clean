@@ -1744,6 +1744,16 @@ trait QuoteV2Trait
             }
         }
 
+        if(!isset($exchangeRate)){
+            if($quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
+                $exchangeRate = $fromCurrency->rates;
+            }elseif($quote->pdf_options['totalsCurrency']['alphacode'] == 'EUR'){
+                $exchangeRate = $fromCurrency->rates_eur;
+            }else{
+                $exchangeRate = 1;
+            }
+        } 
+
         foreach ($amounts as $container => $price) {
             $convertedPrice = $price / $exchangeRate;
             $amounts[$container] = isDecimal($convertedPrice, true);
