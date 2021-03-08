@@ -905,6 +905,7 @@
                                     <b-form-input
                                         v-model="input.units"
                                         style="width:80px;"
+                                        @keypress="isNumber($event)"
                                         class="q-input data-profit"
                                     ></b-form-input>
                                 </b-td>
@@ -934,7 +935,6 @@
                                     <b-form-input
                                         v-model="input.total"
                                         style="width:80px;"
-                                        @keypress="isNumber($event)"
                                         class="q-input"
                                         disabled
                                     ></b-form-input>
