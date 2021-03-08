@@ -874,9 +874,13 @@ class QuoteV2 extends Model implements HasMedia
 
         $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals);
 
+        $allTotalsCurrency = [];
+
         foreach($allTotals as $total){
             $currency = Currency::where('id', $total->currency_id)->first();
             
+            array_push($allTotalsCurrency,$currency->alphacode);
+
             if(!in_array($currency->alphacode,$included)){
                 $currencyExchange = [ 
                     'alphacode' => $currency->alphacode, 
@@ -888,7 +892,12 @@ class QuoteV2 extends Model implements HasMedia
                 array_push($exchange, $currencyExchange);
                 array_push($included, $currency->alphacode);
             }
+        }
 
+        foreach($exchange as $key => $ex){
+            if(!in_array($ex['alphacode'],$allTotalsCurrency)){
+                unset($exchange[$key]);
+            }
         }
 
         return $exchange;
