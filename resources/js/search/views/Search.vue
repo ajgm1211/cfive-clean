@@ -79,6 +79,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="originPortOptions"
+                            :disabled="requestData.requested == 1"
                             label="display_name"
                             track-by="display_name"
                             placeholder="From" 
@@ -98,6 +99,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="destinationPortOptions"
+                            :disabled="requestData.requested == 1"
                             label="display_name"
                             track-by="display_name"
                             placeholder="To" 
@@ -501,13 +503,13 @@
 				<!-- End Tabs Section -->
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-8">
                 <div
                 v-if="Array.isArray(foundRates) && foundRates.length == 0"
                 class="alert alert-danger"
                 role="alert"
                 >
-                    No results for this particular route. Create a manual quote or try another search
+                    No results for this particular route. Create an express contract or try another search
                 </div>
             </div>
 
@@ -516,7 +518,7 @@
                     <button
                         v-if="!searching" 
                         class="btn-search"
-                        @click="requestSearch"
+                        @click="storeSearch"
                     >
                         SEARCH
                     </button>
@@ -600,6 +602,8 @@ export default {
             responseErrors: {},
             foundRates: {},
             companyChosen: false,
+            requestData: {},
+            quoteData: {},
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -624,7 +628,7 @@ export default {
         //console.log("watching");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
-            this.setSearchDisplay();
+            this.getQuery();
         });
     },
     methods: {
@@ -634,8 +638,50 @@ export default {
             this.$emit("initialDataLoaded",this.datalists);
         },
 
+        getQuery(){
+            this.requestData = this.$route.query;
+
+            if(Object.keys(this.requestData).length != 0){
+                if(this.requestData.requested == 0){
+                    this.getSearchData(this.requestData.id);
+                }else if(this.requestData.requested == 1){
+                    this.getQuoteToDuplicate(this.requestData.id);
+                }
+            }else{
+                this.setSearchDisplay(null);
+            }
+        },
+
+        getSearchData(id){
+            actions.search
+                .retrieve(id)
+                .then((response) => {
+                    this.searchData = response.data.data;
+                    this.setSearchDisplay(this.requestData.requested);
+                })
+                .catch(error => {
+                    if(error.status === 422) {
+                        this.responseErrors = error.data.errors;
+                    }
+                });
+        },
+
+        getQuoteToDuplicate(id){
+            actions.quotes
+                .retrieve(id)
+                .then((response) => {
+                    this.quoteData = response.data.data;
+                    this.setSearchDisplay(this.requestData.requested);
+                })
+                .catch(error => {
+                    if(error.status === 422) {
+                        this.responseErrors = error.data.errors;
+                    }
+                });
+        },
+
         //set UI elements
-        setSearchDisplay() {
+        setSearchDisplay(requestType) {
             let component = this;
 
             component.originPortOptions = component.datalists.harbors;
@@ -653,20 +699,55 @@ export default {
             component.datalists.carriers.forEach(function (carrier){
                 component.carrierOptions.push({ text: carrier.name, value: carrier });
             });
-            component.selectedContainerGroup = component.datalists.container_groups[0];
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
             component.priceLevelOptions = component.datalists.price_levels;
             component.deliveryTypeOptions = component.datalists.delivery_types;
-            component.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
-            component.loaded = true;
+            
+            this.fillSearchRequestFields(requestType);
         },
 
-        //Send Search Request to Controller
-        requestSearch() {
-            this.$emit("searchRequest");
+        fillSearchRequestFields(requestType){
+            if(requestType == null){
+                this.selectedContainerGroup = this.datalists.container_groups[0];
+                this.deliveryType = this.deliveryTypeOptions[0];
+            }else if(requestType == 0){
+                this.searchRequest.type = this.searchData.type;
+                this.searchRequest.direction = this.searchData.direction_id;
+                this.deliveryType = this.searchData.delivery_type;
+                this.searchRequest.originPorts = this.searchData.origin_ports;
+                this.searchRequest.destinationPorts = this.searchData.destination_ports;
+                this.selectedContainerGroup = this.searchData.container_group;
+                this.containers = this.searchData.containers;
+                this.searchRequest.company = this.searchData.company;
+                this.unlockContacts();
+                this.searchRequest.contact = this.searchData.contact;
+                this.searchRequest.pricelevel = this.searchData.price_level;
+                this.searchRequest.carriers = this.searchData.carriers;
+                this.searchRequest.containers = this.searchData.containers;
+                this.requestSearch();
+            }else if(requestType == 1){
+                this.searchRequest.type = this.quoteData.type;
+                this.deliveryType = this.quoteData.delivery_type;
+                this.searchRequest.originPorts = this.quoteData.origin_ports;
+                this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
+                this.selectedContainerGroup = this.quoteData.gp_container;
+                this.containers = this.quoteData.containers;
+                this.searchRequest.company = this.quoteData.company_id;
+                this.unlockContacts();
+                this.searchRequest.contact = this.quoteData.contact;
+                this.searchRequest.pricelevel = this.quoteData.price_level;
+                this.searchRequest.carriers = this.quoteData.carriers;
+                this.searchRequest.containers = this.quoteData.containers;
+                this.requestSearch();
+            }
+            
+            this.loaded = true;
+        },
+
+        setSearchParameters(){
             this.searching = true;
             this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
             this.searchRequest.containers = this.containers;
@@ -675,8 +756,36 @@ export default {
             this.searchRequest.harbors = this.datalists.harbors;
             this.searchRequest.surcharges = this.datalists.surcharges;
             this.errorsExist = false;
+        },
+
+        //Send Search Request to Controller
+        storeSearch() {
+            this.setSearchParameters();
+
+            if(this.requestData.requested == undefined || this.requestData.requested == 0){
+                actions.search
+                    .create(this.searchRequest)
+                    .then((response) => {
+                        this.$router.push({ path: `search`, query: { requested: 0, id: response.data.data.id} })
+                        })
+                    .catch(error => {
+                        this.errorsExist = true;
+                        this.searching = false;
+                        if(error.status === 422) {
+                            this.responseErrors = error.data.errors;
+                        }
+                    })
+            }else if(this.requestData.requested == 1){
+                this.$router.go();
+            }
+        },
+
+        requestSearch(){
+            this.searching = true;
+            this.$emit("searchRequest");
+
             actions.search
-                .process(this.searchRequest)
+                .process(this.requestData)
                 .then((response) => {
                     response.data.data.forEach(function (rate){
                         if(typeof rate.containers == "string"){
@@ -711,8 +820,7 @@ export default {
                 component.companyChosen = true;
             }else{
                 component.companyChosen = false;
-            }
-            
+            }            
         },
 
         deleteSurcharger(index){
@@ -848,7 +956,11 @@ export default {
                     component.carriers.push(carrier);
                 });
             }
-        }
+        },
+
+        $route(to, from) {
+            this.$router.go(to);
+        },
     }
 
 }

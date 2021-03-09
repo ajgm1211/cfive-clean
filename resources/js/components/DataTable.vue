@@ -481,17 +481,17 @@
                             </button>
                             <button
                                 class="btn-action"
-                                v-if="singleActions.includes('specialduplicate')"
-                                v-on:click="onSpecialDuplicate(item.id)"
-                            >
-                                Duplicate +
-                            </button>
-                            <button
-                                class="btn-action"
                                 v-if="singleActions.includes('delete')"
                                 v-on:click="onDelete(item.id)"
                             >
                                 Delete
+                            </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('specialduplicate')"
+                                @click="onSpecialDuplicate(item.id)"
+                            >
+                                Duplicate +
                             </button>
                         </b-popover>
                     </b-td>
@@ -1253,18 +1253,11 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
-        
-        onSpecialDuplicate(id) {
-            this.isBusy = true;
 
-            this.actions
-                .duplicate(id, {})
-                .then((response) => {
-                    this.refreshData();
-                })
-                .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                });
+        onSpecialDuplicate(quote_id){
+            let searchRequestType = 1;
+
+            this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, id: quote_id } });
         },
         /* End single actions */
 
@@ -1657,6 +1650,9 @@ export default {
                 this.routerPush(qs);
             },
         },
+        $route(to, from) {
+            this.$router.go(to);
+        }
     },
 };
 </script>

@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Container;
+use App\GroupContainer;
 
 class SearchApiResource extends JsonResource
 {
@@ -14,17 +16,46 @@ class SearchApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        $origin_ports = $this->origin_ports()->get();
+        $destination_ports = $this->destination_ports()->get();
+        $carriers = $this->carriers()->get();
+
+        $containers = $this->containers();
+
+        $container_group = GroupContainer::where('id',$containers[0]['gp_container_id'])->first();
+
+        if(isset($this->contact_id)){
+            $contact = $this->contact()->first();
+            $fullName = $contact->getFullName();
+            $contact->setAttribute('name', $fullName);
+        }else{
+            $contact = null;
+        }
+
         return [
             'id' => $this->id,
             'equipment' => $this->equipment,
             'pick_up_date' => $this->pick_up_date,
-            'delivery' => $this->delivery,
+            'delivery_id' => $this->delivery,
             'type' => $this->type,
-            'direction' => $this->direction,
+            'direction_id' => $this->direction,
             'company_user_id' => $this->company_user_id,
             'user_id' => $this->user_id,
             'contact_id' => $this->contact_id,
+            'price_level_id' => $this->price_level_id,
             'company_id' => $this->company_id,
+            'origin_ports' => $origin_ports,
+            'destination_ports' => $destination_ports,
+            'carriers' => $carriers,
+            'company' => isset($this->company_id) ? $this->client_company()->first() : null,
+            'contact' => $contact,
+            'price_level' => isset($this->price_level_id) ? $this->price_level()->first() : null,
+            'containers' => $containers,
+            'container_group' => $container_group,
+            'delivery_type' => isset($this->delivery) ? $this->delivery_type()->first() : null,
+            'direction' => isset($this->direction) ? $this->direction()->first() : null,
         ];
     }
+
+
 }
