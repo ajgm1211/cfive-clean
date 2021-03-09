@@ -48,7 +48,7 @@
 			<label for="DispNamMD" class="form-control-label">
 				Variation:
 			</label>
-			<input type="text" name="variation[]" class="variationMD form-control">
+			<input type="text" name="variation[]" class="variationMD form-control" required>
 		</div>
 	</div>
 	<hr>
@@ -89,7 +89,6 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	$tableHar 	= $('#myatest').DataTable();
 
 	$("#form").on('submit', function(e){
 		e.preventDefault();
@@ -114,7 +113,7 @@
 			success: function(resp){
 				console.log(resp);
 				if(resp.success == true){
-					$tableHar.ajax.reload();
+					myatest.ajax.reload(null,false);
 					$('#addHarborModal').modal('hide');
 					toastr.success("Aggregate port", "Success");
 				}else if(resp.success == false){
