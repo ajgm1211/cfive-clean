@@ -765,15 +765,17 @@ class QuoteV2 extends Model implements HasMedia
         }
     }
 
-    public function getContainerArray($equip)
+    public function getContainerArray($equip, $type='id')
     {
         if ($equip != '[]') {
             $cont_ids = [];
             $cont_array = explode(",", $equip);
             foreach ($cont_array as $cont) {
                 if ($cont != "") {
-                    $wh = Container::where('code', '=', $cont)->first()->id;
-                    array_push($cont_ids, $wh);
+                    if($type == 'id'){
+                        $wh = Container::where('code', '=', $cont)->first()->id;
+                        array_push($cont_ids, $wh);
+                    }
                 }
             }
             $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
@@ -923,6 +925,32 @@ class QuoteV2 extends Model implements HasMedia
 
             $this->pdf_options = $pdfOptions;
             $this->save();
+        }
+    }
+
+    public function getContainersFromEquipment($equipment, $type = 'model')
+    {
+        if (isset($equipment) && count($equipment) != 0 && $equipment != "[]") {
+            $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equipment));
+            $equip_array = $this->validateEquipment($equip_array);
+            $containers = [];
+
+            foreach($equip_array as $container_id){
+                $cont = Container::where('id',$container_id)->first();
+
+                if($type == 'model'){
+                    array_push($containers, $cont);
+                }else if($type == 'array'){
+                    array_push($containers, $cont->toArray());
+                }
+            }
+
+            return $containers;
+
+        }else{
+
+            return $equipment;
+
         }
     }
 }

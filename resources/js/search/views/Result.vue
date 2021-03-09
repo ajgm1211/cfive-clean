@@ -1151,7 +1151,6 @@ export default {
     mounted(){
         let component = this;
 
-        //console.log(component.request);
         //console.log(component.datalists);
 
         //console.log(component.rates);

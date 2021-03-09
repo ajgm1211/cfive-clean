@@ -339,7 +339,7 @@ export default {
         },
         deleteAll(ids) {
             return api.call('post', `/api/quotes/destroyAll`, { ids: ids });
-        }
+        },
     },
     automaticrates: {
         list(params, callback, route) {
@@ -644,8 +644,14 @@ export default {
 
     },
     search: {
-        process(data) {
-            return api.call('post', `/api/search/process`, data);
+        process(id) {
+            return api.call('post', `/api/search/process`, id);
+        },
+        create(data) {
+            return api.call('post', `/api/search/store`, data);
+        },        
+        retrieve(id) {
+            return api.call('get', `/api/search/${id}`, {});
         },
     },
 };

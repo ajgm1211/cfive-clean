@@ -1025,7 +1025,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/search', 'SearchApiController@index')->name('searchV2.index');
     Route::get('/api/search/list', 'SearchApiController@list')->name('searchV2.list');
     Route::get('/api/search/data', 'SearchApiController@data')->name('searchV2.data');
+    Route::get('/api/search/{search}', 'SearchApiController@retrieve')->name('searchV2.retrieve');
     Route::post('/api/search/process', 'SearchApiController@processSearch');
+    Route::post('/api/search/store', 'SearchApiController@store');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1037,6 +1039,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote')->name('quote.duplicate');
+    Route::post('api/quotes/{request_type}/{quote}/specialduplicate', 'QuotationController@specialduplicate')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
 
     /** AutomaticRate routes**/
