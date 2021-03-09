@@ -116,7 +116,7 @@
 					$('#tdvaration'+resp.data.id).text(resp.data.varation);
 					$('#tdname'+resp.data.id).text(resp.data.name);
 					toastr.success("Updated port", "Success");
-
+					myatest.ajax.reload(null,false);
 				}else if(resp.success == false){
 
 				}

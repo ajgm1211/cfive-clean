@@ -104,7 +104,7 @@ class FileHarborsPortsController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
         //        $request->session()->flash('message.nivel', 'success');
         //        $request->session()->flash('message.content', 'Your Harbor was created');
-        //        return redirect()->route('UploadFile.index');
+        // return redirect()->route('UploadFile.index');
     }
 
     public function show($id)
@@ -124,24 +124,32 @@ class FileHarborsPortsController extends Controller
 
     public function update(Request $request, $id)
     {
+         $harbor = Harbor::find($id);
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
+        
+        if($request->variation!=null){
 
         foreach ($request->variation as $variation) {
             $arreglo[] = str_replace($caracteres, '', trim(strtolower($variation)));
         }
-
-        $type['type'] = $arreglo;
-        $json = json_encode($type);
-
-        $harbor = Harbor::find($id);
+            $type['type'] = $arreglo;
+            $json = json_encode($type);
+            $harbor->varation = $json;
+        }else{
+            $type['type'] = [""];
+            $json = json_encode($type);
+            $harbor->varation=$json;
+         }
+       
         $harbor->name = $request->name;
         $harbor->code = $request->code;
         $harbor->display_name = $request->display_name;
         $harbor->coordinates = $request->coordinate;
         $harbor->country_id = $request->country;
-        $harbor->varation = $json;
+        
         $harbor->update();
         $harbor->load('country');
+        
         $data = [
             'id' => $harbor->id,
             'name' => $harbor->name,
