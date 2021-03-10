@@ -905,7 +905,7 @@ trait SearchTrait
     }
 
     //groups local + global charges by type (Origin, Destination, Freight)
-    public function groupChargesByType($local_charges, $global_charges)
+    public function groupChargesByType($local_charges, $global_charges, $search_data)
     {
         //Creating arrays for every type
         $origin = [];
@@ -930,8 +930,12 @@ trait SearchTrait
         }
 
         //Forming final collection
-        $charges->put('Origin',$origin);
-        $charges->put('Destination',$destination);
+        if($search_data['originCharges']){
+            $charges->put('Origin',$origin);
+        }
+        if($search_data['destinationCharges']){
+            $charges->put('Destination',$destination);
+        }
         $charges->put('Freight',$freight);
         
         return $charges;
