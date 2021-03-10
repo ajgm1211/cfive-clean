@@ -1,5 +1,5 @@
 
-@if((!empty($quote->remarks_english) && $quote->remarks_english!=='<br>') || (!empty($quote->remarks_spanish) && $quote->remarks_spanish!=='<br>') || (!empty($quote->remarks_portuguese) && $quote->remarks_portuguese!=='<br>'))
+@if(($rate->remarks != '' && $rate->remarks!='<br>' || !empty($quote->remarks_english) && $quote->remarks_english!=='<br>') || (!empty($quote->remarks_spanish) && $quote->remarks_spanish!=='<br>') || (!empty($quote->remarks_portuguese) && $quote->remarks_portuguese!=='<br>'))
 
     <div class="clearfix">
 
