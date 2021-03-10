@@ -90,7 +90,9 @@ class CompanyController extends Controller
         $companies = $companies->get();
 
         $colletions = collect([]);
+        $extra_fields = '';
         foreach ($companies as $company) {
+            
             $data = [
                 'id' => $company->id,
                 'idSet' => setearRouteKey($company->id),
@@ -99,13 +101,24 @@ class CompanyController extends Controller
                 'email' => $company->email,
                 'tax_number' => $company->tax_number,
                 'address' => $company->address,
+                'extra' => $company->options,
+                
             ];
             $colletions->push($data);
         }
-
-        return DataTables::of($colletions)->addColumn('action', function ($colletion) {
-            return
-                '<a href="companies/' . $colletion['idSet'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+        
+        return DataTables::of($colletions)
+            ->addColumn('extra', function ($colletion) use ($extra_fields) {
+                if($colletion['extra']){
+                    foreach ($colletion['extra'] as $key=>$item) {
+                        $extra_fields .= '<b>'.$key.'</b>: '.$item .'<br>';
+                    }
+                }
+                return $extra_fields!= '' ? '<ul><li>'.$extra_fields.'</li></ul>':'--';
+            })
+            ->addColumn('action', function ($colletion) {
+                return
+                    '<a href="companies/' . $colletion['idSet'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
                     <i class="la la-eye"></i>
                 </a>
                 <button onclick="AbrirModal(\'edit\',' . $colletion['id'] . ')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
@@ -114,7 +127,7 @@ class CompanyController extends Controller
                 <button id="delete-company" data-company-id="' . $colletion['id'] . '" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                     <i class="la la-eraser"></i>
                 </button>';
-        })->make(true);
+            })->make(true);
     }
 
     /**
