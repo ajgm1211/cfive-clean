@@ -13,6 +13,8 @@ use App\InlandDistance;
 use App\Harbor;
 use App\Direction;
 use App\SearchRate;
+use App\SearchPort;
+use App\SearchCarrier;
 use App\Carrier;
 use App\Company;
 use App\TermAndConditionV2;
@@ -33,7 +35,11 @@ use App\GlobalCharge;
 use App\TransitTime;
 use App\RemarkCondition;
 use App\Surcharge;
+<<<<<<< HEAD
 use App\CalculationType;
+=======
+use App\QuoteV2;
+>>>>>>> e09faf3237b711cc37970a59668f78bf8e5de503
 use Illuminate\Http\Request;
 
 class SearchApiController extends Controller
@@ -61,6 +67,8 @@ class SearchApiController extends Controller
     {
         //Querying each model used and mapping only necessary data
         $company_user_id = \Auth::user()->company_user_id;
+
+        $company_user = CompanyUser::where('id',$company_user_id)->first();
 
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name','image']);
@@ -136,6 +144,7 @@ class SearchApiController extends Controller
         //Collecting all data retrieved
         $data = compact(
             'company_user_id',
+            'company_user',
             'carriers',
             'companies',
             'contacts',
@@ -161,62 +170,24 @@ class SearchApiController extends Controller
     //Validates search request data
     public function processSearch(Request $request)
     {   
-        //dd($request);
-        //Validating request data from form
-        $new_search_data = $request->validate([
-            'originPorts' => 'required|array|min:1',
-            'destinationPorts' => 'required|array|min:1',
-            'dateRange.startDate' => 'required',
-            'dateRange.endDate' => 'required',
-            'containers' => 'required|array|min:1', 
-            'selectedContainerGroup' => 'required',
-            'deliveryType.id' => 'required', 
-            'direction' => 'required',
-            'carriers' => 'required|array|min:1',
-            'type' => 'required',
-            'company' => 'sometimes',
-            'contact' => 'sometimes',
-            'pricelevel' => 'sometimes'
-        ]);
-        
-        //Stripping time stamp from date
-        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
-        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
-
         //Setting current company and user
         $user = \Auth::user();
         $user_id = $user->id;
         $company_user_id = $user->company_user_id;
 
-        //Including company and user in search data array
-        $new_search_data['user'] = $user_id;
-        $new_search_data['company_user'] = $company_user_id;
+        $search_array = $request->input();
 
-        //SEARCH TRAIT - Getting new array that contains only ids, for queries
-        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
+        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'],0,10);
+        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'],0,10);
 
-        //Setting recent searches
-        $recent_searches = $this->recentSearch($new_search_data_ids);
-        
-        //Storing search history
-        $search = $this->store($new_search_data_ids, $recent_searches);
+        $search_ids = $this->getIdsFromArray($search_array);
+        $search_ids['company_user'] = $company_user_id;
+        $search_ids['user'] = $user_id;
 
-        if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
-            $search->SetAttribute('price_level', $new_search_data['pricelevel']['id']);
-        }
-
-        if(array_key_exists('company',$new_search_data) && $new_search_data['company'] != null){
-            $search->SetAttribute('company_id', $new_search_data_ids['company']);
-        }
-
-        if(array_key_exists('contact',$new_search_data) && $new_search_data['contact'] != null){
-            $search->SetAttribute('contact_id', $new_search_data_ids['contact']);
-        }       
-        
         //Retrieving rates with search data
-        $rates = $this->searchRates($new_search_data_ids);
+        $rates = $this->searchRates($search_ids);
 
-        $remarks = $this->searchRemarks($rates, $new_search_data_ids);
+        $remarks = $this->searchRemarks($rates, $search_ids);
         
         //$rateNo = 0;
         foreach($rates as $rate){
@@ -224,23 +195,23 @@ class SearchApiController extends Controller
             //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
             //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($new_search_data_ids, $rate);
+            $local_charges = $this->searchLocalCharges($search_ids, $rate);
         
             //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($new_search_data_ids, $rate);
+            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges);
+            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
             
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges,$new_search_data['containers'], $company_user_id);
+            $this->setChargesPerContainer($charges, $search_array['containers'], $company_user_id);
     
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges);
     
             //Getting price levels if requested
-            if(array_key_exists('pricelevel',$new_search_data) && $new_search_data['pricelevel'] != null){
-                $price_level_markups = $this->searchPriceLevels($new_search_data_ids);
+            if(array_key_exists('pricelevel',$search_array) && $search_array['pricelevel'] != null){
+                $price_level_markups = $this->searchPriceLevels($search_ids);
             }else{
                 $price_level_markups = [];
             }
@@ -263,8 +234,10 @@ class SearchApiController extends Controller
             $rate->setAttribute('transit_time', $transit_time);
 
             $rate->setAttribute('remarks', $remarks);
+
+            $rate->setAttribute('request_type', $request->input('requested'));
     
-            $rate->SetAttribute('search', $search);
+            $rate->SetAttribute('search', $search_array);
         }
 
         return RateResource::collection($rates);
@@ -299,45 +272,94 @@ class SearchApiController extends Controller
     }
 
     //Stores current search if its different from other searches
-    public function store($data, $recent)
+    public function store(Request $request)
     {
+        //Validating request data from form
+        $new_search_data = $request->validate([
+            'originPorts' => 'required|array|min:1',
+            'destinationPorts' => 'required|array|min:1',
+            'dateRange.startDate' => 'required',
+            'dateRange.endDate' => 'required',
+            'containers' => 'required|array|min:1', 
+            'selectedContainerGroup' => 'required',
+            'deliveryType.id' => 'required', 
+            'direction' => 'required',
+            'carriers' => 'required|array|min:1',
+            'type' => 'required',
+            'company' => 'sometimes',
+            'contact' => 'sometimes',
+            'pricelevel' => 'sometimes',
+            'originCharges' => 'sometimes',
+            'destinationCharges' => 'sometimes'
+        ]);
+        
+        //Stripping time stamp from date
+        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
+        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
+        //Setting current company and user
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user_id = $user->company_user_id;
+
+        //Including company and user in search data array
+        $new_search_data['user'] = $user_id;
+        $new_search_data['company_user'] = $company_user_id;
+
+        //SEARCH TRAIT - Getting new array that contains only ids, for queries
+        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
+
         //Formatting date
-        $pick_up_date = $data['dateRange']['startDate'].' / '.$data['dateRange']['endDate'];
+        $pick_up_date = $new_search_data_ids['dateRange']['startDate'].' / '.$new_search_data_ids['dateRange']['endDate'];
 
         //formatting containers
         $container_array = [];
 
         //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
-        foreach($data['containers'] as $container_id){
+        foreach($new_search_data_ids['containers'] as $container_id){
             $container = Container::where('id',$container_id)->first();
 
             array_push($container_array, $container->code);
         }
+        
+        $new_search = SearchRate::create([
+            'company_user_id' => $new_search_data_ids['company_user'],
+            'pick_up_date' => $pick_up_date,
+            'equipment' => $container_array, 
+            'delivery' => $new_search_data_ids['deliveryType'],
+            'direction' => $new_search_data_ids['direction'],
+            'type' => $new_search_data_ids['type'],
+            'user_id' => $new_search_data_ids['user'],
+            'contact_id' => $new_search_data_ids['contact'],
+            'company_id' => $new_search_data_ids['company'],
+            'price_level_id' => $new_search_data_ids['pricelevel'],
+            'origin_charges' => $new_search_data_ids['originCharges'],
+            'destination_charges' => $new_search_data_ids['destinationCharges']
+        ]);
 
-        $matches = false;
-
-        // Checking for matches and creating new search registry if none
-        if($recent != null && count((array) $recent) != 0){
-            foreach($recent as $rc){
-                if($rc->equipment == $container_array){
-                    return $rc;
-                }
+        foreach ($new_search_data_ids['originPorts'] as $origPort) {
+            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
+                $searchPort = new SearchPort();
+                $searchPort->port_orig = $origPort;
+                $searchPort->port_dest = $destPort;
+                $searchPort->search_rate()->associate($new_search);
+                $searchPort->save();
             }
         }
-        
-        if(!$matches){
-            $new_search = SearchRate::create([
-                'company_user_id' => $data['company_user'],
-                'pick_up_date' => $pick_up_date,
-                'equipment' => $container_array, 
-                'delivery' => $data['deliveryType'],
-                'direction' => $data['direction'],
-                'type' => $data['type'],
-                'user_id' => $data['user']
-            ]);
+
+        foreach ($new_search_data_ids['carriers'] as $carrier_id) {
+            $searchCarrier = new SearchCarrier();
+            $searchCarrier->carrier_id = $carrier_id;
+            $searchCarrier->search_rate()->associate($new_search);
+            $searchCarrier->save();
         }
-        
-        return $new_search;
+          
+        return new SearchApiResource($new_search);
+    }
+
+    public function retrieve(SearchRate $search)
+    {        
+        return new SearchApiResource($search);
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
@@ -348,7 +370,6 @@ class SearchApiController extends Controller
         $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
         $user_id = $search_data['user'];
         $container_group = $search_data['selectedContainerGroup'];
-        $company_id = $search_data['company_user'];
         $origin_ports = $search_data['originPorts'];
         $destiny_ports = $search_data['destinationPorts'];
         $arregloCarrier = $search_data['carriers'];
@@ -356,14 +377,14 @@ class SearchApiController extends Controller
         $dateUntil = $search_data['dateRange']['endDate'];
     
         //Querying rates database
-        if ($company_id != null || $company_id != 0) {
-            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier','currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+        if ($company_user_id != null || $company_user_id != 0) {
+            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier','currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id) {
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id, $container_group) {
-                $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
-                    $b->where('company_id', '=', $company_id);
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group) {
+                $q->whereHas('contract_company_restriction', function ($b) use ($company_user_id) {
+                    $b->where('company_id', '=', $company_user_id);
                 })->orDoesntHave('contract_company_restriction');
             })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
