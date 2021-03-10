@@ -221,7 +221,7 @@
                             track-by="business_name"
                             placeholder="Company" 
                             class="s-input"
-                            @input="unlockContacts()"
+                            @input="unlockContacts(), searchRequest.contact = ''"
                             >
                             </multiselect>
                             <img src="/images/empresa.svg" class="img-icon" alt="port">
@@ -882,6 +882,13 @@ export default {
         },
           
     },
+    computed: {
+        companyChange() {
+            if(company != ''){
+                return this.searchRequest.company;
+            }
+        }
+    },
     watch: {
         deliveryType: function() {
             if ( this.deliveryType.id == 1 ) {
@@ -985,6 +992,10 @@ export default {
 
         $route(to, from) {
             this.$router.go(to);
+        },
+
+        companyChange() {
+            console.log('company Changed!');
         },
     }
 
