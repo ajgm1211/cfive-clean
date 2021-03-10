@@ -85,7 +85,7 @@ class SyncCompaniesVisualtrans implements ShouldQueue
                             'tax_number' => $item['cif-nif'],
                             'company_user_id' => $setting->company_user_id,
                             'api_id' => $item['codigo'],
-                            'api_status' => $setting->partner->name,
+                            'api_status' => 'Visualtrans',
                             'options->vs_code' => $item['codigo'],
                         ]);
                     }

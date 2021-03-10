@@ -159,7 +159,7 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        SyncCompaniesEvery30Job::dispatch();
+        //SyncCompaniesEvery30Job::dispatch();
     }
 
     public function getContacts($company_id)
