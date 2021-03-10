@@ -523,7 +523,6 @@ class FclPdf
                 }
             }
         }
-        
         return $totalsArrayOutput;
     }
 }
