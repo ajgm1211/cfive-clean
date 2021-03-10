@@ -288,7 +288,7 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b>{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
+                                            <b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
                                             <p><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p>
 
                                         </div>
@@ -313,7 +313,7 @@
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p class="white-space: nowrap"><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 12px">{{rate.client_currency.alphacode}}</span></b></p>
+                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
                                         </div>
                                     </div>
                                 </div>
@@ -381,7 +381,9 @@
                                             <b-th
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
+                                                style="padding: 0.75rem !important"
                                             >
+
                                             {{container.code}}
                                             </b-th>
                                         </b-tr>
