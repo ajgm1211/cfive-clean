@@ -35,11 +35,8 @@ use App\GlobalCharge;
 use App\TransitTime;
 use App\RemarkCondition;
 use App\Surcharge;
-<<<<<<< HEAD
 use App\CalculationType;
-=======
 use App\QuoteV2;
->>>>>>> e09faf3237b711cc37970a59668f78bf8e5de503
 use Illuminate\Http\Request;
 
 class SearchApiController extends Controller
