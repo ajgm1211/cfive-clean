@@ -309,11 +309,11 @@
                                 <div class="col-12 col-sm-6">
                                     <div class="row justify-content-end card-amount">
                                         <div 
-                                            class="col-12 col-sm-2"
+                                            class="col-12 col-sm-2 pl-0 pr-0"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }}</b>{{rate.client_currency.alphacode}}</p>
+                                            <p class="white-space: nowrap"><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 12px">{{rate.client_currency.alphacode}}</span></b></p>
                                         </div>
                                     </div>
                                 </div>
