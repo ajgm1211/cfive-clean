@@ -97,6 +97,8 @@ class QuotationResource extends JsonResource
             'price_id' => $this->price_id,
             'price_level' => $this->price()->first(),
             'carriers' => $this->carrier()->get(),
+            'search_start' => $this->search_start_date,
+            'search_end' => $this->search_end_date,
         ];
     }
 
