@@ -486,6 +486,13 @@
                             >
                                 Delete
                             </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('specialduplicate')"
+                                @click="onSpecialDuplicate(item.id)"
+                            >
+                                Duplicate +
+                            </button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -1246,6 +1253,12 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
+
+        onSpecialDuplicate(quote_id){
+            let searchRequestType = 1;
+
+            this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
+        },
         /* End single actions */
 
         closeModal(modal) {
@@ -1637,6 +1650,9 @@ export default {
                 this.routerPush(qs);
             },
         },
+        $route(to, from) {
+            this.$router.go(to);
+        }
     },
 };
 </script>

@@ -37,7 +37,8 @@ class QuoteV2 extends Model implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 'cargo_type_id',
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 
+        'cargo_type_id', 'search_start_date', 'search_end_date'
     ];
 
     public function company()
@@ -712,14 +713,18 @@ class QuoteV2 extends Model implements HasMedia
 
         foreach ($relations as $relation) {
             if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
-                $relation->duplicate($new_quote);
+                if($relation != null){
+                    $relation->duplicate($new_quote);
+                }
             } else {
                 foreach ($relation as $relationRecord) {
-                    $newRelationship = $relationRecord->duplicate($new_quote);
+                    if($relationRecord != null){
+                        $newRelationship = $relationRecord->duplicate($new_quote);
+                    }
                 }
             }
         }
-
+        
         return $new_quote;
     }
 
@@ -765,15 +770,17 @@ class QuoteV2 extends Model implements HasMedia
         }
     }
 
-    public function getContainerArray($equip)
+    public function getContainerArray($equip, $type='id')
     {
         if ($equip != '[]') {
             $cont_ids = [];
             $cont_array = explode(",", $equip);
             foreach ($cont_array as $cont) {
                 if ($cont != "") {
-                    $wh = Container::where('code', '=', $cont)->first()->id;
-                    array_push($cont_ids, $wh);
+                    if($type == 'id'){
+                        $wh = Container::where('code', '=', $cont)->first()->id;
+                        array_push($cont_ids, $wh);
+                    }
                 }
             }
             $conts = "[\"" . implode("\",\"", $cont_ids) . "\"]";
@@ -923,6 +930,32 @@ class QuoteV2 extends Model implements HasMedia
 
             $this->pdf_options = $pdfOptions;
             $this->save();
+        }
+    }
+
+    public function getContainersFromEquipment($equipment, $type = 'model')
+    {
+        if (isset($equipment) && count($equipment) != 0 && $equipment != "[]") {
+            $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equipment));
+            $equip_array = $this->validateEquipment($equip_array);
+            $containers = [];
+
+            foreach($equip_array as $container_id){
+                $cont = Container::where('id',$container_id)->first();
+
+                if($type == 'model'){
+                    array_push($containers, $cont);
+                }else if($type == 'array'){
+                    array_push($containers, $cont->toArray());
+                }
+            }
+
+            return $containers;
+
+        }else{
+
+            return $equipment;
+
         }
     }
 }
