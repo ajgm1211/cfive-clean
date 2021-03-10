@@ -733,6 +733,10 @@ export default {
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges = this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges = this.searchData.destination_charges == 0 ? false : true;
+                this.searchRequest.harbors = this.datalists.harbors;
+                this.searchRequest.currency = this.datalists.currency;
+                this.searchRequest.calculation_type = this.datalists.calculation_type;
+                this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             }else if(requestType == 1){
                 this.searchRequest.type = this.quoteData.type;
@@ -755,6 +759,10 @@ export default {
                 this.searchRequest.pricelevel = this.quoteData.price_level;
                 this.searchRequest.carriers = this.quoteData.carriers;
                 this.searchRequest.containers = this.quoteData.containers;
+                this.searchRequest.harbors = this.datalists.harbors;
+                this.searchRequest.currency = this.datalists.currency;
+                this.searchRequest.calculation_type = this.datalists.calculation_type;
+                this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             }
             

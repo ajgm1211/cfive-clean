@@ -469,7 +469,6 @@
 
             <!-- STEPS -->
             <div class="row add-contract-form-steps pt-5 pb-5">
-
                 <div class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteOne }">
                     <div class="add-contract-step">1</div>
                     <span>Contract</span>
