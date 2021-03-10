@@ -79,7 +79,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="originPortOptions"
-                            :disabled="requestData.requested == 1"
+                            :disabled="searchRequest.requestData.requested == 1"
                             label="display_name"
                             track-by="display_name"
                             placeholder="From" 
@@ -99,7 +99,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="destinationPortOptions"
-                            :disabled="requestData.requested == 1"
+                            :disabled="searchRequest.requestData.requested == 1"
                             label="display_name"
                             track-by="display_name"
                             placeholder="To" 
@@ -132,7 +132,9 @@
                 <!-- Containers -->
                 <div class="col-12 col-sm-2 input-search-form containers-search" style="padding-left: 5px;">
                         <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
-                            <b-dropdown-form>
+                            <b-dropdown-form
+                                :disabled="searchRequest.requestData.requested == 1"
+                                >
                                 <b-form-group label="Type">
                                     <b-form-radio-group
                                         id="containers"
@@ -264,7 +266,9 @@
                     <div class="col-12 col-sm-3 input-search-form">
                         
                             <b-dropdown id="dropdown-carriers" :text="carrierText" ref="dropdown" class="m-2">
-                                <b-dropdown-form>
+                                <b-dropdown-form
+                                    :disabled="searchRequest.requestData.requested == 1"
+                                >
                                     <label class="mt-2">
                                         <span>All Carriers</span>
                                         <b-form-checkbox 
@@ -288,21 +292,17 @@
 
                 <div class="row mr-0 ml-4 mt-5 d-flex justify-content-start">
                     <b-form-checkbox
-                        id="originChargesCheckbox"
-                        v-model="searchRequest.originChargesCheckbox"
-                        name="originChargesCheckbox"
-                        value="accepted"
-                        unchecked-value="not_accepted"
+                        id="originCharges"
+                        v-model="searchRequest.originCharges"
+                        name="originCharges"
                         class="mr-5 as-checkbox"
                     >
                         Include origin charges
                     </b-form-checkbox>
                     <b-form-checkbox
-                        id="destinationChargesCheckbox"
-                        v-model="searchRequest.destinationChargesCheckbox"
-                        name="destinationChargesCheckbox"
-                        value="accepted"
-                        unchecked-value="not_accepted"
+                        id="destinationCharges"
+                        v-model="searchRequest.destinationCharges"
+                        name="destinationCharges"
                         class="as-checkbox"
                     >
                         Include destination charges
@@ -561,8 +561,8 @@ export default {
             searchRequest: {
                 direction: 2,
                 type: 'FCL',
-                destinationChargesCheckbox: false,
-                originChargesCheckbox: false,
+                destinationCharges: false,
+                originCharges: false,
                 deliveryType: {},
                 selectedContainerGroup: {},
                 containers: [],
@@ -578,6 +578,7 @@ export default {
                     startDate: new Date().toISOString(),
                     endDate: new Date().toISOString(),
                 },
+                requestData: {},
             },
             selectedContainerGroup: {},
             containers: [],
@@ -602,7 +603,6 @@ export default {
             responseErrors: {},
             foundRates: {},
             companyChosen: false,
-            requestData: {},
             quoteData: {},
             //Gene defined
             ptdActive: false,
@@ -639,13 +639,13 @@ export default {
         },
 
         getQuery(){
-            this.requestData = this.$route.query;
+            this.searchRequest.requestData = this.$route.query;
 
-            if(Object.keys(this.requestData).length != 0){
-                if(this.requestData.requested == 0){
-                    this.getSearchData(this.requestData.id);
-                }else if(this.requestData.requested == 1){
-                    this.getQuoteToDuplicate(this.requestData.id);
+            if(Object.keys(this.searchRequest.requestData).length != 0){
+                if(this.searchRequest.requestData.requested == 0){
+                    this.getSearchData(this.searchRequest.requestData.model_id);
+                }else if(this.searchRequest.requestData.requested == 1){
+                    this.getQuoteToDuplicate(this.searchRequest.requestData.model_id);
                 }
             }else{
                 this.setSearchDisplay(null);
@@ -657,7 +657,7 @@ export default {
                 .retrieve(id)
                 .then((response) => {
                     this.searchData = response.data.data;
-                    this.setSearchDisplay(this.requestData.requested);
+                    this.setSearchDisplay(this.searchRequest.requestData.requested);
                 })
                 .catch(error => {
                     if(error.status === 422) {
@@ -671,7 +671,7 @@ export default {
                 .retrieve(id)
                 .then((response) => {
                     this.quoteData = response.data.data;
-                    this.setSearchDisplay(this.requestData.requested);
+                    this.setSearchDisplay(this.searchRequest.requestData.requested);
                 })
                 .catch(error => {
                     if(error.status === 422) {
@@ -705,6 +705,8 @@ export default {
             component.priceLevelOptions = component.datalists.price_levels;
             component.deliveryTypeOptions = component.datalists.delivery_types;
             component.allCarriers = true;
+            component.searchRequest.originCharges = component.datalists.company_user.origincharge == null ? false : true;
+            component.searchRequest.destinationCharges = component.datalists.company_user.destinationcharge == null ? false : true;
             
             this.fillSearchRequestFields(requestType);
         },
@@ -717,9 +719,11 @@ export default {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
                 this.deliveryType = this.searchData.delivery_type;
+                this.searchRequest.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.originPorts = this.searchData.origin_ports;
                 this.searchRequest.destinationPorts = this.searchData.destination_ports;
                 this.selectedContainerGroup = this.searchData.container_group;
+                this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
@@ -727,13 +731,23 @@ export default {
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriers = this.searchData.carriers;
                 this.searchRequest.containers = this.searchData.containers;
+                this.searchRequest.originCharges = this.searchData.origin_charges == 0 ? false : true;
+                this.searchRequest.destinationCharges = this.searchData.destination_charges == 0 ? false : true;
                 this.requestSearch();
             }else if(requestType == 1){
                 this.searchRequest.type = this.quoteData.type;
                 this.deliveryType = this.quoteData.delivery_type;
+                this.searchRequest.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.originPorts = this.quoteData.origin_ports;
                 this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
+                if(this.quoteData.search_start != null){
+                    this.searchRequest.dateRange.startDate = this.quoteData.search_start;
+                }
+                if(this.quoteData.search_end != null){
+                    this.searchRequest.dateRange.endDate = this.quoteData.search_end;
+                }
                 this.selectedContainerGroup = this.quoteData.gp_container;
+                this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
                 this.searchRequest.company = this.quoteData.company_id;
                 this.unlockContacts();
@@ -762,11 +776,11 @@ export default {
         storeSearch() {
             this.setSearchParameters();
 
-            if(this.requestData.requested == undefined || this.requestData.requested == 0){
+            if(this.searchRequest.requestData.requested == undefined || this.searchRequest.requestData.requested == 0){
                 actions.search
                     .create(this.searchRequest)
                     .then((response) => {
-                        this.$router.push({ path: `search`, query: { requested: 0, id: response.data.data.id} })
+                        this.$router.push({ path: `search`, query: { requested: 0, model_id: response.data.data.id} })
                         })
                     .catch(error => {
                         this.errorsExist = true;
@@ -775,8 +789,19 @@ export default {
                             this.responseErrors = error.data.errors;
                         }
                     })
-            }else if(this.requestData.requested == 1){
-                this.$router.go();
+            }else if(this.searchRequest.requestData.requested == 1){
+                actions.quotes
+                    .update(this.searchRequest.requestData.model_id, this.searchRequest)
+                    .then((response) => {
+                        this.$router.go();
+                        })
+                    .catch(error => {
+                        this.errorsExist = true;
+                        this.searching = false;
+                        if(error.status === 422) {
+                            this.responseErrors = error.data.errors;
+                        }
+                    })
             }
         },
 
@@ -785,7 +810,7 @@ export default {
             this.$emit("searchRequest");
 
             actions.search
-                .process(this.requestData)
+                .process(this.searchRequest)
                 .then((response) => {
                     response.data.data.forEach(function (rate){
                         if(typeof rate.containers == "string"){

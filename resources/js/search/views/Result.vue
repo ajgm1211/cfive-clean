@@ -946,6 +946,7 @@ export default {
     data() {
         return {
             actions: actions,
+            requestData: {},
             //GENE DEFINED
             checked1: false,
             checked2: false,
@@ -991,6 +992,9 @@ export default {
                 endDate: '',
             },
         }
+    },
+    created() {
+        this.requestData = this.$route.query;
     },
     methods: {
 
@@ -1111,11 +1115,19 @@ export default {
             if(ratesForQuote.length == 0){
                 component.noRatesAdded = true;
             }else{
-                component.actions.quotes
-                .create(ratesForQuote, this.$route)
-                .then ((response) => {
-                    window.location.href = "/api/quote/" + response.data.data.id + "/edit";
-                })
+                if(component.requestData.requested == 0){
+                    component.actions.quotes
+                        .create(ratesForQuote, this.$route)
+                        .then ((response) => {
+                            window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                        })
+                }else if(component.requestData.requested == 1){
+                    component.actions.quotes
+                        .specialduplicate(ratesForQuote)
+                        .then ((response) => {
+                            window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                        })
+                }
             }
         },
     },

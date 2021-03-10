@@ -38,10 +38,11 @@ use App\SaleTermCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Http\Traits\QuoteV2Trait;
+use App\Http\Traits\SearchTrait;
 
 class QuotationController extends Controller
 {
-    use QuoteV2Trait;
+    use QuoteV2Trait, SearchTrait;
 
     public function index(Request $request)
     {
@@ -202,6 +203,7 @@ class QuotationController extends Controller
     {
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
+        $user = User::where('company_user_id',$company_user->id)->first();
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
@@ -209,25 +211,28 @@ class QuotationController extends Controller
 
         $search_data = $rate_data[0]['search'];
 
-        $equipment = $this->formatContainersForQuote($search_data['equipment']);
+        $search_data_ids = $this->getIdsFromArray($search_data);
+
+        $equipment = $container_string = "[\"".implode("\",\"",$search_data_ids['containers'])."\"]";
 
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
-            'type' => $search_data['type'],
-            'delivery_type' => $search_data['delivery'],
-            'user_id' => $search_data['user_id'],
+            'type' => $search_data_ids['type'],
+            'delivery_type' => $search_data_ids['deliveryType'],
+            'user_id' => $user->id,
             'company_user_id' => $company_user->id,
-            'company_id' => isset($search_data['company_id']) ? $search_data['company_id'] : null,
-            'contact_id' => isset($search_data['contact_id']) ? $search_data['contact_id'] : null,
-            'price_id' => isset($search_data['price_level']) ? $search_data['price_level'] : null,
+            'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
+            'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
+            'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
             'equipment' => $equipment,
             //'origin_address' => $data['origin_address'],
             //'destination_address' => $data['destination_address'],
-            'date_issued' => explode("/", $search_data['pick_up_date'])[0],
-            'validity_start' => explode("/", $search_data['pick_up_date'])[0],
-            'validity_end' => explode("/", $search_data['pick_up_date'])[1],
+            'date_issued' => $search_data_ids['dateRange']['startDate'],
+            'validity_start' => $search_data_ids['dateRange']['startDate'],
+            'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'remarks_english' => $rate_data[0]['remarks']
+            'remarks_english' => $rate_data[0]['remarks'],
+            'direction_id' => $search_data_ids['direction']
         ]);
 
         $quote = $quote->fresh();
@@ -357,11 +362,13 @@ class QuotationController extends Controller
             }
             $quote->update([$key => $data[$key]]);
         }
+
         if ($request->input('custom_incoterm') != null) {
             $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
         } else {
             $quote->update(['custom_incoterm' => null]);
         }
+
         if ($request->input('custom_quote_id') != null) {
             $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
         } else {
@@ -370,6 +377,14 @@ class QuotationController extends Controller
 
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
+        }
+
+        if ($request->input('dateRange') != null) {
+            $date_range = $request->input('dateRange');
+            $start = substr($date_range['startDate'], 0, 10);
+            $end = substr($date_range['endDate'], 0, 10);
+            
+            $quote->update(['search_start_date' => $start, 'search_end_date' => $end]);
         }
     }
 
@@ -392,6 +407,75 @@ class QuotationController extends Controller
         return new QuotationResource($new_quote);
     }
 
+    public function specialduplicate(Request $request)
+    {
+        $rate_data = $request->input();
+
+        $search_data = $rate_data[0]['search'];
+
+        $search_data_ids = $this->getIdsFromArray($search_data);
+
+        $quote_id = $search_data['requestData']['model_id'];
+
+        $quote = QuoteV2::where('id',$quote_id)->first();
+
+        $new_quote = $quote->duplicate();
+
+        $old_rates = $new_quote->rates_v2()->get();
+
+        foreach($old_rates as $old_rate){
+            $old_rate->delete();
+        }
+
+        foreach ($rate_data as $rate) {
+
+            $newRate = AutomaticRate::create([
+                'quote_id' => $new_quote->id,
+                'contract' => isset($rate['contract']) ? $rate['contract']['name'] : '',
+                'validity_start' => $rate['contract']['validity'],
+                'validity_end' => $rate['contract']['expire'],
+                'currency_id' => $rate['currency_id'],
+                'origin_port_id' => $rate['origin_port'],
+                'destination_port_id' => $rate['destiny_port'],
+                'carrier_id' => $rate['carrier_id']
+            ]);
+
+            foreach ($rate['charges'] as $charge_direction) {
+                foreach ($charge_direction as $charge) {
+
+                    $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
+                    $charge = $this->formatChargeForQuote($charge);
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $newRate->id,
+                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                        'type_id' => $charge['typedestiny_id'],
+                        'calculation_type_id' => $charge['calculationtype']['id'],
+                        'currency_id' => $currency_id,
+                        'amount' => json_encode($charge['amount']),
+                        'markups' => json_encode($charge['markups']),
+                        'total' => json_encode($charge['total'])
+                    ]);
+                }
+            }
+            
+            $rateTotals = AutomaticRateTotal::create([
+                "quote_id" => $new_quote->id,
+                'automatic_rate_id' => $newRate->id,
+                'origin_port_id' => $newRate->origin_port_id,
+                'destination_port_id' => $newRate->destination_port_id,
+                'carrier_id' => $newRate->carrier_id,
+                'currency_id' => $rate['currency_id'],
+                'totals' => null,
+                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null 
+            ]);
+                
+            $rateTotals->totalize($rate['currency_id']);
+        }
+
+        return new QuotationResource($new_quote);
+    }
+
     public function destroyAll(Request $request)
     {
         $toDestroy = QuoteV2::whereIn('id', $request->input('ids'))->get();
@@ -405,7 +489,6 @@ class QuotationController extends Controller
 
     public function show($id)
     {
-
         $quote_id = obtenerRouteKey($id);
         $quote = QuoteV2::firstOrFail($quote_id);
 

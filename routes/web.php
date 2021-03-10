@@ -1039,7 +1039,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote')->name('quote.duplicate');
-    Route::post('api/quotes/{request_type}/{quote}/specialduplicate', 'QuotationController@specialduplicate')->middleware('check_company:quote');
+    Route::post('api/quotes/specialduplicate', 'QuotationController@specialduplicate');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
 
     /** AutomaticRate routes**/

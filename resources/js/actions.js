@@ -334,6 +334,9 @@ export default {
         duplicate(id, data) {
             return api.call('post', `/api/quotes/${id}/duplicate`, data);
         },
+        specialduplicate(data) {
+            return api.call('post', `/api/quotes/specialduplicate`, data);
+        },
         delete(id) {
             return api.call('delete', `/api/quote/${id}/destroy`, {});
         },
