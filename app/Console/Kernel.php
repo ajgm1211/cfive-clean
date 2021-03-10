@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use App\Jobs\SaveFclRatesByContractJob;
-use App\Jobs\SyncCompaniesPerHourJob;
 use App\Jobs\SyncCompaniesJob;
 use App\Jobs\SyncCompaniesVforwarding;
 use App\Jobs\SyncCompaniesVisualtrans;

@@ -77,7 +77,7 @@ class SyncCompaniesVforwarding implements ShouldQueue
                         'phone' => $item['tlf'],
                         'company_user_id' => $setting->company_user_id,
                         'api_id' => $item['id'],
-                        'api_status' => $setting->partner->name,
+                        'api_status' => 'VForwarding',
                         'options->vf_code' => $item['id'],
                     ]);
                 }
