@@ -54,6 +54,8 @@ class SearchApiResource extends JsonResource
             'container_group' => $container_group,
             'delivery_type' => isset($this->delivery) ? $this->delivery_type()->first() : null,
             'direction' => isset($this->direction) ? $this->direction()->first() : null,
+            'origin_charges' => $this->origin_charges,
+            'destination_charges' => $this->destination_charges,
         ];
     }
 

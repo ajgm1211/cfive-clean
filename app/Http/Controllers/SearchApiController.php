@@ -64,6 +64,8 @@ class SearchApiController extends Controller
         //Querying each model used and mapping only necessary data
         $company_user_id = \Auth::user()->company_user_id;
 
+        $company_user = CompanyUser::where('id',$company_user_id)->first();
+
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name','image']);
         });
@@ -134,6 +136,7 @@ class SearchApiController extends Controller
         //Collecting all data retrieved
         $data = compact(
             'company_user_id',
+            'company_user',
             'carriers',
             'companies',
             'contacts',
@@ -163,32 +166,10 @@ class SearchApiController extends Controller
         $user_id = $user->id;
         $company_user_id = $user->company_user_id;
 
-        if($request->input('requested') == 0){
-            $search = SearchRate::where('id',$request->input('id'))->first();
-            $search_array = $search->toArray();
-            $containers = $search->containers('array');
+        $search_array = $request->input();
 
-            $search_array['selectedContainerGroup'] = GroupContainer::where('id',$containers[0]['gp_container_id'])->first()->id;
-            $search_array['dateRange']['startDate'] = rtrim(explode('/',$search->pick_up_date)[0]);
-            $search_array['dateRange']['endDate'] = ltrim(explode('/',$search->pick_up_date)[1]);
-            $search_array['containers'] = $containers;
-            $search_array['originPorts'] = $search->origin_ports()->get()->toArray();
-            $search_array['destinationPorts'] = $search->destination_ports()->get()->toArray();
-            $search_array['carriers'] = $search->carriers()->get()->toArray();
-        }else if($request->input('requested') == 1){
-            $quote = QuoteV2::where('id',$request->input('id'))->first();
-            $search_array = $quote->toArray();
-            $containers = $quote->getContainersFromEquipment($quote->equipment, 'array');
-
-            $search_array['selectedContainerGroup'] = $quote->getContainerCodes($quote->equipment, true)->toArray();
-            $search_array['dateRange']['startDate'] = $quote->validity_start;
-            $search_array['dateRange']['endDate'] = $quote->validity_end;
-            $search_array['containers'] = $containers;
-            $search_array['originPorts'] = $quote->origin_harbor()->get()->toArray();
-            $search_array['destinationPorts'] = $quote->destination_harbor()->get()->toArray();
-            $search_array['carriers'] = $quote->carrier()->get()->toArray();
-            $search_array['direction'] = Direction::where('id',2)->first()->toArray();
-        }
+        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'],0,10);
+        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'],0,10);
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -214,7 +195,7 @@ class SearchApiController extends Controller
             $charges = $this->groupChargesByType($local_charges, $global_charges);
             
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $containers, $company_user_id);
+            $this->setChargesPerContainer($charges, $search_array['containers'], $company_user_id);
     
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges);
@@ -247,11 +228,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
     
-            if($request->input('requested') == 0){
-                $rate->SetAttribute('search', $search);
-            }else if($request->input('requested') == 1){
-                $rate->SetAttribute('quote', $quote);
-            }
+            $rate->SetAttribute('search', $search_array);
         }
 
         return RateResource::collection($rates);
@@ -302,7 +279,9 @@ class SearchApiController extends Controller
             'type' => 'required',
             'company' => 'sometimes',
             'contact' => 'sometimes',
-            'pricelevel' => 'sometimes'
+            'pricelevel' => 'sometimes',
+            'originCharges' => 'sometimes',
+            'destinationCharges' => 'sometimes'
         ]);
         
         //Stripping time stamp from date
@@ -344,7 +323,9 @@ class SearchApiController extends Controller
             'user_id' => $new_search_data_ids['user'],
             'contact_id' => $new_search_data_ids['contact'],
             'company_id' => $new_search_data_ids['company'],
-            'price_level_id' => $new_search_data_ids['pricelevel']
+            'price_level_id' => $new_search_data_ids['pricelevel'],
+            'origin_charges' => $new_search_data_ids['originCharges'],
+            'destination_charges' => $new_search_data_ids['destinationCharges']
         ]);
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
