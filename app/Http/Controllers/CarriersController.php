@@ -8,6 +8,7 @@ use App\Jobs\SynchronImgCarrierJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
+use App\Http\Requests\StoreCarriers;
 
 class CarriersController extends Controller
 {
@@ -42,16 +43,16 @@ class CarriersController extends Controller
             ->make();
     }
 
-    public function store(Request $request)
+    public function store(StoreCarriers $request)
     {
         $file = $request->file('file');
-        $nameimg=preg_replace('([^A-Za-z0-9.])', '',mb_strtolower($request->name.'.png','UTF-8'));
-
-        $fillbooll = Storage::disk('carriers')->put($nameimg, \File::get($file));
+        $nameImg=$file->getClientOriginalName();
+        $fillbooll = Storage::disk('carriers')->put($nameImg, \File::get($file));
+ 
         if ($fillbooll) {
             $carrier = new Carrier();
             $carrier->name = $request->name;
-            $carrier->image = $nameimg;
+            $carrier->image = $nameImg;
             $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
             foreach ($request->variation as $variation) {
@@ -63,7 +64,7 @@ class CarriersController extends Controller
             $json = json_encode($type);
             $carrier->varation = $json;
             $carrier->save();
-            ProcessContractFile::dispatch($carrier->id, $nameimg, 'n/a', 'carrier');
+            ProcessContractFile::dispatch($carrier->id, $nameImg, 'n/a', 'carrier');
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was created');
