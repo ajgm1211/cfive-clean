@@ -56,7 +56,7 @@
             <div class="row mr-0 ml-0">
 
                 <!-- Import / Export -->
-                <div class="col-12 col-sm-1">
+                <div class="col-12 col-sm-12 col-lg-1 export-import-box">
 
                     <b-form-radio-group
                         v-model="searchRequest.direction"
@@ -71,7 +71,7 @@
                 </div>
 
                 <!-- Origin Port -->
-                <div class="col-12 col-sm-3 origen-search input-search-form mb-2" style="position:relative; z-index:70"> 
+                <div class="col-12 col-sm-6 col-lg-3 origen-search input-search-form mb-2" style="position:relative; z-index:70"> 
                     <multiselect
                         v-model="searchRequest.originPorts"
                             :multiple="true"
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Destination Port -->
-                <div class="col-12 col-sm-3 input-search-form mb-2" style="position:relative; z-index:70">
+                <div class="col-12 col-sm-6 col-lg-3 destination-search input-search-form mb-2" style="position:relative; z-index:70">
                         <multiselect
                             v-model="searchRequest.destinationPorts"
                             :multiple="true"
@@ -109,7 +109,7 @@
                 </div>
                 
                 <!-- Date Picker-->
-                <div class="col-12 col-sm-3 input-search-form">
+                <div class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search">
                         <date-range-picker
                             :opens="'center'"
                             :locale-data="{
@@ -123,12 +123,12 @@
                             :linkedCalendars="true"
                             class="s-input"
                         ></date-range-picker>
-                        <img src="/images/calendario.svg" class="img-icon" alt="calendario">
+                        <img src="/images/calendario.svg" class="img-icon calendar-icon" alt="calendario">
                         <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
                 </div>
 
                 <!-- Containers -->
-                <div class="col-12 col-sm-2 input-search-form containers-search" style="padding-left: 5px;">
+                <div class="col-12 col-lg-2 col-sm-6 input-search-form containers-search" style="padding-left: 5px;">
                         <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
                             <b-dropdown-form>
                                 <b-form-group label="Type">
