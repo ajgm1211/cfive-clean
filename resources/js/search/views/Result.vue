@@ -761,9 +761,9 @@
                     <div class="row">
                         <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
 
-                            <div class="col-12 col-sm-3"><p>{{ item.type }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.calculation }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.currency }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.type.name }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.calculation.name }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.currency.alphacode }}</p></div>
                             <div class="col-12 col-sm-2"><p>{{ item.amount }}</p></div>
                             <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
 
@@ -778,6 +778,7 @@
                         ref="myVueDropzone"
                         :useCustomSlot="true"
                         id="dropzone"
+                        :options="dropzoneOptions"
                         v-on:vdropzone-removed-file="removeThisFile"
                         v-on:vdropzone-success="success"
                         >
@@ -955,6 +956,13 @@ export default {
     data() {
         return {
             actions: actions,
+            dropzoneOptions: {
+					url: `/example`,
+					thumbnailWidth: 150,
+					maxFilesize: 0.5,
+					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
+					addRemoveLinks: true,
+				},
             requestData: {},
             //GENE DEFINED
             checked1: false,
