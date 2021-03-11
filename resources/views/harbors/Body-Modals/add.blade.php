@@ -48,7 +48,7 @@
 			<label for="DispNamMD" class="form-control-label">
 				Variation:
 			</label>
-			<input type="text" name="variation[]" class="variationMD form-control" required>
+			<input type="text" name="variation[]" class="variationMD form-control">
 		</div>
 	</div>
 	<hr>
