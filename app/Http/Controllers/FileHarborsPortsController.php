@@ -104,7 +104,7 @@ class FileHarborsPortsController extends Controller
         return response()->json(['success' => true, 'data' => $data]);
         //        $request->session()->flash('message.nivel', 'success');
         //        $request->session()->flash('message.content', 'Your Harbor was created');
-        // return redirect()->route('UploadFile.index');
+        //        return redirect()->route('UploadFile.index');
     }
 
     public function show($id)
@@ -129,12 +129,12 @@ class FileHarborsPortsController extends Controller
         
         if($request->variation!=null){
 
-        foreach ($request->variation as $variation) {
-            $arreglo[] = str_replace($caracteres, '', trim(strtolower($variation)));
-        }
-            $type['type'] = $arreglo;
-            $json = json_encode($type);
-            $harbor->varation = $json;
+            foreach ($request->variation as $variation) {
+                $arreglo[] = str_replace($caracteres, '', trim(strtolower($variation)));
+            }
+                $type['type'] = $arreglo;
+                $json = json_encode($type);
+                $harbor->varation = $json;
         }else{
             $type['type'] = [""];
             $json = json_encode($type);
