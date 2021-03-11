@@ -3,7 +3,7 @@
         
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
-            <div class="col-12 col-sm-6 d-flex align-items-center">
+            <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
                 <div class="d-flex filter-search">
                     <b>filter by:</b>
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 d-flex justify-content-end align-items-center">
+            <div class="col-12 col-sm-6 addcontract-createquote">
 
                 <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                 
@@ -177,7 +177,7 @@
                             
                                     <h5><b>Freight</b></h5>
 
-                                    <b-table-simple hover small class="sc-table">
+                                    <b-table-simple hover small responsive borderless class="sc-table">
 
                                         <b-thead>
                                             <b-tr>
@@ -239,7 +239,7 @@
                     <div class="row">
 
                        <!-- CARRIER -->
-                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                        <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
                             <img 
                                 :src="'/imgcarrier/' + rate.carrier.image"  
                                 alt="logo" 
@@ -247,18 +247,18 @@
                         </div>
 
                         <!-- INFO CARD -->
-                        <div class="row col-12 col-sm-8">
+                        <div class="row col-12 col-lg-8 margin-res">
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
-                                <h6 class="mt-4 mb-5">{{rate.contract.name}}</h6>
+                                <h6 class="mt-4 mb-5 contract-title">{{rate.contract.name}}</h6>
                             </div>
 
                             <!-- INFO AND PRICE -->
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
                                 <!-- INFO -->
-                                <div class="col-12 col-sm-6 d-flex">
+                                <div class="col-12 col-lg-6 d-flex transi-time-res">
 
                                     <!-- ORIGIN -->
                                     <div class="origin mr-4">
@@ -271,7 +271,7 @@
                                     <!-- TT -->
                                     <div class="via d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect">
+                                        <div class="direction-form route-indirect tt">
 
                                             <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
 
@@ -306,10 +306,10 @@
                                 </div>
 
                                 <!-- PRICES -->
-                                <div class="col-12 col-sm-6">
-                                    <div class="row justify-content-end card-amount">
+                                <div class="col-12 col-lg-6 ">
+                                    <div class="row card-amount">
                                         <div 
-                                            class="col-12 col-sm-2 pl-0 pr-0"
+                                            class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
@@ -321,7 +321,7 @@
                             </div>
 
                             <!-- OPTIONS -->
-                            <div class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center">
+                            <div class="col-12 mt-3 mb-3 result-action">
 
                                 <div class="d-flex align-items-center">
 
@@ -353,7 +353,7 @@
                         </div>
 
                         <!-- ADD QUOTE BTN -->
-                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
+                        <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
                                 <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
@@ -370,7 +370,7 @@
                             >
                                 <h5><b>{{ chargeType }}</b></h5>
 
-                                <b-table-simple hover small class="sc-table">
+                                <b-table-simple hover small responsive class="sc-table">
 
                                     <b-thead>
                                         <b-tr>
@@ -449,12 +449,6 @@
             <div class="container-fluid">
                 <div class="row result-header">
                     <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
-                    <div class="col-12 col-sm-3"></div>
-                    <div class="row col-12 col-sm-5 d-flex align-items-center justify-content-end">
-                        <div class="col-12 col-sm-2"><b>20DV</b></div>
-                        <div class="col-12 col-sm-2"><b>40DV</b></div>
-                        <div class="col-12 col-sm-2"><b>40HC</b></div>
-                    </div>
                     <div class="col-12 col-sm-2 d-flex justify-content-end align-items-center">
 
                         <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
@@ -462,6 +456,14 @@
                         <b-button @click="createQuote">Create Quote</b-button>
 
                     </div>
+                    <div 
+                        class="col-12 col-sm-2 d-flex justify-content-end result-header"
+                        v-for="(container,requestKey) in request.containers"
+                        :key="requestKey"
+                    ><b>
+                        {{container.code}}
+                    </b></div>
+                    
                 </div>
             </div>
         </div>
