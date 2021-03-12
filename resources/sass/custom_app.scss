@@ -1179,8 +1179,8 @@ input.multiselect__input:focus {
 .btn-search {
     height: 50px;
     width: 150px;
+    padding: 14px 30px;
     left: 4px;
-    top: 2233px;
     border-radius: 27px;
     color: #ffffff;
     font-weight: 900;
@@ -1190,6 +1190,21 @@ input.multiselect__input:focus {
     position: relative;
     top: 25px;
     box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);
+}
+
+.btn-add-contract {
+    height: 50px;
+    width: 150px;
+    padding: 14px 25px;
+    left: 4px;
+    border-radius: 27px;
+    color: #006BFA;
+    font-weight: 900;
+    font-size: 18px;
+    background: #ffffff;
+    border: 2px solid #006BFA;
+    position: relative;
+    top: 25px;
 }
 
 .no-select-style .multiselect__tags {
@@ -1218,6 +1233,24 @@ input.multiselect__input:focus {
 
 .t-recent b {
     color: #071C4B;
+}
+
+@media only screen and (max-width: 768px) {
+    .export-import-box {
+        padding-left: 30px;
+        padding-right: 30px;
+        .radio-direction {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .export-import-box {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
 
 .radio-direction {
@@ -1258,11 +1291,62 @@ input.multiselect__input:focus {
 }
 
 .result-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     a {
         color: #43B54E;
         font-weight: 900;
         font-size: 10px;
         text-transform: uppercase;
+    }
+}
+
+.addcontract-createquote {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+@media only screen and (max-width: 768px) {
+    .margin-res {
+        margin: 0px !important;
+        .contract-title {
+            text-align: center;
+        }
+    }
+    .calendar-icon {
+        left: 40px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .result-action {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .btn-quote-res {
+        padding: 50px 0px !important;
+    }
+    .margin-res {
+        margin: 0px !important;
+        .contract-title {
+            text-align: center;
+        }
+    }
+    .carrier-img {
+        padding: 50px 0px;
+    }
+    .result-header {
+        display: none;
+    }
+    .result-and-filter {
+        flex-flow: inherit;
+        margin-bottom: 15px;
+    }
+    .addcontract-createquote {
+        justify-content: flex-start;
     }
 }
 
@@ -1355,6 +1439,11 @@ input.multiselect__input:focus {
     background-color: #006BFA;
 }
 
+.filter-search {
+    position: relative;
+    top: 4px;
+}
+
 .filter-search b {
     text-transform: uppercase;
 }
@@ -1434,6 +1523,26 @@ input.multiselect__input:focus {
     align-items: flex-end;
 }
 
+@media only screen and (max-width: 768px) {
+    .destination-search {
+        padding-right: 30px !important;
+    }
+    .datepicker-search {
+        padding-left: 30px !important;
+    }
+}
+
+
+/* @media only screen and (max-width: 425px) {
+    .destination-search {
+        padding-left: 10px !important;
+    }
+    .datepicker-search,
+    .origin-search {
+        padding-right: 10px !important;
+    }
+} */
+
 .result-search .destination {
     b,
     p {
@@ -1448,7 +1557,7 @@ input.multiselect__input:focus {
     img {
         width: 30px;
         top: -25px;
-        left: 160px;
+        left: 123px;
         color: #051b4e;
         position: absolute;
     }
@@ -1466,7 +1575,7 @@ input.multiselect__input:focus {
         background-color: transparent;
     }
     .line {
-        width: 300px;
+        width: 100px;
         height: 2px;
         background-color: #dddddd;
     }
@@ -1484,7 +1593,7 @@ input.multiselect__input:focus {
 }
 
 .result-search .via .direction-form.route-indirect .line {
-    width: 136px !important;
+    width: 100px !important;
 }
 
 .direction-desc {
@@ -1523,6 +1632,27 @@ input.multiselect__input:focus {
     font-weight: 900;
     font-size: 12px;
     text-transform: uppercase;
+}
+
+.btn.btn-secondary.btn-add-contract {
+    height: 50px;
+    width: 150px;
+    padding: 12px 16px;
+    left: 4px;
+    border-radius: 27px;
+    color: #006BFA;
+    font-weight: 900;
+    font-size: 18px;
+    background: #ffffff;
+    border: 2px solid #006BFA !important;
+    position: relative;
+    top: 25px;
+}
+
+.btn.btn-secondary.btn-add-contract:hover {
+    color: #ffffff;
+    background: rgba(#006BFA, 0.8) !important;
+    border-color: rgba(#006BFA, 0.8) !important;
 }
 
 #add-contract {
@@ -1580,6 +1710,12 @@ input.multiselect__input:focus {
     box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03);
 }
 
+.btn-action-sticky {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .activeSticky {
     display: block !important;
     transform: translateY(0px) !important;
@@ -1616,6 +1752,16 @@ input.multiselect__input:focus {
 
 .card-amount p {
     font-size: 13px;
+}
+
+.card-amount {
+    justify-content: flex-end;
+}
+
+@media only screen and (max-width: 425px) {
+    .card-amount {
+        justify-content: center;
+    }
 }
 
 .footer-add-contract-modal {
@@ -1765,11 +1911,28 @@ input.surcharge-input {
 }
 
 .origen-search {
-    padding-left: 30px !important;
+    padding-left: 30px;
 }
 
 .containers-search {
-    padding-right: 15px !important;
+    padding-right: 15px;
+}
+
+@media only screen and (max-width: 768px) {
+    .containers-search {
+        padding-right: 30px !important;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .containers-search,
+    .destination-search,
+    .datepicker-search,
+    .origen-search {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin-bottom: 5px;
+    }
 }
 
 .font-tabs .nav-item a {
@@ -1832,6 +1995,24 @@ input.surcharge-input {
 
 .img-icon-left {
     left: 45px;
+}
+
+@media only screen and (max-width: 425px) {
+    .img-icon {
+        left: 20px;
+    }
+    .tt {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .transi-time-res,
+    .prices-card-res {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 #dropdown-containers .dropdown-menu,
