@@ -3,7 +3,7 @@
         
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
-            <div class="col-12 col-sm-6 d-flex align-items-center">
+            <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
                 <div class="d-flex filter-search">
                     <b>filter by:</b>
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 d-flex justify-content-end align-items-center">
+            <div class="col-12 col-sm-6 addcontract-createquote">
 
                 <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                 
@@ -75,7 +75,7 @@
 
                         <!-- CARRIER -->
                         <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
-                            <img src="/images/maersk.png" alt="logo" width="160px">
+                            <img src="/images/maersk.png" alt="logo" width="115px">
                         </div>
 
                         <!-- NAME, ORIGEN AND DESTINATION INFO -->
@@ -177,7 +177,7 @@
                             
                                     <h5><b>Freight</b></h5>
 
-                                    <b-table-simple hover small class="sc-table">
+                                    <b-table-simple hover small responsive borderless class="sc-table">
 
                                         <b-thead>
                                             <b-tr>
@@ -239,26 +239,26 @@
                     <div class="row">
 
                        <!-- CARRIER -->
-                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                        <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
                             <img 
                                 :src="'/imgcarrier/' + rate.carrier.image"  
                                 alt="logo" 
-                                width="160px">
+                                width="115px">
                         </div>
 
                         <!-- INFO CARD -->
-                        <div class="row col-12 col-sm-8">
+                        <div class="row col-12 col-lg-8 margin-res">
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
-                                <h6 class="mt-4 mb-5">{{rate.contract.name}}</h6>
+                                <h6 class="mt-4 mb-5 contract-title">{{rate.contract.name}}</h6>
                             </div>
 
                             <!-- INFO AND PRICE -->
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
                                 <!-- INFO -->
-                                <div class="col-12 col-sm-6 d-flex">
+                                <div class="col-12 col-lg-6 d-flex transi-time-res">
 
                                     <!-- ORIGIN -->
                                     <div class="origin mr-4">
@@ -271,7 +271,7 @@
                                     <!-- TT -->
                                     <div class="via d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect">
+                                        <div class="direction-form route-indirect tt">
 
                                             <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
 
@@ -288,7 +288,7 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b>{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
+                                            <b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
                                             <p><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p>
 
                                         </div>
@@ -306,14 +306,14 @@
                                 </div>
 
                                 <!-- PRICES -->
-                                <div class="col-12 col-sm-6">
-                                    <div class="row justify-content-end card-amount">
+                                <div class="col-12 col-lg-6 ">
+                                    <div class="row card-amount">
                                         <div 
-                                            class="col-12 col-sm-2"
+                                            class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b>{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }}</b>{{rate.client_currency.alphacode}}</p>
+                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
                                         </div>
                                     </div>
                                 </div>
@@ -321,7 +321,7 @@
                             </div>
 
                             <!-- OPTIONS -->
-                            <div class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center">
+                            <div class="col-12 mt-3 mb-3 result-action">
 
                                 <div class="d-flex align-items-center">
 
@@ -353,7 +353,7 @@
                         </div>
 
                         <!-- ADD QUOTE BTN -->
-                        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center" style="border-left: 1px solid #f3f3f3">
+                        <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
                                 <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button>
                                     <b>add to quote</b>
                                 </b-form-checkbox>
@@ -370,7 +370,7 @@
                             >
                                 <h5><b>{{ chargeType }}</b></h5>
 
-                                <b-table-simple hover small class="sc-table">
+                                <b-table-simple hover small responsive class="sc-table">
 
                                     <b-thead>
                                         <b-tr>
@@ -381,7 +381,9 @@
                                             <b-th
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
+                                                style="padding: 0.75rem !important"
                                             >
+
                                             {{container.code}}
                                             </b-th>
                                         </b-tr>
@@ -447,489 +449,24 @@
             <div class="container-fluid">
                 <div class="row result-header">
                     <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
-                    <div class="col-12 col-sm-3"></div>
-                    <div class="row col-12 col-sm-5 d-flex align-items-center justify-content-end">
-                        <div class="col-12 col-sm-2"><b>20DV</b></div>
-                        <div class="col-12 col-sm-2"><b>40DV</b></div>
-                        <div class="col-12 col-sm-2"><b>40HC</b></div>
-                    </div>
-                    <div class="col-12 col-sm-2 d-flex justify-content-end align-items-center">
+                    <div class="col-12 col-sm-10 btn-action-sticky">
 
                         <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                         
-                        <b-button @click="createQuote">Create Quote</b-button>
+                        <b-button @click="createQuote" style="color:#0072FC; font-weight: bolder; border: 2px solid #0072FC !important">Create Quote</b-button>
 
                     </div>
+                    <!-- <div 
+                        class="col-12 col-sm-2 d-flex justify-content-end result-header"
+                        v-for="(container,requestKey) in request.containers"
+                        :key="requestKey"
+                    ><b>
+                        {{container.code}}
+                    </b></div> -->
+                    
                 </div>
             </div>
         </div>
-
-        <!-- MODAL ADD CONTRACT -->
-        <b-modal  id="add-contract" size="lg" centered title="Created Contract" ref="my-modal" hide-footer>
-
-            <!-- STEPS -->
-            <div class="row add-contract-form-steps pt-5 pb-5">
-                <div class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteOne }">
-                    <div class="add-contract-step">1</div>
-                    <span>Contract</span>
-                </div>
-
-                <div class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteTwo }">
-                    <div class="add-contract-step">2</div>
-                    <span>Ocean Freight</span>
-                </div>
-
-                <div class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteThree }">
-                    <div class="add-contract-step">3</div>
-                    <span>Surcharges</span>
-                </div>
-
-                <div class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteFour }">
-                    <div class="add-contract-step">4</div>
-                    <span>Files</span>
-                </div>
-
-            </div>
-
-            <form action="/action_page.php" class="add-contract-form">
-
-                <!-- CONTRACT -->
-                <fieldset v-if="stepOne">
-
-                    <div class="row">
-
-                        <div v-if="invalidInput" class="col-12 mt-3 mb-3">
-                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.</h5>
-                        </div>
-
-                        <div class="col-12 mb-3">
-                            <label>
-                                <b-form-input
-                                    v-model="reference"
-                                    placeholder="Reference"
-                                    class="input-modal"
-                                ></b-form-input>
-                                <img src="/images/investigacion.svg" alt="reference" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                                <date-range-picker
-                                :opens="'center'"
-                                :locale-data="{
-                                    firstDay: 1,
-                                    format: 'yyyy/mm/dd',
-                                    }"
-                                :singleDatePicker="false"
-                                :autoApply="true"
-                                :timePicker="false"
-                                v-model="dateRange"
-                                :linkedCalendars="true"
-                                class="input-h"
-                                ></date-range-picker>
-                           </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                               <multiselect
-                                    v-model="carrier"
-                                    :multiple="false"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="request.carriers"
-                                    label="name"
-                                    track-by="name"
-                                    placeholder="Carrier"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/carrier.svg" alt="carrier" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                                <multiselect
-                                    v-model="valueEq"
-                                    :multiple="false"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="optionsEquipment"
-                                    placeholder="Equipment"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/container.svg" alt="container" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                                <multiselect
-                                    v-model="direction"
-                                    :multiple="false"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="optionsDirection"
-                                    placeholder="Direction"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/entrega.svg" alt="entrega" width="25px" height="25px">
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-    
-                <!-- OCEAN FREIGHT -->
-                <fieldset v-if="stepTwo">
-
-                        <div v-if="invalidInput" class="col-12 mt-3 mb-3">
-                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.</h5>
-                        </div>
-
-                    <div class="row">
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                               <multiselect
-                                    v-model="origin"
-                                    :multiple="true"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="request.harbors"
-                                    label="display_name"
-                                    track-by="display_name"
-                                    placeholder="Origin"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/port.svg" alt="origen" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                               <multiselect
-                                    v-model="destination"
-                                    :multiple="true"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="request.harbors"
-                                    label="display_name"
-                                    track-by="display_name"
-                                    placeholder="Destination"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/port.svg" alt="destination" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                               <multiselect
-                                    v-model="carrier"
-                                    :multiple="false"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="request.carriers"
-                                    label="name"
-                                    track-by="name"
-                                    placeholder="Carrier"
-                                    class="input-modal"
-                                >
-                                </multiselect>
-                                <img src="/images/carrier.svg" alt="carrier" width="25px" height="25px">
-                            </label>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-3">
-                            <label>
-                               <multiselect
-                                    v-model="currency"
-                                    :multiple="false"
-                                    :close-on-select="true"
-                                    :clear-on-select="true"
-                                    :show-labels="false"
-                                    :options="request.currency"
-                                    label="alphacode"
-                                    track-by="alphacode"
-                                    placeholder="Currency"
-                                    class="input-modal"
-                                >
-                                </multiselect> 
-                                <img src="/images/dinero.svg" alt="currency" width="25px" height="25px">
-                            </label>
-                        </div>
-
-                        <div v-for="(item, index) in items" class="col-12 col-sm-6">
-                            <label>
-                                <b-form-input
-                                    :name="item.name"
-                                    :placeholder="item.placeholder"
-                                    class="input-modal mb-3"
-                                    v-model="equipType"
-                                    required
-                                ></b-form-input>
-                                <img src="/images/ordenar.svg" alt="ordenar" width="25px" height="25px">
-                            </label>
-                        </div>
-                    </div>
-                    
-                </fieldset>
-
-                <!-- SURCHARGES -->
-                <fieldset v-if="stepThree">
-
-                    <div class="row">
-
-                        <div v-if="invalidSurcharger" class="col-12 mb-3">
-                            <h5 class="invalid-data"><b-icon icon="exclamation-circle" class="mr-2"></b-icon>Complete all the fileds</h5>
-                        </div>
-                        <div id="surcharges-list" class="col-12">
-
-                            <div class="row surcharge-content">
-                                <div class="col-12 col-sm-3">
-                                    <label>
-                                        <multiselect
-                                            v-model="typeContract"
-                                            :multiple="false"
-                                            :close-on-select="true"
-                                            :clear-on-select="true"
-                                            :show-labels="false"
-                                            :options="request.surcharges"
-                                            label="name"
-                                            track-by="name"
-                                            placeholder="Type"
-                                            class="input-modal surcharge-input"
-                                            >
-                                        </multiselect>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-sm-3">
-                                    <label>
-                                        <multiselect
-                                                v-model="calculationType"
-                                                :multiple="false"
-                                                :close-on-select="true"
-                                                :clear-on-select="true"
-                                                :show-labels="false"
-                                                :options="request.calculation_type"                                            
-                                                label="name"
-                                                track-by="name"
-                                                placeholder="Calculation Type"
-                                                class="input-modal surcharge-input"
-                                            >
-                                        </multiselect>
-                                </label>
-                                </div>
-                                <div class="col-12 col-sm-3">
-                                    <label>
-                                        <multiselect
-                                            v-model="currencySurcharge"
-                                            :multiple="false"
-                                            :close-on-select="true"
-                                            :clear-on-select="true"
-                                            :show-labels="false"
-                                            :options="request.currency"
-                                            label="alphacode"
-                                            track-by="alphacode"
-                                            placeholder="Currency"
-                                            class="input-modal surcharge-input"
-                                            >
-                                        </multiselect>
-                                </label>
-                                </div>
-                                <div class="col-12 col-sm-2">
-                                    <label>
-                                        <b-form-input
-                                            v-model="amount"
-                                            placeholder="Amount"
-                                            class="input-modal surcharge-input"
-                                        ></b-form-input>
-                                    </label>
-                                </div>
-                                <div class="col-1 d-flex justify-content-center align-items-center">
-                                    <span v-on:click="addSurcharger" class="btn-add-surch"><b-icon icon="check-circle"></b-icon></span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
-
-                            <div class="col-12 col-sm-3"><p>{{ item.type.name }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.calculation.name }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.currency.alphacode }}</p></div>
-                            <div class="col-12 col-sm-2"><p>{{ item.amount }}</p></div>
-                            <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
-
-                        </div>
-                    </div>
-                    
-                </fieldset>
-
-                <!-- FILES -->
-                <fieldset v-if="stepFour">
-                    <vue-dropzone
-                        ref="myVueDropzone"
-                        :useCustomSlot="true"
-                        id="dropzone"
-                        :options="dropzoneOptions"
-                        v-on:vdropzone-removed-file="removeThisFile"
-                        v-on:vdropzone-success="success"
-                        >
-                        <div class="dropzone-container">
-                                <div class="file-selector">
-                                <h6 class="title-dropzone">Upload</h6>
-                                <figure>
-                                <svg
-                                    width="104px"
-                                    height="104px"
-                                    viewBox="0 0 104 104"
-                                    version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                                >
-                                    <defs>
-                                    <circle id="path-1" cx="36" cy="36" r="36"></circle>
-                                    <filter
-                                        x="-37.5%"
-                                        y="-29.2%"
-                                        width="175.0%"
-                                        height="175.0%"
-                                        filterUnits="objectBoundingBox"
-                                        id="filter-2"
-                                    >
-                                        <feOffset
-                                        dx="0"
-                                        dy="6"
-                                        in="SourceAlpha"
-                                        result="shadowOffsetOuter1"
-                                        ></feOffset>
-                                        <feGaussianBlur
-                                        stdDeviation="8"
-                                        in="shadowOffsetOuter1"
-                                        result="shadowBlurOuter1"
-                                        ></feGaussianBlur>
-                                        <feColorMatrix
-                                        values="0 0 0 0 0.0117647059   0 0 0 0 0.0862745098   0 0 0 0 0.160784314  0 0 0 0.08 0"
-                                        type="matrix"
-                                        in="shadowBlurOuter1"
-                                        result="shadowMatrixOuter1"
-                                        ></feColorMatrix>
-                                        <feOffset
-                                        dx="0"
-                                        dy="1"
-                                        in="SourceAlpha"
-                                        result="shadowOffsetOuter2"
-                                        ></feOffset>
-                                        <feGaussianBlur
-                                        stdDeviation="1"
-                                        in="shadowOffsetOuter2"
-                                        result="shadowBlurOuter2"
-                                        ></feGaussianBlur>
-                                        <feColorMatrix
-                                        values="0 0 0 0 0.0117647059   0 0 0 0 0.0862745098   0 0 0 0 0.160784314  0 0 0 0.11 0"
-                                        type="matrix"
-                                        in="shadowBlurOuter2"
-                                        result="shadowMatrixOuter2"
-                                        ></feColorMatrix>
-                                        <feMerge>
-                                        <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
-                                        <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
-                                        </feMerge>
-                                    </filter>
-                                    </defs>
-                                    <g
-                                    id="Page-1"
-                                    stroke="none"
-                                    stroke-width="1"
-                                    fill="none"
-                                    fill-rule="evenodd"
-                                    >
-                                    <g
-                                        id="Artboard"
-                                        transform="translate(-460.000000, -125.000000)"
-                                    >
-                                        <g id="Group-4" transform="translate(412.000000, 129.000000)">
-                                        <g id="Group-2" transform="translate(58.000000, 0.000000)">
-                                            <circle
-                                            id="Oval"
-                                            fill="#3560FF"
-                                            opacity="0.100000001"
-                                            cx="42"
-                                            cy="42"
-                                            r="42"
-                                            ></circle>
-                                            <g id="Group" transform="translate(6.000000, 6.000000)">
-                                            <g id="Oval">
-                                                <use
-                                                fill="black"
-                                                fill-opacity="1"
-                                                filter="url(#filter-2)"
-                                                xlink:href="#path-1"
-                                                ></use>
-                                                <use
-                                                fill="#FFFFFF"
-                                                fill-rule="evenodd"
-                                                xlink:href="#path-1"
-                                                ></use>
-                                            </g>
-                                            <g
-                                                id="upload-cloud"
-                                                transform="translate(21.818182, 24.000000)"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                            >
-                                                <polyline
-                                                id="Path"
-                                                stroke="#000000"
-                                                points="19.6458087 17.3789847 14.3565525 12.0897285 9.06729634 17.3789847"
-                                                ></polyline>
-                                                <path
-                                                d="M14.3565525,12.0897285 L14.3565525,24.1794569"
-                                                id="Path"
-                                                stroke="#3560FF"
-                                                ></path>
-                                                <path
-                                                d="M25.6438239,20.7792208 C28.2965835,19.3021499 29.6312816,16.1761528 28.8860265,13.1856562 C28.1407715,10.1951596 25.5052337,8.10125672 22.4838689,8.09921935 L20.8179512,8.09921935 C19.7219904,3.76967373 16.1275086,0.577339516 11.7773112,0.0700384831 C7.42711383,-0.43726255 3.22057026,1.84535014 1.19724759,5.81113853 C-0.826075091,9.77692693 -0.247870665,14.6059952 2.6515151,17.9569414"
-                                                id="Path"
-                                                stroke="#3560FF"
-                                                ></path>
-                                                <polyline
-                                                id="Path"
-                                                stroke="#3560FF"
-                                                points="19.6458087 17.3789847 14.3565525 12.0897285 9.06729634 17.3789847"
-                                                ></polyline>
-                                            </g>
-                                            </g>
-                                        </g>
-                                        </g>
-                                    </g>
-                                    </g>
-                                </svg>
-                                </figure>
-                                Drop Or Add Files Here
-                                <p><span> or </span></p>
-                                <button type="button" class="btn btn-primary btn-bg">Choose file</button>
-                            </div>
-                        </div>
-				    </vue-dropzone>
-                </fieldset>
-
-                <div class="footer-add-contract-modal pl-4 pr-4">   
-                    <b-button v-if="stepTwo || stepThree || stepFour" v-on:click="backStep" variant="link" style="color: red" class="mr-3">Back</b-button>
-                    <b-button v-on:click="nextStep" v-if="!stepFour" class="btn-create-quote">Save & Continue</b-button>
-                    <b-button v-if="stepFour" class="btn-create-quote">Created Contract</b-button>
-                </div>
-            </form> 
-        </b-modal>
-
     </div>
 </template>
 
@@ -1015,7 +552,7 @@ export default {
     },
     methods: {
 
-        deleteSurcharger(index){
+        /* deleteSurcharger(index){
             this.dataSurcharger.splice(index, 1);
             //console.log(this.dataSurcharger);
         },
@@ -1066,9 +603,9 @@ export default {
             .catch(( data ) => {
 
             });
-        },
+        }, */
 
-        nextStep() {
+        /* nextStep() {
             if ( this.stepOne ) {
 
                 if (this.reference == '' || this.carrier == '' || this.valueEq == '' || this.direction == '' || this.vdata == '') {
@@ -1117,7 +654,7 @@ export default {
                 this.isCompleteTwo = !this.isCompleteTwo;
                 return
             }
-        },
+        }, */
         
         createQuote() {
             let component = this;
@@ -1148,7 +685,7 @@ export default {
             }
         },
     },
-    watch: {
+    /* watch: {
         valueEq: function() {
 
             if (this.valueEq == 'DRY') {
@@ -1176,7 +713,7 @@ export default {
             }
 
         }
-    },
+    }, */
     mounted(){
         let component = this;
 
