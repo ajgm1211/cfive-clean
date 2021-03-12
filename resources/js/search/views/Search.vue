@@ -84,7 +84,6 @@
                             track-by="display_name"
                             placeholder="From" 
                             class="s-input"
-                            @input="setOriginAddressMode"
                     >
                     </multiselect>
                     <img src="/images/port.svg" class="img-icon img-icon-left" alt="port">
@@ -105,7 +104,6 @@
                             track-by="display_name"
                             placeholder="To" 
                             class="s-input"
-                            @input="setDestinationAddressMode"
                         >
                         </multiselect>
                         <img src="/images/port.svg" class="img-icon" alt="port">
@@ -173,13 +171,13 @@
                         <multiselect
                             v-if="originDistance"
                             v-model="searchRequest.originAddress"
-                            :disabled="searchRequest.originPorts.length == 0 || searchRequest.originPorts.length > 1"
+                            disabled="true"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="originAddressOptions"
-                            :placeholder="originAddressPlaceholder" 
+                            placeholder="Under construction" 
                             label="display_name"
                             track-by="display_name"
                             class="s-input"
@@ -203,13 +201,13 @@
                         <multiselect
                             v-if="destinationDistance"
                             v-model="searchRequest.destinationAddress"
-                            :disabled="searchRequest.destinationPorts.length == 0 || searchRequest.destinationPorts.length > 1"
+                            disabled="true"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="destinationAddressOptions"
-                            :placeholder="destinationAddressPlaceholder" 
+                            placeholder="Under construction" 
                             label="display_name"
                             track-by="display_name"
                             class="s-input"
