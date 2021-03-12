@@ -533,7 +533,7 @@
                     </div>
             </div>
 
-            <!-- MODAL ADD CONTRACT -->
+         <!-- MODAL ADD CONTRACT -->
         <b-modal  id="add-contract" size="lg" centered title="Created Contract" ref="my-modal" hide-footer>
 
             <!-- STEPS -->
@@ -597,11 +597,11 @@
                                 :linkedCalendars="true"
                                 class="input-h"
                                 ></date-range-picker>
-                            </label>
+                           </label>
                         </div>
                         <div class="col-12 col-sm-6 mb-3">
                             <label>
-                                <multiselect
+                               <multiselect
                                     v-model="carrier"
                                     :multiple="false"
                                     :close-on-select="true"
@@ -666,7 +666,7 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="request.harbors"
+                                    :options="datalists.harbors"
                                     label="display_name"
                                     track-by="display_name"
                                     placeholder="Origin"
@@ -684,7 +684,7 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="request.harbors"
+                                    :options="datalists.harbors"
                                     label="display_name"
                                     track-by="display_name"
                                     placeholder="Destination"
@@ -762,7 +762,7 @@
                                             :close-on-select="true"
                                             :clear-on-select="true"
                                             :show-labels="false"
-                                            :options="request.surcharges"
+                                            :options="datalists.surcharges"
                                             label="name"
                                             track-by="name"
                                             placeholder="Type"
@@ -988,7 +988,6 @@
                 </div>
             </form> 
         </b-modal>
-        <!-- FIN MODAL ADD CONTRACT -->
 
         </div>
 
@@ -997,8 +996,10 @@
 
 <script>
 import Search from './Search'; 
+import vue2Dropzone from 'vue2-dropzone';
 import Multiselect from "vue-multiselect";
 import DateRangePicker from "vue2-daterange-picker";
+import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
 import actions from "../../actions";
@@ -1009,6 +1010,7 @@ export default {
         Search,
         Multiselect,
         DateRangePicker,
+        vueDropzone: vue2Dropzone,
         
     },
     data() {
@@ -1180,6 +1182,56 @@ export default {
             }
         },
 
+
+        addSurcharger() {
+
+            if(this.typeContract == "" || this.calculationType == "" || this.currencySurcharge == "" ) {
+                this.invalidSurcharger = true;
+                return
+            }
+
+            this.invalidSurcharger = false;
+
+            var surcharge = {
+                type: this.typeContract,
+                calculation: this.calculationType,
+                currency: this.currencySurcharge,
+                amount: this.amount
+            };
+
+            this.dataSurcharger.push(surcharge);
+            
+            this.typeContract = ""; this.calculationType = ""; this.currencySurcharge = ""; this.amount = "";
+        },
+
+        //FILES OPTIONS Modal
+        setFiles(data){
+				let file = {};
+				let url = '';
+				let vcomponent = this;
+				let i = 0;
+
+				let url_tags = document.getElementsByClassName("img-link");
+
+				data.forEach(function(media){
+					vcomponent.$refs.myVueDropzone.manuallyAddFile(media, media.url);
+					url_tags[i].setAttribute('href', media.url);
+					i+=1;
+				});	
+        },
+            
+        removeThisFile(file){
+            let id = this.$route.params.id;
+            
+            this.actions.removefile(id, { 'id': file.id })
+            .then( ( response ) => {
+            })
+            .catch(( data ) => {
+
+            });
+        },
+
+
         //Set lists of data
         setDropdownLists(err, data) {
             this.datalists = data;
@@ -1271,35 +1323,12 @@ export default {
             this.dataPackaging.splice(index, 1);
             //console.log(this.dataPackaging);
         },
-
-        addSurcharger() {
-
-            if(this.pallets == "" || this.quantity == "" || this.height == "" || this.width == "" || this.large == "" || this.weight == "" ) {
-                this.invalidCalculate = true;
-                return
-            }
-
-            this.invalidCalculate = false;
-
-            var totalPackging = this.quantity + this.height + this.width + this.large + this.weight;
-
-            var packaging = {
-                type: this.pallets,
-                quantity: this.quantity,
-                height: this.height,
-                width: this.width,
-                large: this.large,
-                weight: this.weight,
-                total: this.totalPackging,
-            };
-            //console.log(packaging);
-            this.dataPackaging.push(packaging);
-            
-            this.pallets = ""; this.quantity = ""; this.height = ""; 
-            this.width = "";   this.large = "";    this.weight = ""; 
-            this.total = "";
-        },
           
+        //upload files
+        success(file, response){
+            let url_tags = $(".img-link").last();
+            url_tags.attr('href', response.url);
+        },
     },
     watch: {
         deliveryType: function() {
