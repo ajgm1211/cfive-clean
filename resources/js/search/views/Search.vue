@@ -84,6 +84,7 @@
                             track-by="display_name"
                             placeholder="From" 
                             class="s-input"
+                            @input="setOriginAddressMode"
                     >
                     </multiselect>
                     <img src="/images/port.svg" class="img-icon img-icon-left" alt="port">
@@ -104,6 +105,7 @@
                             track-by="display_name"
                             placeholder="To" 
                             class="s-input"
+                            @input="setDestinationAddressMode"
                         >
                         </multiselect>
                         <img src="/images/port.svg" class="img-icon" alt="port">
@@ -169,16 +171,29 @@
                 <div v-if="dtpActive || dtdActive" class="col-12 col-sm-3 origen-search input-search-form" style="position:relative; z-index:60">
 
                         <multiselect
+                            v-if="originDistance"
                             v-model="searchRequest.originAddress"
-                            :multiple="true"
+                            :disabled="searchRequest.originPorts.length == 0 || searchRequest.originPorts.length > 1"
+                            :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="originAddressOptions"
-                            placeholder="From" 
+                            :placeholder="originAddressPlaceholder" 
+                            label="display_name"
+                            track-by="display_name"
                             class="s-input"
                         >
                         </multiselect>
+                        <gmap-autocomplete
+                            v-else
+                            @place_changed="setOriginPlace"
+                            @input="commitOriginAutocomplete"
+                            :value="originAutocompleteValue"
+                            class="form-input form-control"
+                            placeholder="Start typing an address"
+                        >
+                        </gmap-autocomplete>
                         <img src="/images/city.svg" class="img-icon img-icon-left" alt="port">
                 </div>
 
@@ -186,16 +201,29 @@
                 <div v-if="ptdActive || dtdActive" class="col-12 col-sm-3 input-search-form" style="position:relative; z-index:60">
                     
                         <multiselect
+                            v-if="destinationDistance"
                             v-model="searchRequest.destinationAddress"
-                            :multiple="true"
+                            :disabled="searchRequest.destinationPorts.length == 0 || searchRequest.destinationPorts.length > 1"
+                            :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
                             :options="destinationAddressOptions"
-                            placeholder="To" 
+                            :placeholder="destinationAddressPlaceholder" 
+                            label="display_name"
+                            track-by="display_name"
                             class="s-input"
                         >
                         </multiselect>
+                        <gmap-autocomplete
+                            v-else
+                            @place_changed="setDestinationPlace"
+                            @input="commitDestinationAutocomplete"
+                            :value="destinationAutocompleteValue"
+                            class="form-input form-control"
+                            placeholder="Start typing an address"
+                        >
+                        </gmap-autocomplete>
                         <img src="/images/city.svg" class="img-icon" alt="port">
 
                 </div>
@@ -518,7 +546,7 @@
                     <button
                         v-if="!searching" 
                         class="btn-search"
-                        @click="storeSearch"
+                        @click="searchButtonPressed"
                     >
                         SEARCH
                     </button>
@@ -544,6 +572,7 @@ import DateRangePicker from "vue2-daterange-picker";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
 import actions from "../../actions";
+import * as VueGoogleMaps from "vue2-google-maps";
 
 export default {
     components: {
@@ -572,8 +601,8 @@ export default {
                 contact: '',
                 pricelevel: '',
                 carriers: [],
-                originAddress: [],
-                destinationAddress: [],
+                originAddress: '',
+                destinationAddress: '',
                 dateRange: {
                     startDate: new Date().toISOString(),
                     endDate: new Date().toISOString(),
@@ -604,6 +633,12 @@ export default {
             foundRates: {},
             companyChosen: false,
             quoteData: {},
+            originDistance: true,
+            destinationDistance: true,
+            originAutocompleteValue: null,
+            destinationAutocompleteValue: null,
+            originAddressPlaceholder: 'Select an address',
+            destinationAddressPlaceholder: 'Select an address',
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -624,8 +659,8 @@ export default {
             },
         }
     },
-    created() {
-        //console.log("watching");
+    mounted() {
+        console.log("mounted");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
             this.getQuery();
@@ -687,8 +722,8 @@ export default {
             component.originPortOptions = component.datalists.harbors;
             component.destinationPortOptions = component.datalists.harbors;
             component.directionOptions = [
-                { text: component.datalists.directions[0].name, value: component.datalists.directions[0].id },
-                { text: component.datalists.directions[1].name, value: component.datalists.directions[1].id }
+                { text: component.datalists.directions[1].name, value: component.datalists.directions[1].id },
+                { text: component.datalists.directions[0].name, value: component.datalists.directions[0].id }
             ];
             component.containerGroupOptions =  [
                 { text: component.datalists.container_groups[0].name, value: component.datalists.container_groups[0] },
@@ -708,10 +743,12 @@ export default {
             component.searchRequest.originCharges = component.datalists.company_user.origincharge == null ? false : true;
             component.searchRequest.destinationCharges = component.datalists.company_user.destinationcharge == null ? false : true;
             
-            this.fillSearchRequestFields(requestType);
+            this.fillInitialFields(requestType);
         },
 
-        fillSearchRequestFields(requestType){
+        fillInitialFields(requestType){
+            let component = this;
+
             if(requestType == null){
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.deliveryType = this.deliveryTypeOptions[0];
@@ -722,6 +759,29 @@ export default {
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.originPorts = this.searchData.origin_ports;
                 this.searchRequest.destinationPorts = this.searchData.destination_ports;
+                if(this.originDistance){
+                    component.datalists.inland_distances.forEach(function (distance){
+                        if(component.searchData.origin_address == distance.display_name){
+                            component.searchRequest.originAddress = distance;
+                        }
+                    });
+                    
+                }else{
+                    this.searchRequest.originAddress = this.searchData.origin_address;
+                    this.originAutocompleteValue = this.searchData.origin_address;
+                }
+
+                if(this.destinationDistance){
+                    component.datalists.inland_distances.forEach(function (distance){
+                        if(component.searchData.destination_address == distance.display_name){
+                            component.searchRequest.destinationAddress = distance;
+                        }
+                    });
+                    
+                }else{
+                    this.searchRequest.destinationAddress = this.searchData.destination_address;
+                    this.destinationAutocompleteValue = this.searchData.destination_address;
+                }
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
@@ -735,26 +795,34 @@ export default {
                 this.searchRequest.destinationCharges = this.searchData.destination_charges == 0 ? false : true;
                 this.requestSearch();
             }else if(requestType == 1){
+                if(this.quoteData.search_options != null){
+                    this.searchRequest.company = this.quoteData.search_options.company;
+                    this.unlockContacts();
+                    this.searchRequest.contact = this.quoteData.search_options.contact;
+                    this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
+                    this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
+                    this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
+                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date;
+                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date;
+                }else{
+                    this.searchRequest.company = this.quoteData.company_id;
+                    this.unlockContacts();
+                    this.searchRequest.contact = this.quoteData.contact;
+                    this.searchRequest.pricelevel = this.quoteData.price_level;
+                }
+                if(this.quoteData.direction_id != null){
+                    this.searchRequest.direction = this.quoteData.direction_id;
+                }
                 this.searchRequest.type = this.quoteData.type;
                 this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.originPorts = this.quoteData.origin_ports;
                 this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
-                if(this.quoteData.search_start != null){
-                    this.searchRequest.dateRange.startDate = this.quoteData.search_start;
-                }
-                if(this.quoteData.search_end != null){
-                    this.searchRequest.dateRange.endDate = this.quoteData.search_end;
-                }
                 this.selectedContainerGroup = this.quoteData.gp_container;
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
-                this.searchRequest.company = this.quoteData.company_id;
-                this.unlockContacts();
-                this.searchRequest.contact = this.quoteData.contact;
-                this.searchRequest.pricelevel = this.quoteData.price_level;
-                this.searchRequest.carriers = this.quoteData.carriers;
                 this.searchRequest.containers = this.quoteData.containers;
+                this.searchRequest.carriers = this.quoteData.carriers;
                 this.requestSearch();
             }
             
@@ -773,7 +841,7 @@ export default {
         },
 
         //Send Search Request to Controller
-        storeSearch() {
+        searchButtonPressed() {
             this.setSearchParameters();
 
             if(this.searchRequest.requestData.requested == undefined || this.searchRequest.requestData.requested == 0){
@@ -848,6 +916,70 @@ export default {
             }            
         },
 
+        setOriginAddressMode() {
+            let component = this;
+
+            console.log('add off')
+
+            if(component.searchRequest.originPorts.length > 1){
+                component.originAddressPlaceholder = 'Please select only one Origin Port';
+            }else{
+                component.originAddressPlaceholder = 'Select an address';
+                if(component.searchRequest.originPorts.length == 1){
+                    component.datalists.inland_distances.forEach(function (distance){
+                        if(distance.harbor_id == component.searchRequest.originPorts[0].id){
+                            component.originAddressOptions.push(distance);
+                        }
+                    });
+
+                    if(component.originAddressOptions.length == 0){
+                        component.originDistance = false;
+                    }else{
+                        component.originDistance = true;
+                    }
+                }
+            }
+        },
+
+        setDestinationAddressMode() {
+            let component = this;
+
+            if(component.searchRequest.destinationPorts.length > 1){
+                component.destinationAddressPlaceholder = 'Please select only one Origin Port';
+            }else{
+                component.destinationAddressPlaceholder = 'Select an address';
+                if(component.searchRequest.destinationPorts.length == 1){
+                    component.datalists.inland_distances.forEach(function (distance){
+                        if(distance.harbor_id == component.searchRequest.destinationPorts[0].id){
+                            component.destinationAddressOptions.push(distance);
+                        }
+                    });
+
+                    if(component.destinationAddressOptions.length == 0){
+                        component.destinationDistance = false;
+                    }else{
+                        component.destinationDistance = true;
+                    }
+                }
+            }
+        },
+
+        setOriginPlace(place) {
+            this.searchRequest.originAddress = place.formatted_address;
+        },
+
+        setDestinationPlace(place) {
+            this.searchRequest.destinationAddress = place.formatted_address;
+        },
+
+        commitOriginAutocomplete() {
+            this.originAutocompleteValue = this.searchRequest.originAddresses;
+        },
+
+        commitDestinationAutocomplete() {
+            this.destinationAutocompleteValue = this.searchRequest.destinationAddresses;
+        },
+
         deleteSurcharger(index){
             this.dataPackaging.splice(index, 1);
             //console.log(this.dataPackaging);
@@ -882,13 +1014,6 @@ export default {
         },
           
     },
-    computed: {
-        companyChange() {
-            if(company != ''){
-                return this.searchRequest.company;
-            }
-        }
-    },
     watch: {
         deliveryType: function() {
             if ( this.deliveryType.id == 1 ) {
@@ -901,6 +1026,8 @@ export default {
                 this.dtpActive = false; this.dtdActive = false; 
 
                 this.ptdActive = !this.ptdActive;
+
+                this.setDestinationAddressMode();
                 return;
 
             } else if (this.deliveryType.id == 3) {
@@ -908,6 +1035,8 @@ export default {
                 this.ptdActive = false; this.dtdActive = false; 
 
                 this.dtpActive = !this.dtpActive;
+
+                this.setOriginAddressMode();
                 return;
 
             } else if (this.deliveryType.id == 4) {
@@ -915,6 +1044,9 @@ export default {
                 this.ptdActive = false; this.dtpActive = false; 
                
                 this.dtdActive = !this.dtdActive;
+
+                this.setDestinationAddressMode();
+                this.setOriginAddressMode();
                 return;
 
             }
@@ -994,9 +1126,6 @@ export default {
             this.$router.go(to);
         },
 
-        companyChange() {
-            console.log('company Changed!');
-        },
     }
 
 }
