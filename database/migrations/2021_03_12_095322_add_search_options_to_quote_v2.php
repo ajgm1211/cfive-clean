@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSearchDatesToQuote extends Migration
+class AddSearchOptionsToQuoteV2 extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddSearchDatesToQuote extends Migration
     public function up()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->date('search_start_date')->nullable()->after('validity_end');
-            $table->date('search_end_date')->nullable()->after('search_start_date');
+            $table->json('search_options')->nullable()->after('pdf_options');
         });
     }
 
@@ -26,7 +25,7 @@ class AddSearchDatesToQuote extends Migration
      */
     public function down()
     {
-        Schema::table('quote', function (Blueprint $table) {
+        Schema::table('quote_v2', function (Blueprint $table) {
             //
         });
     }

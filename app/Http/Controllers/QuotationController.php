@@ -380,11 +380,23 @@ class QuotationController extends Controller
         }
 
         if ($request->input('dateRange') != null) {
-            $date_range = $request->input('dateRange');
-            $start = substr($date_range['startDate'], 0, 10);
-            $end = substr($date_range['endDate'], 0, 10);
+            $search_data = $request->input();
+
+            $date_range = $search_data['dateRange'];
+            $start_date = substr($date_range['startDate'], 0, 10);
+            $end_date = substr($date_range['endDate'], 0, 10);
+
+            $contact = $search_data['contact'];
+            $company = $search_data['company'];
+
+            $price_level = $search_data['pricelevel'];
+
+            $origin_charges = $search_data['originCharges'];
+            $destination_charges = $search_data['destinationCharges'];
+
+            $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges');
             
-            $quote->update(['search_start_date' => $start, 'search_end_date' => $end]);
+            $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
         }
     }
 
@@ -410,7 +422,6 @@ class QuotationController extends Controller
     public function specialduplicate(Request $request)
     {
         $rate_data = $request->input();
-
         $search_data = $rate_data[0]['search'];
 
         $search_data_ids = $this->getIdsFromArray($search_data);
@@ -420,6 +431,14 @@ class QuotationController extends Controller
         $quote = QuoteV2::where('id',$quote_id)->first();
 
         $new_quote = $quote->duplicate();
+
+        $new_quote->update([
+            'contact_id' => $search_data_ids['contact'],
+            'company_id' => $search_data_ids['company'],
+            'price_id' => $search_data_ids['pricelevel'],
+            'validity_start' => $search_data_ids['dateRange']['startDate'],
+            'validity_end' => $search_data_ids['dateRange']['endDate']            
+        ]);
 
         $old_rates = $new_quote->rates_v2()->get();
 

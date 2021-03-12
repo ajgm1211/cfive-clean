@@ -28,7 +28,7 @@
 
                 <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
                 
-                <b-button b-button variant="primary" @click="createQuote">Create Quote</b-button>
+                <b-button b-button variant="primary" @click="createQuote">{{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}</b-button>
 
             </div>
         </div>

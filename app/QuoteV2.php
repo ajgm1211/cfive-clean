@@ -26,6 +26,7 @@ class QuoteV2 extends Model implements HasMedia
     protected $casts = [
         'equipment' => 'array',
         'pdf_options' => 'json',
+        'search_options' => 'array',
     ];
 
     protected $attributes = [
@@ -38,7 +39,7 @@ class QuoteV2 extends Model implements HasMedia
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
         'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 
-        'cargo_type_id', 'search_start_date', 'search_end_date'
+        'cargo_type_id', 'search_options', 'direction_id'
     ];
 
     public function company()
