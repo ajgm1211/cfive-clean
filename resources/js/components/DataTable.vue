@@ -26,6 +26,7 @@
                             v-if="massiveSelect"
                             v-model="allSelected"
                             :indeterminate="false"
+                            @change="toggleAll"
                         >
                         </b-form-checkbox>
                     </b-th>
