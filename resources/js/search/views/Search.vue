@@ -793,6 +793,10 @@ export default {
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges = this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges = this.searchData.destination_charges == 0 ? false : true;
+                this.searchRequest.harbors = this.datalists.harbors;
+                this.searchRequest.currency = this.datalists.currency;
+                this.searchRequest.calculation_type = this.datalists.calculation_type;
+                this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             }else if(requestType == 1){
                 if(this.quoteData.search_options != null){
@@ -823,6 +827,10 @@ export default {
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
                 this.searchRequest.carriers = this.quoteData.carriers;
+                this.searchRequest.harbors = this.datalists.harbors;
+                this.searchRequest.currency = this.datalists.currency;
+                this.searchRequest.calculation_type = this.datalists.calculation_type;
+                this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             }
             
@@ -837,6 +845,8 @@ export default {
             this.searchRequest.carriers = this.carriers;
             this.searchRequest.harbors = this.datalists.harbors;
             this.searchRequest.surcharges = this.datalists.surcharges;
+            this.searchRequest.currency = this.datalists.currency;
+            this.searchRequest.calculation_type = this.datalists.calculation_type;
             this.errorsExist = false;
         },
 
