@@ -469,7 +469,6 @@
 
             <!-- STEPS -->
             <div class="row add-contract-form-steps pt-5 pb-5">
-
                 <div class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center" v-bind:class="{ stepComplete : isCompleteOne }">
                     <div class="add-contract-step">1</div>
                     <span>Contract</span>
@@ -538,7 +537,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCarrier"
+                                    :options="request.carriers"
+                                    label="name"
+                                    track-by="name"
                                     placeholder="Carrier"
                                     class="input-modal"
                                 >
@@ -633,7 +634,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCarrier"
+                                    :options="request.carriers"
+                                    label="name"
+                                    track-by="name"
                                     placeholder="Carrier"
                                     class="input-modal"
                                 >
@@ -649,7 +652,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsCurrency"
+                                    :options="request.currency"
+                                    label="alphacode"
+                                    track-by="alphacode"
                                     placeholder="Currency"
                                     class="input-modal"
                                 >
@@ -710,7 +715,9 @@
                                                 :close-on-select="true"
                                                 :clear-on-select="true"
                                                 :show-labels="false"
-                                                :options="optionsCalculationType"
+                                                :options="request.calculation_type"                                            
+                                                label="name"
+                                                track-by="name"
                                                 placeholder="Calculation Type"
                                                 class="input-modal surcharge-input"
                                             >
@@ -725,7 +732,9 @@
                                             :close-on-select="true"
                                             :clear-on-select="true"
                                             :show-labels="false"
-                                            :options="optionsCurrency"
+                                            :options="request.currency"
+                                            label="alphacode"
+                                            track-by="alphacode"
                                             placeholder="Currency"
                                             class="input-modal surcharge-input"
                                             >
@@ -752,9 +761,9 @@
                     <div class="row">
                         <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
 
-                            <div class="col-12 col-sm-3"><p>{{ item.type }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.calculation }}</p></div>
-                            <div class="col-12 col-sm-3"><p>{{ item.currency }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.type.name }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.calculation.name }}</p></div>
+                            <div class="col-12 col-sm-3"><p>{{ item.currency.alphacode }}</p></div>
                             <div class="col-12 col-sm-2"><p>{{ item.amount }}</p></div>
                             <div class="col-12 col-sm-1"><span v-on:click="deleteSurcharger(index)"><b-icon icon="x-circle"></b-icon></span></div>
 
@@ -769,6 +778,7 @@
                         ref="myVueDropzone"
                         :useCustomSlot="true"
                         id="dropzone"
+                        :options="dropzoneOptions"
                         v-on:vdropzone-removed-file="removeThisFile"
                         v-on:vdropzone-success="success"
                         >
@@ -946,6 +956,13 @@ export default {
     data() {
         return {
             actions: actions,
+            dropzoneOptions: {
+					url: `/example`,
+					thumbnailWidth: 150,
+					maxFilesize: 0.5,
+					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
+					addRemoveLinks: true,
+				},
             requestData: {},
             //GENE DEFINED
             checked1: false,

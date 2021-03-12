@@ -35,6 +35,7 @@ use App\GlobalCharge;
 use App\TransitTime;
 use App\RemarkCondition;
 use App\Surcharge;
+use App\CalculationType;
 use App\QuoteV2;
 use Illuminate\Http\Request;
 
@@ -127,8 +128,12 @@ class SearchApiController extends Controller
             return $price->only(['id','name']);
         });
         
-        $surcharges = Surcharge::where('company_user_id','=',$company_user_id)->get()->map(function ($surcharges){
-            return $surcharges->only(['id','name',]);
+        $surcharges = Surcharge::where('company_user_id','=',$company_user_id)->get()->map(function ($surcharge){
+            return $surcharge->only(['id','name',]);
+        });
+
+        $calculation_type = CalculationType::get()->map(function ($calculationt){
+            return $calculationt->only(['id','name']);
         });
 
         $type_destiny = TypeDestiny::all();
@@ -155,7 +160,8 @@ class SearchApiController extends Controller
             'terms_and_conditions',
             'type_destiny',
             'surcharges',
-            'inland_distances'
+            'inland_distances',
+            'calculation_type'
         );
 
         return response()->json(['data'=>$data]);

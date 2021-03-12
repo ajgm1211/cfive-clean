@@ -320,6 +320,17 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
+        if($contract->status == 'incomplete'){
+            
+            $requestContract = NewContractRequest::where('contract_id',$contract->id);
+            if(empty($requestContract) == 0 ){
+
+                $requestContract->update(['erased_contract' => 1]);
+
+            }
+
+        }
+
         $contract->delete();
 
         return response()->json(null, 204);
