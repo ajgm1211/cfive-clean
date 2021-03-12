@@ -56,6 +56,8 @@ class SearchApiResource extends JsonResource
             'direction' => isset($this->direction) ? $this->direction()->first() : null,
             'origin_charges' => $this->origin_charges,
             'destination_charges' => $this->destination_charges,
+            'origin_address' => $this->origin_address,
+            'destination_address' => $this->destination_address,
         ];
     }
 

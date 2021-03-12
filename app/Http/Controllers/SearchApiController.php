@@ -133,6 +133,8 @@ class SearchApiController extends Controller
 
         $type_destiny = TypeDestiny::all();
 
+        $inland_distances = InlandDistance::all();
+
         //Collecting all data retrieved
         $data = compact(
             'company_user_id',
@@ -152,7 +154,8 @@ class SearchApiController extends Controller
             'schedule_types',
             'terms_and_conditions',
             'type_destiny',
-            'surcharges'
+            'surcharges',
+            'inland_distances'
         );
 
         return response()->json(['data'=>$data]);
@@ -281,12 +284,21 @@ class SearchApiController extends Controller
             'contact' => 'sometimes',
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
-            'destinationCharges' => 'sometimes'
+            'destinationCharges' => 'sometimes',
+            'originAddress' => 'sometimes',
+            'destinationAddress' => 'sometimes'
         ]);
         
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
+        //Getting address text if in array form
+        if(is_array($new_search_data['originAddress'])){
+            $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
+        }else if(is_array($new_search_data['destinationAddress'])){
+            $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
+        }
 
         //Setting current company and user
         $user = \Auth::user();
@@ -325,7 +337,9 @@ class SearchApiController extends Controller
             'company_id' => $new_search_data_ids['company'],
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
-            'destination_charges' => $new_search_data_ids['destinationCharges']
+            'destination_charges' => $new_search_data_ids['destinationCharges'],
+            //'origin_address' => $new_search_data_ids['originAddress'],
+            //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
