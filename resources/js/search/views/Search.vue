@@ -1177,7 +1177,7 @@ export default {
         }
     },
     mounted() {
-        console.log("mounted");
+        //console.log("mounted");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
             this.getQuery();
@@ -1378,29 +1378,6 @@ export default {
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.originPorts = this.searchData.origin_ports;
                 this.searchRequest.destinationPorts = this.searchData.destination_ports;
-                if(this.originDistance){
-                    component.datalists.inland_distances.forEach(function (distance){
-                        if(component.searchData.origin_address == distance.display_name){
-                            component.searchRequest.originAddress = distance;
-                        }
-                    });
-                    
-                }else{
-                    this.searchRequest.originAddress = this.searchData.origin_address;
-                    this.originAutocompleteValue = this.searchData.origin_address;
-                }
-
-                if(this.destinationDistance){
-                    component.datalists.inland_distances.forEach(function (distance){
-                        if(component.searchData.destination_address == distance.display_name){
-                            component.searchRequest.destinationAddress = distance;
-                        }
-                    });
-                    
-                }else{
-                    this.searchRequest.destinationAddress = this.searchData.destination_address;
-                    this.destinationAutocompleteValue = this.searchData.destination_address;
-                }
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
@@ -1547,8 +1524,6 @@ export default {
 
         setOriginAddressMode() {
             let component = this;
-
-            console.log('add off')
 
             if(component.searchRequest.originPorts.length > 1){
                 component.originAddressPlaceholder = 'Please select only one Origin Port';

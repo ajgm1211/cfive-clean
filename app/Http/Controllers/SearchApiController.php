@@ -136,9 +136,13 @@ class SearchApiController extends Controller
             return $calculationt->only(['id','name']);
         });
 
-        $type_destiny = TypeDestiny::all();
+        $type_destiny = TypeDestiny::get()->map(function ($type){
+            return $type->only(['id','description']);
+        });
 
-        $inland_distances = InlandDistance::all();
+        /**$inland_distances = InlandDistance::get()->map(function ($distance){
+            return $distance->only(['id','display_name','harbor_id']);
+        });**/
 
         //Collecting all data retrieved
         $data = compact(
@@ -160,7 +164,7 @@ class SearchApiController extends Controller
             'terms_and_conditions',
             'type_destiny',
             'surcharges',
-            'inland_distances',
+            //'inland_distances',
             'calculation_type'
         );
 
