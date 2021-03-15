@@ -698,21 +698,6 @@ trait SearchTrait
 
     //NEW SEARCH FUNCTIONS
 
-    //Returns array containing group ids present in a container ids array
-    public function getEquipmentGroups(Array $equipment)
-    {
-        $container_groups = Array();
-
-        foreach($equipment as $container_id){
-            $container = Container::where('id',$container_id)->first();
-            if(!in_array($container['gp_container_id'],$container_groups)){
-                array_push($container_groups,$container['gp_container_id']);
-            }
-        }
-
-        return $container_groups;
-    }
-
     //Returns only ids from a 2-levels deep array containing ids, names, etc
     public function getIdsFromArray(Array $search_request)
     {
