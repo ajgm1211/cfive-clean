@@ -72,6 +72,7 @@ class QuotationResource extends JsonResource
             'pdf_options' => $this->pdf_options,
             'language_id' => $this->language()->first(),
             'incoterm_id' => is_null($this->incoterm_id) ? $this->incoterm_id : $this->incoterm()->first(),
+            'custom_incoterm' => $this->custom_incoterm,
             'rates' => $this->rates_v2()->get(),
             'gp_container' => $this->getContainerCodes($this->equipment, true),
             'client_currency' => $this->user()->first()->companyUser()->first()->currency()->first(),

@@ -6,12 +6,6 @@
         </label>
         <input type="text" name="name" value="" required="required" class="form-control"  id="NameMD">
     </div>
-    <div class="col-lg-3">
-        <label for="number" class="form-control-label">
-            Name of the Image:
-        </label>
-        <input type="text" name="image" value="" required="required" class="form-control"  id="Number">
-    </div>
     <div class="col-lg-4">
         <label><br></label>
         <br>
@@ -50,7 +44,7 @@
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions m-form__actions">
             {!! Form::submit('Add', ['class'=> 'btn btn-primary','onclick' => 'fileempty()']) !!}
-            <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">Cancel</span>
             </button>
         </div>

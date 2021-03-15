@@ -55,7 +55,6 @@ class AutomaticInlandController extends Controller
                     'address'=>$request->input('address')
                 ]);
         }
-
         $vdata = [
             'charge' => 'nullable|sometimes',
             'provider_id' => 'nullable',
@@ -135,15 +134,12 @@ class AutomaticInlandController extends Controller
         $totals = $inland_address->inland_totals()->first();
 
         if($totals == null){
-            
-            $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
-
             $totals = AutomaticInlandTotal::create([
                 'quote_id' => $quote->id,
                 'port_id' => $port_id,
                 'type' => $type,
                 'inland_address_id' => $inland_address->id,
-                'currency_id' => $user_currency
+                'currency_id' => $validate['currency_id']['id']
             ]);
             
             $pdfOptions = [
@@ -153,13 +149,14 @@ class AutomaticInlandController extends Controller
                 
             $totals->pdf_options = $pdfOptions;
             $totals->save();
+
         }
 
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
             'provider'=> 'Inland',
-            'provider_id' => count((array)$validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
+            'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
@@ -337,6 +334,7 @@ class AutomaticInlandController extends Controller
         }
 
         $total->totalize();
+
     }
 
     public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
@@ -398,7 +396,7 @@ class AutomaticInlandController extends Controller
                     "type"=>"Origin",
                     "code"=>$port->code
                 ];
-                if(count((array)$inlands)!=0){
+                if(count($inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);
@@ -415,14 +413,13 @@ class AutomaticInlandController extends Controller
                     "type"=>"Destination",
                     "code"=>$port->code
                 ];
-                if(count((array)$inlands)!=0){
+                if(count($inlands)!=0){
                     array_unshift($ports_sorted,$clearPort);
                 }else{
                     array_push($ports_sorted,$clearPort);
                 }
             }
         }
-
 
         return $ports_sorted;
     }
@@ -458,6 +455,8 @@ class AutomaticInlandController extends Controller
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
 
         $inland_address->delete();
+
+        $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204); 
     }

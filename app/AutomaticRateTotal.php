@@ -17,7 +17,7 @@ class AutomaticRateTotal extends Model
     ];
 
     protected $fillable = [
-        'id', 'quote_id', 'markups', 'currency_id', 'totals', 'automatic_rate_id','origin_port_id', 'destination_port_id'];
+        'id', 'quote_id', 'markups', 'currency_id', 'totals', 'automatic_rate_id','origin_port_id', 'destination_port_id','carrier_id'];
 
     public function quote()
     {
@@ -32,6 +32,11 @@ class AutomaticRateTotal extends Model
     public function rate()
     {
         return $this->belongsTo('App\AutomaticRate', 'automatic_rate_id');
+    }
+
+    public function carrier()
+    {
+        return $this->belongsTo('App\Carrier', 'carrier_id');
     }
 
     public function origin_port()
@@ -124,6 +129,8 @@ class AutomaticRateTotal extends Model
             $this->update(['totals' => $totalsJson, 'markups' => $markups]);
             $rate->update(['total' => $totalsJson]);
 
+            $quote->updatePdfOptions('exchangeRates');
+
         } else if ($quote->type == 'LCL') {
 
             $charges = $rate->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
@@ -193,6 +200,8 @@ class AutomaticRateTotal extends Model
 
             $this->update(['totals' => $totals, 'markups' => $markups]);
             $rate->update(['total' => $totals]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }
     }
 }
