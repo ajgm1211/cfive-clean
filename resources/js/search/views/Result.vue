@@ -333,6 +333,7 @@
 
                                 <div class="d-flex justify-content-end align-items-center">
                                     <b-button 
+                                        v-if="rate.remarks != '<br><br>' && rate.remarks != '<br>'"
                                         class="rs-btn"
                                         :class="rate.remarksCollapse ? null : 'collapsed'"
                                         :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"

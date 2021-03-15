@@ -215,6 +215,12 @@ class QuotationController extends Controller
 
         $equipment = $container_string = "[\"".implode("\",\"",$search_data_ids['containers'])."\"]";
 
+        $remarks = "";
+
+        foreach($rate_data as $rate){
+            $remarks .= $rate['remarks'];
+        }
+
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -231,7 +237,7 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'remarks_english' => $rate_data[0]['remarks'],
+            'remarks_english' => $remarks,
             'direction_id' => $search_data_ids['direction']
         ]);
 
