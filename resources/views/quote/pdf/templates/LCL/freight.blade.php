@@ -20,5 +20,9 @@
         @include('quote.pdf.partials.destinations_lcl')
         <!-- LOCALCHARGE REMARKS -->
         @include('quote.pdf.partials.localcharge_remarks')
+        <!-- EXCHANGE RATE -->
+        @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
+            @include('quote.pdf.partials.exchange')
+        @endif
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')
