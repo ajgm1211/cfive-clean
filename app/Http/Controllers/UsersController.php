@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Delegation;
+use App\UserDelegation;
 use App\Http\Requests\StoreUsers;
 use App\Mail\VerifyMail;
 use App\Notifications\SlackNotification;
@@ -59,6 +61,7 @@ class UsersController extends Controller
             $user = new User($request->all());
             $user->password = $request->password;
             $user->save();
+
             if ($request->type == "subuser") {
                 $user->assignRole('subuser');
             }
@@ -71,6 +74,11 @@ class UsersController extends Controller
             if ($request->type == "data_entry") {
                 $user->assignRole('data_entry');
             }
+            
+            if($request->delegation_id != null){
+                $user->storeDelegation($request->delegation_id,$user->id);
+            }
+
             $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
             $user->notify(new SlackNotification($message));
 
@@ -143,7 +151,8 @@ class UsersController extends Controller
 
     public function add()
     {
-        return view('users.add');
+        $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
+        return view('users.add',compact('delegation'));
     }
 
     public function resetPass(Request $request, $user)
@@ -167,44 +176,38 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
 
-        return view('users.edit', compact('user'));
+
+        if($id_ud==null){
+            $userd=null;
+        }else{
+            $userd=Delegation::find($id_ud->delegations_id);
+        }
+        
+        $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
+
+        return view('users.edit', compact('user','userd','delegation'));
     }
 
     public function UpdateUser(Request $request, $id)
     {
 
         $request->validate([
-            'name' => 'required',
-            'lastname' => 'required',
-            'email' => [
-                'required',
-                Rule::unique('users')->ignore($id),
-            ],
-            'password' => 'sometimes|confirmed',
-            'password_confirmation' => 'required_with:password',
-        ]);
+          'name' => 'required',
+          'lastname' => 'required',
+          'email' => [
+              'required',
+              Rule::unique('users')->ignore($id),
+          ],
+          'password' => 'sometimes|confirmed',
+          'password_confirmation' => 'required_with:password',
+      ]);
 
-        $requestForm = $request->all();
-        $user = User::findOrFail($id);
-        $roles = $user->getRoleNames();
-
-        if (!$roles->isEmpty()) {
-            $user->removeRole($roles[0]);
-        }
-
-        if ($request->type == "admin") {
-            $user->assignRole('administrator');
-        }
-        if ($request->type == "subuser") {
-            $user->assignRole('subuser');
-        }
-        if ($request->type == "company") {
-            $user->assignRole('company');
-        }
-        if ($request->type == "data_entry") {
-            $user->assignRole('data_entry');
-        }
+    $requestForm = $request->all();
+    $user = User::findOrFail($id);
+    $user->update($requestForm);
 
         $user->update($requestForm);
 
@@ -239,11 +242,25 @@ class UsersController extends Controller
             'password' => 'sometimes|confirmed',
             'password_confirmation' => 'required_with:password',
         ]);
-
         $requestForm = $request->all();
         $user = User::findOrFail($id);
-        $roles = $user->getRoleNames();
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
 
+        if($id_ud == null && $request->delegation_id!=null){
+            $delegation= new UserDelegation();
+            $delegation->users_id=$user->id;
+            $delegation->delegations_id=$request->delegation_id;
+            $delegation->save();
+        }elseif($id_ud != null && $request->delegation_id!=null){
+            $delegation = UserDelegation::find($id_ud->id);
+            $delegation ->delegations_id =$request->delegation_id;
+            $delegation->update();
+        }elseif($id_ud != null && $request->delegation_id==null){
+            $id_ud=UserDelegation::where('users_id','=',$id)->first();
+            $id_ud->delete();
+        }
+
+        $roles = $user->getRoleNames();
         if (!$roles->isEmpty()) {
             $user->removeRole($roles[0]);
         }
@@ -323,7 +340,14 @@ class UsersController extends Controller
             $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id', '<>', $id)->pluck('name', 'id');
         }
 
-        return view('users/message', ['userid' => $id, 'users' => $users]);
+        $id_ud=UserDelegation::where('users_id','=',$id)->first();
+        if($id_ud==null){
+            $delegation=false;
+        }else{
+            $delegation=true;
+        }
+
+        return view('users/message', ['userid' => $id, 'users' => $users, 'delegation'=>$delegation]);
     }
     public function resetmsg($id)
     {

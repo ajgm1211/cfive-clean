@@ -55,7 +55,7 @@ class QuotationApiResource extends JsonResource
             "created_by" => $this->user->fullname ?? null,
             "created_at" => $this->created_at->toDateTimeString(),
             "updated_at" => $this->updated_at->toDateTimeString(),
-            "company" => $this->company()->select('business_name', 'address', 'phone')->first() ?? null,
+            "company" => $this->company()->select('business_name', 'address', 'phone', 'options')->first() ?? null,
             "contact" => $this->contact()->select('first_name', 'last_name', 'email', 'phone')->first() ?? null,
             'ocean_freight' => QuotationOceanFreightResource::collection($this->rates_v2()->SelectFields()->SelectChargeApi($this->type)->CarrierRelation()->get()),
             'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1, $this->type)),

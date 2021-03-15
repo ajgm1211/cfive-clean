@@ -245,6 +245,20 @@
                                             <br>
                                         </p>
                                         <hr>
+                                        <label><b>Extra fields</b></label>
+                                        <p class="color-black">
+                                            @if ($company->options)
+                                                @foreach($company->options as $key=>$extra)
+                                                    <ul>
+                                                        <li><b>{{$key}}</b> : {{$extra}}</li>
+                                                    </ul>
+                                                @endforeach
+                                            @else
+                                                <p>No data to display</p>
+                                            @endif
+                                            <br>
+                                        </p>
+                                        <hr>
                                         <label><b>Price level</b></label>
                                         @if(isset($company->price_name) && count($company->price_name)>0)
                                         <div id="price_level_list">
@@ -534,7 +548,7 @@
                         sort: 'timestamp'
                     }
                 },
-                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'origin', name: 'origin'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },

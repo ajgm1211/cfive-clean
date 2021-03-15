@@ -2292,6 +2292,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $info_D->currency->id;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinal;
@@ -2863,8 +2864,21 @@ class QuoteV2Controller extends Controller
         $currencies = Currency::all()->pluck('alphacode', 'id');
         $hideO = 'hide';
         $hideD = 'hide';
-        $chargeOrigin = 'true';
-        $chargeDestination = 'true';
+
+        $charge = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        if($charge->origincharge!=null){
+            $chargeOrigin = 'true';
+        }else{
+            $chargeOrigin = '';
+        }
+        if($charge->destinationcharge!=null){
+            $chargeDestination = 'true';
+        }else{
+            $chargeDestination ='' ;
+        }
+        
+        
         $chargeFreight = 'true';
         $chargeAPI = 'true';
         $chargeAPI_M = 'false';
@@ -3869,6 +3883,7 @@ class QuoteV2Controller extends Controller
 
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
         $chargeDestination = ($chargesDestination != null) ? true : false;
+        
         $chargeFreight = ($chargesFreight != null) ? true : false;
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
@@ -7103,6 +7118,7 @@ class QuoteV2Controller extends Controller
                     $rateTotals->automatic_rate_id = $rate->id;
                     $rateTotals->origin_port_id = $rate->origin_port_id;
                     $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
                     $rateTotals->currency_id = $rateO->idCurrency;
                     $rateTotals->totals = null;
                     $rateTotals->markups = $priceLevelMarkupsFinalArray;
