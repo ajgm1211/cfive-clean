@@ -611,6 +611,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+    Route::post('store', 'SettingController@store_d')->name('delegation.store');
+    Route::get('edit/{id}', 'SettingController@edit_d')->name('settings.edit');
+    Route::put('update','SettingController@update_d')->name('settings.updateD');
+    Route::get('delete/{id}', 'SettingController@destroy')->name('settings.delete');
     Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
@@ -1158,6 +1162,8 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
     Route::post('ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
     Route::post('{contract}/ocean_freight/massiveContainerChange', 'OceanFreightController@massiveContainerChange');
+    Route::post('{contract}/ocean_freight/massiveHarborChange', 'OceanFreightController@massiveHarborChange');
+    Route::post('{contract}/ocean_freight/massiveHarborChangeDest', 'OceanFreightController@massiveHarborChangeDest');
     /* End API Contracts Ocean Freights EndPoints **/
 
     /* API Contracts LocalCharge EndPoints **/

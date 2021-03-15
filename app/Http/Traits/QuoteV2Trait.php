@@ -1727,4 +1727,28 @@ trait QuoteV2Trait
 
         return $amounts;
     }
+
+    public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
+    {
+        $quote->updatePdfOptions('exchangeRates');
+
+        foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
+            if($toCurrency['alphacode'] == $fromCurrency->alphacode){
+                if(isset($quote->pdf_options['totalsCurrency']) && $quote->pdf_options['totalsCurrency']['alphacode'] == 'USD'){
+                    $exchangeRate = $toCurrency['exchangeUSD'];
+                }elseif(isset($quote->pdf_options['totalsCurrency']) && $quote->pdf_options['totalsCurrency']['alphacode'] == 'EUR'){
+                    $exchangeRate = $toCurrency['exchangeEUR'];
+                }else{
+                    $exchangeRate = 1;
+                }
+            }
+        }
+
+        foreach ($amounts as $container => $price) {
+            $convertedPrice = $price / $exchangeRate;
+            $amounts[$container] = isDecimal($convertedPrice, true);
+        }
+
+        return $amounts;
+    }
 }
