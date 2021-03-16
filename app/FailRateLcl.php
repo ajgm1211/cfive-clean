@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class FailRateLcl extends Model
 {
     use SoftDeletes;
-    protected $dates    = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
     protected $table = 'failes_rate_lcl';
     protected $fillable = [
@@ -21,6 +21,6 @@ class FailRateLcl extends Model
         'currency_id',
         'schedule_type',
         'transit_time',
-        'via'
+        'via',
     ];
 }

@@ -9,9 +9,12 @@ use App\Http\Traits\QuoteV2Trait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteTotal;
 use App\QuoteV2;
+use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Delegation;
+use App\UserDelegation;
 
 class LclPdf
 {
@@ -34,14 +37,31 @@ class LclPdf
         $destination_charges = $this->localCharges($quote, 2);
 
         $quote_totals = $this->quoteTotals($quote);
+        
+        $delegation= $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote,'delegation'=>$delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
+        // EVENTO INTERCOM
+        $event = new EventIntercom();
+        $event->event_pdfLcl();
+
         return $pdf->stream('quote-' . $quote->id . '.pdf');
+    }
+    public function Delegation($quote){
+        
+        $id_ud=UserDelegation::where('users_id','=',$quote->user_id)->first();
+        if($id_ud==null)
+            $delegation= '';
+        else{
+            $delegation= Delegation::where('id', '=', $id_ud->delegations_id)->first();
+        }
+
+        return $delegation;
     }
 
     public function localCharges($quote, $type)
@@ -68,12 +88,23 @@ class LclPdf
                 },
 
             ]);
-            
+
             foreach ($localcharges as $value) {
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
-
+                
                 foreach ($inlands as $inland) {
-                    $value->push($inland);
+                    if($inland->pdf_options['grouped']){
+                        foreach($value as $charge){
+                            if($inland->pdf_options['groupId'] == $charge->id){
+                                $inland_total = json_decode($inland->totals, true);
+                                $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
+                                $grouped_total = intval($charge->total) + intval($inland_total['lcl_totals']);
+                                $charge->total = $grouped_total;
+                            }
+                        }
+                    }else{
+                        $value->push($inland);
+                    }
                 }
             }
         } else {
@@ -106,7 +137,7 @@ class LclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id')
+        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
         return $inlands;
@@ -236,13 +267,13 @@ class LclPdf
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
             }
-            
+
+            $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
+
             $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
-
-            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-
+                        
             if($totalsArrayInput){
-                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+                $totalsArrayInput = $this->convertToCurrencyPDF($totalsCurrencyInput,$totalsArrayInput,$quote);
             }
 
             foreach($totalsArrayOutput as $key=>$route){

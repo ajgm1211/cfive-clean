@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnAcountRequestLclGcTable extends Migration
 {
@@ -13,10 +13,10 @@ class AddColumnAcountRequestLclGcTable extends Migration
      */
     public function up()
     {
-        Schema::table('accounts_import_clcl', function (Blueprint $table){
+        Schema::table('accounts_import_clcl', function (Blueprint $table) {
             $table->integer('requestlcl_id')->nullable()->after('company_user_id');
         });
-        Schema::table('account_importation_globalcharge', function (Blueprint $table){
+        Schema::table('account_importation_globalcharge', function (Blueprint $table) {
             $table->integer('requestgc_id')->nullable()->after('company_user_id');
         });
     }
@@ -28,10 +28,10 @@ class AddColumnAcountRequestLclGcTable extends Migration
      */
     public function down()
     {
-        Schema::table('accounts_import_clcl', function($table) {
+        Schema::table('accounts_import_clcl', function ($table) {
             $table->dropColumn('requestlcl_id');
         });
-        Schema::table('account_importation_globalcharge', function($table) {
+        Schema::table('account_importation_globalcharge', function ($table) {
             $table->dropColumn('requestgc_id');
         });
     }

@@ -1,7 +1,10 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -10,7 +13,7 @@
         "api2pdf/api2pdf.php": "dev-master",
         "aws/aws-sdk-php": "~3.0",
         "barryvdh/laravel-dompdf": "^0.8.2",
-        "barryvdh/laravel-elfinder": "^0.3.12",
+        "barryvdh/laravel-elfinder": "^0.4.6",
         "crispchat/php-crisp-api": "^1.5",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
@@ -21,18 +24,21 @@
         "kordy/ticketit": "0.*",
         "lab404/laravel-impersonate": "^1.2",
         "laracasts/flash": "^3.0",
-        "laravel/framework": "5.6.*",
+        "laravel/framework": "5.7.*",
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0",
-        "laravelcollective/html": "^5.5",
+        "laravelcollective/html": "5.7.*",
         "lcobucci/jwt": "3.3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "~2.1.0",
+        "nexmo/client": "^1.0",
         "orangehill/iseed": "^2.6.1",
         "owen-it/laravel-auditing": "^8.0",
-        "php-http/guzzle6-adapter": "^2.0",
+        "php-http/guzzle6-adapter": "^1.0",
+        "php-http/httplug": "^1.0",
         "phpoffice/phpspreadsheet": "^1.10",
         "predis/predis": "^1.1",
+        "psr/http-client": "^1.0",
         "pusher/pusher-php-server": "^3.1",
         "spatie/laravel-backup": "^5.10",
         "spatie/laravel-googletagmanager": "^2.6",
@@ -50,7 +56,10 @@
         "laravel/dusk": "^4.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^2.0",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^7.0",
+        "beyondcode/laravel-dump-server": "^1.0",
+        "php-http/client-integration-tests": "^2.0"
+
     },
     "autoload": {
         "classmap": [
@@ -60,7 +69,9 @@
         "psr-4": {
             "App\\": "app/"
         },
-        "files": ["app/Function.php"]
+        "files": [
+            "app/Function.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -79,11 +90,11 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate"
+            "@php artisan key:generate --ansi"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover --ansi"
         ]
     },
     "config": {
