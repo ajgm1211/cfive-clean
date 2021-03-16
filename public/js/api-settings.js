@@ -40,7 +40,7 @@ $(document).on('change', '#status_api', function() {
         data: {
             'status': value,
             'company_user_id': $('#company_user_id').val(),
-            'id' : id,  
+            'id': id,
         },
         success: function(data) {
             $('#api_integration_setting_id').val(data.data.id);
@@ -95,6 +95,8 @@ $(document).on('click', '.open_edit_modal', function(e) {
             $('#name').val(data.data.name);
             $('#url').val(data.data.url);
             $('#api_key').val(data.data.api_key);
+            $('#company_user_id_input').val(data.data.company_user_id);
+            $('#is_daily_input').val(data.data.is_daily);
             $('#partner_id').val(data.data.partner_id);
             $('#module').val(data.data.module);
             $('#api_integration_id').val(data.data.id);
