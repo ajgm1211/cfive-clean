@@ -473,8 +473,16 @@ class QuotationController extends Controller
                 foreach($rates as $autoRate){
                     if($address->port_id == $autoRate->origin_port_id){
                         $type = 'Origin';
+                        $address->update(['type' => 'Origin']);
+                        if($quote->origin_address == null){
+                            $quote->update(['origin_address' => $address->address]);
+                        }
                     }else if($address->port_id == $autoRate->destination_port_id){
                         $type = 'Destination';
+                        $address->update(['type' => 'Destination']);
+                        if($quote->destination_address == null){
+                            $quote->update(['destination_address' => $address->address]);
+                        }
                     }
                 }
                 
@@ -506,6 +514,22 @@ class QuotationController extends Controller
                 $totals->totalize();
             }
         }elseif(count($inlandTotals)!=0){
+            foreach($inlandAddress as $address){
+                foreach($rates as $autoRate){
+                    if($address->port_id == $autoRate->origin_port_id){
+                        $address->update(['type' => 'Origin']);
+                        if($quote->origin_address == null){
+                            $quote->update(['origin_address' => $address->address]);
+                        }
+                    }else if($address->port_id == $autoRate->destination_port_id){
+                        $address->update(['type' => 'Destination']);
+                        if($quote->destination_address == null){
+                            $quote->update(['destination_address' => $address->address]);
+                        }
+                    }
+                }
+            }
+
             foreach($inlandTotals as $total){
                 $total->totalize();
                 if($total->pdf_options == null){
