@@ -1973,7 +1973,7 @@ class QuoteV2Controller extends Controller
                 }
             }
 
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => $form->origin_address, 'destination_address' => $form->destination_address]);
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => null, 'destination_address' => null]);
 
             $quote = QuoteV2::create($request->all());
             $quote ->custom_quote_id = $quote->quote_id;
@@ -2328,6 +2328,7 @@ class QuoteV2Controller extends Controller
                             $inlandDestAddress->quote_id = $quote->id;
                             $inlandDestAddress->address = $form->destination_address;
                             $inlandDestAddress->port_id = $inlandDestiny->port_id;
+                            $inlandDestAddress->type = $inlandDestiny->type;
                             $inlandDestAddress->save();
 
                             //NEW TABLE INLAND TOTALS
@@ -2393,6 +2394,7 @@ class QuoteV2Controller extends Controller
                             $inlandOrigAddress->quote_id = $quote->id;
                             $inlandOrigAddress->address = $form->origin_address;
                             $inlandOrigAddress->port_id = $inlandOrigin->port_id;
+                            $inlandOrigAddress->type = $inlandOrigin->type;
                             $inlandOrigAddress->save();
 
                             //NEW TABLE INLAND TOTALS
