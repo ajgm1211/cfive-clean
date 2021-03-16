@@ -4,32 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CompanyUser;
-use App\Currency;
-use App\User;
-use App\QuoteV2;
-use App\Surcharge;
 use App\Contact;
-use App\SaleTerm;
-use App\Harbor;
-use App\Airport;
-use App\Country;
-use App\Price;
 use App\Contract;
-use App\GlobalCharge;
-use App\Inland;
-use App\OriginAmmount;
-use App\FreightAmmount;
-use App\EmailSetting;
+use App\Country;
+use App\Currency;
 use App\DestinationAmmount;
-use App\PackageLoad;
-use App\NewContractRequest;
-use App\TermAndCondition;
-use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Input;
-use App\Jobs\ProcessLogo;
+use App\EmailSetting;
+use App\FreightAmmount;
+use App\GlobalCharge;
+use App\Harbor;
 use App\Http\Requests\StoreSettings;
+use App\Inland;
+use App\NewContractRequest;
+use App\OriginAmmount;
+use App\PackageLoad;
 use App\PdfTemplate;
+use App\Price;
+use App\QuoteV2;
+use App\SaleTerm;
+use App\Surcharge;
+use App\TermAndCondition;
+use App\User;
+use App\Delegation;
+use App\UserDelegation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class SettingController extends Controller
 {
@@ -39,6 +38,7 @@ class SettingController extends Controller
         $company = User::where('id', \Auth::id())->with('companyUser')->first();
         if ($company->companyUser) {
             $email_settings = EmailSetting::where('company_user_id', $company->companyUser->id)->first();
+            $delegations = Delegation::where('company_user_id', $company->companyUser->id)->get();
             if ($company->companyUser->decimals == '1') {
                 $selectedTrue = "checked='true'";
                 $selectedFalse = '';
@@ -64,41 +64,37 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
-            if($company->companyUser->colors_pdf != null){
-                $color_pdf=$company->companyUser->colors_pdf;
-            }else{
-                $color_pdf='#006bfa';
+            if ($company->companyUser->colors_pdf != null) {
+                $color_pdf = $company->companyUser->colors_pdf;
+            } else {
+                $color_pdf = '#006bfa';
             }
-        
 
         }
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse','IncludeOrigin','IncludeDestiny','color_pdf'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'color_pdf','delegations'));
     }
-
-   
 
     public function store(StoreSettings $request)
     {
-
         $file = Input::file('image');
         $footer_image = Input::file('footer_image');
         $signature_image = Input::file('email_signature_image');
         $filepath = '';
         $filepath_footer_image = '';
         $filepath_signature_image = '';
-        if ($file != "") {
+        if ($file != '') {
             $filepath = 'Logos/Companies/' . $file->getClientOriginalName();
-            $name     = $file->getClientOriginalName();
+            $name = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name, file_get_contents($file));
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath, file_get_contents($file), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($footer_image != "") {
+        if ($footer_image != '') {
             $filepath_footer_image = 'Footer/' . $footer_image->getClientOriginalName();
             $name_footer_image = $footer_image->getClientOriginalName();
             \Storage::disk('logos')->put($name_footer_image, file_get_contents($footer_image));
@@ -106,7 +102,7 @@ class SettingController extends Controller
             $s3->put($filepath_footer_image, file_get_contents($footer_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($signature_image != "") {
+        if ($signature_image != '') {
             $filepath_signature_image = 'Email/' . $signature_image->getClientOriginalName();
             $name_sign_image = $signature_image->getClientOriginalName();
             \Storage::disk('logos')->put($name_sign_image, file_get_contents($signature_image));
@@ -114,10 +110,11 @@ class SettingController extends Controller
             $s3->put($filepath_signature_image, file_get_contents($signature_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-        if ($request->decimals)
+        if ($request->decimals) {
             $decimals = 1;
-        else
+        } else {
             $decimals = 0;
+        }
 
         if (!$request->company_id) {
             //$company=CompanyUser::create($request->all());
@@ -142,7 +139,7 @@ class SettingController extends Controller
             }
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
-            if ($file != "") {
+            if ($file != '') {
                 $company->logo = $filepath;
             }
             $company->save();
@@ -150,14 +147,12 @@ class SettingController extends Controller
             User::where('id', \Auth::id())->update(['company_user_id' => $company->id]);
             $usuario = User::find(\Auth::id());
 
-
-
             $email_settings = new EmailSetting();
             $email_settings->company_user_id = $company->id;
             $email_settings->email_from = $request->email_from_format;
             $email_settings->email_signature_type = $request->email_signature_type;
             $email_settings->email_signature_text = $request->signature_text_content;
-            if ($signature_image != "") {
+            if ($signature_image != '') {
                 $email_settings->email_signature_image = $filepath_signature_image;
             }
             $email_settings->save();
@@ -179,7 +174,7 @@ class SettingController extends Controller
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
             }
-            if ($file != "") {
+            if ($file != '') {
                 $company->logo = $filepath;
             }
             $company->update();
@@ -189,7 +184,7 @@ class SettingController extends Controller
                 $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
-                if ($signature_image != "") {
+                if ($signature_image != '') {
                     $email_settings->email_signature_image = $filepath_signature_image;
                 }
                 $email_settings->update();
@@ -199,12 +194,13 @@ class SettingController extends Controller
                 $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
-                if ($signature_image != "") {
+                if ($signature_image != '') {
                     $email_settings->email_signature_image = $filepath_signature_image;
                 }
                 $email_settings->save();
             }
         }
+
         return response()->json(['message' => 'Ok']);
     }
 
@@ -362,7 +358,7 @@ class SettingController extends Controller
             $custom_id_quote = $this->idPersonalizado($request->name, $request->company_user_id);
             $explode = explode('-', $custom_id_quote);
             $custom_id += 1;
-            $company_quote = $explode[0] . "-" . $custom_id;
+            $company_quote = $explode[0] . '-' . $custom_id;
 
             $origin_ammounts = OriginAmmount::where('quote_id', $quote->id)->get();
             $freight_ammounts = FreightAmmount::where('quote_id', $quote->id)->get();
@@ -532,6 +528,72 @@ class SettingController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Company duplicated successfully!');
+
         return redirect()->back();
+    }
+    public function store_d(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+        
+        $delegation = new delegation();
+        $delegation->name            = $request->name;
+        $delegation->phone           = $request->phone;
+        $delegation->address         = $request->address;
+        $delegation->company_user_id = $request->company_user_id;
+        $delegation->save();
+
+        $request->session()->flash('message.content', 'Record saved successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
+ 
+    public function edit_d($id)
+    {   
+        return response()->json([
+            'data' => Delegation::find($id),
+        ]);
+    }
+
+    public function update_d(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+
+        $delegation = Delegation::find($request->id);
+
+        $delegation->name=$request->name;
+        $delegation->phone=$request->phone;
+        $delegation->address=$request->address;
+        $delegation->update();
+
+        $request->session()->flash('message.content', 'Record updated successfully');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back();
+    }
+    public function destroy($id)
+    {
+        $id_ud=UserDelegation::where('delegations_id','=',$id)->first();
+
+        if ($id_ud != null)  {
+            return response()->json(['message' => 'error',]);
+
+        }else{
+            $delegation = delegation::find($id)->delete();
+
+            return response()->json([
+                'message' => 'Ok',
+            ]);
+            }
     }
 }

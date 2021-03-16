@@ -96,6 +96,12 @@
                                             {{$company->business_name}}</b></h4>
                                     <hr>
                                     <div class="collapse show" id="about_company">
+                                    <label><b>Company Id</b></label>
+                                        <p class="color-black">
+                                            <span id="company_id_span">{{$company->id}}</span>
+                                            <br>
+                                        </p>
+                                        <hr>
                                         <label><b>Name</b></label>
                                         <p class="color-black">
                                             <input type="hidden" value="{{$company->id}}" id="company_id" />
@@ -534,7 +540,7 @@
                         sort: 'timestamp'
                     }
                 },
-                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'origin', name: 'origin'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },

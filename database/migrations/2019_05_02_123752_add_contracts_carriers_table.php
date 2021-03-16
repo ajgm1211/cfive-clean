@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddContractsCarriersTable extends Migration
 {
@@ -21,12 +21,11 @@ class AddContractsCarriersTable extends Migration
             $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->timestamps();
         });
-        
-        Schema::table('contracts', function (Blueprint $table){
+
+        Schema::table('contracts', function (Blueprint $table) {
             $table->integer('direction_id')->nullable()->after('account_id')->unsigned();
             $table->foreign('direction_id')->references('id')->on('directions');
         });
-        
     }
 
     /**

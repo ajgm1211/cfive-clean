@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class FailSurCharge extends Model
 {
     use SoftDeletes;
-    protected $dates    = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
     protected $table = 'failes_surcharges';
     protected $fillable = [
@@ -21,10 +21,11 @@ class FailSurCharge extends Model
         'ammount',
         'currency_id',
         'carrier_id',
-        'differentiator'
+        'differentiator',
     ];
-    
-    public function contract(){
-        return $this->belongsTo('App\Contract','contract_id');
+
+    public function contract()
+    {
+        return $this->belongsTo('App\Contract', 'contract_id');
     }
 }

@@ -24,6 +24,9 @@ background-color: #969cc0;
 
 background-color: #36A3F7;
 }
+.bg-express{
+background-color: #5ce4a4;   
+}
 .m-portlet {
     box-shadow: none;
     border-radius: 5px;
@@ -1327,7 +1330,7 @@ background-color: #36A3F7;
                                     <div class="m-widget5">
                                         <div class="m-widget5__item no-padding no-margin">
                                             <div class="m-widget5__pic">
-                                                <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
+                                                <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
                                                     title="" />
                                             </div>
                                         </div>
@@ -1400,7 +1403,7 @@ background-color: #36A3F7;
                                         <div class="col-lg-12 b-top no-padding padding-min">
                                             <div class="row justify-content-between">
 
-                                                @if(!empty($arr->remarks) || !empty($arr->remarksG))
+                                                @if(!empty($arr->remarks) || (!empty($arr->remarksG) && $arr->remarksG!='    ' && $arr->remarksG!='<br>    '))
                                                 <div class="col-lg-1">
                                                     <div class="btn-detail__quotes btn-remarks">
                                                         <a id='display_r{{$loop->iteration}}'

@@ -13,8 +13,6 @@
 // class UserTest extends TestCase
 // {
 
-
-
 //     /**
 //      * A basic test example.
 //      *
@@ -33,9 +31,7 @@
 //         $response = $this->actingAs($user)->get('/login');
 
 //         $response->assertRedirect('/v2/quotes/search');
- 
+
 //     }
-
-
 
 //     }

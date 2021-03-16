@@ -3,35 +3,38 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NewRequestLclToAdminMail extends Mailable
 {
-   use Queueable, SerializesModels;
-   public $user,$admin,$contract;
-   /**
+    use Queueable, SerializesModels;
+    public $user;
+    public $admin;
+    public $contract;
+
+    /**
      * Create a new message instance.
      *
      * @return void
      */
-   public function __construct($admin,$user,$contract)
-   {
-      $this->admin    = $admin;
-      $this->user     = $user;
-      $this->contract = $contract;
-   }
+    public function __construct($admin, $user, $contract)
+    {
+        $this->admin = $admin;
+        $this->user = $user;
+        $this->contract = $contract;
+    }
 
-   /**
+    /**
      * Build the message.
      *
      * @return $this
      */
-   public function build()
-   {
-      return $this->markdown('emails.RequestLcl.ToAdminMailabel')->with(['admin' => $this->admin,
+    public function build()
+    {
+        return $this->markdown('emails.RequestLcl.ToAdminMailabel')->with(['admin' => $this->admin,
                                                                          'user' => $this->user,
-                                                                         'contract' => $this->contract])->from('info@cargofive.com');
-   }
+                                                                         'contract' => $this->contract, ])->from('info@cargofive.com');
+    }
 }

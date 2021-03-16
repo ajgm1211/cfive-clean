@@ -85,11 +85,13 @@ class AutomaticRateController extends Controller
                 'origin_port_id' => $rate->origin_port_id,
                 'destination_port_id' => $rate->destination_port_id,
                 'automatic_rate_id' => $rate->id,
+                'carrier_id' => $rate->carrier_id,
                 'totals' => null,
                 'markups' => null                    
             ]);
 
             $totals->totalize($currency->id);
+            
         }
     }
  
@@ -166,6 +168,8 @@ class AutomaticRateController extends Controller
 
             $totals->totalize($request->input('profits_currency'));
         }
+
+        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function retrieve(QuoteV2 $quote, AutomaticRate $autorate)
@@ -206,6 +210,8 @@ class AutomaticRateController extends Controller
         $totals->delete();
 
         $autorate->delete();
+
+        $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204);
     }

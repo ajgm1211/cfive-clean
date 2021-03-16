@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddSchedulesToPdfOptionsTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddSchedulesToPdfOptionsTable extends Migration
     public function up()
     {
         Schema::table('pdf_options', function (Blueprint $table) {
-             $table->boolean('show_schedules')->nullable()->after('destination_charges_currency');
+            $table->boolean('show_schedules')->nullable()->after('destination_charges_currency');
         });
     }
 

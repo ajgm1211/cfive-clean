@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateCarriersTable extends Migration
 {
@@ -13,7 +13,7 @@ class UpdateCarriersTable extends Migration
      */
     public function up()
     {
-        Schema::table('carriers', function(Blueprint $table){
+        Schema::table('carriers', function (Blueprint $table) {
             $table->json('varation')->nullable()->after('image');
         });
     }
@@ -25,7 +25,7 @@ class UpdateCarriersTable extends Migration
      */
     public function down()
     {
-        Schema::table('carriers', function($table) {
+        Schema::table('carriers', function ($table) {
             $table->dropColumn('variation');
         });
     }

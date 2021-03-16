@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PortRegion extends Model
 {
-    protected $table    = "puerto_regions";
+    protected $table = 'puerto_regions';
     protected $fillable = ['id',
                            'harbor_id',
                            'region_pts_id',
@@ -14,10 +14,11 @@ class PortRegion extends Model
 
     public function region_pt()
     {
-        return $this->belongsTo('App\RegionPt','region_pts_id');
+        return $this->belongsTo('App\RegionPt', 'region_pts_id');
     }
-    
-    public function harbor(){
-		return $this->belongsTo('App\Harbor','harbor_id');
-	}
+
+    public function harbor()
+    {
+        return $this->belongsTo('App\Harbor', 'harbor_id');
+    }
 }

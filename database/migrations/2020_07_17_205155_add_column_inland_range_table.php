@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnInlandRangeTable extends Migration
 {
@@ -21,8 +21,6 @@ class AddColumnInlandRangeTable extends Migration
             $table->integer('upper')->default(0);
             $table->integer('lower')->default(0);
         });
-
-
     }
 
     /**
