@@ -127,6 +127,9 @@
                         <th title="business_name">
                             Business name
                         </th>
+                        <th title="Id">
+                            Company Id
+                        </th>
                         <th title="phone">
                             Phone
                         </th>
@@ -237,6 +240,7 @@
             ],
             columns: [
                 {data: 'business_name', name: 'business_name'},
+                {data: 'id', name: 'id'},
                 {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'tax_number', name: 'tax_number'},
