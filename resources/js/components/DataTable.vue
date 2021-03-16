@@ -488,7 +488,7 @@
                             </button>
                             <button
                                 class="btn-action"
-                                v-if="singleActions.includes('specialduplicate')"
+                                v-if="singleActions.includes('specialduplicate') && item.type != 'LCL'"
                                 @click="onSpecialDuplicate(item.id)"
                             >
                                 Duplicate +
