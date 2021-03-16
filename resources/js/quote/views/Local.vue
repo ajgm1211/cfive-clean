@@ -247,7 +247,7 @@
                                     ></b-form-input>
                                 </b-td>
 
-                                <b-td>
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <multiselect
                                         v-model="charge.currency"
                                         :options="datalists['currency']"
@@ -264,6 +264,27 @@
                                                 charge.currency.id,
                                                 'currency_id',
                                                 6
+                                            )
+                                        "
+                                    ></multiselect>
+                                </b-td>
+                                <b-td v-else-if="currentQuoteData.type == 'FCL'">
+                                    <multiselect
+                                        v-model="charge.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Choose a currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.currency.id,
+                                                'currency_id',
+                                                1
                                             )
                                         "
                                     ></multiselect>
@@ -884,6 +905,7 @@
                                     <b-form-input
                                         v-model="input.units"
                                         style="width:80px;"
+                                        @keypress="isNumber($event)"
                                         class="q-input data-profit"
                                     ></b-form-input>
                                 </b-td>
@@ -893,6 +915,7 @@
                                     <b-form-input
                                         v-model="input.price"
                                         style="width:80px;"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -902,6 +925,7 @@
                                     <b-form-input
                                         v-model="input.profit"
                                         style="width:80px;"
+                                        @keypress="isNumber($event)"
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
