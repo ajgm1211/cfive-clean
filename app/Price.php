@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Price extends Model
 {
-    protected $fillable = ['name','description'];
+    protected $fillable = ['name', 'description'];
 
     public function company()
     {
@@ -20,7 +20,7 @@ class Price extends Model
 
     public function company_name()
     {
-        return $this->hasManyThrough('App\Company','App\CompanyPrice','price_id','id','id','company_id');
+        return $this->hasManyThrough('App\Company', 'App\CompanyPrice', 'price_id', 'id', 'id', 'company_id');
     }
 
     public function freight_markup()

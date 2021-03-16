@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AssignDataToDestinationTypesTable extends Migration
 {
@@ -15,20 +15,18 @@ class AssignDataToDestinationTypesTable extends Migration
     {
         \DB::table('destination_types')->delete();
 
-        \DB::table('destination_types')->insert(array (
-            0 => 
-            array (
+        \DB::table('destination_types')->insert([
+            0 => [
                 'id' => 1,
                 'name' => 'Transhipment',
                 'code' => 'transhipment',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 2,
                 'name' => 'Direct',
                 'code' => 'direct',
-            )
-        ));
+            ],
+        ]);
     }
 
     /**

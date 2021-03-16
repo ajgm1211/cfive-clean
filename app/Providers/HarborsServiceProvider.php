@@ -23,6 +23,6 @@ class HarborsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/Helpharbors.php';
+        require_once app_path().'/Helpers/Helpharbors.php';
     }
 }

@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model
 {
-    protected $table    = "regions";
+    protected $table = 'regions';
     protected $fillable = ['id',
-                           'name'
+                           'name',
                           ];
 
     public function CountriesRegions()
     {
         return $this->hasMany('App\CountryRegion');
     }
-    
-    public function country(){
-		return $this->belongsTo('App\Country','country_id');
-	}
+
+    public function country()
+    {
+        return $this->belongsTo('App\Country', 'country_id');
+    }
 }
