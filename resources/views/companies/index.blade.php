@@ -124,11 +124,11 @@
             <table class="table tableData" id="table-company" width="100%">
                 <thead >
                     <tr class="title-quote">
-                        <th title="business_name">
-                            Business name
-                        </th>
                         <th title="Id">
                             Company Id
+                        </th>
+                        <th title="business_name">
+                            Business name
                         </th>
                         <th title="phone">
                             Phone
@@ -239,8 +239,8 @@
                 { "width": "20%", "targets": 0 },
             ],
             columns: [
-                {data: 'business_name', name: 'business_name'},
                 {data: 'id', name: 'id'},
+                {data: 'business_name', name: 'business_name'},
                 {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'tax_number', name: 'tax_number'},
