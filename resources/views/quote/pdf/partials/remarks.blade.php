@@ -1,5 +1,5 @@
 
-@if((!empty($quote->remarks_english) && $quote->remarks_english!=='<br>') || (!empty($quote->remarks_spanish) && $quote->remarks_spanish!=='<br>') || (!empty($quote->remarks_portuguese) && $quote->remarks_portuguese!=='<br>'))
+@if((!empty($quote->remarks) && $quote->remarks!=='<br>') || (!empty($quote->remarks_english) && $quote->remarks_english!=='<br>') || (!empty($quote->remarks_spanish) && $quote->remarks_spanish!=='<br>') || (!empty($quote->remarks_portuguese) && $quote->remarks_portuguese!=='<br>'))
 
     <div class="clearfix">
 
@@ -26,4 +26,5 @@
                 @break
             @endswitch
     </div>
+    
 @endif
