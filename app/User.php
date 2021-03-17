@@ -55,7 +55,7 @@ class User extends Authenticatable implements Auditable
     }
     public function delegation()
     {
-        return $this->belongsTo('App\Delegation');
+        return $this->belongsToMany('App\Delegation');
     }
 
     public function userToken()
@@ -110,4 +110,13 @@ class User extends Authenticatable implements Auditable
     {
         return "{$this->name} {$this->lastname}";
     }
+
+    public function storeDelegation($delegation_id,$user_id){
+
+        $delegation= new UserDelegation();
+        $delegation->users_id=$user_id;
+        $delegation->delegations_id=$delegation_id;
+        $delegation->save();
+        
+     }
 }

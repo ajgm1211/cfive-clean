@@ -36,6 +36,7 @@
                                                 @success="setTermsField"
                                             ></FormInlineView>
                                         </div>
+                                        
                                     </div>
                                 </b-card>
                                 <!-- End Quote inputs -->
@@ -108,11 +109,12 @@
 
                         <b-tab title="Totals" @click="changeView('totals')">
                             <Total v-if="totals"
-                            :currentQuoteData="currentData"
                             :freights="freights"
                             :datalists="datalists"
                             :actions="actions"
                             @freightAdded="setInitialData"
+                            @totalsLoaded="setInitialData"
+                            ref="totalsTab"
                             ></Total>
                         </b-tab>
 
@@ -289,16 +291,16 @@ export default {
                     type: "select",
                     rules: "required",
                     trackby: "name",
-                    placeholder: "Select options",
+                    placeholder: "Select",
                     options: "incoterms",
-                    colClass: "col-lg-1",
+                    colClass: "col-lg-1 incoterm",
                 },
                 custom_incoterm: {
                     label: "CUSTOM INCOTERM",
                     type: "text",                    
                     disabled: false,
                     placeholder: "Custom incoterm",
-                    colClass: "col-lg-2",
+                    colClass: "col-lg-2 custom_incoterm",
                 },
                 language_id: {
                     label: "LANGUAGE",
@@ -412,13 +414,11 @@ export default {
                 setTimeout(function() {
                     component.inlands=true
                 },100);
-            }
+            }    
+            
             if(component.totals){
-                component.totals=false;
-                setTimeout(function() {
-                    component.totals=true
-                },100);
-            }            
+                this.$refs.totalsTab.setInitialOptions(data)
+            }
         },
 
         changeView(val){
@@ -426,12 +426,24 @@ export default {
 
             if(val == 'freight'){
                 component.ocean = true;
+                component.locals = false;
+                component.totals = false;
+                component.inlands = false;
             } else if(val == 'locals'){
                 component.locals = true;
+                component.ocean = false;
+                component.totals = false;
+                component.inlands = false;
             } else if(val == 'inlands'){
                 component.inlands = true;
+                component.locals = false;
+                component.totals = false;
+                component.ocean = false;
             } else if(val == 'totals'){
                 component.totals = true;
+                component.locals = false;
+                component.ocean = false;
+                component.inlands = false;
             }
         },
 

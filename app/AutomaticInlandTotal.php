@@ -131,6 +131,8 @@ class AutomaticInlandTotal extends Model
             $markups = json_encode($markups);
             
             $this->update(['totals'=>$totals,'markups'=>$markups]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }else if($quote->type=='LCL'){
         
             $inlands = $this->inlands_lcl()->get();
@@ -163,8 +165,8 @@ class AutomaticInlandTotal extends Model
             }
 
             if(!$single){
-                $totalsPrice = $this->convertToCurrency($currency, $this->currency()->first(), $totalsPrice);
-                $totalsMarkup = $this->convertToCurrency($currency, $this->currency()->first(), $totalsMarkup);
+                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
+                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
             }elseif($single){
                 foreach($totals as $code => $price){
                     $totals[$code] = isDecimal($price, true);
@@ -179,6 +181,8 @@ class AutomaticInlandTotal extends Model
             
             $this->update(['totals'=>$totalsPrice]);
             $this->update(['markups'=>$totalsMarkup]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }
     }
 
