@@ -169,7 +169,8 @@ class SearchApiController extends Controller
         //Setting current company and user
         $user = \Auth::user();
         $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
 
         $search_array = $request->input();
 
@@ -179,6 +180,7 @@ class SearchApiController extends Controller
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
+        $search_ids['client_currency'] = $company_user->currency;
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
@@ -189,16 +191,16 @@ class SearchApiController extends Controller
             //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
             //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($search_ids, $rate);
+            $local_charges = $this->searchLocalCharges($search_ids, $search_array, $rate);
         
             //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
+            $global_charges = $this->searchGlobalCharges($search_ids, $search_array, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
             
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $search_array['containers'], $company_user_id);
+            $this->setChargesPerContainer($charges, $search_array['containers'], $search_ids['client_currency']);
     
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges);
@@ -212,10 +214,10 @@ class SearchApiController extends Controller
     
             //Adding price levels
             if($price_level_markups != null && count($price_level_markups) != 0){
-                $this->addMarkups($price_level_markups, $rate, $company_user_id);
+                $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
                 foreach($charges as $charge_direction){
                     foreach($charge_direction as $charge){
-                        $this->addMarkups($price_level_markups, $charge, $company_user_id);
+                        $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
                     }
                 }
             }
@@ -223,7 +225,7 @@ class SearchApiController extends Controller
             $remarks = $this->searchRemarks($rate, $search_ids);
 
             //Appending Rate Id to Charges
-            $this->addToRate($rate, $charges, 'charges', $company_user_id);    
+            $this->addToRate($rate, $charges, 'charges', $search_ids['client_currency']);    
 
             $transit_time = $this->searchTransitTime($rate);
     
@@ -409,7 +411,7 @@ class SearchApiController extends Controller
         //Setting attribute to totalize adding charges, inlands, markups, etc. Totals are shown in the client default currency
         foreach($rates_array as $rate){
             //Converting rates to client currency
-            $client_currency = $company_user->currency;
+            $client_currency = $search_data['client_currency'];
             $containers_client_currency = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers,true));
             $rate->setAttribute('totals',$containers_client_currency);
             $rate->setAttribute('client_currency',$client_currency);
@@ -435,23 +437,21 @@ class SearchApiController extends Controller
     }
     
     //Finds local charges matching contracts
-    public function searchLocalCharges($search_data, $rate)
+    public function searchLocalCharges($search_ids, $search_data, $rate)
     {
         //Creating empty collection for storing charges
         $local_charges = collect([]);
         //Pulling necessary data from the search IDs array
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
+        $origin_ports = $search_ids['originPorts'];
+        $destination_ports = $search_ids['destinationPorts'];
         $origin_countries = [];
         $destination_countries = [];
         //SEARCH API - Getting countries from port arrays and building countries array
-        foreach($origin_ports as $origin_port){
-            $origin_country = $this->getPortCountry($origin_port);
-            array_push($origin_countries,$origin_country);
+        foreach($search_data['originPorts'] as $origin_port){
+            array_push($origin_countries,$origin_port['country_id']);
         }
-        foreach($destination_ports as $destination_port){
-            $destination_country = $this->getPortCountry($destination_port);
-            array_push($destination_countries,$destination_country);
+        foreach($search_data['destinationPorts'] as $destination_port){
+            array_push($destination_countries,$destination_port['country_id']);
         }
 
         //Including "ALL" columns for querying LocalCharges with such option marked
@@ -499,7 +499,7 @@ class SearchApiController extends Controller
     }
 
     //Finds global charges matching search data
-    public function searchGlobalCharges($search_data, $rate)
+    public function searchGlobalCharges($search_ids, $search_data, $rate)
     {
         //building Carriers array from rates
         $carriers = [];
@@ -508,21 +508,19 @@ class SearchApiController extends Controller
         //Creating empty collection for storing charges
         $global_charges = collect([]);
         //Pulling necessary data from the search IDs array
-        $validity_start = $search_data['dateRange']['startDate'];
-        $validity_end = $search_data['dateRange']['endDate'];
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
-        $company_user_id = $search_data['company_user'];
+        $validity_start = $search_ids['dateRange']['startDate'];
+        $validity_end = $search_ids['dateRange']['endDate'];
+        $origin_ports = $search_ids['originPorts'];
+        $destination_ports = $search_ids['destinationPorts'];
+        $company_user_id = $search_ids['company_user'];
         $origin_countries = [];
         $destination_countries = [];
         //SEARCH API - Getting countries from port arrays and building countries array
-        foreach($origin_ports as $origin_port){
-            $origin_country = $this->getPortCountry($origin_port);
-            array_push($origin_countries,$origin_country);
+        foreach($search_data['originPorts'] as $origin_port){
+            array_push($origin_countries,$origin_port['country_id']);
         }
         foreach($destination_ports as $destination_port){
-            $destination_country = $this->getPortCountry($destination_port);
-            array_push($destination_countries,$destination_country);
+            array_push($destination_countries,$destination_port['country_id']);
         }
 
         //Including "ALL" columns for querying GlobalCharges with such option marked
@@ -566,17 +564,11 @@ class SearchApiController extends Controller
     //Retrieves and cleans markups from price levels
     public function searchPriceLevels($search_data)
     {
-        //Retrieving current company
-        $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
-    
-        //getting client profile currency
-        $client_currency = $company_user->currency;
-    
         //SEARCH TRAIT - Markups are organized in a collection containing
             //Freight markups (fixed & percent)
             //Local Charge markups (fixed & percent)
             //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $client_currency, $search_data['direction'], $search_data['type']);
+        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
     
         return $markups;
     }
@@ -655,12 +647,8 @@ class SearchApiController extends Controller
     }
     
     //Adds PriceLevels markups to target collection
-    public function addMarkups($markups, $target, $company_user_id)
+    public function addMarkups($markups, $target, $client_currency)
     {
-        //Setting company related info
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
-        $client_currency = $company_user->currency;
-
         //If markups will be added to a Rate, extracts 'freight' variables from markups array
         if(is_a($target, 'App\Rate')){
             //Info from markups array
@@ -764,12 +752,8 @@ class SearchApiController extends Controller
     }
 
     //appending charges to corresponding Rate
-    public function addToRate($rate, $target, $target_type, $company_user_id)
+    public function addToRate($rate, $target, $target_type, $client_currency)
     {
-        //Setting customer currency to convert if necessary
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
-        $client_currency = $company_user->currency;
-
         //Checking type of property to add
         if($target_type == 'charges'){
             $rate_charges = [];

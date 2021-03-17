@@ -842,12 +842,13 @@ trait SearchTrait
     public function joinRateContainers($rates, $search_containers)
     {
         foreach($rates as $rate){
-            $container_array = [];
             $container_group_id = $rate->contract->gp_container_id;
-            $group_containers = Container::where('gp_container_id',$container_group_id)->get();
-            $requested_containers = [];
-
+            
             if($container_group_id == 1){
+                $container_array = [];
+                $group_containers = Container::where('gp_container_id',$container_group_id)->get();
+                $requested_containers = [];
+
                 foreach($group_containers as $cont){
                     if(in_array($cont->id,$search_containers)){
                         array_push($requested_containers, $cont->code);
@@ -869,24 +870,6 @@ trait SearchTrait
                 $rate->save();
             }
         }
-    }
-
-    //Gets country for given port. Output depends on input. It returns ID if ID given, and MODEL if MODEL given
-    public function getPortCountry($port)
-    {
-        //Checking if MODEL
-        if(is_a($port,'App\Harbor')){
-            //Retrieving country model by id
-            $country = Country::where('id',$port->country_id)->first();
-            //Checking if int (ID)
-        }elseif(is_int($port)){
-            //Retrieving port model
-            $port = Harbor::where('id',$port)->first();
-            //Retrieving country by id and getting ID
-            $country = Country::where('id',$port->country_id)->first()->id;
-        }
-
-        return $country;
     }
 
     //groups local + global charges by type (Origin, Destination, Freight)
@@ -927,20 +910,14 @@ trait SearchTrait
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $company_user_id)
+    public function setChargesPerContainer($charges, $containers, $client_currency)
     {
-        //Retrieving current company
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
-    
-        //getting client profile currency
-        $client_currency = $company_user->currency;
-
         //Looping through charges collection
         foreach($charges as $charges_direction){
             foreach($charges_direction as $charge){
 
                 //Getting calculation info from calculation type id
-                $calculation = CalculationType::where('id',$charge->calculationtype_id)->first();
+                $calculation = $charge->calculationtype;
 
                 //Setting arrays for different calculation types, for matching when building final arrays
                 $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];

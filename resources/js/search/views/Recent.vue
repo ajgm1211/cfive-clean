@@ -31,6 +31,7 @@
 
                     <a 
                         @click="recentSearch(search.id)"
+                        style="color:white"
                     >
                     search again
                     </a>
