@@ -1478,6 +1478,7 @@ input.multiselect__input:focus {
 /* Search Result */
 
 .result-search {
+    position: relative;
     border-radius: 4px;
     background: #ffffff;
     box-shadow: 0px 0px 15px 3px #eaeaea;
@@ -1593,7 +1594,7 @@ input.multiselect__input:focus {
 }
 
 .result-search .via .direction-form.route-indirect .line {
-    width: 100px !important;
+    width: 100px;
 }
 
 .direction-desc {
@@ -2185,5 +2186,62 @@ input.data-provider {
     }
     .custom_incoterm {
         padding-left: 0px !important;
+    }
+}
+
+
+/* CMA AND MAERKS */
+.schedule-tt {
+    .title-schedule {
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    .sub-title-schedule {
+        font-size: 12px;
+        font-weight: 400;
+    }
+    .text-schedule {
+        font-size: 12px;
+        font-weight: 800;
+    }
+    .info-schedule {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .schedule {
+        .title-schedule {
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+    }
+
+    .transi-time {
+        .line {
+            width: 300px !important;
+        }
+        .origin, .destination {
+            justify-content: center;
+        }
+        
+    }
+}
+
+.banda-top {
+    top: 30px;
+    left: -29px;
+    position: absolute;
+    width: 120px;
+    height: 0px;
+    border-right: 18px solid transparent;
+    border-left: 23px solid transparent;
+    border-bottom: 20px solid #DD2929;
+    transform: rotate(-50deg);
+    span {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 10px;
     }
 }
