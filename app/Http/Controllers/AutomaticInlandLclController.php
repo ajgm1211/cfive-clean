@@ -332,6 +332,8 @@ class AutomaticInlandLclController extends Controller
 
         $inland_address->delete();
 
+        $quote->updatePdfOptions('exchangeRates');
+
         return response()->json(null, 204); 
     }
 }

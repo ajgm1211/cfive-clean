@@ -14,6 +14,8 @@ use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Delegation;
+use App\UserDelegation;
 
 class FclPdf
 {
@@ -42,7 +44,9 @@ class FclPdf
 
         $quote_totals = $this->quoteTotals($quote,$containers);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $delegation= $this->delegation($quote);
+
+        $view = \View::make('quote.pdf.index', ['quote' => $quote,'delegation'=>$delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
@@ -54,7 +58,18 @@ class FclPdf
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
+    
+    public function Delegation($quote){
+        
+        $id_ud=UserDelegation::where('users_id','=',$quote->user_id)->first();
+        if($id_ud==null)
+            $delegation= '';
+        else{
+            $delegation= Delegation::where('id', '=', $id_ud->delegations_id)->first();
+        }
 
+        return $delegation;
+    }
     public function localCharges($quote, $type)
     {
         $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
@@ -483,21 +498,18 @@ class FclPdf
                     $portArray['destination'] = $total->get_port()->first()->display_name;
                 }
             }
-
-            
+ 
             $totalsArrayInput = $this->processOldContainers($totalsArrayInput, 'amounts');
-            
+
             $totalsCurrencyInput = Currency::where('id',$total->currency_id)->first();
-            
-            $totalsCurrencyOutput = Currency::where('id',$quote->pdf_options['totalsCurrency']['id'])->first();
-            
+                        
             if($totalsArrayInput){
-                $totalsArrayInput = $this->convertToCurrency($totalsCurrencyInput,$totalsCurrencyOutput,$totalsArrayInput);
+                $totalsArrayInput = $this->convertToCurrencyPDF($totalsCurrencyInput,$totalsArrayInput,$quote);
             }
 
             foreach($totalsArrayOutput as $key=>$route){
-                if(($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) && 
-                    ($portArray['carrier'] == 'local' || $portArray['carrier'] == $route['carrier'])){
+                if(($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
+                    ($portArray['carrier'] == 'local' && ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']))){
                     foreach ($containers as $c) {
                         if (isset($totalsArrayInput['c' . $c->code])) {
                             $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
@@ -511,7 +523,6 @@ class FclPdf
                 }
             }
         }
-        
         return $totalsArrayOutput;
     }
 }

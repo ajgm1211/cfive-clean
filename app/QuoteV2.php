@@ -845,4 +845,93 @@ class QuoteV2 extends Model implements HasMedia
         }
         return $equipment;
     }
+
+    public function exchangeRates()
+    {
+        $exchange = [];
+        $included = [];
+        $client = $this->company_user->first();
+
+        if(isset($this->pdf_options['exchangeRates']) && $this->pdf_options['exchangeRates'] != null){
+            $options = $this->pdf_options['exchangeRates'];
+
+            foreach($options as $opt){
+                if($opt['custom']){
+                    array_push($exchange, $opt);
+                    array_push($included, $opt['alphacode']);
+                }
+            }
+        }
+
+        $rateTotals = $this->automatic_rate_totals()->get();
+        $inlandTotals = $this->automatic_inland_totals()->get();
+        
+        if($this->type == 'FCL'){
+            $localchargeTotals = $this->local_charges_totals()->get();
+        }else if($this->type == 'LCL'){
+            $localchargeTotals = $this->local_charges_lcl_totals()->get();
+        }
+
+        $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals);
+
+        $allTotalsCurrency = [];
+
+        foreach($allTotals as $total){
+            $currency = Currency::where('id', $total->currency_id)->first();
+            
+            array_push($allTotalsCurrency,$currency->alphacode);
+
+            if(!in_array($currency->alphacode,$included)){
+                $currencyExchange = [ 
+                    'alphacode' => $currency->alphacode, 
+                    'exchangeUSD' => $currency->rates, 
+                    'exchangeEUR' => $currency->rates_eur,
+                    'custom' => false
+                ];
+
+                array_push($exchange, $currencyExchange);
+                array_push($included, $currency->alphacode);
+            }
+        }
+
+        foreach($exchange as $key => $ex){
+            if(!in_array($ex['alphacode'],$allTotalsCurrency)){
+                unset($exchange[$key]);
+            }
+        }
+
+        return $exchange;
+    }
+
+    public function updatePdfOptions($option = null)
+    {
+        if(($this->pdf_options==null || count($this->pdf_options) != 5) && $option == null){            
+            $client = $this->company_user()->first();
+            $client_currency = Currency::find($client->currency_id);
+
+            $exchangeRates = $this->exchangeRates();
+    
+            $pdfOptions = [
+                "allIn" =>true, 
+                "showCarrier"=>true, 
+                "showTotals"=>false, 
+                "totalsCurrency" =>$client_currency,
+                "exchangeRates" => $exchangeRates
+            ];
+            
+            $this->pdf_options = $pdfOptions;
+            $this->save();
+        }
+
+        if($option == 'exchangeRates'){
+            $pdfOptions = $this->pdf_options;
+
+            $exchangeRates = $this->exchangeRates();
+
+            $pdfOptions['exchangeRates'] = $exchangeRates;
+
+            $this->pdf_options = $pdfOptions;
+            $this->save();
+        }
+    }
 }
