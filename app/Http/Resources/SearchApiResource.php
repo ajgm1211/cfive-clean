@@ -36,6 +36,8 @@ class SearchApiResource extends JsonResource
             'id' => $this->id,
             'equipment' => $this->equipment,
             'pick_up_date' => $this->pick_up_date,
+            'start_date' => rtrim(explode('/', $this->pick_up_date)[0]),
+            'end_date' => ltrim(explode('/', $this->pick_up_date)[1]),
             'delivery_id' => $this->delivery,
             'type' => $this->type,
             'direction_id' => $this->direction,
