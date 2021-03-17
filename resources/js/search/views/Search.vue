@@ -1381,6 +1381,8 @@ export default {
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
+                this.searchRequest.dateRange.startDate = this.searchData.start_date+'T01:00:00';
+                this.searchRequest.dateRange.endDate = this.searchData.end_date+'T01:00:00';
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
                 this.searchRequest.contact = this.searchData.contact;
