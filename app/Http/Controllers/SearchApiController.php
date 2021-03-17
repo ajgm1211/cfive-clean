@@ -234,9 +234,9 @@ class SearchApiController extends Controller
             $rate->setAttribute('remarks', $remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
-    
-            $rate->SetAttribute('search', $search_array);
         }
+
+        $rates[0]->SetAttribute('search', $search_array);
 
         return RateResource::collection($rates);
     }
