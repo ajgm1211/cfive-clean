@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\AutoImportation;
+use App\Duplicados;
+use App\Harbor;
 use App\Jobs\SendEmailAutoImporJob;
 use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
 use App\NewContractRequest;
 use App\User;
-use App\Harbor;
 use Goutte\Client;
-use App\Duplicados;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
@@ -288,45 +288,86 @@ class TestController extends Controller
                 $reader->each(function ($sheet) {
                     // recorre las filas
                     $sheet->each(function ($row) {
-                        $col = explode(';',$row);
-                     
+                        $col = explode(';', $row);
+
                         $original = $col[0];
-                        
-                        
-                        
-                        $duplicado = explode(' ',$col[1]);
-                        
-                        if(count($duplicado ) > 1){
-                           foreach($duplicado as $dupli){
 
-                                $duplicados = new Duplicados;
+                        $duplicado = explode(' ', $col[1]);
 
-                                $duplicados->id_original = $original;
-                              
-                                $duplicados->id_duplicado = $dupli;
-                                $variation = Harbor::where('id',$dupli)->first();
-                                dd(json_decode($variation->varation));
-                                //$duplicados->save();
+
+                        $arrayduplicados = array();
+                        $arreglo = array();
+                        $arrayFinal = array();
+                        $variacionesFinal =  array();
+                        $variationDupli =  array();
+                        $variacionesDupli= array();
+
+
+                        $arrayduplicados2 = array();
+                        $arreglo2 = array();
+                        $arrayFinal2 = array();
+                        $variacionesFinal2 =  array();
+                        $variationDupli2 =  array();
+                        $variacionesDupli2= array();
+
+                        $arrayFin['type'] = array();
+                        $duplicados = new Duplicados;
+                        $duplicados->id_original = $original;
+                        
+
+                        $variationOrig = Harbor::where('id', $original)->first();
+                        $variacionesOrig = array(json_decode($variationOrig->varation));
+                        
+                        
+         
+                        if (count($duplicado) > 1) {
+
+            
+                            foreach ($duplicado as $dupli) {
+
+                                $arrayduplicados[] = $dupli;
+
+                                $variationDupli = Harbor::where('id', $dupli)->first();
+                                $variacionesDupli = array(json_decode($variationDupli->varation));
+                                // dd($variacionesOrig[0]);
+                                $arreglo = array_merge($variacionesOrig[0]->type, $variacionesDupli[0]->type);
+                                $arrayFinal = array_merge($arrayFinal, $arreglo);
+
+                            }
+
+                            $arrayFin['type'] = array_unique($arrayFinal);
+                       //     dd($arrayFin['type']);
+                            $variacionesFinal = json_encode($arrayFin, JSON_UNESCAPED_UNICODE);
+
+                            $duplicados->duplicados = json_encode($arrayduplicados);
+                            $duplicados->varation = $variacionesFinal;
+                            //$duplicados->save();
+                        } else {
+
+           
                             
 
-                                      
+                            $variationDupli2 = Harbor::where('id', $duplicado[0])->first();
+                            $variacionesDupli2 = array(json_decode($variationDupli2->varation));
+                            
+                            $arreglo2 = array_merge($variacionesOrig[0]->type, $variacionesDupli2[0]->type);
+                            $arrayFinal2 = array_merge($arrayFinal2, $arreglo2);
 
-                           }
 
-                        }else{
-
-                            $duplicados = new Duplicados;
-
-                            $duplicados->id_original = $original;
-                            $duplicados->id_duplicado = $duplicado[0];
-                           // $duplicados->save();
+                            $valoresUnicos = array_keys(array_flip($arrayFinal2));
+                            
+                            $arrayFin2['type'] = $valoresUnicos;
+                           
+                            $variacionesFinal2 = json_encode($arrayFin2, JSON_UNESCAPED_UNICODE);
+                            
+                            $duplicados->duplicados = json_encode($duplicado[0]);
+                            $duplicados->varation = $variacionesFinal2;
+                            $duplicados->save();
 
                         }
                     });
                 });
             });
-            
-   
 
         } catch (Illuminate\Filesystem\FileNotFoundException $exception) {
             die("No existe el archivo");
