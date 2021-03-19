@@ -126,8 +126,9 @@ class ProcessContractFile implements ShouldQueue
             }
         } elseif (strnatcasecmp($classification, 'carrier') == 0) {
             $carrier = Carrier::find($this->id);
-            $contents = Storage::disk('carriers')->get($carrier->image);
-            Storage::disk('s3_upload')->put('imgcarrier/'.$carrier->image, $contents, 'public');
+            $nameImg= $carrier->image;
+            $file = File::get(public_path('imgcarrier/'.$nameImg));
+            Storage::disk('s3_upload')->put('imgcarrier/'.$nameImg, $file, 'public');
         }
     }
 }
