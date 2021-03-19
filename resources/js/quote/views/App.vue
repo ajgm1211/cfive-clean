@@ -21,6 +21,7 @@
               :fields="fields"
               :actions="actions.quotes"
               :filter="true"
+              :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate']"
               @onEdit="onEdit"
             ></DataTable>
           </b-card>
