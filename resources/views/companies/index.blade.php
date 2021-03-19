@@ -124,6 +124,9 @@
             <table class="table tableData" id="table-company" width="100%">
                 <thead >
                     <tr class="title-quote">
+                        <th title="Id">
+                            Company Id
+                        </th>
                         <th title="business_name">
                             Business name
                         </th>
@@ -240,6 +243,7 @@
                 { "width": "15%", "targets": 5 },
             ],
             columns: [
+                {data: 'id', name: 'id'},
                 {data: 'business_name', name: 'business_name'},
                 {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
