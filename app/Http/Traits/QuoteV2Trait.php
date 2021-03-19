@@ -1706,21 +1706,21 @@ trait QuoteV2Trait
         return false;
     }
 
-    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, array $amounts)
-    {
+    public function convertToCurrency(Currency $fromCurrency, Currency $toCurrency, Array $amounts)
+    {    
         if ($fromCurrency->alphacode != $toCurrency->alphacode) {
             $inputConversion = $fromCurrency->rates;
             foreach ($amounts as $container => $price) {
                 $convertedPrice = $price / $inputConversion;
-                $amounts[$container] = isDecimal($convertedPrice, true);
+                $amounts[$container] = isDecimal($convertedPrice,true);
             }
-            if ($toCurrency->alphacode == 'USD') {
+            if($toCurrency->alphacode=='USD'){
                 return $amounts;
-            } else {
+            }else{
                 $outputConversion = $toCurrency->rates;
                 foreach ($amounts as $container => $price) {
                     $convertedPrice = $price * $outputConversion;
-                    $amounts[$container] = isDecimal($convertedPrice, true);
+                    $amounts[$container] = isDecimal($convertedPrice,true);
                 }
             }
         }
@@ -1728,6 +1728,72 @@ trait QuoteV2Trait
         return $amounts;
     }
 
+    public function calculatePercentage(int $percentage, $amounts)
+    {       
+        foreach($amounts as $key => $amount){
+            $amounts[$key] = isDecimal($amount * $percentage / 100,true);
+        }
+
+        return $amounts;
+    }
+
+    public function formatChargeForQuote(Array $charge)
+    {
+        $formattedAmount = [];
+        $formattedMarkups = [];
+        $formattedTotal = [];
+
+        if(isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency'){
+            $amount = $charge['containers_client_currency'];
+            if(isset($charge['container_markups'])){
+                $markups = $charge['totals_markups'];
+                $total = $charge['totals_with_markups'];
+            }else{
+                $markups = [];
+                $total = $charge['containers_client_currency'];
+            }
+        }else{
+            $amount = $charge['containers'];
+            if(isset($charge['container_markups'])){
+                $markups = $charge['container_markups'];
+                $total = $charge['containers_with_markups'];
+            }else{
+                $markups = [];
+                $total = $charge['containers'];
+            }
+        }
+
+        foreach($amount as $code => $price){
+            $newCode = 'c'.ltrim($code, 'C');
+            $formattedAmount[$newCode] = $price;
+        }
+
+        foreach($total as $code => $price){
+            $newCode = 'c'.ltrim($code,'C');
+            $formattedTotal[$newCode] = $price;
+        }
+
+        $this->formatMarkupsForQuote($markups);
+
+        $charge['amount'] = $formattedAmount;
+        $charge['markups'] = $formattedMarkups;
+        $charge['total'] = $formattedTotal;
+
+        return $charge;
+    }
+
+    public function formatMarkupsForQuote(Array $markups)
+    {
+        $formattedMarkups = [];
+
+        foreach($markups as $code => $price){
+            $newCode = 'm'.ltrim($code, 'C');
+            $formattedMarkups[$newCode] = $price;
+        }
+
+        return $formattedMarkups;
+    }
+    
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
     {
         $quote->updatePdfOptions('exchangeRates');

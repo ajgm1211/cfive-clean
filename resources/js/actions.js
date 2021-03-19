@@ -322,7 +322,7 @@ export default {
                     callback(error, error.response.data);
                 });
         },
-        create(data) {
+        create(data, route) {
             return api.call('post', `/api/quote/store`, data);
         },
         update(id, data) {
@@ -334,12 +334,15 @@ export default {
         duplicate(id, data) {
             return api.call('post', `/api/quotes/${id}/duplicate`, data);
         },
+        specialduplicate(data) {
+            return api.call('post', `/api/quotes/specialduplicate`, data);
+        },
         delete(id) {
             return api.call('delete', `/api/quote/${id}/destroy`, {});
         },
         deleteAll(ids) {
             return api.call('post', `/api/quotes/destroyAll`, { ids: ids });
-        }
+        },
     },
     automaticrates: {
         list(params, callback, route) {
@@ -642,5 +645,19 @@ export default {
             return api.call('post', `/contracts/export`, data);
         }
 
+    },
+    search: {
+        list(data) {
+            return api.call('get', `/api/search/list`, data);
+        },
+        process(id) {
+            return api.call('post', `/api/search/process`, id);
+        },
+        create(data) {
+            return api.call('post', `/api/search/store`, data);
+        },        
+        retrieve(id) {
+            return api.call('get', `/api/search/${id}`, {});
+        },
     },
 };
