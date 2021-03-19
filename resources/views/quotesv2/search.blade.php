@@ -1403,7 +1403,7 @@ background-color: #5ce4a4;
                                         <div class="col-lg-12 b-top no-padding padding-min">
                                             <div class="row justify-content-between">
 
-                                                @if(!empty($arr->remarks) || !empty($arr->remarksG))
+                                                @if(!empty($arr->remarks) || (!empty($arr->remarksG) && $arr->remarksG!='    ' && $arr->remarksG!='<br>    '))
                                                 <div class="col-lg-1">
                                                     <div class="btn-detail__quotes btn-remarks">
                                                         <a id='display_r{{$loop->iteration}}'
