@@ -659,5 +659,8 @@ export default {
         retrieve(id) {
             return api.call('get', `/api/search/${id}`, {});
         },
+        createContract(data){
+            return api.call('post',`/api/search/storeContract`,data)
+        },
     },
 };
