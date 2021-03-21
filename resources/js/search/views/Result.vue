@@ -1,5 +1,5 @@
 <template>
-    <div class="pr-5 pl-5">
+    <div class="container-cards">
         
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
