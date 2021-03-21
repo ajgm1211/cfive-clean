@@ -1023,7 +1023,11 @@
                 <div class="footer-add-contract-modal pl-4 pr-4">   
                     <b-button v-if="stepTwo || stepThree || stepFour" v-on:click="backStep" variant="link" style="color: red" class="mr-3">Back</b-button>
                     <b-button v-on:click="nextStep" v-if="!stepFour" class="btn-create-quote">Save & Continue</b-button>
-                    <b-button v-if="stepFour" class="btn-create-quote">Create Contract</b-button>
+                    <b-button 
+                    v-if="stepFour"  
+                    class="btn-create-quote"
+                    @click="contracButtonPressed">
+                    Create Contract</b-button>
                 </div>
             </form> 
         </b-modal>
@@ -1479,6 +1483,24 @@ export default {
                         }
                     })
             }
+        },
+        contracButtonPressed() {
+           let contract=this;
+           let hola=[];
+           contract.hola.reference=contract.reference;
+        
+           actions.search
+                .createContract(contract.hola)
+                .then((response) => {
+                    // this.$router.push({ path: `search`, query: { requested: 0, model_id: response.data.data.id} })
+                    })
+                .catch(error => {
+                    // this.errorsExist = true;
+                    // this.searching = false;
+                    // if(error.status === 422) {
+                    //     this.responseErrors = error.data.errors;
+                    // }
+                })
         },
 
         requestSearch(){
