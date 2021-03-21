@@ -1,15 +1,14 @@
 <template>
-    <div class="pr-5 pl-5">
+    <div class="container-cards">
 
-<div 
-                class="col-12 mb-4"
-            >
+            <!-- TARJETA CMA -->
+            <div class="col-12 mb-4"> 
 
                 <div class="result-search">
 
-                    <div class="banda-top"><span>CMA CGM PRICES</span></div>
+                    <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
-                    <!-- CONTENT MAIN CARD -->
+                    <!-- INFORMACION DE TARIFA -->
                     <div class="row">
 
                        <!-- CARRIER -->
@@ -19,87 +18,161 @@
                                 alt="logo" 
                                 width="115px">
                         </div>
+                        <!-- FIN CARRIER -->
 
-                        <!-- INFO CARD -->
+                        <!-- INFORMACION PRINCIPAL -->
                         <div class="row col-12 col-lg-8 margin-res">
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
                                 <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
                             </div>
+                            <!-- FIN CONTRACT NAME -->
 
-                            <!-- INFO AND PRICE -->
+                            <!-- RUTA Y PRECIOS -->
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
-                                <!-- INFO -->
-                                <div class="col-12 col-lg-6 d-flex transi-time-res">
+                                <!-- RUTA -->
+                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
 
-                                    <!-- ORIGIN -->
+                                    <!-- ORGIEN -->
                                     <div class="origin mr-4">
 
                                         <span>origin</span>
-                                        <p>España</p>
+                                        <p class="mb-0">España</p>
+                                        <p>08 Agos, 2020</p>
 
                                     </div>
+                                    <!-- FIN ORGIEN -->
 
-                                    <!-- TT -->
+                                    <!-- LINEA DE RUTA -->
                                     <div class="via d-flex flex-column justify-content-center align-items-center">
 
                                         <div class="direction-form route-indirect tt">
 
-                                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+                                            <img src="/images/logo-ship-blue.svg" class="tt-img" alt="bote" style="top: -30px">
 
                                             <div class="line-route-direct">
                                             <div class="circle mr-2"></div>
-                                            <div class="line"></div>
+                                            <div class="line tt-line"></div>
                                             <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                            <div class="line line-blue"></div>
+                                            <div class="line tt-line line-blue"></div>
                                             <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
 
-                                    
                                         <div class="direction-desc mt-2">
 
-                                            <p style="margin-bottom: 0px"><b>Transit Time:</b> 45 Days</p>
-                                            <p><b>Vessel</b> Gordito</p>
+                                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                                            <p><b>Vessel:</b> Gordito</p>
 
                                         </div>
 
                                     </div>
+                                    <!-- FIN LINEA DE RUTA -->
 
-                                    <!-- DESTINATION -->
+                                    <!-- DESTINO -->
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
-                                        <p>Argentina</p>
+                                        <p class="mb-0">Argentina</p>
+                                        <p>08 Agos, 2020</p>
 
                                     </div>
+                                    <!-- FIN DESTINO -->
 
                                 </div>
+                                <!-- FIN RUTA -->
 
-                                <!-- PRICES -->
-                                <!-- <div class="col-12 col-lg-6 ">
-                                    <div class="row card-amount">
-                                        <div 
-                                            class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
-                                            v-for="(container,contKey) in request.containers"
-                                            :key="contKey"
-                                        >
-                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p class="mb-1">España, Barcelona</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p class="mb-1">Argentina, Buenos Aires</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><p class="mb-1"><b>Transit Time:</b> 45 Days</p></li>
+                                                <li><p><b>Vessel:</b> Gordito</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
+                                <!-- PRECIO -->
+                                <div class="col-12 col-lg-6">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>20DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40HC</b></p>
                                         </div>
                                     </div>
-                                </div> -->
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <!-- PRECIO -->
+                                    <div class="row card-amount card-amount__res">
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO -->
+
+                                </div>
+                                <!-- FIN PRECIO -->
 
                             </div>
+                            <!-- RUTA Y PRECIOS -->
 
-                            <!-- OPTIONS -->
+                            <!-- OPCIONES E INFORMACION EXTRA -->
                             <div class="col-12 mt-3 mb-3 result-action">
 
                                 <div class="d-flex align-items-center">
                                     
-                                    <a href="#" style="color: #006BFA;" ><b-icon icon="check-circle-fill"></b-icon> CMA CGM My PRICES</a>
+                                    <a href="#0" style="color: #006BFA"><b-icon icon="check-circle-fill"></b-icon> CMA CGM My PRICES</a>
                                     <p class="ml-4 mb-0"><b>Validity:</b> 2020-08-02 / 2020-05-09</p>
 
                                 </div>
@@ -117,26 +190,28 @@
                                 </div>
 
                             </div>
+                            <!-- FIN OPCIONES E INFORMACION EXTRA -->
 
                         </div>
+                        <!-- FIN INFORMACION PRINCIPAL -->
 
                         <!-- ADD QUOTE BTN -->
                         <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
-                                <b-form-checkbox class="btn-add-quote" name="check-button" button>
-                                    <b>add to quote</b>
-                                </b-form-checkbox>
+                            <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                                <b>add to quote</b>
+                            </b-form-checkbox>
                         </div>
 
-                   </div>
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
 
-                   <div class="row">
+                    <!-- INFORMACION DESPLEGADA -->
+                    <div class="row mr-0 ml-0">
                    
-                        <!-- <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="">
-                            <div 
-                                v-for="(chargeArray,chargeType) in rate.charges"
-                                :key="chargeType"
-                            >
-                                <h5><b>{{ chargeType }}</b></h5>
+                        <!-- DETALLES DE TARIFA -->
+                        <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                            <div>
+                                <h5><b>Freight</b></h5>
 
                                 <b-table-simple hover small responsive class="sc-table">
 
@@ -146,76 +221,64 @@
                                             <b-th>Detail</b-th>
                                             <b-th></b-th>
                                             <b-th></b-th>
-                                            <b-th
-                                                v-for="(container,contKey) in request.containers"
-                                                :key="contKey"
-                                                style="padding: 0.75rem !important"
-                                            >
-
-                                            {{container.code}}
-                                            </b-th>
+                                            <b-th style="padding: 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem !important">45DV</b-th>
                                         </b-tr>
                                     </b-thead>
 
                                     <b-tbody>
-                                        <b-tr 
-                                            v-for="(charge,chargeKey) in chargeArray"
-                                            :key="chargeKey"
-                                        >
-                                            <b-td><b>{{ charge.surcharge.name }}</b></b-td>
-                                            <b-td>{{ charge.calculationtype.name }}</b-td>
+                                        <b-tr>
+                                            <b-td><b>Ocean Freight</b></b-td>
+                                            <b-td>Per Container</b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td
-                                                v-for="(container,contKey) in request.containers"
-                                                :key="contKey"
-                                            >
-                                            <p v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</p>
-                                            <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
-                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
-                                            <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
-                                            <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
-                                            </b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
                                         </b-tr>
                 
                                         <b-tr>
                                             <b-td></b-td>
                                             <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td><b>Total {{ chargeType }}</b></b-td>
-                                            <b-td 
-                                                v-for="(container,contKey) in request.containers"
-                                                :key="contKey"
-                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
+                                            <b-td><b>Total Freight</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
                                 </b-table-simple>
                             </div>
-                        </b-collapse> -->
-                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule-tt">
+                        </b-collapse>
+                        <!-- FIN DETALLES DE TARIFA-->
+
+                        <!-- SCHEDULES -->
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule-tt" style="background: #fbfbfb">
 
                                 <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
                                 
                                 <div class="row">
                                      
-                                    <div class="col-lg-6 col-12 info-schedule" style="border-right: 1px solid #eee">
+                                    <!-- INFOMACION DE LA API -->
+                                    <div class="col-lg-6 info-schedule" style="border-right: 1px solid #eee">
 
                                         <div class="row schedule">
 
-                                            <div class="col-12 col-lg-6">
-
+                                            <!-- INFORMACION DEL BARCO -->
+                                            <div class="col-lg-6">
 
                                                 <h5 class="title-schedule"><b-icon icon="hdd-rack"></b-icon> Vessel Information</h5>
 
                                                 <div class="row mt-4">
-                                                    <div class="col-12 col-lg-6">
+                                                    <div class="col-lg-6">
 
-                                                        <h5 class="sub-title-schedule">vessel/Voyage</h5>
+                                                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
                                                         <p class="text-schedule"><b>MSC DITTE 038E</b></p>
 
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
+                                                    <div class="col-lg-6">
 
                                                         <h5 class="sub-title-schedule">IMO</h5>
                                                         <p class="text-schedule"><b>MSC DITTE 038E</b></p>
@@ -224,19 +287,21 @@
                                                 </div>
 
                                             </div>
+                                            <!-- FIN INFORMACION DEL BARCO -->
 
-                                            <div class="col-12 col-lg-6">
+                                            <!-- DEADLINE -->
+                                            <div class="col-lg-6">
 
                                                 <h5 class="title-schedule"><b-icon icon="stopwatch"></b-icon> Deadlines</h5>
                                         
                                                 <div class="row mt-4">
-                                                    <div class="col-12 col-lg-6">
+                                                    <div class="col-12 col-sm-6">
 
                                                         <h5 class="sub-title-schedule">CY</h5>
                                                         <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
 
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
+                                                    <div class="col-12 col-sm-6">
 
                                                         <h5 class="sub-title-schedule">VGM</h5>
                                                         <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
@@ -245,24 +310,25 @@
                                                 </div>
 
                                             </div>
+                                            <!-- FIN DEADLINE -->
 
                                         </div>
-                                        
-                                        
-
-
 
                                     </div>
+                                    <!-- FIN INFOMACION DE LA API -->
 
-                                    <div class="col-12 col-lg-6 d-flex transi-time">
+                                    <!-- RUTA -->
+                                    <div class="col-12 col-lg-6 transi-time d-none d-lg-flex">
 
-                                        <!-- ORIGIN -->
+                                        <!-- ORIGEN -->
                                         <div class="origin mr-4">
 
                                             <span>origin</span>
-                                            <p>España</p>
+                                            <p class="mb-0">España</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
 
                                         </div>
+                                        <!-- FIN ORIGEN -->
 
                                         <!-- TT -->
                                         <div class="via d-flex flex-column justify-content-center align-items-center">
@@ -274,7 +340,16 @@
                                                 <div class="line-route-direct">
                                                 <div class="circle mr-2"></div>
                                                 <div class="line"></div>
-                                                <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                                <b-button id="popover-direction" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
+                                                <b-popover target="popover-direction" triggers="hover" placement="top">
+                                                    <template #title>Direction</template>
+                                                    <ul>
+                                                        <li>Argentina - Madrid: 2012/20/20</li>
+                                                        <li>Madrid - China: 2012/20/20</li>
+                                                        <li>China - Chile: 2012/20/20</li>
+                                                    </ul>
+                                                </b-popover>
+                                                <!-- <div class="circle fill-circle-gray mr-2 ml-2"></div> -->
                                                 <div class="line line-blue"></div>
                                                 <div class="circle fill-circle ml-2"></div>
                                                 </div>
@@ -284,7 +359,8 @@
                                         
                                             <div class="direction-desc">
 
-                                                <p><b>TT:</b> 45 Days</p>
+                                                <p class="mb-0"><b>TT:</b> 45 Days</p>
+                                                <p><b>Service</b> Direct</p>
 
                                             </div>
 
@@ -294,117 +370,463 @@
                                         <div class="destination ml-4">
 
                                             <span>destination</span>
-                                            <p>Argentina</p>
+                                            <p class="mb-0">Argentina</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN DESTINATION -->
+
+                                    </div>
+                                    <!-- FIN RUTA -->
+
+                                    <!-- RUTA RESPONSIVA -->
+                                    <div class="col-12 d-lg-none">
+                                        <h6>Transbordos</h6>
+                                        <ul>
+                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                            <li>Madrid - China: 2012/20/20</li>
+                                            <li>China - Chile: 2012/20/20</li>
+                                        </ul>
+                                    </div>
+                                    <!-- FIN RUTA RESPONSIVA -->
+                                </div>
+                            
+                        </b-collapse>
+                        <!-- FIN SCHEDULES -->
+                    </div>
+                    <!-- FIN INFORMACION DESPLEGADA -->
+
+                </div>
+            </div>
+            <!-- FIN TARJETA CMA -->
+
+            <!-- TARJETA MAERKS -->
+            <div class="col-12 mb-4">
+
+                <div class="result-search">
+
+                    <div class="banda-top maerks"><span>MAERSK PRICES</span></div>
+
+                    <!-- INFORMACION DE TARIFA -->
+                    <div class="row">
+
+                       <!-- CARRIER -->
+                        <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                            <img 
+                                src="/images/maersk.png"  
+                                alt="logo" 
+                                width="115px">
+                        </div>
+                        <!-- FIN CARRIER -->
+
+                        <!-- INFORMACION PRINCIPAL -->
+                        <div class="row col-12 col-lg-8 margin-res">
+
+                            <!-- CONTRACT NAME -->
+                            <div class="col-12">
+                                <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
+                            </div>
+                            <!-- FIN CONTRACT NAME -->
+
+                            <!-- RUTA Y PRECIOS -->
+                            <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
+
+                                <!-- RUTA -->
+                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
+
+                                    <!-- ORGIEN -->
+                                    <div class="origin mr-4">
+
+                                        <span>origin</span>
+                                        <p class="mb-0">España</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN ORGIEN -->
+
+                                    <!-- LINEA DE RUTA -->
+                                    <div class="via d-flex flex-column justify-content-center align-items-center">
+
+                                        <div class="direction-form route-indirect tt">
+
+                                            <img src="/images/logo-ship-blue.svg" class="tt-img" alt="bote" style="top: -30px">
+
+                                            <div class="line-route-direct">
+                                            <div class="circle mr-2"></div>
+                                            <div class="line tt-line"></div>
+                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                            <div class="line tt-line line-blue"></div>
+                                            <div class="circle fill-circle ml-2"></div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="direction-desc mt-2">
+
+                                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                                            <p><b>Vessel:</b> Gordito</p>
 
                                         </div>
 
                                     </div>
+                                    <!-- FIN LINEA DE RUTA -->
 
+                                    <!-- DESTINO -->
+                                    <div class="destination ml-4">
+
+                                        <span>destination</span>
+                                        <p class="mb-0">Argentina</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN DESTINO -->
+
+                                </div>
+                                <!-- FIN RUTA -->
+
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p class="mb-1">España, Barcelona</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p class="mb-1">Argentina, Buenos Aires</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><p class="mb-1"><b>Transit Time:</b> 45 Days</p></li>
+                                                <li><p><b>Vessel:</b> Gordito</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
+                                <!-- PRECIO -->
+                                <div class="col-12 col-lg-6">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>20DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45NOR</b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <!-- PRECIO -->
+                                    <div class="row card-amount card-amount__res">
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO -->
+
+                                </div>
+                                <!-- FIN PRECIO -->
+
+                            </div>
+                            <!-- RUTA Y PRECIOS -->
+
+                            <!-- OPCIONES E INFORMACION EXTRA -->
+                            <div class="col-12 mt-3 mb-3 result-action">
+
+                                <div class="result-action">
+                                    
+                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> guaranteed Price & loading</a>
+                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> two-way commitment</a>
+                                    <a href="#0" style="color: #071C4B"></b-icon> T&C applicable</a>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.schedules
+                                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.detailed
+                                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                </div>
+
+                            </div>
+                            <!-- FIN OPCIONES E INFORMACION EXTRA -->
+
+                        </div>
+                        <!-- FIN INFORMACION PRINCIPAL -->
+
+                        <!-- ADD QUOTE BTN -->
+                        <div class="col-12 col-lg-2 d-flex flex-column justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
+                            <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                                <b>add to quote</b>
+                            </b-form-checkbox>
+                            <b-button class="btn-add-quote btn-book">
+                                <b>book</b>
+                            </b-button>
+                        </div>
+
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
+
+                    <!-- INFORMACION DESPLEGADA -->
+                    <div class="row mr-0 ml-0">
+                   
+                        <!-- DETALLES DE TARIFA -->
+                        <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                            <div>
+                                <h5><b>Freight</b></h5>
+
+                                <b-table-simple hover small responsive class="sc-table">
+
+                                    <b-thead>
+                                        <b-tr>
+                                            <b-th>Charge</b-th>
+                                            <b-th>Detail</b-th>
+                                            <b-th></b-th>
+                                            <b-th></b-th>
+                                            <b-th style="padding: 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem !important">45DV</b-th>
+                                        </b-tr>
+                                    </b-thead>
+
+                                    <b-tbody>
+                                        <b-tr>
+                                            <b-td><b>Ocean Freight</b></b-td>
+                                            <b-td>Per Container</b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                        </b-tr>
+                
+                                        <b-tr>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><b>Total Freight</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                        </b-tr>
+                                    </b-tbody>
+                                
+                                </b-table-simple>
+                            </div>
+                        </b-collapse>
+                        <!-- FIN DETALLES DE TARIFA-->
+
+                        <!-- SCHEDULES -->
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule-tt" style="background: #fbfbfb">
+
+                                <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+                                
+                                <div class="row">
+                                     
+                                    <!-- INFOMACION DE LA API -->
+                                    <div class="col-lg-6 info-schedule" style="border-right: 1px solid #eee">
+
+                                        <div class="row schedule">
+
+                                            <!-- INFORMACION DEL BARCO -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="hdd-rack"></b-icon> Vessel Information</h5>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">IMO</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN INFORMACION DEL BARCO -->
+
+                                            <!-- DEADLINE -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="stopwatch"></b-icon> Deadlines</h5>
+                                        
+                                                <div class="row mt-4">
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">CY</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">SI Non-AMS</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">VGM</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">SI AMS</h5>
+                                                        <p class="text-schedule"><b>N/A</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN DEADLINE -->
+
+                                        </div>
+
+                                    </div>
+                                    <!-- FIN INFOMACION DE LA API -->
+
+                                    <!-- RUTA -->
+                                    <div class="col-12 col-lg-6 transi-time d-none d-lg-flex">
+
+                                        <!-- ORIGEN -->
+                                        <div class="origin mr-4">
+
+                                            <span>origin</span>
+                                            <p class="mb-0">España</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN ORIGEN -->
+
+                                        <!-- TT -->
+                                        <div class="via d-flex flex-column justify-content-center align-items-center">
+
+                                            <div class="direction-form route-indirect tt">
+
+                                                <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+
+                                                <div class="line-route-direct">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <b-button id="popover-direction2" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
+                                                <b-popover target="popover-direction2" triggers="hover" placement="top">
+                                                    <template #title>Direction</template>
+                                                    <ul>
+                                                        <li>Argentina - Madrid: 2012/20/20</li>
+                                                        <li>Madrid - China: 2012/20/20</li>
+                                                        <li>China - Chile: 2012/20/20</li>
+                                                    </ul>
+                                                </b-popover>
+                                                <!-- <div class="circle fill-circle-gray mr-2 ml-2"></div> -->
+                                                <div class="line line-blue"></div>
+                                                <div class="circle fill-circle ml-2"></div>
+                                                </div>
+
+                                            </div>
+
+                                        
+                                            <div class="direction-desc">
+
+                                                <p class="mb-0"><b>TT:</b> 45 Days</p>
+                                                <p><b>Service</b> Direct</p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DESTINATION -->
+                                        <div class="destination ml-4">
+
+                                            <span>destination</span>
+                                            <p class="mb-0">Argentina</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN DESTINATION -->
+
+                                    </div>
+                                    <!-- FIN RUTA -->
+
+                                    <!-- RUTA RESPONSIVA -->
+                                    <div class="col-12 d-lg-none">
+                                        <h6>Transbordos</h6>
+                                        <ul>
+                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                            <li>Madrid - China: 2012/20/20</li>
+                                            <li>China - Chile: 2012/20/20</li>
+                                        </ul>
+                                    </div>
+                                    <!-- FIN RUTA RESPONSIVA -->
                                 </div>
                             
                         </b-collapse>
-                   
-                   </div>
-
-                </div>
-            </div>
-        
-
-        <h2 class="mb-5 t-recent" style="margin-top: 80px"><b-icon icon="clock-history" scale="2" variant="secondary" class="mr-3"></b-icon> recent searches</h2>
-
-        <div class="row">
-
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="recent-search">
-
-                    <img src="/images/logo-ship-blue.svg" alt="bote">
-
-                    <p class="mt-4 mb-0">Lisboa, Lis</p>
-
-                    <div class="direction-spot mt-2 mb-2">
-                        <div class="circle"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle"></div>
+                        <!-- FIN SCHEDULES -->
                     </div>
-
-                    <p class="mb-0">Buenos Aires</p>
-
-                    <b class="mb-4">12-05-2020 / 12-05-2020</b>
-
-                    <a href="#">search again</a>
+                    <!-- FIN INFORMACION DESPLEGADA -->
 
                 </div>
             </div>
-
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="recent-search">
-
-                    <img src="/images/logo-ship-blue.svg" alt="bote">
-
-                    <p class="mt-4 mb-0">Lisboa, Lis</p>
-
-                    <div class="direction-spot mt-2 mb-2">
-                        <div class="circle"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle"></div>
-                    </div>
-
-                    <p class="mb-0">Buenos Aires</p>
-
-                    <b class="mb-4">12-05-2020 / 12-05-2020</b>
-
-                    <a href="#">search again</a>
-
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="recent-search">
-
-                    <img src="/images/logo-ship-blue.svg" alt="bote">
-
-                    <p class="mt-4 mb-0">Lisboa, Lis</p>
-
-                    <div class="direction-spot mt-2 mb-2">
-                        <div class="circle"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle"></div>
-                    </div>
-
-                    <p class="mb-0">Buenos Aires</p>
-
-                    <b class="mb-4">12-05-2020 / 12-05-2020</b>
-
-                    <a href="#">search again</a>
-
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="recent-search">
-
-                    <img src="/images/logo-ship-blue.svg" alt="bote">
-
-                    <p class="mt-4 mb-0">Lisboa, Lis</p>
-
-                    <div class="direction-spot mt-2 mb-2">
-                        <div class="circle"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle"></div>
-                    </div>
-
-                    <p class="mb-0">Buenos Aires</p>
-
-                    <b class="mb-4">12-05-2020 / 12-05-2020</b>
-
-                    <a href="#">search again</a>
-
-                </div>
-            </div>
-
-        </div>
-
-        
+            <!-- FIN TARJETA MAERKS -->
 
     </div>
 </template>
