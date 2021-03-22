@@ -57,7 +57,7 @@ class SearchApiController extends Controller
         $results = SearchRate::where('company_user_id',$company_user_id)->orderBy('id', 'desc')->take(4)->get();
 
         //Grouping as collection to be managed by Vue
-        return SearchApiResource::collection($results);//LIMIT TO FOUR OR MAKE SLIDER DISPLAY
+        return SearchApiResource::collection($results);
     }
 
     //Retrieves all data needed for search processing and displaying

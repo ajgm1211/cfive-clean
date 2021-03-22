@@ -22,7 +22,11 @@ class SearchApiResource extends JsonResource
 
         $containers = $this->containers();
 
-        $container_group = GroupContainer::where('id',$containers[0]['gp_container_id'])->first();
+        if($containers != null && count($containers) != 0){
+            $container_group = GroupContainer::where('id',$containers[0]['gp_container_id'])->first();
+        }else{
+            $container_group = null;
+        }
 
         if(isset($this->contact_id)){
             $contact = $this->contact()->first();
