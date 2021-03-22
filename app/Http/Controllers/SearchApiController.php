@@ -184,6 +184,10 @@ class SearchApiController extends Controller
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
+
+        if($rates != null && count($rates) != 0){
+            $rates[0]->SetAttribute('search', $search_array);
+        }
         
         //$rateNo = 0;
         foreach($rates as $rate){
@@ -235,9 +239,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
         }
-
-        $rates[0]->SetAttribute('search', $search_array);
-
+        
         return RateResource::collection($rates);
     }
 
