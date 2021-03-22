@@ -61,4 +61,5 @@ return [
     "totals" => "Totales",
     "price" => "Precio",
     "delegation" => "Delegación",
+    "exchange" => "Tasa de cambio",
 ];
