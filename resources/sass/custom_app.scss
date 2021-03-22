@@ -9,6 +9,7 @@
 
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
+@import 'search/search';
 a,
 input,
 h1,
@@ -1327,9 +1328,7 @@ input.multiselect__input:focus {
         flex-direction: column;
         margin-bottom: 10px;
     }
-    .btn-quote-res {
-        padding: 50px 0px !important;
-    }
+    
     .margin-res {
         margin: 0px !important;
         .contract-title {
@@ -1478,53 +1477,6 @@ input.multiselect__input:focus {
 
 /* Search Result */
 
-.result-search {
-    position: relative;
-    border-radius: 4px;
-    background: #ffffff;
-    box-shadow: 0px 0px 15px 3px #eaeaea;
-}
-
-#detailed,
-#remarks {
-    background: rgba(#C4C4C4, 0.09);
-    h5 {
-        font-size: 12px;
-        color: #051b4e;
-        text-transform: uppercase !important;
-    }
-    .card-body {
-        background: rgba(196, 196, 196, 0.09);
-    }
-}
-
-.result-search .origin,
-.result-search .destination {
-    font-size: 10px;
-    color: #dddddd;
-    display: flex;
-    flex-direction: column;
-    text-transform: uppercase;
-    p {
-        color: #071C4B;
-    }
-    p,
-    span {
-        font-weight: 900;
-    }
-    span {
-        margin-bottom: 5px;
-    }
-}
-
-.origin {
-    align-items: flex-start;
-}
-
-.destination {
-    align-items: flex-end;
-}
-
 @media only screen and (max-width: 768px) {
     .destination-search {
         padding-right: 30px !important;
@@ -1545,84 +1497,7 @@ input.multiselect__input:focus {
     }
 } */
 
-.result-search .destination {
-    b,
-    p {
-        float: right;
-        text-align: right;
-    }
-}
 
-.result-search .direction-form {
-    display: flex;
-    position: relative;
-    img {
-        width: 30px;
-        top: -25px;
-        left: 123px;
-        color: #051b4e;
-        position: absolute;
-    }
-}
-
-.result-search .via .direction-form .line-route-direct {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .circle {
-        width: 15px;
-        height: 15px;
-        border-radius: 50px;
-        border: 2px solid #dddddd;
-        background-color: transparent;
-    }
-    .line {
-        width: 100px;
-        height: 2px;
-        background-color: #dddddd;
-    }
-    .fill-circle {
-        border-color: #006BFA;
-        background-color: #006BFA;
-    }
-    .fill-circle-gray {
-        border-color: #dddddd;
-        background-color: #dddddd;
-    }
-    .line-blue {
-        background-color: #006BFA !important;
-    }
-}
-
-.direction-desc {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    b,
-    p {
-        font-size: 11px;
-        text-align: center;
-        color: #071C4B;
-    }
-    b {
-        text-transform: uppercase;
-    }
-}
-
-.result-search h6 {
-    text-transform: uppercase;
-    font-weight: 900;
-    color: #071C4B;
-}
-
-.btn-add-quote {
-    b {
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #dddddd !important;
-    }
-}
 
 .btn.btn-secondary.add-contract {
     border: none !important;
@@ -1734,31 +1609,6 @@ input.multiselect__input:focus {
 
 .delivery-type {
     right: 16px !important;
-}
-
-.btn-book {
-    width: 120px;
-    background: #43B54E !important;
-    border-color: #43B54E !important;
-    color: #fff !important;
-    margin-top: 10px;
-}
-
-.btn-book:hover {
-    background: #348d3d !important;
-    border-color: #348d3d !important;
-}
-
-.btn-add-quote .active {
-    color: #ffffff;
-    background: #006afa !important;
-    border-color: #006afa !important;
-}
-
-.btn-add-quote .btn-secondary:hover {
-    color: #ffffff;
-    background: #006afa !important;
-    border-color: #006afa !important;
 }
 
 .card-amount p {
@@ -2012,18 +1862,6 @@ input.surcharge-input {
     .img-icon {
         left: 20px;
     }
-    .tt {
-        display: none !important;
-    }
-}
-
-@media only screen and (max-width: 768px) {
-    .transi-time-res,
-    .prices-card-res {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }
 
 #dropdown-containers .dropdown-menu,
@@ -2199,105 +2037,6 @@ input.data-provider {
     }
 }
 
-
-/* CMA AND MAERKS */
-.schedule-tt {
-    .title-schedule {
-        font-weight: 800;
-        text-transform: uppercase;
-    }
-    .sub-title-schedule {
-        font-size: 12px;
-        font-weight: 400;
-    }
-    .text-schedule {
-        font-size: 12px;
-        font-weight: 800;
-    }
-    .info-schedule {
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-
-    .schedule {
-        .title-schedule {
-            font-size: 12px;
-            font-weight: 800;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
-    }
-
-    .transi-time {
-        .line {
-            width: 300px;
-        }
-        .origin, .destination {
-            justify-content: center;
-        }
-        
-    }
-}
-
-.banda-top {
-    top: 31px;
-    left: -45px;
-    position: absolute;
-    width: 152px;
-    height: 0px;
-    border-right: 20px solid transparent;
-    border-left: 29px solid transparent;
-    box-shadow: 0 5px 3px -3px grey;
-    transform: rotate(-50deg);
-    &::after {
-        content: '';
-        width: 14px;
-        position: absolute;
-        top: 22px;
-        left: -28px;
-        border-right: 12px solid transparent;
-        border-left: 2px solid transparent;
-    }
-    &::before {
-        content: '';
-        width: 14px;
-        position: absolute;
-        top: 23px;
-        left: 109px;
-        border-right: 3px solid transparent;
-        border-left: 10px solid transparent;
-    }
-    span {
-        color: #ffffff;
-        font-weight: 800;
-        font-size: 10px;
-        white-space: nowrap;
-        line-height: 3;
-    }
-}
-
-.banda-top.maerks {
-    border-bottom: 23px solid #42B0D5;
-    &::after {
-        border-top: 10px solid #368eac;
-    }
-    &::before {
-
-        border-top: 11px solid #368eac;
-    }
-}
-
-.banda-top.cma {
-    border-bottom: 23px solid #a91f1f;
-    &::after {
-        border-top: 10px solid #991c1c;
-    }
-    &::before {
-
-        border-top: 11px solid #991c1c;
-    }
-}
-
 .card-amount-header__res {
     display: none;
     margin-top: 15px;
@@ -2313,18 +2052,7 @@ input.data-provider {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    /* CMA AND MAERKS */
-    .schedule-tt {
-        .transi-time {
-            .line {
-                width: 175px !important;
-            }
-            
-        }
-        .result-search .direction-form img {
-            left: 200px !important;
-        }
-    }
+
 }
 
 @media only screen and (max-width: 991px) {
@@ -2350,46 +2078,3 @@ input.data-provider {
         padding: 50px 0px !important;
     }
 }
-
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
-
-    .schedule-tt {
-        .transi-time {
-            .line {
-                width: 80px !important;
-            }
-            
-        }
-        .direction-form.route-indirect.tt img {
-            left: 100px !important;
-        }
-    }
-
-    .line.tt-line {
-        width: 40px !important;
-    }
-
-    .tt-img {
-        left: 61px !important;
-    }
-
-}
-
-/* @media only screen and (min-width: 1366px) {
-
-    .schedule-tt {
-        .transi-time {
-            .line {
-                width: 265pxs !important;
-            }
-            
-        }
-        .result-search .direction-form img {
-            left: 321px !important;
-        }
-    }
-
-}
- */
-
-

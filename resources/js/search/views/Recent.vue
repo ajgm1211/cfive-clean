@@ -46,18 +46,18 @@
                                     <!-- FIN ORGIEN -->
 
                                     <!-- LINEA DE RUTA -->
-                                    <div class="via d-flex flex-column justify-content-center align-items-center">
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect tt">
+                                        <div class="direction-form">
 
-                                            <img src="/images/logo-ship-blue.svg" class="tt-img" alt="bote" style="top: -30px">
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                                            <div class="line-route-direct">
-                                            <div class="circle mr-2"></div>
-                                            <div class="line tt-line"></div>
-                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                            <div class="line tt-line line-blue"></div>
-                                            <div class="circle fill-circle ml-2"></div>
+                                            <div class="route-indirect d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                                <div class="line line-blue"></div>
+                                                <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
@@ -144,6 +144,12 @@
                                         <div class="col-2 pl-0 pr-0 prices-card-res">
                                             <p><b>40HC</b></p>
                                         </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45NOR</b></p>
+                                        </div>
                                     </div>
                                     <!-- FIN PRECIO RESPONSIVE -->
 
@@ -158,11 +164,18 @@
                                         <div class="col-2 pl-0 pr-0 prices-card-res">
                                             <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
                                         </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
                                     </div>
                                     <!-- FIN PRECIO -->
 
                                 </div>
                                 <!-- FIN PRECIO -->
+
 
                             </div>
                             <!-- RUTA Y PRECIOS -->
@@ -255,7 +268,7 @@
                         <!-- FIN DETALLES DE TARIFA-->
 
                         <!-- SCHEDULES -->
-                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule-tt" style="background: #fbfbfb">
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule">
 
                                 <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
                                 
@@ -318,7 +331,7 @@
                                     <!-- FIN INFOMACION DE LA API -->
 
                                     <!-- RUTA -->
-                                    <div class="col-12 col-lg-6 transi-time d-none d-lg-flex">
+                                    <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
 
                                         <!-- ORIGEN -->
                                         <div class="origin mr-4">
@@ -331,32 +344,30 @@
                                         <!-- FIN ORIGEN -->
 
                                         <!-- TT -->
-                                        <div class="via d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                            <div class="direction-form route-indirect tt">
+                                            <div class="direction-form">
 
-                                                <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+                                                <img src="/images/logo-ship-blue.svg" class="img-indirect" alt="bote">
 
-                                                <div class="line-route-direct">
-                                                <div class="circle mr-2"></div>
-                                                <div class="line"></div>
-                                                <b-button id="popover-direction" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
-                                                <b-popover target="popover-direction" triggers="hover" placement="top">
-                                                    <template #title>Direction</template>
-                                                    <ul>
-                                                        <li>Argentina - Madrid: 2012/20/20</li>
-                                                        <li>Madrid - China: 2012/20/20</li>
-                                                        <li>China - Chile: 2012/20/20</li>
-                                                    </ul>
-                                                </b-popover>
-                                                <!-- <div class="circle fill-circle-gray mr-2 ml-2"></div> -->
-                                                <div class="line line-blue"></div>
-                                                <div class="circle fill-circle ml-2"></div>
+                                                <div class="route-indirect d-flex align-items-center">
+                                                    <div class="circle mr-2"></div>
+                                                    <div class="line"></div>
+                                                    <b-button id="popover-direction" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
+                                                    <b-popover target="popover-direction" triggers="hover" placement="top">
+                                                        <template #title>Direction</template>
+                                                        <ul>
+                                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                                            <li>Madrid - China: 2012/20/20</li>
+                                                            <li>China - Chile: 2012/20/20</li>
+                                                        </ul>
+                                                    </b-popover>
+                                                    <div class="line line-blue"></div>
+                                                    <div class="circle fill-circle ml-2"></div>
                                                 </div>
 
                                             </div>
 
-                                        
                                             <div class="direction-desc">
 
                                                 <p class="mb-0"><b>TT:</b> 45 Days</p>
@@ -397,6 +408,7 @@
                     <!-- FIN INFORMACION DESPLEGADA -->
 
                 </div>
+
             </div>
             <!-- FIN TARJETA CMA -->
 
@@ -432,7 +444,7 @@
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
                                 <!-- RUTA -->
-                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
+                                <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center" style="border-bottom: 1px solid #eeeeee">
 
                                     <!-- ORGIEN -->
                                     <div class="origin mr-4">
@@ -445,18 +457,16 @@
                                     <!-- FIN ORGIEN -->
 
                                     <!-- LINEA DE RUTA -->
-                                    <div class="via d-flex flex-column justify-content-center align-items-center">
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect tt">
+                                        <div class="direction-form">
 
-                                            <img src="/images/logo-ship-blue.svg" class="tt-img" alt="bote" style="top: -30px">
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                                            <div class="line-route-direct">
-                                            <div class="circle mr-2"></div>
-                                            <div class="line tt-line"></div>
-                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                            <div class="line tt-line line-blue"></div>
-                                            <div class="circle fill-circle ml-2"></div>
+                                            <div class="route-direct d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
@@ -613,9 +623,9 @@
                             <b-form-checkbox class="btn-add-quote" name="check-button" button>
                                 <b>add to quote</b>
                             </b-form-checkbox>
-                            <b-button class="btn-add-quote btn-book">
+                            <a href="#" class="btn-add-quote btn-book">
                                 <b>book</b>
-                            </b-button>
+                            </a>
                         </div>
 
                     </div>
@@ -671,7 +681,7 @@
                         <!-- FIN DETALLES DE TARIFA-->
 
                         <!-- SCHEDULES -->
-                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule-tt" style="background: #fbfbfb">
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule" style="background: #fbfbfb">
 
                                 <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
                                 
@@ -746,7 +756,7 @@
                                     <!-- FIN INFOMACION DE LA API -->
 
                                     <!-- RUTA -->
-                                    <div class="col-12 col-lg-6 transi-time d-none d-lg-flex">
+                                    <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
 
                                         <!-- ORIGEN -->
                                         <div class="origin mr-4">
@@ -759,27 +769,16 @@
                                         <!-- FIN ORIGEN -->
 
                                         <!-- TT -->
-                                        <div class="via d-flex flex-column justify-content-center align-items-center">
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                            <div class="direction-form route-indirect tt">
+                                            <div class="direction-form">
 
-                                                <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+                                                <img src="/images/logo-ship-blue.svg" class="img-direct" alt="bote">
 
-                                                <div class="line-route-direct">
-                                                <div class="circle mr-2"></div>
-                                                <div class="line"></div>
-                                                <b-button id="popover-direction2" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
-                                                <b-popover target="popover-direction2" triggers="hover" placement="top">
-                                                    <template #title>Direction</template>
-                                                    <ul>
-                                                        <li>Argentina - Madrid: 2012/20/20</li>
-                                                        <li>Madrid - China: 2012/20/20</li>
-                                                        <li>China - Chile: 2012/20/20</li>
-                                                    </ul>
-                                                </b-popover>
-                                                <!-- <div class="circle fill-circle-gray mr-2 ml-2"></div> -->
-                                                <div class="line line-blue"></div>
-                                                <div class="circle fill-circle ml-2"></div>
+                                                <div class="route-direct d-flex align-items-center">
+                                                    <div class="circle mr-2"></div>
+                                                    <div class="line"></div>
+                                                    <div class="circle fill-circle ml-2"></div>
                                                 </div>
 
                                             </div>
