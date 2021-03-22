@@ -32,7 +32,9 @@ class NewContractRequest extends Model implements HasMedia
         'contract_id',
         'data',
         'manage_app',
-        'username_load'
+        'username_load',
+        'code',
+        'is_api'
     ];
 
     public function user()
