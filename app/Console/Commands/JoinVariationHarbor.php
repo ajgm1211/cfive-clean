@@ -112,8 +112,8 @@ class JoinVariationHarbor extends Command
                                 $arrayFin2['type'] = $valoresUnicos;
 
                                 $variacionesFinal2 = json_encode($arrayFin2, JSON_UNESCAPED_UNICODE);
-
-                                $duplicados->duplicados = json_encode($duplicado[0]);
+                                $dupli[] = $duplicado[0];
+                                $duplicados->duplicados = json_encode($dupli);
                                 $duplicados->varation = $variacionesFinal2;
                                 $duplicados->save();
 
