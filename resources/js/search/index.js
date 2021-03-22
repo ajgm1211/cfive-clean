@@ -1,7 +1,6 @@
 import '../bootstrap';
 import '../../sass/custom_app.scss';
-
-
+import * as VueGoogleMaps from 'vue2-google-maps';
 
 import Vue from 'vue';
 
@@ -18,6 +17,14 @@ Vue.use(BootstrapVue)
     // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
+
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: 'AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0',
+        libraries: 'places',
+    },
+    installComponents: true
+})
 
 const router = new VueRouter({
     mode: 'history',
