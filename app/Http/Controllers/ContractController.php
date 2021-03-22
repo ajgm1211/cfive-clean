@@ -618,6 +618,8 @@ class ContractController extends Controller
             case 'FCL':
                 $request = NewContractRequest::create([
                     'namecontract' => $contract->name,
+                    'code' => $contract->code,
+                    'is_api' => $contract->is_api,
                     'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction_id' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
@@ -632,6 +634,8 @@ class ContractController extends Controller
             case 'LCL':
                 $request = NewContractRequestLcl::create([
                     'namecontract' => $contract->name,
+                    'code' => $contract->code,
+                    'is_api' => $contract->is_api,
                     'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
