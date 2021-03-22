@@ -260,7 +260,7 @@
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
                                 <!-- RUTA -->
-                                <div class="col-12 col-lg-6 d-flex transi-time-res">
+                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
 
                                     <!-- ORIGIN -->
                                     <div class="origin mr-4">
@@ -307,6 +307,50 @@
 
                                 </div>
 
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p>{{rate.port_origin.display_name}}</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p>{{rate.port_destiny.display_name}}</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b></li>
+                                                <li><p ><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
                                 <!-- PRICES -->
                                 <div class="col-12 col-lg-6 ">
 
@@ -324,7 +368,7 @@
 
                                     <div class="row card-amount card-amount__res">
                                         <div 
-                                            class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
+                                            class="col-2 pl-0 pr-0 prices-card-res"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
