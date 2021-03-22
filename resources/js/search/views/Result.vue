@@ -235,7 +235,7 @@
 
                 <div class="result-search">
 
-                    <!-- CONTENT MAIN CARD -->
+                    <!-- INFORMACION DE TARIFA -->
                     <div class="row">
 
                        <!-- CARRIER -->
@@ -245,19 +245,21 @@
                                 alt="logo" 
                                 width="115px">
                         </div>
+                        <!-- FIN CARRIER -->
 
-                        <!-- INFO CARD -->
+                        <!-- INFORMACION PRINCIPAL -->
                         <div class="row col-12 col-lg-8 margin-res">
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
                                 <h6 class="mt-4 mb-5 contract-title">{{rate.contract.name}}</h6>
                             </div>
+                            <!-- FIN CONTRACT NAME -->
 
-                            <!-- INFO AND PRICE -->
+                            <!-- RUTA Y PRECIOS -->
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
-                                <!-- INFO -->
+                                <!-- RUTA -->
                                 <div class="col-12 col-lg-6 d-flex transi-time-res">
 
                                     <!-- ORIGIN -->
@@ -268,19 +270,19 @@
 
                                     </div>
 
-                                    <!-- TT -->
-                                    <div class="via d-flex flex-column justify-content-center align-items-center">
+                                    <!-- LINEA DE RUTA -->
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect tt">
+                                        <div class="direction-form">
 
-                                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                                            <div class="line-route-direct">
-                                            <div class="circle mr-2"></div>
-                                            <div class="line"></div>
-                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                            <div class="line line-blue"></div>
-                                            <div class="circle fill-circle ml-2"></div>
+                                            <div class="route-indirect d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                                <div class="line line-blue"></div>
+                                                <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
@@ -295,7 +297,7 @@
 
                                     </div>
 
-                                    <!-- DESTINATION -->
+                                    <!-- DESTINO -->
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
@@ -307,7 +309,20 @@
 
                                 <!-- PRICES -->
                                 <div class="col-12 col-lg-6 ">
-                                    <div class="row card-amount">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
+                                        <div 
+                                            class="col-2 pl-0 pr-0 prices-card-res"
+                                            v-for="(container,requestKey) in request.containers"
+                                            :key="requestKey"    
+                                        >
+                                            <p><b>{{container.code}}</b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <div class="row card-amount card-amount__res">
                                         <div 
                                             class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
                                             v-for="(container,contKey) in request.containers"
@@ -320,7 +335,7 @@
 
                             </div>
 
-                            <!-- OPTIONS -->
+                            <!-- OPCIONES E INFORMACION EXTRA -->
                             <div class="col-12 mt-3 mb-3 result-action">
 
                                 <div class="d-flex align-items-center">
