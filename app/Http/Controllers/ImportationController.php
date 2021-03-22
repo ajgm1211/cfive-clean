@@ -1974,7 +1974,7 @@ class ImportationController extends Controller
             ->where('ammount', $ammountVar)
             ->where('currency_id', $currencyVar)
             ->first();
-        if (empty($SurchargeId) == 0) {
+        if (empty($SurchargeId) ) {
             $SurchargeId = LocalCharge::create([
                 'surcharge_id' => $surchargeVar,
                 'typedestiny_id' => $typedestinyVar,
@@ -1995,7 +1995,7 @@ class ImportationController extends Controller
                         ->where('port_dest', $destinationVar)
                         ->where('localcharge_id', $SurchargeId->id)
                         ->first();
-                    if (empty($existsLP) == 0) {
+                    if (empty($existsLP) ) {
                         LocalCharPort::create([
                             'port_orig' => $originVar,
                             'port_dest' => $destinationVar,
@@ -2015,7 +2015,7 @@ class ImportationController extends Controller
                         ->where('country_dest', $destinationCounVar)
                         ->where('localcharge_id', $SurchargeId->id)
                         ->first();
-                    if (empty($existsLC) == 0) {
+                    if (empty($existsLC) ) {
                         LocalCharCountry::create([
                             'country_orig' => $originCounVar,
                             'country_dest' => $destinationCounVar,
@@ -2029,7 +2029,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (empty($localcharcarriersV) == 0) {
+            if (empty($localcharcarriersV) ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2077,7 +2077,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (empty($localcharcarriersV) == 0) {
+            if (empty($localcharcarriersV) ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2546,7 +2546,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', '=', $company_user_id)
                                 ->where('owner', '=', $ownerVal)
                                 ->get();
-                            if (empty($existe) == 0) {
+                            if (empty($existe) ) {
                                 Company::create([
                                     'business_name' => $businessnameVal,
                                     'phone' => $phoneVal,
@@ -2881,7 +2881,7 @@ class ImportationController extends Controller
                                 ->where('company_id', $companyVal)
                                 ->get();
 
-                            if (empty($contactexits) == 0) {
+                            if (empty($contactexits) ) {
                                 Contact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
@@ -2901,7 +2901,7 @@ class ImportationController extends Controller
                                 ->where('company_user_id', \Auth::user()->company_user_id)
                                 ->get();
 
-                            if (empty($failcontactexits) == 0) {
+                            if (empty($failcontactexits) ) {
                                 Failedcontact::create([
                                     'first_name' => $firstnameVal,
                                     'last_name' => $lastnameVal,
