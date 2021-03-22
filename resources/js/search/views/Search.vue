@@ -767,7 +767,7 @@
                                     :name="item.name"
                                     :placeholder="item.placeholder"
                                     class="input-modal mb-3"
-                                    v-model="equipType"
+                                    v-model="equipType[item.placeholder]"
                                     required
                                 ></b-form-input>
                                 <img src="/images/ordenar.svg" alt="ordenar" width="25px" height="25px">
@@ -858,7 +858,6 @@
 
                     <div class="row">
                         <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
-
                             <div class="col-12 col-sm-3"><p>{{ item.type.name }}</p></div>
                             <div class="col-12 col-sm-3"><p>{{ item.calculation.name }}</p></div>
                             <div class="col-12 col-sm-3"><p>{{ item.currency.alphacode }}</p></div>
@@ -1085,8 +1084,8 @@ export default {
                 },
                 requestData: {},
             },
-             dropzoneOptions: {
-					url: `/example`,
+            dropzoneOptions: {
+					url: `/`,
 					thumbnailWidth: 150,
 					maxFilesize: 0.5,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
@@ -1159,6 +1158,7 @@ export default {
             destination: '', 
             carrier: '', 
             reference: '',
+            equipType: {},
             direction: '',
             typeContract: '',
             calculationType: '',
@@ -1484,13 +1484,29 @@ export default {
                     })
             }
         },
-        contracButtonPressed() {
-           let contract=this;
-           let hola=[];
-           contract.hola.reference=contract.reference;
+        contracButtonPressed(file) {
+           let data={
+               //stepOne contract
+                reference: this.reference,
+                datarange: this.dateRange,
+                carrier: this.carrier,
+                direction: this.direction,
+                valueEq: this.valueEq,
+                //stepTwo Ocean
+                origin: this.origin,
+                dextination: this.destination,
+                carrier: this.carrier,
+                currency: this.currency,
+                rates: this.equipType,
+                //stepthree Surcharge
+                dataSurcharger: this.dataSurcharger,
+                //stepFour
+
+
+           };
         
            actions.search
-                .createContract(contract.hola)
+                .createContract(data)
                 .then((response) => {
                     // this.$router.push({ path: `search`, query: { requested: 0, model_id: response.data.data.id} })
                     })
