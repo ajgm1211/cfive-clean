@@ -1489,7 +1489,7 @@ export default {
                     })
             }
         },
-        contracButtonPressed(file) {
+        contracButtonPressed() {
            let data={
                //stepOne contract
                 reference: this.reference,
