@@ -38,8 +38,8 @@ class QuoteV2 extends Model implements HasMedia
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
         'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 
-        'cargo_type_id', 'search_options', 'direction_id'
+        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm',
+        'cargo_type_id', 'search_options', 'direction_id',
     ];
 
     public function company()
@@ -714,18 +714,18 @@ class QuoteV2 extends Model implements HasMedia
 
         foreach ($relations as $relation) {
             if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
-                if($relation != null){
+                if ($relation != null) {
                     $relation->duplicate($new_quote);
                 }
             } else {
                 foreach ($relation as $relationRecord) {
-                    if($relationRecord != null){
+                    if ($relationRecord != null) {
                         $newRelationship = $relationRecord->duplicate($new_quote);
                     }
                 }
             }
         }
-        
+
         return $new_quote;
     }
 
@@ -771,14 +771,14 @@ class QuoteV2 extends Model implements HasMedia
         }
     }
 
-    public function getContainerArray($equip, $type='id')
+    public function getContainerArray($equip, $type = 'id')
     {
         if ($equip != '[]') {
             $cont_ids = [];
             $cont_array = explode(",", $equip);
             foreach ($cont_array as $cont) {
                 if ($cont != "") {
-                    if($type == 'id'){
+                    if ($type == 'id') {
                         $wh = Container::where('code', '=', $cont)->first()->id;
                         array_push($cont_ids, $wh);
                     }
@@ -860,11 +860,11 @@ class QuoteV2 extends Model implements HasMedia
         $included = [];
         $client = $this->company_user->first();
 
-        if(isset($this->pdf_options['exchangeRates']) && $this->pdf_options['exchangeRates'] != null){
+        if (isset($this->pdf_options['exchangeRates']) && $this->pdf_options['exchangeRates'] != null) {
             $options = $this->pdf_options['exchangeRates'];
 
-            foreach($options as $opt){
-                if($opt['custom']){
+            foreach ($options as $opt) {
+                if ($opt['custom']) {
                     array_push($exchange, $opt);
                     array_push($included, $opt['alphacode']);
                 }
@@ -873,10 +873,10 @@ class QuoteV2 extends Model implements HasMedia
 
         $rateTotals = $this->automatic_rate_totals()->get();
         $inlandTotals = $this->automatic_inland_totals()->get();
-        
-        if($this->type == 'FCL'){
+
+        if ($this->type == 'FCL') {
             $localchargeTotals = $this->local_charges_totals()->get();
-        }else if($this->type == 'LCL'){
+        } else if ($this->type == 'LCL') {
             $localchargeTotals = $this->local_charges_lcl_totals()->get();
         }
 
@@ -884,17 +884,17 @@ class QuoteV2 extends Model implements HasMedia
 
         $allTotalsCurrency = [];
 
-        foreach($allTotals as $total){
+        foreach ($allTotals as $total) {
             $currency = Currency::where('id', $total->currency_id)->first();
-            
-            array_push($allTotalsCurrency,$currency->alphacode);
 
-            if(!in_array($currency->alphacode,$included)){
-                $currencyExchange = [ 
-                    'alphacode' => $currency->alphacode, 
-                    'exchangeUSD' => $currency->rates, 
+            array_push($allTotalsCurrency, $currency->alphacode);
+
+            if (!in_array($currency->alphacode, $included)) {
+                $currencyExchange = [
+                    'alphacode' => $currency->alphacode,
+                    'exchangeUSD' => $currency->rates,
                     'exchangeEUR' => $currency->rates_eur,
-                    'custom' => false
+                    'custom' => false,
                 ];
 
                 array_push($exchange, $currencyExchange);
@@ -902,8 +902,8 @@ class QuoteV2 extends Model implements HasMedia
             }
         }
 
-        foreach($exchange as $key => $ex){
-            if(!in_array($ex['alphacode'],$allTotalsCurrency)){
+        foreach ($exchange as $key => $ex) {
+            if (!in_array($ex['alphacode'], $allTotalsCurrency)) {
                 unset($exchange[$key]);
             }
         }
@@ -913,25 +913,25 @@ class QuoteV2 extends Model implements HasMedia
 
     public function updatePdfOptions($option = null)
     {
-        if(($this->pdf_options==null || count($this->pdf_options) != 5) && $option == null){            
+        if (($this->pdf_options == null || count($this->pdf_options) != 5) && $option == null) {
             $client = $this->company_user()->first();
             $client_currency = Currency::find($client->currency_id);
 
             $exchangeRates = $this->exchangeRates();
-    
+
             $pdfOptions = [
-                "allIn" =>true, 
-                "showCarrier"=>true, 
-                "showTotals"=>false, 
-                "totalsCurrency" =>$client_currency,
-                "exchangeRates" => $exchangeRates
+                "allIn" => true,
+                "showCarrier" => true,
+                "showTotals" => false,
+                "totalsCurrency" => $client_currency,
+                "exchangeRates" => $exchangeRates,
             ];
-            
+
             $this->pdf_options = $pdfOptions;
             $this->save();
         }
 
-        if($option == 'exchangeRates'){
+        if ($option == 'exchangeRates') {
             $pdfOptions = $this->pdf_options;
 
             $exchangeRates = $this->exchangeRates();
@@ -943,26 +943,65 @@ class QuoteV2 extends Model implements HasMedia
         }
     }
 
+    public function updateAddresses()
+    {
+        $addresses = $this->automatic_inland_address()->get();
+        $hasOrigin = false;
+        $hasDestination = false;
+
+        if ($addresses != null && count($addresses) != 0) {
+            foreach ($addresses as $address) {
+                if ($address->address == $this->origin_address) {
+                    $hasOrigin = true;
+                } else if ($address->address == $this->destination_address) {
+                    $hasDestination = true;
+                }
+            }
+
+            if (!$hasOrigin) {
+                foreach ($addresses as $addressFinal) {
+                    if ($address->type == 'Origin') {
+                        $this->origin_address = $address->address;
+                        $this->save();
+                    }
+                }
+            } else if (!$hasDestination) {
+                foreach ($addresses as $addressFinal) {
+                    if ($address->type == 'Destination') {
+                        $this->destination_address = $address->address;
+                        $this->save();
+                    }
+                }
+            }
+        } else {
+            $this->origin_address = null;
+            $this->destination_address = null;
+            $this->save();
+
+        }
+
+    }
+
     public function getContainersFromEquipment($equipment, $type = 'model')
     {
-        if (isset($equipment) && count((array)$equipment) != 0 && $equipment != "[]") {
+        if (isset($equipment) && count((array) $equipment) != 0 && $equipment != "[]") {
             $equip_array = explode(",", str_replace(["\"", "[", "]"], "", $equipment));
             $equip_array = $this->validateEquipment($equip_array);
             $containers = [];
 
-            foreach($equip_array as $container_id){
-                $cont = Container::where('id',$container_id)->first();
+            foreach ($equip_array as $container_id) {
+                $cont = Container::where('id', $container_id)->first();
 
-                if($type == 'model'){
+                if ($type == 'model') {
                     array_push($containers, $cont);
-                }else if($type == 'array'){
+                } else if ($type == 'array') {
                     array_push($containers, $cont->toArray());
                 }
             }
 
             return $containers;
 
-        }else{
+        } else {
 
             return $equipment;
 
