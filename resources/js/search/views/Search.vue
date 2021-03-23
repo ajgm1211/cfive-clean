@@ -1515,7 +1515,9 @@ export default {
                 .then((response) => {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
-                    vcomponent.$refs.my-modal.hide(modal);
+                    // vcomponent.$refs.my-modal.hide(modal);
+                    this.$router.go();
+                    
                     })
                 .catch(error => {
                     if(error.status === 422) {
