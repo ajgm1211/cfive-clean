@@ -647,6 +647,9 @@ export default {
 
     },
     search: {
+        list(data) {
+            return api.call('get', `/api/search/list`, data);
+        },
         process(id) {
             return api.call('post', `/api/search/process`, id);
         },

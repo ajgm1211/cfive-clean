@@ -10,7 +10,7 @@ class SearchRate extends Model
 
     protected $fillable = [
         'id', 'pick_up_date', 'user_id', 'equipment', 'delivery', 'direction', 'type', 'company_user_id', 'user_id', 
-        'company_id', 'contact_id', 'price_level_id', 'origin_charges', 'destination_charges'
+        'company_id', 'contact_id', 'price_level_id', 'origin_charges', 'destination_charges', 'origin_address', 'destination_address'
     ];
 
     public function search_ports()
@@ -77,7 +77,13 @@ class SearchRate extends Model
     {
         $containers = [];
 
-        foreach($this->equipment as $code){
+        if(is_array($this->equipment)){
+            $equip = $this->equipment;    
+        }else{
+            $equip = explode(",", str_replace(["\"", "[", "]"], "", $this->equipment));
+        }
+        
+        foreach($equip as $code){
             if($type == 'model'){
                 $newContainer = Container::where('code',$code)->first();
             }elseif($type == 'array'){

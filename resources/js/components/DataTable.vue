@@ -26,6 +26,7 @@
                             v-if="massiveSelect"
                             v-model="allSelected"
                             :indeterminate="false"
+                            @change="toggleAll"
                         >
                         </b-form-checkbox>
                     </b-th>
@@ -488,7 +489,7 @@
                             </button>
                             <button
                                 class="btn-action"
-                                v-if="singleActions.includes('specialduplicate')"
+                                v-if="singleActions.includes('specialduplicate') && item.type != 'LCL'"
                                 @click="onSpecialDuplicate(item.id)"
                             >
                                 Duplicate +

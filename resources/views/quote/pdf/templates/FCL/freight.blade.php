@@ -26,5 +26,9 @@
         @if($destination_charges->count()>0)
             @include('quote.pdf.partials.localcharge_remarks')
         @endif
+        <!-- EXCHANGE RATE -->
+        @if($freight_charges->count()>=1 && @$quote->pdf_options['showTotals'])
+            @include('quote.pdf.partials.exchange')
+        @endif
         <!-- TERMS -->
         @include('quote.pdf.partials.terms')

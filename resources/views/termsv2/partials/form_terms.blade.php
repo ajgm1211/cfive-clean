@@ -12,7 +12,7 @@
 
 <div class="form-group m-form__group">
   {!! Form::label('Type', 'Type') !!}
-  {{ Form::select('type',['FCL' => 'FCL','LCL' => 'LCL','AIR'=>'AIR'],@$term['type'],['placeholder'  => 'Select at option','id'=>'quoteType','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
+  {{ Form::select('type',['FCL' => 'FCL','LCL' => 'LCL'],@$term['type'],['placeholder'  => 'Select at option','id'=>'quoteType','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
 </div>
 
 <div class="form-group m-form__group">
