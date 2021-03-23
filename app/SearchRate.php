@@ -77,7 +77,13 @@ class SearchRate extends Model
     {
         $containers = [];
 
-        foreach($this->equipment as $code){
+        if(is_array($this->equipment)){
+            $equip = $this->equipment;    
+        }else{
+            $equip = explode(",", str_replace(["\"", "[", "]"], "", $this->equipment));
+        }
+        
+        foreach($equip as $code){
             if($type == 'model'){
                 $newContainer = Container::where('code',$code)->first();
             }elseif($type == 'array'){

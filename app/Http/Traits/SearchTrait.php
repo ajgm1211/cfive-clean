@@ -514,7 +514,7 @@ trait SearchTrait
 
             $markupOrig = $localMarkup * $valor;
 
-            $monto = $monto / $rateFreight;
+            //$monto = $monto / $rateFreight;
             $markup = trim($localMarkup);
             $markup = number_format($markup, 2, '.', '');
             $monto += $localMarkup;
