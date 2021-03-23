@@ -198,27 +198,27 @@ class Contract extends Model implements HasMedia, Auditable
                 $rates->destiny_port = $destination['id'];
                 $arreglo = array();
                 if ($req == 1) {
-                    if(!is_null($request->rates['20DV'])){
+                    if(isset($request->rates['20DV'])){
                         $rates->twuenty = $request->rates['20DV'];
                     }else{
                         $rates->twuenty = 0;
                     }
-                    if(!is_null($request->rates['40DV'])){
+                    if(isset($request->rates['40DV'])){
                         $rates->forty = $request->rates['40DV'];
                     }else{
                         $rates->forty = 0;
                     }
-                    if(!is_null($request->rates['40HC'])){
+                    if(isset($request->rates['40HC'])){
                         $rates->fortyhc = $request->rates['40HC'];
                     }else{
                         $rates->fortyhc = 0;
                     }
-                    if(!is_null($request->rates['40NOR'])){
+                    if(isset($request->rates['40NOR'])){
                         $rates->fortynor = $request->rates['40NOR'];
                     }else{
                         $rates->fortynor = 0;
                     }
-                    if(!is_null($request->rates['45HC'])){
+                    if(isset($request->rates['45HC'])){
                         $rates->fortyfive = $request->rates['45HC'];
                     }else{
                         $rates->fortyfive = 0;
