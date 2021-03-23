@@ -1509,13 +1509,13 @@ export default {
 
 
            };
+           let vcomponent = this;
            actions.search
                 .createContract(data)
                 .then((response) => {
-                    vcomponent.$refs.myDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
-                    vcomponent.$refs.myDropzone.processQueue();
+                    vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
+                    vcomponent.$refs.myVueDropzone.processQueue();
                     vcomponent.$refs.my-modal.hide(modal);
-
                     })
                 .catch(error => {
                     if(error.status === 422) {
