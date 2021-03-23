@@ -1424,7 +1424,7 @@ export default {
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
-                this.searchRequest.carriers = this.quoteData.carriers;
+                this.searchRequest.carriers = this.datalists.carriers;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;

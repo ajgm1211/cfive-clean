@@ -184,10 +184,6 @@ class SearchApiController extends Controller
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
-
-        if($rates != null && count($rates) != 0){
-            $rates[0]->SetAttribute('search', $search_array);
-        }
         
         //$rateNo = 0;
         foreach($rates as $rate){
@@ -238,6 +234,13 @@ class SearchApiController extends Controller
             $rate->setAttribute('remarks', $remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
+        }
+
+        //Ordering rates by totals (cheaper to most expensive)
+        $rates = $this->sortRates($rates);
+
+        if($rates != null && count($rates) != 0){
+            $rates[0]->SetAttribute('search', $search_array);
         }
         
         return RateResource::collection($rates);
@@ -351,6 +354,7 @@ class SearchApiController extends Controller
         //setting variables for query
         $company_user_id = $search_data['company_user'];
         $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
+
         $user_id = $search_data['user'];
         $container_group = $search_data['selectedContainerGroup'];
         $origin_ports = $search_data['originPorts'];
@@ -871,4 +875,33 @@ class SearchApiController extends Controller
             
         }
     }    
+
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates)
+    {
+        $sortedRates = [];
+        $highestTotal = 0;
+
+        foreach($rates as $rate){
+            $localTotal = 0; 
+            if(isset($rate->totals_with_markups)){
+                foreach($rate->totals_with_markups as $code => $total){
+                    $localTotal += $total;
+                }
+            }else{
+                foreach($rate->totals as $code => $total){
+                    $localTotal += $total;
+                }
+            }
+
+            if($localTotal > $highestTotal){
+                array_unshift($sortedRates, $rate);
+                $highestTotal = $localTotal;
+            }else{
+                array_push($sortedRates, $rate);
+            }
+        }
+
+        return collect(array_reverse($sortedRates));
+    }
 }
