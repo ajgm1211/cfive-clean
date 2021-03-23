@@ -323,7 +323,7 @@
                         name="originCharges"
                         class="mr-5 as-checkbox"
                     >
-                        Include origin charges
+                        &nbsp;&nbsp;<b>Include origin charges</b>
                     </b-form-checkbox>
                     <b-form-checkbox
                         id="destinationCharges"
@@ -331,7 +331,7 @@
                         name="destinationCharges"
                         class="as-checkbox"
                     >
-                        Include destination charges
+                        &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
                 </div>
                 
