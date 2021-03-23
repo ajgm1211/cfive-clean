@@ -901,10 +901,10 @@ trait SearchTrait
         if($search_data['originCharges']){
             $charges->put('Origin',$origin);
         }
+        $charges->put('Freight',$freight);
         if($search_data['destinationCharges']){
             $charges->put('Destination',$destination);
         }
-        $charges->put('Freight',$freight);
         
         return $charges;
     }

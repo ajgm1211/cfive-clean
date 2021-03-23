@@ -1492,6 +1492,9 @@ export default {
                         if(typeof rate.containers == "string"){
                             rate.containers = JSON.parse(rate.containers)
                         }
+                        if(rate.search == undefined){
+                            rate.search = response.data.data[0].search;
+                        }
                     });
                     this.foundRates = response.data.data;
                     this.searching = false;
