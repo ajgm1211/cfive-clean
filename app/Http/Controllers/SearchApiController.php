@@ -898,7 +898,7 @@ class SearchApiController extends Controller
         }
 
         return response()->json([
-            //'data' => $localcharge->toJson(),
+            'id' => $contract->id,
             'data' => 'Success',
         ]);
     }    
