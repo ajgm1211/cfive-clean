@@ -874,103 +874,24 @@ class SearchApiController extends Controller
 
     public function storeContractNewSearch(Request $request)
     {
-
-        dd($request);
-        $req = $request->group_containerC;
+            // dd($request);
+        $req = $request->valueEq['id'];
         $contract = new Contract();
         $container = Container::get();
 
-        $data = $request->validate([
-            'referenceC' => 'required',
-            'group_containerC' => 'required',
-            'C20DV' => 'sometimes|required',
-            'C40DV' => 'sometimes|required',
-            'C40HC' => 'sometimes|required',
-            'C40NOR' => 'sometimes|required',
-            'C45HC' => 'sometimes|required',
-            'amountC' => 'sometimes|required',
-            'document' => 'required',
-        ]);
-
         $contract->company_user_id = Auth::user()->company_user_id;
-        $contract->name = $request->referenceC;
-        $validation = explode('/', $request->validityC);
-        $contract->direction_id = $request->directionC;
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
+        $contract->name = $request->reference;
+        $contract->direction_id = $request->direction['id'];
+        $contract->validity = date('Y-m-d', strtotime($request->datarange['startDate']));
+        $contract->expire = date('Y-m-d', strtotime($request->datarange['endDate']));
         $contract->status = 'publish';
-        $contract->gp_container_id = $request->group_containerC;
+        $contract->gp_container_id = $request->valueEq['id'];
         $contract->is_manual = 2;
         $contract->save();
 
-        $contract->ContractCarrierSyncSingle($request->carrierR);
-
-        $rates = new Rate();
-        $rates->origin_port = $request->origin_port;
-        $rates->destiny_port = $request->destination_port;
-        $arreglo = array();
-        if ($req == 1) {
-
-            $rates->twuenty = $request->C20DV;
-            $rates->forty = $request->C40DV;
-            $rates->fortyhc = $request->C40HC;
-            $rates->fortynor = $request->C40NOR;
-            $rates->fortyfive = $request->C45HC;
-        } else {
-
-            $rates->twuenty = 0;
-            $rates->forty = 0;
-            $rates->fortyhc = 0;
-            $rates->fortynor = 0;
-            $rates->fortyfive = 0;
-
-            foreach ($container as $cod) {
-
-                $cont = 'C' . $cod->code;
-                if ($cod->gp_container_id == $req) {
-                    $arreglo[$cont] = $request->{$cont};
-                }
-            }
-            $rates->containers = json_encode($arreglo);
-        }
-        $rates->carrier_id = $request->carrierR;
-        $rates->currency_id = $request->currencyR;
-        $rates->contract()->associate($contract);
-        $rates->save();
-
-        // Surcharges
-
-        $calculation_type = $request->input('calculation');
-        $typeC = $request->input('type');
-        $currencyC = $request->input('currency');
-        $amountC = $request->input('amount');
-
-        if (count((array)$calculation_type) > 0) {
-            foreach ($calculation_type as $ct => $ctype) {
-
-                if (!empty($request->input('amount'))) {
-                    $localcharge = new LocalCharge();
-                    $localcharge->surcharge_id = $typeC[$ct];
-                    $localcharge->typedestiny_id = '3';
-                    $localcharge->calculationtype_id = $ctype;
-                    $localcharge->ammount = $amountC[$ct];
-                    $localcharge->currency_id = $currencyC[$ct];
-                    $localcharge->contract()->associate($contract);
-                    $localcharge->save();
-
-                    $detailcarrier = new LocalCharCarrier();
-                    $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
-                    $detailcarrier->localcharge()->associate($localcharge);
-                    $detailcarrier->save();
-
-                    $detailport = new LocalCharPort();
-                    $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
-                    $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
-                    $detailport->localcharge()->associate($localcharge);
-                    $detailport->save();
-                }
-            }
-        }
+        $contract->ContractCarrierSyncSingle($request->carrier['id']);
+        $contract->ContractRateStore($request,$contract,$req,$container);
+        $contract->ContractSurchargeStore($request,$contract);
 
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');

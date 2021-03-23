@@ -653,8 +653,10 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsEquipment"
+                                    :options="datalists.container_groups"
                                     placeholder="Equipment"
+                                    label="name"
+                                    track-by="name"
                                     class="input-modal"
                                 >
                                 </multiselect>
@@ -669,7 +671,9 @@
                                     :close-on-select="true"
                                     :clear-on-select="true"
                                     :show-labels="false"
-                                    :options="optionsDirection"
+                                    :options="datalists.directions"
+                                    label="name"
+                                    track-by="name"
                                     placeholder="Direction"
                                     class="input-modal"
                                 >
@@ -767,7 +771,7 @@
                                     :name="item.name"
                                     :placeholder="item.placeholder"
                                     class="input-modal mb-3"
-                                    v-model="equipType[item.placeholder]"
+                                    v-model="equipType[item.name]"
                                     required
                                 ></b-form-input>
                                 <img src="/images/ordenar.svg" alt="ordenar" width="25px" height="25px">
@@ -1085,7 +1089,8 @@ export default {
                 requestData: {},
             },
             dropzoneOptions: {
-					url: `/`,
+					url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`,
+                    autoProcessQueue: false,
 					thumbnailWidth: 150,
 					maxFilesize: 0.5,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
@@ -1152,10 +1157,10 @@ export default {
             invalidSurcharger: false,
             valueEq: '', 
             amount: '', 
-            currency: 'USD', 
+            currency: '', 
             currencySurcharge: 'USD', 
             origin: '', 
-            destination: '', 
+            destination:'', 
             carrier: '', 
             reference: '',
             equipType: {},
@@ -1494,7 +1499,7 @@ export default {
                 valueEq: this.valueEq,
                 //stepTwo Ocean
                 origin: this.origin,
-                dextination: this.destination,
+                destination: this.destination,
                 carrier: this.carrier,
                 currency: this.currency,
                 rates: this.equipType,
@@ -1754,25 +1759,25 @@ export default {
 
         valueEq: function() {
 
-            if (this.valueEq == 'DRY') {
+            if (this.valueEq.name == 'DRY') {
                 this.items.splice({});
-                this.items.push({name: 'C20DV', placeholder: '20DV'}, { name: 'C40DV', placeholder: '40DV' }, { name: 'C40HC', placeholder: '40HC' }, { name: 'C45HC', placeholder: '45HC' }, { name: 'C40NOR', placeholder: '40NOR' }); 
+                this.items.push({name: 'C20DV', placeholder: '20DV',value: 0}, { name: 'C40DV', placeholder: '40DV' }, { name: 'C40HC', placeholder: '40HC' }, { name: 'C45HC', placeholder: '45HC' }, { name: 'C40NOR', placeholder: '40NOR' }); 
                 return
             }
 
-            if (this.valueEq == 'REEFER') {
+            if (this.valueEq.name == 'REEFER') {
                 this.items.splice({});
                 this.items.push({name: 'C20RF', placeholder: '20RF'}, { name: 'C40RF', placeholder: '40RF' }, { name: 'C40HCRF', placeholder: '40HCRF' }); 
                 return
             }
 
-            if (this.valueEq == 'OPEN TOP') {
+            if (this.valueEq.name == 'OPEN TOP') {
                 this.items.splice({});
                 this.items.push({name: 'C20OT', placeholder: '20OT'}, { name: 'C40OT', placeholder: '40OT' }); 
                 return
             }
 
-            if (this.valueEq == 'FLAT RACK') {
+            if (this.valueEq.name == 'FLAT RACK') {
                 this.items.splice({});
                 this.items.push({name: 'C20FR', placeholder: '20FR'}, { name: 'C40FR', placeholder: '40FR' }); 
                 return
