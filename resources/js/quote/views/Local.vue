@@ -1059,6 +1059,7 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            inputId: 0,
             selectedCharges: [],
             selectedInputs: [],
             carriers: [],
@@ -1090,8 +1091,10 @@ export default {
     methods: {
         add() {
             if (this.value != "") {
+                this.inputId += 1;
                 if (this.currentQuoteData.type == "FCL") {
                     this.inputs.push({
+                        id: this.inputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
@@ -1101,6 +1104,7 @@ export default {
                     });
                 } else {
                     this.inputs.push({
+                        id: this.inputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",

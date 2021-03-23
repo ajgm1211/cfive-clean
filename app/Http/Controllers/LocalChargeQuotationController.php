@@ -236,10 +236,17 @@ class LocalChargeQuotationController extends Controller
      */
     public function store(Request $request)
     {
+        $selectedCharges = $request->validate([
+            'selectedCharges.*.surcharge_id' => 'required',
+            'selectedCharges.*.surcharge' => 'required',
+            'selectedCharges.*.calculation_type_id' => 'required',
+            'selectedCharges.*.price' => 'required',
+            'selectedCharges.*.markup' => 'sometimes',
+            'selectedCharges.*.provider_name' => 'required',
+            'selectedCharges.*.currency_id' => 'required'
+        ]);
 
-        $selectedCharges = $request->selectedCharges;
-
-        foreach ($selectedCharges as $localcharge) {
+        foreach ($selectedCharges['selectedCharges'] as $localcharge) {
 
             $charge = $localcharge['surcharge']['name'];
 
