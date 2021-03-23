@@ -1089,12 +1089,12 @@ export default {
                 requestData: {},
             },
             dropzoneOptions: {
-					url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`,
-                    autoProcessQueue: false,
+					url: `/`,
 					thumbnailWidth: 150,
 					maxFilesize: 0.5,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
 					addRemoveLinks: true,
+                    autoProcessQueue: false,
 			},
             selectedContainerGroup: {},
             containers: [],
@@ -1509,18 +1509,18 @@ export default {
 
 
            };
-        
            actions.search
                 .createContract(data)
                 .then((response) => {
-                    // this.$router.push({ path: `search`, query: { requested: 0, model_id: response.data.data.id} })
+                    vcomponent.$refs.myDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
+                    vcomponent.$refs.myDropzone.processQueue();
+                    vcomponent.$refs.my-modal.hide(modal);
+
                     })
                 .catch(error => {
-                    // this.errorsExist = true;
-                    // this.searching = false;
-                    // if(error.status === 422) {
-                    //     this.responseErrors = error.data.errors;
-                    // }
+                    if(error.status === 422) {
+                        this.responseErrors = error.data.errors;
+                    }
                 })
         },
 
