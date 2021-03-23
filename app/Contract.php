@@ -3,6 +3,7 @@
 namespace App;
 
 use App\ContractCarrier;
+use App\Rate;
 use App\ContractCompanyRestriction;
 use App\ContractUserRestriction;
 use App\Http\Filters\ContractFilter;
@@ -183,6 +184,110 @@ class Contract extends Model implements HasMedia, Auditable
             'carrier_id' => $carrier_id,
             'contract_id' => $this->id,
         ]);
+    }
+
+    public function ContractRateStore($request,$contract,$req,$container){
+
+        $originPort = $request->origin; 
+        $destinationPort= $request->destination;
+
+        foreach ($originPort as $origin) {
+            foreach($destinationPort as $destination){
+                $rates = new Rate();
+                $rates->origin_port = $origin['id'];
+                $rates->destiny_port = $destination['id'];
+                $arreglo = array();
+                if ($req == 1) {
+                    if(!is_null($request->rates['20DV'])){
+                        $rates->twuenty = $request->rates['20DV'];
+                    }else{
+                        $rates->twuenty = 0;
+                    }
+                    if(!is_null($request->rates['40DV'])){
+                        $rates->forty = $request->rates['40DV'];
+                    }else{
+                        $rates->forty = 0;
+                    }
+                    if(!is_null($request->rates['40HC'])){
+                        $rates->fortyhc = $request->rates['40HC'];
+                    }else{
+                        $rates->fortyhc = 0;
+                    }
+                    if(!is_null($request->rates['40NOR'])){
+                        $rates->fortynor = $request->rates['40NOR'];
+                    }else{
+                        $rates->fortynor = 0;
+                    }
+                    if(!is_null($request->rates['45HC'])){
+                        $rates->fortyfive = $request->rates['45HC'];
+                    }else{
+                        $rates->fortyfive = 0;
+                    }
+                } 
+                else {
+
+                    $rates->twuenty = 0;
+                    $rates->forty = 0;
+                    $rates->fortyhc = 0;
+                    $rates->fortynor = 0;
+                    $rates->fortyfive = 0;
+
+                    
+                    foreach ($container as $cod) {
+                        $cont = 'C' . $cod->code;
+                        if ($cod->gp_container_id == $req) {
+                            $arreglo[$cont] = $request->rates[$cont];
+                            
+                        }
+                    }
+                    // dd($arreglo);
+                    $rates->containers = json_encode($arreglo);
+                }
+                $rates->carrier_id = $request->carrier['id'];
+                $rates->currency_id = $request->currency['id'];
+                $rates->contract()->associate($contract);
+                $rates->save();
+            }
+        }        
+    }
+    
+    public function ContractSurchargeStore($request,$contract){
+
+        $calculation_type = $request->dataSurcharger;
+        $originPort = $request->origin; 
+        $destinationPort= $request->destination;
+        // $typeC = $request->input('type');
+        // $currencyC = $request->input('currency');
+        // $amountC = $request->input('amount');
+        if (count((array)$calculation_type) > 0) {
+            foreach ($calculation_type as $ct) {
+                if (!empty($request->dataSurcharger['0']['amount'])) {
+                    $localcharge = new LocalCharge();
+                    $localcharge->surcharge_id = $ct['type']['id'];
+                    $localcharge->typedestiny_id = '3';
+                    $localcharge->calculationtype_id = $ct['calculation']['id'];
+                    $localcharge->ammount = $ct['amount'];
+                    $localcharge->currency_id = $ct['currency']['id'];
+                    $localcharge->contract()->associate($contract);
+                    $localcharge->save();
+
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id = $request->carrier['id']; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+
+                    foreach ($originPort as $origin) {
+                        foreach($destinationPort as $destination){
+                            $detailport = new LocalCharPort();
+                            $detailport->port_orig = $origin['id']; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                            $detailport->port_dest = $destination['id']; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                            $detailport->localcharge()->associate($localcharge);
+                            $detailport->save();
+                        }
+                    }                    
+                }
+            }
+        }
     }
 
     /**
