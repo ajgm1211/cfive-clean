@@ -7,6 +7,7 @@ import Vue from 'vue';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
+import Search from '../search/views/Search'; 
 
 /* Config files */
 import App from './views/App'; // Main Component
@@ -20,7 +21,11 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
     mode: 'history',
-    routes: [],
+    routes: [{
+        path: '/api/search',
+        name: 'searchV2.index',
+        component: Search
+    }],
 });
 
 window.api = new Api();

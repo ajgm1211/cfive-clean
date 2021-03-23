@@ -8,7 +8,7 @@
         ></Search>
 
         <Recent 
-            v-if="(Object.keys(foundRates).length == 0 || foundRates.length == 0) && !searching"
+            v-if="(Object.keys(foundRates).length == 0 || foundRates.length == 0) && !searching && requestData.requested == undefined"
         ></Recent>
 
         <Result 
@@ -39,10 +39,11 @@ export default {
             foundCharges: {},            
             searchRequest: {},
             datalists: {},
+            requestData: {},
         }
     },
     created() {
-        //console.log()
+        this.requestData = this.$route.query;
     },
     methods :
     {

@@ -193,7 +193,7 @@
 								'success'
 							)
 							$(elemento).closest('tr').remove();
-
+							myatest.ajax.reload(null,false);
 						}else if(data == 2){
 							swal("Error!", "an internal error occurred!", "error");
 						}
@@ -210,7 +210,7 @@
 	});
 
 	$(function() {
-		$('#myatest').DataTable({
+		myatest=$('#myatest').DataTable({
 			processing: true,
 			//serverSide: true,
 			ajax: '{!! route("UploadFile.create") !!}',

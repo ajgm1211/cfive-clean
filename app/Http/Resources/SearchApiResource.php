@@ -22,7 +22,11 @@ class SearchApiResource extends JsonResource
 
         $containers = $this->containers();
 
-        $container_group = GroupContainer::where('id',$containers[0]['gp_container_id'])->first();
+        if($containers != null && count($containers) != 0){
+            $container_group = GroupContainer::where('id',$containers[0]['gp_container_id'])->first();
+        }else{
+            $container_group = null;
+        }
 
         if(isset($this->contact_id)){
             $contact = $this->contact()->first();
@@ -36,6 +40,8 @@ class SearchApiResource extends JsonResource
             'id' => $this->id,
             'equipment' => $this->equipment,
             'pick_up_date' => $this->pick_up_date,
+            'start_date' => rtrim(explode('/', $this->pick_up_date)[0]),
+            'end_date' => ltrim(explode('/', $this->pick_up_date)[1]),
             'delivery_id' => $this->delivery,
             'type' => $this->type,
             'direction_id' => $this->direction,
@@ -56,6 +62,8 @@ class SearchApiResource extends JsonResource
             'direction' => isset($this->direction) ? $this->direction()->first() : null,
             'origin_charges' => $this->origin_charges,
             'destination_charges' => $this->destination_charges,
+            'origin_address' => $this->origin_address,
+            'destination_address' => $this->destination_address,
         ];
     }
 
