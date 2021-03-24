@@ -514,7 +514,7 @@ trait SearchTrait
 
             $markupOrig = $localMarkup * $valor;
 
-            $monto = $monto / $rateFreight;
+            //$monto = $monto / $rateFreight;
             $markup = trim($localMarkup);
             $markup = number_format($markup, 2, '.', '');
             $monto += $localMarkup;
@@ -901,10 +901,10 @@ trait SearchTrait
         if($search_data['originCharges']){
             $charges->put('Origin',$origin);
         }
+        $charges->put('Freight',$freight);
         if($search_data['destinationCharges']){
             $charges->put('Destination',$destination);
         }
-        $charges->put('Freight',$freight);
         
         return $charges;
     }

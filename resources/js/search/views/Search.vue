@@ -24,27 +24,42 @@
                         ></b-icon>
                     </div>
 
-                    <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
-                    <div class="delivery-input">
-                        <multiselect
-                            v-model="deliveryType"
-                            :multiple="false"
-                            :close-on-select="true"
-                            :clear-on-select="false"
-                            :show-labels="false"
-                            :options="deliveryTypeOptions"
-                            label="name"
-                            track-by="name"
-                            placeholder="Select"
-                            class="s-input no-select-style"
-                        >
-                        </multiselect>
-                        <b-icon
-                            icon="caret-down-fill"
-                            aria-hidden="true"
-                            class="delivery-type"
-                        ></b-icon>
-                    </div>
+                        <!-- Type (FCL LCL AIR)-->
+                        <div class="type-input">
+                            <multiselect
+                                v-model="searchRequest.type"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"
+                                :options="typeOptions"
+                                @input="checkSearchType()"
+                                placeholder="Select"
+                                class="s-input no-select-style"
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
+                        </div>
+
+                        <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
+                        <div class="delivery-input">
+                            <multiselect
+                                v-model="deliveryType"
+                                :multiple="false"
+                                :close-on-select="true"
+                                :clear-on-select="false"
+                                :show-labels="false"                                
+                                :options="deliveryTypeOptions"
+                                label="name"
+                                track-by="name"
+                                placeholder="Select"
+                                class="s-input no-select-style "
+                            >
+                            </multiselect>
+                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                        </div>
+
+
                 </div>
 
                 <!-- Button Additional services -->
@@ -134,35 +149,23 @@
                 </div>
 
                 <!-- Date Picker-->
-                <div
-                    class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search"
-                >
-                    <date-range-picker
-                        :opens="'center'"
-                        :locale-data="{
-                            firstDay: 0,
-                            format: 'yyyy/mm/dd',
-                        }"
-                        :singleDatePicker="false"
-                        :autoApply="true"
-                        :timePicker="false"
-                        v-model="searchRequest.dateRange"
-                        :linkedCalendars="true"
-                        class="s-input"
-                    ></date-range-picker>
-                    <img
-                        src="/images/calendario.svg"
-                        class="img-icon calendar-icon"
-                        alt="calendario"
-                    />
-                    <span
-                        v-if="
-                            errorsExist &&
-                            'dateRange.startDate' in responseErrors
-                        "
-                        style="color: red"
-                        >Please pick a date</span
-                    >
+                <div class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search">
+                        <date-range-picker
+                            :opens="'center'"
+                            :locale-data="{
+                                firstDay: 0,
+                                format: 'yyyy/mm/dd',
+                            }"
+                            :singleDatePicker="false"
+                            :autoApply="true"
+                            :timePicker="false"
+                            v-model="searchRequest.dateRange"
+                            :linkedCalendars="true"
+                            class="s-input"
+                            @update="updateQuoteSearchOptions()"
+                        ></date-range-picker>
+                        <img src="/images/calendario.svg" class="img-icon calendar-icon" alt="calendario">
+                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
                 </div>
 
                 <!-- Containers -->
@@ -309,16 +312,11 @@
                             track-by="business_name"
                             placeholder="Company"
                             class="s-input"
-                            @input="
-                                unlockContacts(), (searchRequest.contact = '')
-                            "
-                        >
-                        </multiselect>
-                        <img
-                            src="/images/empresa.svg"
-                            class="img-icon"
-                            alt="port"
-                        />
+                            @input="unlockContacts(), searchRequest.contact = '', updateQuoteSearchOptions()"
+                            >
+                            </multiselect>
+                            <img src="/images/empresa.svg" class="img-icon" alt="port">
+                        
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -334,13 +332,10 @@
                             track-by="name"
                             placeholder="Contact"
                             class="s-input"
-                        >
-                        </multiselect>
-                        <img
-                            src="/images/contacto.svg"
-                            class="img-icon"
-                            alt="port"
-                        />
+                            @input="updateQuoteSearchOptions"
+                            >
+                            </multiselect>
+                            <img src="/images/contacto.svg" class="img-icon" alt="port">
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -355,13 +350,10 @@
                             track-by="name"
                             placeholder="Price Level"
                             class="s-input"
-                        >
-                        </multiselect>
-                        <img
-                            src="/images/pricelevel.svg"
-                            class="img-icon"
-                            alt="port"
-                        />
+                            @input="updateQuoteSearchOptions"
+                            >
+                            </multiselect>
+                            <img src="/images/pricelevel.svg" class="img-icon" alt="port">
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -406,16 +398,18 @@
                         v-model="searchRequest.originCharges"
                         name="originCharges"
                         class="mr-5 as-checkbox"
+                        @input="updateQuoteSearchOptions"
                     >
-                        Include origin charges
+                        &nbsp;&nbsp;<b>Include origin charges</b>
                     </b-form-checkbox>
                     <b-form-checkbox
                         id="destinationCharges"
                         v-model="searchRequest.destinationCharges"
                         name="destinationCharges"
                         class="as-checkbox"
+                        @input="updateQuoteSearchOptions"
                     >
-                        Include destination charges
+                        &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
                 </div>
             </b-collapse>
@@ -1788,9 +1782,9 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
-                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date;
-                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date;
-                } else {
+                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date+'T01:00:00';
+                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date+'T01:00:00';
+                }else{
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
                     this.searchRequest.contact = this.quoteData.contact;
@@ -1808,7 +1802,7 @@ export default {
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
-                this.searchRequest.carriers = this.quoteData.carriers;
+                this.searchRequest.carriers = this.datalists.carriers;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1857,23 +1851,9 @@ export default {
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }
-                    });
-            } else if (this.searchRequest.requestData.requested == 1) {
-                actions.quotes
-                    .update(
-                        this.searchRequest.requestData.model_id,
-                        this.searchRequest
-                    )
-                    .then((response) => {
-                        this.$router.go();
                     })
-                    .catch((error) => {
-                        this.errorsExist = true;
-                        this.searching = false;
-                        if (error.status === 422) {
-                            this.responseErrors = error.data.errors;
-                        }
-                    });
+            }else if(this.searchRequest.requestData.requested == 1){
+                this.$router.go();
             }
         },
         contracButtonPressed() {
@@ -1922,6 +1902,9 @@ export default {
                         if (typeof rate.containers == "string") {
                             rate.containers = JSON.parse(rate.containers);
                         }
+                        if(rate.search == undefined){
+                            rate.search = response.data.data[0].search;
+                        }
                     });
                     this.foundRates = response.data.data;
                     this.searching = false;
@@ -1957,6 +1940,28 @@ export default {
                 component.companyChosen = true;
             } else {
                 component.companyChosen = false;
+            }
+        },
+
+        updateQuoteSearchOptions() {
+            if(this.searchRequest.requestData.requested == 1){
+                actions.quotes
+                    .updateSearch(this.searchRequest.requestData.model_id, this.searchRequest)
+                    .then((response) => {
+                        console.log("Quote updated!");
+                        })
+                    .catch(error => {
+                        this.errorsExist = true;
+                        if(error.status === 422) {
+                            this.responseErrors = error.data.errors;
+                        }
+                    })
+            }
+        },
+
+        checkSearchType() {
+            if(this.searchRequest.type == "LCL"){
+                window.location = `/v2/quotes/search`;
             }
         },
 
