@@ -1042,6 +1042,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote')->name('quote.duplicate');
     Route::post('api/quotes/specialduplicate', 'QuotationController@specialduplicate');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
+    Route::post('api/quote/{quote}/updateSearch', 'QuotationController@updateSearchOptions')->middleware('check_company:quote');
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');

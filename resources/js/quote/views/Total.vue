@@ -91,6 +91,7 @@
                                                     'USD'
                                                 "
                                                 v-model="currency.exchangeUSD"
+                                                type="number"
                                                 @blur="updatePdfOptions('exchangeRates')"
                                             ></b-form-input>
                                             <b-form-input
@@ -99,6 +100,7 @@
                                                     'EUR'
                                                 "
                                                 v-model="currency.exchangeEUR"
+                                                type="number"
                                                 @blur="updatePdfOptions('exchangeRates')"
                                             ></b-form-input>
                                         </b-td>

@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class InlandAddress extends Model
 {
     
-    protected $fillable = ['id','quote_id','port_id','inland_address_id','address'];
+    protected $fillable = ['id','quote_id','port_id','inland_address_id','address', 'type'];
 
     public function inland_totals()
     {
         return $this->hasMany('App\AutomaticInlandTotal','inland_address_id');
     }
     
+    public function quote()
+    {
+        return $this->belongsTo('App\QuoteV2');
+    }
+
     public function duplicate($quote)
     {
         $newInlandAddress = $this->replicate();
@@ -34,5 +39,4 @@ class InlandAddress extends Model
 
         return $newInlandAddress;
     }
-
 }
