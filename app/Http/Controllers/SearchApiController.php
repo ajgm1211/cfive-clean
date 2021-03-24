@@ -8,7 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
 use App\Http\Resources\RateResource;
-
+use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
 use App\Harbor;
 use App\Direction;
@@ -872,7 +872,7 @@ class SearchApiController extends Controller
         }
     }
 
-    public function storeContractNewSearch(Request $request)
+    public function storeContractNewSearch(StoreContractSearch $request)
     {
             // dd($request);
         $req = $request->valueEq['id'];

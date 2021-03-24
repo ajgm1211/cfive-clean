@@ -1382,17 +1382,13 @@ export default {
                 requestData: {},
             },
             dropzoneOptions: {
-                url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`,
-                autoProcessQueue: false,
-                thumbnailWidth: 150,
-                maxFilesize: 0.5,
-                headers: {
-                    "X-CSRF-TOKEN": document.head.querySelector(
-                        "[name=csrf-token]"
-                    ).content,
-                },
-                addRemoveLinks: true,
-            },
+					url: '/',
+					thumbnailWidth: 150,
+					maxFilesize: 0.5,
+					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
+					addRemoveLinks: true,
+                    autoProcessQueue: false,
+			},
             selectedContainerGroup: {},
             containers: [],
             deliveryType: {},
@@ -1897,23 +1893,22 @@ export default {
                 //stepthree Surcharge
                 dataSurcharger: this.dataSurcharger,
                 //stepFour
-            };
-            let vcomponent = this;
-            actions.search
+           };
+           let vcomponent = this;
+           actions.search
                 .createContract(data)
                 .then((response) => {
-                    vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
+                    vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
-                    vcomponent.$refs.my-modal.hide(modal);
-                    // this.$router.push({ path: `search`, query: { requested: 0, model_id: response.data.data.id} })
-                })
-                .catch((error) => {
-                    // this.errorsExist = true;
-                    // this.searching = false;
+                    // vcomponent.$refs.my-modal.hide(modal);
+                    this.$router.go();
+                    
+                    })
+                .catch(error => {
                     if(error.status === 422) {
-                         this.responseErrors = error.data.errors;
+                        this.responseErrors = error.data.errors;
                     }
-                });
+                })
         },
 
         requestSearch() {
