@@ -382,26 +382,27 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
+    }
+    
+    public function updateSearchOptions(Request $request, QuoteV2 $quote)
+    {
+        $search_data = $request->input();
 
-        if ($request->input('dateRange') != null) {
-            $search_data = $request->input();
+        $date_range = $search_data['dateRange'];
+        $start_date = substr($date_range['startDate'], 0, 10);
+        $end_date = substr($date_range['endDate'], 0, 10);
 
-            $date_range = $search_data['dateRange'];
-            $start_date = substr($date_range['startDate'], 0, 10);
-            $end_date = substr($date_range['endDate'], 0, 10);
+        $contact = $search_data['contact'];
+        $company = $search_data['company'];
 
-            $contact = $search_data['contact'];
-            $company = $search_data['company'];
+        $price_level = $search_data['pricelevel'];
 
-            $price_level = $search_data['pricelevel'];
+        $origin_charges = $search_data['originCharges'];
+        $destination_charges = $search_data['destinationCharges'];
 
-            $origin_charges = $search_data['originCharges'];
-            $destination_charges = $search_data['destinationCharges'];
+        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges');
 
-            $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges');
-
-            $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
-        }
+        $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
 
     public function destroy(QuoteV2 $quote)
