@@ -478,7 +478,7 @@ i.mx-icon-calendar {
     border: none !important;
     font-size: 16px;
     color: #525f7f;
-    top: 17% !important;
+    top: 10% !important;
 }
 
 .multiselect__single {
@@ -1179,7 +1179,7 @@ input.multiselect__input:focus {
 .btn-search {
     height: 50px;
     width: 150px;
-    padding: 14px 30px;
+    padding: 10px 25px;
     left: 4px;
     border-radius: 27px;
     color: #ffffff;
@@ -1224,7 +1224,7 @@ input.multiselect__input:focus {
 
 .t-as,
 .t-recent {
-    color: #B1B1B1;
+    color: #80888B;
     font-weight: 900;
     font-size: 14px;
     letter-spacing: 2px;
@@ -1393,6 +1393,7 @@ input.multiselect__input:focus {
     text-align: center;
     background: #006BFA;
     text-transform: uppercase;
+    cursor: pointer !important;
 }
 
 .recent-search a:hover {
@@ -1424,14 +1425,14 @@ input.multiselect__input:focus {
     width: 12px;
     height: 12px;
     border-radius: 50px;
-    border: 2px solid #dddddd;
+    border: 2px solid #80888B;
     background-color: transparent;
 }
 
 .recent-search .direction-spot .line {
     width: 2px;
     height: 15px;
-    background-color: #dddddd;
+    background-color: #80888B;
 }
 
 .recent-search .direction-spot .fill-circle {
@@ -1499,7 +1500,7 @@ input.multiselect__input:focus {
 .result-search .origin,
 .result-search .destination {
     font-size: 10px;
-    color: #dddddd;
+    color: #80888B;
     display: flex;
     flex-direction: column;
     text-transform: uppercase;
@@ -1622,8 +1623,19 @@ input.multiselect__input:focus {
     b {
         font-size: 12px;
         text-transform: uppercase;
-        color: #dddddd !important;
+        color: #80888B;
     }
+}
+
+.btn-add-quote:hover,
+.btn-add-quote .active {
+    b {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #ffffff !important;
+    }
+    background: rgba(#006BFA, 0.8) !important;
+    border-color: rgba(#006BFA, 0.8) !important;
 }
 
 .btn.btn-secondary.add-contract {
@@ -1637,20 +1649,20 @@ input.multiselect__input:focus {
 .btn.btn-secondary.btn-add-contract {
     height: 50px;
     width: 150px;
-    padding: 12px 16px;
+    padding: 10px 15px;
     left: 4px;
     border-radius: 27px;
     color: #006BFA;
     font-weight: 900;
     font-size: 18px;
-    background: #ffffff;
+    background: #ffffff !important;
     border: 2px solid #006BFA !important;
     position: relative;
     top: 25px;
 }
 
 .btn.btn-secondary.btn-add-contract:hover {
-    color: #ffffff;
+    color: #ffffff !important;
     background: rgba(#006BFA, 0.8) !important;
     border-color: rgba(#006BFA, 0.8) !important;
 }
@@ -1672,7 +1684,7 @@ input.multiselect__input:focus {
 }
 
 .result-header b {
-    color: #dddddd;
+    color: #80888B;
     font-size: 14px;
     font-weight: 900;
     text-transform: uppercase;
@@ -1738,11 +1750,12 @@ input.multiselect__input:focus {
     right: 16px !important;
 }
 
-.btn-add-quote .active {
+
+/*.btn-add-quote .active {
     color: #ffffff;
     background: #006afa !important;
     border-color: #006afa !important;
-}
+}*/
 
 .btn-add-quote .btn-secondary:hover {
     color: #ffffff;

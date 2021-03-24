@@ -5,9 +5,9 @@
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
-                <div class="d-flex filter-search">
+                <div v-if="false" class="d-flex filter-search">
                     <b>filter by:</b>
-                    <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
+                    <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
                             <multiselect
                                 v-model="filterBy"
                                 :multiple="false"
@@ -19,14 +19,14 @@
                                 class="s-input no-select-style "
                             >
                             </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                            <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
                     </div>
                 </div>
             </div>
 
             <div class="col-12 col-sm-6 addcontract-createquote">
 
-                <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
+                <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
                 
                 <b-button b-button variant="primary" @click="createQuote">{{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}</b-button>
 

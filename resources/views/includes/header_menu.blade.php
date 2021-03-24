@@ -451,7 +451,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                            <!-- <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <i class="m-menu__link-icon la la-envelope"></i>
@@ -491,7 +491,7 @@
                                         Dashboard
                                     </span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('search.list')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-search"></i>
@@ -859,16 +859,7 @@ Group Surchargers
                             </div>
                         </li>
                     </div>
-                    <div class="col-md-6">
-                        <li class="m-nav__item " style="margin-top:20px;">
-                            <a href="{{ url('/tickets') }}" class=" ">
-                                <span class="m-nav__link-icon">
-                                    <i class="flaticon-computer m--font-warning" data-toggle="m-tooltip" title=""
-                                        data-html="true" data-original-title="<b>Support</b>"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </div>
+                
                 </div>
             </ul>
         </div>
