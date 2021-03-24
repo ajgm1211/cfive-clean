@@ -233,12 +233,14 @@ class Contract extends Model implements HasMedia, Auditable
                     $rates->fortynor = 0;
                     $rates->fortyfive = 0;
 
-                    
                     foreach ($container as $cod) {
                         $cont = 'C' . $cod->code;
                         if ($cod->gp_container_id == $req) {
-                            $arreglo[$cont] = $request->rates[$cont];
-                            
+                            if(isset($request->rates[$cont])){
+                                $arreglo[$cont] = $request->rates[$cont];
+                            }else{
+                                $arreglo[$cont] = 0;
+                            }    
                         }
                     }
                     // dd($arreglo);
