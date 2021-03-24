@@ -10,12 +10,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class QuoteV2 extends Model implements HasMedia
+class QuoteV2 extends Model implements HasMedia, Auditable
 {
     use SoftDeletes;
     use HasMediaTrait;
-
+    use \OwenIt\Auditing\Auditable;
     /**
      * The attributes that should be mutated to dates.
      *
