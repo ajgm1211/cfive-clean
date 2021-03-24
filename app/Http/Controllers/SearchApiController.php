@@ -8,7 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
 use App\Http\Resources\RateResource;
-
+use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
 use App\Harbor;
 use App\Direction;
@@ -31,6 +31,8 @@ use App\Price;
 use App\Contact;
 use App\CompanyUser;
 use App\LocalCharge;
+use App\LocalCharCarrier;
+use App\LocalCharPort;
 use App\GlobalCharge;
 use App\TransitTime;
 use App\RemarkCondition;
@@ -874,6 +876,37 @@ class SearchApiController extends Controller
             $rate->setAttribute('charges',$rate_charges);
             
         }
+    }
+
+    public function storeContractNewSearch(StoreContractSearch $request)
+    {
+            // dd($request);
+        $req = $request->valueEq['id'];
+        $contract = new Contract();
+        $container = Container::get();
+
+        $contract->company_user_id = Auth::user()->company_user_id;
+        $contract->name = $request->reference;
+        $contract->direction_id = $request->direction['id'];
+        $contract->validity = date('Y-m-d', strtotime($request->datarange['startDate']));
+        $contract->expire = date('Y-m-d', strtotime($request->datarange['endDate']));
+        $contract->status = 'publish';
+        $contract->gp_container_id = $request->valueEq['id'];
+        $contract->is_manual = 2;
+        $contract->save();
+
+        $contract->ContractCarrierSyncSingle($request->carrier['id']);
+        $contract->ContractRateStore($request,$contract,$req,$container);
+        $contract->ContractSurchargeStore($request,$contract);
+
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
+        }
+
+        return response()->json([
+            'id' => $contract->id,
+            'data' => 'Success',
+        ]);
     }    
 
     //Ordering rates by totals (cheaper to most expensive)
