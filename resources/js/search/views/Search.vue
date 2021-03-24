@@ -124,6 +124,7 @@
                             v-model="searchRequest.dateRange"
                             :linkedCalendars="true"
                             class="s-input"
+                            @update="updateQuoteSearchOptions()"
                         ></date-range-picker>
                         <img src="/images/calendario.svg" class="img-icon calendar-icon" alt="calendario">
                         <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
@@ -247,7 +248,7 @@
                             track-by="business_name"
                             placeholder="Company" 
                             class="s-input"
-                            @input="unlockContacts(), searchRequest.contact = ''"
+                            @input="unlockContacts(), searchRequest.contact = '', updateQuoteSearchOptions()"
                             >
                             </multiselect>
                             <img src="/images/empresa.svg" class="img-icon" alt="port">
@@ -267,6 +268,7 @@
                             track-by="name"
                             placeholder="Contact" 
                             class="s-input"
+                            @input="updateQuoteSearchOptions"
                             >
                             </multiselect>
                             <img src="/images/contacto.svg" class="img-icon" alt="port">
@@ -284,6 +286,7 @@
                             track-by="name"
                             placeholder="Price Level" 
                             class="s-input"
+                            @input="updateQuoteSearchOptions"
                             >
                             </multiselect>
                             <img src="/images/pricelevel.svg" class="img-icon" alt="port">
@@ -322,6 +325,7 @@
                         v-model="searchRequest.originCharges"
                         name="originCharges"
                         class="mr-5 as-checkbox"
+                        @input="updateQuoteSearchOptions"
                     >
                         &nbsp;&nbsp;<b>Include origin charges</b>
                     </b-form-checkbox>
@@ -330,6 +334,7 @@
                         v-model="searchRequest.destinationCharges"
                         name="destinationCharges"
                         class="as-checkbox"
+                        @input="updateQuoteSearchOptions"
                     >
                         &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
@@ -1404,8 +1409,8 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
-                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date;
-                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date;
+                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date+'T01:00:00';
+                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date+'T01:00:00';
                 }else{
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
@@ -1466,18 +1471,7 @@ export default {
                         }
                     })
             }else if(this.searchRequest.requestData.requested == 1){
-                actions.quotes
-                    .update(this.searchRequest.requestData.model_id, this.searchRequest)
-                    .then((response) => {
-                        this.$router.go();
-                        })
-                    .catch(error => {
-                        this.errorsExist = true;
-                        this.searching = false;
-                        if(error.status === 422) {
-                            this.responseErrors = error.data.errors;
-                        }
-                    })
+                this.$router.go();
             }
         },
 
@@ -1525,6 +1519,22 @@ export default {
             }else{
                 component.companyChosen = false;
             }            
+        },
+
+        updateQuoteSearchOptions() {
+            if(this.searchRequest.requestData.requested == 1){
+                actions.quotes
+                    .updateSearch(this.searchRequest.requestData.model_id, this.searchRequest)
+                    .then((response) => {
+                        console.log("Quote updated!");
+                        })
+                    .catch(error => {
+                        this.errorsExist = true;
+                        if(error.status === 422) {
+                            this.responseErrors = error.data.errors;
+                        }
+                    })
+            }
         },
 
         setOriginAddressMode() {
