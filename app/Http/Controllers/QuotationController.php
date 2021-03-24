@@ -437,13 +437,24 @@ class QuotationController extends Controller
 
         $new_quote = $quote->duplicate();
 
-        $new_quote->update([
-            'contact_id' => $search_data_ids['contact'],
-            'company_id' => $search_data_ids['company'],
-            'price_id' => $search_data_ids['pricelevel'],
-            'validity_start' => $search_data_ids['dateRange']['startDate'],
-            'validity_end' => $search_data_ids['dateRange']['endDate'],
-        ]);
+        if($quote->search_options == null){
+            $new_quote->update([
+                'contact_id' => $search_data_ids['contact'],
+                'company_id' => $search_data_ids['company'],
+                'price_id' => $search_data_ids['pricelevel'],
+                'validity_start' => $search_data_ids['dateRange']['startDate'],
+                'validity_end' => $search_data_ids['dateRange']['endDate'],
+            ]);
+        }else{
+            $search_options_ids = $this->getIdsFromArray($quote->search_options);
+            $new_quote->update([
+                'contact_id' => $search_options_ids['contact'],
+                'company_id' => $search_options_ids['company'],
+                'price_id' => $search_options_ids['price_level'],
+                'validity_start' => $search_options_ids['start_date'],
+                'validity_end' => $search_options_ids['end_date'],
+            ]);
+        }
 
         $old_rates = $new_quote->rates_v2()->get();
 
@@ -496,6 +507,9 @@ class QuotationController extends Controller
 
             $rateTotals->totalize($rate['currency_id']);
         }
+
+        $quote->update(['search_options' => null]);
+        $new_quote->update(['search_options' => null]);
 
         return new QuotationResource($new_quote);
     }
