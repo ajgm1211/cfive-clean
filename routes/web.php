@@ -16,7 +16,7 @@ Route::get('/', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
@@ -27,7 +27,7 @@ Route::get('/home', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
