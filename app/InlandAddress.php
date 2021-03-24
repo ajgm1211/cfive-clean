@@ -1,11 +1,12 @@
 <?php
 
 namespace App;
-
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
-class InlandAddress extends Model
+class InlandAddress extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     
     protected $fillable = ['id','quote_id','port_id','inland_address_id','address', 'type'];
 
