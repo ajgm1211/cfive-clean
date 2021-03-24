@@ -328,6 +328,9 @@ export default {
         update(id, data) {
             return api.call('post', `/api/quote/${id}/update`, data);
         },
+        updateSearch(id, data) {
+            return api.call('post', `/api/quote/${id}/updateSearch`, data);
+        },
         retrieve(id) {
             return api.call('get', `/api/quotes/${id}`, {});
         },
