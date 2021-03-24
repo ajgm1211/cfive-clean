@@ -17,6 +17,7 @@
                                 :clear-on-select="false"
                                 :show-labels="false"
                                 :options="typeOptions"
+                                @input="checkSearchType()"
                                 placeholder="Select"
                                 class="s-input no-select-style"
                             >
@@ -1534,6 +1535,12 @@ export default {
                             this.responseErrors = error.data.errors;
                         }
                     })
+            }
+        },
+
+        checkSearchType() {
+            if(this.searchRequest.type == "LCL"){
+                window.location = `/v2/quotes/search`;
             }
         },
 

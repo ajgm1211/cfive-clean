@@ -585,7 +585,7 @@ class SearchApiController extends Controller
         //Retrieving current companyto filter remarks
         $company_user = CompanyUser::where('id',$search_data['company_user'])->first();
 
-        $remarks = RemarkCondition::where([['company_user_id', $company_user->id], ['type',$search_data['type']]])->get();
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->get();
 
         $final_remarks = "";
         $included_contracts = [];
