@@ -5,7 +5,7 @@
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
-                <!--<div v-if="false" class="d-flex filter-search">
+                <div v-if="false" class="d-flex filter-search">
                     <b>filter by:</b>
                     <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
                             <multiselect
@@ -19,8 +19,9 @@
                                 class="s-input no-select-style "
                             >
                             </multiselect>
+                            <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
                     </div>
-                </div>-->
+                </div>
             </div>
 
             <div class="col-12 col-sm-6 addcontract-createquote">
