@@ -236,10 +236,17 @@ class LocalChargeQuotationController extends Controller
      */
     public function store(Request $request)
     {
+        $selectedCharges = $request->validate([
+            'selectedCharges.*.surcharge_id' => 'required',
+            'selectedCharges.*.surcharge' => 'required',
+            'selectedCharges.*.calculation_type_id' => 'required',
+            'selectedCharges.*.price' => 'required',
+            'selectedCharges.*.markup' => 'sometimes',
+            'selectedCharges.*.provider_name' => 'required',
+            'selectedCharges.*.currency_id' => 'required'
+        ]);
 
-        $selectedCharges = $request->selectedCharges;
-
-        foreach ($selectedCharges as $localcharge) {
+        foreach ($selectedCharges['selectedCharges'] as $localcharge) {
 
             $charge = $localcharge['surcharge']['name'];
 
@@ -266,7 +273,7 @@ class LocalChargeQuotationController extends Controller
                         'charge' => $charge,
                         'surcharge_id' => $localcharge['surcharge_id'],
                         'calculation_type_id' => $localcharge['calculation_type_id'],
-                        'provider_name' => $localcharge['provider_name'],
+                        'provider_name' => $localcharge['provider_name'] ?? $localcharge['automatic_rate']['carrier']['name'] ?? null,
                         'currency_id' => $localcharge['currency_id'],
                         'port_id' => $request->port_id,
                         'quote_id' => $request->quote_id,
@@ -283,7 +290,7 @@ class LocalChargeQuotationController extends Controller
                     'charge' => $charge,
                     'surcharge_id' => $localcharge['surcharge_id'],
                     'calculation_type_id' => $localcharge['calculation_type_id'],
-                    'provider_name' => $localcharge['provider_name'],
+                    'provider_name' => $localcharge['provider_name'] ?? $localcharge['automatic_rate']['carrier']['name'] ?? null,
                     'currency_id' => $localcharge['currency_id'],
                     'port_id' => $request->port_id,
                     'quote_id' => $request->quote_id,

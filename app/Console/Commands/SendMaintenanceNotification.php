@@ -50,7 +50,7 @@ class SendMaintenanceNotification extends Command
         try {
             $users = User::where('state', 1)->get();
             foreach ($users as $item) {
-                Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
+                @Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
             }
         } catch (\Exception $e) {
             return $this->info($e->getMessage());
