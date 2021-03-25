@@ -242,7 +242,7 @@ class LocalChargeQuotationController extends Controller
             'selectedCharges.*.calculation_type_id' => 'required',
             'selectedCharges.*.price' => 'required',
             'selectedCharges.*.markup' => 'sometimes',
-            'selectedCharges.*.provider_name' => 'required',
+            'selectedCharges.*.provider_name' => 'sometimes',
             'selectedCharges.*.currency_id' => 'required'
         ]);
 
