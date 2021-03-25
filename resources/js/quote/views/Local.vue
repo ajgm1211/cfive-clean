@@ -800,7 +800,7 @@
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedInputs"
-                                        :id="'id_' + input.surcharge"
+                                        :id="'id_' + input.id"
                                         :value="input"
                                     ></b-form-checkbox>
                                 </b-td>
@@ -1059,6 +1059,7 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            inputId: 0,
             selectedCharges: [],
             selectedInputs: [],
             carriers: [],
@@ -1090,8 +1091,11 @@ export default {
     methods: {
         add() {
             if (this.value != "") {
+                this.inputId += 1;
+                let currentInputId = this.inputId + 1;
                 if (this.currentQuoteData.type == "FCL") {
                     this.inputs.push({
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
@@ -1101,6 +1105,7 @@ export default {
                     });
                 } else {
                     this.inputs.push({
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
