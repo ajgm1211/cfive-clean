@@ -364,7 +364,17 @@ class QuotationController extends Controller
                     $data[$key] = 'Win';
                 }
             }
-            $quote->update([$key => $data[$key]]);
+            $quote->update([$key=>$data[$key]]);
+            
+            if($key == 'validity_end'){
+                $rates = $quote->rates_v2()->get();
+
+                if($rates != null && count($rates) != 0){
+                    foreach($rates as $rate){
+                        $rate->update([$key=>$data[$key]]);
+                    }
+                }
+            }
         }
 
         if ($request->input('custom_incoterm') != null) {

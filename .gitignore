@@ -12,6 +12,6 @@ npm-debug.log
 yarn-error.log
 .env
 /vendormalo
-/.scannerwork
 /reports
+/.scannerwork
 sonar-scanner.properties
