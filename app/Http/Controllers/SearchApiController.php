@@ -540,7 +540,7 @@ class SearchApiController extends Controller
     
         if ($contractStatus != 'api') {
 
-            $global_charges_found = GlobalCharge::where([['validity', '>=', $validity_start],['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+            $global_charges_found = GlobalCharge::where([['validity', '<=', $validity_start],['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
