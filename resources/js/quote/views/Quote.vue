@@ -312,6 +312,13 @@ export default {
                     colClass: "col-lg-3",
                     options:"languages",
                 },
+                chargeable_weight: {
+                    label: "CHARGEABLE WEIGHT",
+                    type: "text_lcl",
+                    disabled: false,
+                    colClass: "col-lg-2",
+                },
+                
             },
             term_fields: {},
             LCL_fields: {
