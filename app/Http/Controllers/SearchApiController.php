@@ -238,10 +238,10 @@ class SearchApiController extends Controller
             $rate->setAttribute('request_type', $request->input('requested'));
         }
 
-        //Ordering rates by totals (cheaper to most expensive)
-        $rates = $this->sortRates($rates);
-
         if($rates != null && count($rates) != 0){
+            //Ordering rates by totals (cheaper to most expensive)
+            $rates = $this->sortRates($rates, $search_ids);
+
             $rates[0]->SetAttribute('search', $search_array);
         }
         
@@ -910,31 +910,42 @@ class SearchApiController extends Controller
     }    
 
     //Ordering rates by totals (cheaper to most expensive)
-    public function sortRates($rates)
+    public function sortRates($rates, $search_data_ids)
     {
+        $sorted = false;
         $sortedRates = [];
-        $highestTotal = 0;
 
-        foreach($rates as $rate){
-            $localTotal = 0; 
-            if(isset($rate->totals_with_markups)){
-                foreach($rate->totals_with_markups as $code => $total){
-                    $localTotal += $total;
-                }
-            }else{
-                foreach($rate->totals as $code => $total){
-                    $localTotal += $total;
-                }
-            }
+        if(isset($search_data_ids['priceLevel'])){
+            $looping = 'totals_with_markups';
+        }else{
+            $looping = 'totals';
+        }
 
-            if($localTotal > $highestTotal){
-                array_unshift($sortedRates, $rate);
-                $highestTotal = $localTotal;
-            }else{
-                array_push($sortedRates, $rate);
+        foreach(array_keys($rates[0]->$looping) as $key){
+            if(!$sorted){
+                $keyPrices = [];
+                $sorted = true;
+                foreach($rates as $rate){
+                    array_push($keyPrices,$rate->$looping[$key]);
+                }
+
+                if(array_unique($keyPrices) == $keyPrices){
+                    sort($keyPrices);
+                    $sortedRates = $keyPrices;
+
+                    foreach($keyPrices as $priceKey => $price){
+                        foreach($rates as $rate){
+                            if($rate->$looping[$key] == $price){
+                                $sortedRates[$priceKey] = $rate;
+                            }
+                        }
+                    }
+                }else{
+                    $sorted = false;
+                }
             }
         }
 
-        return collect(array_reverse($sortedRates));
+        return collect($sortedRates);
     }
 }
