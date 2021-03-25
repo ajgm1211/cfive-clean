@@ -16,7 +16,7 @@ Route::get('/', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
@@ -27,7 +27,7 @@ Route::get('/home', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
@@ -1028,6 +1028,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/search/{search}', 'SearchApiController@retrieve')->name('searchV2.retrieve');
     Route::post('/api/search/process', 'SearchApiController@processSearch');
     Route::post('/api/search/store', 'SearchApiController@store');
+    Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
