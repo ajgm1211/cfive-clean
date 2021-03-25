@@ -4,6 +4,7 @@
             <!-- Type / Delivery type / Additional Services -->
             <div class="row mr-0 ml-0">
                 <div class="col-12 col-sm-6 col-lg-3 d-flex">
+
                     <!-- Type (FCL LCL AIR)-->
                     <div class="type-input">
                         <multiselect
@@ -13,6 +14,7 @@
                             :clear-on-select="false"
                             :show-labels="false"
                             :options="typeOptions"
+                            @input="checkSearchType()"
                             placeholder="Select"
                             class="s-input no-select-style"
                         >
@@ -24,42 +26,27 @@
                         ></b-icon>
                     </div>
 
-                        <!-- Type (FCL LCL AIR)-->
-                        <div class="type-input">
-                            <multiselect
-                                v-model="searchRequest.type"
-                                :multiple="false"
-                                :close-on-select="true"
-                                :clear-on-select="false"
-                                :show-labels="false"
-                                :options="typeOptions"
-                                @input="checkSearchType()"
-                                placeholder="Select"
-                                class="s-input no-select-style"
-                            >
-                            </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="type-mode"></b-icon>
-                        </div>
-
-                        <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
-                        <div class="delivery-input">
-                            <multiselect
-                                v-model="deliveryType"
-                                :multiple="false"
-                                :close-on-select="true"
-                                :clear-on-select="false"
-                                :show-labels="false"                                
-                                :options="deliveryTypeOptions"
-                                label="name"
-                                track-by="name"
-                                placeholder="Select"
-                                class="s-input no-select-style "
-                            >
-                            </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-                        </div>
-
-
+                    <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
+                    <div class="delivery-input">
+                        <multiselect
+                            v-model="deliveryType"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :clear-on-select="false"
+                            :show-labels="false"
+                            :options="deliveryTypeOptions"
+                            label="name"
+                            track-by="name"
+                            placeholder="Select"
+                            class="s-input no-select-style"
+                        >
+                        </multiselect>
+                        <b-icon
+                            icon="caret-down-fill"
+                            aria-hidden="true"
+                            class="delivery-type"
+                        ></b-icon>
+                    </div>
                 </div>
 
                 <!-- Button Additional services -->
@@ -149,23 +136,36 @@
                 </div>
 
                 <!-- Date Picker-->
-                <div class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search">
-                        <date-range-picker
-                            :opens="'center'"
-                            :locale-data="{
-                                firstDay: 0,
-                                format: 'yyyy/mm/dd',
-                            }"
-                            :singleDatePicker="false"
-                            :autoApply="true"
-                            :timePicker="false"
-                            v-model="searchRequest.dateRange"
-                            :linkedCalendars="true"
-                            class="s-input"
-                            @update="updateQuoteSearchOptions()"
-                        ></date-range-picker>
-                        <img src="/images/calendario.svg" class="img-icon calendar-icon" alt="calendario">
-                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
+                <div
+                    class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search"
+                >
+                    <date-range-picker
+                        :opens="'center'"
+                        :locale-data="{
+                            firstDay: 0,
+                            format: 'yyyy/mm/dd',
+                        }"
+                        :singleDatePicker="false"
+                        :autoApply="true"
+                        :timePicker="false"
+                        v-model="searchRequest.dateRange"
+                        :linkedCalendars="true"
+                        class="s-input"
+                        @update="updateQuoteSearchOptions()"
+                    ></date-range-picker>
+                    <img
+                        src="/images/calendario.svg"
+                        class="img-icon calendar-icon"
+                        alt="calendario"
+                    />
+                    <span
+                        v-if="
+                            errorsExist &&
+                            'dateRange.startDate' in responseErrors
+                        "
+                        style="color: red"
+                        >Please pick a date</span
+                    >
                 </div>
 
                 <!-- Containers -->
@@ -312,11 +312,18 @@
                             track-by="business_name"
                             placeholder="Company"
                             class="s-input"
-                            @input="unlockContacts(), searchRequest.contact = '', updateQuoteSearchOptions()"
-                            >
-                            </multiselect>
-                            <img src="/images/empresa.svg" class="img-icon" alt="port">
-                        
+                            @input="
+                                unlockContacts(),
+                                    (searchRequest.contact = ''),
+                                    updateQuoteSearchOptions()
+                            "
+                        >
+                        </multiselect>
+                        <img
+                            src="/images/empresa.svg"
+                            class="img-icon"
+                            alt="port"
+                        />
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -333,9 +340,13 @@
                             placeholder="Contact"
                             class="s-input"
                             @input="updateQuoteSearchOptions"
-                            >
-                            </multiselect>
-                            <img src="/images/contacto.svg" class="img-icon" alt="port">
+                        >
+                        </multiselect>
+                        <img
+                            src="/images/contacto.svg"
+                            class="img-icon"
+                            alt="port"
+                        />
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -351,9 +362,13 @@
                             placeholder="Price Level"
                             class="s-input"
                             @input="updateQuoteSearchOptions"
-                            >
-                            </multiselect>
-                            <img src="/images/pricelevel.svg" class="img-icon" alt="port">
+                        >
+                        </multiselect>
+                        <img
+                            src="/images/pricelevel.svg"
+                            class="img-icon"
+                            alt="port"
+                        />
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -1376,13 +1391,17 @@ export default {
                 requestData: {},
             },
             dropzoneOptions: {
-					url: '/',
-					thumbnailWidth: 150,
-					maxFilesize: 0.5,
-					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
-					addRemoveLinks: true,
-                    autoProcessQueue: false,
-			},
+                url: "/",
+                thumbnailWidth: 150,
+                maxFilesize: 0.5,
+                headers: {
+                    "X-CSRF-TOKEN": document.head.querySelector(
+                        "[name=csrf-token]"
+                    ).content,
+                },
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+            },
             selectedContainerGroup: {},
             containers: [],
             deliveryType: {},
@@ -1782,9 +1801,11 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
-                    this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date+'T01:00:00';
-                    this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date+'T01:00:00';
-                }else{
+                    this.searchRequest.dateRange.startDate =
+                        this.quoteData.search_options.start_date + "T01:00:00";
+                    this.searchRequest.dateRange.endDate =
+                        this.quoteData.search_options.end_date + "T01:00:00";
+                } else {
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
                     this.searchRequest.contact = this.quoteData.contact;
@@ -1851,8 +1872,8 @@ export default {
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }
-                    })
-            }else if(this.searchRequest.requestData.requested == 1){
+                    });
+            } else if (this.searchRequest.requestData.requested == 1) {
                 this.$router.go();
             }
         },
@@ -1873,22 +1894,21 @@ export default {
                 //stepthree Surcharge
                 dataSurcharger: this.dataSurcharger,
                 //stepFour
-           };
-           let vcomponent = this;
-           actions.search
+            };
+            let vcomponent = this;
+            actions.search
                 .createContract(data)
                 .then((response) => {
-                    vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
+                    vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
                     // vcomponent.$refs.my-modal.hide(modal);
                     this.$router.go();
-                    
-                    })
-                .catch(error => {
-                    if(error.status === 422) {
+                })
+                .catch((error) => {
+                    if (error.status === 422) {
                         this.responseErrors = error.data.errors;
                     }
-                })
+                });
         },
 
         requestSearch() {
@@ -1902,7 +1922,7 @@ export default {
                         if (typeof rate.containers == "string") {
                             rate.containers = JSON.parse(rate.containers);
                         }
-                        if(rate.search == undefined){
+                        if (rate.search == undefined) {
                             rate.search = response.data.data[0].search;
                         }
                     });
@@ -1944,23 +1964,26 @@ export default {
         },
 
         updateQuoteSearchOptions() {
-            if(this.searchRequest.requestData.requested == 1){
+            if (this.searchRequest.requestData.requested == 1) {
                 actions.quotes
-                    .updateSearch(this.searchRequest.requestData.model_id, this.searchRequest)
+                    .updateSearch(
+                        this.searchRequest.requestData.model_id,
+                        this.searchRequest
+                    )
                     .then((response) => {
                         console.log("Quote updated!");
-                        })
-                    .catch(error => {
+                    })
+                    .catch((error) => {
                         this.errorsExist = true;
-                        if(error.status === 422) {
+                        if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }
-                    })
+                    });
             }
         },
 
         checkSearchType() {
-            if(this.searchRequest.type == "LCL"){
+            if (this.searchRequest.type == "LCL") {
                 window.location = `/v2/quotes/search`;
             }
         },
