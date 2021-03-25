@@ -81,7 +81,7 @@
                                 <a href="{{url('/api/search')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
                                     <span class="m-menu__link-text">
-                                        New Search
+                                        Search Rates
                                     </span>
                                 </a>
                             </li>
