@@ -312,6 +312,11 @@ export default {
                     colClass: "col-lg-3",
                     options:"languages",
                 },
+                total_quantity: {
+                    label: "TOTAL QUANTITY",
+                    type: "text",
+                    colClass: "col-lg-3",
+                },
                 total_weight: {
                     label: "TOTAL WEIGHT",
                     type: "text_lcl",
