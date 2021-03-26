@@ -1488,6 +1488,15 @@ export default {
                         }
                     })
             }
+        },   
+
+        alert(msg, type) {
+            this.$toast.open({
+                message: msg,
+                type: type,
+                duration: 5000,
+                dismissible: true,
+            });
         },
         contracButtonPressed() {
            let data={
@@ -1515,7 +1524,8 @@ export default {
                 .then((response) => {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
-                    // vcomponent.$refs.my-modal.hide(modal);
+                    vcomponent.$refs.my-modal.hide(modal);
+                    vcomponent.alert("Record saved successfully", "success");
                     this.$router.go();
                     
                     })
