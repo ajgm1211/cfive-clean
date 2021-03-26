@@ -307,7 +307,8 @@ class QuotationController extends Controller
     }
 
     public function update (Request $request, QuoteV2 $quote)
-    {                   
+    {      
+        // dd($request);             
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
@@ -390,6 +391,10 @@ class QuotationController extends Controller
         if($request->input('pdf_options') != null){
             $quote->update(['pdf_options'=>$request->input('pdf_options')]);
         }
+        $quote->update(['total_volume'=>$request['total_volume']]);
+        $quote->update(['total_weight'=>$request['total_weight']]);
+        $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
+        
     }
 
     public function destroy(QuoteV2 $quote)
@@ -473,8 +478,16 @@ class QuotationController extends Controller
                 foreach($rates as $autoRate){
                     if($address->port_id == $autoRate->origin_port_id){
                         $type = 'Origin';
+                        $address->update(['type' => 'Origin']);
+                        if($quote->origin_address == null){
+                            $quote->update(['origin_address' => $address->address]);
+                        }
                     }else if($address->port_id == $autoRate->destination_port_id){
                         $type = 'Destination';
+                        $address->update(['type' => 'Destination']);
+                        if($quote->destination_address == null){
+                            $quote->update(['destination_address' => $address->address]);
+                        }
                     }
                 }
                 
@@ -506,6 +519,22 @@ class QuotationController extends Controller
                 $totals->totalize();
             }
         }elseif(count($inlandTotals)!=0){
+            foreach($inlandAddress as $address){
+                foreach($rates as $autoRate){
+                    if($address->port_id == $autoRate->origin_port_id){
+                        $address->update(['type' => 'Origin']);
+                        if($quote->origin_address == null){
+                            $quote->update(['origin_address' => $address->address]);
+                        }
+                    }else if($address->port_id == $autoRate->destination_port_id){
+                        $address->update(['type' => 'Destination']);
+                        if($quote->destination_address == null){
+                            $quote->update(['destination_address' => $address->address]);
+                        }
+                    }
+                }
+            }
+
             foreach($inlandTotals as $total){
                 $total->totalize();
                 if($total->pdf_options == null){
