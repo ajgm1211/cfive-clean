@@ -50,6 +50,7 @@ class FclPdf
 
         $pdf = \App::make('dompdf.wrapper');
 
+        //$pdf->loadHTML($view);
         $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
 
         // EVENTO INTERCOM
