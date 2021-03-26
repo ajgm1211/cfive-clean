@@ -1021,6 +1021,13 @@
                             </div>
                         </div>
 				    </vue-dropzone>
+                    <div
+                        v-if="contractAdded"
+                        class="alert alert-success"
+                        role="alert"
+                        >
+                        Contract saved successfully!
+                    </div>
                 </fieldset>
 
                 <div class="footer-add-contract-modal pl-4 pr-4">   
@@ -1060,7 +1067,7 @@ export default {
         
     },
     data() {
-        return {
+        return {          
             loaded: false,
             searching: false,
             actions: actions,
@@ -1182,7 +1189,7 @@ export default {
             isCompleteTwo: false,
             isCompleteThree: false,
             isCompleteFour: false,
-
+            contractAdded: false,
         }
     },
     mounted() {
@@ -1524,11 +1531,14 @@ export default {
                 .then((response) => {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url=`/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
-                    vcomponent.$refs.my-modal.hide(modal);
-                    vcomponent.alert("Record saved successfully", "success");
-                    this.$router.go();
-                    
-                    })
+                    vcomponent.contractAdded=true;
+
+                    setTimeout(function () {
+                        vcomponent.contractAdded=false;
+                        vcomponent.$refs["my-modal"].hide();
+                        vcomponent.$router.go();
+                    }, 5000);
+                })
                 .catch(error => {
                     if(error.status === 422) {
                         this.responseErrors = error.data.errors;
