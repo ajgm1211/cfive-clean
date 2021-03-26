@@ -194,6 +194,7 @@
                         <label> ADDRESS </label>
                         <gmap-autocomplete
                             v-if="!modalDistance"
+                            types = ""
                             @place_changed="setPlace"
                             @input="clearAutocomplete"
                             :value="autocompleteValue"
