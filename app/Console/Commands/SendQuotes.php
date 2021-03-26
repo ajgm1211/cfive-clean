@@ -41,19 +41,20 @@ class SendQuotes extends Command
      */
     public function handle()
     {
-        try{
-            $notifications=SendQuote::where('status',0)->get();
+        try {
+            $notifications = SendQuote::where('status', 0)->get();
             foreach ($notifications as $item) {
-                $quote=QuoteV2::findOrFail($item->quote_id);
-                $send_notification=SendQuote::find($item->id);
-                $send_notification->status=1;
+                $quote = QuoteV2::findOrFail($item->quote_id);
+                $send_notification = SendQuote::find($item->id);
+                $send_notification->status = 1;
                 $send_notification->update();
-                
-                Mail::to($item->to)->send(new SendQuotePdf($item->subject,$item->body,$quote,$item->from,$item->sign,$item->sign_type));
+
+                Mail::to($item->to)->send(new SendQuotePdf($item->subject, $item->body, $quote, $item->from, $item->sign, $item->sign_type));
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             return $this->info($e->getMessage());
         }
+
         return $this->info('Command Send Quotes executed successfully!');
     }
 }

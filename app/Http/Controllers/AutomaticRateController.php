@@ -85,11 +85,13 @@ class AutomaticRateController extends Controller
                 'origin_port_id' => $rate->origin_port_id,
                 'destination_port_id' => $rate->destination_port_id,
                 'automatic_rate_id' => $rate->id,
+                'carrier_id' => $rate->carrier_id,
                 'totals' => null,
                 'markups' => null                    
             ]);
 
             $totals->totalize($currency->id);
+            
         }
     }
  
@@ -121,7 +123,7 @@ class AutomaticRateController extends Controller
                 $data['contract'] = '';
             }
 
-            if(!isset($data['exp_date'])){
+            if(isset($data['exp_date'])){
                 $data['validity_end'] = $data['exp_date'];
                 unset($data['exp_date']);
             }
@@ -188,22 +190,6 @@ class AutomaticRateController extends Controller
 
         $inlandAddressesDest = $quote->inland_addresses()->where('port_id',$autorate->destination_port_id)->get();
 
-        $inlandTotalsOrig = $quote->automatic_inland_totals()->where('port_id',$autorate->origin_port_id)->get();
-
-        $inlandTotalsDest = $quote->automatic_inland_totals()->where('port_id',$autorate->destination_port_id)->get();
-
-        if($inlandTotalsOrig){
-            foreach($inlandTotalsOrig as $total){
-                $total->delete();
-            }
-        }
-        
-        if($inlandTotalsDest){
-            foreach($inlandTotalsDest as $total){
-                $total->delete();
-            }
-        }
-
         if($inlandAddressesOrig){
             foreach($inlandAddressesOrig as $address){
                 $address->delete();
@@ -222,6 +208,8 @@ class AutomaticRateController extends Controller
         $totals->delete();
 
         $autorate->delete();
+
+        $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204);
     }

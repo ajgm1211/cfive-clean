@@ -11,9 +11,11 @@ class AutomaticInlandTotal extends Model
 {
     use QuoteV2Trait;
 
+    protected $casts = ['pdf_options' => 'array'];
+
     protected $appends = ['calculation_type' => 1];
 
-    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id'];
+    protected $fillable = ['quote_id','port_id','currency_id','totals','markups','type','inland_address_id','pdf_options'];
 
     public function quotev2()
     {
@@ -30,13 +32,29 @@ class AutomaticInlandTotal extends Model
         return $this->hasOne('App\InlandAddress','id','inland_address_id');
     }
 
+    public function inlands()
+    {
+        return $this->hasMany('App\AutomaticInland','inland_totals_id','id');
+    }
+
+    public function inlands_lcl()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir','inland_totals_id','id');
+    }
+
     public function get_port()
+    {
+        return $this->hasOne('App\Harbor', 'id', 'port_id');
+    }
+
+    public function port()
     {
         return $this->hasOne('App\Harbor', 'id', 'port_id');
     }
 
     public function totalize()
     {
+
         $quote = $this->quotev2()->first();
 
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -51,11 +69,14 @@ class AutomaticInlandTotal extends Model
     
             array_splice($equip_array,-1,1);
         
-            $inlands = AutomaticInland::where([
-                ['quote_id',$this->quote_id],
-                ['port_id',$this->port_id],
-                ['type',$this->type],
-                ['inland_address_id',$this->inland_address_id]])->get();
+            $inlands = $this->inlands()->get();
+
+            $single = false;
+
+            if($inlands != null && count($inlands) == 1){
+                $this->update(['currency_id' => $inlands[0]->currency_id]);
+                $single = true;
+            }
     
             $markups = [];
             $totals = [];
@@ -72,7 +93,9 @@ class AutomaticInlandTotal extends Model
                     $amount_array[$key] = $value;
                 }
                 $inland_currency = $inland->currency()->first();
-                $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
+                if(!$single){
+                    $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
+                }
                 foreach($amount_array as $key=>$value){
                     $totals[$key] += isDecimal($value,true);
                 }
@@ -82,11 +105,25 @@ class AutomaticInlandTotal extends Model
                     foreach($markup_object as $key=>$value){
                         $markup_array[$key] = $value;
                     }
-                    $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
+                    if(!$single){
+                        $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
+                    }
                     foreach($markup_array as $key=>$value){
                         $markups[$key] += isDecimal($value,true);
-                        $totals['c'.str_replace('m','',$key)] += $value;
+                        $totals['c'.str_replace('m','',$key)] += isDecimal($value, true);
                     }
+                }
+            }
+
+            if(!$single){
+                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
+                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
+            }elseif($single){
+                foreach($totals as $code => $price){
+                    $totals[$code] = isDecimal($price, true);
+                }
+                foreach($markups as $code => $price){
+                    $markups[$code] = isDecimal($price, true);
                 }
             }
     
@@ -94,13 +131,18 @@ class AutomaticInlandTotal extends Model
             $markups = json_encode($markups);
             
             $this->update(['totals'=>$totals,'markups'=>$markups]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }else if($quote->type=='LCL'){
         
-            $inlands = AutomaticInlandLclAir::where([
-                ['quote_id',$this->quote_id],
-                ['port_id',$this->port_id],
-                ['type',$this->type],
-                ['inland_address_id',$this->inland_address_id]])->get();
+            $inlands = $this->inlands_lcl()->get();
+
+            $single = false;
+
+            if($inlands != null && count($inlands) == 1){
+                $this->update(['currency_id' => $inlands[0]->currency_id]);
+                $single = true;
+            }
     
             $totals['lcl_totals'] = 0;
             $markups['profit'] = 0;
@@ -111,11 +153,27 @@ class AutomaticInlandTotal extends Model
                 $inlandCurrency = $inland->currency()->first();
                 if($inland->markup){
                     $inlandCharges[1] = $inland->markup;
+                }else{
+                    $inlandCharges[1] = 0;
                 }
-                $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                if(!$single){
+                    $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                }
                 $full = $inlandCharges[0] + $inlandCharges[1];
                 $totals['lcl_totals'] += isDecimal($full,true);
                 $markups['profit'] += isDecimal($inlandCharges[1],true);
+            }
+
+            if(!$single){
+                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
+                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
+            }elseif($single){
+                foreach($totals as $code => $price){
+                    $totals[$code] = isDecimal($price, true);
+                }
+                foreach($markups as $code => $price){
+                    $markups[$code] = isDecimal($price, true);
+                }
             }
     
             $totalsPrice = json_encode($totals);
@@ -123,6 +181,8 @@ class AutomaticInlandTotal extends Model
             
             $this->update(['totals'=>$totalsPrice]);
             $this->update(['markups'=>$totalsMarkup]);
+
+            $quote->updatePdfOptions('exchangeRates');
         }
     }
 
@@ -153,5 +213,37 @@ class AutomaticInlandTotal extends Model
         return $q->when($port, function ($query, $port) {
             return $query->where('port_id', $port);
         });
+    }
+
+    public function duplicate(QuoteV2 $quote, InlandAddress $address)
+    {
+        $newInlandTotal = $this->replicate();
+        $newInlandTotal->quote_id = $quote->id;
+        $newInlandTotal->inland_address_id = $address->id;
+        $newInlandTotal->save(); 
+
+        if($quote->type == 'FCL'){
+            $this->load(
+                'inlands'
+            );
+        }else if($quote->type == 'LCL'){
+            $this->load(
+                'inlands_lcl'
+            );
+        }
+
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+                $newRelationship = $relationRecord->replicate();
+                $newRelationship->inland_totals_id = $newInlandTotal->id;
+                $newRelationship->quote_id = $quote->id;
+                $newRelationship->save();
+            }
+
+        }    
+
+        return $newInlandTotal;
     }
 }

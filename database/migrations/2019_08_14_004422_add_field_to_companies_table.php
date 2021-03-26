@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddFieldToCompaniesTable extends Migration
 {
@@ -14,9 +14,8 @@ class AddFieldToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-
             $table->integer('api_id')->nullable()->after('owner');
-            $table->enum('api_status',['created','updated'])->nullable()->after('api_id');
+            $table->enum('api_status', ['created', 'updated'])->nullable()->after('api_id');
         });
     }
 

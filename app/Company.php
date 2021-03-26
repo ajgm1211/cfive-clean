@@ -8,12 +8,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Company extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['business_name', 'phone', 'address', 'email', 'associated_contacts', 'associated_quotes', 'currency_id', 'company_user_id', 'owner', 'tax_number', 'logo', 'pdf_language', 'payment_conditions', 'options', 'api_id', 'api_status'];
+    protected $fillable = ['business_name', 'phone', 'address', 'email', 'associated_contacts', 'associated_quotes', 'currency_id', 'company_user_id', 'owner', 'tax_number', 'logo', 'pdf_language', 'payment_conditions', 'options', 'api_id', 'api_status', 'options->vf_code', 'options->vs_code'];
 
     public function contact()
     {
         return $this->hasMany('App\Contact');
     }
+
     public function groupUserCompanies()
     {
         return $this->hasMany('App\GroupUserCompany');
@@ -28,6 +29,7 @@ class Company extends Model implements Auditable
     {
         return $this->belongsTo('App\Currency');
     }
+
     public function user()
     {
         return $this->belongsTo('App\user', 'owner');
@@ -50,7 +52,6 @@ class Company extends Model implements Auditable
 
     public function company_user()
     {
-
         return $this->belongsTo('App\CompanyUser');
     }
 
