@@ -105,6 +105,26 @@ class Intercom
         }
     }
 
+
+
+
+    public static function event_searchInland()
+    {
+        $obj = self::$client;
+
+        if (self::isExist(\Auth::user()->email)) {
+            $obj->events->create([
+                "event_name" => "SEARCH  INLAND",
+                "created_at" => strtotime("now"),
+                "email" => \Auth::user()->email,
+                "metadata" => [
+                    "order_date" => strtotime("now"),
+                ],
+            ]);
+        }
+    }
+
+
     public static function event_quoteAutomaticFcl()
     {
         $obj = self::$client;

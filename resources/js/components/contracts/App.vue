@@ -165,9 +165,11 @@
                         rules: 'required', 
                         type:"daterange", 
                         sdName: 'validity', 
-                        edName: 'expire'
+                        edName: 'expire',
+                        min: new Date(new Date().getFullYear(), new Date().getMonth()),
+                        max: new Date(new Date().getFullYear(), new Date().getMonth() + 1)
                     },
-                          gp_container: { 
+                    gp_container: { 
                         label: 'Equipment', 
                         searchable: true, 
                         type: 'select', 
