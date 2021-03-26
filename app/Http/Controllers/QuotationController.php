@@ -392,6 +392,11 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
+        $quote->update(['total_quantity'=>$request['total_quantity']]);
+        $quote->update(['total_volume'=>$request['total_volume']]);
+        $quote->update(['total_weight'=>$request['total_weight']]);
+        $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
+        
     }
     
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
