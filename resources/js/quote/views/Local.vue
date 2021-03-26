@@ -522,6 +522,10 @@
                                         :id="'id_' + localcharge.id"
                                         :value="localcharge"
                                     ></b-form-checkbox>
+                                     <b-form-input
+                                        v-model="localcharge.id"
+                                        class="q-input hide" 
+                                    ></b-form-input>
                                 </b-td>
 
                                 <!-- Surcharges -->
@@ -800,7 +804,7 @@
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedInputs"
-                                        :id="'id_' + input.surcharge"
+                                        :id="'id_' + input.id"
                                         :value="input"
                                     ></b-form-checkbox>
                                 </b-td>
@@ -1092,9 +1096,10 @@ export default {
         add() {
             if (this.value != "") {
                 this.inputId += 1;
+                let currentInputId = this.inputId + 1;
                 if (this.currentQuoteData.type == "FCL") {
                     this.inputs.push({
-                        id: this.inputId,
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
@@ -1104,7 +1109,7 @@ export default {
                     });
                 } else {
                     this.inputs.push({
-                        id: this.inputId,
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
