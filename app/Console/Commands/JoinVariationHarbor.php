@@ -44,7 +44,7 @@ class JoinVariationHarbor extends Command
 
             try
             {
-                $filename = '/var/www/html/cargofive/public/duplicados.csv';
+                $filename = public_path().'/duplicados.csv';
 
                 Excel::load($filename, function ($reader) {
                     $reader->each(function ($sheet) {
