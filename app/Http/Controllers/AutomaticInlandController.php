@@ -48,12 +48,21 @@ class AutomaticInlandController extends Controller
     {        
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$request->input('address')]])->first();
 
+        $type = $request->input('type');
+
         if($inland_address == null){
             $inland_address = InlandAddress::create([
                     'quote_id'=>$quote->id,
                     'port_id'=>$port_id,
-                    'address'=>$request->input('address')
+                    'address'=>$request->input('address'),
+                    'type'=>$type
                 ]);
+
+            if($type == 'Destination'){
+                $quote->update(['destination_address' => $request->input('address')]);
+            }else if($type == 'Origin'){
+                $quote->update(['origin_address' => $request->input('address')]);
+            }
         }
         $vdata = [
             'charge' => 'nullable|sometimes',
@@ -64,8 +73,6 @@ class AutomaticInlandController extends Controller
         $equip = $quote->getContainerCodes($quote->equipment);
         $equip_array = explode(',',$equip);
         array_splice($equip_array,-1,1);
-
-        $type = $request->input('type');
 
         $autoDistance = $request->input('distance');
 
@@ -150,7 +157,6 @@ class AutomaticInlandController extends Controller
             $totals->pdf_options = $pdfOptions;
             $totals->save();
 
-            $quote->updatePdfOptions('exchangeRates');
         }
 
         $inland = AutomaticInland::create([
@@ -336,7 +342,6 @@ class AutomaticInlandController extends Controller
 
         $total->totalize();
 
-        $quote->updatePdfOptions('exchangeRates');   
     }
 
     public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
@@ -436,8 +441,6 @@ class AutomaticInlandController extends Controller
         
         $total->totalize();
 
-        $quote->updatePdfOptions('exchangeRates');
-
         return response()->json(null, 204); 
     }
 
@@ -459,6 +462,8 @@ class AutomaticInlandController extends Controller
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
 
         $inland_address->delete();
+
+        $quote->updateAddresses();
 
         $quote->updatePdfOptions('exchangeRates');
 

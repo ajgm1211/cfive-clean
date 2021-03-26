@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Filters\AutomaticInlandFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticInland extends Model
+class AutomaticInland extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     protected $casts = [
         'markup' => 'array',
         'rate' => 'array'
