@@ -4,7 +4,6 @@
             <!-- Type / Delivery type / Additional Services -->
             <div class="row mr-0 ml-0">
                 <div class="col-12 col-sm-6 col-lg-3 d-flex">
-
                     <!-- Type (FCL LCL AIR)-->
                     <div class="type-input">
                         <multiselect
@@ -1312,6 +1311,13 @@
                                 </div>
                             </div>
                         </vue-dropzone>
+                        <div
+                            v-if="contractAdded"
+                            class="alert alert-success"
+                            role="alert"
+                        >
+                            Contract saved successfully!
+                        </div>
                     </fieldset>
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
@@ -1514,6 +1520,7 @@ export default {
             isCompleteTwo: false,
             isCompleteThree: false,
             isCompleteFour: false,
+            contractAdded: false,
         };
     },
     mounted() {
@@ -1877,6 +1884,15 @@ export default {
                 this.$router.go();
             }
         },
+
+        alert(msg, type) {
+            this.$toast.open({
+                message: msg,
+                type: type,
+                duration: 5000,
+                dismissible: true,
+            });
+        },
         contracButtonPressed() {
             let data = {
                 //stepOne contract
@@ -1901,8 +1917,13 @@ export default {
                 .then((response) => {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
-                    // vcomponent.$refs.my-modal.hide(modal);
-                    this.$router.go();
+                    vcomponent.contractAdded = true;
+
+                    setTimeout(function () {
+                        vcomponent.contractAdded = false;
+                        vcomponent.$refs["my-modal"].hide();
+                        vcomponent.$router.go();
+                    }, 5000);
                 })
                 .catch((error) => {
                     if (error.status === 422) {

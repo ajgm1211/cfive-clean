@@ -592,7 +592,7 @@
             <!-- Profits and Totals end -->
         </b-table-simple>
         <!-- End DataTable -->
-        {{ view }}
+        
         <!-- Pagination -->
         <paginate
             v-if="paginated"
