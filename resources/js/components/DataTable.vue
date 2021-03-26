@@ -475,17 +475,10 @@
                             </button>
                             <button
                                 class="btn-action"
-                                v-if="singleActions.includes('duplicate') && item.type != 'FCL'"
+                                v-if="singleActions.includes('duplicate')"
                                 v-on:click="onDuplicate(item.id)"
                             >
                                 Duplicate
-                            </button>
-                            <button
-                                class="btn-action"
-                                v-if="singleActions.includes('specialduplicate') && item.type != 'LCL'"
-                                @click="onSpecialDuplicate(item.id)"
-                            >
-                                Use as template
                             </button>
                             <button
                                 class="btn-action"
@@ -493,6 +486,13 @@
                                 v-on:click="onDelete(item.id)"
                             >
                                 Delete
+                            </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('specialduplicate') && item.type != 'LCL'"
+                                @click="onSpecialDuplicate(item.id)"
+                            >
+                                Use as template
                             </button>
                         </b-popover>
                     </b-td>
