@@ -24,6 +24,7 @@ class QuotationLocalChargeResource extends JsonResource
             'total' => $this->arrayToString($this->total) ?? [],
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
+            'provider' => $this->provider_name ?? null,
         ];
 
     }
