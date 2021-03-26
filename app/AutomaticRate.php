@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Filters\AutomaticRateFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticRate extends Model
+class AutomaticRate extends Model implements Auditable
 {
     use SoftDeletes;
-
+    use \OwenIt\Auditing\Auditable;
     /**
      * The attributes that should be mutated to dates.
      *

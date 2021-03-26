@@ -31,6 +31,8 @@ class Contact extends Model implements Auditable
     {
         if ($this->first_name && $this->last_name) {
             return $this->first_name . ' ' . $this->last_name;
+        }else{
+            return $this->first_name;
         }
     }
 

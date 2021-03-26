@@ -236,19 +236,20 @@ class LocalChargeQuotationController extends Controller
      */
     public function store(Request $request)
     {
-        $selectedCharges = $request->validate([
+        $request->validate([
             'selectedCharges.*.surcharge_id' => 'required',
             'selectedCharges.*.surcharge' => 'required',
             'selectedCharges.*.calculation_type_id' => 'required',
             'selectedCharges.*.price' => 'required',
             'selectedCharges.*.markup' => 'sometimes',
-            'selectedCharges.*.provider_name' => 'required',
+            //'selectedCharges.*.provider_name' => 'sometimes',
             'selectedCharges.*.currency_id' => 'required'
         ]);
-
-        foreach ($selectedCharges['selectedCharges'] as $localcharge) {
-
-            $this->storeInCharges($request->quote_id, $request->type_id, $request->port_id, $localcharge);
+        
+        foreach ($request->selectedCharges as $localcharge) {
+            if(!array_key_exists("automatic_rate_id", $localcharge)){
+                $this->storeInCharges($request->quote_id, $request->type_id, $request->port_id, $localcharge);
+            }
             $this->storeInLocalCharges($localcharge, $request->port_id, $request->quote_id, $request->type_id);
         }
 
@@ -562,7 +563,7 @@ class LocalChargeQuotationController extends Controller
     {
         $quote = QuoteV2::findOrFail($quote);
 
-        $carrier_id = $data['carrier']['id'] ?? $data['automatic_rate']['carrier']['name'];
+        $carrier_id = $data['carrier']['id'] ?? $data['automatic_rate']['carrier']['name'] ?? null;
 
         $rate = $quote->getRate($type, $port, $carrier_id);
 

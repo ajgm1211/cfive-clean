@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Traits\QuoteV2Trait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticInlandTotal extends Model
+class AutomaticInlandTotal extends Model implements Auditable
 {
     use QuoteV2Trait;
+    use \OwenIt\Auditing\Auditable;
 
     protected $casts = ['pdf_options' => 'array'];
 
