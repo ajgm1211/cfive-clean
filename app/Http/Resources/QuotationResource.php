@@ -28,12 +28,22 @@ class QuotationResource extends JsonResource
         $origin_array = [];
         $destiny_array = [];
 
+        $containers = $this->getContainersFromEquipment($this->equipment);
+
         foreach($origin_ports as $item){
             array_push($origin_array, $item->display_name);
         }
 
         foreach($destiny_ports as $item){
             array_push($destiny_array, $item->display_name);
+        }
+
+        if(isset($this->contact_id)){
+            $contact = $this->contact()->first();
+            $fullName = $contact->getFullName();
+            $contact->setAttribute('name', $fullName);
+        }else{
+            $contact = null;
         }
 
         return [
@@ -43,6 +53,7 @@ class QuotationResource extends JsonResource
             'delivery_type' => is_null($this->delivery_type) ? $this->delivery_type : $this->delivery_type()->first(),
             'company_id' => $this->company,
             'contact_id' => is_null($this->contact_id) ? $this->contact_id : ['id' => $this->contact_id, 'company_id' => $this->company_id, 'name' => $this->contact()->first()->getFullName()],
+            'contact' => $contact,
             'commodity' => $this->commodity,
             'status' => $this->status_quote()->first(),
             'type' => $this->type,
@@ -59,6 +70,7 @@ class QuotationResource extends JsonResource
             'validity_start' => $this->validity_start,
             'validity_end' => $this->validity_end,
             'equipment' => $this->getContainerCodes($this->equipment),
+            'containers' => $containers,
             'cargo_type_id' => is_null($this->cargo_type_id) ? $this->cargo_type_id : $this->cargoType()->first()->name,
             'total_quantity' => $this->total_quantity,
             'total_weight' => $this->total_weight,
@@ -78,8 +90,15 @@ class QuotationResource extends JsonResource
             'client_currency' => $this->user()->first()->companyUser()->first()->currency()->first(),
             'origin' => $origin_array ?? '--',
             'destiny' => $destiny_array ?? '--',
+            'origin_ports' => $origin_ports ?? '--',
+            'destiny_ports' => $destiny_ports ?? '--',
             'decimals' => $this->company_user()->first()->decimals,
-            'local_charges' => $this->type == 'FCL' ? $this->local_charges : $this->local_charges_lcl
+            'local_charges' => $this->type == 'FCL' ? $this->local_charges : $this->local_charges_lcl,
+            'price_id' => $this->price_id,
+            'price_level' => $this->price()->first(),
+            'carriers' => $this->carrier()->get(),
+            'search_options' => $this->search_options,
+            'direction_id' => $this->direction_id,
         ];
     }
 
