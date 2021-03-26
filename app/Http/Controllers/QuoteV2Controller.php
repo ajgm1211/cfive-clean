@@ -3337,6 +3337,9 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataDest)) {
                         $inlandDestiny = Collection::make($dataDest);
+
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
                     }
                 }
                 // Origin Addrees
@@ -3356,6 +3359,9 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataOrig)) {
                         $inlandOrigin = Collection::make($dataOrig);
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
+
                     }
                 }
 
