@@ -522,6 +522,10 @@
                                         :id="'id_' + localcharge.id"
                                         :value="localcharge"
                                     ></b-form-checkbox>
+                                     <b-form-input
+                                        v-model="localcharge.id"
+                                        class="q-input hide" 
+                                    ></b-form-input>
                                 </b-td>
 
                                 <!-- Surcharges -->
