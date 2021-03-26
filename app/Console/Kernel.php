@@ -37,11 +37,11 @@ class Kernel extends ConsoleKernel
         //$schedule->job(new SendQuotesJob)->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         /*$schedule->job(new ProcessExpiredContractsJob)->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
-        //$schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SyncCompaniesVforwarding)->cron('0 */2 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SyncCompaniesVisualtrans)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->appendOutputTo(storage_path('logs/commands.log'));*/
+        //$schedule->job(new SyncCompaniesVforwarding)->cron('0 */2 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new SyncCompaniesVisualtrans)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
@@ -57,8 +57,8 @@ class Kernel extends ConsoleKernel
         //->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
 
         // Comandos para backups
-        //$schedule->command('backup:clean')->daily()->at('01:40');
-        //$schedule->command('backup:run')->daily()->at('02:00');
+        $schedule->command('backup:clean')->daily()->at('01:40');
+        $schedule->command('backup:run')->daily()->at('02:00');
     }
 
     /**
