@@ -91,7 +91,8 @@
                                                     'USD'
                                                 "
                                                 v-model="currency.exchangeUSD"
-                                                @blur="updatePdfOptions"
+                                                type="number"
+                                                @blur="updatePdfOptions('exchangeRates')"
                                             ></b-form-input>
                                             <b-form-input
                                                 v-else-if="
@@ -99,7 +100,8 @@
                                                     'EUR'
                                                 "
                                                 v-model="currency.exchangeEUR"
-                                                @blur="updatePdfOptions"
+                                                type="number"
+                                                @blur="updatePdfOptions('exchangeRates')"
                                             ></b-form-input>
                                         </b-td>
                                     </b-tr>
@@ -161,25 +163,37 @@ export default {
         },
 
         updatePdfOptions(updateType) {
+            let component = this;
+            let newExchangeRates = [];
+
+            if(updateType == 'exchangeRates'){
+                component.pdfOptions['exchangeRates'].forEach(function (exRate){
+                    exRate['custom'] = true;
+                    newExchangeRates.push(exRate);
+                });
+                
+                component.exchangeRates = newExchangeRates
+            }
+
             let pdfOptions = {
                 pdf_options: {
-                    allIn: this.pdfOptions["allIn"],
-                    showCarrier: this.pdfOptions["showCarrier"],
-                    showTotals: this.showTotals,
-                    totalsCurrency: this.totalsCurrency,
-                    exchangeRates: this.exchangeRates,
+                    allIn: component.pdfOptions["allIn"],
+                    showCarrier: component.pdfOptions["showCarrier"],
+                    showTotals: component.showTotals,
+                    totalsCurrency: component.totalsCurrency,
+                    exchangeRates: component.exchangeRates,
                 },
             };
 
-            this.actions.quotes
-                .update(this.currentQuoteData["id"], pdfOptions)
+            component.actions.quotes
+                .update(component.currentQuoteData["id"], pdfOptions)
                 .then((response) => {
-                    let id = this.$route.params.id;
+                    let id = component.$route.params.id;
 
-                    this.$emit("freightAdded", id);
+                    component.$emit("freightAdded", id);
                 })
                 .catch((data) => {
-                    this.$refs.observer.setErrors(data.data.errors);
+                    component.$refs.observer.setErrors(data.data.errors);
                 });
         },
     },

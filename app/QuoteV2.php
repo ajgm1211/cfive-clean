@@ -10,12 +10,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class QuoteV2 extends Model implements HasMedia
+class QuoteV2 extends Model implements HasMedia, Auditable
 {
     use SoftDeletes;
     use HasMediaTrait;
-
+    use \OwenIt\Auditing\Auditable;
     /**
      * The attributes that should be mutated to dates.
      *
@@ -874,9 +875,13 @@ class QuoteV2 extends Model implements HasMedia
 
         $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals);
 
+        $allTotalsCurrency = [];
+
         foreach($allTotals as $total){
             $currency = Currency::where('id', $total->currency_id)->first();
             
+            array_push($allTotalsCurrency,$currency->alphacode);
+
             if(!in_array($currency->alphacode,$included)){
                 $currencyExchange = [ 
                     'alphacode' => $currency->alphacode, 
@@ -888,7 +893,12 @@ class QuoteV2 extends Model implements HasMedia
                 array_push($exchange, $currencyExchange);
                 array_push($included, $currency->alphacode);
             }
+        }
 
+        foreach($exchange as $key => $ex){
+            if(!in_array($ex['alphacode'],$allTotalsCurrency)){
+                unset($exchange[$key]);
+            }
         }
 
         return $exchange;
@@ -922,6 +932,43 @@ class QuoteV2 extends Model implements HasMedia
             $pdfOptions['exchangeRates'] = $exchangeRates;
 
             $this->pdf_options = $pdfOptions;
+            $this->save();
+        }
+    }
+
+    public function updateAddresses()
+    {
+        $addresses = $this->automatic_inland_address()->get();
+        $hasOrigin = false;
+        $hasDestination = false;
+
+        if($addresses != null && count($addresses) != 0){
+            foreach($addresses as $address){
+                if($address->address == $this->origin_address){
+                    $hasOrigin = true;
+                }else if($address->address == $this->destination_address){
+                    $hasDestination = true;
+                }
+            }
+
+            if(!$hasOrigin){
+                foreach($addresses as $addressFinal){
+                    if($address->type == 'Origin'){
+                        $this->origin_address = $address->address;
+                        $this->save(); 
+                    }
+                }
+            }else if(!$hasDestination){
+                foreach($addresses as $addressFinal){
+                    if($address->type == 'Destination'){
+                        $this->destination_address = $address->address;
+                        $this->save();
+                    }
+                }
+            }
+        }else{
+            $this->origin_address = null;
+            $this->destination_address = null;
             $this->save();
         }
     }
