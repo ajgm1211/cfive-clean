@@ -921,7 +921,11 @@ class SearchApiController extends Controller
             $looping = 'totals';
         }
 
-        foreach(array_keys($rates[0]->$looping) as $key){
+        $keys = array_keys($rates[0]->$looping);
+        $keysLeft = count($keys);
+
+        foreach($keys as $key){
+            $keysLeft -= 1;
             if(!$sorted){
                 $keyPrices = [];
                 $sorted = true;
@@ -929,7 +933,7 @@ class SearchApiController extends Controller
                     array_push($keyPrices,$rate->$looping[$key]);
                 }
 
-                if(array_unique($keyPrices) == $keyPrices){
+                if(array_unique($keyPrices) == $keyPrices || $keysLeft == 0){
                     sort($keyPrices);
                     $sortedRates = $keyPrices;
 
@@ -940,7 +944,7 @@ class SearchApiController extends Controller
                             }
                         }
                     }
-                }else{
+                }else if($keysLeft > 0){
                     $sorted = false;
                 }
             }
