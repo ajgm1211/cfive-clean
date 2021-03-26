@@ -35,10 +35,11 @@ class AutomaticInlandController extends Controller
         $total = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$address_id]])->first();
 
         if($total!=null){
+            $results = AutomaticInland::where('inland_totals_id',$total->id)->filterByQuote($quote->id)->filter($request);
             $total->totalize();
+        }else{
+            return null;
         }
-        
-        $results = AutomaticInland::where([['port_id',$port_id],['inland_address_id',$address_id]])->filterByQuote($quote->id)->filter($request);
         
         return AutomaticInlandResource::collection($results);
     }
@@ -47,14 +48,22 @@ class AutomaticInlandController extends Controller
     {        
         $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$request->input('address')]])->first();
 
+        $type = $request->input('type');
+
         if($inland_address == null){
             $inland_address = InlandAddress::create([
                     'quote_id'=>$quote->id,
                     'port_id'=>$port_id,
-                    'address'=>$request->input('address')
+                    'address'=>$request->input('address'),
+                    'type'=>$type
                 ]);
+
+            if($type == 'Destination'){
+                $quote->update(['destination_address' => $request->input('address')]);
+            }else if($type == 'Origin'){
+                $quote->update(['origin_address' => $request->input('address')]);
+            }
         }
-                
         $vdata = [
             'charge' => 'nullable|sometimes',
             'provider_id' => 'nullable',
@@ -64,8 +73,6 @@ class AutomaticInlandController extends Controller
         $equip = $quote->getContainerCodes($quote->equipment);
         $equip_array = explode(',',$equip);
         array_splice($equip_array,-1,1);
-
-        $type = $request->input('type');
 
         $autoDistance = $request->input('distance');
 
@@ -98,7 +105,6 @@ class AutomaticInlandController extends Controller
         if($autoDistance != 0){
             $distance = $autoDistance;
         }else{
-
             if ($type == 'Destination') {
                 $origin = Harbor::where('id',$port_id)->first()->coordinates;
                 $destination = $inland_address->address;
@@ -132,15 +138,36 @@ class AutomaticInlandController extends Controller
             }           
         }
 
+        $totals = $inland_address->inland_totals()->first();
+
+        if($totals == null){
+            $totals = AutomaticInlandTotal::create([
+                'quote_id' => $quote->id,
+                'port_id' => $port_id,
+                'type' => $type,
+                'inland_address_id' => $inland_address->id,
+                'currency_id' => $validate['currency_id']['id']
+            ]);
+            
+            $pdfOptions = [
+                "grouped" =>false, 
+                "groupId"=>null
+                ];
+                
+            $totals->pdf_options = $pdfOptions;
+            $totals->save();
+
+        }
+
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
             'automatic_rate_id' => $quote->rates_v2()->first()->id,
             'provider'=> 'Inland',
-            'provider_id' => count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
+            'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
-            'inland_address_id'=> $inland_address->id,
+            'inland_totals_id'=> $totals->id,
             'type' => $type,
             'distance' => $distance,
             'contract' => 1, 
@@ -150,20 +177,6 @@ class AutomaticInlandController extends Controller
             'validity_end' => $quote->validity_end,
         ]);
 
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
-
-        if($totals == null){
-            
-            $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
-
-            $totals = AutomaticInlandTotal::create([
-                'quote_id' => $quote->id,
-                'port_id' => $port_id,
-                'inland_address' => $inland_address->id,
-                'currency_id' => $user_currency
-            ]);
-        }
-        
         $totals->totalize();
     }
 
@@ -178,46 +191,6 @@ class AutomaticInlandController extends Controller
             }
         }
         return $rateC;
-    }
-
-    public function storeTotals(QuoteV2 $quote, $combo)
-    {   
-        $combo_array = explode(';',$combo);
-        
-        $address = $combo_array[0];
-
-        $port_type = $combo_array[1];
-
-        $port_id = $combo_array[2];
-        
-        $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
-        
-        if($inland_address == null){
-
-            $inland_address = InlandAddress::create([
-                'quote_id'=>$quote->id,
-                'port_id'=>$port_id,
-                'address'=>$address
-            ]);
-        }
-
-        $user_currency = $quote->user()->first()->companyUser()->first()->currency_id;
-
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id],['inland_address_id',$inland_address->id]])->first();
-
-        if($totals == null){
-            $totals = AutomaticInlandTotal::create([
-                'quote_id' => $quote->id,
-                'currency_id' => $user_currency,
-                'port_id' => $port_id,
-                'inland_address_id' => $inland_address->id,
-                'type' => $port_type,
-                'totals' => null,
-                'markups' => null                    
-            ]);
-        }else{
-            $totals->totalize();
-        }
     }
 
     public function update(Request $request, QuoteV2 $quote, AutomaticInland $autoinland)
@@ -264,7 +237,7 @@ class AutomaticInlandController extends Controller
             }
         }
 
-        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$autoinland->port_id],['inland_address_id',$autoinland->inland_address_id]])->first();
+        $totals = $autoinland->inland_totals()->first();
 
         $totals->totalize();
         
@@ -368,6 +341,16 @@ class AutomaticInlandController extends Controller
         }
 
         $total->totalize();
+
+    }
+
+    public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
+    {
+        $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id]])->get();
+
+        foreach($totals as $total){
+            $total->update(['pdf_options'=>$request->input('pdf_options')]);
+        }
     }
 
     public function retrieveTotals(QuoteV2 $quote, $combo)
@@ -411,7 +394,7 @@ class AutomaticInlandController extends Controller
         
         $ports_sorted = [];
         
-        if(count($origin_ports!=0)){
+        if(count($origin_ports)>0){
             foreach($origin_ports as $port){
                 $inlands = AutomaticInland::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -428,7 +411,7 @@ class AutomaticInlandController extends Controller
             }
         }
         
-        if(count($destination_ports!=0)){
+        if(count($destination_ports)>0){
             foreach($destination_ports as $port){
                 $inlands = AutomaticInland::where([['quote_id',$quote->id],['port_id',$port->id]])->get();
                 $clearPort = [
@@ -444,7 +427,6 @@ class AutomaticInlandController extends Controller
                 }
             }
         }
-
 
         return $ports_sorted;
     }
@@ -467,5 +449,24 @@ class AutomaticInlandController extends Controller
         DB::table('automatic_inlands')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function deleteFull(QuoteV2 $quote, $combo)
+    {
+        $combo_array = explode(';',$combo);
+
+        $address = $combo_array[0];
+
+        $port_id = $combo_array[1];
+        
+        $inland_address = InlandAddress::where([['quote_id',$quote->id],['port_id',$port_id],['address',$address]])->first();
+
+        $inland_address->delete();
+
+        $quote->updateAddresses();
+
+        $quote->updatePdfOptions('exchangeRates');
+
+        return response()->json(null, 204); 
     }
 }

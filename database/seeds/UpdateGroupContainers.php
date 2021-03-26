@@ -16,5 +16,4 @@ class UpdateGroupContainers extends Seeder
         DB::table('group_containers')->where('id', 3)->update(['code' => 'opentop']);
         DB::table('group_containers')->where('id', 4)->update(['code' => 'flatrack']);
     }
-    
 }

@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendMaintenanceNotificationEmail extends Mailable
 {
@@ -37,6 +37,6 @@ class SendMaintenanceNotificationEmail extends Mailable
         return $this->from('info@cargofive.com', 'Cargofive')
             ->view('emails.notifications.maintenance')
             ->subject('Cargofive scheduled maintenance notice | Aviso de mantenimiento')
-            ->with(['day' => $this->day,'day_spanish' => $this->day_spanish,'month'=> $this->month,'month_spanish'=> $this->month_spanish,'date'=> $this->date,'hour'=>$this->hour,'duration'=>$this->duration]);
+            ->with(['day' => $this->day, 'day_spanish' => $this->day_spanish, 'month'=> $this->month, 'month_spanish'=> $this->month_spanish, 'date'=> $this->date, 'hour'=>$this->hour, 'duration'=>$this->duration]);
     }
 }

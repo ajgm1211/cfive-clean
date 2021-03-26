@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LocalChargeQuote extends Model
 {
-    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id'];
+    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id', 'provider_name'];
 
     protected $casts = [
         'price' => 'array',
@@ -228,7 +228,8 @@ class LocalChargeQuote extends Model
         $this->attributes['profit'] = $this->removeCommas($array);
     }
 
-    public function removeCommas($array){
+    public function removeCommas($array)
+    {
         $containers = Container::all();
 
         if ($array != null || $array != '') {
@@ -236,7 +237,7 @@ class LocalChargeQuote extends Model
                 foreach ($containers as $container) {
                     if ($k == 'c' . $container->code) {
                         $array['c' . $container->code] = floatvalue($amount);
-                    }else if($k == 'm' . $container->code){
+                    } else if ($k == 'm' . $container->code) {
                         $array['m' . $container->code] = floatvalue($amount);
                     }
                 }

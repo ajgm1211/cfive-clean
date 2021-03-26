@@ -2,24 +2,22 @@
 
 namespace App;
 
-
+use App\Http\Filters\InlandFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Filters\InlandFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 
 class Inland extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    protected $table    = "inlands";
-    protected $fillable =   [
+    protected $table = 'inlands';
+    protected $fillable = [
         'id',
         'provider',
         'type',
@@ -42,6 +40,7 @@ class Inland extends Model implements Auditable
     {
         return $this->hasMany('App\InlandKm');
     }
+
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
@@ -87,7 +86,6 @@ class Inland extends Model implements Auditable
     /* Duplicate Inland Model instance with relations */
     public function duplicate()
     {
-
         $new_inland = $this->replicate();
         $new_inland->provider .= ' copy';
         $new_inland->save();
@@ -107,9 +105,9 @@ class Inland extends Model implements Auditable
     }
 
     /**
-     * Sync Inland Company Restrictions
+     * Sync Inland Company Restrictions.
      *
-     * @param  Array $companies
+     * @param  array $companies
      * @return void
      */
     public function InlandRestrictionsSync($companies)
@@ -119,10 +117,11 @@ class Inland extends Model implements Auditable
         foreach ($companies as $company_id) {
             InlandCompanyRestriction::create([
                 'company_id'    => $company_id,
-                'inland_id'   => $this->id
+                'inland_id'   => $this->id,
             ]);
         }
     }
+
     public function InlandPortsSync($ports)
     {
         DB::table('inlandsports')->where('inland_id', '=', $this->id)->delete();
@@ -134,14 +133,17 @@ class Inland extends Model implements Auditable
             ]);
         }
     }
+
     public function inlandports()
     {
         return $this->hasMany('App\InlandPort');
     }
+
     public function inlandadditionalkms()
     {
         return $this->hasOne('App\InlandAdditionalKm');
     }
+
     public function inlanddetails()
     {
         return $this->hasMany('App\InlandDetail');

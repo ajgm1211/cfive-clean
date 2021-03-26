@@ -14,10 +14,9 @@ use Validator;
 
 class InlandRangeController extends Controller
 {
-
-    function list(Request $request, Inland $inland)
-    {
+    function list(Request $request, Inland $inland) {
         $results = InlandRange::filterByInland($inland->id)->filter($request);
+
         return InlandRangeResource::collection($results);
     }
 
@@ -61,11 +60,11 @@ class InlandRangeController extends Controller
     }
 
     /**
-     * Prepare data to submit
+     * Prepare data to submit.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Inland $inland
-     * @return Array data validated
+     * @return array data validated
      */
     public function prepareData($data, $inland, $available_containers)
     {
@@ -83,7 +82,6 @@ class InlandRangeController extends Controller
                 $containers['C' . $code] = number_format(floatval($data['per_container']), 2, '.', '');
             }
         } else {
-
             foreach ($available_containers as $code) {
                 $value = isset($data['rates_' . $code]) ? number_format(floatval($data['rates_' . $code]), 2, '.', '') : 0;
                 $containers['C' . $code] = $value;
@@ -96,11 +94,11 @@ class InlandRangeController extends Controller
     }
 
     /**
-     * Validate the form
+     * Validate the form.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Inland $inland
-     * @return Array data validated
+     * @return array data validated
      */
     public function validateData($request, $inland, $available_containers, $range = null)
     {
@@ -119,21 +117,22 @@ class InlandRangeController extends Controller
 
         $validator = Validator::make($request->all(), $vdata);
 
-        $lower=$request->input('lower');
-        if(is_null($lower)){
-            $lower=0;
+        $lower = $request->input('lower');
+        if (is_null($lower)) {
+            $lower = 0;
         }
 
-        $upper=$request->input('upper');
-        if(is_null($upper)){
-            $upper=0;
+        $upper = $request->input('upper');
+        if (is_null($upper)) {
+            $upper = 0;
         }
         $query_lower = InlandRange::where('inland_id', $inland->id)->where('lower', '<=', $lower)->where('upper', '>=', $lower)->whereHas('inland', function (Builder $query) use ($company_id) {
             $query->where('company_user_id', $company_id);
         });
 
-        if ($range)
+        if ($range) {
             $query_lower->where('id', '<>', $range->id);
+        }
 
         $validated_lower = $query_lower->get()->count() > 0;
 
@@ -148,7 +147,6 @@ class InlandRangeController extends Controller
         $validated_upper = $query_upper->get()->count() > 0;
 
         $validator->after(function ($validator) use ($validated_lower, $validated_upper) {
-
             if ($validated_lower) {
                 $validator->errors()->add('lower', 'This value isn\'t available');
             }

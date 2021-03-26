@@ -98,7 +98,7 @@
                                         <b>Associated to</b>
                                     </th>
                                     <th title="Field #5">
-                                        <b>Module</b>
+                                        <b>Company</b>
                                     </th>
                                     <th title="Field #6">
                                         <b>Options</b>
@@ -114,7 +114,7 @@
                                             <td>{{$item->url}}</td>
                                             <td>{{$item->api_key}}</td>
                                             <td>{{$item->partner->name}}</td>
-                                            <td>{{$item->module}}</td>
+                                            <td>{{$item->companyUser->name}}</td>
                                             <td>
                                                 <span class="m-switch m-switch--icon">
                                                     <label>
