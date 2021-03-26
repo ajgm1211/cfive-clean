@@ -396,8 +396,9 @@
 
     Dropzone.options.documentDropzone = {
         url: '{{ route("request.fcl.storeMedia") }}',
-        maxFilesize: 32, // MB
+        maxFilesize: 100, // MB
         maxFiles: 1,
+        timeout : 120000,
         acceptedFiles:'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv',
         addRemoveLinks: true,
         /*accept: function(file, done) {
