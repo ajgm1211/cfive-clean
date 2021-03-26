@@ -669,7 +669,9 @@ class QuotationController extends Controller
                         }
                     }
                 } else {
-                    $total->inland_address()->first()->delete();
+                    if($total->inland_address()->first() != null){
+                        $total->inland_address()->first()->delete();
+                    }
                 }
             }
         }
