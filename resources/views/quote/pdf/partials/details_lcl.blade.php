@@ -203,7 +203,7 @@
 
             <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.cargo_details')}}</b></p>
 
-            <br>
+            
 
             @if(!empty($package_loads) && count($package_loads)>0)
 

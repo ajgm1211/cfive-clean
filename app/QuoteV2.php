@@ -934,4 +934,41 @@ class QuoteV2 extends Model implements HasMedia
             $this->save();
         }
     }
+
+    public function updateAddresses()
+    {
+        $addresses = $this->automatic_inland_address()->get();
+        $hasOrigin = false;
+        $hasDestination = false;
+
+        if($addresses != null && count($addresses) != 0){
+            foreach($addresses as $address){
+                if($address->address == $this->origin_address){
+                    $hasOrigin = true;
+                }else if($address->address == $this->destination_address){
+                    $hasDestination = true;
+                }
+            }
+
+            if(!$hasOrigin){
+                foreach($addresses as $addressFinal){
+                    if($address->type == 'Origin'){
+                        $this->origin_address = $address->address;
+                        $this->save(); 
+                    }
+                }
+            }else if(!$hasDestination){
+                foreach($addresses as $addressFinal){
+                    if($address->type == 'Destination'){
+                        $this->destination_address = $address->address;
+                        $this->save();
+                    }
+                }
+            }
+        }else{
+            $this->origin_address = null;
+            $this->destination_address = null;
+            $this->save();
+        }
+    }
 }
