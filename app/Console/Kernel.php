@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\SendQuotes::class,
         Commands\ProcessExpiredContracts::class,
         Commands\mappingMaerskCode::class,
+        Commands\JoinVariationHarbor::class,
         'Laravel\Passport\Console\ClientCommand',
     ];
 
