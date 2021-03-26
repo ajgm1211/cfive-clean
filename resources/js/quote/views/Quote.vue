@@ -312,11 +312,21 @@ export default {
                     colClass: "col-lg-3",
                     options:"languages",
                 },
+                total_weight: {
+                    label: "TOTAL WEIGHT",
+                    type: "text_lcl",
+                    colClass: "col-lg-3",
+                },   
+                total_volume: {
+                    label: "TOTAL VOLUME",
+                    type: "text_lcl",
+                    colClass: "col-lg-3",
+                },
                 chargeable_weight: {
                     label: "CHARGEABLE WEIGHT",
                     type: "text_lcl",
-                    disabled: false,
-                    colClass: "col-lg-2",
+                    disabled: true,
+                    colClass: "col-lg-3",
                 },
                 
             },

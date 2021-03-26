@@ -308,7 +308,7 @@ class QuotationController extends Controller
 
     public function update (Request $request, QuoteV2 $quote)
     {      
-        // dd($request['chargeable_weight']);             
+        // dd($request);             
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions','terms_portuguese','terms_english','remarks_spanish','remarks_portuguese','remarks_english'];
@@ -391,9 +391,10 @@ class QuotationController extends Controller
         if($request->input('pdf_options') != null){
             $quote->update(['pdf_options'=>$request->input('pdf_options')]);
         }
-        
+        $quote->update(['total_volume'=>$request['total_volume']]);
+        $quote->update(['total_weight'=>$request['total_weight']]);
         $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
-        $quote->update(['total_volume'=>$request['chargeable_weight']]);
+        
     }
 
     public function destroy(QuoteV2 $quote)
