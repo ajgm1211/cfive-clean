@@ -458,6 +458,10 @@ class QuotationController extends Controller
                         $type = 'Origin';
                     } else if ($address->port_id == $autoRate->destination_port_id) {
                         $type = 'Destination';
+                        $address->update(['type' => 'Destination']);
+                        if($quote->destination_address == null){
+                            $quote->update(['destination_address' => $address->address]);
+                        }
                     }
                 }
 
