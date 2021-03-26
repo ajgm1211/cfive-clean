@@ -27,7 +27,7 @@ class StoreSettings extends FormRequest
             'name' => 'required',
             'address'=>'required',
             'phone' =>'required',
-            
+
         ];
     }
 }

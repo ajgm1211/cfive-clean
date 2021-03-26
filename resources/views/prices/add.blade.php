@@ -112,11 +112,11 @@
                                             Sea Freights LCL
                                         </a>
                                     </li>
-                                    <li class="nav-item m-tabs__item">
+                                    <!-- <li class="nav-item m-tabs__item">
                                         <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_3" role="tab">
                                             Air Freights
                                         </a>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </div>
                             <div class="tab-content">

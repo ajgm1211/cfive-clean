@@ -109,6 +109,11 @@ class AutomaticRate extends Model
 
     public function totals()
     {
+        return $this->hasMany('App\AutomaticRateTotal', 'automatic_rate_id');
+    }
+
+    public function total_rate()
+    {
         return $this->hasOne('App\AutomaticRateTotal', 'automatic_rate_id');
     }
 
@@ -156,6 +161,13 @@ class AutomaticRate extends Model
         });
     }
 
+    public function scopeGetChargeLcl($query, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use ($type) {
+            $query->where('type_id', $type);
+        });
+    }
+
     public function scopeGetQuote($query, $id)
     {
         return $query->where('quote_id', $id);
@@ -170,11 +182,13 @@ class AutomaticRate extends Model
 
         if ($quote->type == 'FCL') {
             $this->load(
-                'charge'
+                'charge',
+                'totals'
             );
         } else if ($quote->type == 'LCL') {
             $this->load(
-                'charge_lcl_airs'
+                'charge_lcl_air',
+                'totals'
             );
         }
 
@@ -184,6 +198,9 @@ class AutomaticRate extends Model
             foreach ($relation as $relationRecord) {
 
                 $newRelationship = $relationRecord->replicate();
+                if($newRelationship->quote_id){
+                    $newRelationship->quote_id = $quote->id;
+                }
                 $newRelationship->automatic_rate_id = $new_rate->id;
                 $newRelationship->save();
             }
@@ -208,6 +225,40 @@ class AutomaticRate extends Model
         }]);
     }
 
+    public function scopeSelectChargeApi($q, $type)
+    {
+        if($type == 'FCL'){
+            return $q->with(['charge' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'amount as price',
+                    'markups as profit',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }else{
+            return $q->with(['charge_lcl_air' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'price_per_unit as price',
+                    'units',
+                    'minimum',
+                    'markup as profit',
+                    'total',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }
+    }
+
     public function scopeSelectFields($query)
     {
         return $query->select('id', 'quote_id', 'contract', 'validity_start as valid_from', 'validity_end as valid_until', 'markups as profit', 'total', 'schedule_type', 'transit_time', 'via', 'origin_port_id', 'destination_port_id', 'currency_id', 'carrier_id');
@@ -222,8 +273,14 @@ class AutomaticRate extends Model
 
     public function getProfitAttribute($value)
     {
+        $json = json_decode($value);
 
-        return json_decode(json_decode($value));
+        if (!is_object($json)) {
+            return json_decode($json);
+        }else{
+            return $json;
+        }
+        
     }
 
     /*public function getTotalAttribute($value)

@@ -124,6 +124,9 @@
             <table class="table tableData" id="table-company" width="100%">
                 <thead >
                     <tr class="title-quote">
+                        <th title="Id">
+                            Company Id
+                        </th>
                         <th title="business_name">
                             Business name
                         </th>
@@ -138,6 +141,9 @@
                         </th>
                         <th title="address">
                             Address
+                        </th>
+                        <th title="extra">
+                            Extra
                         </th>
                         <th title="action">
                             Options
@@ -234,13 +240,16 @@
             ajax:  "{{ route('companies.index.datatable') }}",
             "columnDefs": [
                 { "width": "20%", "targets": 0 },
+                { "width": "15%", "targets": 5 },
             ],
             columns: [
+                {data: 'id', name: 'id'},
                 {data: 'business_name', name: 'business_name'},
                 {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'tax_number', name: 'tax_number'},
                 {data: 'address', name: 'address'},
+                {data: 'extra', name: 'extra'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },
             ] ,
             "autoWidth": true,

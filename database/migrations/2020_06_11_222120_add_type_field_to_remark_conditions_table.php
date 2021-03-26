@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddTypeFieldToRemarkConditionsTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddTypeFieldToRemarkConditionsTable extends Migration
     public function up()
     {
         Schema::table('remark_conditions', function (Blueprint $table) {
-            $table->enum('mode',['port','country'])->after('name');
+            $table->enum('mode', ['port', 'country'])->after('name');
         });
     }
 

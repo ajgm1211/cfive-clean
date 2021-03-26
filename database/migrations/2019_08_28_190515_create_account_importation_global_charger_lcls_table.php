@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAccountImportationGlobalChargerLclsTable extends Migration
 {
@@ -20,7 +20,7 @@ class CreateAccountImportationGlobalChargerLclsTable extends Migration
             $table->string('namefile')->nullable();
             $table->integer('company_user_id')->unsigned();
             $table->integer('requestgclcl_id')->nullable()->unsigned();
-            $table->enum('status',['complete','incomplete'])->default('incomplete');
+            $table->enum('status', ['complete', 'incomplete'])->default('incomplete');
             $table->foreign('requestgclcl_id')->references('id')->on('new_request_global_charger_lcls');
             $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->timestamps();

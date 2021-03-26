@@ -5,12 +5,7 @@
             Name:
         </label>
         <input type="text" name="name" value="{{$carrier->name}}" required="required" class="form-control"  id="NameMD">
-    </div>
-    <div class="col-lg-4">
-        <label for="number" class="form-control-label">
-            Name of the Image:
-        </label>
-        <input type="text" name="image" value="{{$carrier->image}}" required="required" class="form-control"  id="Number">
+        <input type="hidden" name="image" value="{{$carrier->image}}" required="required" class="form-control"  id="Number" readonly>
     </div>
     <div class="col-lg-4">
         <label class="form-control-label">
@@ -40,7 +35,7 @@
             Preview:
         </label>
         <br>
-        <img id="blah" src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$carrier->image}}" alt="your image" width="175" height="150"/>
+        <img id="blah" src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$carrier->image}}" alt="your image" width="175" height="150"/>
     </div>
     <div class="col-lg-4 " id="imagDiv">
         <label><br></label>
@@ -75,7 +70,7 @@
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions m-form__actions">
             {!! Form::submit('Update', ['class'=> 'btn btn-primary','onclick' => 'fileempty()']) !!}
-            <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">Cancel</span>
             </button>
         </div>

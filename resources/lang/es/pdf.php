@@ -57,5 +57,9 @@ return [
     "provider" => "Proveedor",
     "distance" => "Distancia",
     "ocean_freight" => "Flete Marítimo",
+    "minimum" => "Mínimo",
     "totals" => "Totales",
+    "price" => "Precio",
+    "delegation" => "Delegación",
+    "exchange" => "Tasa de cambio",
 ];

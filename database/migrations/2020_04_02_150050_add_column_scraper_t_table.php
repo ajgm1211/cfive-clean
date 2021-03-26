@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnScraperTTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnScraperTTable extends Migration
      */
     public function up()
     {
-        Schema::table('scrapers_tokens', function (Blueprint $table){
+        Schema::table('scrapers_tokens', function (Blueprint $table) {
             $table->integer('carrier_id')->nullable()->after('token')->unsigned();
             $table->boolean('validator')->default(false)->after('carrier_id');
             $table->boolean('duplicated')->default(false)->after('validator');

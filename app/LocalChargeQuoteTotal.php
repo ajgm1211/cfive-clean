@@ -89,6 +89,10 @@ class LocalChargeQuoteTotal extends Model
         $this->update([
             'total' => $totals,
         ]);
+
+        $quote = $this->quote()->first();
+
+        $quote->updatePdfOptions('exchangeRates');
     }
 
     public function duplicate($quote)

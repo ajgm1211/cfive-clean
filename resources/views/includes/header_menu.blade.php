@@ -86,30 +86,42 @@
                                 </a>
                             </li>
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-list-1"></i>
+                                <a href="{{url('/api/quotes')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-coins"></i>
                                     <span class="m-menu__link-text">
                                         Quotes
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{url('/api/quotes')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-coins"></i>
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                                data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
-                                        FCL Quote
-                                        <span class="m-menu__link-badge">
-                                            <span class="m-badge m-badge--brand m-badge--wide">
-                                                new
-                                            </span>
-                                        </span>
+                                        Deprecated
                                     </span>
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                                 </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
+
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="{{ route('quotes-v2.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-list-1"></i>
+                                                <span class="m-menu__link-text">
+                                                    Quotes V1
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </li> 
-
+                @role('administrator|company')
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -150,7 +162,7 @@
                     </div>
                 </li>
 
-                @role('administrator|company')
+                
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -252,7 +264,7 @@
                     </div>
                 </li>
 
-                @endrole
+                
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('inlands.index', 'inland.edit', 'inlandD.find', 'UploadFile.index', 'provinces.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -278,6 +290,7 @@
                                     </span>
                                 </a>
                             </li>
+                            
                             @hasrole('administrator')
 
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
@@ -318,6 +331,7 @@
                         </ul>
                     </div>
                 </li>
+                @endrole
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('settings.index', 'termsv2.list', 'remarks.list', 'oauth.tokens', 'api.settings', 'users.home', 'prices.index', 'prices.add', 'UserConfiguration.index', 'templates.index', 'dashboard.index', 'ContainerCalculation.index', 'transit_time.index', 'settings.companies',  'search.list', 'impersonate.revert') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -377,6 +391,14 @@
                                 </a>
                             </li>
                             @endrole
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('user.info') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-user"></i>
+                                    <span class="m-menu__link-text">
+                                        My profile 
+                                    </span>
+                                </a>
+                            </li>
                             @role('administrator')
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
@@ -421,7 +443,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                            <!-- <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <i class="m-menu__link-icon la la-envelope"></i>
@@ -461,7 +483,7 @@
                                         Dashboard
                                     </span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('search.list')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-search"></i>
@@ -829,16 +851,7 @@ Group Surchargers
                             </div>
                         </li>
                     </div>
-                    <div class="col-md-6">
-                        <li class="m-nav__item " style="margin-top:20px;">
-                            <a href="{{ url('/tickets') }}" class=" ">
-                                <span class="m-nav__link-icon">
-                                    <i class="flaticon-computer m--font-warning" data-toggle="m-tooltip" title=""
-                                        data-html="true" data-original-title="<b>Support</b>"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </div>
+                
                 </div>
             </ul>
         </div>

@@ -20,13 +20,13 @@ class QuotationOceanFreightResource extends JsonResource
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
             'profit' => $this->profit,
-            'total' => json_decode($this->total),
+            'total' => $this->total ? json_decode($this->total):null,
             'origin' => $this->origin_port->display_name ?? null,
             'destiny' => $this->destination_port->display_name ?? null,
             'transit_time' => $this->transit_time ?? null,
             'via' => $this->via ?? null,
             'carrier' => $this->carrier,
-            'charges' => QuotationOceanFreightChargeResource::collection($this->charge),
+            'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
         ];
     }
 }

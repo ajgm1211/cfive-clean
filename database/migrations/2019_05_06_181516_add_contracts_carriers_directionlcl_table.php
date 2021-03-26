@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddContractsCarriersDirectionlclTable extends Migration
 {
@@ -22,7 +22,7 @@ class AddContractsCarriersDirectionlclTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('contracts_lcl', function (Blueprint $table){
+        Schema::table('contracts_lcl', function (Blueprint $table) {
             $table->integer('direction_id')->nullable()->after('account_id')->unsigned();
             $table->foreign('direction_id')->references('id')->on('directions');
         });

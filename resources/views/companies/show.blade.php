@@ -96,6 +96,12 @@
                                             {{$company->business_name}}</b></h4>
                                     <hr>
                                     <div class="collapse show" id="about_company">
+                                    <label><b>Company Id</b></label>
+                                        <p class="color-black">
+                                            <span id="company_id_span">{{$company->id}}</span>
+                                            <br>
+                                        </p>
+                                        <hr>
                                         <label><b>Name</b></label>
                                         <p class="color-black">
                                             <input type="hidden" value="{{$company->id}}" id="company_id" />
@@ -242,6 +248,20 @@
                                                 title="Cancel" hidden>
                                                 <i class="la la-reply"></i>
                                             </a>
+                                            <br>
+                                        </p>
+                                        <hr>
+                                        <label><b>Extra fields</b></label>
+                                        <p class="color-black">
+                                            @if ($company->options)
+                                                @foreach($company->options as $key=>$extra)
+                                                    <ul>
+                                                        <li><b>{{$key}}</b> : {{$extra}}</li>
+                                                    </ul>
+                                                @endforeach
+                                            @else
+                                                <p>No data to display</p>
+                                            @endif
                                             <br>
                                         </p>
                                         <hr>
@@ -534,7 +554,7 @@
                         sort: 'timestamp'
                     }
                 },
-                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'origin', name: 'origin'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },
