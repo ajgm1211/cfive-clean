@@ -11,6 +11,20 @@ use App\LocalCharPort;
 use App\Rate;
 use App\Harbor;
 use App\RateLcl;
+use App\InlandPort;
+use App\RemarkHarbor;
+use App\AutomaticRateTotal;
+use App\AutomaticInland;
+use App\AutomaticRate;
+use App\AutomaticInlandTotal;
+use App\AutomaticInlandLclAir;
+
+
+
+
+
+
+
 use App\TransitTime;
 use Illuminate\Console\Command;
 
@@ -49,7 +63,7 @@ class DeleteDuplicateHarborsCommand extends Command
     {
         try {
 
-            $objDuplicados = Duplicados::where('id', 1)->get();
+            $objDuplicados = Duplicados::get();
 
             foreach ($objDuplicados as $registrosDuplicados) {
 
@@ -74,6 +88,15 @@ class DeleteDuplicateHarborsCommand extends Command
                     RateLcl::where('destiny_port', $duplicate)->update(['destiny_port' => $original]);
                     TransitTime::where('origin_id', $duplicate)->update(['origin_id' => $original]);
                     TransitTime::where('destination_id', $duplicate)->update(['destination_id' => $original]);
+                    InlandPort::where('port', $duplicate)->update(['port' => $original]);
+                    RemarkHarbor::where('port_id', $duplicate)->update(['port_id' => $original]);
+                    AutomaticRateTotal::where('destination_port_id', $duplicate)->update(['destination_port_id' => $original]);
+                    AutomaticRateTotal::where('origin_port_id', $duplicate)->update(['origin_port_id' => $original]);
+                    AutomaticRate::where('destination_port_id', $duplicate)->update(['destination_port_id' => $original]);
+                    AutomaticRate::where('origin_port_id', $duplicate)->update(['origin_port_id' => $original]);
+                    AutomaticInland::where('port_id', $duplicate)->update(['port_id' => $original]);
+                    AutomaticInlandTotal::where('port_id', $duplicate)->update(['port_id' => $original]);
+                    AutomaticInlandLclAir::where('port_id', $duplicate)->update(['port_id' => $original]);
 
                     Harbor::where('id', $duplicate)->delete();
 
