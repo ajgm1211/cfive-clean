@@ -921,7 +921,8 @@ trait SearchTrait
 
                 //Setting arrays for different calculation types, for matching when building final arrays
                 $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];
-                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP'];
+                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP', 'BL', 'BL REEFER', 'BL OT', 'BL FR', 'TON', 'INV', 'CLR'];
+                $exclude_dry = ['SET'];
 
                 //Empty array for storing final charges
                 $container_charges = [];
@@ -943,6 +944,12 @@ trait SearchTrait
                         $container_charges['C'.$container['code']] = $charge->ammount;
                     }
                 //Individual container calculations
+                }else if(in_array($calculation->code,$exclude_dry)){
+                    foreach($containers as $container){
+                        if($container['gp_container_id'] != 1){
+                            $container_charges['C'.$container['code']] = $charge->ammount;
+                        }
+                    }
                 }else{
                     //Catching poorly formatted calculation codes
                     if($calculation->code == '40'){
