@@ -912,44 +912,12 @@ class SearchApiController extends Controller
     //Ordering rates by totals (cheaper to most expensive)
     public function sortRates($rates, $search_data_ids)
     {
-        $sorted = false;
-        $sortedRates = [];
-
         if(isset($search_data_ids['priceLevel'])){
-            $looping = 'totals_with_markups';
+            $sortBy = 'totals_with_markups';
         }else{
-            $looping = 'totals';
+            $sortBy = 'totals';
         }
 
-        $keys = array_keys($rates[0]->$looping);
-        $keysLeft = count($keys);
-
-        foreach($keys as $key){
-            $keysLeft -= 1;
-            if(!$sorted){
-                $keyPrices = [];
-                $sorted = true;
-                foreach($rates as $rate){
-                    array_push($keyPrices,$rate->$looping[$key]);
-                }
-
-                if(array_unique($keyPrices) == $keyPrices || $keysLeft == 0){
-                    sort($keyPrices);
-                    $sortedRates = $keyPrices;
-
-                    foreach($keyPrices as $priceKey => $price){
-                        foreach($rates as $rate){
-                            if($rate->$looping[$key] == $price){
-                                $sortedRates[$priceKey] = $rate;
-                            }
-                        }
-                    }
-                }else if($keysLeft > 0){
-                    $sorted = false;
-                }
-            }
-        }
-
-        return collect($sortedRates);
+        return($rates->sortBy($sortBy));
     }
 }
