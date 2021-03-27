@@ -980,12 +980,14 @@ trait SearchTrait
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
                 $charge->setAttribute('containers',$container_charges);
+
+                $charge->setAttribute('client_currency',$client_currency);
             }
         }
     }
 
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges)
+    public function joinCharges($charges, $client_currency)
     {
         //Empty array for joint charges
         $joint_charges = [];
@@ -1049,6 +1051,7 @@ trait SearchTrait
                                             $charge->containers_client_currency = $joint_containers;
                                         }elseif($charge->joint_as == 'charge_currency'){
                                             $charge->containers = $joint_containers;
+                                            $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
                                         }
                                         
                                     }
