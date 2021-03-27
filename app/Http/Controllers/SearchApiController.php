@@ -918,6 +918,6 @@ class SearchApiController extends Controller
             $sortBy = 'totals';
         }
 
-        return($rates->sortBy($sortBy));
+        return($rates->sortBy($sortBy)->values());
     }
 }
