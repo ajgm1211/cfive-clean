@@ -1923,7 +1923,7 @@ export default {
                         vcomponent.contractAdded = false;
                         vcomponent.$refs["my-modal"].hide();
                         vcomponent.$router.go();
-                    }, 5000);
+                    }, 3000);
                 })
                 .catch((error) => {
                     if (error.status === 422) {
