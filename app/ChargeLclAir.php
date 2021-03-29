@@ -50,4 +50,9 @@ class ChargeLclAir extends Model
     {
         return $query->where('automatic_rate_id', '=', $automatic_rate_id);
     }
+
+    public function scopeSelectFields($query)
+    {
+        return $query->select('charge_lcl_airs.id', 'automatic_rate_id', 'charge_lcl_airs.type_id', 'charge_lcl_airs.surcharge_id', 'charge_lcl_airs.units', 'charge_lcl_airs.price_per_unit as price', 'charge_lcl_airs.total', 'charge_lcl_airs.markup as profit', 'charge_lcl_airs.calculation_type_id', 'charge_lcl_airs.minimum', 'charge_lcl_airs.currency_id');
+    }
 }
