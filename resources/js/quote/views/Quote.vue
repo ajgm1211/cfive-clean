@@ -314,7 +314,7 @@ export default {
                 },
                 total_quantity: {
                     label: "TOTAL QUANTITY",
-                    type: "text",
+                    type: "text_lcl",
                     colClass: "col-lg-3",
                 },
                 total_weight: {
