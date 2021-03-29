@@ -405,7 +405,16 @@
                                             >
                                             <p v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</p>
                                             <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
+                                            <b v-if="chargeType == 'Freight'">{{ rate.currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as == 'client_currency'">{{ charge.client_currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as != 'client_currency'">{{ charge.currency.alphacode }}</b>
+                                            
+                                            <!--
+                                                ANTES
                                             <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
+                                                CAMBIO
+                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? charge.client_currency.alphacode : rate.currency.alphacode}}</b>
+                                            -->
                                             <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
                                             <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
                                             </b-td>
