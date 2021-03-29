@@ -1259,6 +1259,7 @@ export default {
             let searchRequestType = 1;
 
             this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
+            this.$router.go();
         },
         /* End single actions */
 
@@ -1651,9 +1652,6 @@ export default {
                 this.routerPush(qs);
             },
         },
-        $route(to, from) {
-            this.$router.go(to);
-        }
     },
 };
 </script>
