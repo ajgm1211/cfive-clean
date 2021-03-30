@@ -831,6 +831,7 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
     Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
     Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
     Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+    Route::get('duplicate/{id}', 'RemarkConditionsController@duplicate')->name('remarks.duplicate');
 });
 
 // User Configuration
