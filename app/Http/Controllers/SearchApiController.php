@@ -39,6 +39,7 @@ use App\RemarkCondition;
 use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
+use App\CompanyPrice;
 use Illuminate\Http\Request;
 
 class SearchApiController extends Controller
@@ -135,6 +136,10 @@ class SearchApiController extends Controller
             return $type->only(['id','description']);
         });
 
+        $company_prices = CompanyPrice::get()->map(function ($comprice){
+            return $comprice->only(['id','company_id','price_id']);
+        });
+
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
         });**/
@@ -159,7 +164,8 @@ class SearchApiController extends Controller
             'type_destiny',
             'surcharges',
             //'inland_distances',
-            'calculation_type'
+            'calculation_type',
+            'company_prices'
         );
 
         return response()->json(['data'=>$data]);
@@ -248,7 +254,7 @@ class SearchApiController extends Controller
         return RateResource::collection($rates);
     }
 
-    //Stores current search if its different from other searches
+    //Stores current search
     public function store(Request $request)
     {
         //Validating request data from form
@@ -649,7 +655,7 @@ class SearchApiController extends Controller
         $carrier = $rate->carrier_id;
 
         //Querying
-        $transit_time = TransitTime::where('origin_id',$origin_port)->where('destination_id',$destination_port)->whereIn('carrier_id',[$carrier,26])->first();
+        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
 
         return $transit_time;
     }
