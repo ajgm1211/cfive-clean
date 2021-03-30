@@ -170,10 +170,10 @@ BANDA DE CARDS CMA Y MAERSK
 
 *** */
 .banda-top {
-    top: 31px;
-    left: -45px;
+    top: 15px;
+    left: -42px;
     position: absolute;
-    width: 152px;
+    width: 121px;
     height: 0px;
     border-right: 20px solid transparent;
     border-left: 29px solid transparent;
@@ -184,7 +184,7 @@ BANDA DE CARDS CMA Y MAERSK
         content: '';
         width: 14px;
         position: absolute;
-        top: 22px;
+        top: 25px;
         left: -28px;
         border-right: 12px solid transparent;
         border-left: 2px solid transparent;
@@ -193,10 +193,11 @@ BANDA DE CARDS CMA Y MAERSK
         content: '';
         width: 14px;
         position: absolute;
-        top: 23px;
-        left: 109px;
+        top: 25px;
+        left: 77px;
         border-right: 3px solid transparent;
         border-left: 10px solid transparent;
+        transform: rotate(2deg);
     }
     span {
         color: #ffffff;
@@ -207,25 +208,34 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
+.banda-top.maerks span, .banda-top.cma span{
+    position: relative;
+    left: -7px;
+}
+
 .banda-top.maerks {
-    border-bottom: 23px solid #42B0D5;
+    border-bottom: 26px solid #42B0D5;
     &::after {
+        top: 26px;
         border-top: 10px solid #368eac;
     }
     &::before {
-
+        top: 26px;
         border-top: 11px solid #368eac;
     }
 }
 
 .banda-top.cma {
-    border-bottom: 23px solid #a91f1f;
+    border-bottom: 26px solid #a91f1f;
     &::after {
         border-top: 10px solid #991c1c;
     }
     &::before {
-
         border-top: 11px solid #991c1c;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
     }
 }
 
