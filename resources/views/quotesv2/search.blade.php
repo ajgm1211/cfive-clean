@@ -2175,6 +2175,7 @@ $('#quoteType').on('change', function() {
 //C5 Select
 (function($) {
     $.fn.selectC5 = function() {
+        
         var clickOnID = '' + $(this).attr('id') + '';
         var optionSelect = '#' + $(this).attr('id') + ' option';
         var selectType = '' + $(this).attr('select-type') + '';
