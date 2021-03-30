@@ -312,9 +312,11 @@
                             placeholder="Company"
                             class="s-input"
                             @input="
+                                searchRequest.contact = '',
                                 unlockContacts(),
-                                    (searchRequest.contact = ''),
-                                    updateQuoteSearchOptions()
+                                searchRequest.pricelevel = null,
+                                setPriceLevels(),
+                                updateQuoteSearchOptions()
                             "
                         >
                         </multiselect>
@@ -1766,8 +1768,6 @@ export default {
         },
 
         fillInitialFields(requestType) {
-            let component = this;
-
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.deliveryType = this.deliveryTypeOptions[0];
@@ -1787,9 +1787,14 @@ export default {
                     this.searchData.end_date + "T01:00:00";
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
+                this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                this.searchRequest.carriers = this.searchData.carriers;
+                if(this.searchData.carriers != null){
+                    this.searchRequest.carriers = this.searchData.carriers;
+                }else{
+                    this.searchRequest.carriers = this.carriers;
+                }
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
                     this.searchData.origin_charges == 0 ? false : true;
@@ -1804,6 +1809,7 @@ export default {
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();
+                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
@@ -1815,6 +1821,7 @@ export default {
                 } else {
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
+                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
                 }
@@ -1981,6 +1988,45 @@ export default {
                 component.companyChosen = true;
             } else {
                 component.companyChosen = false;
+            }
+        },
+
+        setPriceLevels() {
+            let component = this;
+            let dlist = this.datalists;
+            let prices = [];
+            
+            component.priceLevelOptions = [];
+
+            if (component.searchRequest.company != null) {
+                dlist.company_prices.forEach(function (comprice) {
+                    prices.push(comprice.price_id);
+                    if(component.searchRequest.company.id == comprice.company_id){
+                        dlist.price_levels.forEach(function (price) {
+                            if ( price.id == comprice.price_id && !component.priceLevelOptions.includes(price)) {
+                                component.priceLevelOptions.push(price);
+                            }
+                        });
+                    }
+                });
+
+                dlist.price_levels.forEach(function (price) {
+                    if(!prices.includes(price.id) && !component.priceLevelOptions.includes(price)){
+                        component.priceLevelOptions.push(price);
+                    }
+                });
+            } else {
+                let prices = [];
+
+                dlist.company_prices.forEach(function (comprice) {
+                    prices.push(comprice.price_id);
+                });
+
+                dlist.price_levels.forEach(function (price) {
+                    if(!prices.includes(price.id)){
+                        component.priceLevelOptions.push(price);
+                    }
+                });
             }
         },
 
