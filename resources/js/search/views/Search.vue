@@ -1790,10 +1790,10 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                if(this.searchData.carriers != null){
+                if(this.searchData.carriers.length != 0){
                     this.searchRequest.carriers = this.searchData.carriers;
                 }else{
-                    this.searchRequest.carriers = this.carriers;
+                    this.searchRequest.carriers = this.datalists.carriers;
                 }
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
