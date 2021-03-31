@@ -5,9 +5,9 @@
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
-                <div class="d-flex filter-search">
+                <div v-if="false" class="d-flex filter-search">
                     <b>filter by:</b>
-                    <div style="width: 160px !important; height: 33.5px; position:relative; top: -3px ">
+                    <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
                             <multiselect
                                 v-model="filterBy"
                                 :multiple="false"
@@ -19,19 +19,20 @@
                                 class="s-input no-select-style "
                             >
                             </multiselect>
-                            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
+                            <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
                     </div>
                 </div>
             </div>
 
             <div class="col-12 col-sm-6 addcontract-createquote">
 
-                <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
+                <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
                 
-                <b-button b-button variant="primary"  @click="createQuote">Create Quote</b-button>
+                <b-button b-button variant="primary" @click="createQuote">{{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}</b-button>
 
             </div>
         </div>
+        <!-- FIN FILTERS -->
 
         <!-- HEADER FCL -->
         <div class="row mt-4 mb-4 result-header" >
@@ -49,6 +50,7 @@
             </div>
 
         </div>
+        <!-- FIN HEADER FCL -->
 
         <!-- HEADER LCL -->
         <div class="row mt-4 mb-4 result-header" v-if="false">
@@ -61,6 +63,7 @@
             </div>
 
         </div>
+        <!-- FIN HEADER LCL -->
 
         <!-- RESULTS -->
         <div v-if="rates.length != 0" class="row" id="top-results">
@@ -392,6 +395,7 @@
 
                                 <div class="d-flex justify-content-end align-items-center">
                                     <b-button 
+                                        v-if="rate.remarks != '<br><br>' && rate.remarks != '<br>'"
                                         class="rs-btn"
                                         :class="rate.remarksCollapse ? null : 'collapsed'"
                                         :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"
@@ -417,11 +421,15 @@
                                     <b>add to quote</b>
                                 </b-form-checkbox>
                         </div>
+                        <!-- FIN ADD QUOTE BTN -->
 
-                   </div>
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
 
-                   <div class="row">
+                    <!-- DETALLES DE TARIFA -->
+                    <div class="row">
                    
+                        <!-- TARIFAS -->
                         <b-collapse :id="'details_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
                             <div 
                                 v-for="(chargeArray,chargeType) in rate.charges"
@@ -440,7 +448,7 @@
                                             <b-th
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
-                                                style="padding: 0.75rem !important"
+                                                style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
                                             >
 
                                             {{container.code}}
@@ -463,7 +471,16 @@
                                             >
                                             <p v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</p>
                                             <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
+                                            <b v-if="chargeType == 'Freight'">{{ rate.currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as == 'client_currency'">{{ charge.client_currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as != 'client_currency'">{{ charge.currency.alphacode }}</b>
+                                            
+                                            <!--
+                                                ANTES
                                             <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
+                                                CAMBIO
+                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? charge.client_currency.alphacode : rate.currency.alphacode}}</b>
+                                            -->
                                             <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
                                             <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
                                             </b-td>
@@ -484,6 +501,9 @@
                                 </b-table-simple>
                             </div>
                         </b-collapse>
+                        <!-- FIN TARIFAS -->
+
+                        <!-- REMARKS -->
                         <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
@@ -493,8 +513,10 @@
                                 </b-card>
                             
                         </b-collapse>
+                        <!-- FIN REMARKS -->
                    
-                   </div>
+                    </div>
+                    <!-- FIN DETALLES DE TARIFA -->
 
                 </div>
             </div>
@@ -510,7 +532,7 @@
                     <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
                     <div class="col-12 col-sm-10 btn-action-sticky">
 
-                        <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
+                        <b-button v-b-modal.add-contract class="btn-add-contract-fixed mr-4" style="border: none !important; color: #0072fc; font-weight: bolder">+ Add Contract</b-button>
                         
                         <b-button @click="createQuote" style="color:#0072FC; font-weight: bolder; border: 2px solid #0072FC !important">Create Quote</b-button>
 
@@ -526,9 +548,6 @@
                 </div>
             </div>
         </div>
-
-       
-
     </div>
 </template>
 
@@ -555,6 +574,14 @@ export default {
     data() {
         return {
             actions: actions,
+            dropzoneOptions: {
+					url: `/example`,
+					thumbnailWidth: 150,
+					maxFilesize: 0.5,
+					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
+					addRemoveLinks: true,
+				},
+            requestData: {},
             //GENE DEFINED
             checked1: false,
             checked2: false,
@@ -600,6 +627,9 @@ export default {
                 endDate: '',
             },
         }
+    },
+    created() {
+        this.requestData = this.$route.query;
     },
     methods: {
 
@@ -720,11 +750,19 @@ export default {
             if(ratesForQuote.length == 0){
                 component.noRatesAdded = true;
             }else{
-                component.actions.quotes
-                .create(ratesForQuote, this.$route)
-                .then ((response) => {
-                    window.location.href = "/api/quote/" + response.data.data.id + "/edit";
-                })
+                if(component.requestData.requested == 0){
+                    component.actions.quotes
+                        .create(ratesForQuote, this.$route)
+                        .then ((response) => {
+                            window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                        })
+                }else if(component.requestData.requested == 1){
+                    component.actions.quotes
+                        .specialduplicate(ratesForQuote)
+                        .then ((response) => {
+                            window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                        })
+                }
             }
         },
     },
@@ -760,7 +798,6 @@ export default {
     mounted(){
         let component = this;
 
-        //console.log(component.request);
         //console.log(component.datalists);
 
         //console.log(component.rates);

@@ -234,9 +234,9 @@
                                             <b-th>Detail</b-th>
                                             <b-th></b-th>
                                             <b-th></b-th>
-                                            <b-th style="padding: 0.75rem !important">20DV</b-th>
-                                            <b-th style="padding: 0.75rem !important">40DV</b-th>
-                                            <b-th style="padding: 0.75rem !important">45DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">45DV</b-th>
                                         </b-tr>
                                     </b-thead>
 
@@ -596,7 +596,7 @@
                                     
                                     <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> guaranteed Price & loading</a>
                                     <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> two-way commitment</a>
-                                    <a href="#0" style="color: #071C4B"></b-icon> T&C applicable</a>
+                                    <a href="#0" style="color: #071C4B"> T&C applicable</a>
 
                                 </div>
 
@@ -647,9 +647,9 @@
                                             <b-th>Detail</b-th>
                                             <b-th></b-th>
                                             <b-th></b-th>
-                                            <b-th style="padding: 0.75rem !important">20DV</b-th>
-                                            <b-th style="padding: 0.75rem !important">40DV</b-th>
-                                            <b-th style="padding: 0.75rem !important">45DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">45DV</b-th>
                                         </b-tr>
                                     </b-thead>
 
@@ -829,3 +829,37 @@
 
     </div>
 </template>
+
+<script>
+import actions from "../../actions";
+
+export default {
+    data() {
+        return {
+            actions: actions,
+            searches: [],
+            loaded: false,
+        }
+    },
+    created() {
+        actions.search
+            .list({})
+            .then((response) => {
+                this.searches = response.data.data;
+                this.loaded = true;
+            })
+            .catch(error => {
+                if(error.status === 403) {
+                    console.log(error.data.errors);
+                }
+            })
+    },
+    methods:
+    {
+        recentSearch(id){
+            this.$router.push({ path: `search`, query: { requested: 0, model_id: id} })
+        }
+    }
+}
+
+</script>

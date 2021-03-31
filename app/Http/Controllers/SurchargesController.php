@@ -111,6 +111,7 @@ class SurchargesController extends Controller
             $is_admin = true;
         }
 
+        //dd($surcharges,$decodejosn,$decodejosn,$sale_terms,$is_admin);
         return view('surcharges.edit', compact('surcharges', 'decodejosn', 'is_admin', 'sale_terms'));
     }
 

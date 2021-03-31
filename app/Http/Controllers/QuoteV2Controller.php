@@ -1973,7 +1973,7 @@ class QuoteV2Controller extends Controller
                 }
             }
 
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => $form->origin_address, 'destination_address' => $form->destination_address]);
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => null, 'destination_address' => null]);
 
             $quote = QuoteV2::create($request->all());
             $quote ->custom_quote_id = $quote->quote_id;
@@ -2328,6 +2328,7 @@ class QuoteV2Controller extends Controller
                             $inlandDestAddress->quote_id = $quote->id;
                             $inlandDestAddress->address = $form->destination_address;
                             $inlandDestAddress->port_id = $inlandDestiny->port_id;
+                            $inlandDestAddress->type = $inlandDestiny->type;
                             $inlandDestAddress->save();
 
                             //NEW TABLE INLAND TOTALS
@@ -2393,6 +2394,7 @@ class QuoteV2Controller extends Controller
                             $inlandOrigAddress->quote_id = $quote->id;
                             $inlandOrigAddress->address = $form->origin_address;
                             $inlandOrigAddress->port_id = $inlandOrigin->port_id;
+                            $inlandOrigAddress->type = $inlandOrigin->type;
                             $inlandOrigAddress->save();
 
                             //NEW TABLE INLAND TOTALS
@@ -3005,7 +3007,6 @@ class QuoteV2Controller extends Controller
 
         foreach ($request->input('originport') as $origP) {
 
-            
             $infoOrig = explode("-", $origP);
             if ($infoOrig[2] == null) {
                 $origin_port[] = $infoOrig[0];
@@ -3336,6 +3337,9 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataDest)) {
                         $inlandDestiny = Collection::make($dataDest);
+
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
                     }
                 }
                 // Origin Addrees
@@ -3355,6 +3359,9 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataOrig)) {
                         $inlandOrigin = Collection::make($dataOrig);
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
+
                     }
                 }
 
@@ -3556,7 +3563,6 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
-
                 // ################## Fin local Charges        #############################
                 //################## Calculos Global Charges #################################
 
@@ -3854,7 +3860,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('color', $color);
                 $data->setAttribute('contract_color', $colores);
             }
-            
+
             // Ordenar por Monto Total  de contenedor de menor a mayor
 
             foreach ($containers as $cont) {
@@ -3896,15 +3902,8 @@ class QuoteV2Controller extends Controller
         // EVENTO INTERCOM
         $event = new EventIntercom();
         $event->event_searchRate();
-        
-        $finalReturn = compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 
-            'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 
-            'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 
-            'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 
-            'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 
-            'directionC', 'harborsR', 'surchargesS', 'calculationTypeS'); //aqui
 
-        return view('quotesv2/search', $finalReturn); 
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
@@ -4712,7 +4711,7 @@ class QuoteV2Controller extends Controller
             array_push($destiny_country, 250);
 
             //Calculation type
-            $arrayBlHblShip = array('1', '2', '3', '16', '18'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
+            $arrayBlHblShip = array('1', '2', '3', '16', '18','20','21'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
             $arraytonM3 = array('4', '11', '17'); //  calculation type 4 = Per ton/m3
             $arraytonCompli = array('6', '7', '12', '13'); //  calculation type 4 = Per ton/m3
             $arrayPerTon = array('5', '10'); //  calculation type 5 = Per  TON
@@ -4720,6 +4719,7 @@ class QuoteV2Controller extends Controller
             $arrayPerPack = array('14'); //  per package
             $arrayPerPallet = array('15'); //  per pallet
             $arrayPerM3 = array('19'); //  per m3
+       
 
             // Local charges
             $localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
@@ -5684,6 +5684,10 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
+
+             
+
+
             } // Fin del calculo de los local charges
 
             //############ Global Charges   ####################
@@ -6627,6 +6631,8 @@ class QuoteV2Controller extends Controller
                         }
                     }
                 }
+
+              
             }
 
             //############ Fin Global Charges ##################

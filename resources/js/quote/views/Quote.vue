@@ -20,7 +20,7 @@
                 <!-- Tabs Section -->
                 <b-card no-body class="card-tabs" style="width: 100%">
                     <b-tabs card class="quote-content-tab">
-                        <b-tab title="Quote Info" active>
+                        <b-tab title="Quote Info" active @click="changeView('quote')">
                             <div style="padding: 0px 25px">
                                 <!-- Quote inputs -->
                                 <b-card class="q-card">
@@ -312,6 +312,28 @@ export default {
                     colClass: "col-lg-3",
                     options:"languages",
                 },
+                total_quantity: {
+                    label: "TOTAL QUANTITY",
+                    type: "text_lcl",
+                    colClass: "col-lg-3",
+                },
+                total_weight: {
+                    label: "TOTAL WEIGHT",
+                    type: "text_lcl",
+                    colClass: "col-lg-3",
+                },   
+                total_volume: {
+                    label: "TOTAL VOLUME",
+                    type: "text_lcl",
+                    colClass: "col-lg-3",
+                },
+                chargeable_weight: {
+                    label: "CHARGEABLE WEIGHT",
+                    type: "text_lcl",
+                    disabled: true,
+                    colClass: "col-lg-3",
+                },
+                
             },
             term_fields: {},
             LCL_fields: {
@@ -424,7 +446,12 @@ export default {
         changeView(val){
             let component = this;
 
-            if(val == 'freight'){
+            if(val == 'quote'){
+                component.ocean = false;
+                component.locals = false;
+                component.totals = false;
+                component.inlands = false;
+            } else if(val == 'freight'){
                 component.ocean = true;
                 component.locals = false;
                 component.totals = false;
