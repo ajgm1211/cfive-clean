@@ -123,7 +123,7 @@ class AutomaticRateController extends Controller
                 $data['contract'] = '';
             }
 
-            if(!isset($data['exp_date'])){
+            if(isset($data['exp_date'])){
                 $data['validity_end'] = $data['exp_date'];
                 unset($data['exp_date']);
             }

@@ -522,6 +522,10 @@
                                         :id="'id_' + localcharge.id"
                                         :value="localcharge"
                                     ></b-form-checkbox>
+                                     <b-form-input
+                                        v-model="localcharge.id"
+                                        class="q-input hide" 
+                                    ></b-form-input>
                                 </b-td>
 
                                 <!-- Surcharges -->
@@ -796,7 +800,14 @@
                                 v-for="(input, counter) in inputs"
                                 :key="counter"
                             >
-                                <b-td></b-td>
+                                <!-- Checkboxes -->
+                                <b-td>
+                                    <b-form-checkbox
+                                        v-model="selectedInputs"
+                                        :id="'id_' + input.id"
+                                        :value="input"
+                                    ></b-form-checkbox>
+                                </b-td>
 
                                 <!-- Surcharges -->
                                 <b-td>
@@ -958,7 +969,7 @@
 
                                 <!-- Botones -->
                                 <b-td>
-                                    <button
+                                    <!--<button
                                         type="button"
                                         class="btn-save"
                                         v-on:click="onSubmitCharge(counter)"
@@ -967,7 +978,7 @@
                                             class="fa fa-check"
                                             aria-hidden="true"
                                         ></i>
-                                    </button>
+                                    </button> -->
                                     <button
                                         type="button"
                                         class="btn-delete"
@@ -1052,7 +1063,9 @@ export default {
             port: [],
             totals: [],
             inputs: [],
+            inputId: 0,
             selectedCharges: [],
+            selectedInputs: [],
             carriers: [],
             value: "",
             template: "",
@@ -1082,8 +1095,11 @@ export default {
     methods: {
         add() {
             if (this.value != "") {
+                this.inputId += 1;
+                let currentInputId = this.inputId + 1;
                 if (this.currentQuoteData.type == "FCL") {
                     this.inputs.push({
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
@@ -1093,6 +1109,7 @@ export default {
                     });
                 } else {
                     this.inputs.push({
+                        id: currentInputId,
                         surcharge: "",
                         calculation_type: "",
                         sale_codes: "",
@@ -1307,11 +1324,12 @@ export default {
             });
         },
         onSubmit() {
-            if (this.selectedCharges.length > 0) {
+            if (this.selectedCharges.length > 0 || this.selectedInputs.length > 0) {
                 this.charges = [];
                 this.totals = [];
+                this.formatInputs();
                 let data = {
-                    selectedCharges: this.selectedCharges,
+                    selectedCharges: this.selectedCharges.concat(this.selectedInputs),
                     sale_codes: this.sale_codes,
                     quote_id: this.$route.params.id,
                     port_id: this.value.id,
@@ -1327,6 +1345,7 @@ export default {
                             this.alert("Record saved successfully", "success");
                             this.closeModal();
                             this.selectedCharges = [];
+                            this.selectedInputs = [];
                         })
                         .catch((data) => {
                             this.$refs.observer.setErrors(data.data.errors);
@@ -1341,6 +1360,7 @@ export default {
                             this.alert("Record saved successfully", "success");
                             this.closeModal();
                             this.selectedCharges = [];
+                            this.selectedInputs = [];
                         })
                         .catch((data) => {
                             this.$refs.observer.setErrors(data.data.errors);
@@ -1446,6 +1466,20 @@ export default {
         setTotal(units, price, markup) {
             return parseFloat(units) * parseFloat(price) + parseFloat(markup);
         },
+        formatInputs(){
+            let component = this;
+
+            component.selectedInputs.forEach(function (input){
+                input.currency_id = input.currency.id;
+                input.surcharge_id = input.surcharge.id;
+                input.calculation_type_id = input.calculation_type.id;
+                input.provider_name = input.carrier.name;
+                if (component.currentQuoteData.type == 'LCL') {
+                    input.price_per_unit = input.price;
+                    input.markup = input.profit;
+                }
+            })
+        }
     },
 };
 </script>
