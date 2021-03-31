@@ -8,8 +8,10 @@ use App\Http\Filters\ChargeFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class Charge extends Model
+class Charge extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    
     protected $casts = [
         'amount' => 'array',
         'markups' => 'array',

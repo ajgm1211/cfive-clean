@@ -574,11 +574,13 @@ API Integrations
                             </div>
                         </li>
                     </div>
+              
                     <div class="col-md-6">
-                        <li  class="m-nav__item "  style="margin-top:20px;">
-                            <a  href="{{ url('/tickets') }}" class=" ">
+                        <li class="m-nav__item " style="margin-top:20px;">
+                            <a href="{{ url('/tickets') }}" class=" ">
                                 <span class="m-nav__link-icon">
-                                    <i class="flaticon-computer"></i>
+                                    <i class="flaticon-computer m--font-warning" data-toggle="m-tooltip" title=""
+                                        data-html="true" data-original-title="<b>Support</b>"></i>
                                 </span>
                             </a>
                         </li>

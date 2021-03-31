@@ -2,54 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use App\QuoteV2;
-use App\Carrier;
+use App\AutomaticInlandTotal;
 use App\AutomaticRate;
-use App\CompanyUser;
-use App\Company;
-use App\Contact;
-use App\Incoterm;
-use App\Harbor;
-use App\PaymentCondition;
-use App\TermAndConditionV2;
-use App\DeliveryType;
-use App\StatusQuote;
+use App\AutomaticRateTotal;
+use App\CalculationType;
+use App\CalculationTypeLcl;
 use App\CargoKind;
 use App\CargoType;
-use App\Language;
-use App\Currency;
-use App\Container;
+use App\Carrier;
 use App\Charge;
-use App\CalculationType;
-use App\Surcharge;
-use App\ScheduleType;
-use App\Provider;
+use App\Company;
+use App\CompanyUser;
+use App\Contact;
+use App\Container;
 use App\Country;
-use App\InlandDistance;
-use App\CalculationTypeLcl;
-use App\AutomaticRateTotal;
-use App\AutomaticInlandTotal;
+use App\Currency;
+use App\DeliveryType;
 use App\DestinationType;
+use App\Harbor;
 use App\Http\Resources\QuotationResource;
-use App\SaleTermCode;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use App\Http\Traits\QuoteV2Trait;
+use App\Http\Traits\SearchTrait;
+use App\Incoterm;
+use App\InlandDistance;
+use App\Language;
+use App\PaymentCondition;
+use App\Provider;
+use App\QuoteV2;
+use App\SaleTermCode;
+use App\ScheduleType;
+use App\StatusQuote;
+use App\Surcharge;
+use App\TermAndConditionV2;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
-    use QuoteV2Trait;
+    use QuoteV2Trait, SearchTrait;
 
     public function index(Request $request)
     {
         return view('quote.index');
     }
 
-    public function list(Request $request)
-    {
+    function list(Request $request) {
         $results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
@@ -202,6 +201,7 @@ class QuotationController extends Controller
     {
         $company_user = Auth::user('web')->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
+        $user = User::where('company_user_id', $company_user->id)->first();
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
@@ -209,25 +209,34 @@ class QuotationController extends Controller
 
         $search_data = $rate_data[0]['search'];
 
-        $equipment = $this->formatContainersForQuote($search_data['equipment']);
+        $search_data_ids = $this->getIdsFromArray($search_data);
+
+        $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+
+        $remarks = "";
+
+        foreach ($rate_data as $rate) {
+            $remarks .= $rate['remarks'];
+        }
 
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
-            'type' => $search_data['type'],
-            'delivery_type' => $search_data['delivery'],
-            'user_id' => $search_data['user_id'],
+            'type' => $search_data_ids['type'],
+            'delivery_type' => $search_data_ids['deliveryType'],
+            'user_id' => $user->id,
             'company_user_id' => $company_user->id,
-            'company_id' => isset($search_data['company_id']) ? $search_data['company_id'] : null,
-            'contact_id' => isset($search_data['contact_id']) ? $search_data['contact_id'] : null,
-            'price_id' => isset($search_data['price_level']) ? $search_data['price_level'] : null,
+            'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
+            'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
+            'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
             'equipment' => $equipment,
             //'origin_address' => $data['origin_address'],
             //'destination_address' => $data['destination_address'],
-            'date_issued' => explode("/", $search_data['pick_up_date'])[0],
-            'validity_start' => explode("/", $search_data['pick_up_date'])[0],
-            'validity_end' => explode("/", $search_data['pick_up_date'])[1],
+            'date_issued' => $search_data_ids['dateRange']['startDate'],
+            'validity_start' => $search_data_ids['dateRange']['startDate'],
+            'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'remarks_english' => $rate_data[0]['remarks']
+            'remarks_english' => $remarks,
+            'direction_id' => $search_data_ids['direction'],
         ]);
 
         $quote = $quote->fresh();
@@ -242,7 +251,7 @@ class QuotationController extends Controller
                 'currency_id' => $rate['currency_id'],
                 'origin_port_id' => $rate['origin_port'],
                 'destination_port_id' => $rate['destiny_port'],
-                'carrier_id' => $rate['carrier_id']
+                'carrier_id' => $rate['carrier_id'],
             ]);
 
             foreach ($rate['charges'] as $charge_direction) {
@@ -259,11 +268,11 @@ class QuotationController extends Controller
                         'currency_id' => $currency_id,
                         'amount' => json_encode($charge['amount']),
                         'markups' => json_encode($charge['markups']),
-                        'total' => json_encode($charge['total'])
+                        'total' => json_encode($charge['total']),
                     ]);
                 }
             }
-            
+
             $rateTotals = AutomaticRateTotal::create([
                 "quote_id" => $quote->id,
                 'automatic_rate_id' => $newRate->id,
@@ -272,9 +281,9 @@ class QuotationController extends Controller
                 'carrier_id' => $newRate->carrier_id,
                 'currency_id' => $rate['currency_id'],
                 'totals' => null,
-                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null 
+                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null,
             ]);
-                
+
             $rateTotals->totalize($rate['currency_id']);
         }
 
@@ -310,7 +319,7 @@ class QuotationController extends Controller
                     'company_id' => 'sometimes|nullable',
                     'incoterm_id' => 'sometimes|nullable',
                     'payment_conditions' => 'sometimes|nullable',
-                    'kind_of_cargo' => 'sometimes|nullable'
+                    'kind_of_cargo' => 'sometimes|nullable',
                 ]);
             } else if ($request->input('cargo_type_id') != null) {
                 $data = $request->validate([
@@ -355,13 +364,25 @@ class QuotationController extends Controller
                     $data[$key] = 'Win';
                 }
             }
-            $quote->update([$key => $data[$key]]);
+            $quote->update([$key=>$data[$key]]);
+            
+            if($key == 'validity_end'){
+                $rates = $quote->rates_v2()->get();
+
+                if($rates != null && count($rates) != 0){
+                    foreach($rates as $rate){
+                        $rate->update([$key=>$data[$key]]);
+                    }
+                }
+            }
         }
+
         if ($request->input('custom_incoterm') != null) {
             $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
         } else {
             $quote->update(['custom_incoterm' => null]);
         }
+
         if ($request->input('custom_quote_id') != null) {
             $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
         } else {
@@ -371,6 +392,32 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
+        $quote->update(['total_quantity'=>$request['total_quantity']]);
+        $quote->update(['total_volume'=>$request['total_volume']]);
+        $quote->update(['total_weight'=>$request['total_weight']]);
+        $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
+        
+    }
+    
+    public function updateSearchOptions(Request $request, QuoteV2 $quote)
+    {
+        $search_data = $request->input();
+
+        $date_range = $search_data['dateRange'];
+        $start_date = substr($date_range['startDate'], 0, 10);
+        $end_date = substr($date_range['endDate'], 0, 10);
+
+        $contact = $search_data['contact'];
+        $company = $search_data['company'];
+
+        $price_level = $search_data['pricelevel'];
+
+        $origin_charges = $search_data['originCharges'];
+        $destination_charges = $search_data['destinationCharges'];
+
+        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges');
+
+        $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
 
     public function destroy(QuoteV2 $quote)
@@ -392,6 +439,96 @@ class QuotationController extends Controller
         return new QuotationResource($new_quote);
     }
 
+    public function specialduplicate(Request $request)
+    {
+        $rate_data = $request->input();
+        $search_data = $rate_data[0]['search'];
+
+        $search_data_ids = $this->getIdsFromArray($search_data);
+
+        $quote_id = $search_data['requestData']['model_id'];
+
+        $quote = QuoteV2::where('id', $quote_id)->first();
+
+        $new_quote = $quote->duplicate();
+
+        if($quote->search_options == null){
+            $new_quote->update([
+                'contact_id' => $search_data_ids['contact'],
+                'company_id' => $search_data_ids['company'],
+                'price_id' => $search_data_ids['pricelevel'],
+                'validity_start' => $search_data_ids['dateRange']['startDate'],
+                'validity_end' => $search_data_ids['dateRange']['endDate'],
+            ]);
+        }else{
+            $search_options_ids = $this->getIdsFromArray($quote->search_options);
+            $new_quote->update([
+                'contact_id' => $search_options_ids['contact'],
+                'company_id' => $search_options_ids['company'],
+                'price_id' => $search_options_ids['price_level'],
+                'validity_start' => $search_options_ids['start_date'],
+                'validity_end' => $search_options_ids['end_date'],
+            ]);
+        }
+
+        $old_rates = $new_quote->rates_v2()->get();
+
+        foreach ($old_rates as $old_rate) {
+            $old_rate->delete();
+        }
+
+        foreach ($rate_data as $rate) {
+
+            $newRate = AutomaticRate::create([
+                'quote_id' => $new_quote->id,
+                'contract' => isset($rate['contract']) ? $rate['contract']['name'] : '',
+                'validity_start' => $rate['contract']['validity'],
+                'validity_end' => $rate['contract']['expire'],
+                'currency_id' => $rate['currency_id'],
+                'origin_port_id' => $rate['origin_port'],
+                'destination_port_id' => $rate['destiny_port'],
+                'carrier_id' => $rate['carrier_id'],
+            ]);
+
+            foreach ($rate['charges'] as $charge_direction) {
+                foreach ($charge_direction as $charge) {
+
+                    $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
+                    $charge = $this->formatChargeForQuote($charge);
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $newRate->id,
+                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                        'type_id' => $charge['typedestiny_id'],
+                        'calculation_type_id' => $charge['calculationtype']['id'],
+                        'currency_id' => $currency_id,
+                        'amount' => json_encode($charge['amount']),
+                        'markups' => json_encode($charge['markups']),
+                        'total' => json_encode($charge['total']),
+                    ]);
+                }
+            }
+
+            $rateTotals = AutomaticRateTotal::create([
+                "quote_id" => $new_quote->id,
+                'automatic_rate_id' => $newRate->id,
+                'origin_port_id' => $newRate->origin_port_id,
+                'destination_port_id' => $newRate->destination_port_id,
+                'carrier_id' => $newRate->carrier_id,
+                'currency_id' => $rate['currency_id'],
+                'totals' => null,
+                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null,
+            ]);
+
+            $rateTotals->totalize($rate['currency_id']);
+        }
+
+        $quote->update(['search_options' => null]);
+        $new_quote->update(['search_options' => null]);
+
+        return new QuotationResource($new_quote);
+    }
+
     public function destroyAll(Request $request)
     {
         $toDestroy = QuoteV2::whereIn('id', $request->input('ids'))->get();
@@ -405,7 +542,6 @@ class QuotationController extends Controller
 
     public function show($id)
     {
-
         $quote_id = obtenerRouteKey($id);
         $quote = QuoteV2::firstOrFail($quote_id);
 
@@ -434,7 +570,7 @@ class QuotationController extends Controller
                         'automatic_rate_id' => $rate->id,
                         'carrier_id' => $rate->carrier_id,
                         'totals' => null,
-                        'markups' => null
+                        'markups' => null,
                     ]);
 
                     $newRateTotal->totalize($currency->id);
@@ -456,8 +592,16 @@ class QuotationController extends Controller
                 foreach ($rates as $autoRate) {
                     if ($address->port_id == $autoRate->origin_port_id) {
                         $type = 'Origin';
+                        $address->update(['type' => 'Origin']);
+                        if ($quote->origin_address == null) {
+                            $quote->update(['origin_address' => $address->address]);
+                        }
                     } else if ($address->port_id == $autoRate->destination_port_id) {
                         $type = 'Destination';
+                        $address->update(['type' => 'Destination']);
+                        if ($quote->destination_address == null) {
+                            $quote->update(['destination_address' => $address->address]);
+                        }
                     }
                 }
 
@@ -468,7 +612,7 @@ class QuotationController extends Controller
                     'port_id' => $address->port_id,
                     'type' => $type,
                     'inland_address_id' => $address->id,
-                    'currency_id' => $user_currency
+                    'currency_id' => $user_currency,
                 ]);
 
                 if ($quote->type == 'FCL') {
@@ -489,12 +633,28 @@ class QuotationController extends Controller
                 $totals->totalize();
             }
         } elseif (count($inlandTotals) != 0) {
+            foreach ($inlandAddress as $address) {
+                foreach ($rates as $autoRate) {
+                    if ($address->port_id == $autoRate->origin_port_id) {
+                        $address->update(['type' => 'Origin']);
+                        if ($quote->origin_address == null) {
+                            $quote->update(['origin_address' => $address->address]);
+                        }
+                    } else if ($address->port_id == $autoRate->destination_port_id) {
+                        $address->update(['type' => 'Destination']);
+                        if ($quote->destination_address == null) {
+                            $quote->update(['destination_address' => $address->address]);
+                        }
+                    }
+                }
+            }
+
             foreach ($inlandTotals as $total) {
                 $total->totalize();
                 if ($total->pdf_options == null) {
                     $pdfOptions = [
                         "grouped" => false,
-                        "groupId" => null
+                        "groupId" => null,
                     ];
 
                     $total->pdf_options = $pdfOptions;
@@ -514,7 +674,9 @@ class QuotationController extends Controller
                         }
                     }
                 } else {
-                    $total->inland_address()->first()->delete();
+                    if($total->inland_address()->first() != null){
+                        $total->inland_address()->first()->delete();
+                    }
                 }
             }
         }
@@ -528,7 +690,7 @@ class QuotationController extends Controller
                 "allIn" => true,
                 "showCarrier" => true,
                 "showTotals" => false,
-                "totalsCurrency" => $currency
+                "totalsCurrency" => $currency,
             ];
 
             $quote->pdf_options = $pdfOptions;

@@ -1737,25 +1737,6 @@ trait QuoteV2Trait
         return $amounts;
     }
 
-    public function formatContainersForQuote(Array $container_codes)
-    {
-        $container_array = [];
-
-        if(count($container_codes) == 0){
-            return "[]";
-        }else{
-            foreach($container_codes as $code){
-                $container = Container::where('code',$code)->first();
-                
-                array_push($container_array, $container->id);
-            }
-    
-            $container_string = "[\"".implode("\",\"",$container_array)."\"]";
-    
-            return $container_string;
-        }
-    }
-
     public function formatChargeForQuote(Array $charge)
     {
         $formattedAmount = [];

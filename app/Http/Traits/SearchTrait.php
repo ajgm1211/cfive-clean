@@ -514,7 +514,7 @@ trait SearchTrait
 
             $markupOrig = $localMarkup * $valor;
 
-            $monto = $monto / $rateFreight;
+            //$monto = $monto / $rateFreight;
             $markup = trim($localMarkup);
             $markup = number_format($markup, 2, '.', '');
             $monto += $localMarkup;
@@ -698,21 +698,6 @@ trait SearchTrait
 
     //NEW SEARCH FUNCTIONS
 
-    //Returns array containing group ids present in a container ids array
-    public function getEquipmentGroups(Array $equipment)
-    {
-        $container_groups = Array();
-
-        foreach($equipment as $container_id){
-            $container = Container::where('id',$container_id)->first();
-            if(!in_array($container['gp_container_id'],$container_groups)){
-                array_push($container_groups,$container['gp_container_id']);
-            }
-        }
-
-        return $container_groups;
-    }
-
     //Returns only ids from a 2-levels deep array containing ids, names, etc
     public function getIdsFromArray(Array $search_request)
     {
@@ -857,12 +842,13 @@ trait SearchTrait
     public function joinRateContainers($rates, $search_containers)
     {
         foreach($rates as $rate){
-            $container_array = [];
             $container_group_id = $rate->contract->gp_container_id;
-            $group_containers = Container::where('gp_container_id',$container_group_id)->get();
-            $requested_containers = [];
-
+            
             if($container_group_id == 1){
+                $container_array = [];
+                $group_containers = Container::where('gp_container_id',$container_group_id)->get();
+                $requested_containers = [];
+
                 foreach($group_containers as $cont){
                     if(in_array($cont->id,$search_containers)){
                         array_push($requested_containers, $cont->code);
@@ -886,26 +872,8 @@ trait SearchTrait
         }
     }
 
-    //Gets country for given port. Output depends on input. It returns ID if ID given, and MODEL if MODEL given
-    public function getPortCountry($port)
-    {
-        //Checking if MODEL
-        if(is_a($port,'App\Harbor')){
-            //Retrieving country model by id
-            $country = Country::where('id',$port->country_id)->first();
-            //Checking if int (ID)
-        }elseif(is_int($port)){
-            //Retrieving port model
-            $port = Harbor::where('id',$port)->first();
-            //Retrieving country by id and getting ID
-            $country = Country::where('id',$port->country_id)->first()->id;
-        }
-
-        return $country;
-    }
-
     //groups local + global charges by type (Origin, Destination, Freight)
-    public function groupChargesByType($local_charges, $global_charges)
+    public function groupChargesByType($local_charges, $global_charges, $search_data)
     {
         //Creating arrays for every type
         $origin = [];
@@ -930,32 +898,31 @@ trait SearchTrait
         }
 
         //Forming final collection
-        $charges->put('Origin',$origin);
-        $charges->put('Destination',$destination);
+        if($search_data['originCharges']){
+            $charges->put('Origin',$origin);
+        }
         $charges->put('Freight',$freight);
+        if($search_data['destinationCharges']){
+            $charges->put('Destination',$destination);
+        }
         
         return $charges;
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $company_user_id)
+    public function setChargesPerContainer($charges, $containers, $client_currency)
     {
-        //Retrieving current company
-        $company_user = CompanyUser::where('id',$company_user_id)->first();
-    
-        //getting client profile currency
-        $client_currency = $company_user->currency;
-
         //Looping through charges collection
         foreach($charges as $charges_direction){
             foreach($charges_direction as $charge){
 
                 //Getting calculation info from calculation type id
-                $calculation = CalculationType::where('id',$charge->calculationtype_id)->first();
+                $calculation = $charge->calculationtype;
 
                 //Setting arrays for different calculation types, for matching when building final arrays
                 $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];
-                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP'];
+                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP', 'BL', 'BL REEFER', 'BL OT', 'BL FR', 'TON', 'INV', 'CLR'];
+                $exclude_dry = ['SET'];
 
                 //Empty array for storing final charges
                 $container_charges = [];
@@ -977,6 +944,12 @@ trait SearchTrait
                         $container_charges['C'.$container['code']] = $charge->ammount;
                     }
                 //Individual container calculations
+                }else if(in_array($calculation->code,$exclude_dry)){
+                    foreach($containers as $container){
+                        if($container['gp_container_id'] != 1){
+                            $container_charges['C'.$container['code']] = $charge->ammount;
+                        }
+                    }
                 }else{
                     //Catching poorly formatted calculation codes
                     if($calculation->code == '40'){
@@ -1007,12 +980,14 @@ trait SearchTrait
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
                 $charge->setAttribute('containers',$container_charges);
+
+                $charge->setAttribute('client_currency',$client_currency);
             }
         }
     }
 
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges)
+    public function joinCharges($charges, $client_currency)
     {
         //Empty array for joint charges
         $joint_charges = [];
@@ -1076,6 +1051,7 @@ trait SearchTrait
                                             $charge->containers_client_currency = $joint_containers;
                                         }elseif($charge->joint_as == 'charge_currency'){
                                             $charge->containers = $joint_containers;
+                                            $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
                                         }
                                         
                                     }
