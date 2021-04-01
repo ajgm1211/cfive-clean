@@ -6,7 +6,7 @@
                 <!-- Reference -->
                 <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
                     <!-- Text Field -->
-                    <div v-if="item.type == 'text' && !item.hidden">
+                    <div v-if="item.type == 'text' && !item.hidden || item.type == 'text_lcl' && data.type=='LCL' " >
                         <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
@@ -359,6 +359,7 @@ export default {
                     case "text":
                     case "textarea":
                     case "ckeditor":
+                    case "text_lcl":   
                         data[key] = component.vdata[key];
                         break;
                     case "select":

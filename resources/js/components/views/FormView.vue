@@ -141,6 +141,8 @@
                                 :singleDatePicker="false"
                                 :autoApply="true"
                                 :timePicker="false"
+                                :minDate="item.min"
+                                :maxDate="item.max"
                                 v-model="vdata[key]"
                                 :linkedCalendars="true"
                                 @select="cleanInput(key)"

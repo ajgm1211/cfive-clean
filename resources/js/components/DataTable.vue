@@ -487,6 +487,13 @@
                             >
                                 Delete
                             </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('specialduplicate') && item.type != 'LCL'"
+                                @click="onSpecialDuplicate(item.id)"
+                            >
+                                Use as template
+                            </button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -585,7 +592,7 @@
             <!-- Profits and Totals end -->
         </b-table-simple>
         <!-- End DataTable -->
-        {{ view }}
+        
         <!-- Pagination -->
         <paginate
             v-if="paginated"
@@ -1246,6 +1253,13 @@ export default {
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+        },
+
+        onSpecialDuplicate(quote_id){
+            let searchRequestType = 1;
+
+            this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
+            this.$router.go();
         },
         /* End single actions */
 
