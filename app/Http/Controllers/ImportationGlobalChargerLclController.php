@@ -94,8 +94,8 @@ class ImportationGlobalChargerLclController extends Controller
                 $validitytoEX = explode('_', $failglobalcharger['expire']);
 
                 if (count($surchargerEX) == 1 && count($typedestinyEX) == 1
-                   && count($typedestinyEX) == 1 && count($calculationtypeEX) == 1
-                   && count($ammountEX) == 1 && count($minimumEX) == 1 && count($currencyEX) == 1) {
+                    && count($typedestinyEX) == 1 && count($calculationtypeEX) == 1
+                    && count($ammountEX) == 1 && count($minimumEX) == 1 && count($currencyEX) == 1) {
 
                     // Origen Y Destino ------------------------------------------------------------------------
                     if ($failglobalcharger->differentiator == 1) {
@@ -123,7 +123,7 @@ class ImportationGlobalChargerLclController extends Controller
                     //  Surcharge ------------------------------------------------------------------------------
 
                     $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
-                    if (count($surchargerV) == 1) {
+                    if (!empty($surchargerV) ) {
                         $surcharB = true;
                         $surchargerV = $surchargerV['id'];
                     }
@@ -131,7 +131,7 @@ class ImportationGlobalChargerLclController extends Controller
                     //  Type Destiny ---------------------------------------------------------------------------
 
                     $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
-                    if (count($typedestunyV) == 1) {
+                    if (!empty($typedestunyV)) {
                         $typedestinyB = true;
                         $typedestunyV = $typedestunyV['id'];
                     }
@@ -140,7 +140,7 @@ class ImportationGlobalChargerLclController extends Controller
 
                     $calculationtypeV = CalculationTypeLcl::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
 
-                    if (count($calculationtypeV) == 1) {
+                    if (!empty($calculationtypeV)) {
                         $calculationtypeB = true;
                         $calculationtypeV = $calculationtypeV['id'];
                     }
@@ -154,7 +154,7 @@ class ImportationGlobalChargerLclController extends Controller
                     //  Currency -------------------------------------------------------------------------------
 
                     $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
-                    if (count($currencyV) == 1) {
+                    if (!empty($currencyV)) {
                         $currencyB = true;
                         $currencyV = $currencyV['id'];
                     }
@@ -186,38 +186,38 @@ class ImportationGlobalChargerLclController extends Controller
                     /*
                     $colleccion = collect([]);
                     $colleccion = [
-                        'origen'            =>  $originV,
-                        'destiny'           =>  $destinationV,
-                        'surcharge'         =>  $surchargerV,
-                        'typedestuny'       =>  $typedestunyV,
-                        'calculationtypeV'  =>  $calculationtypeV,
-                        'amountV'           =>  $amountV,
-                        '$minimumV'         =>  $minimumV,
-                        'currencyV'         =>  $currencyV,
-                        'carrierV'          =>  $carrierV,
-                        'validityfromV'     =>  $validityfromV,
-                        'validitytoV'       =>  $validitytoV,
-                        'surcharB'          =>  $surcharB,
-                        'originB'           =>  $originB,
-                        'destinyB'          =>  $destinyB,
-                        'calculationtypeB'  =>  $calculationtypeB,
-                        'carrierB'          =>  $carrierB,
-                        'currencyB'         =>  $currencyB,
-                        'typedestinyB'      =>  $typedestinyB,
-                        'validityfromBol'   =>  $validityfromBol,
-                        'validitytoBol'     =>  $validitytoBol
+                    'origen'            =>  $originV,
+                    'destiny'           =>  $destinationV,
+                    'surcharge'         =>  $surchargerV,
+                    'typedestuny'       =>  $typedestunyV,
+                    'calculationtypeV'  =>  $calculationtypeV,
+                    'amountV'           =>  $amountV,
+                    '$minimumV'         =>  $minimumV,
+                    'currencyV'         =>  $currencyV,
+                    'carrierV'          =>  $carrierV,
+                    'validityfromV'     =>  $validityfromV,
+                    'validitytoV'       =>  $validitytoV,
+                    'surcharB'          =>  $surcharB,
+                    'originB'           =>  $originB,
+                    'destinyB'          =>  $destinyB,
+                    'calculationtypeB'  =>  $calculationtypeB,
+                    'carrierB'          =>  $carrierB,
+                    'currencyB'         =>  $currencyB,
+                    'typedestinyB'      =>  $typedestinyB,
+                    'validityfromBol'   =>  $validityfromBol,
+                    'validitytoBol'     =>  $validitytoBol
                     ];
 
                     dd($colleccion);*/
 
                     if ($originB == true && $destinyB == true
-                       && $surcharB == true && $typedestinyB == true
-                       && $calculationtypeB == true && $currencyB == true
-                       && $validityfromBol == true && $validitytoBol == true
-                       && $carrierB == true) {
+                        && $surcharB == true && $typedestinyB == true
+                        && $calculationtypeB == true && $currencyB == true
+                        && $validityfromBol == true && $validitytoBol == true
+                        && $carrierB == true) {
                         if ($failglobalcharger->differentiator == 1) { //si es puerto verificamos si exite uno creado con country
                             $typeplace = 'globalcharportlcl';
-                        } elseif ($failglobalcharger->differentiator == 2) {  //si es country verificamos si exite uno creado con puerto
+                        } elseif ($failglobalcharger->differentiator == 2) { //si es country verificamos si exite uno creado con puerto
                             $typeplace = 'globalcharcountrylcl';
                         }
 
@@ -233,37 +233,37 @@ class ImportationGlobalChargerLclController extends Controller
                             ->has($typeplace)
                             ->first();
 
-                        if (count($globalChargeArreG) == 0) {
+                        if (empty($globalChargeArreG)) {
                             $globalChargeArreG = GlobalChargeLcl::create([ // tabla GlobalCharge
-                                'surcharge_id'       						=> $surchargerV,
-                                'typedestiny_id'     						=> $typedestunyV,
-                                'account_imp_gclcl_id'                      => $account_idVal,
-                                'company_user_id'    						=> $company_user_id,
-                                'calculationtypelcl_id'						=> $calculationtypeV,
-                                'ammount'            						=> $amountV,
-                                'minimum'            						=> $minimumV,
-                                'validity' 									=> $validityfromV,
-                                'expire'					 				=> $validitytoV,
-                                'currency_id'        						=> $currencyV,
+                                'surcharge_id' => $surchargerV,
+                                'typedestiny_id' => $typedestunyV,
+                                'account_imp_gclcl_id' => $account_idVal,
+                                'company_user_id' => $company_user_id,
+                                'calculationtypelcl_id' => $calculationtypeV,
+                                'ammount' => $amountV,
+                                'minimum' => $minimumV,
+                                'validity' => $validityfromV,
+                                'expire' => $validitytoV,
+                                'currency_id' => $currencyV,
                             ]);
                         }
 
                         GlobalCharCarrierLcl::create([ // tabla GlobalCharCarrier
-                            'carrier_id'            => $carrierV,
-                            'globalchargelcl_id'    => $globalChargeArreG->id,
+                            'carrier_id' => $carrierV,
+                            'globalchargelcl_id' => $globalChargeArreG->id,
                         ]);
 
                         if ($failglobalcharger->differentiator == 1) {
                             GlobalCharPortLcl::create([ // tabla GlobalCharPort
-                                'port_orig'      	  => $originV,
-                                'port_dest'      	  => $destinationV,
-                                'globalchargelcl_id'  => $globalChargeArreG->id,
+                                'port_orig' => $originV,
+                                'port_dest' => $destinationV,
+                                'globalchargelcl_id' => $globalChargeArreG->id,
                             ]);
                         } elseif ($failglobalcharger->differentiator == 2) {
                             GlobalCharCountryLcl::create([ // tabla GlobalCharCountry
-                                'country_orig'          => $originV,
-                                'country_dest'          => $destinationV,
-                                'globalchargelcl_id'    => $globalChargeArreG->id,
+                                'country_orig' => $originV,
+                                'country_dest' => $destinationV,
+                                'globalchargelcl_id' => $globalChargeArreG->id,
                             ]);
                         }
 
@@ -275,7 +275,7 @@ class ImportationGlobalChargerLclController extends Controller
             $account = AccountImportationGlobalChargerLcl::find($id);
             $usersNotifiques = User::where('type', '=', 'admin')->get();
             foreach ($usersNotifiques as $userNotifique) {
-                $message = 'The Globalchargers LCL was Reprocessed. Account: '.$account['id'].' '.$account['name'];
+                $message = 'The Globalchargers LCL was Reprocessed. Account: ' . $account['id'] . ' ' . $account['name'];
                 $userNotifique->notify(new N_general($userNotifique, $message));
             }
         } else {
@@ -377,7 +377,7 @@ class ImportationGlobalChargerLclController extends Controller
         }
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
-        $nombre = $now.'_'.$nombre;
+        $nombre = $now . '_' . $nombre;
         $filebool = \Storage::disk('GCImportLcl')->put($nombre, \File::get($file));
 
         if ($filebool) {
@@ -398,7 +398,7 @@ class ImportationGlobalChargerLclController extends Controller
             }
 
             $account_id = $account->id;
-        /*$fileTmp    = new FileTmpGlobalcharge();
+            /*$fileTmp    = new FileTmpGlobalcharge();
         $fileTmp->account_id = $account_id;
         $fileTmp->name_file   = $nombre;
         $fileTmp->save(); //*/
@@ -420,14 +420,14 @@ class ImportationGlobalChargerLclController extends Controller
 
         /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
         , si es 1 el solo se mapean puertos
-        */
+         */
         if ($statusPortCountry == 2) {
             array_push($targetsArr, 'Differentiator');
         }
 
         /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna
         con los valores, si es uno el currency viene en una colmna aparte
-        */
+         */
 
         if ($statustypecurren == 1) {
             array_push($targetsArr, 'Currency');
@@ -480,37 +480,37 @@ class ImportationGlobalChargerLclController extends Controller
 
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('GCImportLcl')
-                   ->url($nombre), function ($reader) use ($request,$coordenates) {
-                       $reader->takeRows(2);
-                       $reader->noHeading = true;
-                       $reader->ignoreEmpty();
+                    ->url($nombre), function ($reader) use ($request, $coordenates) {
+                    $reader->takeRows(2);
+                    $reader->noHeading = true;
+                    $reader->ignoreEmpty();
 
-                       $read = $reader->first();
-                       $columna = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'];
-                       for ($i = 0; $i < count($reader->first()); $i++) {
-                           $coordenates->push($columna[$i].' '.$read[$i]);
-                       }
-                   });
+                    $read = $reader->first();
+                    $columna = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V'];
+                    for ($i = 0; $i < count($reader->first()); $i++) {
+                        $coordenates->push($columna[$i] . ' ' . $read[$i]);
+                    }
+                });
 
         $boxdinamy = [
-            'existorigin'       => $originBol,
-            'origin'            => $originArr,
-            'existdestiny'      => $destinyBol,
-            'destiny'           => $destinyArr,
-            'originCount'       => $originCountArr,
-            'originRegion'      => $originRegionArr,
-            'destinyCount'      => $destinyCountArr,
-            'destinyRegion'     => $destinyRegionArr,
-            'existcarrier'      => $carrierBol,
-            'carrier'           => $carrierVal,
-            'existtypedestiny'  => $typedestinyBol,
-            'typedestiny'       => $typedestinyVal,
+            'existorigin' => $originBol,
+            'origin' => $originArr,
+            'existdestiny' => $destinyBol,
+            'destiny' => $destinyArr,
+            'originCount' => $originCountArr,
+            'originRegion' => $originRegionArr,
+            'destinyCount' => $destinyCountArr,
+            'destinyRegion' => $destinyRegionArr,
+            'existcarrier' => $carrierBol,
+            'carrier' => $carrierVal,
+            'existtypedestiny' => $typedestinyBol,
+            'typedestiny' => $typedestinyVal,
             'existdatevalidity' => $datevalidityBol,
-            'validitydate'      => $validitydateVal,
-            'account_id'        => $account_id,
-            'date'              => $request->date,
-            'name'              => $request->name,
-            'fileName'          => $nombre,
+            'validitydate' => $validitydateVal,
+            'account_id' => $account_id,
+            'date' => $request->date,
+            'name' => $request->name,
+            'fileName' => $nombre,
 
         ];
         $data->push($boxdinamy);
@@ -518,19 +518,19 @@ class ImportationGlobalChargerLclController extends Controller
         //dd($data);
 
         return view('importationGlobalChargerLcl.show', compact('harbor',
-                                                               'region',
-                                                               'country',
-                                                               'data',
-                                                               'carrier',
-                                                               'targetsArr',
-                                                               'account_id',
-                                                               'account',
-                                                               'coordenates',
-                                                               'countTarges',
-                                                               'CompanyUserId',
-                                                               'statustypecurren',
-                                                               'statusPortCountry',
-                                                               'typedestiny'));
+            'region',
+            'country',
+            'data',
+            'carrier',
+            'targetsArr',
+            'account_id',
+            'account',
+            'coordenates',
+            'countTarges',
+            'CompanyUserId',
+            'statustypecurren',
+            'statusPortCountry',
+            'typedestiny'));
     }
 
     // se despacha el job
@@ -627,7 +627,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($validitytoC <= 1) {
                     $validitytoA = $validitytoA[0];
                 } else {
-                    $validitytoA = $validitytoA[0].' (error)';
+                    $validitytoA = $validitytoA[0] . ' (error)';
                     $classvalidityTo = 'color:red';
                 }
 
@@ -637,36 +637,36 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($validityfromC <= 1) {
                     $validityfromA = $validityfromA[0];
                 } else {
-                    $validityfromA = $validityfromA[0].' (error)';
+                    $validityfromA = $validityfromA[0] . ' (error)';
                     $classvalidityfrom = 'color:red';
                 }
 
                 // -------------- ORIGIN -------------------------------------------------------------
 
                 if ($failglobalcharge->differentiator == 1) {
-                    $originOb = Harbor::where('varation->type', 'like', '%'.strtolower($originA[0]).'%')
+                    $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
                         ->first();
                 } elseif ($failglobalcharge->differentiator == 2) {
-                    $originOb = Country::where('variation->type', 'like', '%'.strtolower($originA[0]).'%')
+                    $originOb = Country::where('variation->type', 'like', '%' . strtolower($originA[0]) . '%')
                         ->first();
                 }
 
                 $originAIn = $originOb['id'];
                 $originC = count($originA);
-                if ($originC <= 1 && count($originAIn) == 1) {
+                if ($originC <= 1 && count((array)$originAIn) == 1) {
                     $originA = $originOb['name'];
                 } else {
-                    $originA = $originA[0].' (error)';
+                    $originA = $originA[0] . ' (error)';
                     $classdorigin = 'color:red';
                 }
 
                 // -------------- DESTINY ------------------------------------------------------------
 
                 if ($failglobalcharge->differentiator == 1) {
-                    $destinationOb = Harbor::where('varation->type', 'like', '%'.strtolower($destinationA[0]).'%')
+                    $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
                         ->first();
                 } elseif ($failglobalcharge->differentiator == 2) {
-                    $destinationOb = Country::where('variation->type', 'like', '%'.strtolower($destinationA[0]).'%')
+                    $destinationOb = Country::where('variation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
                         ->first();
                 }
 
@@ -675,7 +675,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($destinationC <= 1 && count($destinationAIn) == 1) {
                     $destinationA = $destinationOb['name'];
                 } else {
-                    $destinationA = $destinationA[0].' (error)';
+                    $destinationA = $destinationA[0] . ' (error)';
                     $classddestination = 'color:red';
                 }
 
@@ -687,7 +687,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($surchargeC <= 1) {
                     $surchargeA = $surchargeA[0];
                 } else {
-                    $surchargeA = $surchargeA[0].' (error)';
+                    $surchargeA = $surchargeA[0] . ' (error)';
                     $classsurcharger = 'color:red';
                 }
 
@@ -698,7 +698,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($carrierC <= 1) {
                     $carrierA = $carrierA[0];
                 } else {
-                    $carrierA = $carrierA[0].' (error)';
+                    $carrierA = $carrierA[0] . ' (error)';
                     $classcarrier = 'color:red';
                 }
 
@@ -709,7 +709,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($calculationtypeC <= 1) {
                     $calculationtypeA = $calculationtypeA[0];
                 } else {
-                    $calculationtypeA = $calculationtypeA[0].' (error)';
+                    $calculationtypeA = $calculationtypeA[0] . ' (error)';
                     $classcalculationtype = 'color:red';
                 }
 
@@ -718,7 +718,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($ammountC <= 1) {
                     $ammountA = $failglobalcharge->ammount;
                 } else {
-                    $ammountA = $ammountA[0].' (error)';
+                    $ammountA = $ammountA[0] . ' (error)';
                     $classammount = 'color:red';
                 }
 
@@ -727,7 +727,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($minimumC <= 1) {
                     $minimumA = $failglobalcharge->minimum;
                 } else {
-                    $minimumA = $minimumA[0].' (error)';
+                    $minimumA = $minimumA[0] . ' (error)';
                     $classminimun = 'color:red';
                 }
 
@@ -738,7 +738,7 @@ class ImportationGlobalChargerLclController extends Controller
                 if ($currencyC <= 1) {
                     $currencyA = $currencyA[0];
                 } else {
-                    $currencyA = $currencyA[0].' (error)';
+                    $currencyA = $currencyA[0] . ' (error)';
                     $classcurrency = 'color:red';
                 }
                 // -------------- TYPE DESTINY -----------------------------------------------------
@@ -747,36 +747,36 @@ class ImportationGlobalChargerLclController extends Controller
                 if (count($typedestinyA) <= 1) {
                     $typedestinyLB = $typedestinyobj['description'];
                 } else {
-                    $typedestinyLB = $typedestinyA[0].' (error)';
+                    $typedestinyLB = $typedestinyA[0] . ' (error)';
                     $classtypedestiny = 'color:red';
                 }
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 $arreglo = [
-                    'id'                    => $failglobalcharge->id,
-                    'surchargelb'           => $surchargeA,
-                    'origin_portLb'         => $originA,
-                    'destiny_portLb'        => $destinationA,
-                    'carrierlb'             => $carrierA,
-                    'typedestinylb'         => $typedestinyLB,
-                    'ammount'               => $ammountA,
-                    'minimum'               => $minimumA,
-                    'calculationtypelb'     => $calculationtypeA,
-                    'currencylb'            => $currencyA,
-                    'validitytolb'          => $validitytoA,
-                    'validityfromlb'        => $validityfromA,
-                    'classsurcharge'        => $classsurcharger,
-                    'classorigin'           => $classdorigin,
-                    'classdestiny'          => $classddestination,
-                    'classtypedestiny'      => $classtypedestiny,
-                    'classcarrier'          => $classcarrier,
-                    'classcalculationtype'  => $classcalculationtype,
-                    'classammount'          => $classammount,
-                    'classminimun'          => $classminimun,
-                    'classcurrency'         => $classcurrency,
-                    'classvalidityto'       => $classvalidityTo,
-                    'classvalidityfrom'     => $classvalidityfrom,
-                    'operation'             => 1,
+                    'id' => $failglobalcharge->id,
+                    'surchargelb' => $surchargeA,
+                    'origin_portLb' => $originA,
+                    'destiny_portLb' => $destinationA,
+                    'carrierlb' => $carrierA,
+                    'typedestinylb' => $typedestinyLB,
+                    'ammount' => $ammountA,
+                    'minimum' => $minimumA,
+                    'calculationtypelb' => $calculationtypeA,
+                    'currencylb' => $currencyA,
+                    'validitytolb' => $validitytoA,
+                    'validityfromlb' => $validityfromA,
+                    'classsurcharge' => $classsurcharger,
+                    'classorigin' => $classdorigin,
+                    'classdestiny' => $classddestination,
+                    'classtypedestiny' => $classtypedestiny,
+                    'classcarrier' => $classcarrier,
+                    'classcalculationtype' => $classcalculationtype,
+                    'classammount' => $classammount,
+                    'classminimun' => $classminimun,
+                    'classcurrency' => $classcurrency,
+                    'classvalidityto' => $classvalidityTo,
+                    'classvalidityfrom' => $classvalidityfrom,
+                    'operation' => 1,
                 ];
 
                 //dd($arreglo);
@@ -785,46 +785,46 @@ class ImportationGlobalChargerLclController extends Controller
             //dd($failglobalcoll);
             return DataTables::of($failglobalcoll)
                 ->addColumn('surchargelb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classsurcharge'].'">'.$failglobalcoll['surchargelb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classsurcharge'] . '">' . $failglobalcoll['surchargelb'] . '</span>';
                 })
                 ->addColumn('origin_portLb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classorigin'].'">'.$failglobalcoll['origin_portLb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classorigin'] . '">' . $failglobalcoll['origin_portLb'] . '</span>';
                 })
                 ->addColumn('destiny_portLb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classdestiny'].'">'.$failglobalcoll['destiny_portLb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classdestiny'] . '">' . $failglobalcoll['destiny_portLb'] . '</span>';
                 })
                 ->addColumn('typedestinylb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classtypedestiny'].'">'.$failglobalcoll['typedestinylb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classtypedestiny'] . '">' . $failglobalcoll['typedestinylb'] . '</span>';
                 })
                 ->addColumn('carrierlb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classcarrier'].'">'.$failglobalcoll['carrierlb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classcarrier'] . '">' . $failglobalcoll['carrierlb'] . '</span>';
                 })
                 ->addColumn('ammount', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classammount'].'">'.$failglobalcoll['ammount'].'</span>';
+                    return '<span style="' . $failglobalcoll['classammount'] . '">' . $failglobalcoll['ammount'] . '</span>';
                 })
                 ->addColumn('minimum', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classminimun'].'">'.$failglobalcoll['minimum'].'</span>';
+                    return '<span style="' . $failglobalcoll['classminimun'] . '">' . $failglobalcoll['minimum'] . '</span>';
                 })
                 ->addColumn('calculationtypelb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classcalculationtype'].'">'.$failglobalcoll['calculationtypelb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classcalculationtype'] . '">' . $failglobalcoll['calculationtypelb'] . '</span>';
                 })
                 ->addColumn('currencylb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classcurrency'].'">'.$failglobalcoll['currencylb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classcurrency'] . '">' . $failglobalcoll['currencylb'] . '</span>';
                 })
                 ->addColumn('validitytolb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classvalidityto'].'">'.$failglobalcoll['validitytolb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classvalidityto'] . '">' . $failglobalcoll['validitytolb'] . '</span>';
                 })
                 ->addColumn('validityfromlb', function ($failglobalcoll) {
-                    return '<span style="'.$failglobalcoll['classvalidityfrom'].'">'.$failglobalcoll['validityfromlb'].'</span>';
+                    return '<span style="' . $failglobalcoll['classvalidityfrom'] . '">' . $failglobalcoll['validityfromlb'] . '</span>';
                 })
                 ->addColumn('action', function ($failglobalcoll) {
-                    return '<a href="#" class="" onclick="showModalsavetoglobalcharge('.$failglobalcoll['id'].',1)"><i class="la la-edit"></i></a>
+                    return '<a href="#" class="" onclick="showModalsavetoglobalcharge(' . $failglobalcoll['id'] . ',1)"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-Fail-global" data-id-failglobal="' . $failglobalcoll['id'] . '" class=""><i class="la la-remove"></i></a>';
                 })
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
         } elseif ($selector == 2) {
-            $globalcharges = DB::select('call select_for_acount_globalcharger_lcl('.$id.')');
+            $globalcharges = DB::select('call select_for_acount_globalcharger_lcl(' . $id . ')');
 
             return DataTables::of($globalcharges)
                 ->editColumn('surchargelb', function ($globalcharges) {
@@ -863,9 +863,9 @@ class ImportationGlobalChargerLclController extends Controller
                     return $globalcharges->validity;
                 })
                 ->addColumn('action', function ($globalcharges) {
-                    return '<a href="#" class="" onclick="showModalsavetoglobalcharge('.$globalcharges->id.',2)"><i class="la la-edit"></i></a>
+                    return '<a href="#" class="" onclick="showModalsavetoglobalcharge(' . $globalcharges->id . ',2)"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-globalcharge" data-id-globalcharge="'.$globalcharges->id.'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-globalcharge" data-id-globalcharge="' . $globalcharges->id . '" class=""><i class="la la-remove"></i></a>';
                 })
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
         }
@@ -908,10 +908,10 @@ class ImportationGlobalChargerLclController extends Controller
         // -------------- ORIGIN -------------------------------------------------------------
 
         if ($failglobal->differentiator == 1) {
-            $originOb = Harbor::where('varation->type', 'like', '%'.strtolower($originA[0]).'%')
+            $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
                 ->first();
         } elseif ($failglobal->differentiator == 2) {
-            $originOb = Country::where('variation->type', 'like', '%'.strtolower($originA[0]).'%')
+            $originOb = Country::where('variation->type', 'like', '%' . strtolower($originA[0]) . '%')
                 ->first();
         }
 
@@ -925,10 +925,10 @@ class ImportationGlobalChargerLclController extends Controller
 
         // -------------- DESTINATION --------------------------------------------------------
         if ($failglobal->differentiator == 1) {
-            $destinationOb = Harbor::where('varation->type', 'like', '%'.strtolower($destinationA[0]).'%')
+            $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
                 ->first();
         } elseif ($failglobal->differentiator == 2) {
-            $destinationOb = Country::where('variation->type', 'like', '%'.strtolower($destinationA[0]).'%')
+            $destinationOb = Country::where('variation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
                 ->first();
         }
 
@@ -954,7 +954,7 @@ class ImportationGlobalChargerLclController extends Controller
         $carrierOb = Carrier::where('name', '=', $carrierA[0])->first();
         $carrierC = count($carrierA);
         if ($carrierC <= 1) {
-            $carrAIn = ['id'=>$carrierOb['id']];
+            $carrAIn = ['id' => $carrierOb['id']];
         } else {
             $carrAIn = [];
             $classcarrier = 'color:red';
@@ -975,7 +975,7 @@ class ImportationGlobalChargerLclController extends Controller
         if ($ammountC <= 1) {
             $ammountA = floatval($failglobal['ammount']);
         } else {
-            $ammountA = $ammountA[0].' (error)';
+            $ammountA = $ammountA[0] . ' (error)';
             $classammount = 'color:red';
         }
 
@@ -984,7 +984,7 @@ class ImportationGlobalChargerLclController extends Controller
         if ($minimumC <= 1) {
             $minimumA = floatval($failglobal['minimum']);
         } else {
-            $minimumA = $minimumA[0].' (error)';
+            $minimumA = $minimumA[0] . ' (error)';
             $classminimum = 'color:red';
         }
 
@@ -1026,35 +1026,35 @@ class ImportationGlobalChargerLclController extends Controller
             $classvalidity = 'color:red';
         }
 
-        $validation_expire = $validityfromLB.' / '.$validitytoLB;
+        $validation_expire = $validityfromLB . ' / ' . $validitytoLB;
 
         ////////////////////////////////////////////////////////////////////////////////////
         $arre = [
-            'id'                    => $failglobal['id'],
-            'surcharge_id'          => $surcharAin,
-            'origin_port'           => $originAIn,
-            'destiny_port'          => $destinationAIn,
-            'carrier'               => $carrAIn,
-            'company_user_id'       => $failglobal['company_user_id'],
-            'typedestiny_id'        => $typedestinyLB,
-            'ammount'               => $ammountA,
-            'minimum'               => $minimumA,
-            'calculationtype_id'    => $calculationtypeAIn,
-            'currency_id'           => $currencyAIn,
-            'validityto'            => $validitytoLB,
-            'validityfromLB'        => $validityfromLB,
-            'validation_expire'     => $validation_expire,
-            'classsurcharge'        => $classsurcharger,
-            'classorigin'           => $classdorigin,
-            'classdestiny'          => $classddestination,
-            'classtypedestiny'      => $classtypedestiny,
-            'classcarrier'          => $classcarrier,
-            'classcalculationtype'  => $classcalculationtype,
-            'classammount'          => $classammount,
-            'classminimum'          => $classminimum,
-            'classcurrency'         => $classcurrency,
-            'classvalidity'         => $classvalidity,
-            'globalcharcountry'     => [],
+            'id' => $failglobal['id'],
+            'surcharge_id' => $surcharAin,
+            'origin_port' => $originAIn,
+            'destiny_port' => $destinationAIn,
+            'carrier' => $carrAIn,
+            'company_user_id' => $failglobal['company_user_id'],
+            'typedestiny_id' => $typedestinyLB,
+            'ammount' => $ammountA,
+            'minimum' => $minimumA,
+            'calculationtype_id' => $calculationtypeAIn,
+            'currency_id' => $currencyAIn,
+            'validityto' => $validitytoLB,
+            'validityfromLB' => $validityfromLB,
+            'validation_expire' => $validation_expire,
+            'classsurcharge' => $classsurcharger,
+            'classorigin' => $classdorigin,
+            'classdestiny' => $classddestination,
+            'classtypedestiny' => $classtypedestiny,
+            'classcarrier' => $classcarrier,
+            'classcalculationtype' => $classcalculationtype,
+            'classammount' => $classammount,
+            'classminimum' => $classminimum,
+            'classcurrency' => $classcurrency,
+            'classvalidity' => $classvalidity,
+            'globalcharcountry' => [],
         ];
 
         //dd($arre);
@@ -1071,7 +1071,7 @@ class ImportationGlobalChargerLclController extends Controller
 
         if ($typerate == 'port') { //si es puerto verificamos si exite uno creado con country
             $typeplace = 'globalcharportlcl';
-        } elseif ($typerate == 'country') {  //si es country verificamos si exite uno creado con puerto
+        } elseif ($typerate == 'country') { //si es country verificamos si exite uno creado con puerto
             $typeplace = 'globalcharcountrylcl';
         }
 
@@ -1117,7 +1117,7 @@ class ImportationGlobalChargerLclController extends Controller
             $port_orig = $request->input('port_orig');
             $port_dest = $request->input('port_dest');
 
-            foreach ($port_orig as  $orig => $valueorig) {
+            foreach ($port_orig as $orig => $valueorig) {
                 foreach ($port_dest as $dest => $valuedest) {
                     $globalPtr = GlobalCharPortLcl::where('port_orig', $valueorig)
                         ->where('port_dest', $valuedest)
@@ -1190,7 +1190,7 @@ class ImportationGlobalChargerLclController extends Controller
         $harbor = Harbor::pluck('display_name', 'id');
         $carrier = Carrier::pluck('name', 'id');
         $currency = Currency::pluck('alphacode', 'id');
-        $validation_expire = $globalcharges->validity.' / '.$globalcharges->expire;
+        $validation_expire = $globalcharges->validity . ' / ' . $globalcharges->expire;
         $globalcharges->setAttribute('validation_expire', $validation_expire);
 
         return view('importationGlobalChargerLcl.Body-Modal.edit', compact('globalcharges', 'harbor', 'carrier', 'currency', 'calculationT', 'typedestiny', 'surcharge', 'countries'));
@@ -1228,7 +1228,7 @@ class ImportationGlobalChargerLclController extends Controller
         if ($typerate == 'port') {
             $port_orig = $request->input('port_orig');
             $port_dest = $request->input('port_dest');
-            foreach ($port_orig as  $orig => $valueorig) {
+            foreach ($port_orig as $orig => $valueorig) {
                 foreach ($port_dest as $dest => $valuedest) {
                     $detailport = new GlobalCharPortLcl();
                     $detailport->port_orig = $valueorig;
@@ -1309,29 +1309,29 @@ class ImportationGlobalChargerLclController extends Controller
 
         return DataTables::of($account)
             ->addColumn('status', function ($account) {
-                return  $account->status;
+                return $account->status;
             })
             ->addColumn('company_user_id', function ($account) {
-                return  $account->companyuser->name;
+                return $account->companyuser->name;
             })
             ->addColumn('requestgc_id', function ($account) {
                 if (empty($account->requestgc_id) != true) {
-                    return  $account->requestgc_id;
+                    return $account->requestgc_id;
                 } else {
                     return 'Manual';
                 }
             })
             ->addColumn('action', function ($account) {
-                return '<a href="'.route('showview.globalcharge.lcl', [$account->id, '1']).'" class="show"  title="Failed-Good" >
+                return '<a href="' . route('showview.globalcharge.lcl', [$account->id, '1']) . '" class="show"  title="Failed-Good" >
                             <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
                         </a>
                         &nbsp;
                         &nbsp;
-                        <a href="'.route('Download.Account.gclcl', $account->id).'" class="">
+                        <a href="' . route('Download.Account.gclcl', $account->id) . '" class="">
                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
                         </a>
-                        &nbsp; &nbsp; 
-                        <a href="#" class="eliminaracount" data-id-acount="'.$account->id.'"  title="Delete" >
+                        &nbsp; &nbsp;
+                        <a href="#" class="eliminaracount" data-id-acount="' . $account->id . '"  title="Delete" >
                             <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                         </a>';
             })
@@ -1346,10 +1346,10 @@ class ImportationGlobalChargerLclController extends Controller
         $company = CompanyUser::find($account->company_user_id);
         $extObj = new \SplFileInfo($account->namefile);
         $ext = $extObj->getExtension();
-        $name = $account->id.'-'.$company->name.'_'.$now.'-GCLLC.'.$ext;
+        $name = $account->id . '-' . $company->name . '_' . $now . '-GCLLC.' . $ext;
         if (empty($account->namefile) != true) {
-            if (Storage::disk('s3_upload')->exists('Account/Global-charges/LCL/'.$account->namefile)) {
-                return Storage::disk('s3_upload')->download('Account/Global-charges/LCL/'.$account->namefile, $name);
+            if (Storage::disk('s3_upload')->exists('Account/Global-charges/LCL/' . $account->namefile)) {
+                return Storage::disk('s3_upload')->download('Account/Global-charges/LCL/' . $account->namefile, $name);
             } elseif (Storage::disk('GCAccountLcl')->exists($account->namefile, $name)) {
                 return Storage::disk('GCAccountLcl')->download($account->namefile, $name);
             }
@@ -1380,7 +1380,7 @@ class ImportationGlobalChargerLclController extends Controller
             return response()->json(['success' => '1', 'jobAssociate' => $data['bool']]);
         }
         /* } catch(\Exception $e){
-            return response()->json(['success' => '2','jobAssociate' => false]);
-        }*/
+    return response()->json(['success' => '2','jobAssociate' => false]);
+    }*/
     }
 }

@@ -1020,8 +1020,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
 
-    /** Search V2 **/
-    Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+    /** New Search **/
+    //Route::get('/api/search', 'QuoteV2Controller@newSearch')->name('searchV2.index');
+    Route::get('/api/search', 'SearchApiController@index')->name('searchV2.index');
+    Route::get('/api/search/list', 'SearchApiController@list')->name('searchV2.list');
+    Route::get('/api/search/data', 'SearchApiController@data')->name('searchV2.data');
+    Route::get('/api/search/{search}', 'SearchApiController@retrieve')->name('searchV2.retrieve');
+    Route::post('/api/search/process', 'SearchApiController@processSearch');
+    Route::post('/api/search/store', 'SearchApiController@store');
+    Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1033,7 +1040,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');
     Route::post('api/quotes/destroyAll', 'QuotationController@destroyAll');
     Route::post('api/quotes/{quote}/duplicate', 'QuotationController@duplicate')->middleware('check_company:quote')->name('quote.duplicate');
+    Route::post('api/quotes/specialduplicate', 'QuotationController@specialduplicate');
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
+    Route::post('api/quote/{quote}/updateSearch', 'QuotationController@updateSearchOptions')->middleware('check_company:quote');
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
