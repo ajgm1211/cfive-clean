@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Intercom\IntercomClient;
+use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 
 class LoginController extends Controller
 {
@@ -31,15 +32,17 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+    protected $mixPanel;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(LaravelMixPanel $mixPanel)
     {
         $this->middleware('guest')->except('logout');
+        $this->mixPanel = $mixPanel;
     }
 
 
@@ -127,6 +130,8 @@ class LoginController extends Controller
         } else if ($user->company_user_id == '') {
             return redirect('/settings');
         }
+
+        $this->mixPanel->track('User just Logged!');
 
         return redirect()->intended($this->redirectPath());
     }
