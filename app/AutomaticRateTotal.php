@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Traits\QuoteV2Trait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticRateTotal extends Model
+class AutomaticRateTotal extends Model implements Auditable
 {
     use QuoteV2Trait;
-
+    use \OwenIt\Auditing\Auditable;
     protected $casts = [
         'markups' => 'json',
         'total' => 'json'
