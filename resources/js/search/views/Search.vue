@@ -28,12 +28,12 @@
                     <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
                     <div class="delivery-input">
                         <multiselect
-                            v-model="deliveryType"
+                            v-model="searchRequest.deliveryType"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="false"
-                            :show-labels="false"
                             :options="deliveryTypeOptions"
+                            :show-labels="false"
                             label="name"
                             track-by="name"
                             placeholder="Select"
@@ -1412,11 +1412,11 @@ export default {
             },
             selectedContainerGroup: {},
             containers: [],
-            deliveryType: {},
+            //deliveryType: {},
             carriers: [],
             containerOptions: [],
             typeOptions: ["FCL", "LCL"],
-            deliveryTypeOptions: {},
+            deliveryTypeOptions: [],
             directionOptions: {},
             originPortOptions: {},
             destinationPortOptions: {},
@@ -1753,7 +1753,12 @@ export default {
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
             component.priceLevelOptions = component.datalists.price_levels;
-            component.deliveryTypeOptions = component.datalists.delivery_types;
+            component.datalists.delivery_types.forEach(function (dtype){
+                if(!dtype.name.includes("Door")){
+                    component.deliveryTypeOptions.push(dtype);
+                }
+            })
+            component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
             component.searchRequest.originCharges =
                 component.datalists.company_user.origincharge == null
@@ -1770,11 +1775,11 @@ export default {
         fillInitialFields(requestType) {
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
-                this.deliveryType = this.deliveryTypeOptions[0];
+                //this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
-                this.deliveryType = this.searchData.delivery_type;
+                //this.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.originPorts = this.searchData.origin_ports;
                 this.searchRequest.destinationPorts = this.searchData.destination_ports;
@@ -1829,7 +1834,7 @@ export default {
                     this.searchRequest.direction = this.quoteData.direction_id;
                 }
                 this.searchRequest.type = this.quoteData.type;
-                this.deliveryType = this.quoteData.delivery_type;
+                //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.originPorts = this.quoteData.origin_ports;
                 this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
@@ -1852,7 +1857,7 @@ export default {
             this.searching = true;
             this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
             this.searchRequest.containers = this.containers;
-            this.searchRequest.deliveryType = this.deliveryType;
+            //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
             this.searchRequest.harbors = this.datalists.harbors;
             this.searchRequest.surcharges = this.datalists.surcharges;
@@ -2146,7 +2151,7 @@ export default {
         },
     },
     watch: {
-        deliveryType: function () {
+        /**deliveryType: function () {
             if (this.deliveryType.id == 1) {
                 this.ptdActive = false;
                 this.dtpActive = false;
@@ -2178,7 +2183,7 @@ export default {
                 this.setOriginAddressMode();
                 return;
             }
-        },
+        },**/
 
         selectedContainerGroup: function () {
             let component = this;

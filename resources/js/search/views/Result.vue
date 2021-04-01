@@ -166,7 +166,7 @@
                                     <!-- VALIDITY -->
                                     <div class="d-flex align-items-center">
                                         <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
-                                        <a href="#">download contract</a>
+                                        <a v-if="false" href="#">download contract</a>
                                     </div>
 
                                     <!-- OPTIONS -->
@@ -345,7 +345,7 @@
                                 <div class="d-flex align-items-center">
 
                                     <p class="mr-4 mb-0"><b>Validity:</b> {{rate.contract.validity + " / " + rate.contract.expire}}</p>
-                                    <a href="#">download contract</a>
+                                    <a v-if="false" href="#">download contract</a>
 
                                 </div>
 
