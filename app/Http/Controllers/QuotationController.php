@@ -364,6 +364,7 @@ class QuotationController extends Controller
                     $data[$key] = 'Win';
                 }
             }
+            
             $quote->update([$key=>$data[$key]]);
             
             if($key == 'validity_end'){
