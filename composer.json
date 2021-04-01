@@ -17,6 +17,7 @@
         "crispchat/php-crisp-api": "^1.5",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
+        "genealabs/laravel-mixpanel": "0.7.11",
         "greggilbert/recaptcha": "^2.2",
         "guzzlehttp/guzzle": "^6.3",
         "hashids/hashids": "^3.0",
