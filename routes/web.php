@@ -1159,6 +1159,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('destroyAll', 'ContractController@destroyAll');
     Route::get('{contract}/files', 'ContractController@getFiles')->middleware('check_company:contract');
     Route::post('{contract}/removefile', 'ContractController@removefile')->middleware('check_company:contract');
+    Route::get('{contract}/request/status', 'ContractController@getRequestStatus')->middleware('check_company:contract');
 
     /* End Contracts endpoint (Pending to check) **/
 

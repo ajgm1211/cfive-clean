@@ -781,4 +781,32 @@ class ContractController extends Controller
             'data' => 'Success',
         ]);
     }
+
+    public function getRequestStatus(Contract $contract){
+
+        if(!is_null($contract->contract_request)){
+            $request_status = $contract->contract_request->status;
+            if($request_status == "Pending"){
+                $progress = 25;
+            }else if($request_status == "Processing"){
+                $progress = 50;
+            }else if($request_status == "Imp Finished"){
+                $progress = 75;
+            }else if($request_status == "Review"){
+                $progress = 90;
+            }else{
+                $progress = 100;
+            }
+        }else{
+            if($contract->status == "incomplete"){
+                $progress = 50;
+            }else{
+                $progress = 100;
+            }
+        }
+    
+        return response()->json([
+            'progress' => $progress,
+        ]);
+    }
 }
