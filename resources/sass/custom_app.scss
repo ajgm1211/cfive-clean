@@ -7,6 +7,15 @@
     background-color: transparent !important;
 }
 
+.btn.btn-secondary {
+    background-color: transparent!important;
+    border: 2px solid #80888B !important;
+}
+
+.btn.btn-secondary:focus i {
+    color: #006bf9;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 @import 'search/search';
@@ -273,14 +282,17 @@ td.actions-add-fcl {
     width: 45px;
 }
 
-.btn.btn-secondary {
+
+/* .btn.btn-secondary {
     background-color: transparent!important;
     border: 2px solid #80888B !important;
 }
 
+aqui
+
 .btn.btn-secondary:focus i {
     color: #006bf9;
-}
+} */
 
 .action-app {
     padding: 0.1rem 0.40rem;
