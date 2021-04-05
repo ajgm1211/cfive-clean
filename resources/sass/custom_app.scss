@@ -98,7 +98,7 @@ div,
 .status-st {
     color: #fff;
     font-size: 9px;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 5px 10px;
     text-transform: uppercase;
 }
@@ -119,7 +119,7 @@ div,
 }
 
 .incomplete {
-    background-color: #969cc0;
+    background-color: #FAB429;
 }
 
 .expired {
@@ -127,7 +127,7 @@ div,
 }
 
 .incomplete::before {
-    content: 'incompleted';
+    content: 'processing';
     font-weight: bold;
 }
 
