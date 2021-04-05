@@ -1809,17 +1809,15 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                this.allCarriers = false;
-                if(this.searchData.carriers.length != 0){
+                if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
+                    console.log(this.searchData.carriers.length, this.datalists.carriers.length);
+                    this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
                         component.carriers.push(carrier);
                     });
                 }else{
                     this.searchRequest.carriers = this.datalists.carriers;
-                    component.datalists.carriers.forEach(function (carrier) {
-                        component.carriers.push(carrier);
-                    });
                 }
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
@@ -1871,7 +1869,6 @@ export default {
                 this.requestSearch();
             }
 
-            console.log(this.carriers)
             this.loaded = true;
         },
 
@@ -1881,10 +1878,6 @@ export default {
             this.searchRequest.containers = this.containers;
             //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
-            this.searchRequest.harbors = this.datalists.harbors;
-            this.searchRequest.surcharges = this.datalists.surcharges;
-            this.searchRequest.currency = this.datalists.currency;
-            this.searchRequest.calculation_type = this.datalists.calculation_type;
             this.errorsExist = false;
         },
 

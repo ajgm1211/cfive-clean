@@ -332,8 +332,7 @@
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p v-if="rate.totals_with_markups != undefined"><b style="font-size:16px">{{ rate.totals_with_markups['C'+container.code] % 1 === 0 ? rate.totals_with_markups['C'+container.code] : rate.totals_with_markups['C'+container.code].toFixed(2) }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
-                                            <p v-else><b style="font-size:16px">{{ rate.totals['C'+container.code] % 1 === 0 ? rate.totals['C'+container.code] : rate.totals['C'+container.code].toFixed(2) }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
+                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code] : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
                                         </div>
                                     </div>
                                 </div>
@@ -441,7 +440,7 @@
                                             <b-td 
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
-                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code] % 1 === 0 ?  rate.charge_totals_by_type[chargeType]['C'+container.code] : rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2)}}</b></b-td>
+                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code] }}</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
