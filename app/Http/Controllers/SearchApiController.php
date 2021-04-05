@@ -742,22 +742,23 @@ class SearchApiController extends Controller
 
             foreach($target_containers as $code => $cost){
                 if($cost != 0){
-                    $containers_with_markups[$code] = $cost + isDecimal($markups_array[$code], true);
+                    $containers_with_markups[$code] = isDecimal($cost,true) + $markups_array[$code];
                 }else{
-                    $containers_with_markups[$code] = $cost;
+                    $containers_with_markups[$code] = isDecimal($cost,true);
                 }
             }
 
             foreach($target_totals as $code => $cost){
                 if($cost != 0){
-                    $totals_with_markups[$code] = $cost + isDecimal($markups_client_currency[$code], true);
+                    $totals_with_markups[$code] = isDecimal($cost,true) + $markups_client_currency[$code];
                 }else{
-                    $totals_with_markups[$code] = $cost;
+                    $totals_with_markups[$code] = isDecimal($cost, true);
                 }
             }
         }else{
             return;
         }
+
         //Appending markups and added containers and totals to rate or charge
         $target->setAttribute('container_markups',$markups_array);
         $target->setAttribute('totals_markups',$markups_client_currency);
