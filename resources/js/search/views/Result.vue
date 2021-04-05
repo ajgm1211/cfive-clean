@@ -441,10 +441,10 @@
 
                                     <b-thead>
                                         <b-tr>
-                                            <b-th>Charge</b-th>
-                                            <b-th>Detail</b-th>
-                                            <b-th></b-th>
-                                            <b-th></b-th>
+                                            <b-th style="width:300px">Charge</b-th>
+                                            <b-th style="width:325px">Detail</b-th>
+                                            <!-- <b-th></b-th>
+                                            <b-th></b-th> -->
                                             <b-th
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
@@ -463,17 +463,17 @@
                                         >
                                             <b-td><b>{{ charge.surcharge.name }}</b></b-td>
                                             <b-td>{{ charge.calculationtype.name }}</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
+                                            <!-- <b-td></b-td>
+                                            <b-td></b-td> -->
                                             <b-td
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
                                             >
                                             <p v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</p>
-                                            <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit">+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
-                                            <b v-if="chargeType == 'Freight'">{{ rate.currency.alphacode }}</b>
-                                            <b v-else-if="charge.joint_as == 'client_currency'">{{ charge.client_currency.alphacode }}</b>
-                                            <b v-else-if="charge.joint_as != 'client_currency'">{{ charge.currency.alphacode }}</b>
+                                            <span v-if="charge.container_markups != undefined && charge.container_markups['C'+container.code] != undefined" class="profit" >+{{charge.joint_as=='client_currency' ? charge.totals_markups['C'+container.code] : charge.container_markups['C'+container.code]}}</span>
+                                            <b v-if="chargeType == 'Freight'" style="font-weight: 400">{{ rate.currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as == 'client_currency'" style="font-weight: 400">{{ charge.client_currency.alphacode }}</b>
+                                            <b v-else-if="charge.joint_as != 'client_currency'" style="font-weight: 400">{{ charge.currency.alphacode }}</b>
                                             
                                             <!--
                                                 ANTES
@@ -481,16 +481,16 @@
                                                 CAMBIO
                                             <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? charge.client_currency.alphacode : rate.currency.alphacode}}</b>
                                             -->
-                                            <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
-                                            <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
+                                            <b v-if="charge.container_markups != undefined" style="font-weight: 400">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
+                                            <b v-else style="font-weight: 400" >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
                                             </b-td>
                                         </b-tr>
                 
                                         <b-tr>
+                                            <!-- <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td><b>Total {{ chargeType }}</b></b-td>
+                                            <b-td></b-td> -->
+                                            <b-td colspan="2" style="text-align: right"><b>Total {{ chargeType }}</b></b-td>
                                             <b-td 
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
