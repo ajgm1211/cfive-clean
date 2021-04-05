@@ -242,6 +242,8 @@ class SearchApiController extends Controller
             $rate->setAttribute('remarks', $remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
+
+            $this->stringifyRateAmounts($rate);
         }
 
         if($rates != null && count($rates) != 0){
@@ -250,7 +252,7 @@ class SearchApiController extends Controller
 
             $rates[0]->SetAttribute('search', $search_array);
         }
-        
+
         return RateResource::collection($rates);
     }
 
@@ -715,10 +717,10 @@ class SearchApiController extends Controller
                 if($cost != 0){
                     //Storing markup and added container price
                     $markups_array[$code] = $fixed_target_currency[0];
-                    $containers_with_markups[$code] = $cost + isDecimal($fixed_target_currency[0], true);
+                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_target_currency[0], true);
                 }else{
                     //Storing cost 0 in final price array
-                    $containers_with_markups[$code] = $cost;
+                    $containers_with_markups[$code] = isDecimal($cost,true);
                 }
             }
             
@@ -728,10 +730,10 @@ class SearchApiController extends Controller
                 if($cost != 0){
                     //Storing markup and added total 
                     $markups_client_currency[$code] = $fixed_client_currency[0];
-                    $totals_with_markups[$code] = $cost + isDecimal($fixed_client_currency[0], true);
+                    $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_client_currency[0], true);
                 }else{
                     //Storing cost 0 in final totals array
-                    $totals_with_markups[$code] = $cost;
+                    $totals_with_markups[$code] = isDecimal($cost,true);
                 }
             }
         //Same loop but for percentile markups
@@ -742,7 +744,7 @@ class SearchApiController extends Controller
 
             foreach($target_containers as $code => $cost){
                 if($cost != 0){
-                    $containers_with_markups[$code] = isDecimal($cost,true) + $markups_array[$code];
+                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_array[$code],true);
                 }else{
                     $containers_with_markups[$code] = isDecimal($cost,true);
                 }
@@ -750,7 +752,7 @@ class SearchApiController extends Controller
 
             foreach($target_totals as $code => $cost){
                 if($cost != 0){
-                    $totals_with_markups[$code] = isDecimal($cost,true) + $markups_client_currency[$code];
+                    $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_client_currency[$code],true);
                 }else{
                     $totals_with_markups[$code] = isDecimal($cost, true);
                 }
@@ -818,11 +820,11 @@ class SearchApiController extends Controller
                                 $charge_type_totals[$direction][$code] = 0;
                             }
                             //Add prices from charge to totals by type
-                            $charge_type_totals[$direction][$code] += $charges_to_add[$code];
+                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                         }
                     }
 
-                    //Updating rate to totals to new added array
+                    //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
                     array_push($rate_charges[$direction], $charge);
                     
@@ -872,7 +874,6 @@ class SearchApiController extends Controller
 
                     array_push($rate_charges[$direction], $ocean_freight_collection);
                 }
-                
 
                 $rate->setAttribute('charge_totals_by_type',$charge_type_totals);
                 
