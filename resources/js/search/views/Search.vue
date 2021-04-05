@@ -295,7 +295,7 @@
             </div>
 
             <!-- ADDITIONAL SERVICES -->
-            <b-collapse id="collapse-1" class="mt-3">
+            <b-collapse :visible="(searchRequest.company != null && searchRequest.company != '') || (searchRequest.contact != null && searchRequest.contact != '') || (searchRequest.pricelevel != null && searchRequest.pricelevel != '')" id="collapse-1" class="mt-3">
                 <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
 
                 <div class="row mr-3 ml-3">
@@ -306,6 +306,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="companyOptions"
                             label="business_name"
                             track-by="business_name"
@@ -325,6 +326,9 @@
                             class="img-icon"
                             alt="port"
                         />
+                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -334,6 +338,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="contactOptions"
                             :disabled="!companyChosen"
                             label="name"
@@ -348,6 +353,9 @@
                             class="img-icon"
                             alt="port"
                         />
+                        <button v-if="searchRequest.contact != '' && searchRequest.contact != null" type="button" class="close" aria-label="Close" @click="searchRequest.contact = ''">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -357,6 +365,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="priceLevelOptions"
                             label="name"
                             track-by="name"
@@ -370,6 +379,9 @@
                             class="img-icon"
                             alt="port"
                         />
+                        <button v-if="searchRequest.pricelevel != '' && searchRequest.pricelevel != null" type="button" class="close" aria-label="Close" @click="searchRequest.pricelevel = ''">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-12 col-sm-3 input-search-form">
@@ -1773,6 +1785,8 @@ export default {
         },
 
         fillInitialFields(requestType) {
+            let component = this; 
+            
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 //this.deliveryType = this.deliveryTypeOptions[0];
@@ -1795,10 +1809,17 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
+                this.allCarriers = false;
                 if(this.searchData.carriers.length != 0){
                     this.searchRequest.carriers = this.searchData.carriers;
+                    component.searchData.carriers.forEach(function (carrier) {
+                        component.carriers.push(carrier);
+                    });
                 }else{
                     this.searchRequest.carriers = this.datalists.carriers;
+                    component.datalists.carriers.forEach(function (carrier) {
+                        component.carriers.push(carrier);
+                    });
                 }
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
@@ -1850,6 +1871,7 @@ export default {
                 this.requestSearch();
             }
 
+            console.log(this.carriers)
             this.loaded = true;
         },
 
@@ -1905,6 +1927,7 @@ export default {
                 dismissible: true,
             });
         },
+        
         contracButtonPressed() {
             let data = {
                 //stepOne contract
@@ -1980,7 +2003,7 @@ export default {
             let component = this;
             let dlist = this.datalists;
 
-            if (component.searchRequest.company != null) {
+            if (component.searchRequest.company != null && component.searchRequest.company != '') {
                 component.contactOptions = [];
 
                 dlist.contacts.forEach(function (contact) {
