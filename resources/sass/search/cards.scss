@@ -3,6 +3,7 @@
 TARJETA
 
 *** */
+
 .result-search {
     position: relative;
     border-radius: 4px;
@@ -17,6 +18,7 @@ TARJETA
 
 
 /*** Direccion y Destino ***/
+
 .result-search .origin,
 .result-search .destination {
     font-size: 10px;
@@ -45,13 +47,16 @@ TARJETA
 }
 
 .result-search .destination {
-    b,p {
+    b,
+    p {
         float: right;
         text-align: right;
     }
 }
 
+
 /*** Linea de ruta ***/
+
 .direction-form {
     display: flex;
     justify-content: center;
@@ -97,13 +102,16 @@ TARJETA
     }
 }
 
+
 /*** TT ***/
+
 .direction-desc {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    b,p {
+    b,
+    p {
         font-size: 11px;
         text-align: center;
         color: #071C4B;
@@ -114,8 +122,8 @@ TARJETA
 }
 
 
-
 /*** Botones ***/
+
 #detailed,
 #remarks {
     background: rgba(#C4C4C4, 0.09);
@@ -128,13 +136,15 @@ TARJETA
         background: rgba(196, 196, 196, 0.09);
     }
 }
+
 .btn-add-quote {
     b {
         font-size: 12px;
         text-transform: uppercase;
-        color: #dddddd !important;
+        color: #80888B !important;
     }
 }
+
 .btn-add-quote .active {
     color: #ffffff;
     background: #006afa !important;
@@ -143,9 +153,23 @@ TARJETA
 
 .btn-add-quote .btn-secondary:hover {
     color: #ffffff;
+    border-radius: 4px;
     background: #006afa !important;
     border-color: #006afa !important;
 }
+
+.btn-add-quote:hover,
+.btn-add-quote .active {
+    border-radius: 4px;
+    b {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #ffffff !important;
+    }
+    background: rgba(#006BFA, 0.8) !important;
+    border-color: rgba(#006BFA, 0.8) !important;
+}
+
 .btn-book {
     width: 120px;
     background: #43B54E !important;
@@ -157,6 +181,7 @@ TARJETA
     text-align: center;
     font-weight: 800;
 }
+
 .btn-book:hover {
     background: #348d3d !important;
     border-color: #348d3d !important;
@@ -169,6 +194,7 @@ TARJETA
 BANDA DE CARDS CMA Y MAERSK  
 
 *** */
+
 .banda-top {
     top: 15px;
     left: -42px;
@@ -208,7 +234,8 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
-.banda-top.maerks span, .banda-top.cma span{
+.banda-top.maerks span,
+.banda-top.cma span {
     position: relative;
     left: -7px;
 }
@@ -239,7 +266,9 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
+
 /* CMA AND MAERKS */
+
 .schedule {
     background: #fbfbfb;
     .title-schedule {
@@ -260,8 +289,8 @@ BANDA DE CARDS CMA Y MAERSK
         padding-top: 50px;
         padding-bottom: 50px;
     }
-
-    .origin, .destination {
+    .origin,
+    .destination {
         justify-content: center;
     }
     .direction-form {
@@ -286,6 +315,7 @@ BANDA DE CARDS CMA Y MAERSK
 
 
 /*** RESPONSIVE ***/
+
 @media only screen and (max-width: 425px) {
     .btn-quote-res {
         padding: 50px 0px !important;
@@ -301,7 +331,6 @@ BANDA DE CARDS CMA Y MAERSK
 }
 
 @media only screen and (min-width: 1199px) {
-
     .direction-form {
         .route-indirect {
             .line {
@@ -314,7 +343,6 @@ BANDA DE CARDS CMA Y MAERSK
             }
         }
     }
-
     .schedule {
         .direction-form {
             .route-indirect {
@@ -332,11 +360,9 @@ BANDA DE CARDS CMA Y MAERSK
             }
         }
     }
-
 }
 
 @media only screen and (min-width: 1440px) {
-
     .direction-form {
         .route-indirect {
             .line {
@@ -369,5 +395,4 @@ BANDA DE CARDS CMA Y MAERSK
             }
         }
     }
-
 }

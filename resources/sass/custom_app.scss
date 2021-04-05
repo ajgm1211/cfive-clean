@@ -275,7 +275,7 @@ td.actions-add-fcl {
 
 .btn.btn-secondary {
     background-color: transparent!important;
-    border: 2px solid #eee !important;
+    border: 2px solid #80888B !important;
 }
 
 .btn.btn-secondary:focus i {
@@ -1097,6 +1097,7 @@ input.multiselect__input:focus {
 
 
 /* Search */
+
 .btn.btn-secondary.btn-aditonal-services {
     float: right;
     color: #006BFA;
@@ -1157,7 +1158,6 @@ input.multiselect__input:focus {
         flex-direction: column;
         margin-bottom: 10px;
     }
-    
     .margin-res {
         margin: 0px !important;
         .contract-title {
@@ -1323,19 +1323,6 @@ input.multiselect__input:focus {
         padding-right: 10px !important;
     }
 } */
-
-
-
-.btn-add-quote:hover,
-.btn-add-quote .active {
-    b {
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #ffffff !important;
-    }
-    background: rgba(#006BFA, 0.8) !important;
-    border-color: rgba(#006BFA, 0.8) !important;
-}
 
 .btn.btn-secondary.btn-create-quote {
     color: #ffffff;
@@ -1695,20 +1682,16 @@ input.data-provider {
         display: flex;
         justify-content: center;
     }
-
     .card-amount__res {
         display: flex;
         justify-content: center;
     }
-
     .container-cards {
         padding: 10px;
     }
-
     .btn-quote-res {
         padding: 50px 0px !important;
     }
-
     .carrier-img {
         padding: 50px 0px !important;
     }
