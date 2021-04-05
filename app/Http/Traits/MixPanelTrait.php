@@ -7,7 +7,7 @@ use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Auth;
 
 trait MixPanelTrait
-{    
+{
     /**
      * trackEvents
      *
@@ -17,12 +17,17 @@ trait MixPanelTrait
      */
     public function trackEvents($type, $data)
     {
+        $user = Auth::user();
+
         switch ($type) {
             case "login":
                 $this->trackUserLoginEvent($data);
                 break;
             case "search_fcl":
-                $this->trackSearchFclEvent($data);
+                $this->trackSearchFclEvent($data, $user);
+                break;
+            case "create_quote_fcl":
+                $this->trackCreateQuoteEvent($data, $user);
                 break;
         }
     }
@@ -49,13 +54,12 @@ trait MixPanelTrait
      * trackSearchFclEvent
      *
      * @param  mixed $data
+     * @param  mixed $user
      * @return void
      */
-    public function trackSearchFclEvent($data)
+    public function trackSearchFclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
-
-        $user = Auth::user();
 
         $mixPanel->identify($user->id);
 
@@ -64,6 +68,41 @@ trait MixPanelTrait
             array(
                 'Company' => $data['company_user']['name'],
                 'Container_type' => $data['data']['selectedContainerGroup']['name'],
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackCreateQuoteFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackCreateQuoteEvent($data, $user)
+    {
+        $containers = $data->getContainersFromEquipment($data->equipment);
+
+        $container_arr = [];
+
+        foreach($containers as $container){
+            array_push($container_arr, $container->code);
+        }
+        
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'Create Quote',
+            array(
+                'Company' => $data->company_user->name,
+                'Type' => $data->type,
+                'Equipment' => $container_arr,
+                'Delivery_type' => $data->delivery,
+                'Client_company' => $data->company->business_name ?? null,
+                'Client_contact' => $data->contact->fullname ?? null,
                 'User' => $user->fullname,
             )
         );
