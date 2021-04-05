@@ -2079,6 +2079,15 @@ $(document).ready(function() {
         $('.c5-switch').prop('checked', true);
         $('.c5-switch').trigger('change');
     }
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.has('opt')){
+        $('#quoteType').val('2');
+        $('#quoteType').trigger('change');
+    }
+        
+
+
 });
 /*** GOOGLE MAPS API ***/
 var autocomplete;
