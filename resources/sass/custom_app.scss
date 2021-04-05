@@ -2200,3 +2200,12 @@ input.data-provider {
         padding-left: 0px !important;
     }
 }
+
+.input-search-form {
+    position: relative;
+    button {
+        position: absolute;
+        top: 19px;
+        right: 20px;
+    }
+}
