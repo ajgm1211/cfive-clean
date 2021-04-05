@@ -295,7 +295,7 @@
             </div>
 
             <!-- ADDITIONAL SERVICES -->
-            <b-collapse :visible="(searchRequest.company != null && searchRequest.company != '') || (searchRequest.contact != null && searchRequest.contact != '') || (searchRequest.pricelevel != null && searchRequest.pricelevel != '')" id="collapse-1" class="mt-3">
+            <b-collapse :visible="additionalVisible" id="collapse-1" class="mt-3">
                 <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
 
                 <div class="row mr-3 ml-3">
@@ -1384,6 +1384,7 @@ export default {
     data() {
         return {
             loaded: false,
+            additionalVisible: false,
             searching: false,
             actions: actions,
             datalists: {},
@@ -1869,6 +1870,12 @@ export default {
                 this.requestSearch();
             }
 
+            if((this.searchRequest.company != null && this.searchRequest.company != '') || 
+                (this.searchRequest.contact != null && this.searchRequest.contact != '') || 
+                (this.searchRequest.pricelevel != null && this.searchRequest.pricelevel != '')){
+                    this.additionalVisible = true;
+                }
+                
             this.loaded = true;
         },
 
