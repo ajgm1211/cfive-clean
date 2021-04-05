@@ -13977,7 +13977,7 @@ tr,
 }
 
 .incompleted {
-    background-color: #969cc0;
+    background-color: #FAB429;
 }
 
 .expired {
@@ -13985,7 +13985,7 @@ tr,
 }
 
 .incompleted::before {
-    content: 'incompleted';
+    content: 'processing';
     font-weight: bold;
 }
 
