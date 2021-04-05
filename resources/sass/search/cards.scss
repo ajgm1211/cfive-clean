@@ -143,31 +143,30 @@ TARJETA
         text-transform: uppercase;
         color: #80888B !important;
     }
-}
-
-.btn-add-quote .active {
-    color: #ffffff;
-    background: #006afa !important;
-    border-color: #006afa !important;
-}
-
-.btn-add-quote .btn-secondary:hover {
-    color: #ffffff;
-    border-radius: 4px;
-    background: #006afa !important;
-    border-color: #006afa !important;
-}
-
-.btn-add-quote:hover,
-.btn-add-quote .active {
-    border-radius: 4px;
-    b {
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #ffffff !important;
+    .active {
+        color: #ffffff;
+        background: #006afa !important;
+        border-color: #006afa !important;
     }
-    background: rgba(#006BFA, 0.8) !important;
-    border-color: rgba(#006BFA, 0.8) !important;
+    label {
+        border-radius: 4px;
+        &:hover {
+            color: #ffffff;
+            border-radius: 4px;
+            background: #006afa !important;
+            border-color: #006afa !important;
+        }
+    }
+    &:hover,
+    .active {
+        b {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #ffffff !important;
+        }
+        background: rgba(#006BFA, 1) !important;
+        border-color: rgba(#006BFA, 1) !important;
+    }
 }
 
 .btn-book {
