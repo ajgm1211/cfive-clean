@@ -433,8 +433,8 @@
                                 >
                                     <b-card>
                                         <li
-                                            v-for="address in item[col.key]"
-                                            :key="address"
+                                            v-for="(address, addKey) in item[col.key]"
+                                            :key="addKey"
                                         >
                                             {{ address }}
                                         </li>
