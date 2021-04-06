@@ -816,6 +816,9 @@ export default {
 
         /* Request the data with axios */
         getData(params = {}) {
+            //Cleaning data array
+            this.data = {};
+
             if (!this.multiList) {
                 this.actions.list(
                     params,
