@@ -18,7 +18,7 @@
         @foreach($rates as $rate)
             @if(trim(strip_tags($rate->remarks)) !== '')
 
-                <span>{!! str_replace('&nbsp;', ' ',$rate->remarks) !!}</span><br/>
+                <span>{!! str_replace('&nbsp;', ' ',$rate->remarks) !!}</span>
 
             @endif
 
