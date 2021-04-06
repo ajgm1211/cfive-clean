@@ -1,10 +1,14 @@
 <template>
-    <div class="search pt-5">
+    <div id="search" class="search pt-5">
         <div v-if="loaded">
-            <!-- Type / Delivery type / Additional Services -->
+
+            <!-- OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
             <div class="row mr-0 ml-0">
+
+                <!-- TYPE - DELIVERY TYPE -->
                 <div class="col-12 col-sm-6 col-lg-3 d-flex">
-                    <!-- Type (FCL LCL AIR)-->
+
+                    <!-- TYPE (FCL, LCL, AIR) -->
                     <div class="type-input">
                         <multiselect
                             v-model="searchRequest.type"
@@ -13,19 +17,17 @@
                             :clear-on-select="false"
                             :show-labels="false"
                             :options="typeOptions"
+                            :searchable="false"
                             @input="checkSearchType()"
-                            placeholder="Select"
+                            placeholder="Select Type"
                             class="s-input no-select-style"
                         >
                         </multiselect>
-                        <b-icon
-                            icon="caret-down-fill"
-                            aria-hidden="true"
-                            class="type-mode"
-                        ></b-icon>
+                        
                     </div>
+                    <!-- FIN TYPE (FCL, LCL, AIR) -->
 
-                    <!-- Delivery Type (Door to Door, Door to Port, Port to Port, Port to Door)-->
+                    <!-- DELIVERY TYPE (Door to Door, Door to Port, Port to Port, Port to Door)-->
                     <div class="delivery-input">
                         <multiselect
                             v-model="deliveryType"
@@ -33,6 +35,7 @@
                             :close-on-select="true"
                             :clear-on-select="false"
                             :show-labels="false"
+                            :searchable="false"
                             :options="deliveryTypeOptions"
                             label="name"
                             track-by="name"
@@ -40,29 +43,32 @@
                             class="s-input no-select-style"
                         >
                         </multiselect>
-                        <b-icon
-                            icon="caret-down-fill"
-                            aria-hidden="true"
-                            class="delivery-type"
-                        ></b-icon>
                     </div>
-                </div>
+                    <!-- FIN DELIVERY TYPE (Door to Door, Door to Port, Port to Port, Port to Door)-->
 
-                <!-- Button Additional services -->
+                </div>
+                <!-- FIN TYPE - DELIVERY TYPE -->
+
+                <!-- BOTON ADDITIONAL SERVICES -->
                 <div class="col-12 col-sm-6 col-lg-9">
                     <b-button
                         v-b-toggle.collapse-1
                         class="btn-aditonal-services"
                         >additional services
-                        <b-icon icon="caret-down-fill" class="ml-1"></b-icon
-                    ></b-button>
+                        <b-icon icon="caret-down-fill" class="ml-1"></b-icon>
+                    </b-button>
                 </div>
-            </div>
+                <!-- FIN BOTON ADDITIONAL SERVICES -->
 
-            <!-- Inputs Search -->
+            </div>
+            <!-- FIN OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
+
+            <!-- INPUTS DEL SEARCH -->
             <div class="row mr-0 ml-0">
-                <!-- Import / Export -->
-                <div class="col-12 col-sm-12 col-lg-1 export-import-box">
+
+                <!-- IMPORT - EXPORT -->
+                <div class="col-lg-1 mb-2 export-import">
+
                     <b-form-radio-group
                         v-model="searchRequest.direction"
                         :options="directionOptions"
@@ -72,13 +78,13 @@
                         name="direction"
                         class="radio-direction type-style"
                     ></b-form-radio-group>
-                </div>
 
-                <!-- Origin Port -->
-                <div
-                    class="col-12 col-sm-6 col-lg-3 origen-search input-search-form mb-2"
-                    style="position: relative; z-index: 70"
-                >
+                </div>
+                <!-- FIN IMPORT - EXPORT -->
+
+                <!-- ORIGIN PORT -->
+                <div class="col-lg-3 mb-2 input-search-form origen-search"> 
+
                     <multiselect
                         v-model="searchRequest.originPorts"
                         :multiple="true"
@@ -95,140 +101,106 @@
                     </multiselect>
                     <img
                         src="/images/port.svg"
-                        class="img-icon img-icon-left"
+                        class="img-icon img-icon-left img-icon-origin"
                         alt="port"
                     />
                     <span
                         v-if="errorsExist && 'originPorts' in responseErrors"
                         style="color: red"
                         >The Origin Port field is required!</span
-                    >
-                </div>
+                    > 
 
-                <!-- Destination Port -->
-                <div
-                    class="col-12 col-sm-6 col-lg-3 destination-search input-search-form mb-2"
-                    style="position: relative; z-index: 70"
-                >
-                    <multiselect
-                        v-model="searchRequest.destinationPorts"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="destinationPortOptions"
-                        :disabled="searchRequest.requestData.requested == 1"
-                        label="display_name"
-                        track-by="display_name"
-                        placeholder="To"
-                        class="s-input"
-                    >
-                    </multiselect>
-                    <img src="/images/port.svg" class="img-icon" alt="port" />
-                    <span
-                        v-if="
-                            errorsExist && 'destinationPorts' in responseErrors
-                        "
-                        style="color: red"
-                        >The Destination Port field is required!</span
-                    >
                 </div>
+                <!-- FIN ORIGIN PORT -->
 
-                <!-- Date Picker-->
-                <div
-                    class="col-12 col-sm-6 col-lg-3 input-search-form datepicker-search"
-                >
-                    <date-range-picker
-                        :opens="'center'"
-                        :locale-data="{
-                            firstDay: 0,
-                            format: 'yyyy/mm/dd',
-                        }"
-                        :singleDatePicker="false"
-                        :autoApply="true"
-                        :timePicker="false"
-                        v-model="searchRequest.dateRange"
-                        :linkedCalendars="true"
-                        class="s-input"
-                        @update="updateQuoteSearchOptions()"
-                    ></date-range-picker>
-                    <img
-                        src="/images/calendario.svg"
-                        class="img-icon calendar-icon"
-                        alt="calendario"
-                    />
-                    <span
-                        v-if="
-                            errorsExist &&
-                            'dateRange.startDate' in responseErrors
-                        "
-                        style="color: red"
-                        >Please pick a date</span
-                    >
-                </div>
-
-                <!-- Containers -->
-                <div
-                    class="col-12 col-lg-2 col-sm-6 input-search-form containers-search"
-                    style="padding-left: 5px"
-                >
-                    <b-dropdown
-                        id="dropdown-containers"
-                        :text="containerText.join(', ')"
-                        ref="dropdown"
-                        class="m-2"
-                    >
-                        <b-dropdown-form
-                            :disabled="searchRequest.requestData.requested == 1"
+                <!-- DESTINATION PORT -->
+                <div class="col-lg-3 mb-2 input-search-form destination-search">
+                        <multiselect
+                            v-model="searchRequest.destinationPorts"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :clear-on-select="true"
+                            :show-labels="false"
+                            :options="destinationPortOptions"
+                            label="display_name"
+                            track-by="display_name"
+                            placeholder="To" 
+                            class="s-input"
                         >
-                            <b-form-group label="Type">
-                                <b-form-radio-group
-                                    id="containers"
-                                    v-model="selectedContainerGroup"
-                                    :options="containerGroupOptions"
-                                ></b-form-radio-group>
-                            </b-form-group>
-                            <b-form-group label="Equipment List">
-                                <b-form-checkbox-group
-                                    id="equipment"
-                                    v-model="containers"
-                                    :options="containerOptions"
-                                ></b-form-checkbox-group>
-                            </b-form-group>
-                        </b-dropdown-form>
-                    </b-dropdown>
-                    <img
-                        src="/images/container.svg"
-                        class="img-icon"
-                        alt="port"
-                    />
-                    <span
-                        v-if="errorsExist && 'containers' in responseErrors"
-                        style="color: red"
-                        >Choose at least one container</span
-                    >
+                        </multiselect>
+                        <img src="/images/port.svg" class="img-icon" alt="port">
+                        <span v-if="errorsExist && 'destinationPorts' in responseErrors" style="color:red">The Destination Port field is required!</span>
                 </div>
-            </div>
+                <!-- FIN DESTINATION PORT -->
 
-            <!-- Input From and To PORT -->
+                <!-- DATEPICKER -->
+                <div class="col-lg-3 mb-2 input-search-form datepicker-search">
+
+                        <date-range-picker
+                            :opens="'center'"
+                            :locale-data="{
+                                firstDay: 0,
+                                format: 'yyyy/mm/dd',
+                            }"
+                            :singleDatePicker="false"
+                            :autoApply="true"
+                            :timePicker="false"
+                            v-model="searchRequest.dateRange"
+                            :linkedCalendars="true"
+                            class="s-input"
+                        ></date-range-picker>
+                        <img src="/images/calendario.svg" class="img-icon calendar-icon img-icon-left" alt="calendario">
+                        <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red">Please pick a date</span>
+
+                </div>
+                <!-- FIN DATEPICKER -->
+
+                <!-- CONTAINERS -->
+                <div class="col-lg-2 mb-2 input-search-form containers-search">
+                        
+                        <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
+                            <b-dropdown-form>
+                                <b-form-group label="Type">
+                                    <b-form-radio-group
+                                        id="containers"
+                                        v-model="selectedContainerGroup"
+                                        :options="containerGroupOptions"
+
+                                    ></b-form-radio-group>
+                                </b-form-group>
+                                <b-form-group label="Equipment List">
+                                    <b-form-checkbox-group
+                                        id="equipment"
+                                        v-model="containers"
+                                        :options="containerOptions"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                            </b-dropdown-form>
+                        </b-dropdown>
+                        <img src="/images/container.svg" class="img-icon" alt="port">
+                        <span v-if="errorsExist && 'containers' in responseErrors" style="color:red">Choose at least one container</span>
+
+                </div>
+                <!-- FIN CONTAINERS -->
+
+            </div>
+            <!-- FIN INPUTS DEL SEARCH -->
+
+            <!-- INPUT FROM AND TO PORT -->
             <div
                 v-if="ptdActive || dtpActive || dtdActive"
                 class="row mr-0 ml-0"
             >
-                <div class="col-12 col-sm-1"></div>
+                <div class="col-lg-1"></div>
 
                 <div
                     v-if="ptdActive"
-                    class="col-12 col-sm-3"
+                    class="col-lg-3"
                     style="padding-left: 30px; padding-right: inherit"
                 ></div>
 
                 <!-- Origin City -->
-                <div
-                    v-if="dtpActive || dtdActive"
-                    class="col-12 col-sm-3 origen-search input-search-form"
-                    style="position: relative; z-index: 60"
-                >
+                <div v-if="dtpActive || dtdActive" class="col-lg-3 mb-2 origen-search input-search-form">
                     <multiselect
                         v-if="originDistance"
                         v-model="searchRequest.originAddress"
@@ -255,17 +227,13 @@
                     </gmap-autocomplete>
                     <img
                         src="/images/city.svg"
-                        class="img-icon img-icon-left"
+                        class="img-icon img-icon-left img-icon-origin"
                         alt="port"
                     />
                 </div>
 
                 <!-- Destination City -->
-                <div
-                    v-if="ptdActive || dtdActive"
-                    class="col-12 col-sm-3 input-search-form"
-                    style="position: relative; z-index: 60"
-                >
+                <div v-if="ptdActive || dtdActive" class="col-lg-3 mb-2 input-search-form">
                     <multiselect
                         v-if="destinationDistance"
                         v-model="searchRequest.destinationAddress"
@@ -290,16 +258,20 @@
                         placeholder="Start typing an address"
                     >
                     </gmap-autocomplete>
-                    <img src="/images/city.svg" class="img-icon" alt="port" />
+                    <img src="/images/city.svg" class="img-icon img-icon-left" alt="port" />
                 </div>
             </div>
+            <!-- FIN INPUT FROM AND TO PORT -->
 
             <!-- ADDITIONAL SERVICES -->
             <b-collapse id="collapse-1" class="mt-3">
+                
                 <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
 
+                <!-- INPUTS -->
                 <div class="row mr-3 ml-3">
-                    <div class="col-12 col-sm-3 input-search-form">
+
+                    <div class="col-lg-3 mb-2 input-search-form">
                         <multiselect
                             v-model="searchRequest.company"
                             :multiple="false"
@@ -320,12 +292,12 @@
                         </multiselect>
                         <img
                             src="/images/empresa.svg"
-                            class="img-icon"
+                            class="img-icon img-icon-left"
                             alt="port"
                         />
                     </div>
 
-                    <div class="col-12 col-sm-3 input-search-form">
+                    <div class="col-lg-3 mb-2 input-search-form">
                         <multiselect
                             v-model="searchRequest.contact"
                             :multiple="false"
@@ -343,12 +315,12 @@
                         </multiselect>
                         <img
                             src="/images/contacto.svg"
-                            class="img-icon"
+                            class="img-icon img-icon-left"
                             alt="port"
                         />
                     </div>
 
-                    <div class="col-12 col-sm-3 input-search-form">
+                    <div class="col-lg-3 mb-2 input-search-form">
                         <multiselect
                             v-model="searchRequest.pricelevel"
                             :multiple="false"
@@ -365,12 +337,12 @@
                         </multiselect>
                         <img
                             src="/images/pricelevel.svg"
-                            class="img-icon"
+                            class="img-icon img-icon-left"
                             alt="port"
                         />
                     </div>
 
-                    <div class="col-12 col-sm-3 input-search-form">
+                    <div class="col-lg-3 mb-2 input-search-form">
                         <b-dropdown
                             id="dropdown-carriers"
                             :text="carrierText"
@@ -400,12 +372,15 @@
                         </b-dropdown>
                         <img
                             src="/images/carrier.svg"
-                            class="img-icon"
+                            class="img-icon img-icon-left"
                             alt="port"
                         />
                     </div>
-                </div>
 
+                </div>
+                <!-- FIN INPUTS -->
+
+                <!-- INCLUDE CHECKBOX -->
                 <div class="row mr-0 ml-4 mt-5 d-flex justify-content-start">
                     <b-form-checkbox
                         id="originCharges"
@@ -426,7 +401,10 @@
                         &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
                 </div>
+                <!-- FIN INCLUDE CHECKBOX -->
+
             </b-collapse>
+            <!-- FIN ADDITIONAL SERVICES -->
 
             <!-- LCL FORM INPUTS -->
             <div
@@ -694,6 +672,7 @@
                 </b-card>
                 <!-- End Tabs Section -->
             </div>
+            <!-- FIN LCL FORM INPUTS -->
 
             <div class="col-lg-8">
                 <div
@@ -706,6 +685,7 @@
                 </div>
             </div>
 
+            <!-- BOTON SEARCH Y ADD CONTRAT -->
             <div class="row justify-content-center mr-0 ml-0">
                 <div class="col-2 d-flex justify-content-center">
                     <button
@@ -728,6 +708,7 @@
                     >
                 </div>
             </div>
+            <!-- FIN BOTON SEARCH Y ADD CONTRAT -->
 
             <!-- MODAL ADD CONTRACT -->
             <b-modal
@@ -739,9 +720,10 @@
                 hide-footer
             >
                 <!-- STEPS -->
-                <div class="row add-contract-form-steps pt-5 pb-5">
+                <div id="add-contract-form-steps" class="row pt-5 pb-5">
+
                     <div
-                        class="col-12 step-add-contract col-sm-3 d-flex flex-column justify-content-center align-items-center"
+                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteOne }"
                     >
                         <div class="add-contract-step">1</div>
@@ -749,7 +731,7 @@
                     </div>
 
                     <div
-                        class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center"
+                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteTwo }"
                     >
                         <div class="add-contract-step">2</div>
@@ -757,7 +739,7 @@
                     </div>
 
                     <div
-                        class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center"
+                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteThree }"
                     >
                         <div class="add-contract-step">3</div>
@@ -765,15 +747,18 @@
                     </div>
 
                     <div
-                        class="col-12 col-sm-3 step-add-contract d-flex flex-column justify-content-center align-items-center"
+                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteFour }"
                     >
                         <div class="add-contract-step">4</div>
                         <span>Files</span>
                     </div>
                 </div>
+                <!-- FIN STEPS -->
 
-                <form action="/action_page.php" class="add-contract-form">
+                <!-- FORMULARIO -->
+                <form id="add-contract-form" action="/action_page.php" class="add-contract-form">
+
                     <!-- CONTRACT -->
                     <fieldset v-if="stepOne">
                         <div class="row">
@@ -1093,6 +1078,7 @@
                                                 v-model="amount"
                                                 placeholder="Amount"
                                                 class="input-modal surcharge-input"
+                                                style="padding: 21px 11px !important"
                                             ></b-form-input>
                                         </label>
                                     </div>
@@ -1112,10 +1098,7 @@
                         </div>
 
                         <div class="row">
-                            <div
-                                class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
-                                v-for="(item, index) in dataSurcharger"
-                            >
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1343,8 +1326,13 @@
                             Create Contract</b-button
                         >
                     </div>
+
                 </form>
+                <!-- FIN FORMULARIO -->
+
             </b-modal>
+            <!-- FIN MODAL ADD CONTRACT -->
+
         </div>
     </div>
 </template>

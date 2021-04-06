@@ -38,17 +38,19 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\MixPanelTrait;
 
 class QuotationController extends Controller
 {
-    use QuoteV2Trait, SearchTrait;
+    use QuoteV2Trait, SearchTrait, MixPanelTrait;
 
     public function index(Request $request)
     {
         return view('quote.index');
     }
 
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
@@ -287,6 +289,9 @@ class QuotationController extends Controller
             $rateTotals->totalize($rate['currency_id']);
         }
 
+        /** Tracking create quote event with Mix Panel*/
+        $this->trackEvents("create_quote_fcl", $quote);
+
         return new QuotationResource($quote);
     }
 
@@ -364,14 +369,14 @@ class QuotationController extends Controller
                     $data[$key] = 'Win';
                 }
             }
-            $quote->update([$key=>$data[$key]]);
-            
-            if($key == 'validity_end'){
+            $quote->update([$key => $data[$key]]);
+
+            if ($key == 'validity_end') {
                 $rates = $quote->rates_v2()->get();
 
-                if($rates != null && count($rates) != 0){
-                    foreach($rates as $rate){
-                        $rate->update([$key=>$data[$key]]);
+                if ($rates != null && count($rates) != 0) {
+                    foreach ($rates as $rate) {
+                        $rate->update([$key => $data[$key]]);
                     }
                 }
             }
@@ -392,13 +397,12 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
-        $quote->update(['total_quantity'=>$request['total_quantity']]);
-        $quote->update(['total_volume'=>$request['total_volume']]);
-        $quote->update(['total_weight'=>$request['total_weight']]);
-        $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
-        
+        $quote->update(['total_quantity' => $request['total_quantity']]);
+        $quote->update(['total_volume' => $request['total_volume']]);
+        $quote->update(['total_weight' => $request['total_weight']]);
+        $quote->update(['chargeable_weight' => $request['chargeable_weight']]);
     }
-    
+
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
     {
         $search_data = $request->input();
@@ -452,7 +456,7 @@ class QuotationController extends Controller
 
         $new_quote = $quote->duplicate();
 
-        if($quote->search_options == null){
+        if ($quote->search_options == null) {
             $new_quote->update([
                 'contact_id' => $search_data_ids['contact'],
                 'company_id' => $search_data_ids['company'],
@@ -460,7 +464,7 @@ class QuotationController extends Controller
                 'validity_start' => $search_data_ids['dateRange']['startDate'],
                 'validity_end' => $search_data_ids['dateRange']['endDate'],
             ]);
-        }else{
+        } else {
             $search_options_ids = $this->getIdsFromArray($quote->search_options);
             $new_quote->update([
                 'contact_id' => $search_options_ids['contact'],
@@ -674,7 +678,7 @@ class QuotationController extends Controller
                         }
                     }
                 } else {
-                    if($total->inland_address()->first() != null){
+                    if ($total->inland_address()->first() != null) {
                         $total->inland_address()->first()->delete();
                     }
                 }
