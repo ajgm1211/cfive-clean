@@ -67,22 +67,11 @@
 
                 <p style="line-height:10px;">{{@$quote->user->email}}</p>
 
-                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{delegation->name ?? $user->companyUser->name}}</b></span></p>
 
-                <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+                <p style="line-height:10px;">{{$delegation->address ?? $user->companyUser->address ?? "--"}}</p>
 
-                <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
-
-                @if($delegation != null)
-                    <br>
-                    <p><b>{{__('pdf.delegation')}}:</b></p>
-
-                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
-
-                    <p style="line-height:10px;">{{@$delegation->address}}</p>
-
-                    <p style="line-height:10px;">{{@$delegation->phone}}</p>
-                @endif
+                <p style="line-height:10px;">{{$delegation->phone ?? $user->companyUser->phone ?? "--"}}</p>
 
             </div>
             <!-- End only Client -->
@@ -178,7 +167,7 @@
 
         @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
 
-            <div  class="incoterm">
+            <div class="incoterm" style="margin-top:10px;">
 
                 @if($quote->origin_address!='')
                 
