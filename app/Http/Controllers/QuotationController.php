@@ -445,6 +445,8 @@ class QuotationController extends Controller
     {
         $new_quote = $quote->duplicate();
 
+        $new_quote->update(['custom_quote_id' => null]);
+
         return new QuotationResource($new_quote);
     }
 
