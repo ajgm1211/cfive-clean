@@ -1,4 +1,4 @@
-        <div id="details" class="clearfix details">
+<div id="details" class="clearfix details">
             <!-- Company -->
             <div class="company" style="float: left; width: 350px; line-height: 10px;">
 
@@ -178,7 +178,7 @@
 
         @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
 
-            <div  class="incoterm">
+            <div  class="incoterm" style="margin-top:10px;">
 
                 @if($quote->origin_address!='')
                 
@@ -203,7 +203,7 @@
 
             <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.cargo_details')}}</b></p>
 
-            <br>
+            
 
             @if(!empty($package_loads) && count($package_loads)>0)
 
