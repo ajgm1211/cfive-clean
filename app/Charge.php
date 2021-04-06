@@ -243,4 +243,9 @@ class Charge extends Model implements Auditable
     {
         return $this->currency()->first()->alphacode ?? null;
     }
+
+    public function scopeSelectFields($query)
+    {
+        return $query->select('charges.id', 'automatic_rate_id', 'charges.type_id', 'charges.surcharge_id', 'charges.amount as price', 'charges.markups as profit', 'charges.total as total_price', 'calculation_type_id', 'charges.currency_id');
+    }
 }
