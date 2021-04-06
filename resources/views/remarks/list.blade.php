@@ -132,7 +132,10 @@
                                 <i class="la la-edit"></i>
                             </a>
                             <a href="#" id="delete-remarks" data-remarks-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
-                                <i class="la la-eraser"></i>
+                                <i class="la la-trash"></i>
+                            </a>
+                            <a href="{{ route('remarks.duplicate', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Duplicate " >
+                                <i class="la la-copy"></i>
                             </a>
                         </td>
                     </tr>
@@ -197,7 +200,10 @@
             $('.modal-body').load(url,function(){
                 $('#m_modal_5').modal({show:true});
             });
-
+        }
+        if(action == "duplicate"){
+            var url = '{{ route("remarks.duplicate", "id") }}';
+            url = url.replace('id', id);
         }
 
     }
