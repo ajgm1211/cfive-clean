@@ -130,7 +130,7 @@
             <div class="row">
                 <div style="float: left; margin-left:15px;">
                     <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
-                    <p class="color-title" ><b class="uppercase" {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
+                    <p class="color-title" style="text-align: justify"><b class="uppercase" {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
                 </div>
             </div>
 
@@ -180,7 +180,7 @@
 
             @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
 
-                <div  class="incoterm">
+                <div  class="incoterm" style="margin-top:10px;">
 
                     @if($quote->origin_address!='')
                     
