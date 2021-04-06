@@ -31,6 +31,7 @@ class QuotationApiController extends Controller
         $type = $request->type;
         $status = $request->status;
         $integration = $request->integration;
+        $costs = $request->costs;
         $paginate = 100;
 
         if ($request->paginate) {
@@ -46,7 +47,7 @@ class QuotationApiController extends Controller
             $this->updateIntegrationStatus($quotes);
         }
 
-        return QuotationApiResource::collection($quotes);
+        return QuotationApiResource::collection($quotes, $costs);
     }
 
     /**
