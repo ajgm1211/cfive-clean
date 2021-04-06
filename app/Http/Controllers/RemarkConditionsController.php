@@ -236,4 +236,45 @@ class RemarkConditionsController extends Controller
                 break;
         }
     }
+
+    public function duplicate(request $request,$id)
+    {
+        
+        $remarkCopy = RemarkCondition::find($id)->replicate();
+        $remarkCopy -> name .= ' copy';
+        $remarkCopy ->save();
+
+        $RemarkCarrier=RemarkCarrier::where('remark_condition_id', $id)->get();
+        foreach($RemarkCarrier as $carrier){
+            RemarkCarrier::create([
+                'carrier_id' => $carrier->carrier_id,
+                'remark_condition_id'  => $remarkCopy->id,
+            ]);
+        }
+
+        $RemarkHarbor=RemarkHarbor::where('remark_condition_id','=', $id)->get();
+        foreach($RemarkHarbor as $harbor){
+            RemarkHarbor::create([
+                'port_id' => $harbor->port_id,
+                'remark_condition_id'  => $remarkCopy->id,
+            ]);
+        }
+
+        $RemarkCountry=RemarkCountry::where('remark_condition_id','=', $id)->get();
+        if(isset($RemarkCountry)){
+            foreach($RemarkCountry as $country){
+                RemarkCountry::create([
+                    'country_id' => $country,
+                    'remark_condition_id'  => $remarkCopy->id,
+                ]);
+            }
+        }     
+               
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Duplicate completed successfully');
+
+        return redirect('remarks/list');
+
+    }
 }

@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Intercom\IntercomClient;
+use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
+use App\Http\Traits\MixPanelTrait;
 
 class LoginController extends Controller
 {
@@ -23,7 +25,7 @@ class LoginController extends Controller
      */
 
     use AuthenticatesUsers;
-    use BrowserTrait;
+    use BrowserTrait, MixPanelTrait;
 
     /**
      * Where to redirect users after login.
@@ -54,7 +56,6 @@ class LoginController extends Controller
                         try {
 
                             $client->users->archiveUser($u->id);
-
                         } catch (\Intercom\Exception\IntercomException $e) {
                             \Log::error("Ocurrio un  error intercom con el siguiente usuario" . $u->email);
                             return false;
@@ -127,6 +128,9 @@ class LoginController extends Controller
         } else if ($user->company_user_id == '') {
             return redirect('/settings');
         }
+
+        /** Tracking login event with Mix Panel*/
+        $this->trackEvents("login", $user);
 
         return redirect()->intended($this->redirectPath());
     }
