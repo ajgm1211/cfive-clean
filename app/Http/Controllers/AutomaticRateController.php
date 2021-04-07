@@ -209,6 +209,39 @@ class AutomaticRateController extends Controller
 
         $autorate->delete();
 
+        $automatic_rates = $quote->rates_v2()->get();
+        $rates_origin_ports = [];
+        $rates_destination_ports = [];
+
+        foreach($automatic_rates as $rate){
+            array_push($rates_origin_ports, $rate->origin_port_id);
+            array_push($rates_destination_ports, $rate->destination_port_id);
+        }
+
+        if($quote->type == "FCL"){
+            $localCharges = $quote->local_charges()->get();
+            $localChargeTotals = $quote->local_charges_totals()->get();
+        }else if($quote->type == "LCL"){
+            $localCharges = $quote->local_charges_lcl()->get();
+            $localChargeTotals = $quote->local_charges_lcl_totals()->get();
+        }
+
+        foreach($localCharges as $charge){
+            if($charge->type_id == 1 && !in_array($charge->port_id, $rates_origin_ports)){
+                $charge->delete();
+            }else if($charge->type_id == 2 && !in_array($charge->port_id, $rates_destination_ports)){
+                $charge->delete();
+            }
+        }
+
+        foreach($localChargeTotals as $chargeTotal){
+            if($chargeTotal->type_id == 1 && !in_array($chargeTotal->port_id, $rates_origin_ports)){
+                $chargeTotal->delete();
+            }else if($chargeTotal->type_id == 2 && !in_array($chargeTotal->port_id, $rates_destination_ports)){
+                $chargeTotal->delete();
+            }
+        }
+
         $quote->updatePdfOptions('exchangeRates');
 
         return response()->json(null, 204);

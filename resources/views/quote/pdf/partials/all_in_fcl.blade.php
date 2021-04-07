@@ -6,7 +6,7 @@
 
             <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.total_estimated')}}</b></p>
 
-            <br>
+            
 
         </div>
 
@@ -18,7 +18,7 @@
 
             <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.total_estimated')}}</b></p>
 
-            <br>
+            
 
         </div>
 
