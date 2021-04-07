@@ -225,7 +225,7 @@ table tr:nth-child(odd) td {
 
 table th,
 table td {
-    padding: 8px;
+    padding: 4px;
     text-align: left;
 }
 
