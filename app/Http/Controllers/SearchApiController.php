@@ -39,6 +39,7 @@ use App\RemarkCondition;
 use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
+use App\CompanyPrice;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -144,6 +145,10 @@ class SearchApiController extends Controller
             return $type->only(['id', 'description']);
         });
 
+        $company_prices = CompanyPrice::get()->map(function ($comprice){
+            return $comprice->only(['id','company_id','price_id']);
+        });
+
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
         });**/
@@ -168,7 +173,8 @@ class SearchApiController extends Controller
             'type_destiny',
             'surcharges',
             //'inland_distances',
-            'calculation_type'
+            'calculation_type',
+            'company_prices'
         );
 
         return response()->json(['data' => $data]);
@@ -245,6 +251,8 @@ class SearchApiController extends Controller
             $rate->setAttribute('remarks', $remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
+
+            $this->stringifyRateAmounts($rate);
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -264,7 +272,7 @@ class SearchApiController extends Controller
         return RateResource::collection($rates);
     }
 
-    //Stores current search if its different from other searches
+    //Stores current search
     public function store(Request $request)
     {
         //Validating request data from form
@@ -664,7 +672,7 @@ class SearchApiController extends Controller
         $carrier = $rate->carrier_id;
 
         //Querying
-        $transit_time = TransitTime::where('origin_id', $origin_port)->where('destination_id', $destination_port)->whereIn('carrier_id', [$carrier, 26])->first();
+        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
 
         return $transit_time;
     }
@@ -724,10 +732,10 @@ class SearchApiController extends Controller
                 if ($cost != 0) {
                     //Storing markup and added container price
                     $markups_array[$code] = $fixed_target_currency[0];
-                    $containers_with_markups[$code] = $cost + isDecimal($fixed_target_currency[0], true);
-                } else {
+                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_target_currency[0], true);
+                }else{
                     //Storing cost 0 in final price array
-                    $containers_with_markups[$code] = $cost;
+                    $containers_with_markups[$code] = isDecimal($cost,true);
                 }
             }
 
@@ -737,10 +745,10 @@ class SearchApiController extends Controller
                 if ($cost != 0) {
                     //Storing markup and added total 
                     $markups_client_currency[$code] = $fixed_client_currency[0];
-                    $totals_with_markups[$code] = $cost + isDecimal($fixed_client_currency[0], true);
-                } else {
+                    $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_client_currency[0], true);
+                }else{
                     //Storing cost 0 in final totals array
-                    $totals_with_markups[$code] = $cost;
+                    $totals_with_markups[$code] = isDecimal($cost,true);
                 }
             }
             //Same loop but for percentile markups
@@ -749,24 +757,25 @@ class SearchApiController extends Controller
             $markups_array = $this->calculatePercentage($percent, $target_containers);
             $markups_client_currency = $this->calculatePercentage($percent, $target_totals);
 
-            foreach ($target_containers as $code => $cost) {
-                if ($cost != 0) {
-                    $containers_with_markups[$code] = $cost + isDecimal($markups_array[$code], true);
-                } else {
-                    $containers_with_markups[$code] = $cost;
+            foreach($target_containers as $code => $cost){
+                if($cost != 0){
+                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_array[$code],true);
+                }else{
+                    $containers_with_markups[$code] = isDecimal($cost,true);
                 }
             }
 
-            foreach ($target_totals as $code => $cost) {
-                if ($cost != 0) {
-                    $totals_with_markups[$code] = $cost + isDecimal($markups_client_currency[$code], true);
-                } else {
-                    $totals_with_markups[$code] = $cost;
+            foreach($target_totals as $code => $cost){
+                if($cost != 0){
+                    $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_client_currency[$code],true);
+                }else{
+                    $totals_with_markups[$code] = isDecimal($cost, true);
                 }
             }
         } else {
             return;
         }
+
         //Appending markups and added containers and totals to rate or charge
         $target->setAttribute('container_markups', $markups_array);
         $target->setAttribute('totals_markups', $markups_client_currency);
@@ -826,11 +835,11 @@ class SearchApiController extends Controller
                                 $charge_type_totals[$direction][$code] = 0;
                             }
                             //Add prices from charge to totals by type
-                            $charge_type_totals[$direction][$code] += $charges_to_add[$code];
+                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                         }
                     }
 
-                    //Updating rate to totals to new added array
+                    //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
                     array_push($rate_charges[$direction], $charge);
 

@@ -3,9 +3,7 @@
 
     <div class="clearfix">
 
-        <span class="text-left" style="font-size: 14px !important; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.remarks')}}</b></span>
-            <br>
-            <br>
+        <p class="text-left" style="font-size: 12px !important;"><b>{{__('pdf.remarks')}}</b></p>
             @switch($quote->language_id)
 
                 @case(1)

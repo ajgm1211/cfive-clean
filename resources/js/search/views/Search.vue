@@ -30,7 +30,7 @@
                     <!-- DELIVERY TYPE (Door to Door, Door to Port, Port to Port, Port to Door)-->
                     <div class="delivery-input">
                         <multiselect
-                            v-model="deliveryType"
+                            v-model="searchRequest.deliveryType"
                             :multiple="false"
                             :close-on-select="true"
                             :clear-on-select="false"
@@ -264,8 +264,7 @@
             <!-- FIN INPUT FROM AND TO PORT -->
 
             <!-- ADDITIONAL SERVICES -->
-            <b-collapse id="collapse-1" class="mt-3">
-                
+            <b-collapse :visible="additionalVisible" id="collapse-1" class="mt-3">
                 <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
 
                 <!-- INPUTS -->
@@ -278,15 +277,18 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="companyOptions"
                             label="business_name"
                             track-by="business_name"
                             placeholder="Company"
                             class="s-input"
                             @input="
+                                searchRequest.contact = '',
                                 unlockContacts(),
-                                    (searchRequest.contact = ''),
-                                    updateQuoteSearchOptions()
+                                searchRequest.pricelevel = null,
+                                setPriceLevels(),
+                                updateQuoteSearchOptions()
                             "
                         >
                         </multiselect>
@@ -295,6 +297,9 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
+                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-lg-3 mb-2 input-search-form">
@@ -304,6 +309,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="contactOptions"
                             :disabled="!companyChosen"
                             label="name"
@@ -318,6 +324,9 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
+                        <button v-if="searchRequest.contact != '' && searchRequest.contact != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.contact = ''">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-lg-3 mb-2 input-search-form">
@@ -327,6 +336,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :hide-selected="true"
                             :options="priceLevelOptions"
                             label="name"
                             track-by="name"
@@ -340,6 +350,9 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
+                        <button v-if="searchRequest.pricelevel != '' && searchRequest.pricelevel != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.pricelevel = ''">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
 
                     <div class="col-lg-3 mb-2 input-search-form">
@@ -1358,6 +1371,7 @@ export default {
     data() {
         return {
             loaded: false,
+            additionalVisible: false,
             searching: false,
             actions: actions,
             datalists: {},
@@ -1398,11 +1412,11 @@ export default {
             },
             selectedContainerGroup: {},
             containers: [],
-            deliveryType: {},
+            //deliveryType: {},
             carriers: [],
             containerOptions: [],
             typeOptions: ["FCL", "LCL"],
-            deliveryTypeOptions: {},
+            deliveryTypeOptions: [],
             directionOptions: {},
             originPortOptions: {},
             destinationPortOptions: {},
@@ -1739,7 +1753,12 @@ export default {
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
             component.priceLevelOptions = component.datalists.price_levels;
-            component.deliveryTypeOptions = component.datalists.delivery_types;
+            component.datalists.delivery_types.forEach(function (dtype){
+                if(!dtype.name.includes("Door")){
+                    component.deliveryTypeOptions.push(dtype);
+                }
+            })
+            component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
             component.searchRequest.originCharges =
                 component.datalists.company_user.origincharge == null
@@ -1754,15 +1773,15 @@ export default {
         },
 
         fillInitialFields(requestType) {
-            let component = this;
-
+            let component = this; 
+            
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
-                this.deliveryType = this.deliveryTypeOptions[0];
+                //this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
-                this.deliveryType = this.searchData.delivery_type;
+                //this.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.originPorts = this.searchData.origin_ports;
                 this.searchRequest.destinationPorts = this.searchData.destination_ports;
@@ -1775,9 +1794,19 @@ export default {
                     this.searchData.end_date + "T01:00:00";
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
+                this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                this.searchRequest.carriers = this.searchData.carriers;
+                if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
+                    console.log(this.searchData.carriers.length, this.datalists.carriers.length);
+                    this.allCarriers = false;
+                    this.searchRequest.carriers = this.searchData.carriers;
+                    component.searchData.carriers.forEach(function (carrier) {
+                        component.carriers.push(carrier);
+                    });
+                }else{
+                    this.searchRequest.carriers = this.datalists.carriers;
+                }
                 this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
                     this.searchData.origin_charges == 0 ? false : true;
@@ -1792,6 +1821,7 @@ export default {
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();
+                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
@@ -1803,6 +1833,7 @@ export default {
                 } else {
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
+                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
                 }
@@ -1810,7 +1841,7 @@ export default {
                     this.searchRequest.direction = this.quoteData.direction_id;
                 }
                 this.searchRequest.type = this.quoteData.type;
-                this.deliveryType = this.quoteData.delivery_type;
+                //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.originPorts = this.quoteData.origin_ports;
                 this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
@@ -1826,6 +1857,12 @@ export default {
                 this.requestSearch();
             }
 
+            if((this.searchRequest.company != null && this.searchRequest.company != '') || 
+                (this.searchRequest.contact != null && this.searchRequest.contact != '') || 
+                (this.searchRequest.pricelevel != null && this.searchRequest.pricelevel != '')){
+                    this.additionalVisible = true;
+                }
+                
             this.loaded = true;
         },
 
@@ -1833,12 +1870,8 @@ export default {
             this.searching = true;
             this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
             this.searchRequest.containers = this.containers;
-            this.searchRequest.deliveryType = this.deliveryType;
+            //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
-            this.searchRequest.harbors = this.datalists.harbors;
-            this.searchRequest.surcharges = this.datalists.surcharges;
-            this.searchRequest.currency = this.datalists.currency;
-            this.searchRequest.calculation_type = this.datalists.calculation_type;
             this.errorsExist = false;
         },
 
@@ -1881,6 +1914,7 @@ export default {
                 dismissible: true,
             });
         },
+        
         contracButtonPressed() {
             let data = {
                 //stepOne contract
@@ -1956,7 +1990,7 @@ export default {
             let component = this;
             let dlist = this.datalists;
 
-            if (component.searchRequest.company != null) {
+            if (component.searchRequest.company != null && component.searchRequest.company != '') {
                 component.contactOptions = [];
 
                 dlist.contacts.forEach(function (contact) {
@@ -1969,6 +2003,45 @@ export default {
                 component.companyChosen = true;
             } else {
                 component.companyChosen = false;
+            }
+        },
+
+        setPriceLevels() {
+            let component = this;
+            let dlist = this.datalists;
+            let prices = [];
+            
+            component.priceLevelOptions = [];
+
+            if (component.searchRequest.company != null) {
+                dlist.company_prices.forEach(function (comprice) {
+                    prices.push(comprice.price_id);
+                    if(component.searchRequest.company.id == comprice.company_id){
+                        dlist.price_levels.forEach(function (price) {
+                            if ( price.id == comprice.price_id && !component.priceLevelOptions.includes(price)) {
+                                component.priceLevelOptions.push(price);
+                            }
+                        });
+                    }
+                });
+
+                dlist.price_levels.forEach(function (price) {
+                    if(!prices.includes(price.id) && !component.priceLevelOptions.includes(price)){
+                        component.priceLevelOptions.push(price);
+                    }
+                });
+            } else {
+                let prices = [];
+
+                dlist.company_prices.forEach(function (comprice) {
+                    prices.push(comprice.price_id);
+                });
+
+                dlist.price_levels.forEach(function (price) {
+                    if(!prices.includes(price.id)){
+                        component.priceLevelOptions.push(price);
+                    }
+                });
             }
         },
 
@@ -1993,7 +2066,7 @@ export default {
 
         checkSearchType() {
             if (this.searchRequest.type == "LCL") {
-                window.location = `/v2/quotes/search`;
+                window.location = `/v2/quotes/search?opt=1`;
             }
         },
 
@@ -2088,7 +2161,7 @@ export default {
         },
     },
     watch: {
-        deliveryType: function () {
+        /**deliveryType: function () {
             if (this.deliveryType.id == 1) {
                 this.ptdActive = false;
                 this.dtpActive = false;
@@ -2120,7 +2193,7 @@ export default {
                 this.setOriginAddressMode();
                 return;
             }
-        },
+        },**/
 
         selectedContainerGroup: function () {
             let component = this;
