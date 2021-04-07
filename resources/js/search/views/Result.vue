@@ -1,11 +1,11 @@
 <template>
-    <div class="pr-5 pl-5">
+    <div class="container-cards" v-if="loaded">
         
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
-                <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
-                <div v-if="false" class="d-flex filter-search">
+                <h2 class="mr-5 t-recent">results found: <b>{{finalRates.length}}</b></h2>
+                <div class="d-flex filter-search">
                     <b>filter by:</b>
                     <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
                             <multiselect
@@ -13,12 +13,17 @@
                                 :multiple="false"
                                 :close-on-select="true"
                                 :clear-on-select="false"
+                                :hide-selected="true"
                                 :show-labels="false"
-                                :options="optionsFilter"
-                                placeholder="Select Filter"
+                                :options="filterOptions"
+                                placeholder="Carrier"
                                 class="s-input no-select-style "
+                                @input="filterCarriers"
                             >
                             </multiselect>
+                            <button v-if="filterBy != '' && filterBy != null" type="button" class="close" aria-label="Close" @click="filterBy = '', filterCarriers()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
                     </div>
                 </div>
@@ -28,9 +33,29 @@
 
                 <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
                 
-                <b-button b-button variant="primary" @click="createQuote">{{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}</b-button>
+                <b-button 
+                    v-if="!creatingQuote" 
+                    b-button variant="primary" 
+                    @click="createQuote">
+                        {{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}
+                </b-button>
+
+                <b-button v-else b-button variant="primary">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </b-button>
 
             </div>
+        </div>
+        <!-- FIN FILTERS -->
+
+        <div
+            v-if="noRatesAdded"
+            class="alert alert-warning"
+            role="alert"
+        >
+            Please select at least one Rate to add
         </div>
 
         <!-- HEADER FCL -->
@@ -49,6 +74,7 @@
             </div>
 
         </div>
+        <!-- FIN HEADER FCL -->
 
         <!-- HEADER LCL -->
         <div class="row mt-4 mb-4 result-header" v-if="false">
@@ -61,9 +87,10 @@
             </div>
 
         </div>
+        <!-- FIN HEADER LCL -->
 
         <!-- RESULTS -->
-        <div v-if="rates.length != 0" class="row" id="top-results">
+        <div v-if="finalRates.length != 0" class="row" id="top-results">
 
             <!-- LCL CARD -->
             <div class="col-12 mb-4" v-if="false">
@@ -147,7 +174,7 @@
                                     <!-- VALIDITY -->
                                     <div class="d-flex align-items-center">
                                         <p class="mr-4 mb-0"><b>Vality:</b> 2020-20-20 / 2020-20-20</p>
-                                        <a href="#">download contract</a>
+                                        <a v-if="false" href="#">download contract</a>
                                     </div>
 
                                     <!-- OPTIONS -->
@@ -229,13 +256,13 @@
             <!-- FCL CARD -->
             <div 
                 class="col-12 mb-4" 
-                v-for="(rate,key) in rates"
+                v-for="(rate,key) in finalRates"
                 :key="key"
             >
 
                 <div class="result-search">
 
-                    <!-- CONTENT MAIN CARD -->
+                    <!-- INFORMACION DE TARIFA -->
                     <div class="row">
 
                        <!-- CARRIER -->
@@ -245,20 +272,22 @@
                                 alt="logo" 
                                 width="115px">
                         </div>
+                        <!-- FIN CARRIER -->
 
-                        <!-- INFO CARD -->
+                        <!-- INFORMACION PRINCIPAL -->
                         <div class="row col-12 col-lg-8 margin-res">
 
                             <!-- CONTRACT NAME -->
                             <div class="col-12">
                                 <h6 class="mt-4 mb-5 contract-title">{{rate.contract.name}}</h6>
                             </div>
+                            <!-- FIN CONTRACT NAME -->
 
-                            <!-- INFO AND PRICE -->
+                            <!-- RUTA Y PRECIOS -->
                             <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
 
-                                <!-- INFO -->
-                                <div class="col-12 col-lg-6 d-flex transi-time-res">
+                                <!-- RUTA -->
+                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
 
                                     <!-- ORIGIN -->
                                     <div class="origin mr-4">
@@ -268,19 +297,19 @@
 
                                     </div>
 
-                                    <!-- TT -->
-                                    <div class="via d-flex flex-column justify-content-center align-items-center">
+                                    <!-- LINEA DE RUTA -->
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
 
-                                        <div class="direction-form route-indirect tt">
+                                        <div class="direction-form">
 
-                                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px">
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                                            <div class="line-route-direct">
-                                            <div class="circle mr-2"></div>
-                                            <div class="line"></div>
-                                            <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                                            <div class="line line-blue"></div>
-                                            <div class="circle fill-circle ml-2"></div>
+                                            <div class="route-indirect d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                                <div class="line line-blue"></div>
+                                                <div class="circle fill-circle ml-2"></div>
                                             </div>
 
                                         </div>
@@ -288,14 +317,15 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
-                                            <p><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p>
+                                            <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.service == 1 ? "Direct" : "Transhipment" }}</b>
+                                            <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.via ? rate.transit_time.via : ""}}</b>
+                                            <p v-if="rate.transit_time != null && rate.transit_time.transit_time != null"><b>TT:</b> {{rate.transit_time.transit_time}}</p>
 
                                         </div>
 
                                     </div>
 
-                                    <!-- DESTINATION -->
+                                    <!-- DESTINO -->
                                     <div class="destination ml-4">
 
                                         <span>destination</span>
@@ -305,28 +335,85 @@
 
                                 </div>
 
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p>{{rate.port_origin.display_name}}</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p>{{rate.port_destiny.display_name}}</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b></li>
+                                                <li><p ><b>TT:</b> {{rate.transit_time ? rate.transit_time.transit_time : "None"}}</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
                                 <!-- PRICES -->
                                 <div class="col-12 col-lg-6 ">
-                                    <div class="row card-amount">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
                                         <div 
-                                            class="col-12 col-lg-2 pl-0 pr-0 prices-card-res"
+                                            class="col-2 pl-0 pr-0 prices-card-res"
+                                            v-for="(container,requestKey) in request.containers"
+                                            :key="requestKey"    
+                                        >
+                                            <p><b>{{container.code}}</b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <div class="row card-amount card-amount__res">
+                                        <div 
+                                            class="col-2 pl-0 pr-0 prices-card-res"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
-                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code].toFixed(2) : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
+                                            <p><b style="font-size:16px">{{ rate.totals_with_markups ? rate.totals_with_markups['C'+container.code] : rate.totals['C'+container.code] }} <span style="font-size: 10px">{{rate.client_currency.alphacode}}</span></b></p>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
 
-                            <!-- OPTIONS -->
+                            <!-- OPCIONES E INFORMACION EXTRA -->
                             <div class="col-12 mt-3 mb-3 result-action">
 
                                 <div class="d-flex align-items-center">
 
                                     <p class="mr-4 mb-0"><b>Validity:</b> {{rate.contract.validity + " / " + rate.contract.expire}}</p>
-                                    <a href="#">download contract</a>
+                                    <a v-if="false" href="#">download contract</a>
 
                                 </div>
 
@@ -359,11 +446,15 @@
                                     <b>add to quote</b>
                                 </b-form-checkbox>
                         </div>
+                        <!-- FIN ADD QUOTE BTN -->
 
-                   </div>
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
 
-                   <div class="row">
+                    <!-- DETALLES DE TARIFA -->
+                    <div class="row">
                    
+                        <!-- TARIFAS -->
                         <b-collapse :id="'details_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
                             <div 
                                 v-for="(chargeArray,chargeType) in rate.charges"
@@ -375,14 +466,14 @@
 
                                     <b-thead>
                                         <b-tr>
-                                            <b-th>Charge</b-th>
-                                            <b-th>Detail</b-th>
-                                            <b-th></b-th>
-                                            <b-th></b-th>
+                                            <b-th style="width:300px">Charge</b-th>
+                                            <b-th style="width:325px">Detail</b-th>
+                                            <!-- <b-th></b-th>
+                                            <b-th></b-th> -->
                                             <b-th
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
-                                                style="padding: 0.75rem !important"
+                                                style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
                                             >
 
                                             {{container.code}}
@@ -397,8 +488,8 @@
                                         >
                                             <b-td><b>{{ charge.surcharge.name }}</b></b-td>
                                             <b-td>{{ charge.calculationtype.name }}</b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
+                                            <!-- <b-td></b-td>
+                                            <b-td></b-td> -->
                                             <b-td
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
@@ -408,33 +499,29 @@
                                             <b v-if="chargeType == 'Freight'">{{ rate.currency.alphacode }}</b>
                                             <b v-else-if="charge.joint_as == 'client_currency'">{{ charge.client_currency.alphacode }}</b>
                                             <b v-else-if="charge.joint_as != 'client_currency'">{{ charge.currency.alphacode }}</b>
-                                            
-                                            <!--
-                                                ANTES
-                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? rate.client_currency.alphacode : charge.currency.alphacode}}</b> 
-                                                CAMBIO
-                                            <b>{{ charge.joint_as=='client_currency' && chargeType != 'Freight' ? charge.client_currency.alphacode : rate.currency.alphacode}}</b>
-                                            -->
                                             <b v-if="charge.container_markups != undefined">{{ charge.joint_as=='client_currency' ? charge.totals_with_markups['C'+container.code] : charge.containers_with_markups['C'+container.code] }}</b>
                                             <b v-else >{{ charge.joint_as=='client_currency' ? charge.containers_client_currency['C'+container.code] : charge.containers['C'+container.code] }}</b>
                                             </b-td>
                                         </b-tr>
                 
                                         <b-tr>
+                                            <!-- <b-td></b-td>
                                             <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td></b-td>
-                                            <b-td><b>Total {{ chargeType }}</b></b-td>
+                                            <b-td></b-td> -->
+                                            <b-td colspan="2" style="text-align: right"><b>Total {{ chargeType }}</b></b-td>
                                             <b-td 
                                                 v-for="(container,contKey) in request.containers"
                                                 :key="contKey"
-                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code].toFixed(2) }}</b></b-td>
+                                            ><b>{{ chargeType == 'Freight' ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]['C'+container.code] }}</b></b-td>
                                         </b-tr>
                                     </b-tbody>
                                 
                                 </b-table-simple>
                             </div>
                         </b-collapse>
+                        <!-- FIN TARIFAS -->
+
+                        <!-- REMARKS -->
                         <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
 
                                 <h5><b>Remarks</b></h5>
@@ -444,11 +531,839 @@
                                 </b-card>
                             
                         </b-collapse>
+                        <!-- FIN REMARKS -->
                    
-                   </div>
+                    </div>
+                    <!-- FIN DETALLES DE TARIFA -->
 
                 </div>
             </div>
+
+            <!-- TARJETA CMA -->
+            <div class="col-12 mb-4" v-if="false"> 
+
+                <div class="result-search">
+
+                    <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
+
+                    <!-- INFORMACION DE TARIFA -->
+                    <div class="row">
+
+                       <!-- CARRIER -->
+                        <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                            <img 
+                                src="/images/cma.png"  
+                                alt="logo" 
+                                width="115px">
+                        </div>
+                        <!-- FIN CARRIER -->
+
+                        <!-- INFORMACION PRINCIPAL -->
+                        <div class="row col-12 col-lg-8 margin-res">
+
+                            <!-- CONTRACT NAME -->
+                            <div class="col-12">
+                                <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
+                            </div>
+                            <!-- FIN CONTRACT NAME -->
+
+                            <!-- RUTA Y PRECIOS -->
+                            <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
+
+                                <!-- RUTA -->
+                                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
+
+                                    <!-- ORGIEN -->
+                                    <div class="origin mr-4">
+
+                                        <span>origin</span>
+                                        <p class="mb-0">España</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN ORGIEN -->
+
+                                    <!-- LINEA DE RUTA -->
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
+
+                                        <div class="direction-form">
+
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
+
+                                            <div class="route-indirect d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                                                <div class="line line-blue"></div>
+                                                <div class="circle fill-circle ml-2"></div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="direction-desc mt-2">
+
+                                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                                            <p><b>Vessel:</b> Gordito</p>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- FIN LINEA DE RUTA -->
+
+                                    <!-- DESTINO -->
+                                    <div class="destination ml-4">
+
+                                        <span>destination</span>
+                                        <p class="mb-0">Argentina</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN DESTINO -->
+
+                                </div>
+                                <!-- FIN RUTA -->
+
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p class="mb-1">España, Barcelona</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p class="mb-1">Argentina, Buenos Aires</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><p class="mb-1"><b>Transit Time:</b> 45 Days</p></li>
+                                                <li><p><b>Vessel:</b> Gordito</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
+                                <!-- PRECIO -->
+                                <div class="col-12 col-lg-6">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>20DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45NOR</b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <!-- PRECIO -->
+                                    <div class="row card-amount card-amount__res">
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO -->
+
+                                </div>
+                                <!-- FIN PRECIO -->
+
+
+                            </div>
+                            <!-- RUTA Y PRECIOS -->
+
+                            <!-- OPCIONES E INFORMACION EXTRA -->
+                            <div class="col-12 mt-3 mb-3 result-action">
+
+                                <div class="d-flex align-items-center">
+                                    
+                                    <a href="#0" style="color: #006BFA"><b-icon icon="check-circle-fill"></b-icon> CMA CGM My PRICES</a>
+                                    <p class="ml-4 mb-0"><b>Validity:</b> 2020-08-02 / 2020-05-09</p>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.schedules
+                                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.detailed
+                                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                </div>
+
+                            </div>
+                            <!-- FIN OPCIONES E INFORMACION EXTRA -->
+
+                        </div>
+                        <!-- FIN INFORMACION PRINCIPAL -->
+
+                        <!-- ADD QUOTE BTN -->
+                        <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
+                            <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                                <b>add to quote</b>
+                            </b-form-checkbox>
+                        </div>
+
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
+
+                    <!-- INFORMACION DESPLEGADA -->
+                    <div class="row mr-0 ml-0">
+                   
+                        <!-- DETALLES DE TARIFA -->
+                        <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                            <div>
+                                <h5><b>Freight</b></h5>
+
+                                <b-table-simple hover small responsive class="sc-table">
+
+                                    <b-thead>
+                                        <b-tr>
+                                            <b-th>Charge</b-th>
+                                            <b-th>Detail</b-th>
+                                            <b-th></b-th>
+                                            <b-th></b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">45DV</b-th>
+                                        </b-tr>
+                                    </b-thead>
+
+                                    <b-tbody>
+                                        <b-tr>
+                                            <b-td><b>Ocean Freight</b></b-td>
+                                            <b-td>Per Container</b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                        </b-tr>
+                
+                                        <b-tr>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><b>Total Freight</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                        </b-tr>
+                                    </b-tbody>
+                                
+                                </b-table-simple>
+                            </div>
+                        </b-collapse>
+                        <!-- FIN DETALLES DE TARIFA-->
+
+                        <!-- SCHEDULES -->
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule">
+
+                                <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+                                
+                                <div class="row">
+                                     
+                                    <!-- INFOMACION DE LA API -->
+                                    <div class="col-lg-6 info-schedule" style="border-right: 1px solid #eee">
+
+                                        <div class="row schedule">
+
+                                            <!-- INFORMACION DEL BARCO -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="hdd-rack"></b-icon> Vessel Information</h5>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">IMO</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN INFORMACION DEL BARCO -->
+
+                                            <!-- DEADLINE -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="stopwatch"></b-icon> Deadlines</h5>
+                                        
+                                                <div class="row mt-4">
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">CY</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">VGM</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN DEADLINE -->
+
+                                        </div>
+
+                                    </div>
+                                    <!-- FIN INFOMACION DE LA API -->
+
+                                    <!-- RUTA -->
+                                    <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
+
+                                        <!-- ORIGEN -->
+                                        <div class="origin mr-4">
+
+                                            <span>origin</span>
+                                            <p class="mb-0">España</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN ORIGEN -->
+
+                                        <!-- TT -->
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
+
+                                            <div class="direction-form">
+
+                                                <img src="/images/logo-ship-blue.svg" class="img-indirect" alt="bote">
+
+                                                <div class="route-indirect d-flex align-items-center">
+                                                    <div class="circle mr-2"></div>
+                                                    <div class="line"></div>
+                                                    <b-button id="popover-direction" class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"></b-button>
+                                                    <b-popover target="popover-direction" triggers="hover" placement="top">
+                                                        <template #title>Direction</template>
+                                                        <ul>
+                                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                                            <li>Madrid - China: 2012/20/20</li>
+                                                            <li>China - Chile: 2012/20/20</li>
+                                                        </ul>
+                                                    </b-popover>
+                                                    <div class="line line-blue"></div>
+                                                    <div class="circle fill-circle ml-2"></div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="direction-desc">
+
+                                                <p class="mb-0"><b>TT:</b> 45 Days</p>
+                                                <p><b>Service</b> Direct</p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DESTINATION -->
+                                        <div class="destination ml-4">
+
+                                            <span>destination</span>
+                                            <p class="mb-0">Argentina</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN DESTINATION -->
+
+                                    </div>
+                                    <!-- FIN RUTA -->
+
+                                    <!-- RUTA RESPONSIVA -->
+                                    <div class="col-12 d-lg-none">
+                                        <h6>Transbordos</h6>
+                                        <ul>
+                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                            <li>Madrid - China: 2012/20/20</li>
+                                            <li>China - Chile: 2012/20/20</li>
+                                        </ul>
+                                    </div>
+                                    <!-- FIN RUTA RESPONSIVA -->
+                                </div>
+                            
+                        </b-collapse>
+                        <!-- FIN SCHEDULES -->
+                    </div>
+                    <!-- FIN INFORMACION DESPLEGADA -->
+
+                </div>
+
+            </div>
+            <!-- FIN TARJETA CMA -->
+
+            <!-- TARJETA MAERKS -->
+            <div class="col-12 mb-4" v-if="false">
+
+                <div class="result-search">
+
+                    <div class="banda-top maerks"><span>MAERSK PRICES</span></div>
+
+                    <!-- INFORMACION DE TARIFA -->
+                    <div class="row">
+
+                       <!-- CARRIER -->
+                        <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+                            <img 
+                                src="/images/maersk.png"  
+                                alt="logo" 
+                                width="115px">
+                        </div>
+                        <!-- FIN CARRIER -->
+
+                        <!-- INFORMACION PRINCIPAL -->
+                        <div class="row col-12 col-lg-8 margin-res">
+
+                            <!-- CONTRACT NAME -->
+                            <div class="col-12">
+                                <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
+                            </div>
+                            <!-- FIN CONTRACT NAME -->
+
+                            <!-- RUTA Y PRECIOS -->
+                            <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
+
+                                <!-- RUTA -->
+                                <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center" style="border-bottom: 1px solid #eeeeee">
+
+                                    <!-- ORGIEN -->
+                                    <div class="origin mr-4">
+
+                                        <span>origin</span>
+                                        <p class="mb-0">España</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN ORGIEN -->
+
+                                    <!-- LINEA DE RUTA -->
+                                    <div class="d-flex flex-column justify-content-center align-items-center">
+
+                                        <div class="direction-form">
+
+                                            <img src="/images/logo-ship-blue.svg" alt="bote">
+
+                                            <div class="route-direct d-flex align-items-center">
+                                                <div class="circle mr-2"></div>
+                                                <div class="line"></div>
+                                                <div class="circle fill-circle ml-2"></div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="direction-desc mt-2">
+
+                                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                                            <p><b>Vessel:</b> Gordito</p>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- FIN LINEA DE RUTA -->
+
+                                    <!-- DESTINO -->
+                                    <div class="destination ml-4">
+
+                                        <span>destination</span>
+                                        <p class="mb-0">Argentina</p>
+                                        <p>08 Agos, 2020</p>
+
+                                    </div>
+                                    <!-- FIN DESTINO -->
+
+                                </div>
+                                <!-- FIN RUTA -->
+
+                                <!-- RUTA RESPONSIVA -->
+                                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
+                                    
+                                    <!-- DESTINOS -->
+                                    <div class="col-sm-6">
+                                        
+                                        <!-- ORGIEN -->
+                                        <div class="origin mb-3">
+
+                                            <span>origin</span>
+                                            <p class="mb-1">España, Barcelona</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN ORGIEN -->
+
+                                        <!-- DESTINO -->
+                                        <div class="destination align-items-start mb-3">
+
+                                            <span>destination</span>
+                                            <p class="mb-1">Argentina, Buenos Aires</p>
+                                            <p>08 Agos, 2020</p>
+
+                                        </div>
+                                        <!-- FIN DESTINO -->
+                                    </div>
+                                    <!-- FIN DESTINOS -->
+
+                                    <!-- TRANSIT TIME -->
+                                    <div class="col-sm-6">
+                                        <!-- LINEA DE RUTA -->
+                                        <div class="via">
+
+                                            <ul class="pl-0" style="list-style: none">
+                                                <li><p class="mb-1"><b>Transit Time:</b> 45 Days</p></li>
+                                                <li><p><b>Vessel:</b> Gordito</p></li>
+                                            </ul>
+
+                                        </div>
+                                        <!-- FIN LINEA DE RUTA -->
+                                    </div>
+                                    <!-- FIN TRANSIT TIME -->
+
+                                </div>
+                                <!-- FIN RUTA RESPONSIVA -->
+
+                                <!-- PRECIO -->
+                                <div class="col-12 col-lg-6">
+
+                                    <!-- PRECIO RESPONSIVE -->
+                                    <div class="row card-amount card-amount-header__res" >
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>20DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40DV</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>40HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45HC</b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b>45NOR</b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO RESPONSIVE -->
+
+                                    <!-- PRECIO -->
+                                    <div class="row card-amount card-amount__res">
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                        <div class="col-2 pl-0 pr-0 prices-card-res">
+                                            <p><b style="font-size:16px">200 <span style="font-size: 10px">USD</span></b></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIN PRECIO -->
+
+                                </div>
+                                <!-- FIN PRECIO -->
+
+                            </div>
+                            <!-- RUTA Y PRECIOS -->
+
+                            <!-- OPCIONES E INFORMACION EXTRA -->
+                            <div class="col-12 mt-3 mb-3 result-action">
+
+                                <div class="result-action">
+                                    
+                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> guaranteed Price & loading</a>
+                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> two-way commitment</a>
+                                    <a href="#0" style="color: #071C4B"> T&C applicable</a>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.schedules
+                                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                    <b-button 
+                                        class="rs-btn"
+                                        v-b-toggle.detailed
+                                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon></b-button>
+                                </div>
+
+                            </div>
+                            <!-- FIN OPCIONES E INFORMACION EXTRA -->
+
+                        </div>
+                        <!-- FIN INFORMACION PRINCIPAL -->
+
+                        <!-- ADD QUOTE BTN -->
+                        <div class="col-12 col-lg-2 d-flex flex-column justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
+                            <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                                <b>add to quote</b>
+                            </b-form-checkbox>
+                            <a href="#" class="btn-add-quote btn-book">
+                                <b>book</b>
+                            </a>
+                        </div>
+
+                    </div>
+                    <!-- FIN INFORMACION DE TARIFA -->
+
+                    <!-- INFORMACION DESPLEGADA -->
+                    <div class="row mr-0 ml-0">
+                   
+                        <!-- DETALLES DE TARIFA -->
+                        <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
+                            <div>
+                                <h5><b>Freight</b></h5>
+
+                                <b-table-simple hover small responsive class="sc-table">
+
+                                    <b-thead>
+                                        <b-tr>
+                                            <b-th>Charge</b-th>
+                                            <b-th>Detail</b-th>
+                                            <b-th></b-th>
+                                            <b-th></b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">20DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">40DV</b-th>
+                                            <b-th style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important">45DV</b-th>
+                                        </b-tr>
+                                    </b-thead>
+
+                                    <b-tbody>
+                                        <b-tr>
+                                            <b-td><b>Ocean Freight</b></b-td>
+                                            <b-td>Per Container</b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                            <b-td><p>200 <b>USD</b></p></b-td>
+                                        </b-tr>
+                
+                                        <b-tr>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td></b-td>
+                                            <b-td><b>Total Freight</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                            <b-td><b>USD 200</b></b-td>
+                                        </b-tr>
+                                    </b-tbody>
+                                
+                                </b-table-simple>
+                            </div>
+                        </b-collapse>
+                        <!-- FIN DETALLES DE TARIFA-->
+
+                        <!-- SCHEDULES -->
+                        <b-collapse id="schedules" class="pt-5 pb-5 pl-5 pr-5 col-12 schedule" style="background: #fbfbfb">
+
+                                <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+                                
+                                <div class="row">
+                                     
+                                    <!-- INFOMACION DE LA API -->
+                                    <div class="col-lg-6 info-schedule" style="border-right: 1px solid #eee">
+
+                                        <div class="row schedule">
+
+                                            <!-- INFORMACION DEL BARCO -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="hdd-rack"></b-icon> Vessel Information</h5>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+                                                        <h5 class="sub-title-schedule">IMO</h5>
+                                                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN INFORMACION DEL BARCO -->
+
+                                            <!-- DEADLINE -->
+                                            <div class="col-lg-6">
+
+                                                <h5 class="title-schedule"><b-icon icon="stopwatch"></b-icon> Deadlines</h5>
+                                        
+                                                <div class="row mt-4">
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">CY</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">SI Non-AMS</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">VGM</h5>
+                                                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+
+                                                    </div>
+                                                    <div class="col-12 col-sm-6">
+
+                                                        <h5 class="sub-title-schedule">SI AMS</h5>
+                                                        <p class="text-schedule"><b>N/A</b></p>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- FIN DEADLINE -->
+
+                                        </div>
+
+                                    </div>
+                                    <!-- FIN INFOMACION DE LA API -->
+
+                                    <!-- RUTA -->
+                                    <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
+
+                                        <!-- ORIGEN -->
+                                        <div class="origin mr-4">
+
+                                            <span>origin</span>
+                                            <p class="mb-0">España</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN ORIGEN -->
+
+                                        <!-- TT -->
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
+
+                                            <div class="direction-form">
+
+                                                <img src="/images/logo-ship-blue.svg" class="img-direct" alt="bote">
+
+                                                <div class="route-direct d-flex align-items-center">
+                                                    <div class="circle mr-2"></div>
+                                                    <div class="line"></div>
+                                                    <div class="circle fill-circle ml-2"></div>
+                                                </div>
+
+                                            </div>
+
+                                        
+                                            <div class="direction-desc">
+
+                                                <p class="mb-0"><b>TT:</b> 45 Days</p>
+                                                <p><b>Service</b> Direct</p>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!-- DESTINATION -->
+                                        <div class="destination ml-4">
+
+                                            <span>destination</span>
+                                            <p class="mb-0">Argentina</p>
+                                            <p>20 Sep, 2020 ( Departure ) 20:00</p>
+
+                                        </div>
+                                        <!-- FIN DESTINATION -->
+
+                                    </div>
+                                    <!-- FIN RUTA -->
+
+                                    <!-- RUTA RESPONSIVA -->
+                                    <div class="col-12 d-lg-none">
+                                        <h6>Transbordos</h6>
+                                        <ul>
+                                            <li>Argentina - Madrid: 2012/20/20</li>
+                                            <li>Madrid - China: 2012/20/20</li>
+                                            <li>China - Chile: 2012/20/20</li>
+                                        </ul>
+                                    </div>
+                                    <!-- FIN RUTA RESPONSIVA -->
+                                </div>
+                            
+                        </b-collapse>
+                        <!-- FIN SCHEDULES -->
+                    </div>
+                    <!-- FIN INFORMACION DESPLEGADA -->
+
+                </div>
+            </div>
+            <!-- FIN TARJETA MAERKS -->
 
         </div>
 
@@ -461,19 +1376,22 @@
                     <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center"><b>carrier</b></div>
                     <div class="col-12 col-sm-10 btn-action-sticky">
 
-                        <b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>
+                        <b-button v-b-modal.add-contract class="btn-add-contract-fixed mr-4" style="border: none !important; color: #0072fc; font-weight: bolder">+ Add Contract</b-button>
                         
-                        <b-button @click="createQuote" style="color:#0072FC; font-weight: bolder; border: 2px solid #0072FC !important">Create Quote</b-button>
+                        <b-button 
+                            v-if="!creatingQuote" 
+                            @click="createQuote" 
+                            style="color:#0072FC; font-weight: bolder; border: 2px solid #0072FC !important"
+                        >{{ requestData.requested == 0 ? 'Create Quote' : 'Duplicate Quote'}}
+                        </b-button>
 
-                    </div>
-                    <!-- <div 
-                        class="col-12 col-sm-2 d-flex justify-content-end result-header"
-                        v-for="(container,requestKey) in request.containers"
-                        :key="requestKey"
-                    ><b>
-                        {{container.code}}
-                    </b></div> -->
-                    
+                        <b-button v-else b-button variant="primary">
+                            <div class="spinner-border text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </b-button>
+
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -502,6 +1420,7 @@ export default {
     },
     data() {
         return {
+            loaded: false,
             actions: actions,
             dropzoneOptions: {
 					url: `/example`,
@@ -511,6 +1430,13 @@ export default {
 					addRemoveLinks: true,
 				},
             requestData: {},
+            finalRates: [],
+            creatingQuote: false,
+            errorsExist: false,
+            responseErrors: {},
+            noRatesAdded: false,
+            filterBy: '',
+            filterOptions: [],
             //GENE DEFINED
             checked1: false,
             checked2: false,
@@ -533,7 +1459,6 @@ export default {
             typeContract: '',
             calculationType: '',
             dataSurcharger: [],
-            filterBy: 'LOWEST PRICE',
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
@@ -541,7 +1466,6 @@ export default {
             optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
             optionsTypeContract: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
             optionsCalculationType: ['Calculation 1', 'Calculation 2', 'Calculation 3', 'Calculation 4'],
-            optionsFilter: ['LOWEST PRICE', 'HIGH PRICE', 'LAST DATE', 'OLD DATE'],
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -562,115 +1486,12 @@ export default {
     },
     methods: {
 
-        /* deleteSurcharger(index){
-            this.dataSurcharger.splice(index, 1);
-            //console.log(this.dataSurcharger);
-        },
-
-        addSurcharger() {
-
-            if(this.typeContract == "" || this.calculationType == "" || this.currencySurcharge == "" ) {
-                this.invalidSurcharger = true;
-                return
-            }
-
-            this.invalidSurcharger = false;
-
-            var surcharge = {
-                type: this.typeContract,
-                calculation: this.calculationType,
-                currency: this.currencySurcharge,
-                amount: this.amount
-            };
-
-            this.dataSurcharger.push(surcharge);
-            
-            this.typeContract = ""; this.calculationType = ""; this.currencySurcharge = ""; this.amount = "";
-        },
-
-        //FILES OPTIONS Modal
-        setFiles(data){
-				let file = {};
-				let url = '';
-				let vcomponent = this;
-				let i = 0;
-
-				let url_tags = document.getElementsByClassName("img-link");
-
-				data.forEach(function(media){
-					vcomponent.$refs.myVueDropzone.manuallyAddFile(media, media.url);
-					url_tags[i].setAttribute('href', media.url);
-					i+=1;
-				});	
-        },
-            
-        removeThisFile(file){
-            let id = this.$route.params.id;
-            
-            this.actions.removefile(id, { 'id': file.id })
-            .then( ( response ) => {
-            })
-            .catch(( data ) => {
-
-            });
-        }, */
-
-        /* nextStep() {
-            if ( this.stepOne ) {
-
-                if (this.reference == '' || this.carrier == '' || this.valueEq == '' || this.direction == '' || this.vdata == '') {
-                    this.invalidInput = true;
-                    return
-                }
-                
-                this.invalidInput = false;
-                this.stepOne = false; this.stepTwo = !this.stepTwo; 
-                this.isCompleteTwo = !this.isCompleteTwo;
-                return
-            } else if ( this.stepTwo ) {
-
-                if (this.origin == '' || this.destination == '' || this.carrier == '' || this.currency == '' || this.equipType == '') {
-                    this.invalidInput = true;
-                    return
-                }
-
-                this.invalidInput = false;
-                this.stepTwo = false; this.stepThree = !this.stepThree;
-                this.isCompleteThree = !this.isCompleteThree;
-                return
-            } else if ( this.stepThree ) {
-
-                this.invalidInput = false;
-                this.stepThree = false; this.stepFour = !this.stepFour;
-                this.isCompleteFour = !this.isCompleteFour;
-                return
-            }
-        },
-
-        backStep() {
-            if ( this.stepFour ) {
-                this.invalidInput = false;
-                this.stepFour = false; this.stepThree = !this.stepThree;
-                this.isCompleteFour = !this.isCompleteFour;
-                return
-            } else if ( this.stepThree ) {
-                this.invalidInput = false;
-                this.stepThree = false; this.stepTwo = !this.stepTwo;
-                this.isCompleteThree = !this.isCompleteThree;
-                return
-            } else if ( this.stepTwo ) {
-                this.invalidInput = false;
-                this.stepTwo =  false; this.stepOne = !this.stepOne;
-                this.isCompleteTwo = !this.isCompleteTwo;
-                return
-            }
-        }, */
-        
         createQuote() {
             let component = this;
             let ratesForQuote = [];
 
-            component.rates.forEach(function (rate){
+            component.creatingQuote = true;
+            component.finalRates.forEach(function (rate){
                 if(rate.addToQuote){
                     ratesForQuote.push(rate);
                 }
@@ -678,62 +1499,80 @@ export default {
 
             if(ratesForQuote.length == 0){
                 component.noRatesAdded = true;
+                component.creatingQuote = false;
+                setTimeout(function () {
+                    component.noRatesAdded = false;
+                }, 2000);
             }else{
                 if(component.requestData.requested == 0){
                     component.actions.quotes
-                        .create(ratesForQuote, this.$route)
+                        .create(ratesForQuote, component.$route)
                         .then ((response) => {
                             window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                            component.creatingQuote = false;
                         })
+                        .catch((error) => {
+                            if (error.status === 422) {
+                                component.responseErrors = error.data.errors;
+                                component.creatingQuote = false;
+                            }
+                        });
                 }else if(component.requestData.requested == 1){
                     component.actions.quotes
                         .specialduplicate(ratesForQuote)
                         .then ((response) => {
                             window.location.href = "/api/quote/" + response.data.data.id + "/edit";
+                            component.creatingQuote = false;
                         })
+                        .catch((error) => {
+                            if (error.status === 422) {
+                                component.responseErrors = error.data.errors;
+                                component.creatingQuote = false;
+                            }
+                        });
                 }
             }
         },
+
+        setFilters(){
+            let component = this;
+
+            component.rates.forEach(function (rate){
+                if(!component.filterOptions.includes(rate.carrier.name)){
+                    component.filterOptions.push(rate.carrier.name);
+                }
+            });
+        },
+
+        filterCarriers(){
+            let component = this;
+
+            component.finalRates = [];
+
+            if(component.filterBy != ''){
+                component.rates.forEach(function (rate){
+                    if(component.filterBy == rate.carrier.name){
+                        component.finalRates.push(rate);
+                    }
+                });
+            }else{
+                component.finalRates = component.rates;
+            }
+        },
     },
-    /* watch: {
-        valueEq: function() {
 
-            if (this.valueEq == 'DRY') {
-                this.items.splice({});
-                this.items.push({name: 'C20DV', placeholder: '20DV'}, { name: 'C40DV', placeholder: '40DV' }, { name: 'C40HC', placeholder: '40HC' }, { name: 'C45HC', placeholder: '45HC' }, { name: 'C40NOR', placeholder: '40NOR' }); 
-                return
-            }
-
-            if (this.valueEq == 'REEFER') {
-                this.items.splice({});
-                this.items.push({name: 'C20RF', placeholder: '20RF'}, { name: 'C40RF', placeholder: '40RF' }, { name: 'C40HCRF', placeholder: '40HCRF' }); 
-                return
-            }
-
-            if (this.valueEq == 'OPEN TOP') {
-                this.items.splice({});
-                this.items.push({name: 'C20OT', placeholder: '20OT'}, { name: 'C40OT', placeholder: '40OT' }); 
-                return
-            }
-
-            if (this.valueEq == 'FLAT RACK') {
-                this.items.splice({});
-                this.items.push({name: 'C20FR', placeholder: '20FR'}, { name: 'C40FR', placeholder: '40FR' }); 
-                return
-            }
-
-        }
-    }, */
     mounted(){
         let component = this;
 
         //console.log(component.datalists);
 
-        //console.log(component.rates);
-
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
         });
+
+        component.finalRates = component.rates;
+
+        component.setFilters();
 
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
@@ -743,7 +1582,9 @@ export default {
                 component.isActive = false;
             }
         }
-    }
+
+        this.loaded = true;
+    },
 }
 </script>
 

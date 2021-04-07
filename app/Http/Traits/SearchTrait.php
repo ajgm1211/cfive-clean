@@ -1086,4 +1086,42 @@ trait SearchTrait
 
         return($joint_charges);
     }
+
+    public function stringifyRateAmounts($rate)
+    {
+        if(isset($rate->totals_with_markups)){
+            $totals_with_markups_string = $rate->totals_with_markups;
+            foreach($totals_with_markups_string as $key => $total){
+                $totals_with_markups_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_with_markups = $totals_with_markups_string;
+        }
+
+        if(isset($rate->containers_with_markups)){
+            $containers_with_markups_string = $rate->containers_with_markups;
+            foreach($containers_with_markups_string as $key => $total){
+                $containers_with_markups_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->containers_with_markups = $totals_with_markups_string;
+        }
+
+        $totals_string = $rate->totals;
+        foreach($totals_string as $key => $total){
+            $totals_string[$key] = strval(isDecimal($total, true));
+        }
+
+        $rate->totals = $totals_string;
+
+        $by_type = $rate->charge_totals_by_type;
+        
+        foreach($by_type as $typeKey => $type){
+            foreach($type as $key => $total){
+                $by_type[$typeKey][$key] = strval(isDecimal($total, true));
+            }
+        }
+
+        $rate->charge_totals_by_type = $by_type;
+    }
 }

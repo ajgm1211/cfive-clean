@@ -327,6 +327,17 @@ Route::prefix('Importation')->group(function () {
     Route::get('FailedSurchargeFCDView/{id}/{ids}', 'ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
         ->middleware(['auth', 'role:administrator|data_entry']);
 
+    //editar surcharges fallidos por detalles y con opcion multiple
+
+    Route::post('ShMulSurcFaByFCL/', 'ImportationController@showSurchargeMultiplesPorDetalles')->name('Show.Multiples.Surc.por.detalles.Fcl')
+        ->middleware(['auth', 'role:administrator|data_entry']);
+
+    Route::post('LoMulSurchargeFaByFCL/', 'ImportationController@loadArrayEditMultSurcharge')->name('load.arr.Surcharge.por.detalles.Fcl')
+        ->middleware(['auth', 'role:administrator|data_entry']);
+
+    Route::post('StorMulSurcFaByFCL/', 'ImportationController@StoreFailsurchargeMultiplesByDetalls')->name('store.multi.Surcharge.fails')
+        ->middleware(['auth', 'role:administrator|data_entry']);
+
     // DownLoad Files
     Route::get('/DownLoadFiles/{id}', 'ImportationController@DowLoadFiles')->name('DownLoad.Files')->middleware(['auth']);
 
@@ -831,6 +842,7 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
     Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
     Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
     Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+    Route::get('duplicate/{id}', 'RemarkConditionsController@duplicate')->name('remarks.duplicate');
 });
 
 // User Configuration
