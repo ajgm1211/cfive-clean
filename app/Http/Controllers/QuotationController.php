@@ -201,9 +201,9 @@ class QuotationController extends Controller
 
     public function store(Request $request)
     {
-        $company_user = Auth::user('web')->worksAt();
+        $user = \Auth::user('web');
+        $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
-        $user = User::where('company_user_id', $company_user->id)->first();
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
@@ -226,7 +226,9 @@ class QuotationController extends Controller
             'type' => $search_data_ids['type'],
             'delivery_type' => $search_data_ids['deliveryType'],
             'user_id' => $user->id,
+            'direction_id' => $search_data_ids['direction'],
             'company_user_id' => $company_user->id,
+            'language_id' => $company_user->pdf_language,
             'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
@@ -237,11 +239,18 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'remarks_english' => $remarks,
             'direction_id' => $search_data_ids['direction'],
         ]);
 
         $quote = $quote->fresh();
+
+        if($quote->language_id == 1){
+            $quote->update(['remarks_english' => $remarks]);
+        }else if($quote->language_id == 2){
+            $quote->update(['remarks_spanish' => $remarks]);
+        }else if($quote->language_id == 3){
+            $quote->update(['remarks_portuguese' => $remarks]);
+        }
 
         foreach ($rate_data as $rate) {
 
@@ -439,6 +448,8 @@ class QuotationController extends Controller
     public function duplicate(QuoteV2 $quote)
     {
         $new_quote = $quote->duplicate();
+
+        $new_quote->update(['custom_quote_id' => null]);
 
         return new QuotationResource($new_quote);
     }
