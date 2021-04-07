@@ -1310,7 +1310,7 @@ class ImportationController extends Controller
                     if ($origin != $destiny) {
                         $exists_surcharge = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
                             ->where('typedestiny_id', $data_type_destiny[$key])
-                            ->where('contract_id', $contract_id[$key])
+                            ->where('contract_id', $contract_id)
                             ->where('calculationtype_id', $data_type_calculation[$key])
                             ->where('ammount', $data_amount[$key])
                             ->where('currency_id', $data_currency[$key])
