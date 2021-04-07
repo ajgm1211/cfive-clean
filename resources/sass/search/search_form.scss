@@ -266,6 +266,18 @@ input.input-modal {
     padding: 11px 0px 11px 45px;
 }
 
+.custom_close {
+    right: 45px !important;
+    top: 18px !important;
+    position: absolute !important;
+}
+
+.custom_close_filter {
+    right: 35px !important;
+    top: 8px !important;
+    position: absolute !important;
+}
+
 
 /* *** MODAL ADD CONTRAT *** */
 
@@ -446,6 +458,11 @@ input.input-modal {
             display: none;
         }
     }
+    .custom_close {
+        right: 55px !important;
+        top: 20px !important;
+        position: absolute !important;
+    }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -492,6 +509,11 @@ input.input-modal {
     }
     .daterangepicker.dropdown-menu.show-calendar {
         left: 100% !important;
+    }
+    .custom_close {
+        right: 75px !important;
+        top: 19px !important;
+        position: absolute !important;
     }
 }
 
