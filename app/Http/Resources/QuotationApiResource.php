@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\AutomaticInland;
 use App\AutomaticRate;
+use App\Charge;
 use App\Container;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Traits\UtilTrait;
@@ -62,6 +63,12 @@ class QuotationApiResource extends JsonResource
             'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2, $this->type)),
             'inlands' => $this->type == 'FCL' ? QuotationInlandResource::collection($this->inland()->SelectFields()->get()) : QuotationInlandLclResource::collection($this->inland_lcl()->SelectFields()->get()),
         ];
+        
+        /** Displaying original local charges if costs is true **/
+        if($request->costs=="true"){
+            $data['original_local_charges'] = $this->type == 'FCL' ? 
+            QuotationChargeResource::collection($this->charge()->where('charges.type_id',[1,2])->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id',[1,2])->SelectFields()->get());
+        }
 
         return $data;
     }

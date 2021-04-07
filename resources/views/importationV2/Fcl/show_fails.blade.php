@@ -186,8 +186,10 @@
                             <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinputSg" />
                         </label>
                         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                        <br>
+                        <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;
+
+                        &nbsp; &nbsp;
+                        <a href="#" onclick="showModalsavetosurcharge({{$id}},'editSurchargeByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a>
                     </div>
 
                     <div class="m-portlet__body">
@@ -195,6 +197,7 @@
                         <table class="table tableData"  id="failedSurchargeTable" width="100%">
                             <thead width="100%">
                                 <tr>
+                                    <th></th>
                                     <th> Surcharge </th>
                                     <th> Origin </th>
                                     <th> Destiny </th>
@@ -403,12 +406,38 @@
         failedSurchar = $('#failedSurchargeTable').DataTable({
             processing: true,
             serverSide: true,
-            columnDefs: [],
-            select: {},
-            buttons: [],
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            buttons: [
+                {
+                    text: 'Select all',
+                    action : function(e) {
+                        e.preventDefault();
+                        failedSurchar.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        failedSurchar.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
+                    }
+                },
+                {
+                    text: 'Select none',
+                    action: function () {
+                        failedSurchar.rows().deselect();
+                    }
+                }
+            ],
             ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,1,"surcharger"]) !!}',
             columns: [
-
+                {data: 'select', name:'select'},
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
                 { data: 'destiny_portLb', name: 'destiny_portLb' },
@@ -526,6 +555,8 @@
     }
 
     function showModalsavetosurcharge(id,operation){
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        
         if(operation == 1){
             var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
@@ -538,6 +569,28 @@
             $('.loadDataModal').load(url,function(){
                 $('#modaledit').modal();
             });
+        }else  if(operation == 'editSurchargeByDetalls'){
+            var idAr = [];
+            var oTable = $("#failedSurchargeTable").dataTable();
+            var length=failedSurchar.rows('.selected').data().length;
+
+            if(length >= 2)
+            {
+                for (var i = 0; i < length; i++) { 
+                    idAr.push(failedSurchar.rows('.selected').data()[i].id);
+                }
+                //console.log();
+                var url = "{{route('load.arr.Surcharge.por.detalles.Fcl')}}";
+                //url = url.replace(':id', idAr);
+                data2 = {idAr:idAr,contract_id:id}
+
+                $('#body-div-submit').load(url,data2,function(response,status,jqxhr){
+                    $('#frrSurcharge').submit();
+                });
+
+            } else {
+                swal("Error!", "Please select at least two record", "error");
+            }
         }
     }
 
