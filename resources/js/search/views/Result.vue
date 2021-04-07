@@ -1,24 +1,29 @@
 <template>
-    <div class="container-cards">
+    <div class="container-cards" v-if="loaded">
         
         <!-- FILTERS -->
         <div class="row mb-3" style="margin-top: 80px">
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
-                <h2 class="mr-5 t-recent">results found: <b>{{rates.length}}</b></h2>
-                <div v-if="false" class="d-flex filter-search">
-                    <b>filter by:</b>
-                    <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
+                <h2 class="mr-5 t-recent">results found: <b>{{finalRates.length}}</b></h2>
+                <div class="d-flex filter-search">
+                    <b style="color: #80888B !important; letter-spacing: 2px !important;">filter by:</b>&nbsp;
+                    <div style="width: 200px !important; height: 33.5px; position:relative; top: -8px ">
                             <multiselect
                                 v-model="filterBy"
                                 :multiple="false"
                                 :close-on-select="true"
                                 :clear-on-select="false"
+                                :hide-selected="true"
                                 :show-labels="false"
-                                :options="optionsFilter"
-                                placeholder="Select Filter"
+                                :options="filterOptions"
+                                placeholder="Carrier"
                                 class="s-input no-select-style "
+                                @input="filterCarriers"
                             >
                             </multiselect>
+                            <button v-if="filterBy != '' && filterBy != null" type="button" class="close custom_close_filter" aria-label="Close" @click="filterBy = '', filterCarriers()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                             <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
                     </div>
                 </div>
@@ -85,7 +90,7 @@
         <!-- FIN HEADER LCL -->
 
         <!-- RESULTS -->
-        <div v-if="rates.length != 0" class="row" id="top-results">
+        <div v-if="finalRates.length != 0" class="row" id="top-results">
 
             <!-- LCL CARD -->
             <div class="col-12 mb-4" v-if="false">
@@ -251,7 +256,7 @@
             <!-- FCL CARD -->
             <div 
                 class="col-12 mb-4" 
-                v-for="(rate,key) in rates"
+                v-for="(rate,key) in finalRates"
                 :key="key"
             >
 
@@ -312,7 +317,8 @@
                                     
                                         <div class="direction-desc">
 
-                                            <b class="mt-2">{{rate.transit_time ? rate.transit_time.via : "Direct"}}</b>
+                                            <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.service == 1 ? "Direct" : "Transhipment" }}</b>
+                                            <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.via ? rate.transit_time.via : ""}}</b>
                                             <p v-if="rate.transit_time != null && rate.transit_time.transit_time != null"><b>TT:</b> {{rate.transit_time.transit_time}}</p>
 
                                         </div>
@@ -1414,6 +1420,7 @@ export default {
     },
     data() {
         return {
+            loaded: false,
             actions: actions,
             dropzoneOptions: {
 					url: `/example`,
@@ -1423,10 +1430,13 @@ export default {
 					addRemoveLinks: true,
 				},
             requestData: {},
+            finalRates: [],
             creatingQuote: false,
             errorsExist: false,
             responseErrors: {},
             noRatesAdded: false,
+            filterBy: '',
+            filterOptions: [],
             //GENE DEFINED
             checked1: false,
             checked2: false,
@@ -1449,7 +1459,6 @@ export default {
             typeContract: '',
             calculationType: '',
             dataSurcharger: [],
-            filterBy: 'LOWEST PRICE',
             optionsDirection: ['Import', 'Export', 'Both'],
             optionsCurrency: ['USD', 'EUR', 'MXN'],
             optionsCountries: ['Argentina', 'Arabia', 'España', 'Mexico', 'Francia'],
@@ -1457,7 +1466,6 @@ export default {
             optionsCarrier: ['APL', 'CCNI', 'CMA CGM', 'COSCO', 'CSAV', 'Evergreen', 'Hamburg Sub', 'Hanjin', 'Hapag Lloyd'],
             optionsTypeContract: ['Type 1', 'Type 2', 'Type 3', 'Type 4'],
             optionsCalculationType: ['Calculation 1', 'Calculation 2', 'Calculation 3', 'Calculation 4'],
-            optionsFilter: ['LOWEST PRICE', 'HIGH PRICE', 'LAST DATE', 'OLD DATE'],
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -1483,7 +1491,7 @@ export default {
             let ratesForQuote = [];
 
             component.creatingQuote = true;
-            component.rates.forEach(function (rate){
+            component.finalRates.forEach(function (rate){
                 if(rate.addToQuote){
                     ratesForQuote.push(rate);
                 }
@@ -1525,6 +1533,32 @@ export default {
                 }
             }
         },
+
+        setFilters(){
+            let component = this;
+
+            component.rates.forEach(function (rate){
+                if(!component.filterOptions.includes(rate.carrier.name)){
+                    component.filterOptions.push(rate.carrier.name);
+                }
+            });
+        },
+
+        filterCarriers(){
+            let component = this;
+
+            component.finalRates = [];
+
+            if(component.filterBy != ''){
+                component.rates.forEach(function (rate){
+                    if(component.filterBy == rate.carrier.name){
+                        component.finalRates.push(rate);
+                    }
+                });
+            }else{
+                component.finalRates = component.rates;
+            }
+        },
     },
 
     mounted(){
@@ -1532,11 +1566,13 @@ export default {
 
         //console.log(component.datalists);
 
-        //console.log(component.rates);
-
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
         });
+
+        component.finalRates = component.rates;
+
+        component.setFilters();
 
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
@@ -1546,7 +1582,9 @@ export default {
                 component.isActive = false;
             }
         }
-    }
+
+        this.loaded = true;
+    },
 }
 </script>
 
