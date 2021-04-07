@@ -2066,7 +2066,7 @@ export default {
 
         checkSearchType() {
             if (this.searchRequest.type == "LCL") {
-                window.location = `/v2/quotes/search`;
+                window.location = `/v2/quotes/search?opt=1`;
             }
         },
 
