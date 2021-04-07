@@ -67,21 +67,19 @@
 
                 <p style="line-height:10px;">{{@$quote->user->email}}</p>
 
-                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-
-                <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-
-                <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
-
                 @if($delegation != null)
-                    <br>
-                    <p><b>{{__('pdf.delegation')}}:</b></p>
-
+                                
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
-
+    
                     <p style="line-height:10px;">{{@$delegation->address}}</p>
-
+    
                     <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                @else
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+    
+                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+    
+                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
                 @endif
 
             </div>
@@ -104,21 +102,19 @@
                 
                 <p style="line-height:10px;">{{@$quote->user->email}}</p>
                 
-                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                    
-                <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-                    
-                <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
-
                 @if($delegation != null)
-                    <br>
-                    <p><b>{{__('pdf.delegation')}}:</b></p>
-                    
+                                
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
-
+    
                     <p style="line-height:10px;">{{@$delegation->address}}</p>
-
+    
                     <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                @else
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+    
+                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+    
+                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
                 @endif
                 
             </div>
@@ -127,8 +123,8 @@
 
         <div class="row">
             <div style="float: left; margin-left:15px;">
-                <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
-                <p class="color-title" ><b class="uppercase" {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
+                <p class="color-title" ><b >{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                <p class="color-title" ><b {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
             </div>
         </div>
 
@@ -137,29 +133,29 @@
             <div style="margin-top: 10px; height: 50px" class="incoterm" >
 
                 <div style="float: left">
-                    @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
-                        
-                        <p><span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}}</p>
-                    
-                    @endif
-                
                     <p>
+
+                        @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
+                            
+                            <span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}} |
+                        
+                        @endif
                         
                         @if($quote->kind_of_cargo!='')
 
-                            <span><b>{{__('pdf.kind_of_cargo')}}:</b></span> {{$quote->kind_of_cargo}} 
+                            <span><b>{{__('pdf.kind_of_cargo')}}:</b></span> {{$quote->kind_of_cargo}} |
 
                         @endif 
                         
                         @if($quote->commodity!='')
                         
-                            | <span><b>{{__('pdf.commodity')}}:</b></span> {{$quote->commodity}}
+                            <span><b>{{__('pdf.commodity')}}:</b></span> {{$quote->commodity}} |
                         
                         @endif 
                         
                         @if($quote->risk_level!='')
                         
-                            | <span><b>{{__('pdf.risk_level')}}:</b></span> {{$quote->risk_level}}
+                            <span><b>{{__('pdf.risk_level')}}:</b></span> {{$quote->risk_level}} |
                         
                         @endif  
                         
@@ -195,9 +191,6 @@
             </div>
             
         @endif
-
-        <br>
-        <br>
 
         <div class="company" style="color: #1D3A6E;">
 

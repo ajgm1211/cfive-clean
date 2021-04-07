@@ -1,4 +1,4 @@
-<div class="clearfix">
+<div class="clearfix" style="margin-bottom: 5px;">
 
     <span class="text-left" style="font-size: 14px !important; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.exchange')}}</b></span>
 
@@ -41,4 +41,3 @@
     </div>  
 
 </div>
-<br>
