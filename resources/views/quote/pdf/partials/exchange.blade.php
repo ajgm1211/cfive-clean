@@ -1,6 +1,6 @@
 <div class="clearfix" style="margin-bottom: 5px;">
 
-    <span class="text-left" style="font-size: 14px !important; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.exchange')}}</b></span>
+    <span class="text-left" style="font-size: 12px !important;"><b>{{__('pdf.exchange')}}</b></span>
 
     <div>
         <table border="0" cellspacing="1" cellpadding="1">
