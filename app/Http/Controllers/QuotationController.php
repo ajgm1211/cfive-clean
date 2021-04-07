@@ -201,9 +201,9 @@ class QuotationController extends Controller
 
     public function store(Request $request)
     {
-        $company_user = Auth::user('web')->worksAt();
+        $user = \Auth::user('web');
+        $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
-        $user = User::where('company_user_id', $company_user->id)->first();
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
