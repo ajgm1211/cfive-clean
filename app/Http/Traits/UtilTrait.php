@@ -128,5 +128,4 @@ trait UtilTrait
 
         return $rateC;
     }
-    
 }
