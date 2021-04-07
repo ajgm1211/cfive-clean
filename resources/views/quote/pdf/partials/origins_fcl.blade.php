@@ -6,9 +6,7 @@
         <div>
 
             <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$port}}</b></p>
-
             
-
         </div>
         <!-- End Section Title -->
 

@@ -1,9 +1,7 @@
 @if($quote->terms_and_conditions!='' || $quote->terms_english!='' || $quote->terms_portuguese!='')
     <div class="clearfix">
 
-        <span class="text-left" style="font-size: 14px !important; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.terms')}}</b></span>
-        <br>
-        <br>
+        <p class="text-left" style="font-size: 14px !important; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.terms')}}</b></p>
         <div style="width:100%">
             @switch($quote->language_id)
             
