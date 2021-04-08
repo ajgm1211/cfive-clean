@@ -59,14 +59,14 @@ class RequestFclV2Controller extends Controller
         $date_end = $date_end->addDay(1);
         //$date_start = '2019-08-26 00:00:00';
         //$date_end    = '2020-03-03 12:39:54';
-        $Ncontract = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
+        $Ncontracts = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
         
-        $Ncontracts = array();
-        foreach ($Ncontract as $contract) {
-            if ($contract->erased_contract == 0) {
-                $Ncontracts[] = $contract;   
-            }
-        } 
+        // $Ncontracts = array();
+        // foreach ($Ncontract as $contract) {
+        //     if ($contract->erased_contract == 0) {
+        //         $Ncontracts[] = $contract;   
+        //     }
+        // } 
 
         $permiso_eliminar = false;
         $user = \Auth::user();
