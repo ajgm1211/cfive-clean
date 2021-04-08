@@ -6,8 +6,8 @@
             <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
                 <h2 class="mr-5 t-recent">results found: <b>{{finalRates.length}}</b></h2>
                 <div class="d-flex filter-search">
-                    <b>filter by:</b>
-                    <div style="width: 150px !important; height: 33.5px; position:relative; top: -4px ">
+                    <b style="color: #80888B !important; letter-spacing: 2px !important;">filter by:</b>&nbsp;
+                    <div style="width: 200px !important; height: 33.5px; position:relative; top: -8px ">
                             <multiselect
                                 v-model="filterBy"
                                 :multiple="false"
@@ -21,7 +21,7 @@
                                 @input="filterCarriers"
                             >
                             </multiselect>
-                            <button v-if="filterBy != '' && filterBy != null" type="button" class="close" aria-label="Close" @click="filterBy = '', filterCarriers()">
+                            <button v-if="filterBy != '' && filterBy != null" type="button" class="close custom_close_filter" aria-label="Close" @click="filterBy = '', filterCarriers()">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
