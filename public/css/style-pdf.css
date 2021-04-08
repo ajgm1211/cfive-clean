@@ -223,7 +223,11 @@ table tr:nth-child(odd) td {
     background-color: #faf9fc !important;
 }
 
-table th,
+table th {
+    padding: 8px;
+    text-align: left;
+}
+
 table td {
     padding: 4px;
     text-align: left;
