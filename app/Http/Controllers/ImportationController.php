@@ -1325,7 +1325,7 @@ class ImportationController extends Controller
 
         // dd($typerate);
         foreach ($data_surcharges as $key => $data_surcharge) {
-            $exists_surcharge = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
+            $surcharge_id = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
                 ->where('typedestiny_id', $data_type_destiny[$key])
                 ->where('contract_id', $contract_id)
                 ->where('calculationtype_id', $data_type_calculation[$key])
@@ -1333,71 +1333,61 @@ class ImportationController extends Controller
                 ->where('currency_id', $data_currency[$key])
                 ->first();
             // dd($exists_surcharge);
-            if (empty($exists_surcharge)) {
-                $localcharge = new LocalCharge();
-                $localcharge->surcharge_id = $data_surcharge_id[$key];
-                $localcharge->typedestiny_id = $data_type_destiny[$key];
-                $localcharge->calculationtype_id = $data_type_calculation[$key];
-                $localcharge->ammount = $data_amount[$key];
-                $localcharge->currency_id = $data_currency[$key];
-                $localcharge->contract_id=$contract_id;
-                $localcharge->save();
+            if (empty($surcharge_id)) {
+                $surcharge_id = new LocalCharge();
+                $surcharge_id->surcharge_id = $data_surcharge_id[$key];
+                $surcharge_id->typedestiny_id = $data_type_destiny[$key];
+                $surcharge_id->calculationtype_id = $data_type_calculation[$key];
+                $surcharge_id->ammount = $data_amount[$key];
+                $surcharge_id->currency_id = $data_currency[$key];
+                $surcharge_id->contract_id=$contract_id;
+                $surcharge_id->save();
             }
 
             if ($typerate == 'port') {
-                foreach ($data_origins as $originVar) {
-                    foreach ($data_destinations as $destinationVar) {
-                        foreach ($originVar as $origin){
-                            foreach ($destinationVar as $destiny) {
-                                $existsLP = null;
-                                $existsLP = LocalCharPort::where('port_orig', $origin)
-                                    ->where('port_dest', $destiny)
-                                    ->where('localcharge_id', $localcharge->id)
-                                    ->first();
-                                if (empty($existsLP) ) {
-                                    LocalCharPort::create([
-                                        'port_orig' => $origin,
-                                        'port_dest' => $destiny,
-                                        'localcharge_id' => $localcharge->id,
-                                    ]); //
-                                }
-                            }
+                foreach ($data_origins[$key] as $origin) {
+                    foreach ($data_destinations[$key] as $destiny) {
+                        $existsLP = null;
+                        $existsLP = LocalCharPort::where('port_orig', $origin)
+                            ->where('port_dest', $destiny)
+                            ->where('localcharge_id', $surcharge_id->id)
+                            ->first();
+                        if (empty($existsLP) ) {
+                            LocalCharPort::create([
+                                'port_orig' => $origin,
+                                'port_dest' => $destiny,
+                                'localcharge_id' => $surcharge_id->id,
+                            ]); //
                         }
                     }
                 }
             } elseif ($typerate == 'country') {
-                foreach ($data_origins as $originCounVar) {
-                    foreach ($data_destinations as $destinationCounVar) {
-                        foreach ($originCounVar as $origin) {
-                            foreach ($destinationCounVar as $destiny) {
-                                $existsLC = null;
-                                $existsLC = LocalCharCountry::where('country_orig', $origin)
-                                    ->where('country_dest', $destiny)
-                                    ->where('localcharge_id', $localcharge->id)
-                                    ->first();
-                                if (empty($existsLC) ) {
-                                    LocalCharCountry::create([
-                                        'country_orig' => $origin,
-                                        'country_dest' => $destiny,
-                                        'localcharge_id' => $localcharge->id,
-                                    ]); //
-                                }
-                            }
-                        }        
+                foreach ($data_origins[$key] as $origin) {
+                    foreach ($data_destinations[$key] as $destiny) {
+                        $existsLC = null;
+                        $existsLC = LocalCharCountry::where('country_orig', $origin)
+                            ->where('country_dest', $destiny)
+                            ->where('localcharge_id', $surcharge_id->id)
+                            ->first();
+                        if (empty($existsLC) ) {
+                            LocalCharCountry::create([
+                                'country_orig' => $origin,
+                                'country_dest' => $destiny,
+                                'localcharge_id' => $surcharge_id->id,
+                            ]); //
+                        }
                     }
                 }
             }
-            foreach ($data_carrier as $carrierVar) {
-                foreach ($carrierVar as $carrier) {
-                    $localcharcarriersV = null;
-                    $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrier)->where('localcharge_id', $localcharge->id)->get();
-                    
-                    if (count($localcharcarriersV)==0) {
-                        LocalCharCarrier::create([
-                            'carrier_id' => $carrier,
-                            'localcharge_id' => $localcharge->id,
-                        ]);
-                    }
+            foreach ($data_carrier[$key] as $carrier) {
+                $localcharcarriersV = null;
+                $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrier)->where('localcharge_id', $surcharge_id->id)->get();
+                
+                if (count($localcharcarriersV)==0) {
+                    LocalCharCarrier::create([
+                        'carrier_id' => $carrier,
+                        'localcharge_id' => $surcharge_id->id,
+                    ]);
                 }
             }
             $failSurcharge = FailSurCharge::find($data_surcharge);
@@ -2309,7 +2299,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (empty($localcharcarriersV) ) {
+            if (count($localcharcarriersV)==0 ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2329,8 +2319,6 @@ class ImportationController extends Controller
 
     public function UpdateSurchargersD(Request $request, $id)
     {
-        //dd($request->all());
-
         $surchargeVar = $request->surcharge_id; // id de la columna surchage_id
         $contractVar = $request->contract_id;
         $typedestinyVar = $request->changetype;
@@ -2356,13 +2344,13 @@ class ImportationController extends Controller
         LocalCharCarrier::where('localcharge_id', '=', $SurchargeId->id)->forceDelete();
         foreach ($carrierVarArr as $carrierVar) {
             // $localcharcarriersV = null;
-            // $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            // if (empty($localcharcarriersV) ) {
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
+            if (count($localcharcarriersV)==0 ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
                 ]); //
-            // }
+            }
         }
 
         if ($typerate == 'port') {
