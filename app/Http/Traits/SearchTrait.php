@@ -910,7 +910,7 @@ trait SearchTrait
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $client_currency)
+    public function setChargesPerContainer($charges, $containers, $container_id, $client_currency)
     {
         //Looping through charges collection
         foreach($charges as $charges_direction){
@@ -945,11 +945,16 @@ trait SearchTrait
                     }
                 //Individual container calculations
                 }else if(in_array($calculation->code,$exclude_dry)){
-                    foreach($containers as $container){
-                        if($container['gp_container_id'] != 1){
-                            $container_charges['C'.$container['code']] = $charge->ammount;
+                    if($container_id != 1){
+                        foreach($containers as $container){
+                            if($container['gp_container_id'] != 1){
+                                $container_charges['C'.$container['code']] = $charge->ammount;
+                            }
                         }
+                    }else{
+                        $charge->setAttribute('hide',true);
                     }
+
                 }else{
                     //Catching poorly formatted calculation codes
                     if($calculation->code == '40'){
@@ -976,6 +981,10 @@ trait SearchTrait
                     //In unmodified currency, for general use
                     //In client currency to show in overall totals
                 $client_currency_charges = $this->convertToCurrency($charge->currency,$client_currency,$container_charges);
+
+                if(!isset($charge->hide)){
+                    $charge->setAttribute('hide', false);
+                }
 
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
@@ -1104,7 +1113,7 @@ trait SearchTrait
                 $containers_with_markups_string[$key] = strval(isDecimal($total, true));
             }
 
-            $rate->containers_with_markups = $totals_with_markups_string;
+            $rate->containers_with_markups = $containers_with_markups_string;
         }
 
         $totals_string = $rate->totals;
