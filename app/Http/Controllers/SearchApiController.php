@@ -217,7 +217,7 @@ class SearchApiController extends Controller
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $search_array['containers'], $search_ids['client_currency']);
+            $this->setChargesPerContainer($charges, $search_array['containers'], $search_array['selectedContainerGroup']['id'], $search_ids['client_currency']);
 
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
@@ -228,7 +228,7 @@ class SearchApiController extends Controller
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids['client_currency']);
-
+            
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
                 $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
@@ -403,11 +403,11 @@ class SearchApiController extends Controller
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '>=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 }
             });
         } else {
@@ -419,11 +419,11 @@ class SearchApiController extends Controller
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 }
             });
         }
@@ -798,61 +798,63 @@ class SearchApiController extends Controller
 
                 //Looping through charges by type
                 foreach ($charge_direction as $charge) {
-                    //checking if markups were added to rates and charges
-                    //Case 1 - markups on rate and on  charge
-                    if (isset($rate->totals_with_markups) && isset($charge->totals_with_markups)) {
-                        //Field that is gonna be updated in Rate
-                        $to_update = 'totals_with_markups';
-                        //Current field value
-                        $totals_array = $rate->totals_with_markups;
-                        //Charge totals that will be added to rate
-                        $charges_to_add = $charge->totals_with_markups;
-                        //Case 2 - markups on Charge NOT on Rate
-                    } elseif (!isset($rate->totals_with_markups) && isset($charge->totals_with_markups)) {
-                        $to_update = 'totals';
-                        $totals_array = $rate->totals;
-                        $charges_to_add = $charge->totals_with_markups;
-                        //Case 3 - markups on Rate NOT on Charge
-                    } elseif (isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)) {
-                        $to_update = 'totals_with_markups';
-                        $totals_array = $rate->totals_with_markups;
-                        $charges_to_add = $charge->containers_client_currency;
-                        //Case 4 - markups NOT on Charge NOT on Rate
-                    } elseif (!isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)) {
-                        $to_update = 'totals';
-                        $totals_array = $rate->totals;
-                        $charges_to_add = $charge->containers_client_currency;
-                    }
+                    if(!$charge->hide){   
+                        //checking if markups were added to rates and charges
+                        //Case 1 - markups on rate and on  charge
+                        if (isset($rate->totals_with_markups) && isset($charge->totals_with_markups)) {
+                            //Field that is gonna be updated in Rate
+                            $to_update = 'totals_with_markups';
+                            //Current field value
+                            $totals_array = $rate->totals_with_markups;
+                            //Charge totals that will be added to rate
+                            $charges_to_add = $charge->totals_with_markups;
+                            //Case 2 - markups on Charge NOT on Rate
+                        } elseif (!isset($rate->totals_with_markups) && isset($charge->totals_with_markups)) {
+                            $to_update = 'totals';
+                            $totals_array = $rate->totals;
+                            $charges_to_add = $charge->totals_with_markups;
+                            //Case 3 - markups on Rate NOT on Charge
+                        } elseif (isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)) {
+                            $to_update = 'totals_with_markups';
+                            $totals_array = $rate->totals_with_markups;
+                            $charges_to_add = $charge->containers_client_currency;
+                            //Case 4 - markups NOT on Charge NOT on Rate
+                        } elseif (!isset($rate->totals_with_markups) && !isset($charge->totals_with_markups)) {
+                            $to_update = 'totals';
+                            $totals_array = $rate->totals;
+                            $charges_to_add = $charge->containers_client_currency;
+                        }
 
-                    //Looping through current Rate totals (with or without markups)
-                    foreach ($totals_array as $code => $total) {
-                        //Checking if charge contains each container present in Rate
-                        if (isset($charge->containers_client_currency[$code])) {
-                            //Adding charge container price to Rate totals
-                            $totals_array[$code] += isDecimal($charges_to_add[$code], true);
-                            //If container doesnt exist in totals by type array, set it to 0 (initialize value)
-                            if (!isset($charge_type_totals[$direction][$code])) {
-                                $charge_type_totals[$direction][$code] = 0;
+                        //Looping through current Rate totals (with or without markups)
+                        foreach ($totals_array as $code => $total) {
+                            //Checking if charge contains each container present in Rate
+                            if (isset($charge->containers_client_currency[$code])) {
+                                //Adding charge container price to Rate totals
+                                $totals_array[$code] += isDecimal($charges_to_add[$code], true);
+                                //If container doesnt exist in totals by type array, set it to 0 (initialize value)
+                                if (!isset($charge_type_totals[$direction][$code])) {
+                                    $charge_type_totals[$direction][$code] = 0;
+                                }
+                                //Add prices from charge to totals by type
+                                $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                             }
-                            //Add prices from charge to totals by type
-                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                         }
-                    }
 
-                    //Updating rate totals to new added array
-                    $rate->$to_update = $totals_array;
-                    array_push($rate_charges[$direction], $charge);
+                        //Updating rate totals to new added array
+                        $rate->$to_update = $totals_array;
+                        array_push($rate_charges[$direction], $charge);
 
-                    //
-                    if ($direction == 'Freight') {
-                        if ($charge->joint_as == 'charge_currency') {
-                            $rate_currency_containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                            $charge->containers = $rate_currency_containers;
-                        } elseif ($charge->joint_as == 'client_currency') {
-                            $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
-                            $charge->containers_client_currency = $rate_currency_containers;
+                        //
+                        if ($direction == 'Freight') {
+                            if ($charge->joint_as == 'charge_currency') {
+                                $rate_currency_containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
+                                $charge->containers = $rate_currency_containers;
+                            } elseif ($charge->joint_as == 'client_currency') {
+                                $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
+                                $charge->containers_client_currency = $rate_currency_containers;
+                            }
+                            $charge->currency = $rate->currency;
                         }
-                        $charge->currency = $rate->currency;
                     }
                 }
 
