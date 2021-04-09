@@ -1708,3 +1708,14 @@ input.data-provider {
         padding: 50px 0px !important;
     }
 }
+
+.input-search-form {
+    position: relative;
+    .close {
+        position: absolute;
+        top: 16px;
+        right: 45px;
+        width: 25px;
+        height: 25px;
+    }
+}
