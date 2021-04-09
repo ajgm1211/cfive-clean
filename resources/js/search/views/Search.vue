@@ -297,7 +297,7 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
-                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
+                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -324,7 +324,7 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
-                        <button v-if="searchRequest.contact != '' && searchRequest.contact != null" type="button" class="close" aria-label="Close" @click="searchRequest.contact = ''">
+                        <button v-if="searchRequest.contact != '' && searchRequest.contact != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.contact = ''">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -350,7 +350,7 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
-                        <button v-if="searchRequest.pricelevel != '' && searchRequest.pricelevel != null" type="button" class="close" aria-label="Close" @click="searchRequest.pricelevel = ''">
+                        <button v-if="searchRequest.pricelevel != '' && searchRequest.pricelevel != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.pricelevel = ''">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
