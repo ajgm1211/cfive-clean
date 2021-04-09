@@ -1161,9 +1161,7 @@
                             <b-form-checkbox class="btn-add-quote" name="check-button" button>
                                 <b>add to quote</b>
                             </b-form-checkbox>
-                            <a href="#" class="btn-add-quote btn-book">
-                                <strong>BOOK</strong>
-                            </a>
+                            <a v-b-modal.qty-modal class="btn-add-quote btn-book"><strong>BOOK</strong></a>
                         </div>
 
                     </div>
@@ -1395,6 +1393,29 @@
                 </div>
             </div>
         </div>
+
+        <!--  Book Qty Modal  -->
+        <b-modal
+            ref="qty-modal"
+            id="qty-modal"
+            size="md"
+            centered
+            hide-footer
+            title="Select Quantity"
+        >
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end mb-5 mt-3">
+                    <div class="footer-add-contract-modal pl-4 pr-4">
+                        <button type="button"
+                            class="btn btn-primary"
+                        >
+                            Confirm Book</button
+                        >
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+        <!--  End Modal  -->
     </div>
 </template>
 
