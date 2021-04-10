@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba41946c32b9010626b6276e2d607662",
+    "content-hash": "5e7c1f9994b6194fd0947873ee0d4f72",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -1383,6 +1383,78 @@
                 "php"
             ],
             "time": "2021-02-12T00:02:00+00:00"
+        },
+        {
+            "name": "genealabs/laravel-mixpanel",
+            "version": "0.7.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeneaLabs/laravel-mixpanel.git",
+                "reference": "8d7f7b5200574e2e1c409efe78b47d57569e4c4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeneaLabs/laravel-mixpanel/zipball/8d7f7b5200574e2e1c409efe78b47d57569e4c4f",
+                "reference": "8d7f7b5200574e2e1c409efe78b47d57569e4c4f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "5.5 - 5.7",
+                "illuminate/config": "5.5 - 5.7",
+                "illuminate/console": "5.5 - 5.7",
+                "illuminate/events": "5.5 - 5.7",
+                "illuminate/http": "5.5 - 5.7",
+                "illuminate/queue": "5.5 - 5.7",
+                "illuminate/routing": "5.5 - 5.7",
+                "illuminate/support": "5.5 - 5.7",
+                "mixpanel/mixpanel-php": "*",
+                "php": ">=7.1.3",
+                "sinergi/browser-detector": "~5.0"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "*",
+                "fzaninotto/faker": "~1.4",
+                "laravel/browser-kit-testing": "^4.0",
+                "laravel/laravel": "5.7",
+                "mockery/mockery": "0.9.*",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "*",
+                "sebastian/phpcpd": "*",
+                "symfony/thanks": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "GeneaLabs\\LaravelMixpanel\\Providers\\Service"
+                    ],
+                    "alias": {
+                        "Mixpanel": "GeneaLabs\\LaravelMixpanel\\Facades\\Mixpanel"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GeneaLabs\\LaravelMixpanel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Bronner",
+                    "email": "hello@genealabs.com"
+                }
+            ],
+            "description": "MixPanel wrapper for Laravel 5.",
+            "support": {
+                "issues": "https://github.com/GeneaLabs/laravel-mixpanel/issues",
+                "source": "https://github.com/GeneaLabs/laravel-mixpanel/tree/master"
+            },
+            "time": "2018-10-05T23:08:12+00:00"
         },
         {
             "name": "greggilbert/recaptcha",
@@ -3585,6 +3657,55 @@
             "time": "2019-03-07T07:55:14+00:00"
         },
         {
+            "name": "mixpanel/mixpanel-php",
+            "version": "2.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mixpanel/mixpanel-php.git",
+                "reference": "c9efb8e9514aea92b60dc9f036d566054e36f73e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mixpanel/mixpanel-php/zipball/c9efb8e9514aea92b60dc9f036d566054e36f73e",
+                "reference": "c9efb8e9514aea92b60dc9f036d566054e36f73e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "2.9.*",
+                "phpunit/phpunit": "5.6.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/Mixpanel.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mixpanel <dev@mixpanel.com>",
+                    "homepage": "https://mixpanel.com/"
+                }
+            ],
+            "description": "The Official PHP library for Mixpanel",
+            "homepage": "https://mixpanel.com/help/reference/php",
+            "keywords": [
+                "mixpanel",
+                "mixpanel php"
+            ],
+            "support": {
+                "issues": "https://github.com/mixpanel/mixpanel-php/issues",
+                "source": "https://github.com/mixpanel/mixpanel-php/tree/2.8.1"
+            },
+            "time": "2021-03-31T15:56:50+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.26.0",
             "source": {
@@ -4175,6 +4296,11 @@
                 "pseudorandom",
                 "random"
             ],
+            "support": {
+                "email": "info@paragonie.com",
+                "issues": "https://github.com/paragonie/random_compat/issues",
+                "source": "https://github.com/paragonie/random_compat"
+            },
             "time": "2018-07-02T15:55:56+00:00"
         },
         {
@@ -4909,16 +5035,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.30",
+            "version": "2.0.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "136b9ca7eebef78be14abf90d65c5e57b6bc5d36"
+                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/136b9ca7eebef78be14abf90d65c5e57b6bc5d36",
-                "reference": "136b9ca7eebef78be14abf90d65c5e57b6bc5d36",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/233a920cb38636a43b18d428f9a8db1f0a1a08f4",
+                "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4",
                 "shasum": ""
             },
             "require": {
@@ -4996,6 +5122,10 @@
                 "x.509",
                 "x509"
             ],
+            "support": {
+                "issues": "https://github.com/phpseclib/phpseclib/issues",
+                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.31"
+            },
             "funding": [
                 {
                     "url": "https://github.com/terrafrost",
@@ -5010,7 +5140,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-17T05:42:04+00:00"
+            "time": "2021-04-06T13:56:45+00:00"
         },
         {
             "name": "predis/predis",
@@ -5727,6 +5857,66 @@
                 "stylesheet"
             ],
             "time": "2020-06-01T09:10:00+00:00"
+        },
+        {
+            "name": "sinergi/browser-detector",
+            "version": "5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sinergi/php-browser-detector.git",
+                "reference": "47806b0ec01048b002abdb062fea51a17d554dec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sinergi/php-browser-detector/zipball/47806b0ec01048b002abdb062fea51a17d554dec",
+                "reference": "47806b0ec01048b002abdb062fea51a17d554dec",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sinergi\\BrowserDetector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Schuld",
+                    "email": "chris@chrisschuld.com",
+                    "homepage": "http://chrisschuld.com"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com"
+                }
+            ],
+            "description": "Detecting the user's browser, operating system and language.",
+            "keywords": [
+                "browser",
+                "detection",
+                "language",
+                "operating system",
+                "os"
+            ],
+            "support": {
+                "issues": "https://github.com/sinergi/php-browser-detector/issues",
+                "source": "https://github.com/sinergi/php-browser-detector/tree/develop"
+            },
+            "time": "2016-01-08T19:53:07+00:00"
         },
         {
             "name": "spatie/db-dumper",
@@ -11391,5 +11581,5 @@
     "platform-overrides": {
         "php": "7.1.3"
     },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

@@ -38,17 +38,19 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\MixPanelTrait;
 
 class QuotationController extends Controller
 {
-    use QuoteV2Trait, SearchTrait;
+    use QuoteV2Trait, SearchTrait, MixPanelTrait;
 
     public function index(Request $request)
     {
         return view('quote.index');
     }
 
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $results = QuoteV2::filterByCurrentCompany()->filter($request);
 
         return QuotationResource::collection($results);
@@ -199,9 +201,9 @@ class QuotationController extends Controller
 
     public function store(Request $request)
     {
-        $company_user = Auth::user('web')->worksAt();
+        $user = \Auth::user('web');
+        $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
-        $user = User::where('company_user_id', $company_user->id)->first();
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
@@ -224,7 +226,9 @@ class QuotationController extends Controller
             'type' => $search_data_ids['type'],
             'delivery_type' => $search_data_ids['deliveryType'],
             'user_id' => $user->id,
+            'direction_id' => $search_data_ids['direction'],
             'company_user_id' => $company_user->id,
+            'language_id' => $company_user->pdf_language,
             'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
@@ -235,11 +239,18 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'remarks_english' => $remarks,
             'direction_id' => $search_data_ids['direction'],
         ]);
 
         $quote = $quote->fresh();
+
+        if($quote->language_id == 1){
+            $quote->update(['remarks_english' => $remarks]);
+        }else if($quote->language_id == 2){
+            $quote->update(['remarks_spanish' => $remarks]);
+        }else if($quote->language_id == 3){
+            $quote->update(['remarks_portuguese' => $remarks]);
+        }
 
         foreach ($rate_data as $rate) {
 
@@ -286,6 +297,9 @@ class QuotationController extends Controller
 
             $rateTotals->totalize($rate['currency_id']);
         }
+
+        /** Tracking create quote event with Mix Panel*/
+        $this->trackEvents("create_quote_fcl", $quote);
 
         return new QuotationResource($quote);
     }
@@ -364,14 +378,14 @@ class QuotationController extends Controller
                     $data[$key] = 'Win';
                 }
             }
-            $quote->update([$key=>$data[$key]]);
-            
-            if($key == 'validity_end'){
+            $quote->update([$key => $data[$key]]);
+
+            if ($key == 'validity_end') {
                 $rates = $quote->rates_v2()->get();
 
-                if($rates != null && count($rates) != 0){
-                    foreach($rates as $rate){
-                        $rate->update([$key=>$data[$key]]);
+                if ($rates != null && count($rates) != 0) {
+                    foreach ($rates as $rate) {
+                        $rate->update([$key => $data[$key]]);
                     }
                 }
             }
@@ -392,13 +406,12 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
-        $quote->update(['total_quantity'=>$request['total_quantity']]);
-        $quote->update(['total_volume'=>$request['total_volume']]);
-        $quote->update(['total_weight'=>$request['total_weight']]);
-        $quote->update(['chargeable_weight'=>$request['chargeable_weight']]);
-        
+        $quote->update(['total_quantity' => $request['total_quantity']]);
+        $quote->update(['total_volume' => $request['total_volume']]);
+        $quote->update(['total_weight' => $request['total_weight']]);
+        $quote->update(['chargeable_weight' => $request['chargeable_weight']]);
     }
-    
+
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
     {
         $search_data = $request->input();
@@ -436,6 +449,8 @@ class QuotationController extends Controller
     {
         $new_quote = $quote->duplicate();
 
+        $new_quote->update(['custom_quote_id' => null]);
+
         return new QuotationResource($new_quote);
     }
 
@@ -452,7 +467,7 @@ class QuotationController extends Controller
 
         $new_quote = $quote->duplicate();
 
-        if($quote->search_options == null){
+        if ($quote->search_options == null) {
             $new_quote->update([
                 'contact_id' => $search_data_ids['contact'],
                 'company_id' => $search_data_ids['company'],
@@ -460,7 +475,7 @@ class QuotationController extends Controller
                 'validity_start' => $search_data_ids['dateRange']['startDate'],
                 'validity_end' => $search_data_ids['dateRange']['endDate'],
             ]);
-        }else{
+        } else {
             $search_options_ids = $this->getIdsFromArray($quote->search_options);
             $new_quote->update([
                 'contact_id' => $search_options_ids['contact'],
@@ -674,7 +689,7 @@ class QuotationController extends Controller
                         }
                     }
                 } else {
-                    if($total->inland_address()->first() != null){
+                    if ($total->inland_address()->first() != null) {
                         $total->inland_address()->first()->delete();
                     }
                 }
