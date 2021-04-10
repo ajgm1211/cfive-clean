@@ -320,18 +320,20 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
+        $status_erased=1;
         if($contract->status == 'incomplete'){
             
             $requestContract = NewContractRequest::where('contract_id',$contract->id);
             if(empty($requestContract) == 0 ){
 
-                $requestContract->update(['erased_contract' => 1]);
+                $requestContract->update(['erased_contract' => $status_erased]);
 
             }
 
         }
-
-        $contract->delete();
+        // $contract->delete();
+        $contract->status_erased=$status_erased;
+        $contract->update();
 
         return response()->json(null, 204);
     }
@@ -367,7 +369,8 @@ class ContractController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
+        $status_erased=1;
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased]);
 
         return response()->json(null, 204);
     }
