@@ -1132,6 +1132,227 @@ class ImportationController extends Controller
 
         return redirect()->route('Failed.Developer.For.Contracts', [$contract_id, 0]);
     }
+    ///////////////////////// edit multiple surcharge
+
+    public function loadArrayEditMultSurcharge(Request $request)
+    {
+        $Surcharge = array();
+        foreach ($request->idAr as $surch) {
+            $id = preg_replace('([^0-9])', '', $surch);
+            $Surcharge[] = $id;       
+        } 
+        $array = $Surcharge;
+        $array_count = count($array);
+        $contract_id = $request->contract_id;
+
+        return view('importationV2.Fcl.Body-Modals.FailEditByDetallsSurcharge', compact('array', 'array_count', 'contract_id'));
+    }
+
+    public function showSurchargeMultiplesPorDetalles(Request $request)
+    {
+        // dd($request);
+        $fail_surcharge_total = collect([]);
+        $contract_id = $request->contract_id;
+        $contract = Contract::find($contract_id);
+        $harbor = Harbor::pluck('display_name', 'id');
+        $carrier = Carrier::pluck('name', 'id');
+        $currency = Currency::pluck('alphacode', 'id');
+        $equiment_id = $contract->gp_container_id;
+        $surcharges = Surcharge::pluck('name','id');
+        $calculation_type = CalculationType::pluck('name','id');
+        $type_destiny = TypeDestiny::pluck('description','id');
+        $equiment = HelperAll::LoadHearderContaniers($equiment_id, 'rates');
+        //dd($equiment);
+        
+        foreach ($request->idAr as $surcharge_fail_id) {
+            $failsurcharge = FailSurCharge::find($surcharge_fail_id);
+            $surchargesV = null;
+            $originV = null;
+            $destinationV = null;
+            $calculation_typeV = null;
+            $type_destinyV= null;
+            $amountV= null;
+            $carrierV = null;
+            $currencyV = null;
+            $originA = null;
+            $destinationA = null;
+            $carrierA = null;
+            $currencyA = null;
+            $failed = [];
+            $colec = [];
+
+            $carrAIn = null;
+            $classsurcharger='green';
+            $classdorigin = 'green';
+            $classddestination = 'green';
+            $classtypedestiny ='green';
+            $classcalculationtype ='green';
+            $classamount='green';
+            $classcarrier = 'green';
+            $classcurrency = 'green';
+
+            $surchargeA=explode('_', $failsurcharge['surcharge_id']);
+            $originA = explode('_', $failsurcharge['port_orig']);
+            $destinationA = explode('_', $failsurcharge['port_dest']);
+            $calculation_typeA = explode('_', $failsurcharge['calculationtype_id']);
+            $type_destinyA = explode('_', $failsurcharge['typedestiny_id']);
+            $amountA = explode('_', $failsurcharge['ammount']);
+            $carrierA = explode('_', $failsurcharge['carrier_id']);
+            $currencyA = explode('_', $failsurcharge['currency_id']);
+
+            $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
+                ->first();
+            if (count($originA) <= 1) {
+                $originV = $originOb['id'];
+            } else {
+                $classdorigin = 'red';
+            }
+
+            $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
+                ->first();
+            if (count($destinationA) <= 1) {
+                $destinationV = $destinationOb['id'];
+            } else {
+                $classddestination = 'red';
+            }
+
+            if (count($carrierA) <= 1) {
+                $carrierOb = Carrier::where('name', '=', $carrierA[0])->first();
+                $carrierV = $carrierOb['id'];
+            } else {
+                $classcarrier = 'red';
+            }
+
+            if (count($currencyA) <= 1) {
+                $currenc = Currency::where('alphacode', '=', $currencyA[0])->orWhere('id', '=', $currencyA[0])->first();
+                $currencyV = $currenc['id'];
+            } else {
+                $classcurrency = 'red';
+            }
+
+            if (count($calculation_typeA) <= 1) {
+                $calculatioT = CalculationType::where('name', '=', $calculation_typeA[0])->orWhere('id', '=', $calculation_typeA[0])->first();
+                $calculation_typeV = $calculatioT['id'];
+            } else {
+                $classcalculationtype = 'red';
+            }
+
+            if (count($type_destinyA) <= 1) {
+                $typeDest = TypeDestiny::where('description', '=', $type_destinyA[0])->orWhere('id', '=', $type_destinyA[0])->first();
+                $type_destinyV = $typeDest['id'];
+            } else {
+                $classtypedestiny = 'red';
+            }
+
+            if (count($amountA) <= 1) {
+                if($amountA[0]>=1){
+                    $amountV = $amountA[0];
+                }else {
+                    $classamount = 'red';
+                }
+            } else {
+                $classamount = 'red';
+            }
+
+            if (count($surchargeA) <= 1) {
+                $Surcharg = Surcharge::where('name', '=', $surchargeA[0])->orWhere('id', '=', $surchargeA[0])->first();
+                $surchargesV = $Surcharg['id'];
+            } else {
+                $classsurcharger = 'red';
+            }
+
+            $failed = ['surcharge_id' => $failsurcharge->id,
+                'contract_id' => $failsurcharge->contract_id,
+                'surcharge' => $surchargesV,
+                'origin_port' => $originV,
+                'destiny_port' => $destinationV,
+                'calculation_type' => $calculation_typeV,
+                'type_destiny' =>$type_destinyV,
+                'amount' => $amountV,
+                'carrierAIn' => $carrierV,
+                'currencyAIn' => $currencyV,
+                'classorigin' => $classdorigin,
+                'classdestiny' => $classddestination,
+                'classcarrier' => $classcarrier,
+                'classcurrency' => $classcurrency,
+                'classsurcharger'=>$classsurcharger,
+                'classtypedestiny'=>$classtypedestiny,
+                'classcalculationtype'=>$classcalculationtype,
+                'classamount'=>$classamount,
+            ];
+            $fail_surcharge_total->push($failed);
+        }
+
+        // dd($fail_surcharge_total);
+        return view('importationV2.Fcl.EditByDetailFailSurcharge', compact('fail_surcharge_total','equiment', 'contract_id', 'equiment_id', 'contract', 'harbor', 'carrier', 'currency','surcharges','calculation_type','type_destiny'));
+    }
+
+    public function StoreFailsurchargeMultiplesByDetalls(Request $request)
+    {
+        // dd($request->all());
+        $contract_id = $request->contract_id;
+        $data_surcharges = $request->surcharge_fail_id;
+        $data_origins = $request->origin_id;
+        $data_destinations = $request->destiny_id;
+        $data_surcharge_id=$request->id_surcharge;
+        $data_type_destiny=$request->type_destiny_id;
+        $data_type_calculation=$request->type_calculation__id;
+        $data_amount=$request->amountS;
+        $data_carrier = $request->carrier_id;
+        $data_currency = $request->currency_id;
+
+        $equiment_id = $request->equiment_id;
+
+        // dd($data_surcharges);
+        foreach ($data_surcharges as $key => $data_surcharge) {
+            foreach ($data_origins[$key] as $origin) {
+                foreach ($data_destinations[$key] as $destiny) {  
+                    if ($origin != $destiny) {
+                        $exists_surcharge = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
+                            ->where('typedestiny_id', $data_type_destiny[$key])
+                            ->where('contract_id', $contract_id)
+                            ->where('calculationtype_id', $data_type_calculation[$key])
+                            ->where('ammount', $data_amount[$key])
+                            ->where('currency_id', $data_currency[$key])
+                            ->first();
+                        // dd($exists_surcharge);
+                        if (count((array) $exists_surcharge) == 0) {
+                            $localcharge = new LocalCharge();
+                            $localcharge->surcharge_id = $data_surcharge_id[$key];
+                            $localcharge->typedestiny_id = $data_type_destiny[$key];
+                            $localcharge->calculationtype_id = $data_type_calculation[$key];
+                            $localcharge->ammount = $data_amount[$key];
+                            $localcharge->currency_id = $data_currency[$key];
+                            $localcharge->contract_id=$contract_id;
+                            $localcharge->save();
+
+                            $detailcarrier = new LocalCharCarrier();
+                            $detailcarrier->carrier_id = $data_carrier[$key]; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                            $detailcarrier->localcharge_id=$localcharge->id;
+                            $detailcarrier->save();
+        
+                            $detailport = new LocalCharPort();
+                            $detailport->port_orig = $origin; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                            $detailport->port_dest =  $destiny; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                            $detailport->localcharge_id=$localcharge->id;
+                            $detailport->save();
+
+                        }
+                    }
+                }
+            }
+            $failrate = FailSurCharge::find($data_surcharge);
+            $failrate->forceDelete();
+            //eliminar fail aqui
+        }
+
+        $request->session()->flash('message.content', 'Updated Rates');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->route('Failed.Developer.For.Contracts', [$contract_id, 0]);
+    }
+    ////////////////////////
 
     // Rates ----------------------------------------------------------------------------
     public function EditRatesGood($id)
@@ -2404,10 +2625,11 @@ class ImportationController extends Controller
                         $typedestinyLB = $typedestinyA[0] . ' (error)';
                         $classcurrency = 'color:red';
                     }
-
+                    $select='';
                     ////////////////////////////////////////////////////////////////////////////////////
                     $arreglo = [
                         'id' => $failsurcharge->id,
+                        'select' => $select,
                         'surchargelb' => $surchargeA,
                         'origin_portLb' => $originA,
                         'destiny_portLb' => $destinationA,
