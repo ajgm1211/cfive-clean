@@ -7,6 +7,7 @@ import Vue from 'vue';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
+import VueNumericInput from 'vue-numeric-input';
 
 /* Config files */
 import App from './views/App'; // Main Component
@@ -17,6 +18,7 @@ Vue.use(BootstrapVue)
     // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
+Vue.use(VueNumericInput)
 
 Vue.use(VueGoogleMaps, {
     load: {
