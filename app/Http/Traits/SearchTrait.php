@@ -1096,8 +1096,10 @@ trait SearchTrait
         return($joint_charges);
     }
 
+    //Converting amounts to string so they display decimal places correctly
     public function stringifyRateAmounts($rate)
     {
+        //RATE TOTALS GLOBAL
         if(isset($rate->totals_with_markups)){
             $totals_with_markups_string = $rate->totals_with_markups;
             foreach($totals_with_markups_string as $key => $total){
@@ -1123,6 +1125,7 @@ trait SearchTrait
 
         $rate->totals = $totals_string;
 
+        //RATE TOTALS BY TYPE 
         $by_type = $rate->charge_totals_by_type;
         
         foreach($by_type as $typeKey => $type){
@@ -1132,5 +1135,51 @@ trait SearchTrait
         }
 
         $rate->charge_totals_by_type = $by_type;
+
+        //CHARGES
+        foreach($rate->charges as $direction => $charge_direction){
+            foreach($charge_direction as $chargeKey => $charge){
+                if(isset($charge->surcharge)){
+                    //Plain Container prices
+                    $charge_containers_string = $charge->containers;
+    
+                    foreach($charge_containers_string as $container => $containerTotal){
+                        $charge_containers_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge->containers = $charge_containers_string;
+    
+                    //Containers in client currency
+                    $charge_totals_string = $charge->containers_client_currency;
+    
+                    foreach($charge_totals_string as $container => $containerTotal){
+                        $charge_totals_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge->containers_client_currency = $charge_totals_string;
+    
+                    //Checking if markups
+                    if(isset($charge->containers_with_markups)){
+                        //Containers With Markups
+                        $charge_containers_with_markups_string = $charge->containers_with_markups;
+    
+                        foreach($charge_containers_with_markups_string as $container => $containerTotal){
+                            $charge_containers_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge->containers_with_markups = $charge_containers_with_markups_string;
+    
+                        //Containers with markups in client currency
+                        $charge_totals_with_markups_string = $charge->totals_with_markups;
+                        
+                        foreach($charge_totals_with_markups_string as $container => $containerTotal){
+                            $charge_totals_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge->totals_with_markups = $charge_totals_with_markups_string;
+                    }
+                }
+            }
+        }
     }
 }
