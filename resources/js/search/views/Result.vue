@@ -540,7 +540,7 @@
             </div>
 
             <!-- TARJETA CMA -->
-            <div class="col-12 mb-4" v-if="false"> 
+            <div class="col-12 mb-4"> 
 
                 <div class="result-search">
 
@@ -951,11 +951,11 @@
             <!-- FIN TARJETA CMA -->
 
             <!-- TARJETA MAERKS -->
-            <div class="col-12 mb-4" v-if="false">
+            <div class="col-12 mb-4">
 
                 <div class="result-search">
 
-                    <div class="banda-top maerks"><span>MAERSK PRICES</span></div>
+                    <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
 
                     <!-- INFORMACION DE TARIFA -->
                     <div class="row">
@@ -1162,7 +1162,7 @@
                                 <b>add to quote</b>
                             </b-form-checkbox>
                             <a href="#" class="btn-add-quote btn-book">
-                                <b>book</b>
+                                <strong>BOOK</strong>
                             </a>
                         </div>
 
@@ -1587,4 +1587,3 @@ export default {
     },
 }
 </script>
-
