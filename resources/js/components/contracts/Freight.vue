@@ -31,6 +31,7 @@
                 @onOpenModalHarborOrig="openModalHarborOrig"
                 @onOpenModalHarborDest="openModalHarborDest"
                 :view="'oceanfreight'"
+                :classTable="classTable"
             ></DynamicalDataTable>
             
         </b-card>
@@ -169,6 +170,7 @@ export default {
         datalists: Object,
         actions: Object,
         contractData: Object,
+        classTable: String
     },
     data() {
         return {
