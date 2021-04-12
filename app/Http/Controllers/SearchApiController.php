@@ -261,6 +261,10 @@ class SearchApiController extends Controller
             //Ordering rates by totals (cheaper to most expensive)
             $rates = $this->sortRates($rates, $search_ids);
 
+            $terms = $this->searchTerms($search_ids);
+
+            $search_array['terms'] = $terms;
+
             $rates[0]->SetAttribute('search', $search_array);
         }
 
@@ -665,6 +669,40 @@ class SearchApiController extends Controller
         return $final_remarks;
     }
 
+    //Retrieves Global Remarks
+    public function searchTerms($search_data)
+    {
+        //Retrieving current companyto filter terms
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
+
+        $terms_english = '';
+        $terms_spanish = '';
+        $terms_portuguese = '';
+
+        foreach($terms as $term){
+
+            if($search_data['direction'] == 1){
+                $terms_to_add = $term->import;
+            }else if($search_data['direction'] == 2){
+                $terms_to_add = $term->export;
+            }
+
+            if($term->language_id == 1){
+                $terms_english .= $terms_to_add . '<br>';
+            }else if($term->language_id == 2){
+                $terms_spanish .= $terms_to_add . '<br>';
+            }else if($term->language_id == 3){
+                $terms_portuguese .= $terms_to_add . '<br>';
+            }
+        }
+
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
+
+        return $final_terms;
+    }
+
     //Retrives global Transit Times
     public function searchTransitTime($rate)
     {
@@ -915,10 +953,6 @@ class SearchApiController extends Controller
                         }else{
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                         }
-
-                        //Updating rate totals to new added array
-                        $rate->$to_update = $totals_array;
-                        array_push($rate_charges[$direction], $charge);
 
                         //
                         if ($direction == 'Freight') {
