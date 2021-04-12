@@ -540,7 +540,7 @@
             </div>
 
             <!-- TARJETA CMA -->
-            <div class="col-12 mb-4" v-if="false"> 
+            <div class="col-12 mb-4"> 
 
                 <div class="result-search">
 
@@ -951,7 +951,7 @@
             <!-- FIN TARJETA CMA -->
 
             <!-- TARJETA MAERKS -->
-            <div class="col-12 mb-4" v-if="false">
+            <div class="col-12 mb-4">
 
                 <div class="result-search">
 
@@ -1559,11 +1559,42 @@ export default {
                 component.finalRates = component.rates;
             }
         },
+
+        callMaerskAPI(){
+            let postOriginPort = this.request.originPorts[0].code;
+            let postDestinationPort = this.request.destinationPorts[0].code;
+            let postDate = new Date().toISOString().substring(0,10);
+
+            console.log(postDate);
+
+            axios
+                .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                    { params: {
+                        originPort: postOriginPort,
+                        destinationPort: postDestinationPort,
+                        equipmentSizeType: '2x20DRYx2',
+                        departureDate: postDate,
+                        uemail: 'dcabanales@gmail.com',
+                        brands: 'maersk'
+                        } 
+                    },
+                    { headers: {
+                        'Authorization': `bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau`,
+                        'Accept': `application/json`,
+                        'Content-type': `application/json`
+                        }
+                    })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
     },
 
     mounted(){
         let component = this;
-
         //console.log(component.datalists);
 
         component.rates.forEach(function (rate){
@@ -1582,6 +1613,8 @@ export default {
                 component.isActive = false;
             }
         }
+        
+        this.callMaerskAPI();
 
         this.loaded = true;
     },
