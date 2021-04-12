@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container-cards">
         <h2 class="mb-5 t-recent" style="margin-top: 80px"><b-icon icon="clock-history" scale="2" variant="secondary" class="mr-3"></b-icon> recent searches</h2>
 
         <div class="row">
