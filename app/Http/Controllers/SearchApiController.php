@@ -247,7 +247,7 @@ class SearchApiController extends Controller
             $remarks = $this->searchRemarks($rate, $search_ids);
 
             //Appending Rate Id to Charges
-            $this->addToRate($rate, $charges, 'charges', $search_ids['client_currency']);
+            //$this->addToRate($rate, $charges, 'charges', $search_ids['client_currency']);
 
             $terms = $this->searchTerms($search_ids);
 

@@ -43,7 +43,7 @@
                         <td>{!! $charge->charge ?? 'Inland' !!}</td>
                         <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
                         @foreach ($charge->total as $total)
-                            <td>{!!  $total !!} {!! @$charge->currency->alphacode !!}</td>
+                            <td>{!!  isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                         @endforeach
                     </tr>
                 @endforeach
