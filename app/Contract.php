@@ -65,6 +65,12 @@ class Contract extends Model implements HasMedia, Auditable
         return $this->belongsTo('App\User');
     }
 
+    public function contract_request()
+    {
+
+        return $this->hasOne('App\NewContractRequest','contract_id','id');
+    }
+
     public function FilesTmps()
     {
         return $this->hasMany('App\FileTmp');
