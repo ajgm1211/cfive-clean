@@ -40,17 +40,17 @@
                     <tr>
                         <td>{!! $charge->charge ?? 'Inland' !!}</td>
                         <td>{{  $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
-                        <td>{{ $charge->units ?? "--" }}</td>
-                        <td>{{ $charge->price ?? "--" }}</td>
+                        <td>{{ isDecimal($charge->units, false, true) ?? "--" }}</td>
+                        <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
                         @if(isset($charge->totals))
                             @php
                                 $array_total_inland = json_decode($charge->totals);
                             @endphp
                             @foreach($array_total_inland as $total)
-                                <td>{!! isDecimal($total, true).' '.$charge->currency->alphacode !!}</td>
+                                <td>{!! isDecimal($total, false, true).' '.$charge->currency->alphacode !!}</td>
                             @endforeach
                         @else
-                            <td>{!! isDecimal($charge->total, true).' '.$charge->currency->alphacode !!}</td>
+                            <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
                         @endif
                         
                     </tr>
