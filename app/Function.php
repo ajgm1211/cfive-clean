@@ -15,7 +15,7 @@ function extraerWith($patron, $cadena)
 function setHashID()
 {
     $user = User::where('company_user_id', '=', Auth::user()->company_user_id)->with('companyUser')->first();
-    if (! empty($user)) {
+    if (!empty($user)) {
         $hash = $user->companyUser->hash;
     } else {
         $hash = 'cargofivepapa';
@@ -69,24 +69,32 @@ function obtenerRouteKey($keyP)
     }
 }
 
-function isDecimal($monto, $quote = false)
+function isDecimal($monto, $quote = false, $pdf = false)
 {
     $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
     if ($isDecimal != null && $isDecimal == 1) {
-        if (! $quote) {
-            if (is_string($monto)) {
-                return $monto;
-            } elseif (is_float($monto)) {
-                return $monto;
+        if ($pdf) {
+            return number_format($monto, 2, ',', '.');
+        } else {
+            if (!$quote) {
+                if (is_string($monto)) {
+                    return $monto;
+                } elseif (is_float($monto)) {
+                    return $monto;
+                } else {
+                    return number_format($monto, 2, '.', '');
+                }
             } else {
                 return number_format($monto, 2, '.', '');
             }
-        } else {
-            return number_format($monto, 2, '.', '');
         }
     } else {
-        return round($monto);
+        if ($pdf) {
+            return number_format($monto, 0, ',', '.');
+        } else {
+            return round($monto);
+        }
     }
 }
 
@@ -113,7 +121,7 @@ function ratesCurrencyFunction($id, $typeCurrency)
 
 function processOldDryContainers($array, $type)
 {
-    if (! empty($array)) {
+    if (!empty($array)) {
         switch ($type) {
             case 'amounts':
                 foreach ($array as $k => $amount_value) {
@@ -163,8 +171,9 @@ function processOldDryContainers($array, $type)
     }
 }
 
-function floatvalue($val){
-    $val = str_replace(",",".",$val);
+function floatvalue($val)
+{
+    $val = str_replace(",", ".", $val);
     $val = preg_replace('/\.(?=.*\.)/', '', $val);
     return floatval($val);
 }
