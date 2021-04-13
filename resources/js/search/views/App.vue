@@ -3,21 +3,27 @@
 
         <Search
             @initialDataLoaded="setDatalists"
-            @searchRequest="setSearchStatus"
+            @searchRequested="setSearchStatus"
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
         ></Search>
 
         <Recent 
-            v-if="(Object.keys(foundRates).length == 0 || foundRates.length == 0) && !searching && requestData.requested == undefined"
+            v-if="foundRates.length == 0 && !searching && requestData.requested == undefined"
         ></Recent>
 
         <Result 
-            v-if="Object.keys(foundRates).length != 0"
+            v-if="foundRates.length != 0"
             :rates="foundRates"
             :request="searchRequest"
             :datalists="datalists"
         ></Result>
+
+        <APIResults
+            v-if="searchRequest.length != 0"
+            :request="searchRequest"
+            ref="resultsAPI"
+        ></APIResults>
 
     </div>
 </template>
@@ -26,19 +32,22 @@
 import Search from './Search'; 
 import Recent from './Recent';
 import Result from './Result'; 
+import APIResults from './APIResults'; 
 
 export default {
     components: {
         Search,
         Recent,
-        Result
+        Result,
+        APIResults
     },
     data() {
         return {
             searching: false,
-            foundRates: {},
+            searchRequested: false,
+            foundRates: [],
             foundCharges: {},            
-            searchRequest: {},
+            searchRequest: [],
             datalists: {},
             requestData: {},
         }
@@ -61,6 +70,9 @@ export default {
             this.searching = false;
             this.foundRates = searchData;
             this.searchRequest = searchRequest;
+            this.$nextTick (()=>{
+                this.$refs.resultsAPI.callMaerskAPI();
+            })
         },
 
         clearDisplay(){
