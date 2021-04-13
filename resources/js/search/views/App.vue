@@ -5,6 +5,7 @@
             @initialDataLoaded="setDatalists"
             @searchRequest="setSearchStatus"
             @searchSuccess="setSearchData"
+            @clearResults="clearDisplay"
         ></Search>
 
         <Recent 
@@ -60,6 +61,10 @@ export default {
             this.searching = false;
             this.foundRates = searchData;
             this.searchRequest = searchRequest;
+        },
+
+        clearDisplay(){
+            this.foundRates = [];
         },
     },
 }
