@@ -1799,7 +1799,6 @@ export default {
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
-                    console.log(this.searchData.carriers.length, this.datalists.carriers.length);
                     this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
@@ -1959,7 +1958,7 @@ export default {
         requestSearch() {
             this.searching = true;
             this.$emit("clearResults");
-            this.$emit("searchRequest");
+            this.$emit("searchRequested");
 
             actions.search
                 .process(this.searchRequest)
