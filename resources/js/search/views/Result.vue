@@ -6,7 +6,7 @@
         <h2 class="mr-5 t-recent">
           results found: <b>{{ finalRates.length }}</b>
         </h2>
-        <div class="d-flex filter-search">
+        <!--<div class="d-flex filter-search">
           <b style="color: #80888b !important; letter-spacing: 2px !important"
             >filter by:</b
           >&nbsp;
@@ -28,7 +28,7 @@
               :options="filterOptions"
               placeholder="Carrier"
               class="s-input no-select-style"
-              @input="filterCarriers"
+              
             >
             </multiselect>
             <button
@@ -40,9 +40,9 @@
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <!--<b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>-->
+            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
           </div>
-        </div>
+        </div>-->
       </div>
 
       <div class="col-12 col-sm-6 addcontract-createquote">
@@ -664,7 +664,7 @@
       </div>
 
       <!-- TARJETA CMA -->
-      <div class="col-12 mb-4">
+      <div class="col-12 mb-4" v-if="false">
         <div class="result-search">
           <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
@@ -1275,13 +1275,13 @@
               <!-- OPCIONES E INFORMACION EXTRA -->
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="result-action">
-                  <a href="#0" style="color: #006bfa" class="mr-3"
+                  <span style="color: #006bfa;text-transform: capitalize;" class="mr-3"
                     ><b-icon icon="check-circle-fill"></b-icon> guaranteed Price
-                    & loading</a
+                    & loading</span
                   >
-                  <a href="#0" style="color: #006bfa" class="mr-3"
+                  <span style="color: #006bfa;text-transform: capitalize;" class="mr-3"
                     ><b-icon icon="check-circle-fill"></b-icon> two-way
-                    commitment</a
+                    commitment</span
                   >
                   <a href="#0" style="color: #071c4b"> T&C applicable</a>
                 </div>
@@ -1869,7 +1869,7 @@ export default {
 
     component.finalRates = component.rates;
 
-    component.setFilters();
+    //component.setFilters();
 
     window.document.onscroll = () => {
       let navBar = document.getElementById("top-results");
