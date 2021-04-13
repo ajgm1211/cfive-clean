@@ -225,7 +225,7 @@ class SearchApiController extends Controller
             } else {
                 $price_level_markups = [];
             }
-            
+
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids['client_currency']);
 
@@ -669,7 +669,7 @@ class SearchApiController extends Controller
         return $final_remarks;
     }
 
-    //Retrieves Global Remarks
+    //Retrieves Terms and Conditions
     public function searchTerms($search_data)
     {
         //Retrieving current companyto filter terms
@@ -953,20 +953,8 @@ class SearchApiController extends Controller
                         }else{
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
                         }
-
-                        //
-                        if ($direction == 'Freight') {
-                            if ($charge->joint_as == 'charge_currency') {
-                                $rate_currency_containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                                $charge->containers = $rate_currency_containers;
-                            } elseif ($charge->joint_as == 'client_currency') {
-                                $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
-                                $charge->containers_client_currency = $rate_currency_containers;
-                            }
-                            $charge->currency = $rate->currency;
-                        }
                     }
-                
+
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
 
