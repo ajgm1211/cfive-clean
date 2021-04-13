@@ -1823,7 +1823,7 @@ export default {
     filterCarriers() {
       let component = this;
 
-      component.finalRates = [];
+        //console.log(this.request);
 
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
