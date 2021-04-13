@@ -240,6 +240,9 @@ class QuotationController extends Controller
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
             'direction_id' => $search_data_ids['direction'],
+            'terms_portuguese' => $search_data['terms']['portuguese'],
+            'terms_and_conditions' => $search_data['terms']['spanish'],
+            'terms_english' => $search_data['terms']['english']
         ]);
 
         $quote = $quote->fresh();
