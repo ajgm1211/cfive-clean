@@ -121,6 +121,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :disabled="searchRequest.requestData.requested == 1"
                             :options="destinationPortOptions"
                             label="display_name"
                             track-by="display_name"
@@ -1893,6 +1894,7 @@ export default {
                                 model_id: response.data.data.id,
                             },
                         });
+                        this.getQuery();
                     })
                     .catch((error) => {
                         this.errorsExist = true;
@@ -1902,7 +1904,7 @@ export default {
                         }
                     });
             } else if (this.searchRequest.requestData.requested == 1) {
-                this.$router.go();
+                this.getQuery();
             }
         },
 
@@ -1956,6 +1958,7 @@ export default {
 
         requestSearch() {
             this.searching = true;
+            this.$emit("clearResults");
             this.$emit("searchRequest");
 
             actions.search
@@ -2271,11 +2274,7 @@ export default {
                 });
             }
         },
-
-        $route(to, from) {
-            this.$router.go(to);
-        },
-
+        
         valueEq: function () {
             if (this.valueEq.name == "DRY") {
                 this.items.splice({});

@@ -951,7 +951,7 @@
             <!-- FIN TARJETA CMA -->
 
             <!-- TARJETA MAERKS -->
-            <div class="col-12 mb-4" v-if="false">
+            <div class="col-12 mb-4">
 
                 <div class="result-search">
 
@@ -1132,9 +1132,9 @@
 
                                 <div class="result-action">
                                     
-                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> guaranteed Price & loading</a>
-                                    <a href="#0" style="color: #006BFA" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> two-way commitment</a>
-                                    <a href="#0" style="color: #071C4B"> T&C applicable</a>
+                                    <span style="color: #006BFA;text-transform: capitalize;" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> guaranteed Price & loading</span>
+                                    <span style="color: #006BFA;text-transform: capitalize;" class="mr-3"><b-icon icon="check-circle-fill"></b-icon> two-way commitment</span>
+                                    <a href="#" style="color: #071C4B"> T&C applicable</a>
 
                                 </div>
 
@@ -1559,12 +1559,45 @@ export default {
                 component.finalRates = component.rates;
             }
         },
+
+        callMaerskAPI(){
+            let apiOriginPorts = this.request.originPorts;
+            let apiDestinationPorts = this.request.destinationPorts;
+            let apiDate = new Date().toISOString().substring(0,10);
+            
+            axios
+                .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                    {
+                    params: {
+                        originPort: 'ESBCN',
+                        destinationPort: 'ARBUE',
+                        equipmentSizeType: '1x20DRYx2',
+                        departureDate: apiDate,
+                        uemail: 'dcabanales@gmail.com',
+                        brands: 'maersk'
+                        }
+                    },
+                    {
+                    headers:{
+                        'Authorization': 'bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau',
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json'
+                        } 
+                    }
+                )
+                .then((response) => {
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
     },
 
     mounted(){
         let component = this;
 
-        //console.log(component.datalists);
+        //console.log(this.request);
 
         component.rates.forEach(function (rate){
             rate.addToQuote = false;
@@ -1582,6 +1615,8 @@ export default {
                 component.isActive = false;
             }
         }
+
+        this.callMaerskAPI();
 
         this.loaded = true;
     },
