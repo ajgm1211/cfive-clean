@@ -6,10 +6,12 @@
             @searchRequested="setSearchStatus"
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
+            ref="searchComponent"
         ></Search>
 
         <Recent 
             v-if="foundRates.length == 0 && !searching && requestData.requested == undefined"
+            @recentSearch="quickSearch"
         ></Recent>
 
         <Result 
@@ -19,11 +21,11 @@
             :datalists="datalists"
         ></Result>
 
-        <APIResults
+        <!--<APIResults
             v-if="searchRequest.length != 0"
             :request="searchRequest"
             ref="resultsAPI"
-        ></APIResults>
+        ></APIResults>-->
 
     </div>
 </template>
@@ -32,14 +34,14 @@
 import Search from './Search'; 
 import Recent from './Recent';
 import Result from './Result'; 
-import APIResults from './APIResults'; 
+//import APIResults from './APIResults'; 
 
 export default {
     components: {
         Search,
         Recent,
         Result,
-        APIResults
+        //APIResults
     },
     data() {
         return {
@@ -61,22 +63,26 @@ export default {
             this.datalists = initialData;
         },
 
-        setSearchStatus(){
+        setSearchStatus(searchRequest){
             this.searching = true;
+            this.searchRequest = searchRequest;
+            /**this.$nextTick (()=>{
+                this.$refs.resultsAPI.callMaerskAPI();
+            })**/
         },
 
-        setSearchData(searchData,searchRequest){
+        setSearchData(searchData){
             //console.log(this.searchData);
             this.searching = false;
             this.foundRates = searchData;
-            this.searchRequest = searchRequest;
-            this.$nextTick (()=>{
-                this.$refs.resultsAPI.callMaerskAPI();
-            })
         },
 
         clearDisplay(){
             this.foundRates = [];
+        },
+
+        quickSearch(){
+            this.$refs.searchComponent.getQuery();
         },
     },
 }

@@ -2,7 +2,7 @@
     <div class="container-cards">
 
         <!-- TARJETA CMA -->
-        <div class="col-12 mb-4" v-if="false">
+        <div class="col-12 mb-4" >
         <div class="result-search">
             <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
@@ -441,7 +441,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img src="/images/maersk.png" alt="logo" width="115px" />
+                <img :src="'/images/' + result.companyCode + '.png'" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -449,7 +449,7 @@
             <div class="row col-12 col-lg-8 margin-res">
                 <!-- CONTRACT NAME -->
                 <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
+                <h6 class="mt-4 mb-5 contract-title">{{ result.company }}</h6>
                 </div>
                 <!-- FIN CONTRACT NAME -->
 
@@ -466,8 +466,8 @@
                     <!-- ORGIEN -->
                     <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-0">España</p>
-                    <p>08 Agos, 2020</p>
+                    <p class="mb-0">{{ result.departureTerminal }}</p>
+                    <p>{{ result.departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORGIEN -->
 
@@ -486,8 +486,8 @@
                     </div>
 
                     <div class="direction-desc mt-2">
-                        <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
-                        <p><b>Vessel:</b> Gordito</p>
+                        <p class="mb-1"><b>Transit Time:</b>{{ result.transitTime }}</p>
+                        <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
                     </div>
                     </div>
                     <!-- FIN LINEA DE RUTA -->
@@ -495,8 +495,8 @@
                     <!-- DESTINO -->
                     <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-0">Argentina</p>
-                    <p>08 Agos, 2020</p>
+                    <p class="mb-0">{{ result.arrivalTerminal }}</p>
+                    <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINO -->
                 </div>
@@ -506,13 +506,14 @@
                 <div
                     class="row col-lg-6 d-lg-none mr-0 ml-0"
                     style="border-bottom: 1px solid #eeeeee"
+
                 >
                     <!-- DESTINOS -->
                     <div class="col-sm-6">
                     <!-- ORGIEN -->
                     <div class="origin mb-3">
                         <span>origin</span>
-                        <p class="mb-1">España, Barcelona</p>
+                        <p class="mb-1">ESBCN</p>
                         <p>08 Agos, 2020</p>
                     </div>
                     <!-- FIN ORGIEN -->
@@ -520,7 +521,7 @@
                     <!-- DESTINO -->
                     <div class="destination align-items-start mb-3">
                         <span>destination</span>
-                        <p class="mb-1">Argentina, Buenos Aires</p>
+                        <p class="mb-1">ARBUE</p>
                         <p>08 Agos, 2020</p>
                     </div>
                     <!-- FIN DESTINO -->
@@ -570,38 +571,12 @@
 
                     <!-- PRECIO -->
                     <div class="row card-amount card-amount__res">
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
+                    <div class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(globalTotal, totalKey) in result.pricingDetails.totalRatePerContainer"
+                        :key="totalKey">
                         <p>
                         <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
+                            >{{ globalTotal.total }} <span style="font-size: 10px">{{ globalTotal.currencyCode }}</span></b
                         >
                         </p>
                     </div>
@@ -962,6 +937,7 @@ export default {
                     )
                     .then((response) => {
                         component.results = response.data;
+                        console.log(response.data);
                     })
                     .catch((error) => {
                         console.log(error);
