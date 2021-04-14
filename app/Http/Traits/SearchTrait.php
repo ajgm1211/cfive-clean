@@ -910,7 +910,7 @@ trait SearchTrait
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $client_currency)
+    public function setChargesPerContainer($charges, $containers, $container_id, $client_currency)
     {
         //Looping through charges collection
         foreach($charges as $charges_direction){
@@ -945,11 +945,16 @@ trait SearchTrait
                     }
                 //Individual container calculations
                 }else if(in_array($calculation->code,$exclude_dry)){
-                    foreach($containers as $container){
-                        if($container['gp_container_id'] != 1){
-                            $container_charges['C'.$container['code']] = $charge->ammount;
+                    if($container_id != 1){
+                        foreach($containers as $container){
+                            if($container['gp_container_id'] != 1){
+                                $container_charges['C'.$container['code']] = $charge->ammount;
+                            }
                         }
+                    }else{
+                        $charge->setAttribute('hide',true);
                     }
+
                 }else{
                     //Catching poorly formatted calculation codes
                     if($calculation->code == '40'){
@@ -976,6 +981,10 @@ trait SearchTrait
                     //In unmodified currency, for general use
                     //In client currency to show in overall totals
                 $client_currency_charges = $this->convertToCurrency($charge->currency,$client_currency,$container_charges);
+
+                if(!isset($charge->hide)){
+                    $charge->setAttribute('hide', false);
+                }
 
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
@@ -1085,5 +1094,92 @@ trait SearchTrait
         }
 
         return($joint_charges);
+    }
+
+    //Converting amounts to string so they display decimal places correctly
+    public function stringifyRateAmounts($rate)
+    {
+        //RATE TOTALS GLOBAL
+        if(isset($rate->totals_with_markups)){
+            $totals_with_markups_string = $rate->totals_with_markups;
+            foreach($totals_with_markups_string as $key => $total){
+                $totals_with_markups_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_with_markups = $totals_with_markups_string;
+        }
+
+        if(isset($rate->containers_with_markups)){
+            $containers_with_markups_string = $rate->containers_with_markups;
+            foreach($containers_with_markups_string as $key => $total){
+                $containers_with_markups_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->containers_with_markups = $containers_with_markups_string;
+        }
+
+        $totals_string = $rate->totals;
+        foreach($totals_string as $key => $total){
+            $totals_string[$key] = strval(isDecimal($total, true));
+        }
+
+        $rate->totals = $totals_string;
+
+        //RATE TOTALS BY TYPE 
+        $by_type = $rate->charge_totals_by_type;
+        
+        foreach($by_type as $typeKey => $type){
+            foreach($type as $key => $total){
+                $by_type[$typeKey][$key] = strval(isDecimal($total, true));
+            }
+        }
+
+        $rate->charge_totals_by_type = $by_type;
+
+        //CHARGES
+        foreach($rate->charges as $direction => $charge_direction){
+            foreach($charge_direction as $chargeKey => $charge){
+                if(isset($charge->surcharge)){
+                    //Plain Container prices
+                    $charge_containers_string = $charge->containers;
+    
+                    foreach($charge_containers_string as $container => $containerTotal){
+                        $charge_containers_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge->containers = $charge_containers_string;
+    
+                    //Containers in client currency
+                    $charge_totals_string = $charge->containers_client_currency;
+    
+                    foreach($charge_totals_string as $container => $containerTotal){
+                        $charge_totals_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge->containers_client_currency = $charge_totals_string;
+    
+                    //Checking if markups
+                    if(isset($charge->containers_with_markups)){
+                        //Containers With Markups
+                        $charge_containers_with_markups_string = $charge->containers_with_markups;
+    
+                        foreach($charge_containers_with_markups_string as $container => $containerTotal){
+                            $charge_containers_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge->containers_with_markups = $charge_containers_with_markups_string;
+    
+                        //Containers with markups in client currency
+                        $charge_totals_with_markups_string = $charge->totals_with_markups;
+                        
+                        foreach($charge_totals_with_markups_string as $container => $containerTotal){
+                            $charge_totals_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge->totals_with_markups = $charge_totals_with_markups_string;
+                    }
+                }
+            }
+        }
     }
 }

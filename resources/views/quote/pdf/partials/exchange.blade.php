@@ -1,8 +1,8 @@
-<div class="clearfix">
+<div class="clearfix" style="margin-bottom: 5px;">
 
-    <span class="title text-left" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.exchange')}}</b><br><br/></span>
+    <span class="text-left" style="font-size: 12px !important;"><b>{{__('pdf.exchange')}}</b></span>
 
-    <div style="width:50%">
+    <div>
         <table border="0" cellspacing="1" cellpadding="1">
 
             <!-- Table Header -->
@@ -41,4 +41,3 @@
     </div>  
 
 </div>
-<br>

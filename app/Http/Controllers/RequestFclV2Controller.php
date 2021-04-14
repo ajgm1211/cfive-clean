@@ -33,9 +33,12 @@ use App\Notifications\SlackNotification;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer as Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Http\Traits\SearchTrait;
+
 
 class RequestFclV2Controller extends Controller
 {
+    use SearchTrait;
     // Load View All Request
     public function index(Request $request)
     {
@@ -56,7 +59,15 @@ class RequestFclV2Controller extends Controller
         $date_end = $date_end->addDay(1);
         //$date_start = '2019-08-26 00:00:00';
         //$date_end    = '2020-03-03 12:39:54';
-        $Ncontracts = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
+        $Ncontract = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
+        
+        $Ncontracts = array();
+        foreach ($Ncontract as $contract) {
+            if ($contract->erased_contract == 0) {
+                $Ncontracts[] = $contract;   
+            }
+        } 
+
         $permiso_eliminar = false;
         $user = \Auth::user();
         if ($user->hasAnyPermission([1])) {
@@ -227,8 +238,8 @@ class RequestFclV2Controller extends Controller
         $carriers = $request->carrierM;
         $name = $request->name;
         $user = $request->user;
-        $groupContainer = $request->groupContainers;
-        $containers = $request->containers;
+        $groupContainer = $request->container_type;
+        $containers = $request->equipment;
         $validationexp = $request->validation_expire;
         $validity = explode('/', $validationexp);
         $time = new \DateTime();
@@ -341,10 +352,19 @@ class RequestFclV2Controller extends Controller
         $carrier = carrier::all()->pluck('name', 'id');
         $direction = HelperAll::addOptionSelect(Direction::all(), 'id', 'name');
         $groupContainer = HelperAll::addOptionSelect(GroupContainer::all(), 'id', 'name');
+        //C5 select 
+        $contain = Container::pluck('code', 'id');
+        $contain->prepend('Select an option', '');
+        $group_contain = GroupContainer::pluck('name', 'id');
+        $containers = Container::get();
+        $equipment = array('1', '2', '3');
+        $validateEquipment = $this->validateEquipment($equipment, $containers);
+        $containerType = $validateEquipment['gpId'];
+
         $containers = Container::pluck('name', 'id');
         $user = \Auth::user();
 
-        return view('RequestV2.Fcl.index', compact('carrier', 'user', 'direction', 'groupContainer', 'containers'));
+        return view('RequestV2.Fcl.index', compact('carrier', 'user', 'direction', 'groupContainer', 'containers','containerType','equipment','group_contain','contain'));
     }
 
     //Carga los Status segun la posicion actual

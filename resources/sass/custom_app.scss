@@ -108,7 +108,7 @@ div,
 .status-st {
     color: #fff;
     font-size: 9px;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 5px 10px;
     text-transform: uppercase;
 }
@@ -129,7 +129,7 @@ div,
 }
 
 .incomplete {
-    background-color: #969cc0;
+    background-color: #FAB429;
 }
 
 .expired {
@@ -137,7 +137,7 @@ div,
 }
 
 .incomplete::before {
-    content: 'incompleted';
+    content: 'processing';
     font-weight: bold;
 }
 
@@ -1706,5 +1706,16 @@ input.data-provider {
     }
     .carrier-img {
         padding: 50px 0px !important;
+    }
+}
+
+.input-search-form {
+    position: relative;
+    .close {
+        position: absolute;
+        top: 16px;
+        right: 45px;
+        width: 25px;
+        height: 25px;
     }
 }

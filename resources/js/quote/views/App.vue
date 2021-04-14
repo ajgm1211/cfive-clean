@@ -103,9 +103,11 @@ export default {
   },
   created() {},
   methods: {
+
     onEdit(data) {
       window.location = `/api/quote/${data.id}/edit`;
     },
+
     setClient(value) {
       if (value == null) {
         return "--";
@@ -113,19 +115,7 @@ export default {
         return value.business_name;
       }
     },
-    setPortList(value) {
-      let ports = "";
 
-      if (value) {
-        value.forEach(function (val) {
-          ports += "<li>" + val + "</li> ";
-        });
-
-        return ports;
-      } else {
-        return "--";
-      }
-    },
   },
 };
 </script>
