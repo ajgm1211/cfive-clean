@@ -1958,7 +1958,7 @@ export default {
         requestSearch() {
             this.searching = true;
             this.$emit("clearResults");
-            this.$emit("searchRequested");
+            this.$emit("searchRequested",this.searchRequest);
 
             actions.search
                 .process(this.searchRequest)
@@ -1975,8 +1975,7 @@ export default {
                     this.searching = false;
                     this.$emit(
                         "searchSuccess",
-                        response.data.data,
-                        this.searchRequest
+                        response.data.data
                     );
                 })
                 .catch((error) => {

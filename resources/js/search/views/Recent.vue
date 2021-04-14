@@ -71,7 +71,7 @@ export default {
     {
         recentSearch(id){
             this.$router.push({ path: `search`, query: { requested: 0, model_id: id} });
-            this.$router.go();
+            this.$emit("recentSearch");
         }
     }
 }
