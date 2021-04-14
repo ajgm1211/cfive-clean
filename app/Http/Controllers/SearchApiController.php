@@ -84,12 +84,12 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $companies = Company::where('company_user_id', '=', $company_user_id)->get();
+        $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
         $contacts = [];
 
         foreach ($companies as $comp) {
-            $newContacts = $comp->contact()->get();
+            $newContacts = $comp->contact;
 
             foreach ($newContacts as $cont) {
                 if (!in_array($cont, $contacts)) {
