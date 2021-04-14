@@ -228,7 +228,7 @@ class QuotationController extends Controller
             'user_id' => $user->id,
             'direction_id' => $search_data_ids['direction'],
             'company_user_id' => $company_user->id,
-            'language_id' => $company_user->pdf_language,
+            'language_id' => ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language,
             'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
