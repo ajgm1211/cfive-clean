@@ -17,7 +17,7 @@
         <!-- End Search Input -->
 
         <!-- DataTable -->
-        <b-table-simple small responsive borderless>
+        <b-table-simple small responsive borderless :class="classTable">
             <!-- Header table -->
             <b-thead>
                 <b-tr>
@@ -622,6 +622,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        classTable: String,
         view: String,
         filter: {
             type: Boolean,
