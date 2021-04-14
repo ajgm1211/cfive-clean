@@ -133,6 +133,11 @@ class QuoteV2 extends Model implements HasMedia, Auditable
         return $this->hasManyThrough('App\Charge', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
     }
 
+    public function charge_lcl()
+    {
+        return $this->hasManyThrough('App\ChargeLclAir', 'App\AutomaticRate', 'quote_id', 'automatic_rate_id');
+    }
+
     public function origin_harbor()
     {
         return $this->hasManyThrough('App\Harbor', 'App\AutomaticRate', 'quote_id', 'id', 'id', 'origin_port_id');

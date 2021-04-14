@@ -18,7 +18,9 @@ class SearchApiResource extends JsonResource
     {
         $origin_ports = $this->origin_ports()->get();
         $destination_ports = $this->destination_ports()->get();
-        $carriers = $this->carriers()->get();
+        $carriers = $this->carriers()->get()->map(function ($carrier) {
+            return $carrier->only(['id', 'name','image']);
+        });;
 
         $containers = $this->containers();
 

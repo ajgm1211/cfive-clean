@@ -433,8 +433,8 @@
                                 >
                                     <b-card>
                                         <li
-                                            v-for="address in item[col.key]"
-                                            :key="address"
+                                            v-for="(address, addKey) in item[col.key]"
+                                            :key="addKey"
                                         >
                                             {{ address }}
                                         </li>
@@ -816,6 +816,9 @@ export default {
 
         /* Request the data with axios */
         getData(params = {}) {
+            //Cleaning data array
+            this.data = {};
+
             if (!this.multiList) {
                 this.actions.list(
                     params,
