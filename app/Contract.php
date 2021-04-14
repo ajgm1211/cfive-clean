@@ -130,8 +130,9 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
+        $status_erased=1;
         $company_id = Auth::user()->company_user_id;
-        return $query->where('company_user_id', '=', $company_id);
+        return $query->where('company_user_id', '=', $company_id)->where('status_erased','!=',$status_erased);
     }
 
     /**
