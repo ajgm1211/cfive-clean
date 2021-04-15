@@ -1154,6 +1154,7 @@ class ImportationController extends Controller
         $fail_surcharge_total = collect([]);
         $contract_id = $request->contract_id;
         $contract = Contract::find($contract_id);
+        $countries = Country::pluck('name', 'id');
         $harbor = Harbor::pluck('display_name', 'id');
         $carrier = Carrier::pluck('name', 'id');
         $currency = Currency::pluck('alphacode', 'id');
@@ -1180,6 +1181,7 @@ class ImportationController extends Controller
             $currencyA = null;
             $failed = [];
             $colec = [];
+            $type_rate=null;
 
             $carrAIn = null;
             $classsurcharger='green';
@@ -1200,16 +1202,27 @@ class ImportationController extends Controller
             $carrierA = explode('_', $failsurcharge['carrier_id']);
             $currencyA = explode('_', $failsurcharge['currency_id']);
 
-            $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
-                ->first();
+            if ($failsurcharge->differentiator == 1) {
+                $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
+                    ->first();
+            } elseif ($failsurcharge->differentiator == 2) {
+                $originOb = Country::where('variation->type', 'like', '%' . strtolower($originA[0]) . '%')
+                    ->first();
+            }
             if (count($originA) <= 1) {
                 $originV = $originOb['id'];
             } else {
                 $classdorigin = 'red';
             }
 
-            $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
-                ->first();
+            if ($failsurcharge->differentiator == 1) {
+                $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
+                    ->first();
+            } elseif ($failsurcharge->differentiator == 2) {
+                $destinationOb = Country::where('variation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
+                    ->first();
+            }
+            
             if (count($destinationA) <= 1) {
                 $destinationV = $destinationOb['id'];
             } else {
@@ -1261,6 +1274,12 @@ class ImportationController extends Controller
                 $classsurcharger = 'red';
             }
 
+            if($failsurcharge->differentiator == 1){
+                $type_rate='port';
+            }else{
+                $type_rate='country';
+            }
+
             $failed = ['surcharge_id' => $failsurcharge->id,
                 'contract_id' => $failsurcharge->contract_id,
                 'surcharge' => $surchargesV,
@@ -1279,17 +1298,18 @@ class ImportationController extends Controller
                 'classtypedestiny'=>$classtypedestiny,
                 'classcalculationtype'=>$classcalculationtype,
                 'classamount'=>$classamount,
+                'type_rate'=>$type_rate,
             ];
             $fail_surcharge_total->push($failed);
         }
 
         // dd($fail_surcharge_total);
-        return view('importationV2.Fcl.EditByDetailFailSurcharge', compact('fail_surcharge_total','equiment', 'contract_id', 'equiment_id', 'contract', 'harbor', 'carrier', 'currency','surcharges','calculation_type','type_destiny'));
+        return view('importationV2.Fcl.EditByDetailFailSurcharge', compact('fail_surcharge_total','equiment', 'contract_id', 'equiment_id', 'contract', 'harbor', 'carrier', 'currency','surcharges','calculation_type','type_destiny','countries'));
     }
 
     public function StoreFailsurchargeMultiplesByDetalls(Request $request)
     {
-        // dd($request->all());
+        // dd($request);
         $contract_id = $request->contract_id;
         $data_surcharges = $request->surcharge_fail_id;
         $data_origins = $request->origin_id;
@@ -1300,49 +1320,78 @@ class ImportationController extends Controller
         $data_amount=$request->amountS;
         $data_carrier = $request->carrier_id;
         $data_currency = $request->currency_id;
-
+        $typerate=$request->typerate;
         $equiment_id = $request->equiment_id;
 
-        // dd($data_surcharges);
+        // dd($typerate);
         foreach ($data_surcharges as $key => $data_surcharge) {
-            foreach ($data_origins[$key] as $origin) {
-                foreach ($data_destinations[$key] as $destiny) {  
-                    if ($origin != $destiny) {
-                        $exists_surcharge = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
-                            ->where('typedestiny_id', $data_type_destiny[$key])
-                            ->where('contract_id', $contract_id)
-                            ->where('calculationtype_id', $data_type_calculation[$key])
-                            ->where('ammount', $data_amount[$key])
-                            ->where('currency_id', $data_currency[$key])
+            $surcharge_id = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
+                ->where('typedestiny_id', $data_type_destiny[$key])
+                ->where('contract_id', $contract_id)
+                ->where('calculationtype_id', $data_type_calculation[$key])
+                ->where('ammount', $data_amount[$key])
+                ->where('currency_id', $data_currency[$key])
+                ->first();
+            // dd($exists_surcharge);
+            if (empty($surcharge_id)) {
+                $surcharge_id = new LocalCharge();
+                $surcharge_id->surcharge_id = $data_surcharge_id[$key];
+                $surcharge_id->typedestiny_id = $data_type_destiny[$key];
+                $surcharge_id->calculationtype_id = $data_type_calculation[$key];
+                $surcharge_id->ammount = $data_amount[$key];
+                $surcharge_id->currency_id = $data_currency[$key];
+                $surcharge_id->contract_id=$contract_id;
+                $surcharge_id->save();
+            }
+
+            if ($typerate == 'port') {
+                foreach ($data_origins[$key] as $origin) {
+                    foreach ($data_destinations[$key] as $destiny) {
+                        $existsLP = null;
+                        $existsLP = LocalCharPort::where('port_orig', $origin)
+                            ->where('port_dest', $destiny)
+                            ->where('localcharge_id', $surcharge_id->id)
                             ->first();
-                        // dd($exists_surcharge);
-                        if (count((array) $exists_surcharge) == 0) {
-                            $localcharge = new LocalCharge();
-                            $localcharge->surcharge_id = $data_surcharge_id[$key];
-                            $localcharge->typedestiny_id = $data_type_destiny[$key];
-                            $localcharge->calculationtype_id = $data_type_calculation[$key];
-                            $localcharge->ammount = $data_amount[$key];
-                            $localcharge->currency_id = $data_currency[$key];
-                            $localcharge->contract_id=$contract_id;
-                            $localcharge->save();
-
-                            $detailcarrier = new LocalCharCarrier();
-                            $detailcarrier->carrier_id = $data_carrier[$key]; //$request->input('localcarrier_id'.$contador.'.'.$c);
-                            $detailcarrier->localcharge_id=$localcharge->id;
-                            $detailcarrier->save();
-        
-                            $detailport = new LocalCharPort();
-                            $detailport->port_orig = $origin; // $request->input('port_origlocal'.$contador.'.'.$orig);
-                            $detailport->port_dest =  $destiny; //$request->input('port_destlocal'.$contador.'.'.$dest);
-                            $detailport->localcharge_id=$localcharge->id;
-                            $detailport->save();
-
+                        if (empty($existsLP) ) {
+                            LocalCharPort::create([
+                                'port_orig' => $origin,
+                                'port_dest' => $destiny,
+                                'localcharge_id' => $surcharge_id->id,
+                            ]); //
+                        }
+                    }
+                }
+            } elseif ($typerate == 'country') {
+                foreach ($data_origins[$key] as $origin) {
+                    foreach ($data_destinations[$key] as $destiny) {
+                        $existsLC = null;
+                        $existsLC = LocalCharCountry::where('country_orig', $origin)
+                            ->where('country_dest', $destiny)
+                            ->where('localcharge_id', $surcharge_id->id)
+                            ->first();
+                        if (empty($existsLC) ) {
+                            LocalCharCountry::create([
+                                'country_orig' => $origin,
+                                'country_dest' => $destiny,
+                                'localcharge_id' => $surcharge_id->id,
+                            ]); //
                         }
                     }
                 }
             }
-            $failrate = FailSurCharge::find($data_surcharge);
-            $failrate->forceDelete();
+            foreach ($data_carrier[$key] as $carrier) {
+                $localcharcarriersV = null;
+                $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrier)->where('localcharge_id', $surcharge_id->id)->get();
+                
+                if (count($localcharcarriersV)==0) {
+                    LocalCharCarrier::create([
+                        'carrier_id' => $carrier,
+                        'localcharge_id' => $surcharge_id->id,
+                    ]);
+                }
+            }
+            $failSurcharge = FailSurCharge::find($data_surcharge);
+            $failSurcharge->forceDelete();
             //eliminar fail aqui
         }
 
@@ -2250,7 +2299,7 @@ class ImportationController extends Controller
         foreach ($carrierVarArr as $carrierVar) {
             $localcharcarriersV = null;
             $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            if (empty($localcharcarriersV) ) {
+            if (count($localcharcarriersV)==0 ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
@@ -2270,8 +2319,6 @@ class ImportationController extends Controller
 
     public function UpdateSurchargersD(Request $request, $id)
     {
-        //dd($request->all());
-
         $surchargeVar = $request->surcharge_id; // id de la columna surchage_id
         $contractVar = $request->contract_id;
         $typedestinyVar = $request->changetype;
@@ -2297,13 +2344,13 @@ class ImportationController extends Controller
         LocalCharCarrier::where('localcharge_id', '=', $SurchargeId->id)->forceDelete();
         foreach ($carrierVarArr as $carrierVar) {
             // $localcharcarriersV = null;
-            // $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
-            // if (empty($localcharcarriersV) ) {
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrierVar)->where('localcharge_id', $SurchargeId->id)->get();
+            if (count($localcharcarriersV)==0 ) {
                 LocalCharCarrier::create([
                     'carrier_id' => $carrierVar,
                     'localcharge_id' => $SurchargeId->id,
                 ]); //
-            // }
+            }
         }
 
         if ($typerate == 'port') {
