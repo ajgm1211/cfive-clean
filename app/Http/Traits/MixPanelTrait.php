@@ -41,7 +41,7 @@ trait MixPanelTrait
             case "api_companies_list":
                 $this->trackApiCompaniesListEvent($user);
                 break;
-            case "api_conctacts_list":
+            case "api_contacts_list":
                 $this->trackApiContactsListEvent($user);
                 break;
         }
