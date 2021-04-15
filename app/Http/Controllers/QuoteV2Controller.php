@@ -77,11 +77,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
+use App\Http\Traits\MixPanelTrait;
 
 class QuoteV2Controller extends Controller
 {
 
-    use QuoteV2Trait;
+    use QuoteV2Trait,MixPanelTrait;
     use SearchTrait;
 
     protected $pdf_language = 'English';
@@ -3902,7 +3903,29 @@ class QuoteV2Controller extends Controller
         // EVENTO INTERCOM
         $event = new EventIntercom();
         $event->event_searchRate();
+        $mixSearch = array();
 
+        if(isset($request->contact_id) &&isset($request->company_id_quote) ){
+            $contact = contact::find($request->contact_id);
+
+            $contact_cliente=$contact->first_name.' '.$contact->last_name;
+            $company_cliente=$companies[$request->company_id_quote];
+        }else{
+            $contact_cliente=null;
+            $company_cliente=null;
+        }
+
+        $mixSearch= [
+            'company'=>$company_setting->name,
+            'company_client'=>$company_cliente,
+            'contact_client'=>$contact_cliente,
+            'type_container'=>$group_containerC[$request->container_type],
+            'equipment'=>$request->equipment,
+            'contain'=>$contain,
+        ];
+        // dd($mixSearch);
+        $this->trackEvents("old_search_Fcl", $mixSearch);
+        
         return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS')); //aqui
     }
 
@@ -6897,6 +6920,27 @@ class QuoteV2Controller extends Controller
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name', 'id');
+
+        $mixSearch = array();
+        $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        if(isset($request->contact_id) &&isset($request->company_id_quote) ){
+            $contact = contact::find($request->contact_id);
+
+            $contact_cliente=$contact->first_name.' '.$contact->last_name;
+            $company_cliente=$companies[$request->company_id_quote];
+        }else{
+            $contact_cliente=null;
+            $company_cliente=null;
+        }
+        
+        $mixSearch= [
+            'company'=>$company_setting->name,
+            'company_client'=>$company_cliente,
+            'contact_client'=>$contact_cliente,
+        ];
+        // dd($mixSearch);
+        $this->trackEvents("old_search_lcl", $mixSearch);
 
         return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'chargeAPI_SF', 'contain', 'group_contain', 'carrierMan', 'carriersSelected', 'allCarrier', 'containerType', 'quoteType'));
     }
