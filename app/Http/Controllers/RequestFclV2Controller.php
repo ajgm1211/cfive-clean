@@ -34,11 +34,12 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer as Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Traits\SearchTrait;
+use App\Http\Traits\MixPanelTrait;
 
 
 class RequestFclV2Controller extends Controller
 {
-    use SearchTrait;
+    use SearchTrait,MixPanelTrait;
     // Load View All Request
     public function index(Request $request)
     {
@@ -462,6 +463,7 @@ class RequestFclV2Controller extends Controller
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
                     }
                 }
+                $this->trackEvents("Request_Status_fcl", $Ncontract);
             }
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
