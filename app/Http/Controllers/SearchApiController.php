@@ -246,13 +246,6 @@ class SearchApiController extends Controller
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
-            //Appending Rate Id to Charges
-            //$this->addToRate($rate, $charges, 'charges', $search_ids['client_currency']);
-
-            $terms = $this->searchTerms($search_ids);
-
-            $search_array['terms'] = $terms;
-
             $transit_time = $this->searchTransitTime($rate);
 
             $rate->setAttribute('transit_time', $transit_time);
@@ -267,6 +260,10 @@ class SearchApiController extends Controller
         if ($rates != null && count($rates) != 0) {
             //Ordering rates by totals (cheaper to most expensive)
             $rates = $this->sortRates($rates, $search_ids);
+
+            $terms = $this->searchTerms($search_ids);
+
+            $search_array['terms'] = $terms;
 
             $rates[0]->SetAttribute('search', $search_array);
         }
