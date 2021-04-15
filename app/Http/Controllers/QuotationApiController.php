@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use App\Http\Traits\UtilTrait;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\MixPanelTrait;
 
 class QuotationApiController extends Controller
 {
 
-    use UtilTrait;
+    use UtilTrait, MixPanelTrait;
     use QuotationApiTrait;
 
     /**
@@ -47,6 +48,8 @@ class QuotationApiController extends Controller
             $this->updateIntegrationStatus($quotes);
         }
 
+        $this->trackEvents('api_quotes_v2', []);
+
         return QuotationApiResource::collection($quotes, $costs);
     }
 
@@ -67,6 +70,8 @@ class QuotationApiController extends Controller
             ->AuthUserCompany($company_user_id)->findOrFail($id);
 
         $data = new QuotationApiResource($quote);
+
+        $this->trackEvents('api_quotes_v2_by_id', []);
 
         return $data;
     }
