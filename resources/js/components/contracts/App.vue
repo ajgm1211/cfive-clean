@@ -19,8 +19,10 @@
                     <DataTable 
                         :fields="fields"
                         :actions="actions.contracts"
+                        :singleActions="['edit', 'duplicate', 'delete', 'seeProgressDetails']"
                         :filter="true"
                         @onEdit="onEdit"
+                        @onOpenModalProgressDetails="showProgressDetailsModal"
                         ></DataTable>
                 </b-card>
             </div>
@@ -70,6 +72,18 @@
         </b-modal>
         <!-- End Create Form -->
 
+        <!-- Create Form -->
+        <b-modal id="seeProgressDetails" size="md" hide-header-close title="Processing progress" hide-footer>
+            <div style="padding:20px; margin-bottom:25px;">
+                <b-progress :max="max" height="2rem">
+                    <b-progress-bar :value="value">
+                        <span><b>{{ value }}%</b></span>
+                    </b-progress-bar>
+                </b-progress>
+            </div>
+        </b-modal>
+        <!-- End Create Form -->
+
     </div>
 
 </template>
@@ -87,6 +101,8 @@
         },
         data() {
             return {
+                value: 45,
+                max: 100,
                 isBusy:true, // Loader
                 modalSuccess: false,
                 actions: actions,
@@ -209,6 +225,18 @@
 
             link(){
                  window.location = '/RequestFcl/NewRqFcl';
+            },
+
+            showProgressDetailsModal(id) {
+                actions.contracts
+                .getRequestStatus(id)
+                .then((response) => {
+                    this.value = response.data.progress;
+                    this.$bvModal.show("seeProgressDetails");
+                })
+                .catch((error) => {
+                    //
+                });
             },
 
             closeModal(modal, exporting = false){
