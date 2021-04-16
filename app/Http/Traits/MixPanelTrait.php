@@ -29,6 +29,21 @@ trait MixPanelTrait
             case "create_quote_fcl":
                 $this->trackCreateQuoteEvent($data, $user);
                 break;
+            case "api_rate_fcl":
+                $this->trackApiRateFclEvent($data, $user);
+                break;
+            case "api_quotes_v2":
+                $this->trackApiQuoteV2Event($user);
+                break;
+            case "api_quotes_v2_by_id":
+                $this->trackApiQuoteV2ByIdEvent($user);
+                break;
+            case "api_companies_list":
+                $this->trackApiCompaniesListEvent($user);
+                break;
+            case "api_contacts_list":
+                $this->trackApiContactsListEvent($user);
+                break;
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
                 break;
@@ -98,10 +113,10 @@ trait MixPanelTrait
 
         $container_arr = [];
 
-        foreach($containers as $container){
+        foreach ($containers as $container) {
             array_push($container_arr, $container->code);
         }
-        
+
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
@@ -120,12 +135,130 @@ trait MixPanelTrait
         );
     }
 
+    /**
+     * trackApiRateFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackApiRateFclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'API Rates FCL',
+            array(
+                'Company' => $user->companyUser->name,
+                'Origin' => $data['origin'],
+                'Destination' => $data['destination'],
+                'From' => $data['from'],
+                'Until' => $data['until'],
+                'Container_group' => $data['group'],
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackApiQuoteV2Event
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackApiQuoteV2Event($user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'API Quotes V2 List',
+            array(
+                'Company' => $user->companyUser->name,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackApiQuoteV2ByIdEvent
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackApiQuoteV2ByIdEvent($user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'API Quotes V2 By ID',
+            array(
+                'Company' => $user->companyUser->name,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackApiCompaniesListEvent
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackApiCompaniesListEvent($user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'API Companies List',
+            array(
+                'Company' => $user->companyUser->name,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackApiContactsListEvent
+     *
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackApiContactsListEvent($user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'API Contacts List',
+            array(
+                'Company' => $user->companyUser->name,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackStatusFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
     public function trackStatusFclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
-        $date=explode("/",$data->validation);
+        $date = explode("/", $data->validation);
         $mixPanel->track(
             'Request Done FCL',
             array(
@@ -133,58 +266,78 @@ trait MixPanelTrait
                 'User'          => $user->fullname,
                 'namecontract'  => $data->namecontract,
                 'validity_from' => $date[0],
-                'validity_until'=> $date[1],
+                'validity_until' => $date[1],
                 'username_load' => $data->username_load,
             )
         );
     }
 
+    /**
+     * trackStatusLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
     public function trackStatusLclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
-        $date=explode("/",$data->validation);
+        $date = explode("/", $data->validation);
         $mixPanel->track(
             'Request Done LCL',
             array(
                 'Company'       => $data->company_user->name,
                 'User'          => $user->fullname,
-                'namecontract'  => $data->namecontract,
-                'validity_from' => $date[0],
-                'validity_until'=> $date[1],
-                'username_load' => $data->username_load,
+                'Contract'      => $data->namecontract,
+                'Valid_from'    => $date[0],
+                'Valid_until'   => $date[1],
+                'Username'      => $data->username_load,
             )
         );
     }
 
+    /**
+     * trackOldSearchFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
     public function trackOldSearchFclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
 
-
-        $equipment=array();
-        foreach ($data['equipment'] as $equipment_id){
-            if($data['contain'][$equipment_id]!=null){
-                $equipment[]='C'.$data['contain'][$equipment_id];             
-            }  
+        $equipment = array();
+        foreach ($data['equipment'] as $equipment_id) {
+            if ($data['contain'][$equipment_id] != null) {
+                $equipment[] = 'C' . $data['contain'][$equipment_id];
+            }
         }
         $mixPanel->track(
-            'Old search FCL',
+            'Old Search FCL',
             array(
-                'type'=>'FCL',
+                'type' => 'FCL',
                 'Company' => $data['company'],
-                'company_client' => $data['company_client'] ?? null,
-                'contact_client' => $data['contact_client'] ?? null,
-                'type_container' => $data['type_container'],
-                'equipment' => $equipment,
+                'Client_company' => $data['company_client'] ?? null,
+                'Client_contact' => $data['contact_client'] ?? null,
+                'Container_group' => $data['type_container'],
+                'Container_type' => $equipment,
                 'User' => $user->fullname,
             )
         );
     }
 
+    /**
+     * trackOldSearchLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
     public function trackOldSearchLclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
@@ -192,12 +345,12 @@ trait MixPanelTrait
         $mixPanel->identify($user->id);
 
         $mixPanel->track(
-            'Old search LCL',
+            'Old Search LCL',
             array(
-                'type'=>'LCL',
+                'type' => 'LCL',
                 'Company' => $data['company'],
-                'company_client' => $data['company_client'] ?? null,
-                'contact_client' => $data['contact_client'] ?? null,
+                'Client_company' => $data['company_client'] ?? null,
+                'Client_contact' => $data['contact_client'] ?? null,
                 'User' => $user->fullname,
             )
         );
