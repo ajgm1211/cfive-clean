@@ -2,7 +2,7 @@
     <div class="container-cards">
 
         <!-- TARJETA CMA -->
-        <div class="col-12 mb-4" >
+        <div class="col-12 mb-4" v-if="false">
         <div class="result-search">
             <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
@@ -513,16 +513,16 @@
                     <!-- ORGIEN -->
                     <div class="origin mb-3">
                         <span>origin</span>
-                        <p class="mb-1">ESBCN</p>
-                        <p>08 Agos, 2020</p>
+                        <p class="mb-0">{{ result.departureTerminal }}</p>
+                        <p>{{ result.departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORGIEN -->
 
                     <!-- DESTINO -->
                     <div class="destination align-items-start mb-3">
                         <span>destination</span>
-                        <p class="mb-1">ARBUE</p>
-                        <p>08 Agos, 2020</p>
+                        <p class="mb-0">{{ result.arrivalTerminal }}</p>
+                        <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINO -->
                     </div>
@@ -534,10 +534,10 @@
                     <div class="via">
                         <ul class="pl-0" style="list-style: none">
                         <li>
-                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                            <p class="mb-1"><b>Transit Time:</b>{{ result.transitTime }}</p>
                         </li>
                         <li>
-                            <p><b>Vessel:</b> Gordito</p>
+                            <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
                         </li>
                         </ul>
                     </div>
@@ -602,10 +602,20 @@
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
-                    <b-button class="rs-btn" v-b-toggle.schedules
+                    <b-button 
+                        class="rs-btn"
+                        :class="result.scheduleCollapse ? null : 'collapsed'"
+                        :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
+                        :aria-controls="'schedules_' + String(result.routingDetails[0].voyageNumber)"
+                        @click="result.scheduleCollapse = !result.scheduleCollapse" 
                     ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
-                    <b-button class="rs-btn" v-b-toggle.detailed
+                    <b-button 
+                        class="rs-btn" 
+                        :class="result.detailCollapse ? null : 'collapsed'"
+                        :aria-expanded="result.detailCollapse ? 'true' : 'false'"
+                        :aria-controls="'details_' + String(result.routingDetails[0].voyageNumber)"
+                        @click="result.detailCollapse = !result.detailCollapse"
                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
                 </div>
@@ -632,9 +642,16 @@
             <!-- INFORMACION DESPLEGADA -->
             <div class="row mr-0 ml-0">
             <!-- DETALLES DE TARIFA -->
-            <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                <div>
-                <h5><b>Freight</b></h5>
+            <b-collapse 
+                class="pt-5 pb-5 pl-5 pr-5 col-12"
+                :id="'details_' + String(result.routingDetails[0].voyageNumber)" 
+                v-model = result.detailCollapse
+            >
+                <div 
+                    v-for="(surchargeType, surchargeKey) in result.pricingDetails.surcharges"
+                    :key="surchargeKey"
+                >
+                <h5><b>{{ surchargeKey.substring(0, surchargeKey.length - 10)}}</b></h5>
 
                 <b-table-simple hover small responsive class="sc-table">
                     <b-thead>
@@ -647,37 +664,25 @@
                         style="
                             padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
                         "
-                        >20DV</b-th
-                        >
-                        <b-th
-                        style="
-                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        >40DV</b-th
-                        >
-                        <b-th
-                        style="
-                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        >45DV</b-th
+                        v-for="(requestContainer, rContainerKey) in request.containers"
+                        :key="rContainerKey"
+                        >{{ requestContainer.code }}</b-th
                         >
                     </b-tr>
                     </b-thead>
 
                     <b-tbody>
-                    <b-tr>
-                        <b-td><b>Ocean Freight</b></b-td>
+                    <b-tr
+                        v-for="(surchargeName, nameKey) in surchargeType"
+                        :key="nameKey">
+                        <b-td><b>{{ surchargeName.chargeName }}</b></b-td>
                         <b-td>Per Container</b-td>
                         <b-td></b-td>
                         <b-td></b-td>
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
-                        >
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
-                        >
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
+                        <b-td 
+                            v-for="(surchargeContainer, containerKey) in surchargeName.containers"
+                            :key="containerKey"
+                        ><p>{{ surchargeContainer.amount }}<b>{{ surchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
@@ -685,10 +690,12 @@
                         <b-td></b-td>
                         <b-td></b-td>
                         <b-td></b-td>
-                        <b-td><b>Total Freight</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
+                        <b-td><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10)}}</b></b-td>
+                        <b-td
+                            v-for="(typeTotal, typeTotalKey) in result.pricingDetails.totalRatePerContainer.totalCharges"
+                            :key="typeTotalKey"
+                        >
+                        <b>{{ typeTotal.currencyCode }} {{ typeTotal.totalSurcharges }} </b></b-td>
                     </b-tr>
                     </b-tbody>
                 </b-table-simple>
@@ -698,7 +705,8 @@
 
             <!-- SCHEDULES -->
             <b-collapse
-                id="schedules"
+                :id="'schedules_' + String(result.routingDetails[0].voyageNumber)"
+                v-model = result.scheduleCollapse
                 class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
                 style="background: #fbfbfb"
             >
@@ -720,11 +728,11 @@
                         <div class="row mt-4">
                         <div class="col-lg-6">
                             <h5 class="sub-title-schedule">Vessel/Voyage</h5>
-                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                            <p class="text-schedule"><b>{{ result.routingDetails[0].vehiculeName }} / {{ result.routingDetails[0].voyageNumber }}</b></p>
                         </div>
                         <div class="col-lg-6">
                             <h5 class="sub-title-schedule">IMO</h5>
-                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                            <p class="text-schedule"><b>{{ result.routingDetails[0].imoNumber }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -737,21 +745,12 @@
                         </h5>
 
                         <div class="row mt-4">
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">CY</h5>
-                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">SI Non-AMS</h5>
-                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">VGM</h5>
-                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">SI AMS</h5>
-                            <p class="text-schedule"><b>N/A</b></p>
+                        <div class="col-12 col-sm-6" 
+                            v-for="(deadline, deadKey) in result.routingDetails[0].deadlines"
+                            :key="deadKey"
+                        >
+                            <h5 class="sub-title-schedule"> {{ deadline.deadlineKey }} </h5>
+                            <p class="text-schedule"><b>{{ deadline.deadline }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -767,8 +766,8 @@
                     <!-- ORIGEN -->
                     <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-0">España</p>
-                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    <p class="mb-0">{{ result.routingDetails[0].departureName }}</p>
+                    <p>{{ result.routingDetails[0].departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORIGEN -->
 
@@ -799,8 +798,8 @@
                     <!-- DESTINATION -->
                     <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-0">Argentina</p>
-                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    <p class="mb-0">{{ result.routingDetails[1].arrivalName }}</p>
+                    <p>{{ result.routingDetails[1].arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINATION -->
                 </div>
