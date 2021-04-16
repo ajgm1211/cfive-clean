@@ -540,7 +540,7 @@
             </div>
 
             <!-- TARJETA CMA -->
-            <div class="col-12 mb-4"> 
+            <div class="col-12 mb-4" v-if="false"> 
 
                 <div class="result-search">
 
@@ -951,7 +951,7 @@
             <!-- FIN TARJETA CMA -->
 
             <!-- TARJETA MAERKS -->
-            <div class="col-12 mb-4">
+            <div class="col-12 mb-4" v-if="false">
 
                 <div class="result-search">
 
@@ -1603,7 +1603,7 @@ export default {
 
         component.finalRates = component.rates;
 
-        component.setFilters();
+        //component.setFilters();
 
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
@@ -1614,8 +1614,6 @@ export default {
             }
         }
         
-        this.callMaerskAPI();
-
         this.loaded = true;
     },
 }

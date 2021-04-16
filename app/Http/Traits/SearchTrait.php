@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use App\CalculationType;
+use App\ContainerCalculation;
 use App\CompanyUser;
 use App\Currency;
 use App\Inland;
@@ -912,62 +913,29 @@ trait SearchTrait
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
     public function setChargesPerContainer($charges, $containers, $container_id, $client_currency)
     {
+        $container_calculations = ContainerCalculation::all();
         //Looping through charges collection
         foreach($charges as $charges_direction){
             foreach($charges_direction as $charge){
-
                 //Getting calculation info from calculation type id
                 $calculation = $charge->calculationtype;
-
-                //Setting arrays for different calculation types, for matching when building final arrays
-                $teu_calculations = ['TEU','TEU RF','TEU OT','TEU FR'];
-                $container_calculations = ['CONT','CONT RF','CONT OT','CONT FR','SHIP', 'BL', 'BL REEFER', 'BL OT', 'BL FR', 'TON', 'INV', 'CLR'];
-                $exclude_dry = ['SET'];
 
                 //Empty array for storing final charges
                 $container_charges = [];
 
-                //Checking through the different types of calculation
-                    //TEU calculations -> if a container's 'is_teu' option is true, rates are doubled 
-                if(in_array($calculation->code,$teu_calculations)){
-                    foreach($containers as $container){
-                        $options = json_decode($container['options'],true);
-                        if(isset($options['is_teu']) && $options['is_teu']){
-                            $container_charges['C'.$container['code']] = 2 * $charge->ammount;
-                        }else{
-                            $container_charges['C'.$container['code']] = $charge->ammount;
-                        }
-                    }
-                }elseif(in_array($calculation->code,$container_calculations)){
-                //Calculations that apply to ALL containers
-                    foreach($containers as $container){
-                        $container_charges['C'.$container['code']] = $charge->ammount;
-                    }
-                //Individual container calculations
-                }else if(in_array($calculation->code,$exclude_dry)){
-                    if($container_id != 1){
+                foreach($container_calculations as $relation){
+                    if($relation->calculationtype_id == $calculation->id){
                         foreach($containers as $container){
-                            if($container['gp_container_id'] != 1){
-                                $container_charges['C'.$container['code']] = $charge->ammount;
+                            if($relation->container_id == $container['id']){
+                                $options = json_decode($container['options'],true);
+                                $calculation_options = json_decode($calculation->options, true);
+                                if($calculation_options['isteu'] && isset($options['is_teu']) && $options['is_teu']){
+                                    $container_charges['C'.$container['code']] = 2 * $charge->ammount;
+                                }else{
+                                    $container_charges['C'.$container['code']] = $charge->ammount;
+                                }
                             }
                         }
-                    }else{
-                        $charge->setAttribute('hide',true);
-                    }
-
-                }else{
-                    //Catching poorly formatted calculation codes
-                    if($calculation->code == '40'){
-                        $container_charges['C40DV'] = $charge->ammount; 
-                    }elseif($calculation->code == '20'){
-                        $container_charges['C20DV'] = $charge->ammount; 
-                    }elseif($calculation->code == '45'){
-                        $container_charges['C45HC'] = $charge->ammount; 
-                    }elseif($calculation->code == '20R'){
-                        $container_charges['C20RF'] = $charge->ammount;
-                    //Catching when calculation codes match container codes 
-                    }else{
-                        $container_charges['C'.$calculation->code] = $charge->ammount;
                     }
                 }
 
@@ -981,10 +949,6 @@ trait SearchTrait
                     //In unmodified currency, for general use
                     //In client currency to show in overall totals
                 $client_currency_charges = $this->convertToCurrency($charge->currency,$client_currency,$container_charges);
-
-                if(!isset($charge->hide)){
-                    $charge->setAttribute('hide', false);
-                }
 
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
                 
