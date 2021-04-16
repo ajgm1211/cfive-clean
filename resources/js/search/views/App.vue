@@ -3,20 +3,29 @@
 
         <Search
             @initialDataLoaded="setDatalists"
-            @searchRequest="setSearchStatus"
+            @searchRequested="setSearchStatus"
             @searchSuccess="setSearchData"
+            @clearResults="clearDisplay"
+            ref="searchComponent"
         ></Search>
 
         <Recent 
-            v-if="(Object.keys(foundRates).length == 0 || foundRates.length == 0) && !searching && requestData.requested == undefined"
+            v-if="foundRates.length == 0 && !searching && requestData.requested == undefined"
+            @recentSearch="quickSearch"
         ></Recent>
 
         <Result 
-            v-if="Object.keys(foundRates).length != 0"
+            v-if="foundRates.length != 0"
             :rates="foundRates"
             :request="searchRequest"
             :datalists="datalists"
         ></Result>
+
+        <!--<APIResults
+            v-if="searchRequest.length != 0"
+            :request="searchRequest"
+            ref="resultsAPI"
+        ></APIResults>-->
 
     </div>
 </template>
@@ -25,19 +34,22 @@
 import Search from './Search'; 
 import Recent from './Recent';
 import Result from './Result'; 
+//import APIResults from './APIResults'; 
 
 export default {
     components: {
         Search,
         Recent,
-        Result
+        Result,
+        //APIResults
     },
     data() {
         return {
             searching: false,
-            foundRates: {},
+            searchRequested: false,
+            foundRates: [],
             foundCharges: {},            
-            searchRequest: {},
+            searchRequest: [],
             datalists: {},
             requestData: {},
         }
@@ -51,15 +63,26 @@ export default {
             this.datalists = initialData;
         },
 
-        setSearchStatus(){
+        setSearchStatus(searchRequest){
             this.searching = true;
+            this.searchRequest = searchRequest;
+            /**this.$nextTick (()=>{
+                this.$refs.resultsAPI.callMaerskAPI();
+            })**/
         },
 
-        setSearchData(searchData,searchRequest){
+        setSearchData(searchData){
             //console.log(this.searchData);
             this.searching = false;
             this.foundRates = searchData;
-            this.searchRequest = searchRequest;
+        },
+
+        clearDisplay(){
+            this.foundRates = [];
+        },
+
+        quickSearch(){
+            this.$refs.searchComponent.getQuery();
         },
     },
 }
