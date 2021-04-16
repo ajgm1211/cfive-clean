@@ -26,9 +26,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PrvRequest;
 use Yajra\Datatables\Datatables;
+use App\Http\Traits\MixPanelTrait;
+
 
 class NewContractRequestLclController extends Controller
 {
+    use MixPanelTrait;
 
     public function index()
     {
@@ -476,6 +479,7 @@ class NewContractRequestLclController extends Controller
                     }
 
                 }
+                $this->trackEvents("Request_Status_lcl", $Ncontract);
             }
 
             $Ncontract->save();
