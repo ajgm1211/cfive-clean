@@ -1775,6 +1775,8 @@ export default {
 
         fillInitialFields(requestType) {
             let component = this; 
+            let origPortNames = [];
+            let destPortNames = [];
             
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
@@ -1784,8 +1786,20 @@ export default {
                 this.searchRequest.direction = this.searchData.direction_id;
                 //this.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
-                this.searchRequest.originPorts = this.searchData.origin_ports;
-                this.searchRequest.destinationPorts = this.searchData.destination_ports;
+                this.searchRequest.originPorts = [];
+                component.searchData.origin_ports.forEach(function (origPort){
+                    if(!origPortNames.includes(origPort.name)){
+                        origPortNames.push(origPort.name);
+                        component.searchRequest.originPorts.push(origPort);
+                    }
+                });
+                this.searchRequest.destinationPorts = [];
+                component.searchData.destination_ports.forEach(function (destPort){
+                    if(!destPortNames.includes(destPort.name)){
+                        destPortNames.push(destPort.name);
+                        component.searchRequest.destinationPorts.push(destPort);
+                    }
+                });
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
