@@ -21,11 +21,11 @@
             :datalists="datalists"
         ></Result>
 
-        <!--<APIResults
+        <APIResults
             v-if="searchRequest.length != 0"
             :request="searchRequest"
             ref="resultsAPI"
-        ></APIResults>-->
+        ></APIResults>
 
     </div>
 </template>
@@ -34,14 +34,14 @@
 import Search from './Search'; 
 import Recent from './Recent';
 import Result from './Result'; 
-//import APIResults from './APIResults'; 
+import APIResults from './APIResults'; 
 
 export default {
     components: {
         Search,
         Recent,
         Result,
-        //APIResults
+        APIResults
     },
     data() {
         return {
@@ -66,9 +66,9 @@ export default {
         setSearchStatus(searchRequest){
             this.searching = true;
             this.searchRequest = searchRequest;
-            /**this.$nextTick (()=>{
+            this.$nextTick (()=>{
                 this.$refs.resultsAPI.callMaerskAPI();
-            })**/
+            })
         },
 
         setSearchData(searchData){
