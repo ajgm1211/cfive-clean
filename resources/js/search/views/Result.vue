@@ -1584,6 +1584,7 @@ export default {
         
         this.loaded = true;
     },
+    }
 }
 </script>
 
