@@ -16,6 +16,10 @@
     color: #006bf9;
 }
 
+.table-responsive-sm {
+    overflow-x: scroll !important;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 @import 'search/search';
@@ -1554,7 +1558,7 @@ input.multiselect__input:focus {
 /*local modal table*/
 
 .data-surcharge {
-    width: 120px !important;
+    width: 110px !important;
 }
 
 .data-currency {
@@ -1562,17 +1566,34 @@ input.multiselect__input:focus {
 }
 
 .data-detail {
-    width: 180px !important;
+    width: 145px !important;
 }
 
 .data-showas,
 input.data-showas {
-    width: 180px !important;
+    width: 110px !important;
 }
 
 .data-provider,
 input.data-provider {
-    width: 180px !important;
+    width: 95px !important;
+}
+
+.data-surcharge, 
+.data-currency, 
+.data-detail, 
+.data-showas,
+.data-provider {
+    .multiselect__select {
+        width: 17px !important;
+        height: 20px !important;
+        right: 3px !important;
+        top: 6px !important;
+        padding: 0px !important;
+    }
+    .multiselect__tags {
+        padding: 4px 15px 4px 10px !important;
+    }
 }
 
 .data-profit.form-control {
@@ -1717,5 +1738,14 @@ input.data-provider {
         right: 45px;
         width: 25px;
         height: 25px;
+    }
+}
+
+.multiselect--disabled {
+    .multiselect__tags {
+        background: #ededed !important;
+        .multiselect__single {
+            background: #ededed !important;
+        }
     }
 }
