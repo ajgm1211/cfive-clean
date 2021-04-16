@@ -64,7 +64,9 @@ class RequestFclV2Controller extends Controller
         
         $Ncontracts = array();
         foreach ($Ncontract as $contract) {
-            if ($contract->erased_contract == 0) {
+            $request_id=NewContractRequest::find($contract->id);
+            
+            if ($request_id->status_erased==0) {
                 $Ncontracts[] = $contract;   
             }
         } 
@@ -224,7 +226,13 @@ class RequestFclV2Controller extends Controller
                     &nbsp;&nbsp;';
                     $buttons = $excel_button . $buttons;
                 } else {
-                    $buttons = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                    
+                    $delete= '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                    $change_status_erased = '
+                    <center><a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . ' Number Contract: ' . $Ncontracts->numbercontract . '"  title="Delete" >
+                    <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a></center>';
+                    $buttons =$delete.$change_status_erased;
                 }
                 return $buttons;
             })->make();
@@ -613,20 +621,27 @@ class RequestFclV2Controller extends Controller
     {
         try {
             $Ncontract = NewContractRequest::find($id);
-            if (!empty($Ncontract->namefile)) {
-                try {
-                    Storage::disk('FclRequest')->delete($Ncontract->namefile);
-                } catch (\Exception $e) {
+            $status_erased=1;
+            if($Ncontract->erased_contract==1){
+                $Ncontract->status_erased=$status_erased;
+                $Ncontract->update();
+                return 1;
+            }else{
+                if (!empty($Ncontract->namefile)) {
+                    try {
+                        Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                    } catch (\Exception $e) {
+                    }
+                } else {
+                    try {
+                        $mediaItem = $Ncontract->getFirstMedia('document');
+                        $mediaItems->delete();
+                    } catch (\Exception $e) {
+                    }
                 }
-            } else {
-                try {
-                    $mediaItem = $Ncontract->getFirstMedia('document');
-                    $mediaItems->delete();
-                } catch (\Exception $e) {
-                }
+                $Ncontract->delete();
+                return 1;
             }
-            $Ncontract->delete();
-            return 1;
         } catch (\Exception $e) {
             Log::error($e);
             return 2;

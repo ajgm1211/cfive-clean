@@ -84,12 +84,12 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $companies = Company::where('company_user_id', '=', $company_user_id)->get();
+        $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
         $contacts = [];
 
         foreach ($companies as $comp) {
-            $newContacts = $comp->contact()->get();
+            $newContacts = $comp->contact;
 
             foreach ($newContacts as $cont) {
                 if (!in_array($cont, $contacts)) {
@@ -99,9 +99,10 @@ class SearchApiController extends Controller
             }
         }
 
-        $harbors = Harbor::get()->map(function ($harbor) {
+        /*$harbors = Harbor::get()->map(function ($harbor) {
             return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
-        });
+        });*/
+        $harbors =  \DB::select('call  select_harbors_search');
 
         $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
             return $delivery_type->only(['id', 'name']);
