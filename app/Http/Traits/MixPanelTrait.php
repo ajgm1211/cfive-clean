@@ -5,9 +5,11 @@ namespace App\Http\Traits;
 use Illuminate\Support\Collection as Collection;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Auth;
+use App\Container;
 
 trait MixPanelTrait
 {
+
     /**
      * trackEvents
      *
@@ -55,6 +57,9 @@ trait MixPanelTrait
                 break;
             case "old_search_lcl":
                 $this->trackOldSearchLclEvent($data, $user);
+                break;
+            case "old_create_quote":
+                $this->trackOldCreateQuoteEvent($data, $user);
                 break;
         }
     }
@@ -314,7 +319,7 @@ trait MixPanelTrait
         $equipment = array();
         foreach ($data['equipment'] as $equipment_id) {
             if ($data['contain'][$equipment_id] != null) {
-                $equipment[] = 'C' . $data['contain'][$equipment_id];
+                $equipment[] = $data['contain'][$equipment_id];
             }
         }
         $mixPanel->track(
@@ -351,6 +356,44 @@ trait MixPanelTrait
                 'Company' => $data['company'],
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    /**
+     * trackOldCreateQuoteEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackOldCreateQuoteEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $array = [];
+        $containers = Container::select('id','code')->get();
+
+        foreach (json_decode($data->equipment) as $val) {
+            foreach ($containers as $cont) {
+                if ($val == $cont->id) {
+                    array_push($array, $cont->code);
+                    $data->equipment = $array;
+                }
+            }
+        }
+        
+        $mixPanel->track(
+            'Old Create Quote',
+            array(
+                'type' => $data->type,
+                'Company' => $data->company_user->name,
+                'Client_company' => $data->company->business_name ?? null,
+                'Client_contact' => $data->contact->fullname ?? null,
+                'Container_type' => json_encode($data->equipment),
                 'User' => $user->fullname,
             )
         );
