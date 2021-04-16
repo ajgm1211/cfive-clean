@@ -29,6 +29,18 @@ trait MixPanelTrait
             case "create_quote_fcl":
                 $this->trackCreateQuoteEvent($data, $user);
                 break;
+            case "Request_Status_fcl":
+                $this->trackStatusFclEvent($data, $user);
+                break;
+            case "Request_Status_lcl":
+                $this->trackStatusLclEvent($data, $user);
+                break;
+            case "old_search_Fcl":
+                $this->trackOldSearchFclEvent($data, $user);
+                break;
+            case "old_search_lcl":
+                $this->trackOldSearchLclEvent($data, $user);
+                break;
         }
     }
 
@@ -103,6 +115,89 @@ trait MixPanelTrait
                 'Delivery_type' => $data->delivery,
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    public function trackStatusFclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+        $date=explode("/",$data->validation);
+        $mixPanel->track(
+            'Request Done FCL',
+            array(
+                'Company'       => $data->company_user->name,
+                'User'          => $user->fullname,
+                'namecontract'  => $data->namecontract,
+                'validity_from' => $date[0],
+                'validity_until'=> $date[1],
+                'username_load' => $data->username_load,
+            )
+        );
+    }
+
+    public function trackStatusLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+        $date=explode("/",$data->validation);
+        $mixPanel->track(
+            'Request Done LCL',
+            array(
+                'Company'       => $data->company_user->name,
+                'User'          => $user->fullname,
+                'namecontract'  => $data->namecontract,
+                'validity_from' => $date[0],
+                'validity_until'=> $date[1],
+                'username_load' => $data->username_load,
+            )
+        );
+    }
+
+    public function trackOldSearchFclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+
+        $equipment=array();
+        foreach ($data['equipment'] as $equipment_id){
+            if($data['contain'][$equipment_id]!=null){
+                $equipment[]='C'.$data['contain'][$equipment_id];             
+            }  
+        }
+        $mixPanel->track(
+            'Old search FCL',
+            array(
+                'type'=>'FCL',
+                'Company' => $data['company'],
+                'company_client' => $data['company_client'] ?? null,
+                'contact_client' => $data['contact_client'] ?? null,
+                'type_container' => $data['type_container'],
+                'equipment' => $equipment,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+    public function trackOldSearchLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'Old search LCL',
+            array(
+                'type'=>'LCL',
+                'Company' => $data['company'],
+                'company_client' => $data['company_client'] ?? null,
+                'contact_client' => $data['contact_client'] ?? null,
                 'User' => $user->fullname,
             )
         );
