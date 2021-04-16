@@ -21,7 +21,7 @@
                                     <td >{{$total['POL']}}</td>
                                     <td >{{$total['POD']}}</td>
                                     <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$total['carrier']}}</td>
-                                    <td >{{ @$total['total'] }}&nbsp;{{@$total['currency']}}</td>
+                                    <td >{{ isDecimal(@$total['total'], false, true) }}&nbsp;{{@$total['currency']}}</td>
                                 </tr>
                             @endforeach
                         </tbody>

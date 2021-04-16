@@ -312,6 +312,71 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
+/** MODAL TO CHOOSE QTY **/
+
+.containers-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px !important;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.containers-numbers p {
+    font-size: 14px;
+    margin-bottom: 0px;
+    color: #333333;
+    font-weight: 700;
+}
+
+.vue-numeric-input {
+    width: 120px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+.containers-numbers .btn-decrement,
+.containers-numbers .btn-increment {
+    width: 35px !important;
+    height: 35px;
+    padding: 0px;
+    border-radius: 5px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.containers-numbers .btn-decrement {
+    background: #EBEBEB !important;
+}
+
+.containers-numbers .btn-increment {
+    background: #007bff !important;
+}
+
+.containers-numbers .btn-increment i:after,
+.containers-numbers .btn-increment i:before {
+    background: #FFFFFF !important;
+}
+
+.containers-numbers .numeric-input {
+    width: 35px !important;
+    height: 36px;
+    left: 43px;
+    top: 2px;
+    position: relative;
+    font-weight: 700;
+    text-align: center !important;
+    padding: 0px !important;
+    border: 2px solid #EBEBEB !important;
+    border-radius: 5px !important;
+}
+
+.containers-numbers .numeric-input:active,
+.containers-numbers .numeric-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 
 /*** RESPONSIVE ***/
 
