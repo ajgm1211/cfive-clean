@@ -393,7 +393,7 @@ trait MixPanelTrait
                 'Company' => $data->company_user->name,
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
-                'Container_type' => json_encode($data->equipment),
+                'Container_type' => json_encode($data->equipment) ?? null,
                 'User' => $user->fullname,
             )
         );
