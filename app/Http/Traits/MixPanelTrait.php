@@ -9,15 +9,33 @@ use App\Container;
 
 trait MixPanelTrait
 {
-
     /**
      * trackEvents
      *
      * @param  mixed $type
      * @param  mixed $data
+     * @param  mixed $env
      * @return void
      */
-    public function trackEvents($type, $data)
+    public function trackEvents($type, $data, $env = "web")
+    {
+        if ($env == "api") {
+            /** Executing events from API */
+            $this->executeApiEvent($type, $data);
+        }
+
+        /** Executing events from web app */
+        $this->executeWebEvent($type, $data);
+    }
+
+    /**
+     * executeWebEvent
+     *
+     * @param  mixed $type
+     * @param  mixed $data
+     * @return void
+     */
+    public function executeWebEvent($type, $data)
     {
         $user = Auth::user();
 
@@ -30,21 +48,6 @@ trait MixPanelTrait
                 break;
             case "create_quote_fcl":
                 $this->trackCreateQuoteEvent($data, $user);
-                break;
-            case "api_rate_fcl":
-                $this->trackApiRateFclEvent($data, $user);
-                break;
-            case "api_quotes_v2":
-                $this->trackApiQuoteV2Event($user);
-                break;
-            case "api_quotes_v2_by_id":
-                $this->trackApiQuoteV2ByIdEvent($user);
-                break;
-            case "api_companies_list":
-                $this->trackApiCompaniesListEvent($user);
-                break;
-            case "api_contacts_list":
-                $this->trackApiContactsListEvent($user);
                 break;
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
@@ -60,6 +63,36 @@ trait MixPanelTrait
                 break;
             case "old_create_quote":
                 $this->trackOldCreateQuoteEvent($data, $user);
+                break;
+        }
+    }
+
+    /**
+     * executeApiEvent
+     *
+     * @param  mixed $type
+     * @param  mixed $data
+     * @return void
+     */
+    public function executeApiEvent($type, $data)
+    {
+        $user = Auth::user();
+
+        switch ($type) {
+            case "api_rate_fcl":
+                $this->trackApiRateFclEvent($data, $user);
+                break;
+            case "api_quotes_v2":
+                $this->trackApiQuoteV2Event($user);
+                break;
+            case "api_quotes_v2_by_id":
+                $this->trackApiQuoteV2ByIdEvent($user);
+                break;
+            case "api_companies_list":
+                $this->trackApiCompaniesListEvent($user);
+                break;
+            case "api_contacts_list":
+                $this->trackApiContactsListEvent($user);
                 break;
         }
     }
@@ -269,10 +302,10 @@ trait MixPanelTrait
             array(
                 'Company'       => $data->company_user->name,
                 'User'          => $user->fullname,
-                'namecontract'  => $data->namecontract,
-                'validity_from' => $date[0],
-                'validity_until' => $date[1],
-                'username_load' => $data->username_load,
+                'Contract'  => $data->namecontract,
+                'Valid_from' => $date[0],
+                'Valid_until' => $date[1],
+                'User' => $user->fullname,
             )
         );
     }
@@ -322,6 +355,7 @@ trait MixPanelTrait
                 $equipment[] = $data['contain'][$equipment_id];
             }
         }
+
         $mixPanel->track(
             'Old Search FCL',
             array(
@@ -375,25 +409,25 @@ trait MixPanelTrait
         $mixPanel->identify($user->id);
 
         $array = [];
-        $containers = Container::select('id','code')->get();
+        $containers = Container::select('id', 'code')->get();
 
         foreach (json_decode($data->equipment) as $val) {
             foreach ($containers as $cont) {
                 if ($val == $cont->id) {
-                    array_push($array, $cont->code);
-                    $data->equipment = $array;
+                    $array[] = $cont->code;
+                    //array_push($array, $cont->code);
                 }
             }
         }
-        
+
         $mixPanel->track(
             'Old Create Quote',
             array(
-                'type' => $data->type,
+                'Type' => $data->type,
                 'Company' => $data->company_user->name,
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
-                'Container_type' => json_encode($data->equipment) ?? null,
+                'Container_type' => $array ?? null,
                 'User' => $user->fullname,
             )
         );

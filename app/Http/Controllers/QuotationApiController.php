@@ -48,7 +48,7 @@ class QuotationApiController extends Controller
             $this->updateIntegrationStatus($quotes);
         }
 
-        $this->trackEvents('api_quotes_v2', []);
+        $this->trackEvents('api_quotes_v2', [], "api");
 
         return QuotationApiResource::collection($quotes, $costs);
     }
@@ -71,7 +71,7 @@ class QuotationApiController extends Controller
 
         $data = new QuotationApiResource($quote);
 
-        $this->trackEvents('api_quotes_v2_by_id', []);
+        $this->trackEvents('api_quotes_v2_by_id', [], "api");
 
         return $data;
     }
