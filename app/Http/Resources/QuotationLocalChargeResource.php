@@ -22,6 +22,9 @@ class QuotationLocalChargeResource extends JsonResource
             'price' => $this->arrayToString($this->price) ?? [],
             'profit' => $this->arrayToString($this->profit) ?? [],
             'total' => $this->arrayToString($this->total) ?? [],
+            /*'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToString($this->price) : $this->price,
+            'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToString($this->profit) : $this->profit,
+            'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToString($this->total) : $this->total,*/
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->provider_name ?? null,
