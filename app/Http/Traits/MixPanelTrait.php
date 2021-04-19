@@ -19,6 +19,7 @@ trait MixPanelTrait
      */
     public function trackEvents($type, $data, $env = "web")
     {
+        /** Checking if event is from API */
         if ($env == "api") {
             /** Executing events from API */
             $this->executeApiEvent($type, $data);
