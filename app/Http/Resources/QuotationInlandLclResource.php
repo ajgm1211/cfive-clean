@@ -25,7 +25,7 @@ class QuotationInlandLclResource extends JsonResource
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
             'units' => $this->units,
-            'price' => $this->price,
+            'price' => $this->price_per_unit,
             'profit' => $this->profit,
             'total' => $this->total,
             'currency' => $this->currency->alphacode ?? null,
