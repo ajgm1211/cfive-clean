@@ -557,7 +557,7 @@ class ApiController extends Controller
             $track_array['group'] = $group;
     
             /** Tracking search event with Mix Panel*/
-            $this->trackEvents("api_rate_fcl", $track_array);
+            $this->trackEvents("api_rate_fcl", $track_array, "api");
             
             return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0,$request);
         } catch (\Exception $e) {

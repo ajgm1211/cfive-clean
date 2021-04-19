@@ -43,7 +43,7 @@ class ContactController extends Controller
         }
 
         if ($request->ajax()) {
-            $this->trackEvents("api_contacts_list", []);
+            $this->trackEvents("api_contacts_list", [], "api");
             return $contacts;
             //return (new ContactResource($contacts));
         }
