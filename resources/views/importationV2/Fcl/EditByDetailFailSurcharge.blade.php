@@ -114,7 +114,7 @@ $validation_expire = 'Please enter validity date';
                                         @endphp
                                         <tr id="{{'tr_clone'.$loop->index}}"  >
                                             <input type="hidden" name="surcharge_fail_id[{{$loop->index}}]" value="{{$surchargef['surcharge_id']}}">
-                                            <input type="hidden" name="typerate" value="{{$surchargef['type_rate']}}">
+                                            <input type="hidden" name="typerate[{{$loop->index}}]" value="{{$surchargef['type_rate']}}">
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('id_surcharge['.$rowTable.']', $surcharges,$surchargef['surcharge'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$surchargef["classorigin"] ,'required' => 'required']) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
