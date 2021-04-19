@@ -64,7 +64,7 @@ class CompanyController extends Controller
         }
 
         if ($request->ajax()) {
-            $this->trackEvents("api_companies_list", []);
+            $this->trackEvents("api_companies_list", [], "api");
             return $companies;
         }
 
