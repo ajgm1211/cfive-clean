@@ -914,6 +914,7 @@ trait SearchTrait
     public function setChargesPerContainer($charges, $containers, $container_id, $client_currency)
     {
         $container_calculations = ContainerCalculation::all();
+
         //Looping through charges collection
         foreach($charges as $charges_direction){
             foreach($charges_direction as $charge){
@@ -923,10 +924,13 @@ trait SearchTrait
                 //Empty array for storing final charges
                 $container_charges = [];
 
+                $hide_charge = true;
+
                 foreach($container_calculations as $relation){
                     if($relation->calculationtype_id == $calculation->id){
                         foreach($containers as $container){
                             if($relation->container_id == $container['id']){
+                                $hide_charge = false;
                                 $options = json_decode($container['options'],true);
                                 $calculation_options = json_decode($calculation->options, true);
                                 if($calculation_options['isteu'] && isset($options['is_teu']) && $options['is_teu']){
@@ -955,6 +959,8 @@ trait SearchTrait
                 $charge->setAttribute('containers',$container_charges);
 
                 $charge->setAttribute('client_currency',$client_currency);
+                 
+                $charge->setAttribute('hide',$hide_charge);
             }
         }
     }
