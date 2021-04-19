@@ -995,63 +995,65 @@ trait SearchTrait
                     $charge_matched = false;
                     //Looping through duplicate array
                     foreach($comparing_array as $comparing_charge){
-                        //Index of present compared change in its array, for control purposes
-                        $comparing_charge_index = array_search($comparing_charge,$comparing_array);
-                        //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
+                        if(!$comparing_charge->hide){
+                            //Index of present compared change in its array, for control purposes
+                            $comparing_charge_index = array_search($comparing_charge,$comparing_array);
+                            //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
                             //Original index 0 only compares with 1,2,3...
                             //Original index 1 only compares with 2,3,4...
                             //Original index 2 only compares with 3,4,5... And so on
-                        if($original_charge_index < $comparing_charge_index){
-                            //Checking if charge needs to be joint
-                                //Surcharges must match
-                                //Index of compared charge must not be in the compared control array (compared_and_joint)
-                            if($charge->surcharge_id == $comparing_charge->surcharge_id &&
-                                count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
-                                //Converting compared array container rates into corresponding currency:
-                                    //If currencies don't match, join must be done in client currency
-                                    if($charge->currency->id != $comparing_charge->currency->id){
-                                        $joint_containers = $charge->containers_client_currency;
-                                        //Marking charge as joint under client currency
-                                        $charge->setAttribute('joint_as','client_currency');
-                                        $comparing_charge_containers = $comparing_charge->containers_client_currency;
-                                    //If currencies match, sum is direct
-                                    }elseif($charge->currency->id == $comparing_charge->currency->id){
-                                        $joint_containers = $charge->containers;
-                                        //Marking as joint under charge currency
-                                        $charge->setAttribute('joint_as','charge_currency');
-                                        $comparing_charge_containers = $comparing_charge->containers;
-                                    }
-                                    //Adding container rates together
-                                    foreach($comparing_charge_containers as $code => $container){
-                                        if(!isset($joint_containers[$code])){
-                                            $joint_containers[$code] = 0;
+                            if($original_charge_index < $comparing_charge_index){
+                                //Checking if charge needs to be joint
+                                    //Surcharges must match
+                                    //Index of compared charge must not be in the compared control array (compared_and_joint)
+                                if($charge->surcharge_id == $comparing_charge->surcharge_id &&
+                                    count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
+                                    //Converting compared array container rates into corresponding currency:
+                                        //If currencies don't match, join must be done in client currency
+                                        if($charge->currency->id != $comparing_charge->currency->id){
+                                            $joint_containers = $charge->containers_client_currency;
+                                            //Marking charge as joint under client currency
+                                            $charge->setAttribute('joint_as','client_currency');
+                                            $comparing_charge_containers = $comparing_charge->containers_client_currency;
+                                        //If currencies match, sum is direct
+                                        }elseif($charge->currency->id == $comparing_charge->currency->id){
+                                            $joint_containers = $charge->containers;
+                                            //Marking as joint under charge currency
+                                            $charge->setAttribute('joint_as','charge_currency');
+                                            $comparing_charge_containers = $comparing_charge->containers;
                                         }
-                                        $joint_containers[$code] += $container;
-                                        //Checking join type and using corresponding container array
-                                        if($charge->joint_as == 'client_currency'){
-                                            $charge->containers_client_currency = $joint_containers;
-                                        }elseif($charge->joint_as == 'charge_currency'){
-                                            $charge->containers = $joint_containers;
-                                            $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
+                                        //Adding container rates together
+                                        foreach($comparing_charge_containers as $code => $container){
+                                            if(!isset($joint_containers[$code])){
+                                                $joint_containers[$code] = 0;
+                                            }
+                                            $joint_containers[$code] += $container;
+                                            //Checking join type and using corresponding container array
+                                            if($charge->joint_as == 'client_currency'){
+                                                $charge->containers_client_currency = $joint_containers;
+                                            }elseif($charge->joint_as == 'charge_currency'){
+                                                $charge->containers = $joint_containers;
+                                                $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
+                                            }
+                                            
                                         }
-                                        
-                                    }
-                                    //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
-                                        //EXAMPLE
-                                        //Original charge 0 is joint with compared charge 1, original 0 is included in final array
-                                        //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
-                                        //SOLUTION -> Original charge must be pulled from final array if present
-                                    foreach($joint_charges[$direction] as $key => $j_charge){
-                                        if($j_charge->id == $charge->id){
-                                            unset($joint_charges[$direction][$key]);
+                                        //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
+                                            //EXAMPLE
+                                            //Original charge 0 is joint with compared charge 1, original 0 is included in final array
+                                            //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
+                                            //SOLUTION -> Original charge must be pulled from final array if present
+                                        foreach($joint_charges[$direction] as $key => $j_charge){
+                                            if($j_charge->id == $charge->id){
+                                                unset($joint_charges[$direction][$key]);
+                                            }
                                         }
-                                    }
-                                    //Include joint charge in final array
-                                    array_push($joint_charges[$direction],$charge);
-                                    //Include comparing charge in control array, indicating it has been joint already
-                                    array_push($compared_and_joint,$comparing_charge_index);
-                                    //Indicating original charge has been matched with at least one comparin charge
-                                    $charge_matched = true;
+                                        //Include joint charge in final array
+                                        array_push($joint_charges[$direction],$charge);
+                                        //Include comparing charge in control array, indicating it has been joint already
+                                        array_push($compared_and_joint,$comparing_charge_index);
+                                        //Indicating original charge has been matched with at least one comparin charge
+                                        $charge_matched = true;
+                                }
                             }
                         }
                     }
