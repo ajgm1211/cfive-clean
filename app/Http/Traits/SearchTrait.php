@@ -952,6 +952,7 @@ trait SearchTrait
                 //Setting rates per container
                     //In unmodified currency, for general use
                     //In client currency to show in overall totals
+
                 $client_currency_charges = $this->convertToCurrency($charge->currency,$client_currency,$container_charges);
 
                 $charge->setAttribute('containers_client_currency',$client_currency_charges);
@@ -987,7 +988,8 @@ trait SearchTrait
                 $compared_and_joint = [];
                 //Looping through charges in direction
                 foreach($charges_direction as $charge){
-                    //Index of present charge in its array, for control purposes
+                    if(!$charge->hide){
+                        //Index of present charge in its array, for control purposes
                     $original_charge_index = array_search($charge,$charges_direction);
                     //Control variable that indicates whether a charge has been matched and joint
                     $charge_matched = false;
@@ -1058,6 +1060,7 @@ trait SearchTrait
                         //Including unjoint charge in final array
                         $charge->setAttribute('joint_as', 'charge_currency');
                         array_push($joint_charges[$direction],$charge);
+                    }
                     }
                 }
             }
