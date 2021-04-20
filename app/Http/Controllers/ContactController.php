@@ -9,10 +9,11 @@ use App\Http\Traits\EntityTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
+use App\Http\Traits\MixPanelTrait;
 
 class ContactController extends Controller
 {
-    use EntityTrait;
+    use EntityTrait, MixPanelTrait;
 
     /**
      * Display a listing of the resource.
@@ -42,6 +43,7 @@ class ContactController extends Controller
         }
 
         if ($request->ajax()) {
+            $this->trackEvents("api_contacts_list", [], "api");
             return $contacts;
             //return (new ContactResource($contacts));
         }

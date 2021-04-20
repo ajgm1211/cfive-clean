@@ -32,11 +32,13 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\MixPanelTrait;
 
 class ApiController extends Controller
 {
     use SearchTraitApi;
     use UtilTrait;
+    use MixPanelTrait;
 
     public function index()
     {
@@ -546,6 +548,17 @@ class ApiController extends Controller
     public function search(Request $request,$mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl = 'all' ,$api_company_id = 0)
     {
         try {
+
+            $track_array = [];
+            $track_array['origin'] = $code_origin;
+            $track_array['destination'] = $code_destination;
+            $track_array['from'] = $inicio;
+            $track_array['until'] = $fin;
+            $track_array['group'] = $group;
+    
+            /** Tracking search event with Mix Panel*/
+            $this->trackEvents("api_rate_fcl", $track_array, "api");
+            
             return $this->processSearch($mode, $code_origin, $code_destination, $inicio, $fin, $group, $carrierUrl,$api_company_id = 0,$request);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);

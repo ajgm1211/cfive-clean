@@ -19,22 +19,26 @@ class QuotationLocalChargeResource extends JsonResource
             'charge' => $this->charge,
             'calculation_type' => $this->calculation_type->name ?? null,
             'port' => $this->port->display_name ?? null,
-            'price' => $this->arrayToString($this->price) ?? [],
-            'profit' => $this->arrayToString($this->profit) ?? [],
-            'total' => $this->arrayToString($this->total) ?? [],
+            /*'price' => $this->arrayToFloat($this->price) ?? [],
+            'profit' => $this->arrayToFloat($this->profit) ?? [],
+            'total' => $this->arrayToFloat($this->total) ?? [],*/
+            'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->price) : $this->price,
+            'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->profit) : $this->profit,
+            'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->total) : $this->total,
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->provider_name ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
         ];
 
     }
 
-    public function arrayToString($array){
+    public function arrayToFloat($array){
 
         $new_array = [];
 
         foreach((array)$array as $key=>$item){
-            $new_array[$key] = (string) $item;
+            $new_array[$key] = (float) $item;
         }
 
         return $new_array;
