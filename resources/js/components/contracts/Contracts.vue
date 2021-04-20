@@ -30,6 +30,7 @@
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
 							:contractData="currentData"
+							:classTable="classTable"
 							></ocean-freight>
 						</b-tab>
 
@@ -39,6 +40,7 @@
 								  :datalists="datalists"
 								  :actions="actions.surcharges"
 								  :contractData="currentData"
+								  :classTable="classTable"
 								  >
 							</surcharges>
 						</b-tab>
@@ -104,6 +106,7 @@
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
+				classTable: 'table-contract',
 
 				/* Form Inline Fields */
                 form_fields: {
