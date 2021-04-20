@@ -121,6 +121,7 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
+                            :disabled="searchRequest.requestData.requested == 1"
                             :options="destinationPortOptions"
                             label="display_name"
                             track-by="display_name"
@@ -1774,6 +1775,8 @@ export default {
 
         fillInitialFields(requestType) {
             let component = this; 
+            let origPortNames = [];
+            let destPortNames = [];
             
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
@@ -1783,8 +1786,20 @@ export default {
                 this.searchRequest.direction = this.searchData.direction_id;
                 //this.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
-                this.searchRequest.originPorts = this.searchData.origin_ports;
-                this.searchRequest.destinationPorts = this.searchData.destination_ports;
+                this.searchRequest.originPorts = [];
+                component.searchData.origin_ports.forEach(function (origPort){
+                    if(!origPortNames.includes(origPort.name)){
+                        origPortNames.push(origPort.name);
+                        component.searchRequest.originPorts.push(origPort);
+                    }
+                });
+                this.searchRequest.destinationPorts = [];
+                component.searchData.destination_ports.forEach(function (destPort){
+                    if(!destPortNames.includes(destPort.name)){
+                        destPortNames.push(destPort.name);
+                        component.searchRequest.destinationPorts.push(destPort);
+                    }
+                });
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
@@ -1798,7 +1813,6 @@ export default {
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
-                    console.log(this.searchData.carriers.length, this.datalists.carriers.length);
                     this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
@@ -1893,6 +1907,7 @@ export default {
                                 model_id: response.data.data.id,
                             },
                         });
+                        this.getQuery();
                     })
                     .catch((error) => {
                         this.errorsExist = true;
@@ -1902,7 +1917,7 @@ export default {
                         }
                     });
             } else if (this.searchRequest.requestData.requested == 1) {
-                this.$router.go();
+                this.getQuery();
             }
         },
 
@@ -1956,7 +1971,8 @@ export default {
 
         requestSearch() {
             this.searching = true;
-            this.$emit("searchRequest");
+            this.$emit("clearResults");
+            this.$emit("searchRequested",this.searchRequest);
 
             actions.search
                 .process(this.searchRequest)
@@ -1973,8 +1989,7 @@ export default {
                     this.searching = false;
                     this.$emit(
                         "searchSuccess",
-                        response.data.data,
-                        this.searchRequest
+                        response.data.data
                     );
                 })
                 .catch((error) => {
@@ -2271,11 +2286,7 @@ export default {
                 });
             }
         },
-
-        $route(to, from) {
-            this.$router.go(to);
-        },
-
+        
         valueEq: function () {
             if (this.valueEq.name == "DRY") {
                 this.items.splice({});

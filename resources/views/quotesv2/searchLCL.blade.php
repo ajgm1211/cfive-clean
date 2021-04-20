@@ -1345,9 +1345,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-6" align='right'> 
-                                                <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'LCL')"><b>Create Quote</b></button>
-                                                <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'LCL')" title="New Feature">
-                                                    Create LCL Quote
+                                                <!--<button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'LCL')"><b>Create Quote</b></button>-->
+                                                <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'LCL')">
+                                                    Create Quote
                                                 </button>
                                             </div>
                                             <!--<div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill  btn-info">Create Quote</button></div>-->

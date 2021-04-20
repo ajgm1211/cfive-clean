@@ -24,18 +24,40 @@ class QuotationInlandResource extends JsonResource
             'provider' => $this->providers->name ?? null,
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
-            'price' => $this->arrayToString($this->price),
-            'profit' => $this->arrayToString($this->profit),
+            'price' => $this->arrayToFloat($this->price),
+            'profit' => $this->arrayToFloat($this->profit),
+            'total' => $this->setTotal($this->price, $this->profit),
             'currency' => $this->currency->alphacode ?? null,
         ];
     }
 
-    public function arrayToString($array){
+    public function arrayToFloat($array)
+    {
 
         $new_array = [];
 
-        foreach($array as $key=>$item){
-            $new_array[$key] = (string) $item;
+        foreach ($array as $key => $item) {
+            $new_array[$key] = (float) $item;
+        }
+
+        return $new_array;
+    }
+
+    public function setTotal($price, $profit)
+    {
+
+        $new_array = [];
+        
+        foreach ($price as $key => $item) {
+            foreach ($profit as $k => $value) {
+                $str1 = ltrim($key, 'c');
+                $str2 = ltrim($k, 'm');
+                $total = 0;
+                if($str1 == $str2){
+                    $total = (float) $item + (float) $value;
+                    $new_array[$key] = (float) $total;
+                }
+            }
         }
 
         return $new_array;
