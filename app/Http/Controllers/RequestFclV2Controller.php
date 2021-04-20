@@ -189,7 +189,7 @@ class RequestFclV2Controller extends Controller
                         } else {
                             $hiddenPrCt = '';
                         }
-                        $butPrCt = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" ' . $hiddenPrCt . ' title="Proccess FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+                        $butPrCt = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" ' . $hiddenPrCt . ' title="Process FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
                         $butFailsR = '<a href="' . route('Failed.Developer.For.Contracts', [$Ncontracts->contract, 0]) . '" ' . $hiddenPrCt . ' title="Failed - FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;&nbsp;';
                         $validator_color = 'color:#c000d0';
@@ -213,7 +213,7 @@ class RequestFclV2Controller extends Controller
                         } else {
                             $hiddenPrRq = '';
                         }
-                        $butPrRq = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->id . '/1/0" ' . $hiddenPrRq . ' id="PrCHidden' . $Ncontracts->id . '" title="Proccess FCL Request">
+                        $butPrRq = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->id . '/1/0" ' . $hiddenPrRq . ' id="PrCHidden' . $Ncontracts->id . '" title="Process FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
                         $buttons = $butPrRq . $buttons;
