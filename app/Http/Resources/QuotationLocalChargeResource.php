@@ -19,12 +19,12 @@ class QuotationLocalChargeResource extends JsonResource
             'charge' => $this->charge,
             'calculation_type' => $this->calculation_type->name ?? null,
             'port' => $this->port->display_name ?? null,
-            'price' => $this->arrayToFloat($this->price) ?? [],
+            /*'price' => $this->arrayToFloat($this->price) ?? [],
             'profit' => $this->arrayToFloat($this->profit) ?? [],
-            'total' => $this->arrayToFloat($this->total) ?? [],
-            /*'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->price) : $this->price,
+            'total' => $this->arrayToFloat($this->total) ?? [],*/
+            'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->price) : $this->price,
             'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->profit) : $this->profit,
-            'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->total) : $this->total,*/
+            'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->total) : $this->total,
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->provider_name ?? null,
