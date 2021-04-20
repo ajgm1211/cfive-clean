@@ -84,12 +84,12 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $companies = Company::where('company_user_id', '=', $company_user_id)->get();
+        $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
         $contacts = [];
 
         foreach ($companies as $comp) {
-            $newContacts = $comp->contact()->get();
+            $newContacts = $comp->contact;
 
             foreach ($newContacts as $cont) {
                 if (!in_array($cont, $contacts)) {
@@ -99,9 +99,10 @@ class SearchApiController extends Controller
             }
         }
 
-        $harbors = Harbor::get()->map(function ($harbor) {
+        /*$harbors = Harbor::get()->map(function ($harbor) {
             return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
-        });
+        });*/
+        $harbors =  \DB::select('call  select_harbors_search');
 
         $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
             return $delivery_type->only(['id', 'name']);
@@ -217,7 +218,7 @@ class SearchApiController extends Controller
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $search_array['containers'], $search_array['selectedContainerGroup']['id'], $search_ids['client_currency']);
+            $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {

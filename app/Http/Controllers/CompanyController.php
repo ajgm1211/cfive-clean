@@ -19,10 +19,11 @@ use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Traits\MixPanelTrait;
 
 class CompanyController extends Controller
 {
-    use EntityTrait;
+    use EntityTrait, MixPanelTrait;
 
     /** @var CompanyRepositoryInterface */
     private $repository;
@@ -63,6 +64,7 @@ class CompanyController extends Controller
         }
 
         if ($request->ajax()) {
+            $this->trackEvents("api_companies_list", [], "api");
             return $companies;
         }
 

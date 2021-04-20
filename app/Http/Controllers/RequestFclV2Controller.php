@@ -34,11 +34,12 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer as Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Traits\SearchTrait;
+use App\Http\Traits\MixPanelTrait;
 
 
 class RequestFclV2Controller extends Controller
 {
-    use SearchTrait;
+    use SearchTrait,MixPanelTrait;
     // Load View All Request
     public function index(Request $request)
     {
@@ -63,7 +64,9 @@ class RequestFclV2Controller extends Controller
         
         $Ncontracts = array();
         foreach ($Ncontract as $contract) {
-            if ($contract->erased_contract == 0) {
+            $request_id=NewContractRequest::find($contract->id);
+            
+            if ($request_id->status_erased==0) {
                 $Ncontracts[] = $contract;   
             }
         } 
@@ -186,7 +189,7 @@ class RequestFclV2Controller extends Controller
                         } else {
                             $hiddenPrCt = '';
                         }
-                        $butPrCt = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" ' . $hiddenPrCt . ' title="Proccess FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+                        $butPrCt = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->contract . '/2/' . $Ncontracts->id . '" ' . $hiddenPrCt . ' title="Process FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
                         $butFailsR = '<a href="' . route('Failed.Developer.For.Contracts', [$Ncontracts->contract, 0]) . '" ' . $hiddenPrCt . ' title="Failed - FCL Contract" class="PrCHidden' . $Ncontracts->id . '"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;&nbsp;';
                         $validator_color = 'color:#c000d0';
@@ -210,7 +213,7 @@ class RequestFclV2Controller extends Controller
                         } else {
                             $hiddenPrRq = '';
                         }
-                        $butPrRq = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->id . '/1/0" ' . $hiddenPrRq . ' id="PrCHidden' . $Ncontracts->id . '" title="Proccess FCL Request">
+                        $butPrRq = '<a href="/Importation/RequestProccessFCL/' . $Ncontracts->id . '/1/0" ' . $hiddenPrRq . ' id="PrCHidden' . $Ncontracts->id . '" title="Process FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
                         $buttons = $butPrRq . $buttons;
@@ -223,7 +226,13 @@ class RequestFclV2Controller extends Controller
                     &nbsp;&nbsp;';
                     $buttons = $excel_button . $buttons;
                 } else {
-                    $buttons = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                    
+                    $delete= '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                    $change_status_erased = '
+                    <center><a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . ' Number Contract: ' . $Ncontracts->numbercontract . '"  title="Delete" >
+                    <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a></center>';
+                    $buttons =$delete.$change_status_erased;
                 }
                 return $buttons;
             })->make();
@@ -462,6 +471,7 @@ class RequestFclV2Controller extends Controller
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
                     }
                 }
+                $this->trackEvents("Request_Status_fcl", $Ncontract);
             }
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
@@ -611,20 +621,27 @@ class RequestFclV2Controller extends Controller
     {
         try {
             $Ncontract = NewContractRequest::find($id);
-            if (!empty($Ncontract->namefile)) {
-                try {
-                    Storage::disk('FclRequest')->delete($Ncontract->namefile);
-                } catch (\Exception $e) {
+            $status_erased=1;
+            if($Ncontract->erased_contract==1){
+                $Ncontract->status_erased=$status_erased;
+                $Ncontract->update();
+                return 1;
+            }else{
+                if (!empty($Ncontract->namefile)) {
+                    try {
+                        Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                    } catch (\Exception $e) {
+                    }
+                } else {
+                    try {
+                        $mediaItem = $Ncontract->getFirstMedia('document');
+                        $mediaItems->delete();
+                    } catch (\Exception $e) {
+                    }
                 }
-            } else {
-                try {
-                    $mediaItem = $Ncontract->getFirstMedia('document');
-                    $mediaItems->delete();
-                } catch (\Exception $e) {
-                }
+                $Ncontract->delete();
+                return 1;
             }
-            $Ncontract->delete();
-            return 1;
         } catch (\Exception $e) {
             Log::error($e);
             return 2;
