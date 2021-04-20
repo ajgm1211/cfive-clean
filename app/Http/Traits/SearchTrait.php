@@ -911,8 +911,9 @@ trait SearchTrait
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $container_id, $client_currency)
+    public function setChargesPerContainer($charges, $containers, $rate_containers, $client_currency)
     {
+        $rate_container_array = json_decode($rate_containers,true);
         $container_calculations = ContainerCalculation::all();
 
         //Looping through charges collection
@@ -943,9 +944,9 @@ trait SearchTrait
                     }
                 }
 
-                foreach($containers as $code => $container){
-                    if(!isset($container_charges['C'.$container['code']])){
-                        $container_charges['C'.$container['code']] = 0;
+                foreach($rate_container_array as $code => $price){
+                    if(!isset($container_charges[$code]) || $price == 0){
+                        $container_charges[$code] = 0;
                     }
                 }
 
