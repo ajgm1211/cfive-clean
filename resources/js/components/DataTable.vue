@@ -494,6 +494,13 @@
                             >
                                 Use as template
                             </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('seeProgressDetails')"
+                                @click="onOpenProgressModal(item.id)"
+                            >
+                                Processing progress
+                            </button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -1346,6 +1353,9 @@ export default {
         onOpenModalHarborDest() {
             let ids = this.selected.map((item) => item.id);
             this.$emit("onOpenModalHarborDestView", ids);
+        },
+        onOpenProgressModal(id) {
+            this.$emit("onOpenModalProgressDetails", id);
         },
 
         addInsert() {
