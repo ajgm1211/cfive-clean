@@ -21,7 +21,7 @@ class QuotationOceanFreightChargeLclResource extends JsonResource
             'units' => $this->units,
             'price' => $this->price,
             'minimum' => $this->minimum ?? null,
-            'profit' => $this->profit,
+            //'profit' => $this->profit,
             'TON/M3' => $this->total,
             'currency' => $this->currency->alphacode
         ];
