@@ -65,7 +65,8 @@
             <div class="row col-12 col-sm-4"></div>
             <div class="row col-12 col-sm-4 d-flex align-items-center justify-content-end">
                 <div 
-                    class="col-12 col-sm-2 d-flex justify-content-end"
+                    class="d-flex justify-content-start"
+                    :class="countContainersClass()"
                     v-for="(container,requestKey) in request.containers"
                     :key="requestKey"
                 ><b>
@@ -397,6 +398,7 @@
                                     <div class="row card-amount card-amount__res">
                                         <div 
                                             class="col-2 pl-0 pr-0 prices-card-res"
+                                            :class="countContainersClass()"
                                             v-for="(container,contKey) in request.containers"
                                             :key="contKey"
                                         >
@@ -1162,7 +1164,7 @@
                                 <b>add to quote</b>
                             </b-form-checkbox>
                             <a href="#" class="btn-add-quote btn-book">
-                                <b>book</b>
+                                <b style="color: #ffffff !important">book</b>
                             </a>
                         </div>
 
@@ -1486,6 +1488,23 @@ export default {
     },
     methods: {
 
+
+        countContainersClass() {
+
+            if(this.request.containers.length == 5 || this.request.containers.length == 4) {
+                return 'col-2';
+            }
+            
+            if(this.request.containers.length == 3) {
+                return 'col-3';
+            }
+
+            if(this.request.containers.length == 2) {
+                return 'col-4';
+            }
+
+        },
+
         createQuote() {
             let component = this;
             let ratesForQuote = [];
@@ -1542,6 +1561,7 @@ export default {
                     component.filterOptions.push(rate.carrier.name);
                 }
             });
+
         },
 
         filterCarriers(){
@@ -1618,6 +1638,8 @@ export default {
 
         this.loaded = true;
     },
+
+    
 }
 </script>
 
