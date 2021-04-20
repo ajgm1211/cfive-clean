@@ -651,7 +651,7 @@
                     v-for="(surchargeType, surchargeKey) in result.pricingDetails.surcharges"
                     :key="surchargeKey"
                 >
-                <h5><b>{{ surchargeKey.substring(0, surchargeKey.length - 10)}}</b></h5>
+                <h5><b>{{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></h5>
 
                 <b-table-simple hover small responsive class="sc-table">
                     <b-thead>
@@ -690,12 +690,12 @@
                         <b-td></b-td>
                         <b-td></b-td>
                         <b-td></b-td>
-                        <b-td><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10)}}</b></b-td>
+                        <b-td><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></b-td>
                         <b-td
-                            v-for="(typeTotal, typeTotalKey) in result.pricingDetails.totalRatePerContainer.totalCharges"
+                            v-for="(typeTotal, typeTotalKey) in result.pricingDetails.totalRatePerType['totalRate'+surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)]"
                             :key="typeTotalKey"
                         >
-                        <b>{{ typeTotal.currencyCode }} {{ typeTotal.totalSurcharges }} </b></b-td>
+                        <b>{{ typeTotal.currencyCode }} {{ typeTotal.total }} </b></b-td>
                     </b-tr>
                     </b-tbody>
                 </b-table-simple>
@@ -730,7 +730,7 @@
                             <h5 class="sub-title-schedule">Vessel/Voyage</h5>
                             <p class="text-schedule"><b>{{ result.routingDetails[0].vehiculeName }} / {{ result.routingDetails[0].voyageNumber }}</b></p>
                         </div>
-                        <div class="col-lg-6">
+                        <div v-if="result.routingDetails[0].imoNumber != null" class="col-lg-6">
                             <h5 class="sub-title-schedule">IMO</h5>
                             <p class="text-schedule"><b>{{ result.routingDetails[0].imoNumber }}</b></p>
                         </div>
@@ -766,8 +766,8 @@
                     <!-- ORIGEN -->
                     <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-0">{{ result.routingDetails[0].departureName }}</p>
-                    <p>{{ result.routingDetails[0].departureDateGmt.substring(0,10) }}</p>
+                    <p class="mb-0">{{ result.departureTerminal }}</p>
+                    <p>{{ result.departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORIGEN -->
 
@@ -782,36 +782,69 @@
                         alt="bote"
                         />
 
-                        <div class="route-direct d-flex align-items-center">
-                        <div class="circle mr-2"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle ml-2"></div>
+                        <div 
+                            class="route-indirect d-flex align-items-center"
+                            v-if="result.routingDetails.length > 1"
+                        >
+                            <div class="circle mr-2"></div>
+                            <div class="line"></div>
+                            <b-button
+                                id="popover-direction"
+                                class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
+                            ></b-button>
+                            <b-popover
+                                target="popover-direction"
+                                triggers="hover"
+                                placement="top"
+                            >
+                                <template #title>Transshipments</template>
+                                <ul>
+                                <li v-for="(trans, transKey) in result.routingDetails"
+                                    :key="transKey"
+                                >
+                                {{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                                </li>
+                                </ul>
+                            </b-popover>
+                            <div class="line line-blue"></div>
+                            <div class="circle fill-circle ml-2"></div>
+                        </div>
+
+                        <div 
+                            class="route-direct d-flex align-items-center"
+                            v-else
+                        >
+                            <div class="circle mr-2"></div>
+                            <div class="line"></div>
+                            <div class="circle fill-circle ml-2"></div>
                         </div>
                     </div>
 
                     <div class="direction-desc">
-                        <p class="mb-0"><b>TT:</b> 45 Days</p>
-                        <p><b>Service</b> Direct</p>
+                        <p class="mb-0"><b>TT:</b> {{ result.transitTime }}</p>
+                        <p><b>Service</b> {{ result.routingDetails.length > 1 ? 'Transshipment' : 'Direct'}}</p>
                     </div>
                     </div>
 
                     <!-- DESTINATION -->
                     <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-0">{{ result.routingDetails[1].arrivalName }}</p>
-                    <p>{{ result.routingDetails[1].arrivalDateGmt.substring(0,10) }}</p>
+                    <p class="mb-0">{{ result.arrivalTerminal }}</p>
+                    <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINATION -->
                 </div>
                 <!-- FIN RUTA -->
 
                 <!-- RUTA RESPONSIVA -->
-                <div class="col-12 d-lg-none">
-                    <h6>Transbordos</h6>
+                <div v-if="result.routingDetails.length > 1" class="col-12 d-lg-none">
+                    <h6>Transshipments</h6>
                     <ul>
-                    <li>Argentina - Madrid: 2012/20/20</li>
-                    <li>Madrid - China: 2012/20/20</li>
-                    <li>China - Chile: 2012/20/20</li>
+                    <li v-for="(trans, transKey) in result.routingDetails"
+                        :key="transKey"
+                    >
+                    {{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                    </li>
                     </ul>
                 </div>
                 <!-- FIN RUTA RESPONSIVA -->
