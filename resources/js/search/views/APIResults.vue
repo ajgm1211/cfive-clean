@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="direction-desc mt-2">
-                        <p class="mb-1"><b>Transit Time:</b> {{ cmaResult.transitTime }}</p>
+                        <p class="mb-1"><b>Transit Time: </b> {{ cmaResult.transitTime + ' days' }}</p>
                         <p><b>Vessel:</b> {{ cmaResult.vehiculeName }}</p>
                     </div>
                     </div>
@@ -111,7 +111,7 @@
                     <div class="via">
                         <ul class="pl-0" style="list-style: none">
                         <li>
-                            <p class="mb-1"><b>Transit Time:</b>{{ cmaResult.transitTime }}</p>
+                            <p class="mb-1"><b>Transit Time: </b>{{ cmaResult.transitTime + ' days' }}</p>
                         </li>
                         <li>
                             <p><b>Vessel:</b>{{ cmaResult.vehiculeName }}</p>
@@ -453,7 +453,7 @@
                     </div>
 
                     <div class="direction-desc mt-2">
-                        <p class="mb-1"><b>Transit Time:</b>{{ result.transitTime }}</p>
+                        <p class="mb-1"><b>Transit Time: </b>{{ result.transitTime + ' days' }}</p>
                         <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
                     </div>
                     </div>
@@ -501,7 +501,7 @@
                     <div class="via">
                         <ul class="pl-0" style="list-style: none">
                         <li>
-                            <p class="mb-1"><b>Transit Time:</b>{{ result.transitTime }}</p>
+                            <p class="mb-1"><b>Transit Time: </b>{{ result.transitTime + ' days' }}</p>
                         </li>
                         <li>
                             <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
@@ -681,6 +681,21 @@
                         </b-tr>
                         </b-thead>
 
+                        <b-tbody>
+                            <b-tr
+                                v-for="(fee, feeKey) in result.formattedPenalties"
+                                :key="feeKey">
+                                <b-td><b>{{ fee.name }}</b></b-td>
+                                <b-td>Per Container</b-td>
+                                <b-td></b-td>
+                                <b-td></b-td>
+                                <b-td 
+                                    v-for="(maerskContainer, maerskContainerKey) in containerCodesMaersk"
+                                    :key="maerskContainerKey"
+                                ><p>{{ fee[maerskContainer] }}<b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
+                                >
+                            </b-tr>
+                        </b-tbody>
                     </b-table-simple>
                 </div>
             </b-collapse>
@@ -804,7 +819,7 @@
                     </div>
 
                     <div class="direction-desc">
-                        <p class="mb-0"><b>TT:</b> {{ result.transitTime }}</p>
+                        <p class="mb-0"><b>TT: </b> {{ result.transitTime + ' days'}}</p>
                         <p><b>Service</b> {{ result.routingDetails.length > 1 ? 'Transshipment' : 'Direct'}}</p>
                     </div>
                     </div>
@@ -907,6 +922,7 @@ export default {
             maersk: [],
             cmacgm: [],
         },
+        containerCodesMaersk: [],
     };
   },
   methods: {
@@ -958,6 +974,7 @@ export default {
                         .then((response) => {
                             response.data.forEach(function (respData){
                                 component.results[carrierCode].push(respData);
+                                component.setPenalties(respData);
                             });
                             console.log(component['results']);
                         })
@@ -968,6 +985,40 @@ export default {
             });
         });
         
+    },
+    
+    setPenalties(responseData){
+        let finalPenalties = [];
+        let penaltyCodes = [];
+        let component = this;
+        
+        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+            penaltyPerContainer.charges.forEach(function (penaltyCont){
+                if(!penaltyCodes.includes(penaltyCont.penaltyType)){
+                    penaltyCodes.push(penaltyCont.penaltyType);
+                    finalPenalties.push({
+                        name: penaltyCont.displayName
+                    });
+                }
+
+                if(!component.containerCodesMaersk.includes(penaltyPerContainer.containerSizeType)){
+                    component.containerCodesMaersk.push(penaltyPerContainer.containerSizeType);
+                }
+            });
+        });
+
+        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+            penaltyPerContainer.charges.forEach(function (penaltyCont){
+                finalPenalties.forEach(function (final){
+                    if(penaltyCont.displayName == final.name){
+                        final[penaltyPerContainer.containerSizeType] = penaltyCont.chargeFee;
+                        final[penaltyPerContainer.containerSizeType + "currency"] = penaltyPerContainer.currency;
+                    }
+                });
+            });
+        });
+
+        responseData.formattedPenalties = finalPenalties;
     },
 
     setApiContainers(){
