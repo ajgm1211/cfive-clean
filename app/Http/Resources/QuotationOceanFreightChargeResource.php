@@ -18,9 +18,20 @@ class QuotationOceanFreightChargeResource extends JsonResource
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
             'calculation_type' => $this->calculation_type->name ?? null,
-            'price' => $this->price,
-            'profit' => $this->profit,
-            'currency' => $this->currency->alphacode
+            'price' => $this->arrayToFloat($this->price),
+            //'profit' => $this->profit,
+            'currency' => $this->currency->alphacode ?? null
         ];
+    }
+
+    public function arrayToFloat($array){
+
+        $new_array = [];
+
+        foreach((array)$array as $key=>$item){
+            $new_array[$key] = (float) $item;
+        }
+
+        return $new_array;
     }
 }

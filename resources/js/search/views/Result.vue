@@ -837,10 +837,9 @@ export default {
     },
 },
 
-  mounted() {
-    let component = this;
-
-    //console.log(this.request);
+    mounted(){
+        let component = this;
+        //console.log(component.datalists);
 
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
@@ -848,19 +847,18 @@ export default {
 
     component.finalRates = component.rates;
 
-    //component.setFilters();
+        //component.setFilters();
 
-    window.document.onscroll = () => {
-      let navBar = document.getElementById("top-results");
-      if (window.scrollY > navBar.offsetTop) {
-        component.isActive = true;
-      } else {
-        component.isActive = false;
-      }
-    };
-
-    this.loaded = true;
-  },
-
-};
+        window.document.onscroll = () => {
+            let navBar = document.getElementById('top-results');
+            if(window.scrollY > navBar.offsetTop){
+                component.isActive = true;
+            } else {
+                component.isActive = false;
+            }
+        }
+        
+        this.loaded = true;
+    },
+}
 </script>

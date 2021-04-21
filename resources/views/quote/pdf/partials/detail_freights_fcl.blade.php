@@ -95,7 +95,7 @@
                                                                 $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
                                                             ?>
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
-                                                            <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, true) . ' ' .$v->currency->alphacode}}</td>
+                                                            <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, false, true) . ' ' .$v->currency->alphacode}}</td>
 
                                                         @endif
                                                     @endforeach
@@ -128,7 +128,7 @@
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
                                         @if($c->code == $key)
-                                            <td {{$hide}}><b>{{ isDecimal(@$total_freight->${'c'.$c->code}, true) .' '. @$r->currency->alphacode }}</b></td>
+                                            <td {{$hide}}><b>{{ isDecimal(@$total_freight->${'c'.$c->code}, false, true) .' '. @$r->currency->alphacode }}</b></td>
                                         @endif
                                     @endforeach
                                 @endforeach
