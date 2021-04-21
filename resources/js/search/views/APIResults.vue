@@ -2,7 +2,11 @@
     <div class="container-cards">
 
         <!-- TARJETA CMA -->
-        <div class="col-12 mb-4" v-if="false">
+        <div 
+            class="col-12 mb-4" 
+            v-for="(cmaResult, cmaResultKey) in results.cmacgm"
+            :key="cmaResultKey+'cma'"
+        >
         <div class="result-search">
             <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
@@ -21,7 +25,7 @@
             <div class="row col-12 col-lg-8 margin-res">
                 <!-- CONTRACT NAME -->
                 <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
+                <h6 class="mt-4 mb-5 contract-title">CMA PRICES</h6>
                 </div>
                 <!-- FIN CONTRACT NAME -->
 
@@ -38,8 +42,8 @@
                     <!-- ORGIEN -->
                     <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-0">España</p>
-                    <p>08 Agos, 2020</p>
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].departureName }}</p>
+                    <p>{{ cmaResult.departureDateGmt }}</p>
                     </div>
                     <!-- FIN ORGIEN -->
 
@@ -60,8 +64,8 @@
                     </div>
 
                     <div class="direction-desc mt-2">
-                        <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
-                        <p><b>Vessel:</b> Gordito</p>
+                        <p class="mb-1"><b>Transit Time:</b> {{ cmaResult.transitTime }}</p>
+                        <p><b>Vessel:</b> {{ cmaResult.vehiculeName }}</p>
                     </div>
                     </div>
                     <!-- FIN LINEA DE RUTA -->
@@ -69,8 +73,8 @@
                     <!-- DESTINO -->
                     <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-0">Argentina</p>
-                    <p>08 Agos, 2020</p>
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].arrivalName }}</p>
+                    <p>{{ cmaResult.arrivalDateGmt }}</p>
                     </div>
                     <!-- FIN DESTINO -->
                 </div>
@@ -86,16 +90,16 @@
                     <!-- ORGIEN -->
                     <div class="origin mb-3">
                         <span>origin</span>
-                        <p class="mb-1">España, Barcelona</p>
-                        <p>08 Agos, 2020</p>
+                        <p class="mb-1">{{ cmaResult.routingDetails[0].departureName }}</p>
+                        <p>{{ cmaResult.departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORGIEN -->
 
                     <!-- DESTINO -->
                     <div class="destination align-items-start mb-3">
                         <span>destination</span>
-                        <p class="mb-1">Argentina, Buenos Aires</p>
-                        <p>08 Agos, 2020</p>
+                        <p class="mb-1">{{ cmaResult.routingDetails[0].arrivalName }}</p>
+                        <p>{{ cmaResult.arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINO -->
                     </div>
@@ -107,10 +111,10 @@
                     <div class="via">
                         <ul class="pl-0" style="list-style: none">
                         <li>
-                            <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
+                            <p class="mb-1"><b>Transit Time:</b>{{ cmaResult.transitTime }}</p>
                         </li>
                         <li>
-                            <p><b>Vessel:</b> Gordito</p>
+                            <p><b>Vessel:</b>{{ cmaResult.vehiculeName }}</p>
                         </li>
                         </ul>
                     </div>
@@ -124,58 +128,26 @@
                 <div class="col-12 col-lg-6">
                     <!-- PRECIO RESPONSIVE -->
                     <div class="row card-amount card-amount-header__res">
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>20DV</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>40DV</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>40HC</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>45HC</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>45NOR</b></p>
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cont,contCode) in request.containers"
+                        :key="contCode"
+                    >
+                        <p><b>{{ cont.code }}</b></p>
                     </div>
                     </div>
                     <!-- FIN PRECIO RESPONSIVE -->
 
                     <!-- PRECIO -->
                     <div class="row card-amount card-amount__res">
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cmaGlobalTotal, cmaTotalKey) in cmaResult.pricingDetails.totalRatePerContainer"
+                        :key="cmaTotalKey"
+                    >
                         <p>
                         <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
-                        >
-                        </p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p>
-                        <b style="font-size: 16px"
-                            >200 <span style="font-size: 10px">USD</span></b
+                            > {{ cmaGlobalTotal.total }} <span style="font-size: 10px">{{ cmaGlobalTotal.currencyCode }}</span></b
                         >
                         </p>
                     </div>
@@ -227,8 +199,11 @@
             <div class="row mr-0 ml-0">
             <!-- DETALLES DE TARIFA -->
             <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
-                <div>
-                <h5><b>Freight</b></h5>
+                <div
+                    v-for="(cmaSurchargeType, cmaSurchargeKey) in cmaResult.pricingDetails.surcharges"
+                    :key="cmaSurchargeKey"
+                >
+                <h5><b>{{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></h5>
 
                 <b-table-simple hover small responsive class="sc-table">
                     <b-thead>
@@ -237,41 +212,30 @@
                         <b-th>Detail</b-th>
                         <b-th></b-th>
                         <b-th></b-th>
-                        <b-th
-                        style="
+                        <b-th 
+                            style="
                             padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        >20DV</b-th
-                        >
-                        <b-th
-                        style="
-                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        >40DV</b-th
-                        >
-                        <b-th
-                        style="
-                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        >45DV</b-th
+                            "
+                            v-for="(requestContainer, rContainerKey) in request.containers"
+                            :key="rContainerKey"
+                        >{{ requestContainer.code }}
+                        >{{ requestContainer.code }}</b-th
                         >
                     </b-tr>
                     </b-thead>
 
                     <b-tbody>
-                    <b-tr>
-                        <b-td><b>Ocean Freight</b></b-td>
+                    <b-tr 
+                        v-for="(cmaSurchargeName, cmaNameKey) in cmaSurchargeType"
+                        :key="cmaNameKey">
+                        <b-td><b>{{ cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName }}</b></b-td>
                         <b-td>Per Container</b-td>
                         <b-td></b-td>
                         <b-td></b-td>
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
-                        >
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
-                        >
-                        <b-td
-                        ><p>200 <b>USD</b></p></b-td
+                        <b-td 
+                            v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
+                            :key="cmaContainerKey"
+                        ><p>{{ cmaSurchargeContainer.amount }}<b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
@@ -279,10 +243,12 @@
                         <b-td></b-td>
                         <b-td></b-td>
                         <b-td></b-td>
-                        <b-td><b>Total Freight</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
-                        <b-td><b>USD 200</b></b-td>
+                        <b-td><b>Total {{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></b-td>
+                        <b-td
+                            v-for="(cmaTypeTotal, cmaTypeTotalKey) in cmaResult.pricingDetails.totalRatePerType['totalRate'+cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)]"
+                            :key="cmaTypeTotalKey"
+                        >
+                        <b>{{ cmaTypeTotal.currencyCode }} {{ cmaTypeTotal.total }} </b></b-td>
                     </b-tr>
                     </b-tbody>
                 </b-table-simple>
@@ -428,9 +394,10 @@
         <!-- FIN TARJETA CMA -->
 
         <!-- TARJETA MAERKS -->
-        <div class="col-12 mb-4" 
-            v-for="(result, key) in results"
-            :key="key">
+        <div 
+            class="col-12 mb-4" 
+            v-for="(result, key) in results.maersk"
+            :key="key+'maersk'">
         <div class="result-search">
             <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
 
@@ -551,20 +518,12 @@
                 <div class="col-12 col-lg-6">
                     <!-- PRECIO RESPONSIVE -->
                     <div class="row card-amount card-amount-header__res">
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>20DV</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>40DV</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>40HC</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>45HC</b></p>
-                    </div>
-                    <div class="col-2 pl-0 pr-0 prices-card-res">
-                        <p><b>45NOR</b></p>
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cont,contCode) in request.containers"
+                        :key="contCode"    
+                    >
+                        <p><b>{{ cont.code }}</b></p>
                     </div>
                     </div>
                     <!-- FIN PRECIO RESPONSIVE -->
@@ -699,6 +658,30 @@
                     </b-tr>
                     </b-tbody>
                 </b-table-simple>
+                </div>
+
+                <div>
+                    <h5><b>Maersk Spot Fees</b></h5>
+
+                    <b-table-simple hover small responsive class="sc-table">
+                        <b-thead>
+                        <b-tr>
+                            <b-th>Fee</b-th>
+                            <b-th>Detail</b-th>
+                            <b-th></b-th>
+                            <b-th></b-th>
+                            <b-th
+                            style="
+                                padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                            "
+                            v-for="(requestContainer, rContainerKey) in request.containers"
+                            :key="rContainerKey"
+                            >{{ requestContainer.code }}</b-th
+                            >
+                        </b-tr>
+                        </b-thead>
+
+                    </b-table-simple>
                 </div>
             </b-collapse>
             <!-- FIN DETALLES DE TARIFA-->
@@ -920,16 +903,20 @@ export default {
             "40FR": 0,
         },
         book_qty: {},
-        results: [],
+        results: {
+            maersk: [],
+            cmacgm: [],
+        },
     };
   },
   methods: {
-    callMaerskAPI(){
+    callAPIs(){
         let component = this;
         let apiOriginPorts = [];
         let apiDestinationPorts = [];
         let apiDate = new Date().toISOString().substring(0,10);
         let apiContainers = "";
+        let apiCarrierCodes = ["maersk"];
 
         component.request.originPorts.forEach(function (originPort){
             if(!apiOriginPorts.includes(originPort.code)){
@@ -945,37 +932,42 @@ export default {
 
         apiContainers = component.setApiContainers();
 
-        apiOriginPorts.forEach(function (origin){
-            apiDestinationPorts.forEach(function (destination){
-                axios
-                    .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
-                        {
-                        params: {
-                            originPort: origin,
-                            destinationPort: destination,
-                            equipmentSizeType: apiContainers,
-                            departureDate: apiDate,
-                            uemail: 'dcabanales@gmail.com',
-                            brands: 'maersk'
+        apiCarrierCodes.forEach(function (carrierCode){
+            apiOriginPorts.forEach(function (origin){
+                apiDestinationPorts.forEach(function (destination){
+                    axios
+                        .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                            {
+                            params: {
+                                originPort: origin,
+                                destinationPort: destination,
+                                equipmentSizeType: apiContainers,
+                                departureDate: apiDate,
+                                uemail: 'dcabanales@gmail.com',
+                                brands: carrierCode
+                                }
+                            },
+                            {
+                            headers:{
+                                'Authorization': 'bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau',
+                                'Accept': 'application/json',
+                                'Content-type': 'application/json'
+                                } 
                             }
-                        },
-                        {
-                        headers:{
-                            'Authorization': 'bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau',
-                            'Accept': 'application/json',
-                            'Content-type': 'application/json'
-                            } 
-                        }
-                    )
-                    .then((response) => {
-                        component.results = response.data;
-                        console.log(response.data);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    });
+                        )
+                        .then((response) => {
+                            response.data.forEach(function (respData){
+                                component.results[carrierCode].push(respData);
+                            });
+                            console.log(component['results']);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        })
+                });
+            });
         });
+        
     },
 
     setApiContainers(){
