@@ -34,6 +34,7 @@ class QuotationApiResource extends JsonResource
             "date_issued" => $this->date_issued,
             "status" => $this->status,
             "incoterm" => $this->incoterm->name ?? null,
+            "custom_incoterm" => $this->custom_incoterm ?? null,
             "delivery" => $this->delivery,
             "cargo_type" => $this->cargoType()->first()->name ?? null,
             "total_quantity" => $this->total_quantity,
@@ -72,7 +73,13 @@ class QuotationApiResource extends JsonResource
 
         return $data;
     }
-
+    
+    /**
+     * Adjust equipment formats
+     *
+     * @param  mixed $equipment
+     * @return void
+     */
     public function transformEquipmentSingle($equipment)
     {
         $containers = Container::select('id', 'code')->get();
@@ -101,12 +108,20 @@ class QuotationApiResource extends JsonResource
 
         return $equipment;
     }
-
+    
+    /**
+     * Get local charges' data from DB
+     *
+     * @param  mixed $id
+     * @param  mixed $type
+     * @param  mixed $quote_type
+     * @return void
+     */
     public function localCharges($id, $type, $quote_type)
     {
         switch ($quote_type) {
             case 'FCL':
-                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name')
+                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id')
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
             case 'LCL':
