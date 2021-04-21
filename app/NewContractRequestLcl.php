@@ -30,7 +30,9 @@ class NewContractRequestLcl extends Model
         'contract_id',
         'type',
         'data',
-        'username_load'
+        'username_load',
+        'code',
+        'is_api'
     ];
 
     public function user()

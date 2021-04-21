@@ -24,7 +24,10 @@
 
         <div>
             <span class="color-title uppercase"><b>{{__('pdf.date_issue')}}:</b></span>
-            {{date_format($quote->created_at, 'd/M/Y')}}
+            {{date_format($quote->created_at, 'd/m/Y')}}
+        </div>
+        <div>
+            <span class="color-title uppercase" ><b>{{__('pdf.validity')}}: </b></span>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}
         </div>
 
     </div>
