@@ -47,6 +47,27 @@ div,
     font-family: "Sailec" !important;
 }
 
+.multiselect {
+    .multiselect__select {
+        width: 15px;
+        height: 17px;
+        padding: 0px;
+        right: 10px;
+        top: 9px;
+    }
+
+    .multiselect__tags {
+        font-size: 13px !important;
+        min-height: 40px !important;
+        border: 2px solid #eee !important;
+        padding: 4px 40px 5px 10px !important;
+        border-radius: 0.25rem !important;
+        height: auto !important;
+    }
+}
+
+
+
 .multiselect__content-wrapper::-webkit-scrollbar,
 #carriers-list::-webkit-scrollbar {
     width: 6px;
@@ -459,14 +480,10 @@ i.mx-icon-calendar {
     color: #333333 !important;
 }
 
-.multiselect__tags {
-    font-size: 13px !important;
-    height: 33.5px;
-    min-height: 33.5px !important;
-    border: 2px solid #eee !important;
-    padding: 4px 40px 5px 10px !important;
-    border-radius: 0.25rem !important;
-    height: auto !important;
+
+
+.form-control {
+    min-height: 40px !important;
 }
 
 .multiselect__tags-wrap {
@@ -499,8 +516,10 @@ i.mx-icon-calendar {
 }
 
 .multiselect__single {
+    top: 5px;
     color: #031b4e;
     font-size: 12px !important;
+    margin-bottom: 0px !important;
 }
 
 .multiselect__content-wrapper {
@@ -699,16 +718,13 @@ input.multiselect__input:focus {
     color: #626e8b !important;
 }
 
-.multiselect__single {
-    margin-bottom: 0px !important;
-}
-
 @media only screen and (max-width: 425px) {
     .nav-tabs .nav-item {
-        width: 48% !important;
+        text-align: center;
+        width: 100% !important;
     }
     .nav-tabs .nav-link {
-        font-size: 14px !important;
+        font-size: 16px !important;
     }
     .card-body {
         overflow-x: scroll;
@@ -1033,6 +1049,8 @@ input.multiselect__input:focus {
 
 .multiselect__placeholder {
     font-size: 12px;
+    position: relative;
+    top: 5px;
 }
 
 
@@ -1609,8 +1627,9 @@ input.data-provider {
 #origin,
 #destination {
     .oceanfreight {
+        width: 250px;
         .multiselect__tags {
-            width: 190px;
+            width: 250px;
         }
     }
 }
@@ -1618,6 +1637,7 @@ input.data-provider {
 #origin,
 #destination {
     .surcharges {
+        width: 150px;
         .multiselect__tags {
             width: 150px;
         }
@@ -1628,6 +1648,7 @@ input.data-provider {
 #carriers {
     .oceanfreight,
     .surcharges {
+        width: 150px;
         .multiselect__tags {
             width: 150px;
         }
@@ -1637,24 +1658,18 @@ input.data-provider {
 #currency {
     .oceanfreight,
     .currency {
+        width: 120px;
         .multiselect__tags {
-            width: 100px;
+            width: 120px;
         }
     }
 }
-
-
-/* 
-.local_calculation_type {
-    .multiselect__tags {
-        width: 180px;
-    }
-} */
 
 #surcharge,
 #destination_type,
 #calculation_type {
     .surcharges {
+        width: 130px;
         .multiselect__tags {
             width: 130px;
         }
@@ -1664,7 +1679,7 @@ input.data-provider {
 #destination_type {
     .surcharges {
         .multiselect__tags {
-            width: 110px;
+            width: 150px;
         }
     }
 }
@@ -1748,4 +1763,25 @@ input.data-provider {
             background: #ededed !important;
         }
     }
+}
+
+@media only screen and (max-width: 1024px) {
+
+    td #rates_20FR,
+    td #rates_40FR,
+    td #rates_20DV,
+    td #rates_40DV,
+    td #rates_40HC,
+    td #rates_45HC,
+    td #rates_40NOR,
+    td #rates_20RF,
+    td #rates_40RF,
+    td #rates_40HCRF {
+        width: 80px;
+    }
+
+}
+
+.invalid-feedback {
+    margin-top: 5px !important;
 }

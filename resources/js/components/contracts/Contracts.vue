@@ -126,7 +126,7 @@
                         type: 'multiselect', 
                         rules: 'required', 
                         trackby: 'name', 
-                        placeholder: 'Select options', 
+                        placeholder: 'Select', 
                         options: 'carriers' 
                     },
                     gp_container: { 
@@ -135,7 +135,7 @@
                         type: 'select', 
                         rules: 'required', 
                         trackby: 'name', 
-                        placeholder: 'Select option', 
+                        placeholder: 'Select', 
                         options: 'equipments' 
                     },
                     direction: { 
@@ -144,7 +144,7 @@
                         type: 'select', 
                         rules: 'required', 
                         trackby: 'name', 
-                        placeholder: 'Select option', 
+                        placeholder: 'Select', 
                         options: 'directions' 
                     },
                     status: {
