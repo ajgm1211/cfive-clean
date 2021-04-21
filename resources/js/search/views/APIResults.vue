@@ -675,7 +675,7 @@
                     <b-tr
                         v-for="(surchargeName, nameKey) in surchargeType"
                         :key="nameKey">
-                        <b-td><b>{{ surchargeName.chargeName }}</b></b-td>
+                        <b-td><b>{{ surchargeName.chargeCode + ' - ' + surchargeName.chargeName }}</b></b-td>
                         <b-td>Per Container</b-td>
                         <b-td></b-td>
                         <b-td></b-td>
