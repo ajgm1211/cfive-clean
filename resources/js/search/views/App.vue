@@ -67,7 +67,7 @@ export default {
             this.searching = true;
             this.searchRequest = searchRequest;
             this.$nextTick (()=>{
-                this.$refs.resultsAPI.callMaerskAPI();
+                this.$refs.resultsAPI.callAPIs();
             })
         },
 
