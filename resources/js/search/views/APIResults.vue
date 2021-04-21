@@ -1,1118 +1,1056 @@
 <template>
-  <div class="container-cards">
-    <!-- TARJETA CMA -->
-    <div class="mb-4" v-if="false">
-      <div class="result-search">
-        <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
+    <div class="container-cards">
 
-        <!-- INFORMACION DE TARIFA -->
-        <div class="row">
-          <!-- CARRIER -->
-          <div
-            class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
-            style="border-right: 1px solid #f3f3f3"
-          >
-            <img src="/images/cma.png" alt="logo" width="115px" />
-          </div>
-          <!-- FIN CARRIER -->
+        <!-- TARJETA CMA -->
+        <div 
+            class="mb-4" 
+            v-for="(cmaResult, cmaResultKey) in results.cmacgm"
+            :key="cmaResultKey+'cma'"
+        >
+        <div class="result-search">
+            <div class="banda-top cma"><span>CMA CGM PRICES</span></div>
 
-          <!-- INFORMACION PRINCIPAL -->
-          <div class="row col-12 col-lg-8 margin-res">
-            <!-- CONTRACT NAME -->
-            <div class="col-12">
-              <h6 class="mt-4 mb-5 contract-title">CMA CARD</h6>
-            </div>
-            <!-- FIN CONTRACT NAME -->
-
-            <!-- RUTA Y PRECIOS -->
+            <!-- INFORMACION DE TARIFA -->
+            <div class="row">
+            <!-- CARRIER -->
             <div
-              class="row col-12 mr-0 ml-0"
-              style="border-bottom: 1px solid #f3f3f3"
+                class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
+                style="border-right: 1px solid #f3f3f3"
             >
-              <!-- RUTA -->
-              <div
-                class="col-12 col-lg-6 d-none d-lg-flex"
-                style="border-bottom: 1px solid #eeeeee"
-              >
-                <!-- ORGIEN -->
-                <div class="origin mr-4">
-                  <span>origin</span>
-                  <p class="mb-0">España</p>
-                  <p>08 Agos, 2020</p>
-                </div>
-                <!-- FIN ORGIEN -->
+                <img src="/images/cma.png" alt="logo" width="115px" />
+            </div>
+            <!-- FIN CARRIER -->
 
-                <!-- LINEA DE RUTA -->
+            <!-- INFORMACION PRINCIPAL -->
+            <div class="row col-12 col-lg-8 margin-res">
+                <!-- CONTRACT NAME -->
+                <div class="col-12">
+                <h6 class="mt-4 mb-5 contract-title">CMA PRICES</h6>
+                </div>
+                <!-- FIN CONTRACT NAME -->
+
+                <!-- RUTA Y PRECIOS -->
                 <div
-                  class="d-flex flex-column justify-content-center align-items-center"
+                class="row col-12 mr-0 ml-0"
+                style="border-bottom: 1px solid #f3f3f3"
                 >
-                  <div class="direction-form">
-                    <img src="/images/logo-ship-blue.svg" alt="bote" />
-
-                    <div class="route-indirect d-flex align-items-center">
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                      <div class="line line-blue"></div>
-                      <div class="circle fill-circle ml-2"></div>
-                    </div>
-                  </div>
-
-                  <div class="direction-desc mt-2">
-                    <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
-                    <p><b>Vessel:</b> Gordito</p>
-                  </div>
-                </div>
-                <!-- FIN LINEA DE RUTA -->
-
-                <!-- DESTINO -->
-                <div class="destination ml-4">
-                  <span>destination</span>
-                  <p class="mb-0">Argentina</p>
-                  <p>08 Agos, 2020</p>
-                </div>
-                <!-- FIN DESTINO -->
-              </div>
-              <!-- FIN RUTA -->
-
-              <!-- RUTA RESPONSIVA -->
-              <div
-                class="row col-lg-6 d-lg-none mr-0 ml-0"
-                style="border-bottom: 1px solid #eeeeee"
-              >
-                <!-- DESTINOS -->
-                <div class="col-sm-6">
-                  <!-- ORGIEN -->
-                  <div class="origin mb-3">
+                <!-- RUTA -->
+                <div
+                    class="col-12 col-lg-6 d-none d-lg-flex"
+                    style="border-bottom: 1px solid #eeeeee"
+                >
+                    <!-- ORGIEN -->
+                    <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-1">España, Barcelona</p>
-                    <p>08 Agos, 2020</p>
-                  </div>
-                  <!-- FIN ORGIEN -->
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].departureName }}</p>
+                    <p>{{ cmaResult.departureDateGmt }}</p>
+                    </div>
+                    <!-- FIN ORGIEN -->
 
-                  <!-- DESTINO -->
-                  <div class="destination align-items-start mb-3">
+                    <!-- LINEA DE RUTA -->
+                    <div
+                    class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                    <div class="direction-form">
+                        <img src="/images/logo-ship-blue.svg" alt="bote" />
+
+                        <div class="route-indirect d-flex align-items-center">
+                        <div class="circle mr-2"></div>
+                        <div class="line"></div>
+                        <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                        <div class="line line-blue"></div>
+                        <div class="circle fill-circle ml-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="direction-desc mt-2">
+                        <p class="mb-1"><b>Transit Time: </b> {{ cmaResult.transitTime + ' days' }}</p>
+                        <p><b>Vessel:</b> {{ cmaResult.vehiculeName }}</p>
+                    </div>
+                    </div>
+                    <!-- FIN LINEA DE RUTA -->
+
+                    <!-- DESTINO -->
+                    <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-1">Argentina, Buenos Aires</p>
-                    <p>08 Agos, 2020</p>
-                  </div>
-                  <!-- FIN DESTINO -->
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].arrivalName }}</p>
+                    <p>{{ cmaResult.arrivalDateGmt }}</p>
+                    </div>
+                    <!-- FIN DESTINO -->
                 </div>
-                <!-- FIN DESTINOS -->
+                <!-- FIN RUTA -->
 
-                <!-- TRANSIT TIME -->
-                <div class="col-sm-6">
-                  <!-- LINEA DE RUTA -->
-                  <div class="via">
-                    <ul class="pl-0" style="list-style: none">
-                      <li>
-                        <p class="mb-1"><b>Transit Time:</b> 45 Days</p>
-                      </li>
-                      <li>
-                        <p><b>Vessel:</b> Gordito</p>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- FIN LINEA DE RUTA -->
-                </div>
-                <!-- FIN TRANSIT TIME -->
-              </div>
-              <!-- FIN RUTA RESPONSIVA -->
+                <!-- RUTA RESPONSIVA -->
+                <div
+                    class="row col-lg-6 d-lg-none mr-0 ml-0"
+                    style="border-bottom: 1px solid #eeeeee"
+                >
+                    <!-- DESTINOS -->
+                    <div class="col-sm-6">
+                    <!-- ORGIEN -->
+                    <div class="origin mb-3">
+                        <span>origin</span>
+                        <p class="mb-1">{{ cmaResult.routingDetails[0].departureName }}</p>
+                        <p>{{ cmaResult.departureDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN ORGIEN -->
 
-              <!-- PRECIO -->
-              <div class="col-12 col-lg-6">
-                <!-- PRECIO RESPONSIVE -->
-                <div class="row card-amount card-amount-header__res">
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>20DV</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>40DV</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>40HC</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>45HC</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>45NOR</b></p>
-                  </div>
+                    <!-- DESTINO -->
+                    <div class="destination align-items-start mb-3">
+                        <span>destination</span>
+                        <p class="mb-1">{{ cmaResult.routingDetails[0].arrivalName }}</p>
+                        <p>{{ cmaResult.arrivalDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN DESTINO -->
+                    </div>
+                    <!-- FIN DESTINOS -->
+
+                    <!-- TRANSIT TIME -->
+                    <div class="col-sm-6">
+                    <!-- LINEA DE RUTA -->
+                    <div class="via">
+                        <ul class="pl-0" style="list-style: none">
+                        <li>
+                            <p class="mb-1"><b>Transit Time: </b>{{ cmaResult.transitTime + ' days' }}</p>
+                        </li>
+                        <li>
+                            <p><b>Vessel:</b>{{ cmaResult.vehiculeName }}</p>
+                        </li>
+                        </ul>
+                    </div>
+                    <!-- FIN LINEA DE RUTA -->
+                    </div>
+                    <!-- FIN TRANSIT TIME -->
                 </div>
-                <!-- FIN PRECIO RESPONSIVE -->
+                <!-- FIN RUTA RESPONSIVA -->
 
                 <!-- PRECIO -->
-                <div class="row card-amount card-amount__res">
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p>
-                      <b style="font-size: 16px"
-                        >200 <span style="font-size: 10px">USD</span></b
-                      >
-                    </p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p>
-                      <b style="font-size: 16px"
-                        >200 <span style="font-size: 10px">USD</span></b
-                      >
-                    </p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p>
-                      <b style="font-size: 16px"
-                        >200 <span style="font-size: 10px">USD</span></b
-                      >
-                    </p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p>
-                      <b style="font-size: 16px"
-                        >200 <span style="font-size: 10px">USD</span></b
-                      >
-                    </p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p>
-                      <b style="font-size: 16px"
-                        >200 <span style="font-size: 10px">USD</span></b
-                      >
-                    </p>
-                  </div>
+                <div class="col-12 col-lg-6">
+                    <!-- PRECIO RESPONSIVE -->
+                    <div class="row card-amount card-amount-header__res">
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cont,contCode) in request.containers"
+                        :key="contCode"
+                    >
+                        <p><b>{{ cont.code }}</b></p>
+                    </div>
+                    </div>
+                    <!-- FIN PRECIO RESPONSIVE -->
+
+                    <!-- PRECIO -->
+                    <div class="row card-amount card-amount__res">
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cmaGlobalTotal, cmaTotalKey) in cmaResult.pricingDetails.totalRatePerContainer"
+                        :key="cmaTotalKey"
+                    >
+                        <p>
+                        <b style="font-size: 16px"
+                            > {{ cmaGlobalTotal.total }} <span style="font-size: 10px">{{ cmaGlobalTotal.currencyCode }}</span></b
+                        >
+                        </p>
+                    </div>
+                    </div>
+                    <!-- FIN PRECIO -->
                 </div>
                 <!-- FIN PRECIO -->
-              </div>
-              <!-- FIN PRECIO -->
-            </div>
-            <!-- RUTA Y PRECIOS -->
-
-            <!-- OPCIONES E INFORMACION EXTRA -->
-            <div class="col-12 mt-3 mb-3 result-action">
-              <div class="d-flex align-items-center">
-                <a href="#0" style="color: #006bfa"
-                  ><b-icon icon="check-circle-fill"></b-icon> CMA CGM My
-                  PRICES</a
-                >
-                <p class="ml-4 mb-0">
-                  <b>Validity:</b> 2020-08-02 / 2020-05-09
-                </p>
-              </div>
-
-              <div class="d-flex justify-content-end align-items-center">
-                <b-button class="rs-btn" v-b-toggle.schedules
-                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-                <b-button class="rs-btn" v-b-toggle.detailed
-                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-              </div>
-            </div>
-            <!-- FIN OPCIONES E INFORMACION EXTRA -->
-          </div>
-          <!-- FIN INFORMACION PRINCIPAL -->
-
-          <!-- ADD QUOTE BTN -->
-          <div
-            class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res"
-            style="border-left: 1px solid #f3f3f3"
-          >
-            <b-form-checkbox class="btn-add-quote" name="check-button" button>
-              <b>add to quote</b>
-            </b-form-checkbox>
-          </div>
-        </div>
-        <!-- FIN INFORMACION DE TARIFA -->
-
-        <!-- INFORMACION DESPLEGADA -->
-        <div class="row mr-0 ml-0">
-          <!-- DETALLES DE TARIFA -->
-          <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
-            <div>
-              <h5><b>Freight</b></h5>
-
-              <b-table-simple hover small responsive class="sc-table">
-                <b-thead>
-                  <b-tr>
-                    <b-th>Charge</b-th>
-                    <b-th>Detail</b-th>
-                    <b-th></b-th>
-                    <b-th></b-th>
-                    <b-th
-                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      >20DV</b-th
-                    >
-                    <b-th
-                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      >40DV</b-th
-                    >
-                    <b-th
-                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      >45DV</b-th
-                    >
-                  </b-tr>
-                </b-thead>
-
-                <b-tbody>
-                  <b-tr>
-                    <b-td><b>Ocean Freight</b></b-td>
-                    <b-td>Per Container</b-td>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td
-                      ><p>200 <b>USD</b></p></b-td
-                    >
-                    <b-td
-                      ><p>200 <b>USD</b></p></b-td
-                    >
-                    <b-td
-                      ><p>200 <b>USD</b></p></b-td
-                    >
-                  </b-tr>
-
-                  <b-tr>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td><b>Total Freight</b></b-td>
-                    <b-td><b>USD 200</b></b-td>
-                    <b-td><b>USD 200</b></b-td>
-                    <b-td><b>USD 200</b></b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </div>
-          </b-collapse>
-          <!-- FIN DETALLES DE TARIFA-->
-
-          <!-- SCHEDULES -->
-          <b-collapse
-            id="schedules"
-            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
-          >
-            <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
-
-            <div class="row">
-              <!-- INFOMACION DE LA API -->
-              <div
-                class="col-lg-6 info-schedule"
-                style="border-right: 1px solid #eee"
-              >
-                <div class="row schedule">
-                  <!-- INFORMACION DEL BARCO -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="hdd-rack"></b-icon> Vessel Information
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div class="col-lg-6">
-                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
-                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
-                      </div>
-                      <div class="col-lg-6">
-                        <h5 class="sub-title-schedule">IMO</h5>
-                        <p class="text-schedule"><b>MSC DITTE 038E</b></p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- FIN INFORMACION DEL BARCO -->
-
-                  <!-- DEADLINE -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="stopwatch"></b-icon> Deadlines
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div class="col-12 col-sm-6">
-                        <h5 class="sub-title-schedule">CY</h5>
-                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                      </div>
-                      <div class="col-12 col-sm-6">
-                        <h5 class="sub-title-schedule">VGM</h5>
-                        <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- FIN DEADLINE -->
                 </div>
-              </div>
-              <!-- FIN INFOMACION DE LA API -->
+                <!-- RUTA Y PRECIOS -->
 
-              <!-- RUTA -->
-              <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
-                <!-- ORIGEN -->
-                <div class="origin mr-4">
-                  <span>origin</span>
-                  <p class="mb-0">España</p>
-                  <p>20 Sep, 2020 ( Departure ) 20:00</p>
-                </div>
-                <!-- FIN ORIGEN -->
-
-                <!-- TT -->
-                <div
-                  class="d-flex flex-column justify-content-center align-items-center"
-                >
-                  <div class="direction-form">
-                    <img
-                      src="/images/logo-ship-blue.svg"
-                      class="img-indirect"
-                      alt="bote"
-                    />
-
-                    <div class="route-indirect d-flex align-items-center">
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <b-button
-                        id="popover-direction"
-                        class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
-                      ></b-button>
-                      <b-popover
-                        target="popover-direction"
-                        triggers="hover"
-                        placement="top"
-                      >
-                        <template #title>Direction</template>
-                        <ul>
-                          <li>Argentina - Madrid: 2012/20/20</li>
-                          <li>Madrid - China: 2012/20/20</li>
-                          <li>China - Chile: 2012/20/20</li>
-                        </ul>
-                      </b-popover>
-                      <div class="line line-blue"></div>
-                      <div class="circle fill-circle ml-2"></div>
-                    </div>
-                  </div>
-
-                  <div class="direction-desc">
-                    <p class="mb-0"><b>TT:</b> 45 Days</p>
-                    <p><b>Service</b> Direct</p>
-                  </div>
+                <!-- OPCIONES E INFORMACION EXTRA -->
+                <div class="col-12 mt-3 mb-3 result-action">
+                <div class="d-flex align-items-center">
+                    <a href="#0" style="color: #006bfa"
+                    ><b-icon icon="check-circle-fill"></b-icon> CMA CGM My
+                    PRICES</a
+                    >
+                    <p class="ml-4 mb-0">
+                    <b>Validity:</b> 2020-08-02 / 2020-05-09
+                    </p>
                 </div>
 
-                <!-- DESTINATION -->
-                <div class="destination ml-4">
-                  <span>destination</span>
-                  <p class="mb-0">Argentina</p>
-                  <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                <div class="d-flex justify-content-end align-items-center">
+                    <b-button class="rs-btn" v-b-toggle.schedules
+                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                    ></b-button>
+                    <b-button class="rs-btn" v-b-toggle.detailed
+                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                    ></b-button>
                 </div>
-                <!-- FIN DESTINATION -->
-              </div>
-              <!-- FIN RUTA -->
-
-              <!-- RUTA RESPONSIVA -->
-              <div class="col-12 d-lg-none">
-                <h6>Transbordos</h6>
-                <ul>
-                  <li>Argentina - Madrid: 2012/20/20</li>
-                  <li>Madrid - China: 2012/20/20</li>
-                  <li>China - Chile: 2012/20/20</li>
-                </ul>
-              </div>
-              <!-- FIN RUTA RESPONSIVA -->
+                </div>
+                <!-- FIN OPCIONES E INFORMACION EXTRA -->
             </div>
-          </b-collapse>
-          <!-- FIN SCHEDULES -->
-        </div>
-        <!-- FIN INFORMACION DESPLEGADA -->
-      </div>
-    </div>
-    <!-- FIN TARJETA CMA -->
+            <!-- FIN INFORMACION PRINCIPAL -->
 
-    <!-- TARJETA MAERKS -->
-    <div class="mb-4" v-for="(result, key) in results" :key="key">
-      <div class="result-search">
-        <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
-
-        <!-- INFORMACION DE TARIFA -->
-        <div class="row">
-          <!-- CARRIER -->
-          <div
-            class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
-            style="border-right: 1px solid #f3f3f3"
-          >
-            <img
-              :src="'/images/' + result.companyCode + '.png'"
-              alt="logo"
-              width="115px"
-            />
-          </div>
-          <!-- FIN CARRIER -->
-
-          <!-- INFORMACION PRINCIPAL -->
-          <div class="row col-12 col-lg-8 margin-res">
-            <!-- CONTRACT NAME -->
-            <div class="col-12">
-              <h6 class="mt-4 mb-5 contract-title">{{ result.company }}</h6>
-            </div>
-            <!-- FIN CONTRACT NAME -->
-
-            <!-- RUTA Y PRECIOS -->
+            <!-- ADD QUOTE BTN -->
             <div
-              class="row col-12 mr-0 ml-0"
-              style="border-bottom: 1px solid #f3f3f3"
+                class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res"
+                style="border-left: 1px solid #f3f3f3"
             >
-              <!-- RUTA -->
-              <div
-                class="col-12 col-lg-6 d-none d-lg-flex align-items-center"
-                style="border-bottom: 1px solid #eeeeee"
-              >
-                <!-- ORGIEN -->
-                <div class="origin mr-4">
-                  <span>origin</span>
-                  <p class="mb-0">{{ result.departureTerminal }}</p>
-                  <p>{{ result.departureDateGmt.substring(0, 10) }}</p>
-                </div>
-                <!-- FIN ORGIEN -->
+                <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                <b>add to quote</b>
+                </b-form-checkbox>
+            </div>
+            </div>
+            <!-- FIN INFORMACION DE TARIFA -->
 
-                <!-- LINEA DE RUTA -->
+            <!-- INFORMACION DESPLEGADA -->
+            <div class="row mr-0 ml-0">
+            <!-- DETALLES DE TARIFA -->
+            <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
                 <div
-                  class="d-flex flex-column justify-content-center align-items-center"
+                    v-for="(cmaSurchargeType, cmaSurchargeKey) in cmaResult.pricingDetails.surcharges"
+                    :key="cmaSurchargeKey"
                 >
-                  <div class="direction-form">
-                    <img src="/images/logo-ship-blue.svg" alt="bote" />
+                <h5><b>{{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></h5>
 
-                    <div class="route-direct d-flex align-items-center">
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <div class="circle fill-circle ml-2"></div>
+                <b-table-simple hover small responsive class="sc-table">
+                    <b-thead>
+                    <b-tr>
+                        <b-th>Charge</b-th>
+                        <b-th>Detail</b-th>
+                        <b-th></b-th>
+                        <b-th></b-th>
+                        <b-th 
+                            style="
+                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                            "
+                            v-for="(requestContainer, rContainerKey) in request.containers"
+                            :key="rContainerKey"
+                        >{{ requestContainer.code }}
+                        >{{ requestContainer.code }}</b-th
+                        >
+                    </b-tr>
+                    </b-thead>
+
+                    <b-tbody>
+                    <b-tr 
+                        v-for="(cmaSurchargeName, cmaNameKey) in cmaSurchargeType"
+                        :key="cmaNameKey">
+                        <b-td><b>{{ cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName }}</b></b-td>
+                        <b-td>Per Container</b-td>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td 
+                            v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
+                            :key="cmaContainerKey"
+                        ><p>{{ cmaSurchargeContainer.amount }}<b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
+                        >
+                    </b-tr>
+
+                    <b-tr>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td><b>Total {{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></b-td>
+                        <b-td
+                            v-for="(cmaTypeTotal, cmaTypeTotalKey) in cmaResult.pricingDetails.totalRatePerType['totalRate'+cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)]"
+                            :key="cmaTypeTotalKey"
+                        >
+                        <b>{{ cmaTypeTotal.currencyCode }} {{ cmaTypeTotal.total }} </b></b-td>
+                    </b-tr>
+                    </b-tbody>
+                </b-table-simple>
+                </div>
+            </b-collapse>
+            <!-- FIN DETALLES DE TARIFA-->
+
+            <!-- SCHEDULES -->
+            <b-collapse
+                id="schedules"
+                class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            >
+                <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+
+                <div class="row">
+                <!-- INFOMACION DE LA API -->
+                <div
+                    class="col-lg-6 info-schedule"
+                    style="border-right: 1px solid #eee"
+                >
+                    <div class="row schedule">
+                    <!-- INFORMACION DEL BARCO -->
+                    <div class="col-lg-6">
+                        <h5 class="title-schedule">
+                        <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                        </h5>
+
+                        <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <h5 class="sub-title-schedule">Vessel/Voyage</h5>
+                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                        </div>
+                        <div class="col-lg-6">
+                            <h5 class="sub-title-schedule">IMO</h5>
+                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                        </div>
+                        </div>
                     </div>
-                  </div>
+                    <!-- FIN INFORMACION DEL BARCO -->
 
-                  <div class="direction-desc mt-2">
-                    <p class="mb-1">
-                      <b>Transit Time:</b>{{ result.transitTime }}
-                    </p>
-                    <p>
-                      <b>{{ result.vehiculeType }}:</b>
-                      {{ result.vehiculeName }}
-                    </p>
-                  </div>
+                    <!-- DEADLINE -->
+                    <div class="col-lg-6">
+                        <h5 class="title-schedule">
+                        <b-icon icon="stopwatch"></b-icon> Deadlines
+                        </h5>
+
+                        <div class="row mt-4">
+                        <div class="col-12 col-sm-6">
+                            <h5 class="sub-title-schedule">CY</h5>
+                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <h5 class="sub-title-schedule">VGM</h5>
+                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- FIN DEADLINE -->
+                    </div>
                 </div>
-                <!-- FIN LINEA DE RUTA -->
+                <!-- FIN INFOMACION DE LA API -->
 
-                <!-- DESTINO -->
-                <div class="destination ml-4">
-                  <span>destination</span>
-                  <p class="mb-0">{{ result.arrivalTerminal }}</p>
-                  <p>{{ result.arrivalDateGmt.substring(0, 10) }}</p>
+                <!-- RUTA -->
+                <div
+                    class="col-12 col-lg-6 d-none d-lg-flex align-items-center"
+                >
+                    <!-- ORIGEN -->
+                    <div class="origin mr-4">
+                    <span>origin</span>
+                    <p class="mb-0">España</p>
+                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    </div>
+                    <!-- FIN ORIGEN -->
+
+                    <!-- TT -->
+                    <div
+                    class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                    <div class="direction-form">
+                        <img
+                        src="/images/logo-ship-blue.svg"
+                        class="img-indirect"
+                        alt="bote"
+                        />
+
+                        <div class="route-indirect d-flex align-items-center">
+                        <div class="circle mr-2"></div>
+                        <div class="line"></div>
+                        <b-button
+                            id="popover-direction"
+                            class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
+                        ></b-button>
+                        <b-popover
+                            target="popover-direction"
+                            triggers="hover"
+                            placement="top"
+                        >
+                            <template #title>Direction</template>
+                            <ul>
+                            <li>Argentina - Madrid: 2012/20/20</li>
+                            <li>Madrid - China: 2012/20/20</li>
+                            <li>China - Chile: 2012/20/20</li>
+                            </ul>
+                        </b-popover>
+                        <div class="line line-blue"></div>
+                        <div class="circle fill-circle ml-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="direction-desc">
+                        <p class="mb-0"><b>TT:</b> 45 Days</p>
+                        <p><b>Service</b> Direct</p>
+                    </div>
+                    </div>
+
+                    <!-- DESTINATION -->
+                    <div class="destination ml-4">
+                    <span>destination</span>
+                    <p class="mb-0">Argentina</p>
+                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    </div>
+                    <!-- FIN DESTINATION -->
                 </div>
-                <!-- FIN DESTINO -->
-              </div>
-              <!-- FIN RUTA -->
+                <!-- FIN RUTA -->
 
-              <!-- RUTA RESPONSIVA -->
-              <div
-                class="row col-lg-6 d-lg-none mr-0 ml-0"
-                style="border-bottom: 1px solid #eeeeee"
-              >
-                <!-- DESTINOS -->
-                <div class="col-sm-6">
-                  <!-- ORGIEN -->
-                  <div class="origin mb-3">
+                <!-- RUTA RESPONSIVA -->
+                <div class="col-12 d-lg-none">
+                    <h6>Transbordos</h6>
+                    <ul>
+                    <li>Argentina - Madrid: 2012/20/20</li>
+                    <li>Madrid - China: 2012/20/20</li>
+                    <li>China - Chile: 2012/20/20</li>
+                    </ul>
+                </div>
+                <!-- FIN RUTA RESPONSIVA -->
+                </div>
+            </b-collapse>
+            <!-- FIN SCHEDULES -->
+            </div>
+            <!-- FIN INFORMACION DESPLEGADA -->
+        </div>
+        </div>
+        <!-- FIN TARJETA CMA -->
+
+        <!-- TARJETA MAERKS -->
+        <div 
+            class="mb-4" 
+            v-for="(result, key) in results.maersk"
+            :key="key+'maersk'">
+        <div class="result-search">
+            <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
+
+            <!-- INFORMACION DE TARIFA -->
+            <div class="row">
+            <!-- CARRIER -->
+            <div
+                class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
+                style="border-right: 1px solid #f3f3f3"
+            >
+                <img :src="'/images/' + result.companyCode + '.png'" alt="logo" width="115px" />
+            </div>
+            <!-- FIN CARRIER -->
+
+            <!-- INFORMACION PRINCIPAL -->
+            <div class="row col-12 col-lg-8 margin-res">
+                <!-- CONTRACT NAME -->
+                <div class="col-12">
+                <h6 class="mt-4 mb-5 contract-title">{{ result.company }}</h6>
+                </div>
+                <!-- FIN CONTRACT NAME -->
+
+                <!-- RUTA Y PRECIOS -->
+                <div
+                class="row col-12 mr-0 ml-0"
+                style="border-bottom: 1px solid #f3f3f3"
+                >
+                <!-- RUTA -->
+                <div
+                    class="col-12 col-lg-6 d-none d-lg-flex align-items-center"
+                    style="border-bottom: 1px solid #eeeeee"
+                >
+                    <!-- ORGIEN -->
+                    <div class="origin mr-4">
                     <span>origin</span>
                     <p class="mb-0">{{ result.departureTerminal }}</p>
-                    <p>{{ result.departureDateGmt.substring(0, 10) }}</p>
-                  </div>
-                  <!-- FIN ORGIEN -->
+                    <p>{{ result.departureDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN ORGIEN -->
 
-                  <!-- DESTINO -->
-                  <div class="destination align-items-start mb-3">
+                    <!-- LINEA DE RUTA -->
+                    <div
+                    class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                    <div class="direction-form">
+                        <img src="/images/logo-ship-blue.svg" alt="bote" />
+
+                        <div class="route-direct d-flex align-items-center">
+                        <div class="circle mr-2"></div>
+                        <div class="line"></div>
+                        <div class="circle fill-circle ml-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="direction-desc mt-2">
+                        <p class="mb-1"><b>Transit Time: </b>{{ result.transitTime + ' days' }}</p>
+                        <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
+                    </div>
+                    </div>
+                    <!-- FIN LINEA DE RUTA -->
+
+                    <!-- DESTINO -->
+                    <div class="destination ml-4">
                     <span>destination</span>
                     <p class="mb-0">{{ result.arrivalTerminal }}</p>
-                    <p>{{ result.arrivalDateGmt.substring(0, 10) }}</p>
-                  </div>
-                  <!-- FIN DESTINO -->
+                    <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN DESTINO -->
                 </div>
-                <!-- FIN DESTINOS -->
+                <!-- FIN RUTA -->
 
-                <!-- TRANSIT TIME -->
-                <div class="col-sm-6">
-                  <!-- LINEA DE RUTA -->
-                  <div class="via">
-                    <ul class="pl-0" style="list-style: none">
-                      <li>
-                        <p class="mb-1">
-                          <b>Transit Time:</b>{{ result.transitTime }}
-                        </p>
-                      </li>
-                      <li>
-                        <p>
-                          <b>{{ result.vehiculeType }}:</b>
-                          {{ result.vehiculeName }}
-                        </p>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- FIN LINEA DE RUTA -->
-                </div>
-                <!-- FIN TRANSIT TIME -->
-              </div>
-              <!-- FIN RUTA RESPONSIVA -->
+                <!-- RUTA RESPONSIVA -->
+                <div
+                    class="row col-lg-6 d-lg-none mr-0 ml-0"
+                    style="border-bottom: 1px solid #eeeeee"
 
-              <!-- PRECIO -->
-              <div class="col-12 col-lg-6">
-                <!-- PRECIO RESPONSIVE -->
-                <div class="row card-amount card-amount-header__res">
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>20DV</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>40DV</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>40HC</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>45HC</b></p>
-                  </div>
-                  <div class="col-2 pl-0 pr-0 prices-card-res">
-                    <p><b>45NOR</b></p>
-                  </div>
+                >
+                    <!-- DESTINOS -->
+                    <div class="col-sm-6">
+                    <!-- ORGIEN -->
+                    <div class="origin mb-3">
+                        <span>origin</span>
+                        <p class="mb-0">{{ result.departureTerminal }}</p>
+                        <p>{{ result.departureDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN ORGIEN -->
+
+                    <!-- DESTINO -->
+                    <div class="destination align-items-start mb-3">
+                        <span>destination</span>
+                        <p class="mb-0">{{ result.arrivalTerminal }}</p>
+                        <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN DESTINO -->
+                    </div>
+                    <!-- FIN DESTINOS -->
+
+                    <!-- TRANSIT TIME -->
+                    <div class="col-sm-6">
+                    <!-- LINEA DE RUTA -->
+                    <div class="via">
+                        <ul class="pl-0" style="list-style: none">
+                        <li>
+                            <p class="mb-1"><b>Transit Time: </b>{{ result.transitTime + ' days' }}</p>
+                        </li>
+                        <li>
+                            <p><b>{{ result.vehiculeType }}:</b> {{ result.vehiculeName }}</p>
+                        </li>
+                        </ul>
+                    </div>
+                    <!-- FIN LINEA DE RUTA -->
+                    </div>
+                    <!-- FIN TRANSIT TIME -->
                 </div>
-                <!-- FIN PRECIO RESPONSIVE -->
+                <!-- FIN RUTA RESPONSIVA -->
 
                 <!-- PRECIO -->
-                <div class="row card-amount card-amount__res">
-                  <div
-                    class="col-2 pl-0 pr-0 prices-card-res"
-                    v-for="(globalTotal, totalKey) in result.pricingDetails
-                      .totalRatePerContainer"
-                    :key="totalKey"
-                  >
-                    <p>
-                      <b style="font-size: 16px"
-                        >{{ globalTotal.total }}
-                        <span style="font-size: 10px">{{
-                          globalTotal.currencyCode
-                        }}</span></b
-                      >
-                    </p>
-                  </div>
+                <div class="col-12 col-lg-6">
+                    <!-- PRECIO RESPONSIVE -->
+                    <div class="row card-amount card-amount-header__res">
+                    <div 
+                        class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(cont,contCode) in request.containers"
+                        :key="contCode"    
+                    >
+                        <p><b>{{ cont.code }}</b></p>
+                    </div>
+                    </div>
+                    <!-- FIN PRECIO RESPONSIVE -->
+
+                    <!-- PRECIO -->
+                    <div class="row card-amount card-amount__res">
+                    <div class="col-2 pl-0 pr-0 prices-card-res"
+                        v-for="(globalTotal, totalKey) in result.pricingDetails.totalRatePerContainer"
+                        :key="totalKey">
+                        <p>
+                        <b style="font-size: 16px"
+                            >{{ globalTotal.total }} <span style="font-size: 10px">{{ globalTotal.currencyCode }}</span></b
+                        >
+                        </p>
+                    </div>
+                    </div>
+                    <!-- FIN PRECIO -->
                 </div>
                 <!-- FIN PRECIO -->
-              </div>
-              <!-- FIN PRECIO -->
+                </div>
+                <!-- RUTA Y PRECIOS -->
+
+                <!-- OPCIONES E INFORMACION EXTRA -->
+                <div class="col-12 mt-3 mb-3 result-action">
+                <div class="result-action">
+                    <span style="color: #006bfa;text-transform: capitalize;" class="mr-3"
+                    ><b-icon icon="check-circle-fill"></b-icon> guaranteed Price
+                    & loading</span
+                    >
+                    <span style="color: #006bfa;text-transform: capitalize;" class="mr-3"
+                    ><b-icon icon="check-circle-fill"></b-icon> two-way
+                    commitment</span
+                    >
+                    <a href="#0" style="color: #071c4b"> T&C applicable</a>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center">
+                    <b-button 
+                        class="rs-btn"
+                        :class="result.scheduleCollapse ? null : 'collapsed'"
+                        :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
+                        :aria-controls="'schedules_' + String(result.routingDetails[0].voyageNumber)"
+                        @click="result.scheduleCollapse = !result.scheduleCollapse" 
+                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                    ></b-button>
+                    <b-button 
+                        class="rs-btn" 
+                        :class="result.detailCollapse ? null : 'collapsed'"
+                        :aria-expanded="result.detailCollapse ? 'true' : 'false'"
+                        :aria-controls="'details_' + String(result.routingDetails[0].voyageNumber)"
+                        @click="result.detailCollapse = !result.detailCollapse"
+                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                    ></b-button>
+                </div>
+                </div>
+                <!-- FIN OPCIONES E INFORMACION EXTRA -->
             </div>
-            <!-- RUTA Y PRECIOS -->
+            <!-- FIN INFORMACION PRINCIPAL -->
 
-            <!-- OPCIONES E INFORMACION EXTRA -->
-            <div class="col-12 mt-3 mb-3 result-action">
-              <div class="result-action">
-                <span
-                  style="color: #006bfa; text-transform: capitalize"
-                  class="mr-3"
-                  ><b-icon icon="check-circle-fill"></b-icon> guaranteed Price &
-                  loading</span
-                >
-                <span
-                  style="color: #006bfa; text-transform: capitalize"
-                  class="mr-3"
-                  ><b-icon icon="check-circle-fill"></b-icon> two-way
-                  commitment</span
-                >
-                <a href="#0" style="color: #071c4b"> T&C applicable</a>
-              </div>
-
-              <div class="d-flex justify-content-end align-items-center">
-                <b-button
-                  class="rs-btn"
-                  :class="result.scheduleCollapse ? null : 'collapsed'"
-                  :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'schedules_' + String(result.routingDetails[0].voyageNumber)
-                  "
-                  @click="result.scheduleCollapse = !result.scheduleCollapse"
-                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-                <b-button
-                  class="rs-btn"
-                  :class="result.detailCollapse ? null : 'collapsed'"
-                  :aria-expanded="result.detailCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'details_' + String(result.routingDetails[0].voyageNumber)
-                  "
-                  @click="result.detailCollapse = !result.detailCollapse"
-                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-              </div>
-            </div>
-            <!-- FIN OPCIONES E INFORMACION EXTRA -->
-          </div>
-          <!-- FIN INFORMACION PRINCIPAL -->
-
-          <!-- ADD QUOTE BTN -->
-          <div
-            class="col-12 col-lg-2 d-flex flex-column justify-content-center align-items-center btn-quote-res"
-            style="border-left: 1px solid #f3f3f3"
-          >
-            <b-form-checkbox class="btn-add-quote" name="check-button" button>
-              <b>add to quote</b>
-            </b-form-checkbox>
-            <a v-b-modal.qty-modal class="btn-add-quote btn-book"
-              ><strong>BOOK</strong></a
-            >
-          </div>
-        </div>
-        <!-- FIN INFORMACION DE TARIFA -->
-
-        <!-- INFORMACION DESPLEGADA -->
-        <div class="row mr-0 ml-0">
-          <!-- DETALLES DE TARIFA -->
-          <b-collapse
-            class="pt-5 pb-5 pl-5 pr-5 col-12"
-            :id="'details_' + String(result.routingDetails[0].voyageNumber)"
-            v-model="result.detailCollapse"
-          >
+            <!-- ADD QUOTE BTN -->
             <div
-              v-for="(surchargeType, surchargeKey) in result.pricingDetails
-                .surcharges"
-              :key="surchargeKey"
+                class="col-12 col-lg-2 d-flex flex-column justify-content-center align-items-center btn-quote-res"
+                style="border-left: 1px solid #f3f3f3"
             >
-              <h5>
-                <b>{{
-                  surchargeKey
-                    .substring(0, surchargeKey.length - 10)
-                    .charAt(0)
-                    .toUpperCase() +
-                  surchargeKey.substring(0, surchargeKey.length - 10).slice(1)
-                }}</b>
-              </h5>
-
-              <b-table-simple hover small responsive class="sc-table">
-                <b-thead>
-                  <b-tr>
-                    <b-th>Charge</b-th>
-                    <b-th>Detail</b-th>
-                    <b-th></b-th>
-                    <b-th></b-th>
-                    <b-th
-                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      v-for="(
-                        requestContainer, rContainerKey
-                      ) in request.containers"
-                      :key="rContainerKey"
-                      >{{ requestContainer.code }}</b-th
-                    >
-                  </b-tr>
-                </b-thead>
-
-                <b-tbody>
-                  <b-tr
-                    v-for="(surchargeName, nameKey) in surchargeType"
-                    :key="nameKey"
-                  >
-                    <b-td
-                      ><b>{{
-                        surchargeName.chargeCode +
-                        " - " +
-                        surchargeName.chargeName
-                      }}</b></b-td
-                    >
-                    <b-td>Per Container</b-td>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td
-                      v-for="(
-                        surchargeContainer, containerKey
-                      ) in surchargeName.containers"
-                      :key="containerKey"
-                      ><p>
-                        {{ surchargeContainer.amount
-                        }}<b>{{ surchargeContainer.currencyCode }}</b>
-                      </p></b-td
-                    >
-                  </b-tr>
-
-                  <b-tr>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td
-                      ><b
-                        >Total
-                        {{
-                          surchargeKey
-                            .substring(0, surchargeKey.length - 10)
-                            .charAt(0)
-                            .toUpperCase() +
-                          surchargeKey
-                            .substring(0, surchargeKey.length - 10)
-                            .slice(1)
-                        }}</b
-                      ></b-td
-                    >
-                    <b-td
-                      v-for="(typeTotal, typeTotalKey) in result.pricingDetails
-                        .totalRatePerType[
-                        'totalRate' +
-                          surchargeKey
-                            .substring(0, surchargeKey.length - 10)
-                            .charAt(0)
-                            .toUpperCase() +
-                          surchargeKey
-                            .substring(0, surchargeKey.length - 10)
-                            .slice(1)
-                      ]"
-                      :key="typeTotalKey"
-                    >
-                      <b
-                        >{{ typeTotal.currencyCode }} {{ typeTotal.total }}
-                      </b></b-td
-                    >
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </div>
-          </b-collapse>
-          <!-- FIN DETALLES DE TARIFA-->
-
-          <!-- SCHEDULES -->
-          <b-collapse
-            :id="'schedules_' + String(result.routingDetails[0].voyageNumber)"
-            v-model="result.scheduleCollapse"
-            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
-            style="background: #fbfbfb"
-          >
-            <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
-
-            <div class="row">
-              <!-- INFOMACION DE LA API -->
-              <div
-                class="col-lg-6 info-schedule"
-                style="border-right: 1px solid #eee"
-              >
-                <div class="row schedule">
-                  <!-- INFORMACION DEL BARCO -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="hdd-rack"></b-icon> Vessel Information
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div class="col-lg-6">
-                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
-                        <p class="text-schedule">
-                          <b
-                            >{{ result.routingDetails[0].vehiculeName }} /
-                            {{ result.routingDetails[0].voyageNumber }}</b
-                          >
-                        </p>
-                      </div>
-                      <div
-                        v-if="result.routingDetails[0].imoNumber != null"
-                        class="col-lg-6"
-                      >
-                        <h5 class="sub-title-schedule">IMO</h5>
-                        <p class="text-schedule">
-                          <b>{{ result.routingDetails[0].imoNumber }}</b>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- FIN INFORMACION DEL BARCO -->
-
-                  <!-- DEADLINE -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="stopwatch"></b-icon> Deadlines
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div
-                        class="col-12 col-sm-6"
-                        v-for="(deadline, deadKey) in result.routingDetails[0]
-                          .deadlines"
-                        :key="deadKey"
-                      >
-                        <h5 class="sub-title-schedule">
-                          {{ deadline.deadlineKey }}
-                        </h5>
-                        <p class="text-schedule">
-                          <b>{{ deadline.deadline }}</b>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- FIN DEADLINE -->
-                </div>
-              </div>
-              <!-- FIN INFOMACION DE LA API -->
-
-              <!-- RUTA -->
-              <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
-                <!-- ORIGEN -->
-                <div class="origin mr-4">
-                  <span>origin</span>
-                  <p class="mb-0">{{ result.departureTerminal }}</p>
-                  <p>{{ result.departureDateGmt.substring(0, 10) }}</p>
-                </div>
-                <!-- FIN ORIGEN -->
-
-                <!-- TT -->
-                <div
-                  class="d-flex flex-column justify-content-center align-items-center"
+                <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                <b>add to quote</b>
+                </b-form-checkbox>
+                <a v-b-modal.qty-modal class="btn-add-quote btn-book"
+                ><strong>BOOK</strong></a
                 >
-                  <div class="direction-form">
-                    <img
-                      src="/images/logo-ship-blue.svg"
-                      class="img-direct"
-                      alt="bote"
-                    />
-
-                    <div
-                      class="route-indirect d-flex align-items-center"
-                      v-if="result.routingDetails.length > 1"
-                    >
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <b-button
-                        id="popover-direction"
-                        class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
-                      ></b-button>
-                      <b-popover
-                        target="popover-direction"
-                        triggers="hover"
-                        placement="top"
-                      >
-                        <template #title>Transshipments</template>
-                        <ul>
-                          <li
-                            v-for="(trans, transKey) in result.routingDetails"
-                            :key="transKey"
-                          >
-                            {{
-                              trans.departureName +
-                              " - " +
-                              trans.arrivalName +
-                              " : " +
-                              trans.arrivalDateGmt.substring(0, 10)
-                            }}
-                          </li>
-                        </ul>
-                      </b-popover>
-                      <div class="line line-blue"></div>
-                      <div class="circle fill-circle ml-2"></div>
-                    </div>
-
-                    <div class="route-direct d-flex align-items-center" v-else>
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <div class="circle fill-circle ml-2"></div>
-                    </div>
-                  </div>
-
-                  <div class="direction-desc">
-                    <p class="mb-0"><b>TT:</b> {{ result.transitTime }}</p>
-                    <p>
-                      <b>Service</b>
-                      {{
-                        result.routingDetails.length > 1
-                          ? "Transshipment"
-                          : "Direct"
-                      }}
-                    </p>
-                  </div>
-                </div>
-
-                <!-- DESTINATION -->
-                <div class="destination ml-4">
-                  <span>destination</span>
-                  <p class="mb-0">{{ result.arrivalTerminal }}</p>
-                  <p>{{ result.arrivalDateGmt.substring(0, 10) }}</p>
-                </div>
-                <!-- FIN DESTINATION -->
-              </div>
-              <!-- FIN RUTA -->
-
-              <!-- RUTA RESPONSIVA -->
-              <div
-                v-if="result.routingDetails.length > 1"
-                class="col-12 d-lg-none"
-              >
-                <h6>Transshipments</h6>
-                <ul>
-                  <li
-                    v-for="(trans, transKey) in result.routingDetails"
-                    :key="transKey"
-                  >
-                    {{
-                      trans.departureName +
-                      " - " +
-                      trans.arrivalName +
-                      " : " +
-                      trans.arrivalDateGmt.substring(0, 10)
-                    }}
-                  </li>
-                </ul>
-              </div>
-              <!-- FIN RUTA RESPONSIVA -->
             </div>
-          </b-collapse>
-          <!-- FIN SCHEDULES -->
+            </div>
+            <!-- FIN INFORMACION DE TARIFA -->
+
+            <!-- INFORMACION DESPLEGADA -->
+            <div class="row mr-0 ml-0">
+            <!-- DETALLES DE TARIFA -->
+            <b-collapse 
+                class="pt-5 pb-5 pl-5 pr-5 col-12"
+                :id="'details_' + String(result.routingDetails[0].voyageNumber)" 
+                v-model = result.detailCollapse
+            >
+                <div 
+                    v-for="(surchargeType, surchargeKey) in result.pricingDetails.surcharges"
+                    :key="surchargeKey"
+                >
+                <h5><b>{{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></h5>
+
+                <b-table-simple hover small responsive class="sc-table">
+                    <b-thead>
+                    <b-tr>
+                        <b-th>Charge</b-th>
+                        <b-th>Detail</b-th>
+                        <b-th></b-th>
+                        <b-th></b-th>
+                        <b-th
+                        style="
+                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                        "
+                        v-for="(requestContainer, rContainerKey) in request.containers"
+                        :key="rContainerKey"
+                        >{{ requestContainer.code }}</b-th
+                        >
+                    </b-tr>
+                    </b-thead>
+
+                    <b-tbody>
+                    <b-tr
+                        v-for="(surchargeName, nameKey) in surchargeType"
+                        :key="nameKey">
+                        <b-td><b>{{ surchargeName.chargeCode + ' - ' + surchargeName.chargeName }}</b></b-td>
+                        <b-td>Per Container</b-td>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td 
+                            v-for="(surchargeContainer, containerKey) in surchargeName.containers"
+                            :key="containerKey"
+                        ><p>{{ surchargeContainer.amount }}<b>{{ surchargeContainer.currencyCode }}</b></p></b-td
+                        >
+                    </b-tr>
+
+                    <b-tr>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td></b-td>
+                        <b-td><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></b-td>
+                        <b-td
+                            v-for="(typeTotal, typeTotalKey) in result.pricingDetails.totalRatePerType['totalRate'+surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)]"
+                            :key="typeTotalKey"
+                        >
+                        <b>{{ typeTotal.currencyCode }} {{ typeTotal.total }} </b></b-td>
+                    </b-tr>
+                    </b-tbody>
+                </b-table-simple>
+                </div>
+
+                <div>
+                    <h5><b>Maersk Spot Fees</b></h5>
+
+                    <b-table-simple hover small responsive class="sc-table">
+                        <b-thead>
+                        <b-tr>
+                            <b-th>Fee</b-th>
+                            <b-th>Detail</b-th>
+                            <b-th></b-th>
+                            <b-th></b-th>
+                            <b-th
+                            style="
+                                padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                            "
+                            v-for="(requestContainer, rContainerKey) in request.containers"
+                            :key="rContainerKey"
+                            >{{ requestContainer.code }}</b-th
+                            >
+                        </b-tr>
+                        </b-thead>
+
+                        <b-tbody>
+                            <b-tr
+                                v-for="(fee, feeKey) in result.formattedPenalties"
+                                :key="feeKey">
+                                <b-td><b>{{ fee.name }}</b></b-td>
+                                <b-td>Per Container</b-td>
+                                <b-td></b-td>
+                                <b-td></b-td>
+                                <b-td 
+                                    v-for="(maerskContainer, maerskContainerKey) in containerCodesMaersk"
+                                    :key="maerskContainerKey"
+                                ><p>{{ fee[maerskContainer] }}<b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
+                                >
+                            </b-tr>
+                        </b-tbody>
+                    </b-table-simple>
+                </div>
+            </b-collapse>
+            <!-- FIN DETALLES DE TARIFA-->
+
+            <!-- SCHEDULES -->
+            <b-collapse
+                :id="'schedules_' + String(result.routingDetails[0].voyageNumber)"
+                v-model = result.scheduleCollapse
+                class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+                style="background: #fbfbfb"
+            >
+                <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+
+                <div class="row">
+                <!-- INFOMACION DE LA API -->
+                <div
+                    class="col-lg-6 info-schedule"
+                    style="border-right: 1px solid #eee"
+                >
+                    <div class="row schedule">
+                    <!-- INFORMACION DEL BARCO -->
+                    <div class="col-lg-6">
+                        <h5 class="title-schedule">
+                        <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                        </h5>
+
+                        <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <h5 class="sub-title-schedule">Vessel/Voyage</h5>
+                            <p class="text-schedule"><b>{{ result.routingDetails[0].vehiculeName }} / {{ result.routingDetails[0].voyageNumber }}</b></p>
+                        </div>
+                        <div v-if="result.routingDetails[0].imoNumber != null" class="col-lg-6">
+                            <h5 class="sub-title-schedule">IMO</h5>
+                            <p class="text-schedule"><b>{{ result.routingDetails[0].imoNumber }}</b></p>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- FIN INFORMACION DEL BARCO -->
+
+                    <!-- DEADLINE -->
+                    <div class="col-lg-6">
+                        <h5 class="title-schedule">
+                        <b-icon icon="stopwatch"></b-icon> Deadlines
+                        </h5>
+
+                        <div class="row mt-4">
+                        <div class="col-12 col-sm-6" 
+                            v-for="(deadline, deadKey) in result.routingDetails[0].deadlines"
+                            :key="deadKey"
+                        >
+                            <h5 class="sub-title-schedule"> {{ deadline.deadlineKey }} </h5>
+                            <p class="text-schedule"><b>{{ deadline.deadline }}</b></p>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- FIN DEADLINE -->
+                    </div>
+                </div>
+                <!-- FIN INFOMACION DE LA API -->
+
+                <!-- RUTA -->
+                <div
+                    class="col-12 col-lg-6 d-none d-lg-flex align-items-center"
+                >
+                    <!-- ORIGEN -->
+                    <div class="origin mr-4">
+                    <span>origin</span>
+                    <p class="mb-0">{{ result.departureTerminal }}</p>
+                    <p>{{ result.departureDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN ORIGEN -->
+
+                    <!-- TT -->
+                    <div
+                    class="d-flex flex-column justify-content-center align-items-center"
+                    >
+                    <div class="direction-form">
+                        <img
+                        src="/images/logo-ship-blue.svg"
+                        class="img-direct"
+                        alt="bote"
+                        />
+
+                        <div 
+                            class="route-indirect d-flex align-items-center"
+                            v-if="result.routingDetails.length > 1"
+                        >
+                            <div class="circle mr-2"></div>
+                            <div class="line"></div>
+                            <b-button
+                                id="popover-direction"
+                                class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
+                            ></b-button>
+                            <b-popover
+                                target="popover-direction"
+                                triggers="hover"
+                                placement="top"
+                            >
+                                <template #title>Transshipments</template>
+                                <ul>
+                                <li v-for="(trans, transKey) in result.routingDetails"
+                                    :key="transKey"
+                                >
+                                {{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                                </li>
+                                </ul>
+                            </b-popover>
+                            <div class="line line-blue"></div>
+                            <div class="circle fill-circle ml-2"></div>
+                        </div>
+
+                        <div 
+                            class="route-direct d-flex align-items-center"
+                            v-else
+                        >
+                            <div class="circle mr-2"></div>
+                            <div class="line"></div>
+                            <div class="circle fill-circle ml-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="direction-desc">
+                        <p class="mb-0"><b>TT: </b> {{ result.transitTime + ' days'}}</p>
+                        <p><b>Service</b> {{ result.routingDetails.length > 1 ? 'Transshipment' : 'Direct'}}</p>
+                    </div>
+                    </div>
+
+                    <!-- DESTINATION -->
+                    <div class="destination ml-4">
+                    <span>destination</span>
+                    <p class="mb-0">{{ result.arrivalTerminal }}</p>
+                    <p>{{ result.arrivalDateGmt.substring(0,10) }}</p>
+                    </div>
+                    <!-- FIN DESTINATION -->
+                </div>
+                <!-- FIN RUTA -->
+
+                <!-- RUTA RESPONSIVA -->
+                <div v-if="result.routingDetails.length > 1" class="col-12 d-lg-none">
+                    <h6>Transshipments</h6>
+                    <ul>
+                    <li v-for="(trans, transKey) in result.routingDetails"
+                        :key="transKey"
+                    >
+                    {{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                    </li>
+                    </ul>
+                </div>
+                <!-- FIN RUTA RESPONSIVA -->
+                </div>
+            </b-collapse>
+            <!-- FIN SCHEDULES -->
+            </div>
+            <!-- FIN INFORMACION DESPLEGADA -->
         </div>
-        <!-- FIN INFORMACION DESPLEGADA -->
-      </div>
-      <!--  Book Qty Modal  -->
-      <b-modal
-        ref="qtyModal"
+
+        <!--  Book Qty Modal  -->
+        <b-modal
+        ref="qty-modal"
         id="qty-modal"
         size="md"
         centered
         hide-footer
         title="Choose quantity"
-      >
+        >
         <div class="row">
-          <div class="col-12">
+            <div class="col-12">
             <!-- Containers -->
             <div v-for="(item, key) in request.containers" :key="key">
-              <div class="containers-numbers">
+                <div class="containers-numbers">
                 <p>{{ item.code }}</p>
                 <vue-numeric-input
-                  v-model="container_qty[item.alternate_name]"
-                  :min="0"
-                  :max="100"
+                    v-model="container_qty[item.alternate_name]"
+                    :min="0"
+                    :max="100"
                 ></vue-numeric-input>
-              </div>
+                </div>
             </div>
-          </div>
+            </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex justify-content-end mb-4 mt-4">
+            <div class="col-12 d-flex justify-content-end mb-4 mt-4">
             <div class="footer-add-contract-modal pl-4 pr-4">
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="completeBook(result.additionalData.deeplink)"
-              >
+                <button type="button" class="btn btn-primary" @click="completeBook(result.additionalData.deeplink)">
                 Confirm Book
-              </button>
+                </button>
             </div>
-          </div>
+            </div>
         </div>
-      </b-modal>
-      <!--  End Modal  -->
+        </b-modal>
+        <!--  End Modal  -->
+        </div>
+        <!-- FIN TARJETA MAERKS -->
+
     </div>
-    <!-- FIN TARJETA MAERKS -->
-  </div>
 </template>
 
 <script>
+
 export default {
   props: {
     request: Object,
   },
   data() {
     return {
-      //Containers count
-      container_qty: {
-        "20DRY": 0,
-        "40DRY": 0,
-        "40HDRY": 0,
-        "45HDRY": 0,
-        "40NOR": 0,
-        "20RF": 0,
-        "40RF": 0,
-        "40HCRF": 0,
-        "20OT": 0,
-        "40OT": 0,
-        "20FR": 0,
-        "40FR": 0,
-      },
-      book_qty: {},
-      results: [],
+        //Containers count
+        container_qty: {
+            "20DRY": 0,
+            "40DRY": 0,
+            "40HDRY": 0,
+            "45HDRY": 0,
+            "40NOR": 0,
+            "20RF": 0,
+            "40RF": 0,
+            "40HCRF": 0,
+            "20OT": 0,
+            "40OT": 0,
+            "20FR": 0,
+            "40FR": 0,
+        },
+        book_qty: {},
+        results: {
+            maersk: [],
+            cmacgm: [],
+        },
+        containerCodesMaersk: [],
     };
   },
   methods: {
-    callMaerskAPI() {
-      let component = this;
-      let apiOriginPorts = [];
-      let apiDestinationPorts = [];
-      let apiDate = new Date().toISOString().substring(0, 10);
-      let apiContainers = "";
+    callAPIs(){
+        let component = this;
+        let apiOriginPorts = [];
+        let apiDestinationPorts = [];
+        let apiDate = new Date().toISOString().substring(0,10);
+        let apiContainers = "";
+        let apiCarrierCodes = ["maersk"];
 
-      component.request.originPorts.forEach(function (originPort) {
-        if (!apiOriginPorts.includes(originPort.code)) {
-          apiOriginPorts.push(originPort.code);
-        }
-      });
+        component.request.originPorts.forEach(function (originPort){
+            if(!apiOriginPorts.includes(originPort.code)){
+                apiOriginPorts.push(originPort.code);
+            }
+        });
 
-      component.request.destinationPorts.forEach(function (destinationPort) {
-        if (!apiDestinationPorts.includes(destinationPort.code)) {
-          apiDestinationPorts.push(destinationPort.code);
-        }
-      });
+        component.request.destinationPorts.forEach(function (destinationPort){
+            if(!apiDestinationPorts.includes(destinationPort.code)){
+                apiDestinationPorts.push(destinationPort.code);
+            }
+        });
 
-      apiContainers = component.setApiContainers();
+        apiContainers = component.setApiContainers();
 
-      apiOriginPorts.forEach(function (origin) {
-        apiDestinationPorts.forEach(function (destination) {
-          axios
-            .get(
-              "https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing",
-              {
-                params: {
-                  originPort: origin,
-                  destinationPort: destination,
-                  equipmentSizeType: apiContainers,
-                  departureDate: apiDate,
-                  uemail: "dcabanales@gmail.com",
-                  brands: "maersk",
-                },
-              },
-              {
-                headers: {
-                  Authorization:
-                    "bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau",
-                  Accept: "application/json",
-                  "Content-type": "application/json",
-                },
-              }
-            )
-            .then((response) => {
-              component.results = response.data;
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.log(error);
+        apiCarrierCodes.forEach(function (carrierCode){
+            apiOriginPorts.forEach(function (origin){
+                apiDestinationPorts.forEach(function (destination){
+                    axios
+                        .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                            {
+                            params: {
+                                originPort: origin,
+                                destinationPort: destination,
+                                equipmentSizeType: apiContainers,
+                                departureDate: apiDate,
+                                uemail: 'dcabanales@gmail.com',
+                                brands: carrierCode
+                                }
+                            },
+                            {
+                            headers:{
+                                'Authorization': 'bwCi1vPZwHh8lYtOcae4TjfjLKo4sRmdOj8RiW3pzKXl8YqWau',
+                                'Accept': 'application/json',
+                                'Content-type': 'application/json'
+                                } 
+                            }
+                        )
+                        .then((response) => {
+                            response.data.forEach(function (respData){
+                                component.results[carrierCode].push(respData);
+                                component.setPenalties(respData);
+                            });
+                            console.log(component['results']);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        })
+                });
             });
         });
-      });
+        
+    },
+    
+    setPenalties(responseData){
+        let finalPenalties = [];
+        let penaltyCodes = [];
+        let component = this;
+        
+        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+            penaltyPerContainer.charges.forEach(function (penaltyCont){
+                if(!penaltyCodes.includes(penaltyCont.penaltyType)){
+                    penaltyCodes.push(penaltyCont.penaltyType);
+                    finalPenalties.push({
+                        name: penaltyCont.displayName
+                    });
+                }
+
+                if(!component.containerCodesMaersk.includes(penaltyPerContainer.containerSizeType)){
+                    component.containerCodesMaersk.push(penaltyPerContainer.containerSizeType);
+                }
+            });
+        });
+
+        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+            penaltyPerContainer.charges.forEach(function (penaltyCont){
+                finalPenalties.forEach(function (final){
+                    if(penaltyCont.displayName == final.name){
+                        final[penaltyPerContainer.containerSizeType] = penaltyCont.chargeFee;
+                        final[penaltyPerContainer.containerSizeType + "currency"] = penaltyPerContainer.currency;
+                    }
+                });
+            });
+        });
+
+        responseData.formattedPenalties = finalPenalties;
     },
 
-    setApiContainers() {
-      let component = this;
-      let finalContainerString = "";
+    setApiContainers(){
+        let component = this;
+        let finalContainerString = "";
 
-      component.request.containers.forEach(function (container) {
-        let containerString = "1x" + container.code.substring(0, 2);
+        component.request.containers.forEach(function(container){
+            let containerString = "1x" + container.code.substring(0,2);
 
-        if (["NOR", "HCRF", "OT", "FR"].includes(container.code)) {
-          return;
-        }
-        if (container.code.includes("HC")) {
-          containerString += "HC";
-        }
-        if (container.code.includes("DV")) {
-          containerString += "DRY";
-        }
-        if (container.code.includes("RF")) {
-          containerString += "RF";
-        }
+            if(["NOR","HCRF","OT","FR"].includes(container.code)){
+                return;
+            }
+            if(container.code.includes("HC")){
+                containerString += "HC";
+            }
+            if(container.code.includes("DV")){
+                containerString += "DRY";
+            }
+            if(container.code.includes("RF")){
+                containerString += "RF";
+            }
+            
+            containerString += "x2";
 
-        containerString += "x2";
+            finalContainerString += containerString;
 
-        finalContainerString += containerString;
+            if(component.request.containers[component.request.containers.indexOf(container) + 1] != undefined){
+                finalContainerString += ",";
+            }
+        });
 
-        if (
-          component.request.containers[
-            component.request.containers.indexOf(container) + 1
-          ] != undefined
-        ) {
-          finalContainerString += ",";
-        }
-      });
-
-      return finalContainerString;
+        return finalContainerString;
     },
 
     alert(msg, type) {
