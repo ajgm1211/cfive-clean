@@ -70,7 +70,8 @@ export default {
     methods:
     {
         recentSearch(id){
-            this.$router.push({ path: `search`, query: { requested: 0, model_id: id} })
+            this.$router.push({ path: `search`, query: { requested: 0, model_id: id} });
+            this.$emit("recentSearch");
         }
     }
 }

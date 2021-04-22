@@ -34,6 +34,9 @@ export default {
         },
         removefile(id, data) {
             return api.call('post', `/api/v2/contracts/${id}/removefile`, data);
+        },
+        getRequestStatus(id) {
+            return api.call('get', `/api/v2/contracts/${id}/request/status`, {});
         }
     },
     oceanfreights: {

@@ -34,16 +34,21 @@ class ValidateTemplateJob implements ShouldQueue
         $url = env('BARRACUDA_EP')."contracts/processing/".$this->request_id;
         $json = '{"spreadsheetData":false}';
         $token = AuthtokenToken::where('user_id',1)->first();
-        $response = $client->request('POST',$url,[
-            'headers' => [
+        $headers = [
                 'Authorization' => 'token '.$token->key,
                 'Accept'        => '*/*',
                 'Content-Type'  => 'application/json',
                 'User-Agent'    => '*/*',
                 'Connection'    => 'keep-alive'
-            ],
-            'body'=>$json
-        ]);
+            ];
+            
+        $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+        $response = json_decode($response->getBody()->getContents(),true);
+        
+        $url = env('BARRACUDA_EP')."requests/cmpfiles/".$this->request_id;
+        $json = '{"duplicate":true,"re_search":true}';
+            
+        $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
         $response = json_decode($response->getBody()->getContents(),true);
     }
 }

@@ -199,15 +199,17 @@
                                         <label><b>PDF language</b></label>
                                         <p class="color-black">
                                             <span id="pdf_language_span">
-                                                @if($company->pdf_language==1)
-                                                English
-                                                @elseif($company->pdf_language==2)
-                                                Spanish
+                                                @if($company->pdf_language==1 || $company->pdf_language=="english")
+                                                    English
+                                                @elseif($company->pdf_language==2 || $company->pdf_language=="spanish")
+                                                    Spanish
+                                                @elseif($company->pdf_language==3 || $company->pdf_language=="portuguese")
+                                                    Portuguese
                                                 @else
-                                                Portuguese
+                                                    English
                                                 @endif
                                             </span>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language',1=>'English',2=>'Spanish',3=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
                                             <a id='edit_pdf_language' onclick="display_pdf_language()"
                                                 class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"
                                                 title="Edit ">
