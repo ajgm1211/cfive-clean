@@ -253,18 +253,19 @@ BANDA DE CARDS CMA Y MAERSK
 }
 
 .banda-top.cma {
-    border-bottom: 26px solid #a91f1f;
+    border-bottom: 26px solid #ff0000;
     &::after {
-        border-top: 10px solid #991c1c;
+        border-top: 10px solid #d22d2d;
     }
     &::before {
-        border-top: 11px solid #991c1c;
+        border-top: 11px solid #d22d2d;
     }
     span {
         top: 2px;
         font-size: 9px;
     }
 }
+
 
 
 /* CMA AND MAERKS */

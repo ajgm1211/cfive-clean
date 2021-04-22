@@ -82,7 +82,8 @@
         class="row col-12 col-sm-4 d-flex align-items-center justify-content-end"
       >
         <div
-          class="col-12 col-sm-2 d-flex justify-content-end"
+          class="d-flex justify-content-start"
+          :class="countContainersClass()"
           v-for="(container, requestKey) in request.containers"
           :key="requestKey"
         >
@@ -447,6 +448,7 @@
                   <div class="row card-amount card-amount__res">
                     <div
                       class="col-2 pl-0 pr-0 prices-card-res"
+                      :class="countContainersClass()"
                       v-for="(container, contKey) in request.containers"
                       :key="contKey"
                     >
@@ -474,7 +476,7 @@
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                   </p>
-                  <a href="#">download contract</a>
+                  <!--<a href="#">download contract</a>-->
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -560,7 +562,11 @@
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
-                      <b-td>{{ charge.joint ? 'Per Container' : charge.calculationtype.name }}</b-td>
+                      <b-td>{{
+                        charge.joint
+                          ? "Per Container"
+                          : charge.calculationtype.name
+                      }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
@@ -711,7 +717,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -751,6 +756,21 @@ export default {
     this.requestData = this.$route.query;
   },
   methods: {
+    countContainersClass() {
+      if (
+        this.request.containers.length == 5 ||
+        this.request.containers.length == 4
+      ) {
+        return "col-2";
+      }
+
+      if (this.request.containers.length == 3) {
+        return "col-3";
+      }
+      if (this.request.containers.length == 2) {
+        return "col-4";
+      }
+    },
     createQuote() {
       let component = this;
       let ratesForQuote = [];
@@ -804,26 +824,26 @@ export default {
     setFilters() {
       let component = this;
 
-        if(component.filterBy != ''){
-            component.rates.forEach(function (rate){
-                if(component.filterBy == rate.carrier.name){
-                    component.finalRates.push(rate);
-                }
-            });
-        }else{
-            component.finalRates = component.rates;
-        }
+      if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
-        if (!component.filterOptions.includes(rate.carrier.name)) {
-        component.filterOptions.push(rate.carrier.name);
-            }
+          if (component.filterBy == rate.carrier.name) {
+            component.finalRates.push(rate);
+          }
         });
+      } else {
+        component.finalRates = component.rates;
+      }
+      component.rates.forEach(function (rate) {
+        if (!component.filterOptions.includes(rate.carrier.name)) {
+          component.filterOptions.push(rate.carrier.name);
+        }
+      });
     },
 
     filterCarriers() {
       let component = this;
 
-        //console.log(this.request);
+      //console.log(this.request);
 
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
@@ -835,11 +855,11 @@ export default {
         component.finalRates = component.rates;
       }
     },
-},
+  },
 
-    mounted(){
-        let component = this;
-        //console.log(component.datalists);
+  mounted() {
+    let component = this;
+    //console.log(component.datalists);
 
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
@@ -847,18 +867,18 @@ export default {
 
     component.finalRates = component.rates;
 
-        //component.setFilters();
+    //component.setFilters();
 
-        window.document.onscroll = () => {
-            let navBar = document.getElementById('top-results');
-            if(window.scrollY > navBar.offsetTop){
-                component.isActive = true;
-            } else {
-                component.isActive = false;
-            }
-        }
-        
-        this.loaded = true;
-    },
-}
+    window.document.onscroll = () => {
+      let navBar = document.getElementById("top-results");
+      if (window.scrollY > navBar.offsetTop) {
+        component.isActive = true;
+      } else {
+        component.isActive = false;
+      }
+    };
+
+    this.loaded = true;
+  },
+};
 </script>
