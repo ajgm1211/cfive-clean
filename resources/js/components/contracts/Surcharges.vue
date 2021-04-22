@@ -22,6 +22,7 @@
                 @onEdit="onEdit"
                 :firstEmpty="false"
                 :view="'surcharges'"
+                :classTable="classTable"
                 ></DataTable>
 
 
@@ -74,6 +75,7 @@
             datalists: Object,
             actions: Object,
             contractData: Object,
+            classTable: String
         },
         data() {
             return {
