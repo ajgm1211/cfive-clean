@@ -913,8 +913,9 @@ trait SearchTrait
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
     public function setChargesPerContainer($charges, $containers, $rate_containers, $client_currency)
     {
+        $container_ids = $this->getIdsFromArray($containers);
         $rate_container_array = json_decode($rate_containers,true);
-        $container_calculations = ContainerCalculation::all();
+        $container_calculations = ContainerCalculation::whereIn('container_id',$container_ids)->get();
 
         //Looping through charges collection
         foreach($charges as $charges_direction){
@@ -925,13 +926,10 @@ trait SearchTrait
                 //Empty array for storing final charges
                 $container_charges = [];
 
-                $hide_charge = true;
-
                 foreach($container_calculations as $relation){
                     if($relation->calculationtype_id == $calculation->id){
                         foreach($containers as $container){
                             if($relation->container_id == $container['id']){
-                                $hide_charge = false;
                                 $options = json_decode($container['options'],true);
                                 $calculation_options = json_decode($calculation->options, true);
                                 if($calculation_options['isteu'] && isset($options['is_teu']) && $options['is_teu']){
@@ -961,8 +959,6 @@ trait SearchTrait
                 $charge->setAttribute('containers',$container_charges);
 
                 $charge->setAttribute('client_currency',$client_currency);
-                 
-                $charge->setAttribute('hide',$hide_charge);
             }
         }
     }
