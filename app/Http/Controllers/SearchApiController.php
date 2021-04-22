@@ -553,6 +553,7 @@ class SearchApiController extends Controller
         $company_user_id = $search_ids['company_user'];
         $origin_countries = [];
         $destination_countries = [];
+        $container_ids = $search_ids['containers'];
         //SEARCH API - Getting countries from port arrays and building countries array
         foreach ($search_data['originPorts'] as $origin_port) {
             array_push($origin_countries, $origin_port['country_id']);
@@ -574,6 +575,10 @@ class SearchApiController extends Controller
 
             $global_charges_found = GlobalCharge::where([['validity', '<=', $validity_start], ['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
+            })->whereHas('calculationtype', function ($q) use ($container_ids) {
+                $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
+                    $b->whereIn('container_id', $container_ids);
+                });
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->orwhereHas('globalcharport', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
