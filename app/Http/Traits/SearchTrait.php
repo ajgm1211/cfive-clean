@@ -1011,12 +1011,14 @@ trait SearchTrait
                                             $joint_containers = $charge->containers_client_currency;
                                             //Marking charge as joint under client currency
                                             $charge->setAttribute('joint_as','client_currency');
+                                            $charge->setAttribute('joint',true);
                                             $comparing_charge_containers = $comparing_charge->containers_client_currency;
                                         //If currencies match, sum is direct
                                         }elseif($charge->currency->id == $comparing_charge->currency->id){
                                             $joint_containers = $charge->containers;
                                             //Marking as joint under charge currency
                                             $charge->setAttribute('joint_as','charge_currency');
+                                            $charge->setAttribute('joint',true);
                                             $comparing_charge_containers = $comparing_charge->containers;
                                         }
                                         //Adding container rates together
@@ -1058,6 +1060,7 @@ trait SearchTrait
                     if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
                         //Including unjoint charge in final array
                         $charge->setAttribute('joint_as', 'charge_currency');
+                        $charge->setAttribute('joint',false);
                         array_push($joint_charges[$direction],$charge);
                     }
                     }
