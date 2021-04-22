@@ -229,7 +229,7 @@
                         v-for="(cmaSurchargeName, cmaNameKey) in cmaSurchargeType"
                         :key="cmaNameKey">
                         <b-td><b>{{ cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName }}</b></b-td>
-                        <b-td>Per Container</b-td>
+                        <b-td>{{ cmaSurchargeName.calculationType }}</b-td>
                         <b-td></b-td>
                         <b-td></b-td>
                         <b-td 
@@ -416,7 +416,7 @@
             <div class="row col-12 col-lg-8 margin-res">
                 <!-- CONTRACT NAME -->
                 <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">{{ result.company }}</h6>
+                <h6 class="mt-4 mb-5 contract-title">{{ result.quoteLine }}</h6>
                 </div>
                 <!-- FIN CONTRACT NAME -->
 
@@ -557,10 +557,18 @@
                     ><b-icon icon="check-circle-fill"></b-icon> two-way
                     commitment</span
                     >
-                    <a href="#0" style="color: #071c4b"> T&C applicable</a>
+                    <a href="https://terms.maersk.com/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
+                    <b-button 
+                        class="rs-btn"
+                        :class="result.detentionCollapse ? null : 'collapsed'"
+                        :aria-expanded="result.detentionCollapse ? 'true' : 'false'"
+                        :aria-controls="'detention_' + String(result.routingDetails[0].voyageNumber)"
+                        @click="result.detentionCollapse = !result.detentionCollapse" 
+                    ><b>D&D</b><b-icon icon="caret-down-fill"></b-icon
+                    ></b-button>
                     <b-button 
                         class="rs-btn"
                         :class="result.scheduleCollapse ? null : 'collapsed'"
@@ -635,7 +643,7 @@
                         v-for="(surchargeName, nameKey) in surchargeType"
                         :key="nameKey">
                         <b-td><b>{{ surchargeName.chargeCode + ' - ' + surchargeName.chargeName }}</b></b-td>
-                        <b-td>Per Container</b-td>
+                        <b-td>{{ surchargeName.calculationType }}</b-td>
                         <b-td></b-td>
                         <b-td></b-td>
                         <b-td 
@@ -667,7 +675,6 @@
                         <b-thead>
                         <b-tr>
                             <b-th>Fee</b-th>
-                            <b-th>Detail</b-th>
                             <b-th></b-th>
                             <b-th></b-th>
                             <b-th
@@ -686,7 +693,6 @@
                                 v-for="(fee, feeKey) in result.formattedPenalties"
                                 :key="feeKey">
                                 <b-td><b>{{ fee.name }}</b></b-td>
-                                <b-td>Per Container</b-td>
                                 <b-td></b-td>
                                 <b-td></b-td>
                                 <b-td 
@@ -849,6 +855,43 @@
                 </div>
             </b-collapse>
             <!-- FIN SCHEDULES -->
+
+            <!-- DETENTIONS -->
+            <b-collapse
+                :id="'detention_' + String(result.routingDetails[0].voyageNumber)"
+                v-model = result.detentionCollapse
+                class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+                style="background: #fbfbfb"
+            >
+                <div>
+                    <h5><b>Demurrage & Detention</b></h5>
+
+                    <b-table-simple hover small responsive class="sc-table">
+                        <b-thead>
+                        <b-tr>
+                            <b-th>Type (import)</b-th>
+                            <b-th>Start Event</b-th>
+                            <b-th>Free time (days)</b-th>
+                            <b-th></b-th>
+                            <b-th
+                            style="
+                                padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                            "
+                            v-for="(requestContainer, rContainerKey) in request.containers"
+                            :key="rContainerKey"
+                            >{{ requestContainer.code }}</b-th
+                            >
+                        </b-tr>
+                        </b-thead>
+
+                        <b-tbody>
+                            
+                        </b-tbody>
+                    </b-table-simple>
+                </div>
+
+            </b-collapse>
+            <!-- FIN DETENTIONS -->
             </div>
             <!-- FIN INFORMACION DESPLEGADA -->
         </div>
@@ -923,6 +966,7 @@ export default {
             cmacgm: [],
         },
         containerCodesMaersk: [],
+        apiRatesFound: false,
     };
   },
   methods: {
@@ -947,8 +991,11 @@ export default {
         });
 
         apiContainers = component.setApiContainers();
+        component.apiRatesFound = false;
+        component.$emit('apiSearch',component.apiRatesFound);
 
         apiCarrierCodes.forEach(function (carrierCode){
+            component.results[carrierCode] = [];
             apiOriginPorts.forEach(function (origin){
                 apiDestinationPorts.forEach(function (destination){
                     axios
@@ -973,6 +1020,10 @@ export default {
                         )
                         .then((response) => {
                             response.data.forEach(function (respData){
+                                if(!component.apiRatesFound){
+                                    component.apiRatesFound = true;
+                                    component.$emit('apiSearch',component.apiRatesFound);
+                                }
                                 component.results[carrierCode].push(respData);
                                 component.setPenalties(respData);
                             });

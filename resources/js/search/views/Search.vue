@@ -690,7 +690,7 @@
 
             <div class="col-lg-8">
                 <div
-                    v-if="Array.isArray(foundRates) && foundRates.length == 0"
+                    v-if="Array.isArray(foundRates) && (foundRates.length == 0) && !foundApiRates"
                     class="alert alert-danger"
                     role="alert"
                 >
@@ -1433,6 +1433,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
+            foundApiRates:false,
             companyChosen: false,
             quoteData: {},
             originDistance: true,
