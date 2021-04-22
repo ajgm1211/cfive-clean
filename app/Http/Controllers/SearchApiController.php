@@ -892,7 +892,6 @@ class SearchApiController extends Controller
         }
     }
 
-
     public function calculateTotals($rate,$client_currency)
     {
         $charge_type_totals = [];
@@ -1042,4 +1041,5 @@ class SearchApiController extends Controller
 
         return ($sorted);
     }
+    
 }
