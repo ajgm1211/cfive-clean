@@ -195,7 +195,7 @@
                   <p class="mr-4 mb-0">
                     <b>Vality:</b> 2020-20-20 / 2020-20-20
                   </p>
-                  <a v-if="false" href="#">download contract</a>
+                  <a href="#">download contract</a>
                 </div>
 
                 <!-- OPTIONS -->
@@ -474,7 +474,7 @@
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                   </p>
-                  <a v-if="false" href="#">download contract</a>
+                  <a href="#">download contract</a>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -560,7 +560,7 @@
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
-                      <b-td>{{ charge.calculationtype.name }}</b-td>
+                      <b-td>{{ charge.joint ? 'Per Container' : charge.calculationtype.name }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
