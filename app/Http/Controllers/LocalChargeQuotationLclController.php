@@ -142,7 +142,7 @@ class LocalChargeQuotationLclController extends Controller
             'selectedCharges.*.markup' => 'sometimes',
             'selectedCharges.*.units' => 'required',
             'selectedCharges.*.price_per_unit' => 'required',
-            'selectedCharges.*.provider_name' => 'sometimes',
+            //'selectedCharges.*.provider_name' => 'sometimes',
             'selectedCharges.*.currency_id' => 'required'
         ]);
 
