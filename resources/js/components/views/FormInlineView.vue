@@ -301,7 +301,15 @@ export default {
                 return "col-lg-3";
             }
 
-            if (item.label == "Direction" || item.label == "Equipment") {
+            if (item.label == "Direction") {
+                return "col-lg-1";
+            }
+
+            if (item.label == "Equipment") {
+                return "col-lg-2";
+            }
+
+            if (item.label == "Status") {
                 return "col-lg-1";
             }
 
@@ -309,7 +317,9 @@ export default {
                 return item.colClass;
             }
 
-            return "col-12 col-sm-3 col-lg-2";
+            return "col-lg-2";
+
+            /* return "col-12 col-sm-3 col-lg-2"; */
         },
 
         isEmpty(value) {

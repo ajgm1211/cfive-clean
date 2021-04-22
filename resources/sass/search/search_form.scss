@@ -96,7 +96,7 @@ BUSCADOR
         font-weight: bolder;
         width: 30px;
         height: 25px;
-        top: 0px;
+        top: 7px;
     }
     .type-input .multiselect__select {
         right: 20px;
@@ -200,6 +200,11 @@ BUSCADOR
         .img-icon {
             opacity: 0.1 !important;
         }
+    }
+    .vue-daterange-picker.s-input .reportrange-text {
+        border: none !important;
+        background: #f8f8f8;
+        min-height: 50px !important;
     }
 }
 

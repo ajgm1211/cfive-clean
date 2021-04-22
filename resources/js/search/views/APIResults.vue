@@ -142,6 +142,7 @@
                     <div class="row card-amount card-amount__res">
                     <div 
                         class="col-2 pl-0 pr-0 prices-card-res"
+                        :class="countContainersClass()"
                         v-for="(cmaGlobalTotal, cmaTotalKey) in cmaResult.pricingDetails.totalRatePerContainer"
                         :key="cmaTotalKey"
                     >
@@ -208,10 +209,10 @@
                 <b-table-simple hover small responsive class="sc-table">
                     <b-thead>
                     <b-tr>
-                        <b-th>Charge</b-th>
-                        <b-th>Detail</b-th>
-                        <b-th></b-th>
-                        <b-th></b-th>
+                        <b-th style="width:300px">Charge</b-th>
+                        <b-th style="width:325px">Detail</b-th>
+                        <!-- <b-th></b-th>
+                        <b-th></b-th> -->
                         <b-th 
                             style="
                             padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
@@ -230,8 +231,8 @@
                         :key="cmaNameKey">
                         <b-td><b>{{ cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName }}</b></b-td>
                         <b-td>{{ cmaSurchargeName.calculationType }}</b-td>
-                        <b-td></b-td>
-                        <b-td></b-td>
+                        <!-- <b-td></b-td>
+                        <b-td></b-td> -->
                         <b-td 
                             v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
                             :key="cmaContainerKey"
@@ -240,10 +241,10 @@
                     </b-tr>
 
                     <b-tr>
+                        <!-- <b-td></b-td>
                         <b-td></b-td>
-                        <b-td></b-td>
-                        <b-td></b-td>
-                        <b-td><b>Total {{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></b-td>
+                        <b-td></b-td> -->
+                        <b-td colspan="2" style="text-align: right"><b>Total {{ cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)}}</b></b-td>
                         <b-td
                             v-for="(cmaTypeTotal, cmaTypeTotalKey) in cmaResult.pricingDetails.totalRatePerType['totalRate'+cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).charAt(0).toUpperCase() + cmaSurchargeKey.substring(0, cmaSurchargeKey.length - 10).slice(1)]"
                             :key="cmaTypeTotalKey"
@@ -531,6 +532,7 @@
                     <!-- PRECIO -->
                     <div class="row card-amount card-amount__res">
                     <div class="col-2 pl-0 pr-0 prices-card-res"
+                        :class="countContainersClass()"
                         v-for="(globalTotal, totalKey) in result.pricingDetails.totalRatePerContainer"
                         :key="totalKey">
                         <p>
@@ -623,18 +625,17 @@
                 <b-table-simple hover small responsive class="sc-table">
                     <b-thead>
                     <b-tr>
-                        <b-th>Charge</b-th>
-                        <b-th>Detail</b-th>
-                        <b-th></b-th>
-                        <b-th></b-th>
+                        <b-th style="width:300px">Charge</b-th>
+                        <b-th style="width:325px">Detail</b-th>
+                        <!-- <b-th></b-th>
+                        <b-th></b-th> -->
                         <b-th
-                        style="
-                            padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
+                        style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;"
                         v-for="(requestContainer, rContainerKey) in request.containers"
                         :key="rContainerKey"
-                        >{{ requestContainer.code }}</b-th
                         >
+                        {{ requestContainer.code }}
+                        </b-th>
                     </b-tr>
                     </b-thead>
 
@@ -644,8 +645,8 @@
                         :key="nameKey">
                         <b-td><b>{{ surchargeName.chargeCode + ' - ' + surchargeName.chargeName }}</b></b-td>
                         <b-td>{{ surchargeName.calculationType }}</b-td>
-                        <b-td></b-td>
-                        <b-td></b-td>
+                        <!-- <b-td></b-td>
+                        <b-td></b-td> -->
                         <b-td 
                             v-for="(surchargeContainer, containerKey) in surchargeName.containers"
                             :key="containerKey"
@@ -654,10 +655,10 @@
                     </b-tr>
 
                     <b-tr>
+                        <!-- <b-td></b-td>
                         <b-td></b-td>
-                        <b-td></b-td>
-                        <b-td></b-td>
-                        <b-td><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></b-td>
+                        <b-td></b-td> -->
+                        <b-td colspan="2" style="text-align: right"><b>Total {{ surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)}}</b></b-td>
                         <b-td
                             v-for="(typeTotal, typeTotalKey) in result.pricingDetails.totalRatePerType['totalRate'+surchargeKey.substring(0, surchargeKey.length - 10).charAt(0).toUpperCase() + surchargeKey.substring(0, surchargeKey.length - 10).slice(1)]"
                             :key="typeTotalKey"
@@ -674,9 +675,7 @@
                     <b-table-simple hover small responsive class="sc-table">
                         <b-thead>
                         <b-tr>
-                            <b-th>Fee</b-th>
-                            <b-th></b-th>
-                            <b-th></b-th>
+                            <b-th style="width:300px">Fee</b-th>
                             <b-th
                             style="
                                 padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
@@ -693,8 +692,6 @@
                                 v-for="(fee, feeKey) in result.formattedPenalties"
                                 :key="feeKey">
                                 <b-td><b>{{ fee.name }}</b></b-td>
-                                <b-td></b-td>
-                                <b-td></b-td>
                                 <b-td 
                                     v-for="(maerskContainer, maerskContainerKey) in containerCodesMaersk"
                                     :key="maerskContainerKey"
@@ -970,6 +967,18 @@ export default {
     };
   },
   methods: {
+    countContainersClass() {
+        if(this.request.containers.length == 5 || this.request.containers.length == 4) {
+            return 'col-2';
+        }
+        
+        if(this.request.containers.length == 3) {
+            return 'col-3';
+        }
+        if(this.request.containers.length == 2) {
+            return 'col-4';
+        }
+    },
     callAPIs(){
         let component = this;
         let apiOriginPorts = [];
