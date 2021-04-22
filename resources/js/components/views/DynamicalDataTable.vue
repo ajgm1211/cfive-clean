@@ -31,6 +31,7 @@
         @onOpenModalHarborDestView="openModalHarborDestView"
         ref="table"
         :view="view"
+        :classTable="classTable"
         >
     </DataTable>
 
@@ -46,6 +47,7 @@
             FormView,
         },
         props: {
+            classTable: String,
             view: String,
             equipment: Object,
             datalists: Object,
