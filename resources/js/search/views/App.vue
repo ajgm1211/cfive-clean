@@ -10,7 +10,7 @@
         ></Search>
 
         <Recent 
-            v-if="foundRates.length == 0 && !searching && requestData.requested == undefined"
+            v-if="(foundRates.length == 0 && !searching) && (requestData.requested == undefined) && !apiResultsExist"
             @recentSearch="quickSearch"
         ></Recent>
 
@@ -24,6 +24,7 @@
         <APIResults
             v-if="searchRequest.length != 0"
             :request="searchRequest"
+            @apiSearch="detectApiResults"
             ref="resultsAPI"
         ></APIResults>
 
@@ -52,6 +53,7 @@ export default {
             searchRequest: [],
             datalists: {},
             requestData: {},
+            apiResultsExist: false,
         }
     },
     created() {
@@ -83,6 +85,11 @@ export default {
 
         quickSearch(){
             this.$refs.searchComponent.getQuery();
+        },
+
+        detectApiResults(resultsFound){
+            this.apiResultsExist = resultsFound;
+            this.$refs.searchComponent.foundApiRates = resultsFound;
         },
     },
 }
