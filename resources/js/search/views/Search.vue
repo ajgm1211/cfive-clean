@@ -1433,7 +1433,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
-            foundApiRates:false,
+            foundApiRates:true,
             companyChosen: false,
             quoteData: {},
             originDistance: true,
