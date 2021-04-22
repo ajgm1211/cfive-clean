@@ -1718,7 +1718,10 @@ input.data-provider {
 }
 
 .container-cards {
-    padding: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 @media only screen and (max-width: 991px) {

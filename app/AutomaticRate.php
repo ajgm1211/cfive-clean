@@ -268,7 +268,7 @@ class AutomaticRate extends Model implements Auditable
     public function scopeCarrierRelation($query)
     {
         $query->with(['carrier' => function ($q) {
-            $q->select('id', 'name', 'image as url');
+            $q->select('id', 'name', 'uncode', 'scac','image as url');
         }]);
     }
 
