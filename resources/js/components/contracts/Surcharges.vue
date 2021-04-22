@@ -89,7 +89,7 @@
                     { key: 'surcharge', label: 'Type', formatter: (value)=> { return value.name } }, 
                     { key: 'origin', label: 'Origin', formatter: (value)=> { return this.badges(value, 'warning') } }, 
                     { key: 'destination', label: 'Destination', formatter: (value)=> { return this.badges(value, 'warning') } }, 
-                    { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
+                    { key: 'destination_type', label: 'Charge Type', formatter: (value)=> { return value.description } }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgescarriers(value) } }, 
                     { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
                     { key: 'amount', label: 'Amount' }, 
