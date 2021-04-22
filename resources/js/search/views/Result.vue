@@ -719,7 +719,6 @@
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import actions from "../../actions";
-
 export default {
   props: {
     rates: Array,
@@ -742,7 +741,6 @@ export default {
       noRatesAdded: false,
       filterBy: "",
       filterOptions: [],
-
       isActive: false,
       items: [],
     };
@@ -754,14 +752,12 @@ export default {
     createQuote() {
       let component = this;
       let ratesForQuote = [];
-
       component.creatingQuote = true;
       component.finalRates.forEach(function (rate) {
         if (rate.addToQuote) {
           ratesForQuote.push(rate);
         }
       });
-
       if (ratesForQuote.length == 0) {
         component.noRatesAdded = true;
         component.creatingQuote = false;
@@ -800,10 +796,8 @@ export default {
         }
       }
     },
-
     setFilters() {
       let component = this;
-
         if(component.filterBy != ''){
             component.rates.forEach(function (rate){
                 if(component.filterBy == rate.carrier.name){
@@ -819,12 +813,9 @@ export default {
             }
         });
     },
-
     filterCarriers() {
       let component = this;
-
         //console.log(this.request);
-
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
           if (component.filterBy == rate.carrier.name) {
@@ -836,19 +827,14 @@ export default {
       }
     },
 },
-
     mounted(){
         let component = this;
         //console.log(component.datalists);
-
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
     });
-
     component.finalRates = component.rates;
-
         //component.setFilters();
-
         window.document.onscroll = () => {
             let navBar = document.getElementById('top-results');
             if(window.scrollY > navBar.offsetTop){
