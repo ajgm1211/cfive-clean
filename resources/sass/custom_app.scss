@@ -548,6 +548,8 @@ i.mx-icon-calendar {
 }
 
 .text-break {
+    display: flex;
+    align-items: center;
     color: #031b4e;
     font-size: 12px !important;
 }
@@ -560,11 +562,11 @@ i.mx-icon-calendar {
     border-color: #006bf9 !important;
 }
 
-.vue-daterange-picker.s-input .reportrange-text {
-    border: none !important;
-    background: #f8f8f8;
-    min-height: 50px;
+.b-form-btn-label-control.b-form-datepicker {
+    height: 40px !important;
+    min-height: 40px !important;
 }
+
 
 .vue-daterange-picker.s-input .reportrange-text i {
     padding-top: 6px;
@@ -1317,12 +1319,6 @@ input.multiselect__input:focus {
     min-height: 25px !important;
 }
 
-.vue-daterange-picker.s-input .reportrange-text {
-    border: none !important;
-    background: #f8f8f8;
-    min-height: 50px;
-}
-
 .vue-daterange-picker.s-input .reportrange-text i {
     padding-top: 6px;
     font-size: 25px;
@@ -1785,3 +1781,7 @@ input.data-provider {
 .invalid-feedback {
     margin-top: 5px !important;
 }
+
+/* .table-modal-local-charges {
+    height: 300px;
+} */
