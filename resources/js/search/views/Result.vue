@@ -1,120 +1,5 @@
 <template>
   <div class="container-cards" v-if="loaded">
-    <!-- FILTERS -->
-    <div class="row mb-3" style="margin-top: 80px">
-      <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
-        <h2 class="mr-5 t-recent">
-          results found: <b>{{ finalRates.length }}</b>
-        </h2>
-        <!--<div class="d-flex filter-search">
-          <b style="color: #80888b !important; letter-spacing: 2px !important"
-            >filter by:</b
-          >&nbsp;
-          <div
-            style="
-              width: 200px !important;
-              height: 33.5px;
-              position: relative;
-              top: -8px;
-            "
-          >
-            <multiselect
-              v-model="filterBy"
-              :multiple="false"
-              :close-on-select="true"
-              :clear-on-select="false"
-              :hide-selected="true"
-              :show-labels="false"
-              :options="filterOptions"
-              placeholder="Carrier"
-              class="s-input no-select-style"
-              
-            >
-            </multiselect>
-            <button
-              v-if="filterBy != '' && filterBy != null"
-              type="button"
-              class="close custom_close_filter"
-              aria-label="Close"
-              @click="(filterBy = ''), filterCarriers()"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-          </div>
-        </div>-->
-      </div>
-
-      <div class="col-12 col-sm-6 addcontract-createquote">
-        <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
-
-        <b-button
-          v-if="!creatingQuote"
-          b-button
-          variant="primary"
-          @click="createQuote"
-        >
-          {{ requestData.requested == 0 ? "Create Quote" : "Duplicate Quote" }}
-        </b-button>
-
-        <b-button v-else b-button variant="primary">
-          <div class="spinner-border text-light" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </b-button>
-      </div>
-    </div>
-    <!-- FIN FILTERS -->
-
-    <div v-if="noRatesAdded" class="alert alert-warning" role="alert">
-      Please select at least one Rate to add
-    </div>
-
-    <!-- HEADER FCL -->
-    <div class="row mt-4 mb-4 result-header">
-      <div
-        class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-      >
-        <b>carrier</b>
-      </div>
-      <div class="row col-12 col-sm-4"></div>
-      <div
-        class="row col-12 col-sm-4 d-flex align-items-center justify-content-end"
-      >
-        <div
-          class="col-12 col-sm-2 d-flex justify-content-end"
-          v-for="(container, requestKey) in request.containers"
-          :key="requestKey"
-        >
-          <b>
-            {{ container.code }}
-          </b>
-        </div>
-      </div>
-    </div>
-    <!-- FIN HEADER FCL -->
-
-    <!-- HEADER LCL -->
-    <div class="row mt-4 mb-4 result-header" v-if="false">
-      <div
-        class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-      >
-        <b>carrier</b>
-      </div>
-      <div
-        class="row col-12 col-sm-8 d-flex align-items-center justify-content-between"
-      >
-        <div class="col-12 col-sm-3"><b>ORIGEN</b></div>
-        <div class="col-12 col-sm-3 d-flex justify-content-end">
-          <b>DESTINO</b>
-        </div>
-        <div class="col-12 col-sm-6 d-flex justify-content-center">
-          <b>PRICE</b>
-        </div>
-      </div>
-    </div>
-    <!-- FIN HEADER LCL -->
-
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
       <!-- LCL CARD -->
@@ -220,6 +105,7 @@
                 class="btn-add-quote"
                 name="check-button"
                 button
+                @change="addRateToQuote(rate)"
               >
                 <b>add to quote</b>
               </b-form-checkbox>
@@ -509,6 +395,7 @@
                 class="btn-add-quote"
                 name="check-button"
                 button
+                @change="addRateToQuote(rate)"
               >
                 <b>add to quote</b>
               </b-form-checkbox>
@@ -735,67 +622,20 @@ export default {
       actions: actions,
       requestData: {},
       finalRates: [],
-      creatingQuote: false,
       errorsExist: false,
       responseErrors: {},
-      noRatesAdded: false,
       filterBy: "",
       filterOptions: [],
       isActive: false,
       items: [],
+      ratesForQuote: [],
+      creatingQuote: false,
     };
   },
   created() {
     this.requestData = this.$route.query;
   },
   methods: {
-    createQuote() {
-      let component = this;
-      let ratesForQuote = [];
-      component.creatingQuote = true;
-      component.finalRates.forEach(function (rate) {
-        if (rate.addToQuote) {
-          ratesForQuote.push(rate);
-        }
-      });
-      if (ratesForQuote.length == 0) {
-        component.noRatesAdded = true;
-        component.creatingQuote = false;
-        setTimeout(function () {
-          component.noRatesAdded = false;
-        }, 2000);
-      } else {
-        if (component.requestData.requested == 0) {
-          component.actions.quotes
-            .create(ratesForQuote, component.$route)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        } else if (component.requestData.requested == 1) {
-          component.actions.quotes
-            .specialduplicate(ratesForQuote)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        }
-      }
-    },
     setFilters() {
       let component = this;
         if(component.filterBy != ''){
@@ -826,6 +666,24 @@ export default {
         component.finalRates = component.rates;
       }
     },
+    addRateToQuote(rate){
+      let component = this;
+
+      if(rate.addToQuote){
+        component.ratesForQuote.push(rate);
+      }else{
+        component.ratesForQuote.forEach(function(rateQ){
+          if(rate.id == rateQ.id){
+            component.ratesForQuote.splice(component.ratesForQuote.indexOf(rateQ),1);
+          }
+        });
+      }
+
+      component.$emit("addedToQuote",component.ratesForQuote);
+    },
+    createQuote(){
+      this.$emit('createQuote');
+    }
 },
     mounted(){
         let component = this;

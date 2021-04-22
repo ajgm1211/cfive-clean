@@ -963,7 +963,6 @@ export default {
             cmacgm: [],
         },
         containerCodesMaersk: [],
-        apiRatesFound: false,
     };
   },
   methods: {
@@ -987,6 +986,8 @@ export default {
         let apiContainers = "";
         let apiCarrierCodes = ["maersk"];
 
+        component.$emit('apiSearchStarted');
+
         component.request.originPorts.forEach(function (originPort){
             if(!apiOriginPorts.includes(originPort.code)){
                 apiOriginPorts.push(originPort.code);
@@ -1000,8 +1001,6 @@ export default {
         });
 
         apiContainers = component.setApiContainers();
-        component.apiRatesFound = false;
-        component.$emit('apiSearch',component.apiRatesFound);
 
         apiCarrierCodes.forEach(function (carrierCode){
             component.results[carrierCode] = [];
@@ -1029,14 +1028,17 @@ export default {
                         )
                         .then((response) => {
                             response.data.forEach(function (respData){
-                                if(!component.apiRatesFound){
-                                    component.apiRatesFound = true;
-                                    component.$emit('apiSearch',component.apiRatesFound);
-                                }
                                 component.results[carrierCode].push(respData);
                                 component.setPenalties(respData);
                             });
-                            console.log(component['results']);
+
+                            if(apiCarrierCodes[apiCarrierCodes.indexOf(carrierCode) + 1] == undefined){
+                                let finalLength = 0;
+                                apiCarrierCodes.forEach(function (cCode){
+                                    finalLength += component.results[cCode].length;
+                                });
+                                component.$emit('apiSearchDone',finalLength);
+                            }
                         })
                         .catch((error) => {
                             console.log(error);
