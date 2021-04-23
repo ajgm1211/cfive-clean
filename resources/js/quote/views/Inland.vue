@@ -10,8 +10,8 @@
         <b-card v-else class="q-card">
             <div class="row justify-content-between">
                 <!-- Origen -> Destino -->
-                <div class="col-12 col-lg-8 d-flex align-items-center">
-                    <h5><b>Inland at:</b></h5>
+                <div class="col-12 col-lg-8 d-sm-flex align-items-center d-none ">
+                    <h5 class="mb-0"><b>Inland at:</b></h5>
 
                     <multiselect
                         v-model="currentPort"
@@ -36,7 +36,7 @@
                         height="25"
                     />
 
-                    <h5>
+                    <h5 class="mb-0">
                         <b>From:</b>
                         <img
                             :src="currentPort['flag']"
@@ -58,9 +58,44 @@
                         track-by="address"
                         placeholder="Select an Address"
                         class="q-select ml-3"
-                    >
-                        ></multiselect
-                    >
+                    > </multiselect>
+                </div>
+                <!-- End Origen -> Destino -->
+                <!-- Origen -> Destino RESPONSIVO -->
+                <div class="col-12 col-lg-8 resposive-origin-destination">
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                        <h5 class="mb-2"><b>Inland at:</b></h5>
+
+                        <multiselect
+                            v-model="currentPort"
+                            :options="port_options"
+                            :searchable="true"
+                            :close-on-select="true"
+                            :show-labels="false"
+                            :allow-empty="false"
+                            label="name"
+                            track-by="name"
+                            placeholder="Select Template"
+                            class="q-select ml-3"
+                        >
+                        </multiselect>
+                    </div>
+
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                        <h5 class="mb-2"><b>From:</b></h5>
+
+                        <multiselect
+                            v-model="currentAddress"
+                            :options="address_options"
+                            :searchable="true"
+                            :close-on-select="true"
+                            :show-labels="false"
+                            label="address"
+                            track-by="address"
+                            placeholder="Select an Address"
+                            class="q-select ml-3"
+                        ></multiselect>
+                    </div>
                 </div>
                 <!-- End Origen -> Destino -->
 
@@ -138,7 +173,7 @@
 
                 <!-- Checkbox Group Action -->
                 <div 
-                    class="col-12 d-flex"
+                    class="col-12 responsive-group-action"
                     v-if="
                         currentAddress != undefined
                     "
@@ -156,7 +191,6 @@
                         label="charge"
                         track-by="charge"
                         placeholder="Local Charge"
-                        style="width: 20%"
                         @input="updatePdfOptions('select')"
                     ></multiselect>
                 </div>
@@ -234,7 +268,7 @@
                 </div>
                 <!-- DataTable -->
                 <div class="row">
-                    <div class="col-12 mt-5">
+                    <div id="modal-inlandcharges-table" class="col-12 mt-5" >
                         <b-table-simple
                             v-if="inlandAddRequested"
                             hover
@@ -296,6 +330,7 @@
                                     class="q-tr"
                                     v-for="(inlandAdd, key) in this.inlandAdds"
                                     :key="key"
+                                    
                                 >
                                     <b-td v-if="inlandFound">
                                         <b-form-checkbox
@@ -311,6 +346,7 @@
                                             "
                                             v-model="inlandAdd.charge"
                                             placeholder="Choose a charge"
+                                            class="data-surcharge"
                                         ></b-form-input>
                                     </b-td>
 
@@ -325,56 +361,68 @@
                                             :show-labels="false"
                                             :close-on-select="true"
                                             :preserve-search="true"
-                                            placeholder="Choose a provider"
+                                            placeholder="Provider"
                                             label="name"
                                             track-by="name"
+                                            class="data-provider"
                                         ></multiselect>
                                     </b-td>
 
                                     <b-td
                                         v-if="currentQuoteData['type']=='LCL'"
-                                        ><b-form-input
-                                            v-model="inlandAdd.total"
-                                            placeholder="Insert rate"
-                                            @blur="totalizeModalInlands"
-                                        ></b-form-input>
-                                        <b-form-input
-                                            v-model="inlandAdd.profit"
-                                            placeholder="Insert profit"
-                                            @blur="totalizeModalInlands"
-                                        ></b-form-input>
+                                        >
+                                        
+                                        <div style="display: flex; width: 100%">
+                                                <b-form-input
+                                                    v-model="inlandAdd.total"
+                                                    placeholder="Insert rate"
+                                                    class="data-profit"
+                                                    @blur="totalizeModalInlands"
+                                                ></b-form-input>
+                                                <b-form-input
+                                                    v-model="inlandAdd.profit"
+                                                    placeholder="Insert profit"
+                                                    class="data-profit"
+                                                    @blur="totalizeModalInlands"
+                                                ></b-form-input>
+                                        </div>
+                                        
+
                                     </b-td>
 
                                     <b-td
                                         v-for="(item, key) in quoteEquip"
                                         :key="key"
+                                        :id="item"
                                     >
-                                        <b-form-input
-                                            v-if="
-                                                inlandAdd.port ==
-                                                currentPort['id']
-                                            "
-                                            :placeholder="item"
-                                            v-model="
-                                                inlandAdd.price['c' + item]
-                                            "
-                                            type="number"
-                                            class="q-input"
-                                            @blur="totalizeModalInlands"
-                                        ></b-form-input>
-                                        <b-form-input
-                                            v-if="
-                                                inlandAdd.port ==
-                                                currentPort['id']
-                                            "
-                                            :placeholder="item"
-                                            v-model="
-                                                inlandAdd.markup['m' + item]
-                                            "
-                                            type="number"
-                                            class="q-input"
-                                            @blur="totalizeModalInlands"
-                                        ></b-form-input>
+                                        <div style="display: flex; width: 100%">
+                                            <b-form-input
+                                                v-if="
+                                                    inlandAdd.port ==
+                                                    currentPort['id']
+                                                "
+                                                
+                                                v-model="
+                                                    inlandAdd.price['c' + item]
+                                                "
+                                                type="number"
+                                                class="q-input data-profit"
+                                                @blur="totalizeModalInlands"
+                                            ></b-form-input>
+                                            <b-form-input
+                                                v-if="
+                                                    inlandAdd.port ==
+                                                    currentPort['id']
+                                                "
+                                                
+                                                v-model="
+                                                    inlandAdd.markup['m' + item]
+                                                "
+                                                type="number"
+                                                class="q-input data-profit"
+                                                @blur="totalizeModalInlands"
+                                            ></b-form-input>
+                                        </div>
                                     </b-td>
 
                                     <b-td>
@@ -392,6 +440,7 @@
                                             placeholder="Choose a currency"
                                             label="alphacode"
                                             track-by="alphacode"
+                                            class="data-currency"
                                             @input="totalizeModalInlands"
                                         ></multiselect>
                                     </b-td>
