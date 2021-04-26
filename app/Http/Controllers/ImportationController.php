@@ -2593,7 +2593,7 @@ class ImportationController extends Controller
                             $originA = $originA->name;
                         }
                     } else {
-                        //$originA = $originA[0].' (error)';
+                        $originA = $originA[0].' (error)';
                         $classdorigin = 'color:red';
                     }
 
@@ -2612,7 +2612,7 @@ class ImportationController extends Controller
                             $destinationA = $destinationA->name;
                         }
                     } else {
-                        //$destinationA = $destinationA[0].' (error)';
+                        $destinationA = $destinationA[0].' (error)';
                         $classddestination = 'color:red';
                     }
                     // -------------- SURCHARGE -----------------------------------------------------------
