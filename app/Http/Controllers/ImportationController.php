@@ -2579,38 +2579,38 @@ class ImportationController extends Controller
 
                     // -------------- ORIGIN -------------------------------------------------------------
                     if ($failsurcharge->differentiator == 1) {
-                        $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
-                            ->first();
+                        $originOb = PrvHarbor::get_harbor($originA[0]); 
                     } elseif ($failsurcharge->differentiator == 2) {
-                        $originOb = Country::where('variation->type', 'like', '%' . strtolower($originA[0]) . '%')
-                            ->first();
+                        $originOb = PrvHarbor::get_country($originA[0]); 
                     }
-                    $originAIn = $originOb['id'];
-                    $originC = count($originA);
-                    if ($originC <= 1) {
-                        $originA = $originOb['name'];
+
+                    if ($originOb['boolean']) {
+                        if ($failsurcharge->differentiator == 1) {
+                            $originA = $originOb['puerto'];
+                        }else{
+                            $originA = $originOb['country'];
+                        }
                     } else {
-                        $originA = $originA[0] . ' (error)';
+                        //$originA = $originA[0].' (error)';
                         $classdorigin = 'color:red';
                     }
 
                     // -------------- DESTINY ------------------------------------------------------------
                     if ($failsurcharge->differentiator == 1) {
-                        $destinationOb = Harbor::where('varation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
-                            ->first();
+                        $destinationOb = PrvHarbor::get_harbor($destinationA[0]); 
                     } elseif ($failsurcharge->differentiator == 2) {
-                        $destinationOb = Country::where('variation->type', 'like', '%' . strtolower($destinationA[0]) . '%')
-                            ->first();
+                        $destinationOb = PrvHarbor::get_country($destinationA[0]); 
                     }
-                    $destinationAIn = $destinationOb['id'];
-                    $destinationC = count($destinationA);
-                    if ($destinationC <= 1) {
-                        $destinationA = $destinationOb['name'];
+                    if ($destinationOb['boolean']) {
+                        if ($failsurcharge->differentiator == 1) {
+                            $destinationA = $destinationOb['puerto'];
+                        }else{
+                            $destinationA = $destinationOb['country'];
+                        }
                     } else {
-                        $destinationA = $destinationA[0] . ' (error)';
+                        //$destinationA = $destinationA[0].' (error)';
                         $classddestination = 'color:red';
                     }
-
                     // -------------- SURCHARGE -----------------------------------------------------------
 
                     $surchargeOb = Surcharge::where('name', '=', $surchargeA[0])->where('company_user_id', '=', \Auth::user()->company_user_id)->first();
