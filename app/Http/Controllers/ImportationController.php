@@ -2101,7 +2101,7 @@ class ImportationController extends Controller
                 $originA = $originOb['country'];
             }
         } else {
-            //$originA = $originA[0].' (error)';
+            $originA = null';
             $classdorigin = 'color:red';
         }
 
@@ -2120,7 +2120,7 @@ class ImportationController extends Controller
                 $destinationA = $destinationOb['country'];
             }
         } else {
-            //$destinationA = $destinationA[0].' (error)';
+            $destinationA = null;
             $classddestination = 'color:red';
         }
 
@@ -2192,8 +2192,8 @@ class ImportationController extends Controller
         $failsurchargeArre = [
             'id' => $failsurcharge['id'],
             'surcharge' => $surcharAin,
-            'origin_port' => $originAIn,
-            'destiny_port' => $destinationAIn,
+            'origin_port' => $originA,
+            'destiny_port' => $destinationA,
             'carrier' => $carrAIn,
             'contract_id' => $failsurcharge['contract_id'],
             'typedestiny' => $typedestinyLB,
