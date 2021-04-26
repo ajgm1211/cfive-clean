@@ -25,7 +25,7 @@
             <div class="row col-12 col-lg-8 margin-res">
                 <!-- CONTRACT NAME -->
                 <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">CMA PRICES</h6>
+                <h6 class="mt-4 mb-5 contract-title">{{ cmaResult.quoteLine }}</h6>
                 </div>
                 <!-- FIN CONTRACT NAME -->
 
@@ -43,7 +43,7 @@
                     <div class="origin mr-4">
                     <span>origin</span>
                     <p class="mb-0">{{ cmaResult.routingDetails[0].departureName }}</p>
-                    <p>{{ cmaResult.departureDateGmt }}</p>
+                    <p>{{ cmaResult.departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORGIEN -->
 
@@ -65,7 +65,7 @@
 
                     <div class="direction-desc mt-2">
                         <p class="mb-1"><b>Transit Time: </b> {{ cmaResult.transitTime + ' days' }}</p>
-                        <p><b>Vessel:</b> {{ cmaResult.vehiculeName }}</p>
+                        <p><b>Vessel: </b> {{ cmaResult.vehiculeName }}</p>
                     </div>
                     </div>
                     <!-- FIN LINEA DE RUTA -->
@@ -74,7 +74,7 @@
                     <div class="destination ml-4">
                     <span>destination</span>
                     <p class="mb-0">{{ cmaResult.routingDetails[0].arrivalName }}</p>
-                    <p>{{ cmaResult.arrivalDateGmt }}</p>
+                    <p>{{ cmaResult.arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINO -->
                 </div>
@@ -114,7 +114,7 @@
                             <p class="mb-1"><b>Transit Time: </b>{{ cmaResult.transitTime + ' days' }}</p>
                         </li>
                         <li>
-                            <p><b>Vessel:</b>{{ cmaResult.vehiculeName }}</p>
+                            <p><b>Vessel: </b>{{ cmaResult.vehiculeName }}</p>
                         </li>
                         </ul>
                     </div>
@@ -167,15 +167,27 @@
                     PRICES</a
                     >
                     <p class="ml-4 mb-0">
-                    <b>Validity:</b> 2020-08-02 / 2020-05-09
+                    <b>Validity:</b> {{ cmaResult.departureDateGmt.substring(0,10) + ' / ' + cmaResult.arrivalDateGmt.substring(0,10) }}
                     </p>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
-                    <b-button class="rs-btn" v-b-toggle.schedules
+                    <b-button 
+                        class="rs-btn"
+                        :class="cmaResult.scheduleCollapse ? null : 'collapsed'"
+                        :aria-expanded="cmaResult.scheduleCollapse ? 'true' : 'false'"
+                        :aria-controls="'schedules_' + String(cmaResult.routingDetails[0].voyageNumber)"
+                        @click="cmaResult.scheduleCollapse = !cmaResult.scheduleCollapse;
+                                cmaResult.detailCollapse ? cmaResult.detailCollapse=false : cmaResult.detailCollapse = cmaResult.detailCollapse" 
                     ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
-                    <b-button class="rs-btn" v-b-toggle.detailed
+                    <b-button 
+                        class="rs-btn" 
+                        :class="cmaResult.detailCollapse ? null : 'collapsed'"
+                        :aria-expanded="cmaResult.detailCollapse ? 'true' : 'false'"
+                        :aria-controls="'details_' + String(cmaResult.routingDetails[0].voyageNumber)"
+                        @click="cmaResult.detailCollapse = !cmaResult.detailCollapse;
+                                cmaResult.scheduleCollapse ? cmaResult.scheduleCollapse=false : cmaResult.scheduleCollapse = cmaResult.scheduleCollapse"
                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
                 </div>
@@ -199,7 +211,11 @@
             <!-- INFORMACION DESPLEGADA -->
             <div class="row mr-0 ml-0">
             <!-- DETALLES DE TARIFA -->
-            <b-collapse id="detailed" class="pt-5 pb-5 pl-5 pr-5 col-12">
+            <b-collapse 
+                :id="'details_' + String(cmaResult.routingDetails[0].voyageNumber)" 
+                v-model = cmaResult.detailCollapse 
+                class="pt-5 pb-5 pl-5 pr-5 col-12"
+            >
                 <div
                     v-for="(cmaSurchargeType, cmaSurchargeKey) in cmaResult.pricingDetails.surcharges"
                     :key="cmaSurchargeKey"
@@ -259,7 +275,8 @@
 
             <!-- SCHEDULES -->
             <b-collapse
-                id="schedules"
+                :id="'schedules_' + String(cmaResult.routingDetails[0].voyageNumber)" 
+                v-model = cmaResult.scheduleCollapse
                 class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             >
                 <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
@@ -280,11 +297,11 @@
                         <div class="row mt-4">
                         <div class="col-lg-6">
                             <h5 class="sub-title-schedule">Vessel/Voyage</h5>
-                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                            <p class="text-schedule"><b>{{ cmaResult.routingDetails[0].vehiculeName + ' / ' + cmaResult.routingDetails[0].voyageNumber }}</b></p>
                         </div>
                         <div class="col-lg-6">
-                            <h5 class="sub-title-schedule">IMO</h5>
-                            <p class="text-schedule"><b>MSC DITTE 038E</b></p>
+                            <h5 class="sub-title-schedule" v-if="cmaResult.routingDetails[0].imoNumber != null">IMO</h5>
+                            <p class="text-schedule"><b>{{ cmaResult.routingDetails[0].imoNumber }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -297,13 +314,12 @@
                         </h5>
 
                         <div class="row mt-4">
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">CY</h5>
-                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <h5 class="sub-title-schedule">VGM</h5>
-                            <p class="text-schedule"><b>18 Sep, 2020 08:00</b></p>
+                        <div 
+                            class="col-12 col-sm-6" 
+                            v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult.routingDetails[0].deadlines"
+                            :key="cmaDeadlineKey">
+                            <h5 class="sub-title-schedule">{{ cmaDeadline.deadlineKey }}</h5>
+                            <p class="text-schedule"><b>{{ cmaDeadline.deadline }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -319,8 +335,8 @@
                     <!-- ORIGEN -->
                     <div class="origin mr-4">
                     <span>origin</span>
-                    <p class="mb-0">España</p>
-                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].departureName }}</p>
+                    <p>{{ cmaResult.routingDetails[0].departureDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN ORIGEN -->
 
@@ -347,11 +363,12 @@
                             triggers="hover"
                             placement="top"
                         >
-                            <template #title>Direction</template>
+                            <template #title>Transshipments</template>
                             <ul>
-                            <li>Argentina - Madrid: 2012/20/20</li>
-                            <li>Madrid - China: 2012/20/20</li>
-                            <li>China - Chile: 2012/20/20</li>
+                                <li 
+                                    v-for="(trans, transKey) in cmaResult.routingDetails"
+                                    :key="transKey">{{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                                </li>
                             </ul>
                         </b-popover>
                         <div class="line line-blue"></div>
@@ -360,16 +377,16 @@
                     </div>
 
                     <div class="direction-desc">
-                        <p class="mb-0"><b>TT:</b> 45 Days</p>
-                        <p><b>Service</b> Direct</p>
+                        <p class="mb-0"><b>TT: </b> {{ cmaResult.transitTime + ' days'}}</p>
+                        <p><b>Service: </b> {{ cmaResult.routingDetails.length > 1 ? "Transshipment" : "Direct" }}</p>
                     </div>
                     </div>
 
                     <!-- DESTINATION -->
                     <div class="destination ml-4">
                     <span>destination</span>
-                    <p class="mb-0">Argentina</p>
-                    <p>20 Sep, 2020 ( Departure ) 20:00</p>
+                    <p class="mb-0">{{ cmaResult.routingDetails[0].arrivalName }}</p>
+                    <p>{{ cmaResult.routingDetails[0].arrivalDateGmt.substring(0,10) }}</p>
                     </div>
                     <!-- FIN DESTINATION -->
                 </div>
@@ -377,11 +394,12 @@
 
                 <!-- RUTA RESPONSIVA -->
                 <div class="col-12 d-lg-none">
-                    <h6>Transbordos</h6>
+                    <h6>Transshipments</h6>
                     <ul>
-                    <li>Argentina - Madrid: 2012/20/20</li>
-                    <li>Madrid - China: 2012/20/20</li>
-                    <li>China - Chile: 2012/20/20</li>
+                    <li 
+                        v-for="(trans, transKey) in cmaResult.routingDetails"
+                        :key="transKey">{{ trans.departureName + ' - ' + trans.arrivalName + ' : ' + trans.arrivalDateGmt.substring(0,10) }}
+                    </li>
                     </ul>
                 </div>
                 <!-- FIN RUTA RESPONSIVA -->
@@ -1057,14 +1075,16 @@ export default {
                         .then((response) => {
                             response.data.forEach(function (respData){
                                 component.results[carrier.code].push(respData);
-                                component.setPenalties(respData);
-                                component.setDetention(respData);
+                                if(carrier.code == "maersk"){
+                                    component.setPenalties(respData);
+                                    component.setDetention(respData);
+                                }
                             });
 
                             if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] == undefined){
                                 let finalLength = 0;
                                 component.request.carriersApi.forEach(function (cCode){
-                                    finalLength += component.results[cCode].length;
+                                    finalLength += component.results[cCode.code].length;
                                 });
                                 component.$emit('apiSearchDone',finalLength);
                             }
