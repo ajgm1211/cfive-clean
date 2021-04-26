@@ -1817,4 +1817,23 @@ trait QuoteV2Trait
 
         return $amounts;
     }
+
+    public function removeCommas($array)
+    {
+        $containers = Container::all();
+
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount) {
+                foreach ($containers as $container) {
+                    if ($k == 'c' . $container->code) {
+                        $array['c' . $container->code] = floatvalue($amount);
+                    } else if ($k == 'm' . $container->code) {
+                        $array['m' . $container->code] = floatvalue($amount);
+                    }
+                }
+            }
+        }
+
+        return json_encode($array);
+    }
 }
