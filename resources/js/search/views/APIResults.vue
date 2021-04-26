@@ -568,7 +568,9 @@
                         :class="result.detentionCollapse ? null : 'collapsed'"
                         :aria-expanded="result.detentionCollapse ? 'true' : 'false'"
                         :aria-controls="'detention_' + String(result.routingDetails[0].voyageNumber)"
-                        @click="result.detentionCollapse = !result.detentionCollapse" 
+                        @click="result.detentionCollapse = !result.detentionCollapse;
+                                result.scheduleCollapse ? result.scheduleCollapse=false : result.scheduleCollapse = result.scheduleCollapse;
+                                result.detailCollapse ? result.detailCollapse=false : result.detailCollapse = result.detailCollapse" 
                     ><b>D&D</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
                     <b-button 
@@ -576,7 +578,9 @@
                         :class="result.scheduleCollapse ? null : 'collapsed'"
                         :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
                         :aria-controls="'schedules_' + String(result.routingDetails[0].voyageNumber)"
-                        @click="result.scheduleCollapse = !result.scheduleCollapse" 
+                        @click="result.scheduleCollapse = !result.scheduleCollapse;
+                                result.detentionCollapse ? result.detentionCollapse=false : result.detentionCollapse = result.detentionCollapse;
+                                result.detailCollapse ? result.detailCollapse=false : result.detailCollapse = result.detailCollapse" 
                     ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
                     <b-button 
@@ -584,7 +588,9 @@
                         :class="result.detailCollapse ? null : 'collapsed'"
                         :aria-expanded="result.detailCollapse ? 'true' : 'false'"
                         :aria-controls="'details_' + String(result.routingDetails[0].voyageNumber)"
-                        @click="result.detailCollapse = !result.detailCollapse"
+                        @click="result.detailCollapse = !result.detailCollapse;
+                                result.scheduleCollapse ? result.scheduleCollapse=false : result.scheduleCollapse = result.scheduleCollapse;
+                                result.detentionCollapse ? result.detentionCollapse=false : result.detentionCollapse = result.detentionCollapse"
                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                     ></b-button>
                 </div>
@@ -693,7 +699,7 @@
                                 :key="feeKey">
                                 <b-td><b>{{ fee.name }}</b></b-td>
                                 <b-td 
-                                    v-for="(maerskContainer, maerskContainerKey) in containerCodesMaersk"
+                                    v-for="(maerskContainer, maerskContainerKey) in containerCodesMaerskPenalties"
                                     :key="maerskContainerKey"
                                 ><p>{{ fee[maerskContainer] }}<b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
                                 >
@@ -866,9 +872,17 @@
                     <b-table-simple hover small responsive class="sc-table">
                         <b-thead>
                         <b-tr>
+
+                        </b-tr>
+                            <b-th></b-th>
+                            <b-th></b-th>
+                            <b-th></b-th>
+                            <b-th></b-th>
+                            <b-th>Free time (days)</b-th>
+                            <b-th></b-th>
+                        <b-tr>
                             <b-th>Type (import)</b-th>
                             <b-th>Start Event</b-th>
-                            <b-th>Free time (days)</b-th>
                             <b-th></b-th>
                             <b-th
                             style="
@@ -882,7 +896,19 @@
                         </b-thead>
 
                         <b-tbody>
-                            
+                            <b-tr
+                                v-for="(detention, detentionKey) in result.formattedDetentions"
+                                :key="detentionKey"
+                            >
+                                <b-td><b>{{ detention.name }}</b></b-td>
+                                <b-td><b>{{ detention.event }}</b></b-td>
+                                <b-td></b-td>
+                                <b-td 
+                                    v-for="(maerskContainer, maerskContainerKey) in containerCodesMaerskDetentions"
+                                    :key="maerskContainerKey"
+                                ><p>{{ detention[maerskContainer] }}</p></b-td
+                                >
+                            </b-tr>
                         </b-tbody>
                     </b-table-simple>
                 </div>
@@ -939,6 +965,7 @@
 export default {
   props: {
     request: Object,
+    datalists: Object,
   },
   data() {
     return {
@@ -962,7 +989,8 @@ export default {
             maersk: [],
             cmacgm: [],
         },
-        containerCodesMaersk: [],
+        containerCodesMaerskPenalties: [],
+        containerCodesMaerskDetentions: [],
     };
   },
   methods: {
@@ -978,13 +1006,13 @@ export default {
             return 'col-4';
         }
     },
+
     callAPIs(){
         let component = this;
         let apiOriginPorts = [];
         let apiDestinationPorts = [];
         let apiDate = new Date().toISOString().substring(0,10);
         let apiContainers = "";
-        let apiCarrierCodes = ["maersk"];
 
         component.$emit('apiSearchStarted');
 
@@ -1002,8 +1030,8 @@ export default {
 
         apiContainers = component.setApiContainers();
 
-        apiCarrierCodes.forEach(function (carrierCode){
-            component.results[carrierCode] = [];
+        component.request.carriersApi.forEach(function (carrier){
+            component.results[carrier.code] = [];
             apiOriginPorts.forEach(function (origin){
                 apiDestinationPorts.forEach(function (destination){
                     axios
@@ -1015,7 +1043,7 @@ export default {
                                 equipmentSizeType: apiContainers,
                                 departureDate: apiDate,
                                 uemail: 'dcabanales@gmail.com',
-                                brands: carrierCode
+                                brands: carrier.code
                                 }
                             },
                             {
@@ -1028,13 +1056,14 @@ export default {
                         )
                         .then((response) => {
                             response.data.forEach(function (respData){
-                                component.results[carrierCode].push(respData);
+                                component.results[carrier.code].push(respData);
                                 component.setPenalties(respData);
+                                component.setDetention(respData);
                             });
 
-                            if(apiCarrierCodes[apiCarrierCodes.indexOf(carrierCode) + 1] == undefined){
+                            if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] == undefined){
                                 let finalLength = 0;
-                                apiCarrierCodes.forEach(function (cCode){
+                                component.request.carriersApi.forEach(function (cCode){
                                     finalLength += component.results[cCode].length;
                                 });
                                 component.$emit('apiSearchDone',finalLength);
@@ -1063,8 +1092,8 @@ export default {
                     });
                 }
 
-                if(!component.containerCodesMaersk.includes(penaltyPerContainer.containerSizeType)){
-                    component.containerCodesMaersk.push(penaltyPerContainer.containerSizeType);
+                if(!component.containerCodesMaerskPenalties.includes(penaltyPerContainer.containerSizeType)){
+                    component.containerCodesMaerskPenalties.push(penaltyPerContainer.containerSizeType);
                 }
             });
         });
@@ -1081,6 +1110,36 @@ export default {
         });
 
         responseData.formattedPenalties = finalPenalties;
+    },
+
+    setDetention(responseData){
+        let component = this;
+        let finalDetentions = [];
+        let detentionCodes = [];
+
+        responseData.additionalData.importDnDConditions.forEach(function(detention){
+            if(!detentionCodes.includes(detention.chargeType)){
+                detentionCodes.push(detention.chargeType);
+                finalDetentions.push({
+                    name: detention.chargeType,
+                    event: detention.freetimeStartEvent
+                });
+            }
+
+            if(!component.containerCodesMaerskDetentions.includes(detention.containerSizeType)){
+                component.containerCodesMaerskDetentions.push(detention.containerSizeType);
+            }
+        });
+
+        responseData.additionalData.importDnDConditions.forEach(function(detention){
+            finalDetentions.forEach(function (final){
+                if(detention.chargeType == final.name){
+                    final[detention.containerSizeType] = detention.freetimeGrantInDays;
+                }
+            });
+        });
+
+        responseData.formattedDetentions = finalDetentions;
     },
 
     setApiContainers(){

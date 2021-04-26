@@ -40,6 +40,7 @@ use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
 use App\CompanyPrice;
+use App\ApiProvider;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -82,6 +83,10 @@ class SearchApiController extends Controller
 
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
+        });
+
+        $carriers_api = ApiProvider::get()->map(function ($provider) {
+            return $provider->only(['id', 'name', 'code']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
@@ -159,6 +164,7 @@ class SearchApiController extends Controller
             'company_user_id',
             'company_user',
             'carriers',
+            'carriers_api',
             'companies',
             'contacts',
             'currency',
