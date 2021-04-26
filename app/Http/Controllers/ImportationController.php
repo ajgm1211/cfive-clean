@@ -1163,7 +1163,7 @@ class ImportationController extends Controller
         $calculation_type = CalculationType::pluck('name','id');
         $type_destiny = TypeDestiny::pluck('description','id');
         $equiment = HelperAll::LoadHearderContaniers($equiment_id, 'rates');
-        //dd($equiment);
+        
         
         foreach ($request->idAr as $surcharge_fail_id) {
             $failsurcharge = FailSurCharge::find($surcharge_fail_id);
@@ -1201,7 +1201,7 @@ class ImportationController extends Controller
             $amountA = explode('_', $failsurcharge['ammount']);
             $carrierA = explode('_', $failsurcharge['carrier_id']);
             $currencyA = explode('_', $failsurcharge['currency_id']);
-
+            
             if ($failsurcharge->differentiator == 1) {
                 $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
                     ->first();
@@ -1237,21 +1237,21 @@ class ImportationController extends Controller
             }
 
             if (count($currencyA) <= 1) {
-                $currenc = Currency::where('alphacode', '=', $currencyA[0])->orWhere('id', '=', $currencyA[0])->first();
+                $currenc = Currency::where('alphacode', '=', $currencyA[0])->first();
                 $currencyV = $currenc['id'];
             } else {
                 $classcurrency = 'red';
             }
 
             if (count($calculation_typeA) <= 1) {
-                $calculatioT = CalculationType::where('name', '=', $calculation_typeA[0])->orWhere('id', '=', $calculation_typeA[0])->first();
+                $calculatioT = CalculationType::where('name', '=', $calculation_typeA[0])->first();
                 $calculation_typeV = $calculatioT['id'];
             } else {
                 $classcalculationtype = 'red';
             }
 
             if (count($type_destinyA) <= 1) {
-                $typeDest = TypeDestiny::where('description', '=', $type_destinyA[0])->orWhere('id', '=', $type_destinyA[0])->first();
+                $typeDest = TypeDestiny::where('description', '=', $type_destinyA[0])->first();
                 $type_destinyV = $typeDest['id'];
             } else {
                 $classtypedestiny = 'red';
@@ -1268,7 +1268,8 @@ class ImportationController extends Controller
             }
 
             if (count($surchargeA) <= 1) {
-                $Surcharg = Surcharge::where('name', '=', $surchargeA[0])->orWhere('id', '=', $surchargeA[0])->first();
+                $Surcharg=Surcharge::where('name', '=', $surchargeA[0])->where('company_user_id', '=', $failsurcharge->contract->company_user_id)->first();
+                // $Surcharg = Surcharge::where('name', '=', $surchargeA[0])->orWhere('id', '=', $surchargeA[0])->first();
                 $surchargesV = $Surcharg['id'];
             } else {
                 $classsurcharger = 'red';
@@ -1309,7 +1310,6 @@ class ImportationController extends Controller
 
     public function StoreFailsurchargeMultiplesByDetalls(Request $request)
     {
-        // dd($request);
         $contract_id = $request->contract_id;
         $data_surcharges = $request->surcharge_fail_id;
         $data_origins = $request->origin_id;
@@ -1344,7 +1344,7 @@ class ImportationController extends Controller
                 $surcharge_id->save();
             }
 
-            if ($typerate == 'port') {
+            if ($typerate[$key]  == 'port') {
                 foreach ($data_origins[$key] as $origin) {
                     foreach ($data_destinations[$key] as $destiny) {
                         $existsLP = null;
@@ -1361,7 +1361,7 @@ class ImportationController extends Controller
                         }
                     }
                 }
-            } elseif ($typerate == 'country') {
+            } elseif ($typerate[$key]  == 'country') {
                 foreach ($data_origins[$key] as $origin) {
                     foreach ($data_destinations[$key] as $destiny) {
                         $existsLC = null;
@@ -1379,6 +1379,7 @@ class ImportationController extends Controller
                     }
                 }
             }
+            
             foreach ($data_carrier[$key] as $carrier) {
                 $localcharcarriersV = null;
                 $localcharcarriersV = LocalCharCarrier::where('carrier_id', $carrier)->where('localcharge_id', $surcharge_id->id)->get();
@@ -2045,7 +2046,7 @@ class ImportationController extends Controller
             'surchargeSelect',
             'calculationtypeselect'));
     }
-
+/////lllalalala
     public function EditSurchargersFail($id)
     {
         $objharbor = new Harbor();

@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class LocalChargeLcl extends Model
+class LocalChargeLcl extends Model implements Auditable
 {
     use SoftDeletes;
+    use \OwenIt\Auditing\Auditable;
     protected $dates = ['deleted_at'];
     protected $table = 'localcharges_lcl';
     protected $fillable = ['id', 'surcharge_id', 'typedestiny_id', 'contractlcl_id', 'calculationtypelcl_id', 'ammount', 'minimum', 'currency_id', 'created_at', 'updated_at'];

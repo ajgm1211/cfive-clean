@@ -301,7 +301,7 @@ trait MixPanelTrait
         $mixPanel->track(
             'Request Done FCL',
             array(
-                'Company'       => $data->company_user->name,
+                'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
                 'Contract'  => $data->namecontract,
                 'Valid_from' => $date[0],
@@ -327,7 +327,7 @@ trait MixPanelTrait
         $mixPanel->track(
             'Request Done LCL',
             array(
-                'Company'       => $data->company_user->name,
+                'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
                 'Contract'      => $data->namecontract,
                 'Valid_from'    => $date[0],
