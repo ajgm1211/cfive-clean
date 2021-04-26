@@ -2101,7 +2101,7 @@ class ImportationController extends Controller
                 $originA = $originOb['country'];
             }
         } else {
-            $originA = null';
+            $originA = null;
             $classdorigin = 'color:red';
         }
 
