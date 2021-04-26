@@ -2587,10 +2587,10 @@ class ImportationController extends Controller
                     if ($originOb['boolean']) {
                         if ($failsurcharge->differentiator == 1) {
                             $originA = Harbor::find($originOb['puerto']);
-                            $originA = $originA->name
+                            $originA = $originA->name;
                         }else{
                             $originA = Country::find($originOb['country']);
-                            $originA = $originA->name
+                            $originA = $originA->name;
                         }
                     } else {
                         //$originA = $originA[0].' (error)';
