@@ -2586,9 +2586,11 @@ class ImportationController extends Controller
 
                     if ($originOb['boolean']) {
                         if ($failsurcharge->differentiator == 1) {
-                            $originA = $originOb['puerto'];
+                            $originA = Harbor::find($originOb['puerto']);
+                            $originA = $originA->name
                         }else{
-                            $originA = $originOb['country'];
+                            $originA = Country::find($originOb['country']);
+                            $originA = $originA->name
                         }
                     } else {
                         //$originA = $originA[0].' (error)';
@@ -2603,9 +2605,11 @@ class ImportationController extends Controller
                     }
                     if ($destinationOb['boolean']) {
                         if ($failsurcharge->differentiator == 1) {
-                            $destinationA = $destinationOb['puerto'];
+                            $destinationA =  Harbor::find($destinationOb['puerto']);
+                            $destinationA = $destinationA->name;
                         }else{
-                            $destinationA = $destinationOb['country'];
+                            $destinationA = Country::find($destinationOb['country']);
+                            $destinationA = $destinationA->name;
                         }
                     } else {
                         //$destinationA = $destinationA[0].' (error)';
