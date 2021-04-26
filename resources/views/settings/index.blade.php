@@ -524,8 +524,8 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Address</th>
                                             <th>Phone</th>
+                                            <th>Address</th>
                                             <th>Options</th>
                                         </tr>
                                     </thead>
