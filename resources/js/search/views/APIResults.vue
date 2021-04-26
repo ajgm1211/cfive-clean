@@ -1053,7 +1053,7 @@ export default {
             apiOriginPorts.forEach(function (origin){
                 apiDestinationPorts.forEach(function (destination){
                     axios
-                        .get('https://serene-woodland-07538.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                        .get('https://carriers.cargofive.com/api/pricing',
                             {
                             params: {
                                 originPort: origin,
