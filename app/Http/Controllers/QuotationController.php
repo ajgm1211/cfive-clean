@@ -316,6 +316,7 @@ class QuotationController extends Controller
 
     public function update(Request $request, QuoteV2 $quote)
     {
+        // dd($request);
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english'];
@@ -409,10 +410,21 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
-        $quote->update(['total_quantity' => $request['total_quantity']]);
-        $quote->update(['total_volume' => $request['total_volume']]);
-        $quote->update(['total_weight' => $request['total_weight']]);
-        $quote->update(['chargeable_weight' => $request['chargeable_weight']]);
+
+        if(!isset($request->pdf_options['showTotals'])){
+            $calc_volume=floatval($request['total_volume']);
+            $calc_weight=floatval($request['total_weight'])/1000;
+
+            $quote->update(['total_quantity' => $request['total_quantity']]);
+            $quote->update(['total_volume' => $request['total_volume']]);
+            $quote->update(['total_weight' => $request['total_weight']]);
+            if($calc_volume > $calc_weight){
+                $quote->update(['chargeable_weight' => $request['total_volume']]);
+            }else{
+                $quote->update(['chargeable_weight' => $request['total_weight']]);
+            }
+        }
+    
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
