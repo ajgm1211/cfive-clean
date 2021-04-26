@@ -39,8 +39,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SyncCompaniesJob)->dailyAt('04:00')->appendOutputTo(storage_path('logs/commands.log'));*/
-        $schedule->job(new SyncCompaniesVforwarding)->cron('0 */2 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SyncCompaniesVisualtrans)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesVforwarding)->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new SyncCompaniesVisualtrans)->cron('0 */5 * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')
