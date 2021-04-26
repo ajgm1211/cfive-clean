@@ -85,7 +85,7 @@ TARJETA
     }
     img {
         width: 30px;
-        top: -30px;
+        top: -10px;
         margin: auto;
         color: #051b4e;
         position: absolute;
@@ -138,6 +138,7 @@ TARJETA
 }
 
 .btn-add-quote {
+    border-radius: 4px;
     b {
         font-size: 12px;
         text-transform: uppercase;

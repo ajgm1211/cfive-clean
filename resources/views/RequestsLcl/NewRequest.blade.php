@@ -102,7 +102,7 @@
                                             <label for="file" class="btn btn-primary form-control" >
                                                 Choose File
                                             </label>
-                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required accept=".xlsx,.xls,.csv,.pdf" style='display: none;'>
                                             <div id="info" style="color:red"></div>
                                         </div>
                                         <div class="col-lg-4">
@@ -472,13 +472,31 @@
     }
     function cambiar(){
         var pdrs = document.getElementById('file').files[0].name;
-        document.getElementById('info').innerHTML = pdrs;
+
+        if(pdrs.endsWith(".xlsx",pdrs.length)==true || pdrs.endsWith(".xls",pdrs.length)==true ||pdrs.endsWith(".csv",pdrs.length)==true ||pdrs.endsWith(".pdf",pdrs.length)==true ){
+            var typeDoc=true;
+        }else{
+            swal("Error","Error, You can't upload files of this type, only(XLSX, XLS, CSV, PDF).", "error",true,);
+            var typeDoc=false;   
+        }
+        console.log(typeDoc);
+            document.getElementById('info').innerHTML = pdrs;  
     } 
 
     function validate(formData, jqForm, options) {
         var form = jqForm[0];
+        var pdrs = document.getElementById('file').files[0].name;
+        
+        if(pdrs.endsWith(".xlsx",pdrs.length)==true || pdrs.endsWith(".xls",pdrs.length)==true ||pdrs.endsWith(".csv",pdrs.length)==true ||pdrs.endsWith(".pdf",pdrs.length)==true ){
+            var typeDoc=true;
+        }else{
+            var typeDoc=false;
+        }
+        
         if (!form.file.value) {
-            //alert('File not found');
+            return false;
+        }else if(typeDoc!=true){
+            swal("Error","Error, You can't upload files of this type, please upload other file(XLSX, XLS, CSV, PDF).", "error",true,);
             return false;
         }
     }

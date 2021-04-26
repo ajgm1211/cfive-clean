@@ -18,7 +18,7 @@
                 <div class="col-12 quote-card">
                    
                     <!-- Logo, origen, destino -->
-                    <div>
+                    <div class="responsive-destination-card">
                         <img
                             :src="freight.carrierLogo"
                             alt="logo"
@@ -56,9 +56,9 @@
                     <!-- End Logo, origen, destino -->
 
                     <!-- Add Freight -->
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center justify-content-center">
                         <!-- Inputs Freight -->
-                        <div class="d-flex align-items-center">
+                        <div class="d-lg-flex align-items-center d-none">
                             <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
                             <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-primary btn-bg">+ Add Charge</a>
                         </div>
@@ -118,10 +118,18 @@
                     ></DynamicalDataTable>
 
                     <!-- Checkbox Freight-->
-                    <div class="col-12 d-flex mt-5 mb-3">
+                    <div class="col-12 responsive-checkbox-freight mt-5 mb-3">
                         <b-form-checkbox v-if="freights.length < 2" v-model="allIn" @input="updatePdfOptions()">
                             <span>Freight All-In</span>
                         </b-form-checkbox>
+
+                        <!-- Add Freight -->
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex align-items-center d-lg-none">
+                                <a href="#" class="btn btn-link btn-delete" id="show-btn" @click="deleteFreight(freight.id)">Delete Freight</a>
+                                <a href="#" id="show-btn2" @click="setTableInsert(freight.id);" class="btn btn-primary btn-bg">+ Add Charge</a>
+                            </div>
+                        </div>
                     </div>
                     <!-- End Checkbox Freight-->
                 </div>
@@ -162,6 +170,7 @@
                     @exit="closeModal('addFreight','cancel')"
                     @success="closeModal('addFreight','addFreight')"
                     :actions="actions.automaticrates"
+                    class="modal-add-freight"
                 ></FormView>
             </div>
         </b-modal>

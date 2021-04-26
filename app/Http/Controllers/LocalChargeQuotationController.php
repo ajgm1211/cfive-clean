@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Traits\QuoteV2Trait;
 use App\QuoteV2;
 use App\AutomaticRate;
 use App\Carrier;
@@ -25,6 +26,7 @@ use App\Provider;
 
 class LocalChargeQuotationController extends Controller
 {
+    use QuoteV2Trait;
     /**
      * get harbors
      *
@@ -242,10 +244,10 @@ class LocalChargeQuotationController extends Controller
             'selectedCharges.*.calculation_type_id' => 'required',
             'selectedCharges.*.price' => 'required',
             'selectedCharges.*.markup' => 'sometimes',
-            //'selectedCharges.*.provider_name' => 'sometimes',
+            'selectedCharges.*.provider_name' => 'sometimes',
             'selectedCharges.*.currency_id' => 'required'
         ]);
-        
+
         foreach ($request->selectedCharges as $localcharge) {
             if(!array_key_exists("automatic_rate_id", $localcharge)){
                 $this->storeInCharges($request->quote_id, $request->type_id, $request->port_id, $localcharge);
@@ -577,24 +579,5 @@ class LocalChargeQuotationController extends Controller
             'markups' => $this->removeCommas($data['markup']),
             'provider_name' => $data['provider_name'] ?? $data['automatic_rate']['carrier']['name'] ?? null,
         ]);
-    }
-
-    public function removeCommas($array)
-    {
-        $containers = Container::all();
-
-        if ($array != null || $array != '') {
-            foreach ($array as $k => $amount) {
-                foreach ($containers as $container) {
-                    if ($k == 'c' . $container->code) {
-                        $array['c' . $container->code] = floatvalue($amount);
-                    } else if ($k == 'm' . $container->code) {
-                        $array['m' . $container->code] = floatvalue($amount);
-                    }
-                }
-            }
-        }
-
-        return json_encode($array);
     }
 }
