@@ -3,12 +3,12 @@
 namespace App;
 
 use App\ContractCarrier;
-use App\Rate;
 use App\ContractCompanyRestriction;
 use App\ContractUserRestriction;
 use App\Http\Filters\ContractFilter;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
+use App\Rate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -68,7 +68,7 @@ class Contract extends Model implements HasMedia, Auditable
     public function contract_request()
     {
 
-        return $this->hasOne('App\NewContractRequest','contract_id','id');
+        return $this->hasOne('App\NewContractRequest', 'contract_id', 'id');
     }
 
     public function FilesTmps()
@@ -136,9 +136,9 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
-        $status_erased=1;
+        $status_erased = 1;
         $company_id = Auth::user()->company_user_id;
-        return $query->where('company_user_id', '=', $company_id)->where('status_erased','!=',$status_erased);
+        return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
     }
 
     /**
@@ -193,46 +193,46 @@ class Contract extends Model implements HasMedia, Auditable
         ]);
     }
 
-    public function ContractRateStore($request,$contract,$req,$container){
+    public function ContractRateStore($request, $contract, $req, $container)
+    {
 
-        $originPort = $request->origin; 
-        $destinationPort= $request->destination;
+        $originPort = $request->origin;
+        $destinationPort = $request->destination;
 
         foreach ($originPort as $origin) {
-            foreach($destinationPort as $destination){
+            foreach ($destinationPort as $destination) {
                 $rates = new Rate();
                 $rates->origin_port = $origin['id'];
                 $rates->destiny_port = $destination['id'];
                 $arreglo = array();
                 if ($req == 1) {
-                    
-                    if(isset($request->rates['C20DV'])){
+
+                    if (isset($request->rates['C20DV'])) {
                         $rates->twuenty = $request->rates['C20DV'];
-                    }else{
+                    } else {
                         $rates->twuenty = 0;
                     }
-                    if(isset($request->rates['C40DV'])){
+                    if (isset($request->rates['C40DV'])) {
                         $rates->forty = $request->rates['C40DV'];
-                    }else{
+                    } else {
                         $rates->forty = 0;
                     }
-                    if(isset($request->rates['C40HC'])){
+                    if (isset($request->rates['C40HC'])) {
                         $rates->fortyhc = $request->rates['C40HC'];
-                    }else{
+                    } else {
                         $rates->fortyhc = 0;
                     }
-                    if(isset($request->rates['C40NOR'])){
+                    if (isset($request->rates['C40NOR'])) {
                         $rates->fortynor = $request->rates['C40NOR'];
-                    }else{
+                    } else {
                         $rates->fortynor = 0;
                     }
-                    if(isset($request->rates['C45HC'])){
+                    if (isset($request->rates['C45HC'])) {
                         $rates->fortyfive = $request->rates['C45HC'];
-                    }else{
+                    } else {
                         $rates->fortyfive = 0;
                     }
-                } 
-                else {
+                } else {
 
                     $rates->twuenty = 0;
                     $rates->forty = 0;
@@ -243,11 +243,11 @@ class Contract extends Model implements HasMedia, Auditable
                     foreach ($container as $cod) {
                         $cont = 'C' . $cod->code;
                         if ($cod->gp_container_id == $req) {
-                            if(isset($request->rates[$cont])){
+                            if (isset($request->rates[$cont])) {
                                 $arreglo[$cont] = $request->rates[$cont];
-                            }else{
+                            } else {
                                 $arreglo[$cont] = 0;
-                            }    
+                            }
                         }
                     }
                     // dd($arreglo);
@@ -258,18 +258,19 @@ class Contract extends Model implements HasMedia, Auditable
                 $rates->contract()->associate($contract);
                 $rates->save();
             }
-        }        
+        }
     }
-    
-    public function ContractSurchargeStore($request,$contract){
+
+    public function ContractSurchargeStore($request, $contract)
+    {
 
         $calculation_type = $request->dataSurcharger;
-        $originPort = $request->origin; 
-        $destinationPort= $request->destination;
+        $originPort = $request->origin;
+        $destinationPort = $request->destination;
         // $typeC = $request->input('type');
         // $currencyC = $request->input('currency');
         // $amountC = $request->input('amount');
-        if (count((array)$calculation_type) > 0) {
+        if (count((array) $calculation_type) > 0) {
             foreach ($calculation_type as $ct) {
                 if (!empty($request->dataSurcharger['0']['amount'])) {
                     $localcharge = new LocalCharge();
@@ -287,14 +288,14 @@ class Contract extends Model implements HasMedia, Auditable
                     $detailcarrier->save();
 
                     foreach ($originPort as $origin) {
-                        foreach($destinationPort as $destination){
+                        foreach ($destinationPort as $destination) {
                             $detailport = new LocalCharPort();
                             $detailport->port_orig = $origin['id']; // $request->input('port_origlocal'.$contador.'.'.$orig);
                             $detailport->port_dest = $destination['id']; //$request->input('port_destlocal'.$contador.'.'.$dest);
                             $detailport->localcharge()->associate($localcharge);
                             $detailport->save();
                         }
-                    }                    
+                    }
                 }
             }
         }
