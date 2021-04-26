@@ -31,7 +31,11 @@
     </main>
 
 
-    <div class="footer-page" style="background: {{ @$user->companyUser->colors_pdf }}"></div>
+    @if($user->companyUser->footer_type=='Image' || $user->companyUser->footer_type=='Text')
+        @include('quote.pdf.partials.footer')
+    @else
+        <div class="footer-page" style="background: {{ @$user->companyUser->colors_pdf }}"></div>
+    @endif
 
 </body>
 

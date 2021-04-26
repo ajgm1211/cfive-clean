@@ -214,7 +214,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -422,7 +422,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
