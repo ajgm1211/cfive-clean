@@ -64,7 +64,8 @@ class CarriersController extends Controller
             $json = json_encode($type);
             $carrier->varation = $json;
             $carrier->save();
-            ProcessContractFile::dispatch($carrier->id, $nameImg, 'n/a', 'carrier');
+            // ProcessContractFile::dispatch($carrier->id, $nameImg, 'n/a', 'carrier');
+            Storage::disk('s3_upload')->put('imgcarrier/'.$nameImg, $file, 'public');
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was created');
@@ -90,7 +91,7 @@ class CarriersController extends Controller
 
     public function update(Request $request, $id)
     {
-        //dd($request->all());
+        // dd($request->all());
         $carrier = Carrier::find($id);
 
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
@@ -114,7 +115,8 @@ class CarriersController extends Controller
                 $file = $request->file('file');
                 $fillbool = Storage::disk('carriers')->put($request->image, \File::get($file));
             if ($fillbool) {
-                ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
+                Storage::disk('s3_upload')->put('imgcarrier/'.$request->image, $file, 'public');
+                // ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
             }
         }
 
