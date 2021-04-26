@@ -80,7 +80,7 @@
                   <p class="mr-4 mb-0">
                     <b>Vality:</b> 2020-20-20 / 2020-20-20
                   </p>
-                  <a v-if="false" href="#">download contract</a>
+                  <a href="#">download contract</a>
                 </div>
 
                 <!-- OPTIONS -->
@@ -333,6 +333,7 @@
                   <div class="row card-amount card-amount__res">
                     <div
                       class="col-2 pl-0 pr-0 prices-card-res"
+                      :class="countContainersClass()"
                       v-for="(container, contKey) in request.containers"
                       :key="contKey"
                     >
@@ -360,7 +361,7 @@
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                   </p>
-                  <a v-if="false" href="#">download contract</a>
+                  <!--<a href="#">download contract</a>-->
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -447,7 +448,11 @@
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
-                      <b-td>{{ charge.calculationtype.name }}</b-td>
+                      <b-td>{{
+                        charge.joint
+                          ? "Per Container"
+                          : charge.calculationtype.name
+                      }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
@@ -598,7 +603,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -636,22 +640,88 @@ export default {
     this.requestData = this.$route.query;
   },
   methods: {
+    countContainersClass() {
+      if (
+        this.request.containers.length == 5 ||
+        this.request.containers.length == 4
+      ) {
+        return "col-2";
+      }
+
+      if (this.request.containers.length == 3) {
+        return "col-3";
+      }
+      if (this.request.containers.length == 2) {
+        return "col-4";
+      }
+    },
+    createQuote() {
+      let component = this;
+      let ratesForQuote = [];
+
+      component.creatingQuote = true;
+      component.finalRates.forEach(function (rate) {
+        if (rate.addToQuote) {
+          ratesForQuote.push(rate);
+        }
+      });
+
+      if (ratesForQuote.length == 0) {
+        component.noRatesAdded = true;
+        component.creatingQuote = false;
+        setTimeout(function () {
+          component.noRatesAdded = false;
+        }, 2000);
+      } else {
+        if (component.requestData.requested == 0) {
+          component.actions.quotes
+            .create(ratesForQuote, component.$route)
+            .then((response) => {
+              window.location.href =
+                "/api/quote/" + response.data.data.id + "/edit";
+              component.creatingQuote = false;
+            })
+            .catch((error) => {
+              if (error.status === 422) {
+                component.responseErrors = error.data.errors;
+                component.creatingQuote = false;
+              }
+            });
+        } else if (component.requestData.requested == 1) {
+          component.actions.quotes
+            .specialduplicate(ratesForQuote)
+            .then((response) => {
+              window.location.href =
+                "/api/quote/" + response.data.data.id + "/edit";
+              component.creatingQuote = false;
+            })
+            .catch((error) => {
+              if (error.status === 422) {
+                component.responseErrors = error.data.errors;
+                component.creatingQuote = false;
+              }
+            });
+        }
+      }
+    },
+
     setFilters() {
       let component = this;
-        if(component.filterBy != ''){
-            component.rates.forEach(function (rate){
-                if(component.filterBy == rate.carrier.name){
-                    component.finalRates.push(rate);
-                }
-            });
-        }else{
-            component.finalRates = component.rates;
-        }
+
+      if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
-        if (!component.filterOptions.includes(rate.carrier.name)) {
-        component.filterOptions.push(rate.carrier.name);
-            }
+          if (component.filterBy == rate.carrier.name) {
+            component.finalRates.push(rate);
+          }
         });
+      } else {
+        component.finalRates = component.rates;
+      }
+      component.rates.forEach(function (rate) {
+        if (!component.filterOptions.includes(rate.carrier.name)) {
+          component.filterOptions.push(rate.carrier.name);
+        }
+      });
     },
     filterCarriers() {
       let component = this;

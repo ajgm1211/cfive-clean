@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class LocalChargeQuoteLcl extends Model
+class LocalChargeQuoteLcl extends Model implements Auditable
 {
-    protected $fillable = ['charge', 'calculation_type_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name'];
+    use \OwenIt\Auditing\Auditable;
+    
+    protected $fillable = ['charge', 'calculation_type_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name', 'surcharge_id'];
 
     public function quotev2()
     {
