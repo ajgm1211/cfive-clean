@@ -145,6 +145,7 @@
         <APIResults
             v-if="searchRequest.length != 0"
             :request="searchRequest"
+            :datalists="datalists"
             @apiSearchStarted="clearDisplay"
             @apiSearchDone="addApiResults"
             ref="resultsAPI"
