@@ -1397,6 +1397,8 @@ class ApiController extends Controller
                                         $arregloDest = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '0', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'cantidad' => $cantidadT);
 
                                         $collectionDest->push($arregloDest);
+
+                                        //return response()->json($collectionDest);
                                     }
                                 }
                             }
@@ -2416,17 +2418,20 @@ class ApiController extends Controller
 
             //General information
 
-            $information['information'] = array('id_contract'=> $data->contract->id,'id_rate' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->created_at, 'updated_at' => $data->updated_at);
+            $information['information'] = array('name'=>$data->contract->name,'validity'=>$data->contract->validity,'expire'=>$data->contract->expire,'status'=>$data->contract->status,'id_contract'=> $data->contract->id,'id_rate' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->contract->created_at, 'updated_at' => $data->contract->updated_at);
             $information['information']['origin_port'] = array('id' => $data->port_origin->id, 'name' => $data->port_origin->display_name, 'code' => $data->port_origin->code, 'coordinates' => $data->port_destiny->coordinates);
             $information['information']['destination_port'] = array('id' => $data->port_destiny->id, 'name' => $data->port_destiny->display_name, 'code' => $data->port_destiny->code, 'coordinates' => $data->port_destiny->coordinates);
             $information['information']['carrier'] = array('id' => $data->carrier->id, 'name' => $data->carrier->name, 'code' => $data->carrier->uncode);
+            $information['information']['rates'] = $array;
+            $information['information']['charges_origin'] = $collectionOrig;
+            $information['information']['charges_destination'] = $collectionDest;
+            $information['information']['charges_freight'] = $collectionFreight;
+            $information['information']['totals'] = array('charge_freight' => $FreightCharges, 'charge_origin' => $totalOrigin, 'charge_destination' => $totalDestiny,'rates'=> number_format($totalRates, 2, '.', ''),'all_freight'=>$totalFreight,'quote'=> number_format($totalQuote, 2, '.', ''));
 
-            $collectionGeneral->put('general', $information);
-            $collectionGeneral->put('rates', $array);
-            $collectionGeneral->put('charges_origin', $collectionOrig);
-            $collectionGeneral->put('charges_destination', $collectionDest);
-            $collectionGeneral->put('charges_freight', $collectionFreight);
 
+            $collectionGeneral->put('contract', $information);
+            
+        
             /*
             $data->setAttribute('localOrig', $collectionOrig);
             $data->setAttribute('localDest', $collectionDest);
@@ -2437,9 +2442,7 @@ class ApiController extends Controller
             $data->setAttribute('totalFreight', $totalFreight);
             $data->setAttribute('totalFreightOrig', $totalFreightOrig);
 
-            $data->setAttribute('totalrates', $totalRates);
-            $data->setAttribute('totalOrigin', $totalOrigin);
-            $data->setAttribute('totalDestiny', $totalDestiny);
+ 
 
             $data->setAttribute('totalQuote', $totalQuote);
             // INLANDS
