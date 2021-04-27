@@ -236,8 +236,7 @@
                             v-for="(requestContainer, rContainerKey) in request.containers"
                             :key="rContainerKey"
                         >{{ requestContainer.code }}
-                        >{{ requestContainer.code }}</b-th
-                        >
+                        </b-th>
                     </b-tr>
                     </b-thead>
 
@@ -245,14 +244,14 @@
                     <b-tr 
                         v-for="(cmaSurchargeName, cmaNameKey) in cmaSurchargeType"
                         :key="cmaNameKey">
-                        <b-td><b>{{ cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName }}</b></b-td>
+                        <b-td><b>{{ cmaSurchargeName.chargeName != null ? cmaSurchargeName.chargeCode + ' - ' + cmaSurchargeName.chargeName : cmaSurchargeName.chargeCode }}</b></b-td>
                         <b-td>{{ cmaSurchargeName.calculationType }}</b-td>
                         <!-- <b-td></b-td>
                         <b-td></b-td> -->
                         <b-td 
                             v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
                             :key="cmaContainerKey"
-                        ><p>{{ cmaSurchargeContainer.amount }}<b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
+                        ><p>{{ cmaSurchargeContainer.amount }} <b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
@@ -667,14 +666,14 @@
                     <b-tr
                         v-for="(surchargeName, nameKey) in surchargeType"
                         :key="nameKey">
-                        <b-td><b>{{ surchargeName.chargeCode + ' - ' + surchargeName.chargeName }}</b></b-td>
+                        <b-td><b>{{ surchargeName.chargeName != null ? surchargeName.chargeCode + ' - ' + surchargeName.chargeName : surchargeName.chargeCode }}</b></b-td>
                         <b-td>{{ surchargeName.calculationType }}</b-td>
                         <!-- <b-td></b-td>
                         <b-td></b-td> -->
                         <b-td 
                             v-for="(surchargeContainer, containerKey) in surchargeName.containers"
                             :key="containerKey"
-                        ><p>{{ surchargeContainer.amount }}<b>{{ surchargeContainer.currencyCode }}</b></p></b-td
+                        ><p>{{ surchargeContainer.amount }} <b>{{ surchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
@@ -719,7 +718,7 @@
                                 <b-td 
                                     v-for="(maerskContainer, maerskContainerKey) in containerCodesMaerskPenalties"
                                     :key="maerskContainerKey"
-                                ><p>{{ fee[maerskContainer] }}<b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
+                                ><p>{{ fee[maerskContainer] }} <b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
                                 >
                             </b-tr>
                         </b-tbody>
@@ -1047,55 +1046,56 @@ export default {
         });
 
         apiContainers = component.setApiContainers();
+        if(this.request.carriersApi.length > 0){
 
-        component.request.carriersApi.forEach(function (carrier){
-            component.results[carrier.code] = [];
-            apiOriginPorts.forEach(function (origin){
-                apiDestinationPorts.forEach(function (destination){
-                    axios
-                        .get('https://mighty-castle-09151.herokuapp.com/https://carriers.cargofive.com/api/pricing',
-                            {
-                            params: {
-                                originPort: origin,
-                                destinationPort: destination,
-                                equipmentSizeType: apiContainers,
-                                departureDate: apiDate,
-                                uemail: 'dcabanales@gmail.com',
-                                brands: carrier.code
+            component.request.carriersApi.forEach(function (carrier){
+                component.results[carrier.code] = [];
+                apiOriginPorts.forEach(function (origin){
+                    apiDestinationPorts.forEach(function (destination){
+                        axios
+                            .get('https://mighty-castle-09151.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                                {
+                                params: {
+                                    originPort: origin,
+                                    destinationPort: destination,
+                                    equipmentSizeType: apiContainers,
+                                    departureDate: apiDate,
+                                    uemail: 'dcabanales@gmail.com',
+                                    brands: carrier.code
+                                    }
+                                },
+                                {
+                                headers:{
+                                    'Authorization': 'Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha',
+                                    'Accept': 'application/json',
+                                    'Content-type': 'application/json'
+                                    } 
                                 }
-                            },
-                            {
-                            headers:{
-                                'Authorization': 'Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha',
-                                'Accept': 'application/json',
-                                'Content-type': 'application/json'
-                                } 
-                            }
-                        )
-                        .then((response) => {
-                            response.data.forEach(function (respData){
-                                component.results[carrier.code].push(respData);
-                                if(carrier.code == "maersk"){
-                                    component.setPenalties(respData);
-                                    component.setDetention(respData);
-                                }
-                            });
-
-                            if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] == undefined){
-                                let finalLength = 0;
-                                component.request.carriersApi.forEach(function (cCode){
-                                    finalLength += component.results[cCode.code].length;
+                            )
+                            .then((response) => {
+                                response.data.forEach(function (respData){
+                                    component.results[carrier.code].push(respData);
+                                    if(carrier.code == "maersk"){
+                                        component.setPenalties(respData);
+                                        component.setDetention(respData);
+                                    }
                                 });
-                                component.$emit('apiSearchDone',finalLength);
-                            }
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        })
+    
+                                if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] == undefined){
+                                    let finalLength = 0;
+                                    component.request.carriersApi.forEach(function (cCode){
+                                        finalLength += component.results[cCode.code].length;
+                                    });
+                                    component.$emit('apiSearchDone',finalLength);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                    });
                 });
             });
-        });
-        
+        }
     },
     
     setPenalties(responseData){
