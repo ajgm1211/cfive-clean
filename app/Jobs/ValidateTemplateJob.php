@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\EndpointTable;
 use App\AuthtokenToken;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -30,25 +31,28 @@ class ValidateTemplateJob implements ShouldQueue
      */
     public function handle()
     {
-        $client = new \GuzzleHttp\Client();
-        $url = env('BARRACUDA_EP')."contracts/processing/".$this->request_id;
-        $json = '{"spreadsheetData":false}';
-        $token = AuthtokenToken::where('user_id',1)->first();
-        $headers = [
+        $endpoint_obj = EndpointTable::where("name","barracuaep")->first();
+        if($endpoint_obj->status == 1){
+            $client = new \GuzzleHttp\Client();
+            $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
+            $json = '{"spreadsheetData":false}';
+            $token = AuthtokenToken::where('user_id',1)->first();
+            $headers = [
                 'Authorization' => 'token '.$token->key,
                 'Accept'        => '*/*',
                 'Content-Type'  => 'application/json',
                 'User-Agent'    => '*/*',
                 'Connection'    => 'keep-alive'
             ];
-            
-        $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-        $response = json_decode($response->getBody()->getContents(),true);
-        
-        $url = env('BARRACUDA_EP')."requests/cmpfiles/".$this->request_id;
-        $json = '{"duplicate":true,"re_search":true}';
-            
-        $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-        $response = json_decode($response->getBody()->getContents(),true);
+
+            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+            $response = json_decode($response->getBody()->getContents(),true);
+
+            $url = $endpoint_obj->url."requests/cmpfiles/".$this->request_id;
+            $json = '{"duplicate":true,"re_search":true}';
+
+            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+            $response = json_decode($response->getBody()->getContents(),true);
+        }
     }
 }
