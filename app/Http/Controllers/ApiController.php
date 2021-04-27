@@ -1365,7 +1365,7 @@ class ApiController extends Controller
                                         $totalOrigin += $totalAmmount;
                                         $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                         $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                        $arregloOrig = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                        $arregloOrig = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                         //$arregloOrig = array_merge($arregloOrig, $markupBL);
 
                                         $collectionOrig->push($arregloOrig);
@@ -1390,7 +1390,7 @@ class ApiController extends Controller
                                         $totalDestiny += $totalAmmount;
                                         $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                         $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                        $arregloDest = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                        $arregloDest = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                         //   $arregloDest = array_merge($arregloDest, $markupBL);
 
                                         $collectionDest->push($arregloDest);
@@ -1418,7 +1418,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloPC = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloPC = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     //   $arregloPC = array_merge($arregloPC, $markupBL);
 
                                     $collectionFreight->push($arregloPC);
@@ -1471,7 +1471,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloOrigTonM3 = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigTonM3 = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     // $arregloOrigTonM3 = array_merge($arregloOrigTonM3, $markupTonM3);
 
                                     $collectionOrig->push($arregloOrigTonM3);
@@ -1503,7 +1503,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloDest = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDest = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     // $arregloDest = array_merge($arregloDest, $markupTonM3);
 
                                     $collectionDest->push($arregloDest);
@@ -1536,7 +1536,7 @@ class ApiController extends Controller
 
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloPC = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloPC = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $cantidadT, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     //  $arregloPC = array_merge($arregloPC, $markupTonM3);
 
                                     $collectionFreight->push($arregloPC);
@@ -1585,7 +1585,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloOrigTon = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigTon = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //$arregloOrigTon = array_merge($arregloOrigTon, $markupTON);
                                     $collectionOrig->push($arregloOrigTon);
 
@@ -1617,7 +1617,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloDest = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDest = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //$arregloDest = array_merge($arregloDest, $markupTON);
 
                                     $collectionDest->push($arregloDest);
@@ -1652,7 +1652,7 @@ class ApiController extends Controller
 
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloPC = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloPC = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     //$arregloPC = array_merge($arregloPC, $markupTON);
 
                                     $collectionFreight->push($arregloPC);
@@ -1872,7 +1872,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrigKg = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigKg = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //$arregloOrigKg = array_merge($arregloOrigKg, $markupKG);
                                     $collectionOrig->push($arregloOrigKg);
 
@@ -1904,7 +1904,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDestKg = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestKg = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     // $arregloDestKg = array_merge($arregloDestKg, $markupKG);
 
                                     $collectionDest->push($arregloDestKg);
@@ -1940,7 +1940,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloFreightKg = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightKg = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     //$arregloFreightKg = array_merge($arregloFreightKg, $markupKG);
 
                                     $collectionFreight->push($arregloFreightKg);
@@ -1983,7 +1983,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloOrigpack = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigpack = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //$arregloOrigpack = array_merge($arregloOrigpack, $markupKG);
                                     $collectionOrig->push($arregloOrigpack);
 
@@ -2014,7 +2014,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDestPack = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestPack = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     // $arregloDestPack = array_merge($arregloDestPack, $markupKG);
 
                                     $collectionDest->push($arregloDestPack);
@@ -2050,7 +2050,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloFreightPack = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightPack = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     //$arregloFreightPack = array_merge($arregloFreightPack, $markupKG);
 
                                     $collectionFreight->push($arregloFreightPack);
@@ -2092,7 +2092,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloOrigpallet = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigpallet = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //   $arregloOrigpallet = array_merge($arregloOrigpallet, $markupKG);
                                     $collectionOrig->push($arregloOrigpallet);
 
@@ -2123,7 +2123,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDestPallet = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestPallet = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
                                     //$arregloDestPallet = array_merge($arregloDestPallet, $markupKG);
 
                                     $collectionDest->push($arregloDestPallet);
@@ -2158,7 +2158,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloFreightPallet = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightPallet = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
                                     // $arregloFreightPallet = array_merge($arregloFreightPallet, $markupKG);
 
                                     $collectionFreight->push($arregloFreightPallet);
@@ -2205,7 +2205,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
-                                    $arregloOrigpallet = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigpallet = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
 
                                     $collectionOrig->push($arregloOrigpallet);
 
@@ -2235,7 +2235,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDestPallet = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestPallet = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
 
                                     $collectionDest->push($arregloDestPallet);
 
@@ -2266,7 +2266,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloFreightVol = array('surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightVol = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount  , 2, '.', ''),  'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
 
                                     $collectionFreight->push($arregloFreightVol);
                                     // ARREGLO GENERAL 99
@@ -2329,7 +2329,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrig = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''),'cantidad' => '-', 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrig = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''),'cantidad' => '-', 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     //$origGlo["origin"] = $arregloOrig;
                                     $collectionOrig->push($arregloOrig);
@@ -2353,7 +2353,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDest = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => '1', 'monto' => $global->ammount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDest = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => '1', 'monto' => $global->ammount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDest);
             
@@ -2376,7 +2376,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreight = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => '-', 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreight = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => '-', 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreight);
             
@@ -2421,7 +2421,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrig = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrig = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrig);
             
@@ -2452,7 +2452,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDest = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDest = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDest);
             
@@ -2482,7 +2482,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreight = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreight = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $cantidadT, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreight);
             
@@ -2525,7 +2525,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrig = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrig = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrig);
             
@@ -2555,7 +2555,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDest = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDest = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDest);
                                     // ARREGLO GENERAL 99
@@ -2586,7 +2586,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreight = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreight = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreight);
             
@@ -2792,7 +2792,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrigKg = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigKg = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrigKg);
             
@@ -2825,7 +2825,7 @@ class ApiController extends Controller
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
             
-                                    $arregloDestKg = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestKg = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDestKg);
                                     // ARREGLO GENERAL 99
@@ -2857,7 +2857,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreightKg = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightKg = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreightKg);
             
@@ -2897,7 +2897,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrigPack = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigPack = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrigPack);
             
@@ -2930,7 +2930,7 @@ class ApiController extends Controller
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
             
-                                    $arregloDestKg = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestKg = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDestPack);
                                     // ARREGLO GENERAL 99
@@ -2962,7 +2962,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreightPack = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightPack = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreightPack);
             
@@ -3002,7 +3002,7 @@ class ApiController extends Controller
                                     $totalOrigin += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrigPallet = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigPallet = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrigPallet);
             
@@ -3034,7 +3034,7 @@ class ApiController extends Controller
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
             
-                                    $arregloDestPallet = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestPallet = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_global' => $subtotal_global, 'cantidad' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDestPallet);
                                     // ARREGLO GENERAL 99
@@ -3065,7 +3065,7 @@ class ApiController extends Controller
                                     $FreightCharges += $totalAmmount;
                                     $subtotal_global = number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloFreightPallet = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightPallet = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_global' => $subtotal_global, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreightPallet);
             
@@ -3112,7 +3112,7 @@ class ApiController extends Controller
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
             
-                                    $arregloOrigpallet = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloOrigpallet = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionOrig->push($arregloOrigpallet);
             
@@ -3142,7 +3142,7 @@ class ApiController extends Controller
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local = number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDestPallet = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
+                                    $arregloDestPallet = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrency, 'montoOrig' => $totalAmmount);
             
                                     $collectionDest->push($arregloDestPallet);
             
@@ -3175,7 +3175,7 @@ class ApiController extends Controller
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
                                     $totalFreight += $totalAmmount;
                                     $FreightCharges += $totalAmmount;
-                                    $arregloFreightVol = array('surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $mont, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
+                                    $arregloFreightVol = array('surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'price_unit' => number_format($global->ammount  , 2, '.', ''), 'cantidad' => $unidades, 'monto' => $mont, 'currency' => $global->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrencyFreight, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'freight', 'subtotal_local' => $subtotal_local, 'cantidadT' => $unidades, 'typecurrency' => $typeCurrencyFreight, 'currency_orig_id' => $idCurrencyFreight, 'montoOrig' => $totalAmmount);
             
                                     $collectionFreight->push($arregloFreightVol);
                                     // ARREGLO GENERAL 99
@@ -3415,6 +3415,7 @@ $company_cliente = null;
                     }
                     $itemsDetail['monto'] = number_format($monto, 2, '.', '');
                     $itemsDetail['currency'] = $itemsDetail['typecurrency'];
+                    $itemsDetail['type'] = 0;
                     //$itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
                     
 
@@ -3443,7 +3444,7 @@ $company_cliente = null;
                             unset($itemsDetail['calculation_id']);
                             unset($itemsDetail['typecurrency']);
                             unset($itemsDetail['currency_id']);
-
+                            $itemsDetail['type'] = 0;
                             $collect->push($itemsDetail);
                             $monto = 0;
                             $montoMarkup = 0;
@@ -3453,11 +3454,11 @@ $company_cliente = null;
                 }
             }
         }
-
+       
         $collect = $collect->groupBy([
             'surcharge_name',
             function ($item) use ($collect) {
-                $collect->put('x', 'surcharge_name');
+               // $collect->put('x', 'surcharge_name');
                 return $item['type'];
             },
         ], $preserveKeys = false);
