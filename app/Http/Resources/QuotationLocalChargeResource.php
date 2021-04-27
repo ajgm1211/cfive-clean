@@ -29,6 +29,7 @@ class QuotationLocalChargeResource extends JsonResource
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->provider_name ?? null,
             'charge_options' => $this->surcharge->options ?? null,
+            'charge_id' => $this->surcharge_id ?? null,
         ];
 
     }

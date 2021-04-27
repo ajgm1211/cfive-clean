@@ -17,6 +17,7 @@ class QuotationOceanFreightChargeLclResource extends JsonResource
         return [
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
+            'charge_id' => $this->surcharge_id ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
             'units' => $this->units,
             'price' => $this->price,
