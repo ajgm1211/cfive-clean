@@ -1062,15 +1062,13 @@ export default {
                                     departureDate: apiDate,
                                     uemail: 'dcabanales@gmail.com',
                                     brands: carrier.code
-                                    }
-                                },
-                                {
+                                    },
                                 headers:{
                                     'Authorization': 'Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha',
                                     'Accept': 'application/json',
                                     'Content-type': 'application/json'
                                     } 
-                                }
+                                },
                             )
                             .then((response) => {
                                 response.data.forEach(function (respData){
