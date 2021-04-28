@@ -738,14 +738,10 @@ class SearchApiController extends Controller
                 }
                 
                 if($direction == 'Freight'){
-                    if ($charge->joint_as == 'charge_currency') {
-                        $rate_currency_containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                        $charge->containers = $rate_currency_containers;
-                    } elseif ($charge->joint_as == 'client_currency') {
+                    if ($charge->joint_as == 'client_currency') {
                         $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
                         $charge->containers_client_currency = $rate_currency_containers;
                     }
-                    $charge->currency = $rate->currency;
                 }
             }
 
@@ -922,8 +918,8 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->totals_with_markups);
                                 $charges_to_add_original = $charge->totals_with_markups;
                             }else{
-                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers_with_markups);
-                                $charges_to_add_original = $charge->containers_with_markups;
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers_with_markups);
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_with_markups);
                             }
                         }else{
                             $charges_to_add = $charge->totals_with_markups;
@@ -934,8 +930,8 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers_client_currency);
                                 $charges_to_add_original = $charge->containers_client_currency;
                             }else{
-                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers);
-                                $charges_to_add_original = $charge->containers;
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers);
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,$charge->containers);
                             }
                         }else{
                             $charges_to_add = $charge->containers_client_currency;
