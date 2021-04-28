@@ -375,6 +375,12 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
+                                <b-form-group label="SPOT Rates">
+                                    <b-form-checkbox-group
+                                        v-model="carriersApi"
+                                        :options="carrierApiOptions"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
                                 <b-form-group label="Carriers">
                                     <b-form-checkbox-group
                                         id="carriers-list"
@@ -690,7 +696,7 @@
 
             <div class="col-lg-8">
                 <div
-                    v-if="Array.isArray(foundRates) && foundRates.length == 0"
+                    v-if="Array.isArray(foundRates) && (foundRates.length == 0) && !foundApiRates"
                     class="alert alert-danger"
                     role="alert"
                 >
@@ -1391,6 +1397,7 @@ export default {
                 contact: "",
                 pricelevel: "",
                 carriers: [],
+                carriersApi: [],
                 originAddress: "",
                 destinationAddress: "",
                 dateRange: {
@@ -1415,6 +1422,8 @@ export default {
             containers: [],
             //deliveryType: {},
             carriers: [],
+            carriersApi: [],
+            carrierApiOptions: [],
             containerOptions: [],
             typeOptions: ["FCL", "LCL"],
             deliveryTypeOptions: [],
@@ -1433,6 +1442,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
+            foundApiRates:true,
             companyChosen: false,
             quoteData: {},
             originDistance: true,
@@ -1750,6 +1760,12 @@ export default {
                     value: carrier,
                 });
             });
+            component.datalists.carriers_api.forEach(function (carrier_api) {
+                component.carrierApiOptions.push({
+                    text: carrier_api.name,
+                    value: carrier_api,
+                });
+            });
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
@@ -1761,6 +1777,9 @@ export default {
             })
             component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
+            component.datalists.carriers_api.forEach(function (carrier_api) {
+                component.carriersApi.push(carrier_api);
+            });
             component.searchRequest.originCharges =
                 component.datalists.company_user.origincharge == null
                     ? false
@@ -1812,6 +1831,7 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
                 if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
@@ -1864,6 +1884,7 @@ export default {
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
                 this.searchRequest.carriers = this.datalists.carriers;
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1886,6 +1907,7 @@ export default {
             this.searchRequest.containers = this.containers;
             //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
+            this.searchRequest.carriersApi = this.carriersApi;
             this.errorsExist = false;
         },
 
