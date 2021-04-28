@@ -697,17 +697,18 @@
 
                     <b-table-simple hover small responsive class="sc-table">
                         <b-thead>
-                        <b-tr>
-                            <b-th style="width:300px">Fee</b-th>
-                            <b-th
-                            style="
-                                padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                            "
-                            v-for="(requestContainer, rContainerKey) in request.containers"
-                            :key="rContainerKey"
-                            >{{ requestContainer.code }}</b-th
-                            >
-                        </b-tr>
+                            <b-tr>
+                                <b-th style="width:300px">Fee</b-th>
+                                <b-th style="width:325px"></b-th>
+                                <b-th
+                                style="
+                                    padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                                "
+                                v-for="(requestContainer, rContainerKey) in request.containers"
+                                :key="rContainerKey"
+                                >{{ requestContainer.code }}</b-th
+                                >
+                            </b-tr>
                         </b-thead>
 
                         <b-tbody>
@@ -715,6 +716,7 @@
                                 v-for="(fee, feeKey) in result.formattedPenalties"
                                 :key="feeKey">
                                 <b-td><b>{{ fee.name }}</b></b-td>
+                                <b-td style="width:325px"></b-td>
                                 <b-td 
                                     v-for="(maerskContainer, maerskContainerKey) in containerCodesMaerskPenalties"
                                     :key="maerskContainerKey"
