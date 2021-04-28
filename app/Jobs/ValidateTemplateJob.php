@@ -42,6 +42,7 @@ class ValidateTemplateJob implements ShouldQueue
                 'Accept'        => '*/*',
                 'Content-Type'  => 'application/json',
                 'User-Agent'    => '*/*',
+                'Access-Control-Allow-Origin'    => '*',
                 'Connection'    => 'keep-alive'
             ];
 
