@@ -589,9 +589,9 @@
                 font-weight: bolder;
                 border: 2px solid #0072fc !important;
               "
-              >{{
-                requestData.requested == 0 ? "Create Quote" : "Duplicate Quote"
-              }}
+              >
+                Create Quote
+              
             </b-button>
 
             <b-button v-else b-button variant="primary">

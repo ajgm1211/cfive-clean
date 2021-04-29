@@ -377,8 +377,8 @@
                                 </label>
                                 <b-form-group label="SPOT Rates">
                                     <b-form-checkbox-group
-                                        v-model="carriersApi"
-                                        :options="carrierApiOptions"
+                                        v-model="searchRequest.carriersApi"
+                                        :options="carriersApiOptions"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                                 <b-form-group label="Carriers">
@@ -657,6 +657,7 @@
                                 <div
                                     class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
                                     v-for="(item, index) in dataPackaging"
+                                    :key="index"
                                 >
                                     <div class="col-12 col-sm-1 pr-0">
                                         <p>{{ item.type }}</p>
@@ -1004,6 +1005,7 @@
 
                             <div
                                 v-for="(item, index) in items"
+                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1118,7 +1120,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger"
+                            :key="index">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1422,8 +1425,7 @@ export default {
             containers: [],
             //deliveryType: {},
             carriers: [],
-            carriersApi: [],
-            carrierApiOptions: [],
+            carriersApiOptions: [],
             containerOptions: [],
             typeOptions: ["FCL", "LCL"],
             deliveryTypeOptions: [],
@@ -1760,12 +1762,14 @@ export default {
                     value: carrier,
                 });
             });
-            component.datalists.carriers_api.forEach(function (carrier_api) {
-                component.carrierApiOptions.push({
-                    text: carrier_api.name,
-                    value: carrier_api,
+            if(component.carriersApiOptions.length == 0){
+                component.datalists.carriers_api.forEach(function (carrier_api) {
+                    component.carriersApiOptions.push({
+                        text: carrier_api.name,
+                        value: carrier_api,
+                    });
                 });
-            });
+            }
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
@@ -1777,9 +1781,6 @@ export default {
             })
             component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
-            component.datalists.carriers_api.forEach(function (carrier_api) {
-                component.carriersApi.push(carrier_api);
-            });
             component.searchRequest.originCharges =
                 component.datalists.company_user.origincharge == null
                     ? false
@@ -1799,6 +1800,7 @@ export default {
             
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
                 //this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
@@ -1831,7 +1833,7 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                this.searchRequest.carriersApi = this.datalists.carriers_api;
+                this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
@@ -1907,7 +1909,6 @@ export default {
             this.searchRequest.containers = this.containers;
             //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
-            this.searchRequest.carriersApi = this.carriersApi;
             this.errorsExist = false;
         },
 
