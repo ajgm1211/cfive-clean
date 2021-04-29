@@ -417,7 +417,7 @@
             v-for="(result, key) in results.maersk"
             :key="key+'maersk'">
         <div class="result-search">
-            <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
+            <div class="banda-top maerks"><span style="text-transform: capitalize;">{{ result.company }}</span></div>
 
             <!-- INFORMACION DE TARIFA -->
             <div class="row">
@@ -576,7 +576,8 @@
                     ><b-icon icon="check-circle-fill"></b-icon> two-way
                     commitment</span
                     >
-                    <a href="https://terms.maersk.com/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
+                    <a v-if="result.company == 'Maersk Spot'" href="https://terms.maersk.com/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
+                    <a v-else href="https://terms.sealandmaersk.com/europe/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -693,7 +694,7 @@
                 </div>
 
                 <div>
-                    <h5><b>Maersk Spot Fees</b></h5>
+                    <h5><b>{{ result.company }} Fees</b></h5>
 
                     <b-table-simple hover small responsive class="sc-table">
                         <b-thead>
@@ -974,6 +975,9 @@
         </div>
         <!-- FIN TARJETA MAERKS -->
 
+        <div v-if="!apiSearchDone" class="spinner-border text-primary" role="status" style="border-spacing: 0px, 20px">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 </template>
 
@@ -1008,6 +1012,7 @@ export default {
         },
         containerCodesMaerskPenalties: [],
         containerCodesMaerskDetentions: [],
+        apiSearchDone: true,
     };
   },
   methods: {
@@ -1033,6 +1038,7 @@ export default {
         let apiCarrierCodes = "";
 
         component.$emit('apiSearchStarted');
+        component.apiSearchDone = false;
 
         component.request.originPorts.forEach(function (originPort){
             if(!apiOriginPorts.includes(originPort.code)){
@@ -1090,9 +1096,11 @@ export default {
                             });
 
                             component.$emit('apiSearchDone',response.data.length);
+                            component.apiSearchDone = true;
                         })
                         .catch((error) => {
                             console.log(error);
+                            component.apiSearchDone = true;
                         })
                 });
             });
