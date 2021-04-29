@@ -1045,12 +1045,14 @@ export default {
             }
         });
 
+        component.results.maersk = [];
+        component.results.cmacgm = [];
+
         apiContainers = component.setApiContainers();
         if(this.request.carriersApi.length > 0){
 
             component.request.carriersApi.forEach(function (carrier){
                 apiCarrierCodes += carrier.code;
-                component.results[carrier.code] = [];
                 if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] != undefined){
                     apiCarrierCodes += ',';
                 }
@@ -1094,6 +1096,7 @@ export default {
                         .catch((error) => {
                             console.log(error);
                             component.apiSearchDone = true;
+                            component.$emit('apiSearchDone',0);
                         })
                 });
             });
