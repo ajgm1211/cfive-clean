@@ -234,10 +234,19 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
-.banda-top.maerks span,
-.banda-top.cma span {
+.banda-top.cma span, 
+.banda-top.maerks span {
+    text-transform: uppercase;
     position: relative;
     left: -7px;
+}
+
+.banda-top.cma span {
+    left: -7px;
+}
+
+.banda-top.maerks span {
+    left: -3px;
 }
 
 .banda-top.maerks {
@@ -377,6 +386,15 @@ BANDA DE CARDS CMA Y MAERSK
 .containers-numbers .numeric-input:focus {
     outline: none !important;
     box-shadow: none !important;
+}
+
+.spinner-load {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative; 
+    top: 150px; 
+    border-spacing: 0px, 20px;
 }
 
 
