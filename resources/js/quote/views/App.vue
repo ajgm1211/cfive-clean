@@ -1,5 +1,4 @@
 <template>
-  <div class="quote-header">
     <div class="container-fluid">
       <div class="row mt-5">
         <div class="col-12">
@@ -28,7 +27,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 

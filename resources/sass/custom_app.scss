@@ -767,13 +767,9 @@ input.multiselect__input:focus {
     padding-left: 5px !important;
 }
 
-.tab-pane .card-body {
+/* .tab-pane .card-body {
     overflow-x: scroll;
-}
-
-.no-scroll .card-body {
-    overflow: inherit;
-}
+} */
 
 .btn-adds {
     right: 60px;
@@ -1779,4 +1775,22 @@ input.multiselect__input:focus {
         }
     }
     
+}
+
+#lower.form-control, 
+#upper.form-control {
+    width: 130px;
+}
+
+.checkbox-thead {
+    label::after,
+    label:before {
+        left: -15px !important;
+        top: 0px !important;
+    }
+}
+
+.action-thead {
+    left: 6px !important; 
+    position: relative;
 }
