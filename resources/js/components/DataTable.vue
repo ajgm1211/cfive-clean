@@ -620,6 +620,7 @@
         >
         </paginate>
         <!-- Pagination end -->
+        <!-- Total Results: {{ items.length }} -->
     </div>
 </template>
 
