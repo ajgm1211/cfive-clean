@@ -27,6 +27,7 @@
                             v-model="allSelected"
                             :indeterminate="false"
                             @change="toggleAll"
+                            class="checkbox-thead"
                         >
                         </b-form-checkbox>
                     </b-th>
@@ -76,7 +77,7 @@
                     <b-th>
                         <b-button
                             v-bind:id="'popover_all'"
-                            class="action-app"
+                            class="action-app action-thead"
                             href="#"
                             tabindex="0"
                             ><i class="fa fa-ellipsis-h" aria-hidden="true"></i
@@ -897,6 +898,8 @@ export default {
                     this.$route
                 );
             }
+
+            var contador = this.data.length;
         },
 
         /* Set the data into datatable */
