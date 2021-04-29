@@ -1107,6 +1107,8 @@ export default {
                 });
             });
             
+        }else{
+            component.apiSearchDone = true;
         }
     },
     
