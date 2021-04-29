@@ -70,6 +70,7 @@
                         responsive
                         borderless
                         :striped="false"
+                        class="local_charge_table"
                     >
                         <!-- Header table -->
                         <b-thead class="q-thead">
@@ -118,7 +119,7 @@
                                     <b-form-input
                                         v-if="currentQuoteData.type == 'FCL'"
                                         v-model="charge.charge"
-                                        class="q-input"
+                                        class="q-input local_charge_input"
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
@@ -131,7 +132,7 @@
                                     <b-form-input
                                         v-if="currentQuoteData.type == 'LCL'"
                                         v-model="charge.charge"
-                                        class="q-input"
+                                        class="q-input local_charge_input"
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
@@ -174,9 +175,10 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a calculation type"
+                                        placeholder="Calculation type"
                                         label="name"
                                         track-by="name"
+                                        class="local_calculation_type"
                                         @input="
                                             onUpdate(
                                                 charge.id,
@@ -194,7 +196,7 @@
                                 >
                                     <b-form-input
                                         v-model="charge.total['c' + item]"
-                                        class="q-input"
+                                        class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
                                         v-on:blur="
                                             onUpdate(
@@ -210,7 +212,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.units"
-                                        class="q-input"
+                                        class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -226,7 +228,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.price"
-                                        class="q-input"
+                                        class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
                                         v-on:change="
                                             onUpdate(
@@ -242,7 +244,7 @@
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
                                         v-model="charge.price * charge.units"
-                                        class="q-input"
+                                        class="q-input local_charge_total_input"
                                         disabled
                                     ></b-form-input>
                                 </b-td>
@@ -255,7 +257,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a currency"
+                                        placeholder="Currency"
+                                        class="local_charge_currency"
                                         label="alphacode"
                                         track-by="alphacode"
                                         @input="
@@ -276,7 +279,8 @@
                                         :show-labels="false"
                                         :close-on-select="true"
                                         :preserve-search="true"
-                                        placeholder="Choose a currency"
+                                        placeholder="Select a currency"
+                                        class="local_charge_currency"
                                         label="alphacode"
                                         track-by="alphacode"
                                         @input="
@@ -330,6 +334,7 @@
                                         :close-on-select="true"
                                         :preserve-search="true"
                                         placeholder="Select a currency"
+                                        class="local_charge_currency"
                                         label="alphacode"
                                         track-by="alphacode"
                                         @input="
@@ -379,6 +384,7 @@
                                             :close-on-select="true"
                                             :preserve-search="true"
                                             placeholder="Select a currency"
+                                            class="local_charge_currency"
                                             label="alphacode"
                                             track-by="alphacode"
                                             @input="
