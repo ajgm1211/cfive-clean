@@ -417,7 +417,7 @@
             v-for="(result, key) in results.maersk"
             :key="key+'maersk'">
         <div class="result-search">
-            <div class="banda-top maerks"><span style="text-transform: capitalize;">{{ result.company }}</span></div>
+            <div class="banda-top maerks"><span>{{ result.company }}</span></div>
 
             <!-- INFORMACION DE TARIFA -->
             <div class="row">
@@ -884,35 +884,29 @@
                 :id="'detention_' + String(result.routingDetails[0].voyageNumber)"
                 v-model = result.detentionCollapse
                 class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
-                style="background: #fbfbfb"
             >
                 <div>
                     <h5><b>Demurrage & Detention</b></h5>
 
-                    <b-table-simple hover small responsive class="sc-table">
+                    <b-table-simple hover small responsive class="sc-table mb-0">
                         <b-thead>
-                        <b-tr>
-
-                        </b-tr>
-                            <b-th></b-th>
-                            <b-th></b-th>
-                            <b-th></b-th>
-                            <b-th></b-th>
-                            <b-th>Free time (days)</b-th>
-                            <b-th></b-th>
-                        <b-tr>
-                            <b-th>Type (import)</b-th>
-                            <b-th>Start Event</b-th>
-                            <b-th></b-th>
-                            <b-th
-                            style="
-                                padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                            "
-                            v-for="(requestContainer, rContainerKey) in request.containers"
-                            :key="rContainerKey"
-                            >{{ requestContainer.code }}</b-th
-                            >
-                        </b-tr>
+                            <b-tr>
+                                <b-th colspan="3"></b-th>
+                                <b-th colspan="3" style="text-align: center">Free time (days)</b-th>
+                            </b-tr>
+                            <b-tr>
+                                <b-th>Type (import)</b-th>
+                                <b-th>Start Event</b-th>
+                                <b-th></b-th>
+                                <b-th
+                                style="
+                                    padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
+                                "
+                                v-for="(requestContainer, rContainerKey) in request.containers"
+                                :key="rContainerKey"
+                                >{{ requestContainer.code }}</b-th
+                                >
+                            </b-tr>
                         </b-thead>
 
                         <b-tbody>
@@ -977,9 +971,12 @@
         </div>
         <!-- FIN TARJETA MAERKS -->
 
-        <div v-if="!apiSearchDone" class="spinner-border text-primary" role="status" style="border-spacing: 0px, 20px">
-            <span class="sr-only">Loading...</span>
+        <div v-if="!apiSearchDone" class="spinner-load" style="width: 100%">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div> 
         </div>
+        
     </div>
 </template>
 
