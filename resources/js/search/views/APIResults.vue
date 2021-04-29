@@ -1005,7 +1005,6 @@ export default {
         },
         containerCodesMaerskPenalties: [],
         containerCodesMaerskDetentions: [],
-        apiSearchDone: true,
     };
   },
   methods: {
@@ -1031,7 +1030,6 @@ export default {
         let apiCarrierCodes = "";
 
         component.$emit('apiSearchStarted');
-        component.apiSearchDone = false;
 
         component.request.originPorts.forEach(function (originPort){
             if(!apiOriginPorts.includes(originPort.code)){
@@ -1091,18 +1089,16 @@ export default {
                             });
 
                             component.$emit('apiSearchDone',response.data.length);
-                            component.apiSearchDone = true;
                         })
                         .catch((error) => {
                             console.log(error);
-                            component.apiSearchDone = true;
                             component.$emit('apiSearchDone',0);
                         })
                 });
             });
             
         }else{
-            component.apiSearchDone = true;
+            component.$emit('apiSearchDone',0);
         }
     },
     
