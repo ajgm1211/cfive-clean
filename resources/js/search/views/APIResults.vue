@@ -162,12 +162,12 @@
                 <!-- OPCIONES E INFORMACION EXTRA -->
                 <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
-                    <a href="#0" style="color: #006bfa"
+                    <span style="color: #006bfa; text-transform: capitalize;"
                     ><b-icon icon="check-circle-fill"></b-icon> CMA CGM My
-                    PRICES</a
+                    PRICES</span
                     >
                     <p class="ml-4 mb-0">
-                    <b>Validity:</b> {{ cmaResult.departureDateGmt.substring(0,10) + ' / ' + cmaResult.arrivalDateGmt.substring(0,10) }}
+                    <b>Validity:</b> {{ cmaResult.validityFrom.substring(0,10) + ' / ' + cmaResult.validityTo.substring(0,10) }}
                     </p>
                 </div>
 
@@ -318,7 +318,7 @@
                             v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult.routingDetails[0].deadlines"
                             :key="cmaDeadlineKey">
                             <h5 class="sub-title-schedule">{{ cmaDeadline.deadlineKey }}</h5>
-                            <p class="text-schedule"><b>{{ cmaDeadline.deadline }}</b></p>
+                            <p class="text-schedule"><b>{{ cmaDeadline.deadline.substring(0,10) + " " + cmaDeadline.deadline.substring(11,cmaDeadline.deadline.length-1) }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -417,7 +417,7 @@
             v-for="(result, key) in results.maersk"
             :key="key+'maersk'">
         <div class="result-search">
-            <div class="banda-top maerks"><span>MAERSK SPOT</span></div>
+            <div class="banda-top maerks"><span style="text-transform: capitalize;">{{ result.company }}</span></div>
 
             <!-- INFORMACION DE TARIFA -->
             <div class="row">
@@ -576,7 +576,8 @@
                     ><b-icon icon="check-circle-fill"></b-icon> two-way
                     commitment</span
                     >
-                    <a href="https://terms.maersk.com/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
+                    <a v-if="result.company == 'Maersk Spot'" href="https://terms.maersk.com/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
+                    <a v-else href="https://terms.sealandmaersk.com/europe/terms-spot-booking" style="color: #071c4b" target="_blank"> T&C applicable</a>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -693,7 +694,7 @@
                 </div>
 
                 <div>
-                    <h5><b>Maersk Spot Fees</b></h5>
+                    <h5><b>{{ result.company }} Fees</b></h5>
 
                     <b-table-simple hover small responsive class="sc-table">
                         <b-thead>
@@ -976,6 +977,9 @@
         </div>
         <!-- FIN TARJETA MAERKS -->
 
+        <div v-if="!apiSearchDone" class="spinner-border text-primary" role="status" style="border-spacing: 0px, 20px">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 </template>
 
@@ -1010,6 +1014,7 @@ export default {
         },
         containerCodesMaerskPenalties: [],
         containerCodesMaerskDetentions: [],
+        apiSearchDone: true,
     };
   },
   methods: {
@@ -1032,8 +1037,10 @@ export default {
         let apiDestinationPorts = [];
         let apiDate = new Date().toISOString().substring(0,10);
         let apiContainers = "";
+        let apiCarrierCodes = "";
 
         component.$emit('apiSearchStarted');
+        component.apiSearchDone = false;
 
         component.request.originPorts.forEach(function (originPort){
             if(!apiOriginPorts.includes(originPort.code)){
@@ -1051,50 +1058,57 @@ export default {
         if(this.request.carriersApi.length > 0){
 
             component.request.carriersApi.forEach(function (carrier){
+                apiCarrierCodes += carrier.code;
                 component.results[carrier.code] = [];
-                apiOriginPorts.forEach(function (origin){
-                    apiDestinationPorts.forEach(function (destination){
-                        axios
-                            .get('https://carriers.cargofive.com/api/pricing',
-                                {
-                                params: {
-                                    originPort: origin,
-                                    destinationPort: destination,
-                                    equipmentSizeType: apiContainers,
-                                    departureDate: apiDate,
-                                    uemail: 'dcabanales@gmail.com',
-                                    brands: carrier.code
-                                    },
-                                headers:{
-                                    'Authorization': 'Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha',
-                                    'Accept': 'application/json',
-                                    'Content-type': 'application/json'
-                                    } 
+                if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] != undefined){
+                    apiCarrierCodes += ',';
+                }
+            });
+
+            apiOriginPorts.forEach(function (origin){
+                apiDestinationPorts.forEach(function (destination){
+                    axios
+                        .get('https://mighty-castle-09151.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                            {
+                            params: {
+                                originPort: origin,
+                                destinationPort: destination,
+                                equipmentSizeType: apiContainers,
+                                departureDate: apiDate,
+                                uemail: 'dcabanales@gmail.com',
+                                brands: apiCarrierCodes
                                 },
-                            )
-                            .then((response) => {
-                                response.data.forEach(function (respData){
-                                    component.results[carrier.code].push(respData);
-                                    if(carrier.code == "maersk"){
-                                        component.setPenalties(respData);
-                                        component.setDetention(respData);
-                                    }
-                                });
-    
-                                if(component.request.carriersApi[component.request.carriersApi.indexOf(carrier) + 1] == undefined){
-                                    let finalLength = 0;
-                                    component.request.carriersApi.forEach(function (cCode){
-                                        finalLength += component.results[cCode.code].length;
-                                    });
-                                    component.$emit('apiSearchDone',finalLength);
+                            headers:{
+                                'Authorization': 'Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha',
+                                'Accept': 'application/json',
+                                'Content-type': 'application/json'
+                                } 
+                            },
+                        )
+                        .then((response) => {
+                            response.data.forEach(function (respData){
+                                if(respData.company == "Maersk Spot" || respData.company == "Sealand Spot"){
+                                    component.results["maersk"].push(respData);
+                                    component.setPenalties(respData);
+                                    component.setDetention(respData);
+                                }else if(respData.company == "CMA CGM"){
+                                    component.results["cmacgm"].push(respData);
                                 }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            })
-                    });
+                                
+                            });
+
+                            component.$emit('apiSearchDone',response.data.length);
+                            component.apiSearchDone = true;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            component.apiSearchDone = true;
+                        })
                 });
             });
+            
+        }else{
+            component.apiSearchDone = true;
         }
     },
     

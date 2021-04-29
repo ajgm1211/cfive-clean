@@ -86,7 +86,7 @@ class SearchApiController extends Controller
         });
 
         $carriers_api = ApiProvider::get()->map(function ($provider) {
-            return $provider->only(['id', 'name', 'code']);
+            return $provider->only(['id', 'name', 'code', 'image']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
@@ -299,6 +299,7 @@ class SearchApiController extends Controller
             'deliveryType.id' => 'required',
             'direction' => 'required',
             'carriers' => 'required|array|min:1',
+            'carriersApi' => 'sometimes',
             'type' => 'required',
             'company' => 'sometimes',
             'contact' => 'sometimes',
@@ -331,7 +332,6 @@ class SearchApiController extends Controller
 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromArray($new_search_data);
-
         //Formatting date
         $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
 
@@ -373,10 +373,23 @@ class SearchApiController extends Controller
         }
 
         foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-            $searchCarrier = new SearchCarrier();
-            $searchCarrier->carrier_id = $carrier_id;
-            $searchCarrier->search_rate()->associate($new_search);
-            $searchCarrier->save();
+            $carrier = Carrier::where('id',$carrier_id)->first();
+            
+            $search_carrier = new SearchCarrier();
+
+            $search_carrier->search_rate_id = $new_search->id;
+            
+            $search_carrier->provider()->associate($carrier)->save();
+        }
+
+        foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+            $provider = ApiProvider::where('id',$provider_id)->first();
+            
+            $search_carrier = new SearchCarrier();
+
+            $search_carrier->search_rate_id = $new_search->id;
+            
+            $search_carrier->provider()->associate($provider)->save();
         }
 
         return new SearchApiResource($new_search);
@@ -1003,6 +1016,20 @@ class SearchApiController extends Controller
         }
     }
 
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates, $search_data_ids)
+    {
+        if (isset($search_data_ids['pricelevel'])) {
+            $sortBy = 'totals_with_markups';
+        } else {
+            $sortBy = 'totals';
+        }
+
+        $sorted = $rates->sortBy($sortBy)->values();
+
+        return ($sorted);
+    }
+
     public function storeContractNewSearch(StoreContractSearch $request)
     {
         // dd($request);
@@ -1032,20 +1059,6 @@ class SearchApiController extends Controller
             'id' => $contract->id,
             'data' => 'Success',
         ]);
-    }
-
-    //Ordering rates by totals (cheaper to most expensive)
-    public function sortRates($rates, $search_data_ids)
-    {
-        if (isset($search_data_ids['pricelevel'])) {
-            $sortBy = 'totals_with_markups';
-        } else {
-            $sortBy = 'totals';
-        }
-
-        $sorted = $rates->sortBy($sortBy)->values();
-
-        return ($sorted);
     }
     
 }

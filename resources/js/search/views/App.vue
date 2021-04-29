@@ -65,7 +65,7 @@
             variant="primary"
             @click="createQuote"
             >
-            {{ requestData.requested == 0 ? "Create Quote" : "Duplicate Quote" }}
+            Create Quote
             </b-button>
 
             <b-button v-else b-button variant="primary">
@@ -129,7 +129,7 @@
         <!-- FIN RESULTS HEADER -->
 
         <Recent 
-            v-if="resultsTotal == 0"
+            v-if="resultsTotal == 0 && !searching"
             @recentSearch="quickSearch"
         ></Recent>
 

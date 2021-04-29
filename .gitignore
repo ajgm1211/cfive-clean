@@ -16,3 +16,4 @@ access.log
 /.scannerwork
 /reports
 sonar-scanner.properties
+sonar-project.properties
