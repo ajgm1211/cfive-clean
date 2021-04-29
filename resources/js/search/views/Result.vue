@@ -596,7 +596,7 @@
                           }}</span
                         >
                         <b v-if="chargeType == 'Freight'">{{
-                          rate.currency.alphacode
+                          charge.joint_as == 'client_currency' ? rate.currency.alphacode : charge.currency.alphacode
                         }}</b>
                         <b v-else-if="charge.joint_as == 'client_currency'">{{
                           charge.client_currency.alphacode

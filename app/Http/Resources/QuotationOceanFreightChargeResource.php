@@ -17,6 +17,7 @@ class QuotationOceanFreightChargeResource extends JsonResource
         return [
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
+            'charge_id' => $this->surcharge_id ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
             'price' => $this->arrayToFloat($this->price),
             //'profit' => $this->profit,
