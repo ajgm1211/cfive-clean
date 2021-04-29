@@ -1934,7 +1934,6 @@ export default {
                     })
                     .catch((error) => {
                         this.errorsExist = true;
-                        this.searching = false;
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }
@@ -2009,7 +2008,6 @@ export default {
                         }
                     });
                     this.foundRates = response.data.data;
-                    this.searching = false;
                     this.$emit(
                         "searchSuccess",
                         response.data.data
@@ -2017,7 +2015,6 @@ export default {
                 })
                 .catch((error) => {
                     this.errorsExist = true;
-                    this.searching = false;
                     if (error.status === 422) {
                         this.responseErrors = error.data.errors;
                     }
