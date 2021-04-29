@@ -182,6 +182,8 @@ export default {
             noRatesAdded: false,
             ratesForQuote: [],
             actions: actions,
+            apiSearchDone: true,
+            searchDone: true,
         }
     },
     created() {
@@ -250,12 +252,17 @@ export default {
             this.searching = false;
             this.foundRates = searchData;
             this.resultsTotal += this.foundRates.length;
+            this.searchDone = true;
+            if(this.apiSearchDone){
+                this.$refs.searchComponent.searching = false;
+            }
         },
 
         clearDisplay(){
             this.foundRates = [];
             this.ratesForQuote = [];
             this.resultsTotal = 0;
+            this.apiSearchDone = false;
         },
 
         quickSearch(){
@@ -268,6 +275,11 @@ export default {
                 this.$refs.searchComponent.foundApiRates = false;
             }else{
                 this.$refs.searchComponent.foundApiRates = true;
+            }
+
+            this.apiSearchDone = true;
+            if(this.searchDone){
+                this.$refs.searchComponent.searching = false;
             }
         },
 
