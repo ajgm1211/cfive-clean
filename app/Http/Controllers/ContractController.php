@@ -195,6 +195,7 @@ class ContractController extends Controller
             'name' => $data['name'],
             'number' => null,
             'company_user_id' => $company_user_id,
+            'user_id'=>Auth::user()->id,
             'account_id' => null,
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
@@ -567,7 +568,7 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
-
+        
         if ($request->code) {
             $code = $request->code;
         } else {
@@ -579,6 +580,7 @@ class ContractController extends Controller
                 $contract = Contract::create([
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
+                    'user_id' => Auth::user()->id,
                     'direction_id' => $direction,
                     'validity' => $request->valid_from,
                     'expire' => $request->valid_until,
