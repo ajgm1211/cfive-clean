@@ -401,7 +401,6 @@ class SearchApiController extends Controller
         $arregloCarrier = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
-        $direction_id = $search_data['direction'];
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
@@ -413,18 +412,14 @@ class SearchApiController extends Controller
                 $q->whereHas('contract_company_restriction', function ($b) use ($company_user_id) {
                     $b->where('company_id', '=', $company_user_id);
                 })->orDoesntHave('contract_company_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user, $direction_id) {
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where(function ($qry) use ($direction_id) {
-                        $qry->where('direction_id',$direction_id)->orWhere('direction_id',3);
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '>=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where(function ($qry) use ($direction_id) {
-                        $qry->where('direction_id',$direction_id)->orWhere('direction_id',3);
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 }
             });
