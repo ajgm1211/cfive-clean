@@ -1125,7 +1125,7 @@ class SearchApiController extends Controller
                     return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name]);
                 }
                 if($mediaItem->disk == 'contracts3'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->model_id."/".$mediaItem->file_name]);
+                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name]);
                 }
             }
         }
