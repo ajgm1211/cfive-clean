@@ -666,7 +666,10 @@ export default {
             return api.call('get', `/api/search/${id}`, {});
         },
         createContract(data){
-            return api.call('post',`/api/search/storeContract`,data)
+            return api.call('post',`/api/search/storeContract`,data);
+        },
+        downloadContract(data){
+            return api.call('post',`/api/search/downloadContract`, data);
         },
     },
 };
