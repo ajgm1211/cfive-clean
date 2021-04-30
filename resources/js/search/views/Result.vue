@@ -864,7 +864,7 @@ export default {
     },
 
     downloadContractFile(rate){
-      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
+      let parameters = [rate.contract_request_id, rate.contract_backup_id, rate.contract_id];
 
       this.actions.search
         .downloadContract(parameters)
