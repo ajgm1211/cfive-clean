@@ -91,11 +91,11 @@ export default {
           key: "user_id",
           label: "User",
           formatter: (value) => {
-            return value.name;
+            return value.fullname;
           },
           filterIsOpen: true,
-          filterTrackBy: "name",
-          trackLabel: "name",
+          filterTrackBy: "fullname",
+          trackLabel: "fullname",
         },
         { key: "created_at", label: "Created at", filterIsOpen: false },
       ],
