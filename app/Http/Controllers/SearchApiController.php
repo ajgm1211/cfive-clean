@@ -984,6 +984,7 @@ class SearchApiController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->valueEq['id'];
         $contract->is_manual = 2;
+        $contract->user_id = Auth::user()->id;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrier['id']);
@@ -1119,7 +1120,13 @@ class SearchApiController extends Controller
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
-                return $mediaItem;
+                //return $mediaItem;
+                if($mediaItem->disk == 'FclRequest'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name]);
+                }
+                if($mediaItem->disk == 'contracts3'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->model_id."/".$mediaItem->file_name]);
+                }
             }
         }
     }
