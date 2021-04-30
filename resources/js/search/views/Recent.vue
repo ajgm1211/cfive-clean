@@ -55,7 +55,7 @@ export default {
         }
     },
     created() {
-        actions.search
+        /**actions.search
             .list({})
             .then((response) => {
                 this.searches = response.data.data;
@@ -65,7 +65,7 @@ export default {
                 if(error.status === 403) {
                     console.log(error.data.errors);
                 }
-            })
+            })**/
     },
     methods:
     {
