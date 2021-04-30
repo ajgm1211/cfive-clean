@@ -290,7 +290,7 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'/imgcarrier/' + rate.carrier.image"
+                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
                 alt="logo"
                 width="115px"
               />
@@ -475,8 +475,14 @@
                   <p class="mr-4 mb-0">
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
+                    <img v-if="rate.contract.validity > searchEndDate" src="/images/error.svg" width="15px" data-toggle="tooltip" title="Contract date beyond search range"/>
                   </p>
-                  <!--<a href="#">download contract</a>-->
+                  <button 
+                    v-if="rate.contract_id != 0 || rate.contract_request_id != 0 || rate.contract_backup_id != 0"
+                    style="background: transparent; border: 0; text-transform: uppercase; color: #00C581"
+                    @click="downloadContractFile(rate)"
+                  >
+                  download contract</button>                
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -747,6 +753,7 @@ export default {
       noRatesAdded: false,
       filterBy: "",
       filterOptions: [],
+      searchEndDate: "",
 
       isActive: false,
       items: [],
@@ -855,12 +862,26 @@ export default {
         component.finalRates = component.rates;
       }
     },
+
+    downloadContractFile(rate){
+      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
+
+      this.actions.search
+        .downloadContract(parameters)
+        .then((response) => {
+          console.log('Downloading!', response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 
   mounted() {
     let component = this;
     //console.log(component.datalists);
 
+    component.searchEndDate = component.request.dateRange.endDate;
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
     });
