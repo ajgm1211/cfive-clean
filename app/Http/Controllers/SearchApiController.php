@@ -45,6 +45,7 @@ use App\NewContractRequest;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 
@@ -1026,7 +1027,7 @@ class SearchApiController extends Controller
 
             $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
             if (!empty($contractRequest)) {
-                $contractRequestId = $excelRequest->id;
+                $contractRequestId = $contractRequest->id;
             } else {
                 $contractRequestId = "0";
             }

@@ -268,7 +268,7 @@ export default {
                     searchable: true,
                     type: "select",
                     rules: "required",
-                    trackby: "name",
+                    trackby: "fullname",
                     placeholder: "Select options",
                     options: "users",
                     colClass: "col-lg-3",

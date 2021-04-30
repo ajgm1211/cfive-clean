@@ -870,6 +870,7 @@ export default {
         .downloadContract(parameters)
         .then((response) => {
           console.log('Downloading!', response);
+          window.open(response.data.url);
         })
         .catch((error) => {
           console.log(error);
