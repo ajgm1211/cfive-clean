@@ -4,7 +4,7 @@
         <!-- TARJETA CMA -->
         <div 
             class="mb-4" 
-            v-for="(cmaResult, cmaResultKey) in results.cmacgm"
+            v-for="(cmaResult, cmaResultKey) in orderedCmaRates"
             :key="cmaResultKey+'cma'"
         >
         <div class="result-search">
@@ -318,7 +318,7 @@
                             v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult.routingDetails[0].deadlines"
                             :key="cmaDeadlineKey">
                             <h5 class="sub-title-schedule">{{ cmaDeadline.deadlineKey }}</h5>
-                            <p class="text-schedule"><b>{{ cmaDeadline.deadline.substring(0,10) + " " + cmaDeadline.deadline.substring(11,cmaDeadline.deadline.length-1) }}</b></p>
+                            <p class="text-schedule"><b>{{ cmaDeadline.deadline.substring(0,10) + " " + cmaDeadline.deadline.substring(11,cmaDeadline.deadline.length-4) }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -414,7 +414,7 @@
         <!-- TARJETA MAERKS -->
         <div 
             class="mb-4" 
-            v-for="(result, key) in results.maersk"
+            v-for="(result, key) in orderedMaerskRates"
             :key="key+'maersk'">
         <div class="result-search">
             <div class="banda-top maerks"><span>{{ result.company }}</span></div>
@@ -777,7 +777,7 @@
                             :key="deadKey"
                         >
                             <h5 class="sub-title-schedule"> {{ deadline.deadlineKey }} </h5>
-                            <p class="text-schedule"><b>{{ deadline.deadline }}</b></p>
+                            <p class="text-schedule"><b>{{ deadline.deadline.substring(0,deadline.deadline.length-3) }}</b></p>
                         </div>
                         </div>
                     </div>
@@ -1086,6 +1086,7 @@ export default {
                                     component.results["cmacgm"].push(respData);
                                 }
                                 
+                                component.hideCharges(respData);
                             });
 
                             component.$emit('apiSearchDone',response.data.length);
@@ -1166,6 +1167,28 @@ export default {
         responseData.formattedDetentions = finalDetentions;
     },
 
+    hideCharges(responseData){
+        if( !this.request.originCharges ){
+            delete responseData.pricingDetails.surcharges.originSurcharges;
+            responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont){
+                let newTotal = 0;
+                newTotal = totalPerCont.total - responseData.pricingDetails.totalRatePerType.totalRateOrigin[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+                responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
+            });
+            responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
+        }
+
+        if( !this.request.destinationCharges ){
+            delete responseData.pricingDetails.surcharges.destinationSurcharges;
+            responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont){
+                let newTotal = 0;
+                newTotal = totalPerCont.total - responseData.pricingDetails.totalRatePerType.totalRateDestination[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total; 
+                responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
+            });
+            responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
+        }
+    },
+
     setApiContainers(){
         let component = this;
         let finalContainerString = "";
@@ -1232,6 +1255,55 @@ export default {
       window.open(link_str[0] + "?" + qty, "_blank");
       component.alert("Redirecting to the Maersk site", "success");
       component.$root.$emit("bv::hide::modal", "qty-modal");
+    },
+  },
+  computed: {
+    orderedMaerskRates: function() {
+      return _.orderBy(this.results.maersk, item => item.pricingDetails.totalRatePerContainer[0].total, ['asc']);
+
+        /**var sortedArray = _(this.results.maersk).chain().sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[0]){
+                return result.pricingDetails.totalRatePerContainer[0].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[1]){
+                return result.pricingDetails.totalRatePerContainer[1].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[2]){
+                return result.pricingDetails.totalRatePerContainer[2].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[3]){
+                return result.pricingDetails.totalRatePerContainer[3].total;
+            }
+        }).value();
+
+        return sortedArray;**/
+    },
+
+    orderedCmaRates: function() {
+      return _.orderBy(this.results.cmacgm, item => item.pricingDetails.totalRatePerContainer[0].total, ['asc']);
+
+      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[0]){
+                return result.pricingDetails.totalRatePerContainer[0].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[1]){
+                return result.pricingDetails.totalRatePerContainer[1].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[2]){
+                return result.pricingDetails.totalRatePerContainer[2].total;
+            }
+        }).sortBy(function(result) {
+            if(result.pricingDetails.totalRatePerContainer[3]){
+                return result.pricingDetails.totalRatePerContainer[3].total;
+            }
+        }).value();
+
+        return sortedArray;**/
     },
   },
 };
