@@ -699,7 +699,7 @@ class ContractController extends Controller
             'amountC' => 'sometimes|required',
             'document' => 'required',
         ]);
-            dd(Auth::user()->id);
+            // dd(Auth::user()->id);
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);
