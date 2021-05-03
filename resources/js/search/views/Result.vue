@@ -175,7 +175,10 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'/imgcarrier/' + rate.carrier.image"
+                :src="
+                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                  rate.carrier.image
+                "
                 alt="logo"
                 width="115px"
               />
@@ -360,8 +363,30 @@
                   <p class="mr-4 mb-0">
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
+                    <img
+                      v-if="rate.contract.validity > searchEndDate"
+                      src="/images/error.svg"
+                      width="15px"
+                      data-toggle="tooltip"
+                      title="Contract date beyond search range"
+                    />
                   </p>
-                  <!--<a href="#">download contract</a>-->
+                  <button
+                    v-if="
+                      rate.contract_id != 0 ||
+                      rate.contract_request_id != 0 ||
+                      rate.contract_backup_id != 0
+                    "
+                    style="
+                      background: transparent;
+                      border: 0;
+                      text-transform: uppercase;
+                      color: #00c581;
+                    "
+                    @click="downloadContractFile(rate)"
+                  >
+                    download contract
+                  </button>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -482,7 +507,9 @@
                           }}</span
                         >
                         <b v-if="chargeType == 'Freight'">{{
-                          rate.currency.alphacode
+                          charge.joint_as == "client_currency"
+                            ? rate.currency.alphacode
+                            : charge.currency.alphacode
                         }}</b>
                         <b v-else-if="charge.joint_as == 'client_currency'">{{
                           charge.client_currency.alphacode
@@ -589,9 +616,8 @@
                 font-weight: bolder;
                 border: 2px solid #0072fc !important;
               "
-              >
-                Create Quote
-              
+            >
+              Create Quote
             </b-button>
 
             <b-button v-else b-button variant="primary">
@@ -630,6 +656,7 @@ export default {
       responseErrors: {},
       filterBy: "",
       filterOptions: [],
+      searchEndDate: "",
       isActive: false,
       items: [],
       ratesForQuote: [],
@@ -725,7 +752,7 @@ export default {
     },
     filterCarriers() {
       let component = this;
-        //console.log(this.request);
+      //console.log(this.request);
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
           if (component.filterBy == rate.carrier.name) {
@@ -736,43 +763,59 @@ export default {
         component.finalRates = component.rates;
       }
     },
-    addRateToQuote(rate){
+    downloadContractFile(rate){
+      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
+
+      this.actions.search
+        .downloadContract(parameters)
+        .then((response) => {
+          console.log('Downloading!', response);
+          window.open(response.data.url)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    addRateToQuote(rate) {
       let component = this;
 
-      if(rate.addToQuote){
+      if (rate.addToQuote) {
         component.ratesForQuote.push(rate);
-      }else{
-        component.ratesForQuote.forEach(function(rateQ){
-          if(rate.id == rateQ.id){
-            component.ratesForQuote.splice(component.ratesForQuote.indexOf(rateQ),1);
+      } else {
+        component.ratesForQuote.forEach(function (rateQ) {
+          if (rate.id == rateQ.id) {
+            component.ratesForQuote.splice(
+              component.ratesForQuote.indexOf(rateQ),
+              1
+            );
           }
         });
       }
 
-      component.$emit("addedToQuote",component.ratesForQuote);
+      component.$emit("addedToQuote", component.ratesForQuote);
     },
-    createQuote(){
-      this.$emit('createQuote');
-    }
-},
-    mounted(){
-        let component = this;
-        //console.log(component.datalists);
+    createQuote() {
+      this.$emit("createQuote");
+    },
+  },
+  mounted() {
+    let component = this;
+    //console.log(component.datalists);
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
     });
     component.finalRates = component.rates;
-        //component.setFilters();
-        window.document.onscroll = () => {
-            let navBar = document.getElementById('top-results');
-            if(window.scrollY > navBar.offsetTop){
-                component.isActive = true;
-            } else {
-                component.isActive = false;
-            }
-        }
-        
-        this.loaded = true;
-    },
-}
+    //component.setFilters();
+    window.document.onscroll = () => {
+      let navBar = document.getElementById("top-results");
+      if (window.scrollY > navBar.offsetTop) {
+        component.isActive = true;
+      } else {
+        component.isActive = false;
+      }
+    };
+
+    this.loaded = true;
+  },
+};
 </script>

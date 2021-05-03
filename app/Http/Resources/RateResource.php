@@ -41,6 +41,9 @@ class RateResource extends JsonResource
             'search' => $this->search,
             'price_level' => isset($this->price_level) ? $this->price_level : null,
             'remarks' => isset($this->remarks) ? $this->remarks : null,
+            'contract_backup_id' => $this->contractBackupId,
+            'contract_request_id' => $this->contractRequestId,
+            'contract_id' => $this->contractId
         ];
     }
 }

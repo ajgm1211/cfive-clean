@@ -126,6 +126,7 @@
                     { key: 'expire', label: 'Valid Until', filterIsOpen:true }, 
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name }, filterIsOpen:true, filterTrackBy: "name", trackLabel: "name"}, 
                     { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name }, filterIsOpen:true, filterTrackBy: "name", trackLabel: "name"},
+                    { key: 'user_name', label: 'Owner', filterIsOpen:true },
                     { key: 'created_at', label: 'Created At', filterIsOpen:true},
 
                 ],
