@@ -2,11 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Container;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Traits\UtilTrait;
 
 class QuotationChargeResource extends JsonResource
 {
+    use UtilTrait;
+    
     /**
      * Transform the resource into an array.
      *
@@ -19,11 +21,14 @@ class QuotationChargeResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type->description,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
+            'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
             'port' => $this->getType($this->type_id),
-            'price' => $this->arrayToFloat($this->price) ?? [],
-            'profit' => $this->arrayToFloat($this->profit) ?? [],
-            'total' => $this->setTotal($this->price, $this->profit),
+            'price' => $this->arrayMapToFloat($this->price) ?? [],
+            'profit' => $this->arrayMapToFloat($this->profit) ?? [],
+            'total' => $this->profit ? $this->setTotal($this->price, $this->profit):$this->arrayMapToFloat($this->price),
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->automatic_rate->carrier->name ?? null,
@@ -45,50 +50,5 @@ class QuotationChargeResource extends JsonResource
         } else {
             return null;
         }
-    }
-
-    /**
-     * arrayToFloat
-     *
-     * @param  mixed $array
-     * @return void
-     */
-    public function arrayToFloat($array)
-    {
-
-        $new_array = [];
-
-        foreach ((array)$array as $key => $item) {
-            $new_array[$key] = (float) $item;
-        }
-
-        return $new_array;
-    }
-    
-    /**
-     * setTotal
-     *
-     * @param  mixed $price
-     * @param  mixed $profit
-     * @return void
-     */
-    public function setTotal($price, $profit)
-    {
-
-        $new_array = [];
-        
-        foreach ($price as $key => $item) {
-            foreach ($profit as $k => $value) {
-                $str1 = ltrim($key, 'c');
-                $str2 = ltrim($k, 'm');
-                $total = 0;
-                if($str1 == $str2){
-                    $total = (float) $item + (float) $value;
-                    $new_array[$key] = (float) $total;
-                }
-            }
-        }
-
-        return $new_array;
     }
 }
