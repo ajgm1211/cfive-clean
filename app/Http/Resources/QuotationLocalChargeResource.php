@@ -21,7 +21,10 @@ class QuotationLocalChargeResource extends JsonResource
         return [
             'id' => $this->id,
             'charge' => $this->charge,
+            'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
             'port' => $this->port->display_name ?? null,
             /*'price' => $this->arrayToFloat($this->price) ?? [],
             'profit' => $this->arrayToFloat($this->profit) ?? [],
@@ -32,8 +35,6 @@ class QuotationLocalChargeResource extends JsonResource
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->provider_name ?? null,
-            'charge_options' => $this->surcharge->options ?? null,
-            'charge_id' => $this->surcharge_id ?? null,
         ];
 
     }
