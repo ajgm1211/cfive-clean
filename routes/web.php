@@ -1041,6 +1041,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/process', 'SearchApiController@processSearch');
     Route::post('/api/search/store', 'SearchApiController@store');
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
+    Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');

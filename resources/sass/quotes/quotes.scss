@@ -59,6 +59,11 @@ input.data-showas {
         }
     }
 }
+
+.data-detail {
+    width: 170px !important;
+}
+
 /*** * Fin Modal Table Add Charges - Local Charges * ***/
 @media only screen and (min-width: 320px) and (max-width: 425px) {
     .responsive-checkbox-freight {
@@ -104,9 +109,8 @@ input.data-showas {
         width: 80px;
     }
 
-    td#charge input, 
-    .data-detail {
-        width: 150px;
+    td#charge input {
+        width: 150px !important;
     }
 
     td #fixed_surcharge,
@@ -204,7 +208,6 @@ input.data-showas {
 
 @media only screen and (min-width: 1024px) {
     td #fixed_surcharge, 
-    .data-detail,
     td #freights_20FR,
     td #freights_40FR,
     td #freights_20DV,

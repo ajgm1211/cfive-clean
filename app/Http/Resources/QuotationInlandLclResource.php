@@ -18,6 +18,7 @@ class QuotationInlandLclResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'contract' => $this->contract,
+            'charge' => $this->charge,
             'distance' => $this->distance,
             'port' => $this->port->display_name ?? null,
             'address' => $this->inland_address->address ?? null,

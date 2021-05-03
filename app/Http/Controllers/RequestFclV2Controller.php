@@ -35,6 +35,7 @@ use PhpOffice\PhpSpreadsheet\Writer as Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Traits\SearchTrait;
 use App\Http\Traits\MixPanelTrait;
+use Illuminate\Support\Facades\Auth;
 
 
 class RequestFclV2Controller extends Controller
@@ -279,6 +280,7 @@ class RequestFclV2Controller extends Controller
             $contract->direction_id = $direction_id;
             $contract->status = 'incomplete';
             $contract->company_user_id = $CompanyUserId;
+            $contract->user_id = Auth::user()->id;
             $contract->gp_container_id = $gpContainer->id;
             $contract->save();
 
