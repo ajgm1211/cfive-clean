@@ -419,7 +419,7 @@
             v-for="(result, key) in orderedMaerskRates"
             :key="key+'maersk'">
         <div class="result-search">
-            <div class="banda-top maerks"><span>{{ result.company }}</span></div>
+            <div class="banda-top" :class="result.companyCode"><span>{{ result.company }}</span></div>
 
             <!-- INFORMACION DE TARIFA -->
             <div class="row">
