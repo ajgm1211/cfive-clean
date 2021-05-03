@@ -489,7 +489,7 @@ export default {
                 freight.loaded = false;
                 component.datalists.carriers.forEach(function (carrier){
                     if(freight.carrier_id==carrier.id){
-                        freight.carrierLogo = "/imgcarrier/".concat(carrier.image)
+                        freight.carrierLogo = "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/".concat(carrier.image)
                     }
                 });
 

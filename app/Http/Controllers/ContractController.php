@@ -51,7 +51,8 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
@@ -195,7 +196,7 @@ class ContractController extends Controller
             'name' => $data['name'],
             'number' => null,
             'company_user_id' => $company_user_id,
-            'user_id'=>Auth::user()->id,
+            'user_id' => Auth::user()->id,
             'account_id' => null,
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
@@ -203,7 +204,7 @@ class ContractController extends Controller
             'status' => 'publish',
             'gp_container_id' => $data['gp_container'],
             'remarks' => '',
-            'is_manual' => 1,
+            'is_manual' => 1
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);
@@ -261,17 +262,17 @@ class ContractController extends Controller
 
         $date = date('Y-m-d');
         $expire = date('Y-m-d', strtotime($data['expire']));
-        
-        if($contract->status != 'incomplete'){
+
+        if ($contract->status != 'incomplete') {
             if ($date <= $expire) {
                 $status = 'publish';
             } else {
                 $status = 'expired';
             }
-        }else{
+        } else {
             $status = 'incomplete';
         }
-        
+
         return $status;
     }
 
@@ -321,19 +322,17 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        $status_erased=1;
-        if($contract->status == 'incomplete'){
-            
-            $requestContract = NewContractRequest::where('contract_id',$contract->id);
-            if(empty($requestContract) == 0 ){
+        $status_erased = 1;
+        if ($contract->status == 'incomplete') {
+
+            $requestContract = NewContractRequest::where('contract_id', $contract->id);
+            if (empty($requestContract) == 0) {
 
                 $requestContract->update(['erased_contract' => $status_erased]);
-
             }
-
         }
         // $contract->delete();
-        $contract->status_erased=$status_erased;
+        $contract->status_erased = $status_erased;
         $contract->update();
 
         return response()->json(null, 204);
@@ -370,7 +369,7 @@ class ContractController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        $status_erased=1;
+        $status_erased = 1;
         DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased]);
 
         return response()->json(null, 204);
@@ -385,10 +384,10 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        if(!empty($media) == 0){
+        if (!empty($media) == 0) {
             $media->delete();
         }
-        
+
 
         return response()->json(null, 204);
     }
@@ -568,7 +567,7 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
-        
+
         if ($request->code) {
             $code = $request->code;
         } else {
@@ -632,7 +631,7 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":'.$contract->code.',"is_api":'.$contract->is_api.'}}',
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":' . $contract->code . ',"is_api":' . $contract->is_api . '}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
@@ -700,7 +699,7 @@ class ContractController extends Controller
             'amountC' => 'sometimes|required',
             'document' => 'required',
         ]);
-
+            dd(Auth::user()->id);
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);
@@ -710,6 +709,7 @@ class ContractController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->group_containerC;
         $contract->is_manual = 2;
+        $contract->user_id = Auth::user()->id;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
@@ -791,29 +791,30 @@ class ContractController extends Controller
         ]);
     }
 
-    public function getRequestStatus(Contract $contract){
+    public function getRequestStatus(Contract $contract)
+    {
 
-        if(!is_null($contract->contract_request)){
+        if (!is_null($contract->contract_request)) {
             $request_status = $contract->contract_request->status;
-            if($request_status == "Pending"){
+            if ($request_status == "Pending") {
                 $progress = 25;
-            }else if($request_status == "Processing"){
+            } else if ($request_status == "Processing") {
                 $progress = 50;
-            }else if($request_status == "Imp Finished"){
+            } else if ($request_status == "Imp Finished") {
                 $progress = 75;
-            }else if($request_status == "Review"){
+            } else if ($request_status == "Review") {
                 $progress = 90;
-            }else{
+            } else {
                 $progress = 100;
             }
-        }else{
-            if($contract->status == "incomplete"){
+        } else {
+            if ($contract->status == "incomplete") {
                 $progress = 50;
-            }else{
+            } else {
                 $progress = 100;
             }
         }
-    
+
         return response()->json([
             'progress' => $progress,
         ]);
