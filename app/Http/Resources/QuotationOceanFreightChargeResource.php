@@ -22,7 +22,9 @@ class QuotationOceanFreightChargeResource extends JsonResource
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
             'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
             'price' => $this->arrayMapToFloat($this->price),
             //'profit' => $this->profit,
             'currency' => $this->currency->alphacode ?? null
