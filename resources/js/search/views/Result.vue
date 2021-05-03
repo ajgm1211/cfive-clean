@@ -754,25 +754,25 @@ export default {
     createQuote(){
       this.$emit('createQuote');
     }
-},
-    mounted(){
-        let component = this;
-        //console.log(component.datalists);
-    component.rates.forEach(function (rate) {
-      rate.addToQuote = false;
-    });
-    component.finalRates = component.rates;
-        //component.setFilters();
-        window.document.onscroll = () => {
-            let navBar = document.getElementById('top-results');
-            if(window.scrollY > navBar.offsetTop){
-                component.isActive = true;
-            } else {
-                component.isActive = false;
-            }
+  },
+  mounted(){
+    let component = this;
+    //console.log(component.datalists);
+  component.rates.forEach(function (rate) {
+    rate.addToQuote = false;
+  });
+  component.finalRates = component.rates;
+    //component.setFilters();
+    window.document.onscroll = () => {
+        let navBar = document.getElementById('top-results');
+        if(window.scrollY > navBar.offsetTop){
+            component.isActive = true;
+        } else {
+            component.isActive = false;
         }
-        
-        this.loaded = true;
-    },
+    }
+    
+    this.loaded = true;
+  },
 }
 </script>
