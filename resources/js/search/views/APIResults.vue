@@ -17,7 +17,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'+'/cma.png'" alt="logo" width="115px" />
+                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'+'cma.png'" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -251,7 +251,7 @@
                         <b-td 
                             v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
                             :key="cmaContainerKey"
-                        ><p>{{ cmaSurchargeContainer.amount }} <b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
+                        ><p><b>{{ cmaSurchargeContainer.amount }} {{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
@@ -676,7 +676,7 @@
                         <b-td 
                             v-for="(surchargeContainer, containerKey) in surchargeName.containers"
                             :key="containerKey"
-                        ><p>{{ surchargeContainer.amount }} <b>{{ surchargeContainer.currencyCode }}</b></p></b-td
+                        ><p><b>{{ surchargeContainer.amount }} {{ surchargeContainer.currencyCode }}</b></p></b-td
                         >
                     </b-tr>
 
