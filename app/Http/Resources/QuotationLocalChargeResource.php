@@ -3,9 +3,13 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Traits\UtilTrait;
 
 class QuotationLocalChargeResource extends JsonResource
 {
+
+    use UtilTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -32,16 +36,5 @@ class QuotationLocalChargeResource extends JsonResource
             'charge_id' => $this->surcharge_id ?? null,
         ];
 
-    }
-
-    public function arrayToFloat($array){
-
-        $new_array = [];
-
-        foreach((array)$array as $key=>$item){
-            $new_array[$key] = (float) $item;
-        }
-
-        return $new_array;
     }
 }

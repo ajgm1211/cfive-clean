@@ -7,7 +7,13 @@ use App\Currency;
 use Illuminate\Support\Collection as Collection;
 
 trait UtilTrait
-{
+{    
+    /**
+     * transformEquipment
+     *
+     * @param  mixed $quotes
+     * @return void
+     */
     public function transformEquipment($quotes)
     {
         $containers = Container::select('id', 'code')->get();
@@ -36,7 +42,13 @@ trait UtilTrait
             }
         }
     }
-
+    
+    /**
+     * transformEquipmentSingle
+     *
+     * @param  mixed $quote
+     * @return void
+     */
     public function transformEquipmentSingle($quote)
     {
         $containers = Container::select('id', 'code')->get();
@@ -64,7 +76,14 @@ trait UtilTrait
         }
     }
 
-
+    
+    /**
+     * processOldContainers
+     *
+     * @param  mixed $array
+     * @param  mixed $type
+     * @return void
+     */
     public function processOldContainers($array, $type)
     {
         if (!empty($array)) {
@@ -114,7 +133,14 @@ trait UtilTrait
             }
         }
     }
-
+    
+    /**
+     * ratesCurrency
+     *
+     * @param  mixed $id
+     * @param  mixed $typeCurrency
+     * @return void
+     */
     public function ratesCurrency($id, $typeCurrency)
     {
         $rates = Currency::where('id', '=', $id)->get();
@@ -127,5 +153,60 @@ trait UtilTrait
         }
 
         return $rateC;
+    }
+
+    /**
+     * Convert values in array to float using array_map
+     *
+     * @param  mixed $array
+     * @return void
+     */
+    public function arrayMapToFloat($array)
+    {
+        return array_map('floatval', $array);
+    }
+    
+    /**
+     * Convert values in array to float using foreach
+     *
+     * @param  mixed $array
+     * @return void
+     */
+    public function arrayToFloat($array){
+        $new_array = [];
+
+        foreach((array)$array as $key=>$item){
+            $new_array[$key] = (float) $item;
+        }
+
+        return $new_array;
+    }
+
+    /**
+     * set total adding price and profit
+     *
+     * @param  mixed $price
+     * @param  mixed $profit
+     * @return void
+     */
+    public function setTotal($price, $profit)
+    {
+
+        $new_array = [];
+        
+        foreach ($price as $key => $item) {
+            foreach ($profit as $k => $value) {
+                $str1 = ltrim($key, 'c');
+                $str2 = ltrim($k, 'm');
+                $total = 0;
+                if($str1 == $str2){
+                    $total = (float) $item + (float) $value;
+                    $new_array[$key] = (float) $total;
+                }
+            }
+        }
+        $merge = array_merge($price, $new_array);
+        $floats = $this->arrayMapToFloat($merge);
+        return $floats;
     }
 }
