@@ -40,9 +40,14 @@ use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
 use App\CompanyPrice;
+use App\ContractFclFile;
+use App\NewContractRequest;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaStream;
+use Spatie\MediaLibrary\Models\Media;
 
 class SearchApiController extends Controller
 {
@@ -209,10 +214,10 @@ class SearchApiController extends Controller
             //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
             //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($search_ids, $search_array, $rate);
+            $local_charges = $this->searchLocalCharges($search_ids, $rate);
 
             //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($search_ids, $search_array, $rate);
+            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
@@ -256,6 +261,8 @@ class SearchApiController extends Controller
             $rate->setAttribute('request_type', $request->input('requested'));
 
             $this->stringifyRateAmounts($rate);
+
+            $this->setDownloadParameters($rate);
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -475,34 +482,19 @@ class SearchApiController extends Controller
     }
 
     //Finds local charges matching contracts
-    public function searchLocalCharges($search_ids, $search_data, $rate)
+    public function searchLocalCharges($search_ids, $rate)
     {
         //Creating empty collection for storing charges
         $local_charges = collect([]);
         //Pulling necessary data from the search IDs array
-        $origin_ports = $search_ids['originPorts'];
-        $destination_ports = $search_ids['destinationPorts'];
-        $origin_countries = [];
-        $destination_countries = [];
-        //SEARCH API - Getting countries from port arrays and building countries array
-        foreach ($search_data['originPorts'] as $origin_port) {
-            array_push($origin_countries, $origin_port['country_id']);
-        }
-        foreach ($search_data['destinationPorts'] as $destination_port) {
-            array_push($destination_countries, $destination_port['country_id']);
-        }
-
-        //Including "ALL" columns for querying LocalCharges with such option marked
-        //IDS: On Harbors: 1485; On Countries: 250
-        array_push($origin_ports, 1485);
-        array_push($destination_ports, 1485);
-        array_push($origin_countries, 250);
-        array_push($destination_countries, 250);
+        $origin_ports = [$rate->origin_port,1485];
+        $destination_ports = [$rate->destiny_port,1485];
+        $origin_countries = [$rate->port_origin->country()->first()->id, 250];
+        $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
 
         //creating carriers array with only rates carrier
-        $carriers = array($rate->carrier->id);
-        //Including "ALL" column of carriers table
-        array_push($carriers, 26);
+        $carriers = [$rate->carrier->id, 26];
+
         //Checking if contract comes from API
         if ($rate->contract->status != 'api') {
             //Querying NON API contract local charges
@@ -537,37 +529,21 @@ class SearchApiController extends Controller
     }
 
     //Finds global charges matching search data
-    public function searchGlobalCharges($search_ids, $search_data, $rate)
+    public function searchGlobalCharges($search_ids, $rate)
     {
         //building Carriers array from rates
-        $carriers = [];
-        array_push($carriers, $rate->carrier->id);
-        array_push($carriers, 26);
+        $carriers = [$rate->carrier->id, 26];
         //Creating empty collection for storing charges
         $global_charges = collect([]);
         //Pulling necessary data from the search IDs array
         $validity_start = $search_ids['dateRange']['startDate'];
         $validity_end = $search_ids['dateRange']['endDate'];
-        $origin_ports = $search_ids['originPorts'];
-        $destination_ports = $search_ids['destinationPorts'];
+        $origin_ports = [$rate->origin_port,1485];
+        $destination_ports = [$rate->destiny_port,1485];
+        $origin_countries = [$rate->port_origin->country()->first()->id, 250];
+        $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
         $company_user_id = $search_ids['company_user'];
-        $origin_countries = [];
-        $destination_countries = [];
         $container_ids = $search_ids['containers'];
-        //SEARCH API - Getting countries from port arrays and building countries array
-        foreach ($search_data['originPorts'] as $origin_port) {
-            array_push($origin_countries, $origin_port['country_id']);
-        }
-        foreach ($search_data['destinationPorts'] as $destination_port) {
-            array_push($destination_countries, $destination_port['country_id']);
-        }
-
-        //Including "ALL" columns for querying GlobalCharges with such option marked
-        //IDS: On Harbors: 1485; On Countries: 250
-        array_push($origin_ports, 1485);
-        array_push($destination_ports, 1485);
-        array_push($origin_countries, 250);
-        array_push($destination_countries, 250);
 
         $contractStatus = 'NOT API'; //*************** CHANGE THIS LATER ************
 
@@ -738,14 +714,10 @@ class SearchApiController extends Controller
                 }
                 
                 if($direction == 'Freight'){
-                    if ($charge->joint_as == 'charge_currency') {
-                        $rate_currency_containers = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
-                        $charge->containers = $rate_currency_containers;
-                    } elseif ($charge->joint_as == 'client_currency') {
+                    if ($charge->joint_as == 'client_currency') {
                         $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
                         $charge->containers_client_currency = $rate_currency_containers;
                     }
-                    $charge->currency = $rate->currency;
                 }
             }
 
@@ -922,8 +894,8 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->totals_with_markups);
                                 $charges_to_add_original = $charge->totals_with_markups;
                             }else{
-                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers_with_markups);
-                                $charges_to_add_original = $charge->containers_with_markups;
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers_with_markups);
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_with_markups);
                             }
                         }else{
                             $charges_to_add = $charge->totals_with_markups;
@@ -934,8 +906,8 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers_client_currency);
                                 $charges_to_add_original = $charge->containers_client_currency;
                             }else{
-                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers);
-                                $charges_to_add_original = $charge->containers;
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers);
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,$charge->containers);
                             }
                         }else{
                             $charges_to_add = $charge->containers_client_currency;
@@ -1012,6 +984,7 @@ class SearchApiController extends Controller
         $contract->status = 'publish';
         $contract->gp_container_id = $request->valueEq['id'];
         $contract->is_manual = 2;
+        $contract->user_id = Auth::user()->id;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrier['id']);
@@ -1041,5 +1014,120 @@ class SearchApiController extends Controller
 
         return ($sorted);
     }
-    
+
+    public function setDownloadParameters($rate)
+    {
+        if ($rate->contract->status != 'api') {
+
+            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequestBackup)) {
+                $contractBackupId = $contractRequestBackup->id;
+            } else {
+                $contractBackupId = "0";
+            }
+
+            $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequest)) {
+                $contractRequestId = $contractRequest->id;
+            } else {
+                $contractRequestId = "0";
+            }
+
+            $mediaItems = $rate->contract->getMedia('document');
+            $totalItems = count($mediaItems);
+            if ($totalItems > 0) {
+                $contractId = $rate->contract->id;
+            }else{
+                $contractId = "0";
+            }
+        }else{
+            $contractBackupId = "0";
+            $contractRequestId = "0";
+            $contractId = "0";
+        }
+
+        $rate->setAttribute('contractBackupId', $contractBackupId);
+        $rate->setAttribute('contractRequestId', $contractRequestId);
+        $rate->setAttribute('contractId', $contractId);
+    }
+
+    public function downloadContractFile(Request $request)
+    {
+
+        $parameters = $request->input();
+
+        $contractId = $parameters[0];
+        $contractRequestId = $parameters[1];
+        $contractBackupId = $parameters[2];
+
+        if ($contractId == 0) {
+            $contractFile = NewContractRequest::find($contractRequestId);
+            $mode_search = false;
+            if (!empty($contractFile)) {
+                $success = false;
+                $download = null;
+                if (!empty($contractFile->namefile)) {
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $company = CompanyUser::find($contractFile->company_user_id);
+                    $extObj = new \SplFileInfo($contractFile->namefile);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
+                } else {
+                    $mode_search = true;
+                    $contractFile->load('companyuser');
+                    $data = json_decode($contractFile->data, true);
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $mediaItem = $contractFile->getFirstMedia('document');
+                    $extObj = new \SplFileInfo($mediaItem->file_name);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
+                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $success = true;
+                }
+            } else {
+                $contractFile = ContractFclFile::find($contractBackupId);
+                $time = new \DateTime();
+                $now = $time->format('d-m-y');
+                $extObj = new \SplFileInfo($contractFile->namefile);
+                $ext = $extObj->getExtension();
+                $name = $contractFile->id . '-' . $now . '-FLC.' . $ext;
+            }
+
+            if ($mode_search == false) {
+                if (Storage::disk('s3_upload')->exists('Request/FCL/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('s3_upload')->exists('contracts/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('contracts/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('FclRequest')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('FclRequest')->url($contractFile->namefile, $name);
+                } elseif (Storage::disk('UpLoadFile')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
+                }
+            }
+            return response()->json(['success' => $success, 'url' => $download]);
+        } else {
+            $contract = Contract::find($contractId);
+            $downloads = $contract->getMedia('document');
+            $total = count($downloads);
+            if ($total > 1) {
+                return MediaStream::create('my-contract.zip')->addMedia($downloads);
+            } else {
+                $media = $downloads->first();
+                $mediaItem = Media::find($media->id);
+                //return $mediaItem;
+                if($mediaItem->disk == 'FclRequest'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name]);
+                }
+                if($mediaItem->disk == 'contracts3'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-development-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name]);
+                }
+            }
+        }
+    }
 }
