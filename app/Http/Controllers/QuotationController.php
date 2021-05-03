@@ -86,7 +86,7 @@ class QuotationController extends Controller
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($user) {
-            return $user->only(['id', 'name', 'lastname']);
+            return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
