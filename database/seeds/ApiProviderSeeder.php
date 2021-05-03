@@ -14,7 +14,7 @@ class ApiProviderSeeder extends Seeder
         DB::table('api_providers')->insert([
             'name' => 'SEALAND SPOT',
             'status' => 1,
-            'image' => 'sealand.png',
+            'image' => 'sealand.jpg',
             'code' => 'sealand',
             'require_login' => 0
         ]);
