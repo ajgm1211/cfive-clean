@@ -17,7 +17,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img src="/images/cma.png" alt="logo" width="115px" />
+                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'+'/cma.png'" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -350,7 +350,9 @@
                         alt="bote"
                         />
 
-                        <div class="route-indirect d-flex align-items-center">
+                        <div 
+                            class="route-indirect d-flex align-items-center"
+                            v-if="cmaResult.routingDetails.length > 1">
                         <div class="circle mr-2"></div>
                         <div class="line"></div>
                         <b-button
@@ -426,7 +428,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img :src="'/images/' + result.companyCode + '.png'" alt="logo" width="115px" />
+                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + result.companyCode + '.png'" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -693,7 +695,7 @@
                 </b-table-simple>
                 </div>
 
-                <div>
+                <div v-if="result.penaltyFees">
                     <h5><b>{{ result.company }} Fees</b></h5>
 
                     <b-table-simple hover small responsive class="sc-table">
@@ -849,7 +851,7 @@
 
                     <div class="direction-desc">
                         <p class="mb-0"><b>TT: </b> {{ result.transitTime + ' days'}}</p>
-                        <p><b>Service</b> {{ result.routingDetails.length > 1 ? 'Transshipment' : 'Direct'}}</p>
+                        <p><b>Service:</b> {{ result.routingDetails.length > 1 ? 'Transshipment' : 'Direct'}}</p>
                     </div>
                     </div>
 
@@ -1108,33 +1110,35 @@ export default {
         let penaltyCodes = [];
         let component = this;
         
-        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
-            penaltyPerContainer.charges.forEach(function (penaltyCont){
-                if(!penaltyCodes.includes(penaltyCont.penaltyType)){
-                    penaltyCodes.push(penaltyCont.penaltyType);
-                    finalPenalties.push({
-                        name: penaltyCont.displayName
-                    });
-                }
-
-                if(!component.containerCodesMaerskPenalties.includes(penaltyPerContainer.containerSizeType)){
-                    component.containerCodesMaerskPenalties.push(penaltyPerContainer.containerSizeType);
-                }
-            });
-        });
-
-        responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
-            penaltyPerContainer.charges.forEach(function (penaltyCont){
-                finalPenalties.forEach(function (final){
-                    if(penaltyCont.displayName == final.name){
-                        final[penaltyPerContainer.containerSizeType] = penaltyCont.chargeFee;
-                        final[penaltyPerContainer.containerSizeType + "currency"] = penaltyPerContainer.currency;
+        if(responseData.additionalData.penaltyFees){
+            responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+                penaltyPerContainer.charges.forEach(function (penaltyCont){
+                    if(!penaltyCodes.includes(penaltyCont.penaltyType)){
+                        penaltyCodes.push(penaltyCont.penaltyType);
+                        finalPenalties.push({
+                            name: penaltyCont.displayName
+                        });
+                    }
+    
+                    if(!component.containerCodesMaerskPenalties.includes(penaltyPerContainer.containerSizeType)){
+                        component.containerCodesMaerskPenalties.push(penaltyPerContainer.containerSizeType);
                     }
                 });
             });
-        });
-
-        responseData.formattedPenalties = finalPenalties;
+    
+            responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
+                penaltyPerContainer.charges.forEach(function (penaltyCont){
+                    finalPenalties.forEach(function (final){
+                        if(penaltyCont.displayName == final.name){
+                            final[penaltyPerContainer.containerSizeType] = penaltyCont.chargeFee;
+                            final[penaltyPerContainer.containerSizeType + "currency"] = penaltyPerContainer.currency;
+                        }
+                    });
+                });
+            });
+    
+            responseData.formattedPenalties = finalPenalties;
+        }
     },
 
     setDetention(responseData){
