@@ -63,17 +63,21 @@ class QuotationApiResource extends JsonResource
             'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1, $this->type)),
             'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2, $this->type)),
             'inlands' => $this->type == 'FCL' ? QuotationInlandResource::collection($this->inland()->SelectFields()->get()) : QuotationInlandLclResource::collection($this->inland_lcl()->SelectFields()->get()),
+            'original_origin_charges' => $this->type == 'FCL' ?
+                QuotationChargeResource::collection($this->charge()->where('charges.type_id', 1)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 1)->SelectFields()->get()),
+            'original_destination_charges' => $this->type == 'FCL' ?
+                QuotationChargeResource::collection($this->charge()->where('charges.type_id', 2)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 2)->SelectFields()->get()),
         ];
-        
+
         /** Displaying original local charges if costs is true **/
-        if($request->costs=="true"){
+        /*if($request->costs=="true"){
             $data['original_local_charges'] = $this->type == 'FCL' ? 
             QuotationChargeResource::collection($this->charge()->where('charges.type_id',[1,2])->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id',[1,2])->SelectFields()->get());
-        }
+        }*/
 
         return $data;
     }
-    
+
     /**
      * Adjust equipment formats
      *
@@ -108,7 +112,7 @@ class QuotationApiResource extends JsonResource
 
         return $equipment;
     }
-    
+
     /**
      * Get local charges' data from DB
      *
