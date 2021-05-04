@@ -949,7 +949,7 @@ export default {
                         }
                     });
                     component.datalists.providers.forEach(function (prov) {
-                        if (prov.id == search["prov_id"]) {
+                        if (prov.id == search["provider_id"]) {
                             newInlandAdd.provider_id = prov;
                         }
                     });
