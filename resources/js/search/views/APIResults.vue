@@ -201,7 +201,13 @@
                 class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res"
                 style="border-left: 1px solid #f3f3f3"
             >
-                <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                <b-form-checkbox 
+                    v-model="cmaResult.addToQuote"
+                    class="btn-add-quote"
+                    name="check-button"
+                    button
+                    @change="addResultToQuote(cmaResult)"
+                >
                 <b>add to quote</b>
                 </b-form-checkbox>
             </div>
@@ -251,7 +257,7 @@
                         <b-td 
                             v-for="(cmaSurchargeContainer, cmaContainerKey) in cmaSurchargeName.containers"
                             :key="cmaContainerKey"
-                        ><p>{{ cmaSurchargeContainer.amount }} <b>{{ cmaSurchargeContainer.currencyCode }}</b></p></b-td
+                        ><p><b>{{ cmaSurchargeContainer.currencyCode }} </b>{{ cmaSurchargeContainer.amount }}</p></b-td
                         >
                     </b-tr>
 
@@ -624,7 +630,13 @@
                 class="col-12 col-lg-2 d-flex flex-column justify-content-center align-items-center btn-quote-res"
                 style="border-left: 1px solid #f3f3f3"
             >
-                <b-form-checkbox class="btn-add-quote" name="check-button" button>
+                <b-form-checkbox 
+                    v-model="result.addToQuote"
+                    class="btn-add-quote"
+                    name="check-button"
+                    button
+                    @change="addResultToQuote(result)"
+                >
                 <b>add to quote</b>
                 </b-form-checkbox>
                 <a v-b-modal.qty-modal class="btn-add-quote btn-book"
@@ -676,7 +688,7 @@
                         <b-td 
                             v-for="(surchargeContainer, containerKey) in surchargeName.containers"
                             :key="containerKey"
-                        ><p>{{ surchargeContainer.amount }} <b>{{ surchargeContainer.currencyCode }}</b></p></b-td
+                        ><p><b>{{ surchargeContainer.currencyCode }}</b> {{ surchargeContainer.amount }}</p></b-td
                         >
                     </b-tr>
 
@@ -695,7 +707,7 @@
                 </b-table-simple>
                 </div>
 
-                <div v-if="result.penaltyFees">
+                <div v-if="result.additionalData.penaltyFees.length > 0">
                     <h5><b>{{ result.company }} Fees</b></h5>
 
                     <b-table-simple hover small responsive class="sc-table">
@@ -1007,6 +1019,7 @@ export default {
         },
         containerCodesMaerskPenalties: [],
         containerCodesMaerskDetentions: [],
+        resultsForQuote: [],
     };
   },
   methods: {
@@ -1093,6 +1106,8 @@ export default {
                                         respData.image = provider.image;
                                     }
                                 });
+                                respData.addToQuote = false;
+                                respData.search = component.request;
                                 component.hideCharges(respData);
                             });
 
@@ -1115,7 +1130,7 @@ export default {
         let penaltyCodes = [];
         let component = this;
         
-        if(responseData.additionalData.penaltyFees){
+        if(responseData.additionalData.penaltyFees.length > 0){
             responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
                 penaltyPerContainer.charges.forEach(function (penaltyCont){
                     if(!penaltyCodes.includes(penaltyCont.penaltyType)){
@@ -1228,6 +1243,22 @@ export default {
         });
 
         return finalContainerString;
+    },
+
+    addResultToQuote(result){
+      let component = this;
+
+      if(result.addToQuote){
+        component.resultsForQuote.push(result);
+      }else{
+        component.resultsForQuote.forEach(function(resultQ){
+          if(result.id == resultQ.id){
+            component.resultsForQuote.splice(component.resultsForQuote.indexOf(resultQ),1);
+          }
+        });
+      }
+
+      component.$emit("addedToQuote",component.resultsForQuote);
     },
 
     alert(msg, type) {
