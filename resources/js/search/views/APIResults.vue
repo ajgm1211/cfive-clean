@@ -735,7 +735,7 @@
                                 <b-td 
                                     v-for="(maerskContainer, maerskContainerKey) in containerCodesMaerskPenalties"
                                     :key="maerskContainerKey"
-                                ><p>{{ fee[maerskContainer] }} <b>{{ fee[maerskContainer+'currency'] }}</b></p></b-td
+                                ><p><b>{{ fee[maerskContainer+'currency'] }} {{ fee[maerskContainer] }}</b></p></b-td
                                 >
                             </b-tr>
                         </b-tbody>
