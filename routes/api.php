@@ -89,3 +89,8 @@ Route::group(['prefix' => 'request', 'middleware' => 'auth:api'], function () {
     //Route::group(['prefix' => 'request'], function () {
     Route::post('sendEmail', 'RequestFclV2Controller@sendEmailRequest');
 });
+
+Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function () {
+    //Route::group(['prefix' => 'request'], function () {
+    Route::post('sendEmail', 'NewContractRequestLclController@sendEmailRequest');
+});
