@@ -1834,9 +1834,10 @@ export default {
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
-                if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
+                if(this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
                     this.searchRequest.carriers = this.searchData.carriers;
+                    component.carriers = [];
                     component.searchData.carriers.forEach(function (carrier) {
                         component.carriers.push(carrier);
                     });
@@ -2277,13 +2278,17 @@ export default {
         carriers() {
             let component = this;
 
-            if (component.carriers.length == component.carrierOptions.length) {
+            if (component.carriers.length == component.datalists.carriers.length) {
                 component.carrierText = "All Carriers Selected";
             } else if (component.carriers.length >= 5) {
                 component.carrierText =
                     component.carriers.length + " Carriers Selected";
-            } else if (component.carriers.length == 0) {
-                component.carrierText = "Select a Carrier";
+            } else if (component.carriers.length == 0 ) {
+                if(component.searchRequest.carriersApi.length == 0){
+                    component.carrierText = "Select a Carrier";
+                }else{
+                    component.carrierText = "SPOT Providers selected"
+                }
             } else {
                 let selectedCarriers = [];
 

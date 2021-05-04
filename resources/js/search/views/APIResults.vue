@@ -17,7 +17,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'+'/cma.png'" alt="logo" width="115px" />
+                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'+cmaResult.image" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -428,7 +428,7 @@
                 class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
                 style="border-right: 1px solid #f3f3f3"
             >
-                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + result.companyCode + '.png'" alt="logo" width="115px" />
+                <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + result.image" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -1088,6 +1088,11 @@ export default {
                                     component.results["cmacgm"].push(respData);
                                 }
                                 
+                                component.request.carriersApi.forEach(function (provider){
+                                    if(respData.companyCode == provider.code){
+                                        respData.image = provider.image;
+                                    }
+                                });
                                 component.hideCharges(respData);
                             });
 
