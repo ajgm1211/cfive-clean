@@ -4356,13 +4356,19 @@ class QuoteV2Controller extends Controller
         $package_pallet = $this->totalPalletPackage($request->input('total_quantity'), $request->input('cargo_type'), $request->input('type_load_cargo'), $request->input('quantity'));
 
         $incoterm = Incoterm::pluck('name', 'id');
-        if (\Auth::user()->hasRole('subuser')) {
+        
+        /*if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
+                
             })->orwhere('owner', \Auth::user()->id)->pluck('business_name', 'id');
+            
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
-        }
+            
+        }*/
+
+        $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
@@ -6925,6 +6931,7 @@ class QuoteV2Controller extends Controller
             $contact = contact::find($request->contact_id);
 
             $contact_cliente = $contact->first_name . ' ' . $contact->last_name;
+           
             $company_cliente = $companies[$request->company_id_quote];
         } else {
             $contact_cliente = null;
