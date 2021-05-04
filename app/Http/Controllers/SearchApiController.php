@@ -298,7 +298,7 @@ class SearchApiController extends Controller
             'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required',
             'direction' => 'required',
-            'carriers' => 'required|array|min:1',
+            'carriers' => 'sometimes',
             'carriersApi' => 'sometimes',
             'type' => 'required',
             'company' => 'sometimes',
