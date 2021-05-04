@@ -133,6 +133,16 @@
             @recentSearch="quickSearch"
         ></Recent>
 
+        <APIResults
+            v-if="searchRequest.length != 0"
+            :request="searchRequest"
+            :datalists="datalists"
+            @apiSearchStarted="clearDisplay"
+            @apiSearchDone="addApiResults"
+            @addedToQuote="setResultsForQuote"
+            ref="resultsAPI"
+        ></APIResults>
+
         <Result 
             v-if="foundRates.length != 0"
             :rates="foundRates"
@@ -141,15 +151,6 @@
             @createQuote="createQuote"
             @addedToQuote="setRatesForQuote"
         ></Result>
-
-        <APIResults
-            v-if="searchRequest.length != 0"
-            :request="searchRequest"
-            :datalists="datalists"
-            @apiSearchStarted="clearDisplay"
-            @apiSearchDone="addApiResults"
-            ref="resultsAPI"
-        ></APIResults>
 
     </div>
 </template>
@@ -180,7 +181,10 @@ export default {
             resultsTotal: 0,
             creatingQuote: false,
             noRatesAdded: false,
-            ratesForQuote: [],
+            ratesForQuote: {
+                rates: [],
+                results: [],
+            },
             actions: actions,
             apiSearchDone: true,
             searchDone: true,
@@ -196,7 +200,7 @@ export default {
             
             component.creatingQuote = true;
             
-            if (component.ratesForQuote.length == 0) {
+            if (component.ratesForQuote.rates.length == 0 && component.ratesForQuote.results.length == 0) {
                 component.noRatesAdded = true;
                 component.creatingQuote = false;
                 setTimeout(function () {
@@ -260,7 +264,10 @@ export default {
 
         clearDisplay(){
             this.foundRates = [];
-            this.ratesForQuote = [];
+            this.ratesForQuote = {
+                rates: [],
+                results: [],
+            };
             this.resultsTotal = 0;
             this.apiSearchDone = false;
         },
@@ -284,8 +291,13 @@ export default {
         },
 
         setRatesForQuote(rates){
-            this.ratesForQuote = rates;
+            this.ratesForQuote['rates'] = rates;
         },
+        
+        setResultsForQuote(results){
+            this.ratesForQuote['results'] = results;
+        },
+
     },
 }
 </script>
