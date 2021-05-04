@@ -103,7 +103,6 @@
                                 {!!  Form::hidden('contract_owner',$api_contract['user_id'],['class'=>'form-control m-input'])!!}
                             </div>
                             @elseif($selector == 2)
-                            {!!  Form::text('contract_owner',$api_contract['user_id'],['class'=>'form-control m-input'])!!}
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-3">
                                     <label for="nameid" class="">Contract Name</label>
