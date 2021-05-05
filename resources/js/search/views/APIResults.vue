@@ -707,7 +707,7 @@
                 </b-table-simple>
                 </div>
 
-                <div v-if="result.additionalData.penaltyFees.length > 0">
+                <div v-if="result.additionalData.penaltyFees != null && result.additionalData.penaltyFees.length > 0">
                     <h5><b>{{ result.company }} Fees</b></h5>
 
                     <b-table-simple hover small responsive class="sc-table">
@@ -1108,6 +1108,8 @@ export default {
                                 });
                                 respData.addToQuote = false;
                                 respData.search = component.request;
+                                respData.originPort = origin;
+                                respData.destinationPort = destination;
                                 component.hideCharges(respData);
                             });
 
@@ -1130,7 +1132,7 @@ export default {
         let penaltyCodes = [];
         let component = this;
         
-        if(responseData.additionalData.penaltyFees.length > 0){
+        if(responseData.additionalData.penaltyFees != null && responseData.additionalData.penaltyFees.length > 0){
             responseData.additionalData.penaltyFees.forEach(function(penaltyPerContainer){
                 penaltyPerContainer.charges.forEach(function (penaltyCont){
                     if(!penaltyCodes.includes(penaltyCont.penaltyType)){
