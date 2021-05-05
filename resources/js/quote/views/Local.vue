@@ -1354,7 +1354,7 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.$refs.observer.setErrors(data.data.errors);
+                            this.alert("Please complete the fields", "error");
                         });
                 } else {
                     actions.localchargeslcl
@@ -1369,7 +1369,7 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.$refs.observer.setErrors(data.data.errors);
+                            this.alert("Please complete the fields", "error");
                         });
                 }
             } else {
@@ -1476,14 +1476,30 @@ export default {
             let component = this;
 
             component.selectedInputs.forEach(function (input){
-                input.currency_id = input.currency.id;
-                input.surcharge_id = input.surcharge.id;
-                input.calculation_type_id = input.calculation_type.id;
-                input.provider_name = input.carrier.name;
-                if (component.currentQuoteData.type == 'LCL') {
-                    input.price_per_unit = input.price;
-                    input.markup = input.profit;
-                }
+                    input.currency_id=null;
+                    input.surcharge_id=null;
+                    input.calculation_type_id=null;
+                    input.provider_name=null;
+
+                if(input.currency.id != null){
+                    input.currency_id = input.currency.id;
+                }if(input.surcharge.id != null){
+                    input.surcharge_id = input.surcharge.id;
+                }if(input.calculation_type.id != null ){
+                    input.calculation_type_id = input.calculation_type.id;
+                }if(input.currency.id != null){
+                    input.provider_name = input.carrier.name;
+                } 
+                    if (component.currentQuoteData.type == 'LCL') {
+                            input.price_per_unit=null;
+                            input.markup=null;
+
+                        if(input.price!=null){
+                           input.price_per_unit = input.price; 
+                        }if(input.profit!=null){
+                           input.markup = input.profit; 
+                        } 
+                    }
             })
         }
     },
