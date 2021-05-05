@@ -22,6 +22,7 @@
               :filter="true"
               :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate']"
               @onEdit="onEdit"
+              :totalResults="totalResults"
             ></DataTable>
           </b-card>
         </div>
@@ -48,6 +49,7 @@ export default {
   },
   data() {
     return {
+      totalResults: true,
       activeOcean: false,
       actions: actions,
       fields: [
