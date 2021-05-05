@@ -1354,7 +1354,9 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.alert("Please complete the fields", "error");
+                            if(data.status == 422){
+                                this.alert("Please complete the fields", "error");
+                            }
                         });
                 } else {
                     actions.localchargeslcl
@@ -1369,7 +1371,9 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.alert("Please complete the fields", "error");
+                            if(data.status == 422){
+                                this.alert("Please complete the fields", "error");
+                            }
                         });
                 }
             } else {
@@ -1489,7 +1493,8 @@ export default {
                     input.calculation_type_id = input.calculation_type.id;
                 }if(input.currency.id != null){
                     input.provider_name = input.carrier.name;
-                } 
+                }
+                
                     if (component.currentQuoteData.type == 'LCL') {
                             input.price_per_unit=null;
                             input.markup=null;
