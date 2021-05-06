@@ -70,6 +70,11 @@ class Contract extends Model implements HasMedia, Auditable
 
         return $this->hasOne('App\NewContractRequest','contract_id','id');
     }
+    
+    public function user_from_request()
+    {
+        return $this->hasManyThrough('App\User', 'App\NewContractRequest', 'contract_id', 'id', 'id', 'user_id');
+    }
 
     public function FilesTmps()
     {
