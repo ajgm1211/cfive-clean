@@ -1074,7 +1074,7 @@ export default {
             apiOriginPorts.forEach(function (origin){
                 apiDestinationPorts.forEach(function (destination){
                     axios
-                        .get('https://mighty-castle-09151.herokuapp.com/https://carriers.cargofive.com/api/pricing',
+                        .get('https://carriers.cargofive.com/api/pricing',
                             {
                             params: {
                                 originPort: origin,
