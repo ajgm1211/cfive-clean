@@ -140,7 +140,7 @@
 
                             @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
                                 
-                                <span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}} |
+                                <span><b>Incoterm:</b> </span>{{$quote->incoterm->name}} - {{$quote->custom_incoterm}}  |
                             
                             @endif
                             
