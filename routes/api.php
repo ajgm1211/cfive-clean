@@ -75,6 +75,8 @@ Route::group(['prefix' => 'v1'], function () {
         //Rates
         Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}/{carrierUrl?}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
         Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
+        //Calculation types
+        Route::get('calculationtypes/{type}', 'ApiCalculationTypeController@index');
     });
 });
 
