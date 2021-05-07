@@ -295,7 +295,8 @@ class RequestFclV2Controller extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $contract->id;
             $Ncontract->save();
-
+            $u=json_decode($Ncontract->data);
+            dd($u->group_containers->name);
             foreach ($carriers as $carrierVal) {
                 ContractCarrier::create([
                     'carrier_id' => $carrierVal,
@@ -333,6 +334,9 @@ class RequestFclV2Controller extends Controller
             $user->notify(new SlackNotification($message));
             $admins = User::where('type', 'admin')->get();
             $message = 'has created an new request: ' . $Ncontract->id;
+
+    
+            $this->trackEvents("new_request_Fcl", $Ncontract);
 
             // EVENTO INTERCOM
             $event = new EventIntercom();
