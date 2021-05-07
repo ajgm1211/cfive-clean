@@ -447,7 +447,7 @@ trait MixPanelTrait
      * @param  mixed $user
      * @return void
      */
-    public function trackRequestFclEvent($data, $user)
+    public function trackNewRequestFclEvent($data, $user)
     {
         
         $mixPanel = app('mixpanel');
@@ -474,7 +474,7 @@ trait MixPanelTrait
      * @param  mixed $user
      * @return void
      */
-    public function trackRequestLclEvent($data, $user)
+    public function trackNewRequestLclEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
 
