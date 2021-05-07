@@ -313,6 +313,9 @@ class NewContractRequestLclController extends Controller
                 $userNotifique->notify(new N_general($user, $message));
             }
 
+            
+            $this->trackEvents("new_request_Lcl", $contract);
+            
             // EVENTO INTERCOM
             $event = new EventIntercom();
             $event->event_newRequestLCL();
