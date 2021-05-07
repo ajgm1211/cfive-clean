@@ -175,7 +175,7 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'/imgcarrier/' + rate.carrier.image"
+                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
                 alt="logo"
                 width="115px"
               />
