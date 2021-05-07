@@ -295,8 +295,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $contract->id;
             $Ncontract->save();
-            $u=json_decode($Ncontract->data);
-            dd($u->group_containers->name);
+
             foreach ($carriers as $carrierVal) {
                 ContractCarrier::create([
                     'carrier_id' => $carrierVal,
