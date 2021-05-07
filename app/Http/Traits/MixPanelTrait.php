@@ -65,6 +65,12 @@ trait MixPanelTrait
             case "old_create_quote":
                 $this->trackOldCreateQuoteEvent($data, $user);
                 break;
+            case "new_request_Fcl":
+                $this->trackNewRequestFclEvent($data, $user);
+                break;
+            case "new_request_Lcl":
+                $this->trackNewRequestLclEvent($data, $user);
+                break;
         }
     }
 
@@ -429,6 +435,57 @@ trait MixPanelTrait
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
                 'Container_type' => $array ?? null,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+        /**
+     * trackRequestFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackNewRequestFclEvent($data, $user)
+    {
+        
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $container=json_decode($data->data);
+        $mixPanel->track(
+            'New Request FCL',
+            array(
+                'type' => 'FCL',
+                'Company' => $user->companyUser->name,
+                'contract_id'=>$data->contract_id,
+                'type_contenedor'=>$container->group_containers->name,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+        /**
+     * trackRequestLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackNewRequestLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'New Request LCL',
+            array(
+                'type' => 'LCL',
+                'Company' => $user->companyUser->name,
+                'contract_id'=>$data->id,
                 'User' => $user->fullname,
             )
         );
