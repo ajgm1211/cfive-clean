@@ -24,7 +24,8 @@
                 :massiveactions="['changecontainersview', 'delete']"
                 @onEditSuccess="onEdit"
                 @onFormFieldUpdated="formFieldUpdated"
-                ></DynamicalDataTable>
+                :classTable="classTable"
+            ></DynamicalDataTable>
 
         </b-card>
 
@@ -74,7 +75,8 @@
         props: {
             equipment: Object,
             datalists: Object,
-            actions: Object
+            actions: Object,
+            classTable: String
         },
         data() {
             return {
@@ -109,7 +111,7 @@
                         type: 'select', 
                         rules: 'required', 
                         trackby: 'alphacode', 
-                        placeholder: 'Select Currency Port', 
+                        placeholder: 'Currency Port', 
                         options: 'currencies' }
                 },
             }
