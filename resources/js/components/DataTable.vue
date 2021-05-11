@@ -599,10 +599,13 @@
                 </b-tr>
             </b-tbody>
             <!-- Profits and Totals end -->
+           
         </b-table-simple>
         <!-- End DataTable -->
+        <p v-if="totalResults">Total Results: {{ this.totalData }}</p>
         
         <!-- Pagination -->
+
         <paginate
             v-if="paginated"
             :page-count="pageCount"
@@ -620,6 +623,7 @@
         >
         </paginate>
         <!-- Pagination end -->
+        
     </div>
 </template>
 
@@ -631,6 +635,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        totalResults: Boolean,
         classTable: String,
         view: String,
         filter: {
@@ -758,6 +763,7 @@ export default {
     },
     data() {
         return {
+            totalData: '',
             isBusy: false,
             data: {},
             fdata: {},
@@ -898,13 +904,13 @@ export default {
                     this.$route
                 );
             }
-
-            var contador = this.data.length;
+            
         },
 
         /* Set the data into datatable */
         setData(err, { data: records, links, meta }) {
             this.isBusy = false;
+            this.totalData = meta.total;
 
             if (err) {
                 this.error = err.toString();
@@ -913,6 +919,9 @@ export default {
                 this.autoupdateTableData = records;
                 this.pageCount = Math.ceil(meta.total / meta.per_page);
             }
+
+            
+
         },
 
         /* Refresh Data */
