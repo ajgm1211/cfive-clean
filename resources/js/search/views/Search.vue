@@ -92,7 +92,7 @@
                         :clear-on-select="true"
                         :show-labels="false"
                         :options="originPortOptions"
-                        :disabled="searchRequest.requestData.requested == 1"
+                        @input="updateQuoteSearchOptions()"
                         label="display_name"
                         track-by="display_name"
                         placeholder="From"
@@ -121,8 +121,8 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :disabled="searchRequest.requestData.requested == 1"
                             :options="destinationPortOptions"
+                            @input="updateQuoteSearchOptions()"
                             label="display_name"
                             track-by="display_name"
                             placeholder="To" 
@@ -1840,6 +1840,8 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
+                    this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
+                    this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
                     this.searchRequest.dateRange.startDate =
                         this.quoteData.search_options.start_date + "T01:00:00";
                     this.searchRequest.dateRange.endDate =
@@ -1850,6 +1852,8 @@ export default {
                     this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
+                    this.searchRequest.originPorts = this.quoteData.origin_ports;
+                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
                 }
                 if (this.quoteData.direction_id != null) {
                     this.searchRequest.direction = this.quoteData.direction_id;
@@ -1857,8 +1861,6 @@ export default {
                 this.searchRequest.type = this.quoteData.type;
                 //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
-                this.searchRequest.originPorts = this.quoteData.origin_ports;
-                this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
                 this.selectedContainerGroup = this.quoteData.gp_container;
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
