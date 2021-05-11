@@ -1154,6 +1154,25 @@ trait SearchTrait
         
                         $charge->totals_with_markups = $charge_totals_with_markups_string;
                     }
+                }else{
+                    $charge_containers_string = $charge['containers'];
+    
+                    foreach($charge_containers_string as $container => $containerTotal){
+                        $charge_containers_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge['containers'] = $charge_containers_string;
+
+                    if(isset($charge['containers_with_markups'])){
+                        //Containers With Markups
+                        $charge_containers_with_markups_string = $charge['containers_with_markups'];
+    
+                        foreach($charge_containers_with_markups_string as $container => $containerTotal){
+                            $charge_containers_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge['containers_with_markups'] = $charge_containers_with_markups_string;
+                    }
                 }
             }
         }
