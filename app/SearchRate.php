@@ -30,7 +30,14 @@ class SearchRate extends Model
 
     public function carriers()
     {
-        return $this->hasManyThrough('App\Carrier', 'App\SearchCarrier', 'search_rate_id', 'id', 'id', 'carrier_id');
+        return $this->hasManyThrough('App\Carrier', 'App\SearchCarrier', 'search_rate_id', 'id', 'id', 'provider_id')
+        ->where('provider_type', 'App\Carrier');
+    }
+
+    public function api_providers()
+    {
+        return $this->hasManyThrough('App\ApiProvider', 'App\SearchCarrier', 'search_rate_id', 'id', 'id', 'provider_id')
+        ->where('provider_type', 'App\ApiProvider');
     }
 
     public function user()
@@ -95,4 +102,5 @@ class SearchRate extends Model
         
         return $containers;
     }
+
 }

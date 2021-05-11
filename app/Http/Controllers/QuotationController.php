@@ -207,9 +207,17 @@ class QuotationController extends Controller
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
-        $rate_data = $request->input();
+        $data = $request->input();
 
-        $search_data = $rate_data[0]['search'];
+        $rate_data = $data['rates'];
+
+        $result_data = $data['results'];
+
+        if(count($rate_data) != 0){
+            $search_data = $rate_data[0]['search'];
+        }else{
+            $search_data = $result_data[0]['search'];
+        }
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
@@ -240,9 +248,9 @@ class QuotationController extends Controller
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
             'direction_id' => $search_data_ids['direction'],
-            'terms_portuguese' => $search_data['terms']['portuguese'],
-            'terms_and_conditions' => $search_data['terms']['spanish'],
-            'terms_english' => $search_data['terms']['english']
+            'terms_portuguese' => isset($search_data['terms']) ? $search_data['terms']['portuguese'] : null,
+            'terms_and_conditions' => isset($search_data['terms']) ? $search_data['terms']['spanish'] : null,
+            'terms_english' => isset($search_data['terms']) ? $search_data['terms']['english'] : null
         ]);
 
         $quote = $quote->fresh();
@@ -260,6 +268,9 @@ class QuotationController extends Controller
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
                 'contract' => isset($rate['contract']) ? $rate['contract']['name'] : '',
+                'transit_time' => isset($rate['transit_time']) ? $rate['transit_time']['transit_time'] : null,
+                'via' => isset($rate['transit_time']) ? $rate['transit_time']['via'] : null,
+                'schedule_type' => isset($rate['transit_time']) ? $rate['transit_time']['service_id'] : null,
                 'validity_start' => $rate['contract']['validity'],
                 'validity_end' => $rate['contract']['expire'],
                 'currency_id' => $rate['currency_id'],
@@ -299,6 +310,63 @@ class QuotationController extends Controller
             ]);
 
             $rateTotals->totalize($rate['currency_id']);
+        }
+
+        foreach ($result_data as $result) {
+
+            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+
+            if(isset($result['validityFrom'])){
+                $start_date = substr($result['validityFrom'], 0, 10);
+            }else{
+                $start_date = substr($search_data['dateRange']['startDate'], 0, 10);
+            }
+
+            if(isset($result['validityTo'])){
+                $end_date = substr($result['validityTo'], 0, 10);
+            }else{
+                $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
+            }
+
+            $newRate = AutomaticRate::create([
+                'quote_id' => $quote->id,
+                'contract' => $result['quoteLine'],
+                'validity_start' => $start_date,
+                'validity_end' => $end_date,
+                'transit_time' => $result['transitTime'],
+                'via' => count($result['routingDetails']) > 1 ? $result['routingDetails'][0]['arrivalName'] : null,
+                'schedule_type' => count($result['routingDetails']) > 1 ? 2 : 1,
+                'currency_id' => $result['currency_id'],
+                'origin_port_id' => $result['origin_port'],
+                'destination_port_id' => $result['destiny_port'],
+                'carrier_id' => $result['carrier_id'],
+            ]);
+
+            foreach ($result['pricingDetails']['surcharges'] as $charge_direction) {
+                foreach ($charge_direction as $charge) {
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $newRate->id,
+                        'surcharge_id' => $charge['surcharge_id'],
+                        'type_id' => $charge['type_id'],
+                        'calculation_type_id' => $charge['calculationtype_id'],
+                        'currency_id' => $charge['currency_id'],
+                        'amount' => json_encode($charge['amount']),
+                        'total' => json_encode($charge['amount']),
+                    ]);
+                }
+            }
+
+            $rateTotals = AutomaticRateTotal::create([
+                "quote_id" => $quote->id,
+                'automatic_rate_id' => $newRate->id,
+                'origin_port_id' => $newRate->origin_port_id,
+                'destination_port_id' => $newRate->destination_port_id,
+                'carrier_id' => $newRate->carrier_id,
+                'currency_id' => $newRate->currency_id,
+            ]);
+
+            $rateTotals->totalize($newRate->currency_id);
         }
 
         /** Tracking create quote event with Mix Panel*/
