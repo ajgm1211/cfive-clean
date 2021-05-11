@@ -18,7 +18,9 @@
 
 .table-responsive-sm {
     overflow-x: scroll !important;
-} 
+}
+
+
 
 /* @media only screen and (min-width: 320px) and (max-width: 1024px) {
     .table-responsive-sm {
@@ -767,13 +769,9 @@ input.multiselect__input:focus {
     padding-left: 5px !important;
 }
 
-.tab-pane .card-body {
+/* .tab-pane .card-body {
     overflow-x: scroll;
-}
-
-.no-scroll .card-body {
-    overflow: inherit;
-}
+} */
 
 .btn-adds {
     right: 60px;
@@ -1777,3 +1775,53 @@ input.multiselect__input:focus {
     }
     
 }
+
+#lower.form-control, 
+#upper.form-control {
+    width: 130px;
+}
+
+.checkbox-thead {
+    label::after,
+    label:before {
+        left: -15px !important;
+        top: 0px !important;
+    }
+}
+
+.action-thead {
+    left: 6px !important; 
+    position: relative;
+}
+
+.local_charge_currency {
+    width: 170px !important;
+}
+
+.local_charge_table {
+    height: 300px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 768px){
+
+    .local_calculation_type, 
+    .local_charge_input {
+        width: 180px !important;
+    }
+    
+    .local_charge_total_input {
+        width: 80px !important;
+    }
+    
+}
+
+@media only screen and (min-width: 1024px) {
+    
+    .local_calculation_type, 
+    .local_charge_total_input,
+    .local_charge_input {
+        width: 100% !important;
+    }
+    
+}
+
