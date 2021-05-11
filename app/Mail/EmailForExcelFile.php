@@ -35,7 +35,6 @@ class EmailForExcelFile extends Mailable
     {
         return $this->markdown('emails.excel_csv')
         ->with(['text' => $this->text])
-        ->attachFromStorageDisk('ExcelFiles',$this->path)
         ->from('info@cargofive.com')
         ->subject('Exportation Finished');
   
