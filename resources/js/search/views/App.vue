@@ -246,6 +246,7 @@ export default {
         setSearchStatus(searchRequest){
             this.searching = true;
             this.searchRequest = searchRequest;
+            this.requestData = this.$route.query;
             this.$nextTick (()=>{
                 this.$refs.resultsAPI.callAPIs();
             })
