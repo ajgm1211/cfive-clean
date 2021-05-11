@@ -11,21 +11,15 @@
                 <div class="card-body row" style="overflow: inherit">
                     <div class="col-lg-12">
                         <!-- Show Totals Checkbox-->
-                        <div class="col-12 col-lg-2 col-sm-2 d-flex mt-5 mb-5">
+                        <div class="col-12 d-flex align-items-center justify-content-start flex-wrap mt-5 mb-5">
                             <b-form-checkbox
                                 v-model="showTotals"
+                                style="width: 120px; top: -4px"
                                 @input="updatePdfOptions('totalsCheck')"
                             >
-                                <span>Show Totals</span>
+                                <span><b>Show totals in:</b></span>
                             </b-form-checkbox>
-                        </div>
-                        <hr>
-                        <!-- Show Totals Checkbox End-->
-                        <!-- Currency Multiselect-->
-                        <div class="col-2 col-lg-2 col-sm-2 d-flex mb-2">
-                            <span>Show totals in:</span>
-                        </div>
-                        <div class="col-12 col-lg-2 col-sm-3 d-flex mb-3">
+
                             <multiselect
                                 v-model="totalsCurrency"
                                 :multiple="false"
@@ -38,22 +32,61 @@
                                 :allow-empty="false"
                                 label="alphacode"
                                 track-by="alphacode"
-                                placeholder="Select Currency"
                                 @input="updatePdfOptions('showAs')"
+                                style="width: 90px"
+                                class="change-currency-totals"
                             >
                             </multiselect>
+
+                            <ul class="exchange-rates" style="margin-bottom: 0px !important">
+                                <li 
+                                    v-for="(currency, key) in exchangeRates"
+                                    :key="key"
+                                    class="mr-3"
+                                >
+                                    <b class="mr-3">{{ currency.alphacode }} to {{totalsCurrency.alphacode}}:</b>
+                                    <b-form-input
+                                        v-if="
+                                            totalsCurrency.alphacode ==
+                                            'USD'
+                                        "
+                                        v-model="currency.exchangeUSD"
+                                        type="number"
+                                        @blur="updatePdfOptions('exchangeRates')"
+                                        style="width: 90px"
+                                    ></b-form-input>
+                                    <b-form-input
+                                        v-else-if="
+                                            totalsCurrency.alphacode ==
+                                            'EUR'
+                                        "
+                                        v-model="currency.exchangeEUR"
+                                        type="number"
+                                        @blur="updatePdfOptions('exchangeRates')"
+                                        style="width: 90px"
+                                    ></b-form-input>
+                                </li>
+                            </ul>
                         </div>
+                        
+                        <!-- Show Totals Checkbox End-->
+                        <!-- Currency Multiselect-->
+                        <!-- <div class="col-2 col-lg-2 col-sm-2 d-flex mb-2">
+                            <span>Show totals in:</span>
+                        </div>
+                        <div class="col-12 col-lg-2 col-sm-3 d-flex mb-3">
+                            
+                        </div> -->
                         <!-- Currency Multiselect End-->
-                        <hr />
                         <!-- Exchange rate table-->
-                        <div class="col-12 col-lg-4 col-sm-4 d-flex mt-2 mb-3">
+                        <!-- <div class="col-12 col-lg-4 col-sm-4 d-flex mt-2 mb-3">
                             <b-table-simple
                                 hover
                                 small
                                 responsive="sm"
                                 borderless
                             >
-                                <!-- Header table -->
+                                
                                 <b-thead class="q-thead">
                                     <b-tr>
                                         <b-th>
@@ -107,7 +140,7 @@
                                     </b-tr>
                                 </b-tbody>
                             </b-table-simple>
-                        </div>
+                        </div> -->
                         <!-- Exchange rate table End-->
                     </div>
                 </div>
