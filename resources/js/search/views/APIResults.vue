@@ -940,8 +940,8 @@
                         </b-tbody>
                     </b-table-simple>
 
-                    <a v-if="result.companyCode=='maersk'" href="https://assets.maerskline.com/combined-pricing-assets/maeu/dnd/free_time_offer_for_Maersk_SPOT.xlsx">Demurrage and Detention T&C applicable</a>
-                    <a v-else-if="result.companyCode=='sealand'" href="https://assets.maerskline.com/combined-pricing-assets/seau/dnd/free_time_offer_for_Sealand_SPOT.xlsx">Demurrage and Detention T&C applicable</a>
+                    <a v-if="result.companyCode=='maersk'" href="https://assets.maerskline.com/combined-pricing-assets/maeu/dnd/free_time_offer_for_Maersk_SPOT.xlsx">Export Demurrage & Detention  T&C</a>
+                    <a v-else-if="result.companyCode=='sealand'" href="https://assets.maerskline.com/combined-pricing-assets/seau/dnd/free_time_offer_for_Sealand_SPOT.xlsx">Export Demurrage & Detention  T&C</a>
                 </div>
 
             </b-collapse>
