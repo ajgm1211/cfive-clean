@@ -990,20 +990,6 @@ class SearchApiController extends Controller
         }
     }
 
-    //Ordering rates by totals (cheaper to most expensive)
-    public function sortRates($rates, $search_data_ids)
-    {
-        if (isset($search_data_ids['pricelevel'])) {
-            $sortBy = 'totals_with_markups';
-        } else {
-            $sortBy = 'totals';
-        }
-
-        $sorted = $rates->sortBy($sortBy)->values();
-
-        return ($sorted);
-    }
-
     public function storeContractNewSearch(StoreContractSearch $request)
     {
         // dd($request);
