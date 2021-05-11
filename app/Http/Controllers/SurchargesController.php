@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
+use App\Http\Traits\EntityTrait;
 
 class SurchargesController extends Controller
 {
+    use EntityTrait;
     /**
      * Display a listing of the resource.
      *
@@ -76,7 +78,7 @@ class SurchargesController extends Controller
 
     public function store(StoreSurcharge $request)
     {
-        //dd($request->all());
+        // dd($request->all());
         $request->validated();
 
         $surcharge = new Surcharge();
@@ -87,6 +89,18 @@ class SurchargesController extends Controller
         if (!Auth::user()->hasRole(['administrator', 'data_entry'])) {
             $surcharge->company_user_id = Auth::user()->company_user_id;
         }
+
+        if ($request->key_name && $request->key_value) {
+            $options_array = [];
+
+            $options_key = $this->processArray($request->key_name);
+            $options_value = $this->processArray($request->key_value);
+
+            $options_array = json_encode(array_combine($options_key, $options_value));
+
+            $surcharge->options = $options_array;
+        }
+
         $surcharge->save();
 
         if ($request->ajax()) {
@@ -123,6 +137,18 @@ class SurchargesController extends Controller
         $surcharges->description = $request->description;
         $surcharges->sale_term_id = $request->sale_term_id;
         $surcharges->variation = strtolower(json_encode(['type' => $request->variation]));
+
+        if ($request->key_name && $request->key_value) {
+            $options_array = [];
+
+            $options_key = $this->processArray($request->key_name);
+            $options_value = $this->processArray($request->key_value);
+
+            $options_array = json_encode(array_combine($options_key, $options_value));
+
+            $surcharges->options = $options_array;
+        }
+
         $surcharges->update();
 
         $request->session()->flash('message.nivel', 'success');
