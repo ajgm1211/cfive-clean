@@ -8,6 +8,8 @@ import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
 import VueNumericInput from 'vue-numeric-input';
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 /* Config files */
 import App from './views/App'; // Main Component
@@ -19,6 +21,10 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(VueNumericInput)
+
+Vue.use(VueToast, {
+    position: 'top-right'
+});
 
 Vue.use(VueGoogleMaps, {
     load: {

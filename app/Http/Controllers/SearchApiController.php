@@ -42,6 +42,7 @@ use App\QuoteV2;
 use App\CompanyPrice;
 use App\ContractFclFile;
 use App\NewContractRequest;
+use App\ApiProvider;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -80,13 +81,18 @@ class SearchApiController extends Controller
     //Retrieves all data needed for search processing and displaying
     public function data(Request $request)
     {
+        $user = \Auth::user();
         //Querying each model used and mapping only necessary data
-        $company_user_id = \Auth::user()->company_user_id;
+        $company_user_id = $user->company_user_id;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
+        });
+
+        $carriers_api = ApiProvider::get()->map(function ($provider) {
+            return $provider->only(['id', 'name', 'code', 'image']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
@@ -161,9 +167,11 @@ class SearchApiController extends Controller
 
         //Collecting all data retrieved
         $data = compact(
+            'user',
             'company_user_id',
             'company_user',
             'carriers',
+            'carriers_api',
             'companies',
             'contacts',
             'currency',
@@ -299,7 +307,8 @@ class SearchApiController extends Controller
             'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required',
             'direction' => 'required',
-            'carriers' => 'required|array|min:1',
+            'carriers' => 'sometimes',
+            'carriersApi' => 'sometimes',
             'type' => 'required',
             'company' => 'sometimes',
             'contact' => 'sometimes',
@@ -332,7 +341,6 @@ class SearchApiController extends Controller
 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromArray($new_search_data);
-
         //Formatting date
         $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
 
@@ -374,10 +382,23 @@ class SearchApiController extends Controller
         }
 
         foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-            $searchCarrier = new SearchCarrier();
-            $searchCarrier->carrier_id = $carrier_id;
-            $searchCarrier->search_rate()->associate($new_search);
-            $searchCarrier->save();
+            $carrier = Carrier::where('id',$carrier_id)->first();
+            
+            $search_carrier = new SearchCarrier();
+
+            $search_carrier->search_rate_id = $new_search->id;
+            
+            $search_carrier->provider()->associate($carrier)->save();
+        }
+
+        foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+            $provider = ApiProvider::where('id',$provider_id)->first();
+            
+            $search_carrier = new SearchCarrier();
+
+            $search_carrier->search_rate_id = $new_search->id;
+            
+            $search_carrier->provider()->associate($provider)->save();
         }
 
         return new SearchApiResource($new_search);
@@ -967,6 +988,20 @@ class SearchApiController extends Controller
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
 
         }
+    }
+
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates, $search_data_ids)
+    {
+        if (isset($search_data_ids['pricelevel'])) {
+            $sortBy = 'totals_with_markups';
+        } else {
+            $sortBy = 'totals';
+        }
+
+        $sorted = $rates->sortBy($sortBy)->values();
+
+        return ($sorted);
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)
