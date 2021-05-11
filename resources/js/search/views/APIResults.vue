@@ -1084,7 +1084,7 @@ export default {
                                 destinationPort: destination,
                                 equipmentSizeType: apiContainers,
                                 departureDate: apiDate,
-                                uemail: 'dcabanales@gmail.com',
+                                uemail: component.datalists.user.email,
                                 brands: apiCarrierCodes
                                 },
                             headers:{
