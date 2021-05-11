@@ -81,8 +81,9 @@ class SearchApiController extends Controller
     //Retrieves all data needed for search processing and displaying
     public function data(Request $request)
     {
+        $user = \Auth::user();
         //Querying each model used and mapping only necessary data
-        $company_user_id = \Auth::user()->company_user_id;
+        $company_user_id = $user->company_user_id;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
@@ -90,7 +91,7 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id',[2,3])->get()->map(function ($provider) {
+        $carriers_api = ApiProvider::get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
         });
 
@@ -166,6 +167,7 @@ class SearchApiController extends Controller
 
         //Collecting all data retrieved
         $data = compact(
+            'user',
             'company_user_id',
             'company_user',
             'carriers',
