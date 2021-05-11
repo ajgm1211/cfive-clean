@@ -50,6 +50,9 @@ class QuotationResource extends JsonResource
             $this->user->setAttribute('fullname', $this->user->fullname);
         }
 
+        $inland_ports = $this->setInlandPorts();
+        $local_ports = $this->setLocalPorts();
+
         return [
             'id' => $this->id,
             'quote_id' => $this->quote_id,
@@ -103,15 +106,45 @@ class QuotationResource extends JsonResource
             'carriers' => $this->carrier()->get(),
             'search_options' => $this->search_options,
             'direction_id' => $this->direction_id,
+            'inland_ports' => $inland_ports,
+            'local_ports' => $local_ports,
         ];
     }
 
-    public function formatear($created_at){
-
+    public function formatear($created_at)
+    {
         $fecha=date('Y-m-d H:m:s', strtotime($created_at));
 
         return $fecha;
+    }
 
+    public function setInlandPorts()
+    {
+        $addresses = $this->inland_addresses()->get();
 
+        $ports = [];
+
+        foreach($addresses as $address){
+            array_push($ports, $address->port()->first()->id);
+        }
+
+        return $ports;
+    }
+
+    public function setLocalPorts()
+    {
+        if($this->type == "FCL"){
+            $locals = $this->local_charges()->get();
+        }elseif($this->type == "LCL"){
+            $locals = $this->local_charges_lcl()->get();
+        }
+
+        $ports = [];
+
+        foreach($locals as $local){
+            array_push($ports, $local->port()->first()->id);
+        }
+
+        return $ports;
     }
 }
