@@ -757,7 +757,6 @@ export default {
           console.log(error);
         });
     },
-  },
     addRateToQuote(rate){
       let component = this;
 
