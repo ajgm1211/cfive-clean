@@ -313,6 +313,10 @@ export default {
                 return "col-lg-1";
             }
 
+            if (item.label == "Provider") {
+                return "col-lg-2 col-pr-5";
+            }
+
             if ("colClass" in item) {
                 return item.colClass;
             }

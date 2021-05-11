@@ -7,6 +7,10 @@
     background-color: transparent !important;
 }
 
+/* .sc-table.table-sm tr:nth-child(even) {
+    background-color: #fbfbfb !important;
+} */
+
 .btn.btn-secondary {
     background-color: transparent!important;
     border: 2px solid #80888B !important;
@@ -767,13 +771,9 @@ input.multiselect__input:focus {
     padding-left: 5px !important;
 }
 
-.tab-pane .card-body {
+/* .tab-pane .card-body {
     overflow-x: scroll;
-}
-
-.no-scroll .card-body {
-    overflow: inherit;
-}
+} */
 
 .btn-adds {
     right: 60px;
@@ -1697,7 +1697,10 @@ input.multiselect__input:focus {
 }
 
 .container-cards {
-    padding: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 @media only screen and (max-width: 991px) {
@@ -1776,4 +1779,22 @@ input.multiselect__input:focus {
         }
     }
     
+}
+
+#lower.form-control, 
+#upper.form-control {
+    width: 130px;
+}
+
+.checkbox-thead {
+    label::after,
+    label:before {
+        left: -15px !important;
+        top: 0px !important;
+    }
+}
+
+.action-thead {
+    left: 6px !important; 
+    position: relative;
 }
