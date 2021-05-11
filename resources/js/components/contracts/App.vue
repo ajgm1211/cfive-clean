@@ -23,6 +23,7 @@
                         :filter="true"
                         @onEdit="onEdit"
                         @onOpenModalProgressDetails="showProgressDetailsModal"
+                        :totalResults="totalResults"
                         ></DataTable>
                 </b-card>
             </div>
@@ -101,6 +102,7 @@
         },
         data() {
             return {
+                totalResults: true,
                 value: 45,
                 max: 100,
                 isBusy:true, // Loader
