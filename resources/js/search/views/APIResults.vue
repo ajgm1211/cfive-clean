@@ -25,7 +25,7 @@
             <div class="row col-12 col-lg-8 margin-res">
                 <!-- CONTRACT NAME -->
                 <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">{{ cmaResult.quoteLine }}</h6>
+                <h6 class="mt-4 mb-5 contract-title">{{ cmaResult.contractReference }}</h6>
                 </div>
                 <!-- FIN CONTRACT NAME -->
 
