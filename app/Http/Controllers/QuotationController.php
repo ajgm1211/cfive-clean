@@ -542,7 +542,8 @@ class QuotationController extends Controller
 
     public function specialduplicate(Request $request)
     {
-        $rate_data = $request->input();
+        $data = $request->input();
+        $rate_data = $data['rates'];
         $search_data = $rate_data[0]['search'];
 
         $search_data_ids = $this->getIdsFromArray($search_data);
@@ -578,7 +579,12 @@ class QuotationController extends Controller
             $old_rate->delete();
         }
 
+        $rate_ports = [ 'origin' => [], 'destination' => [] ];
+
         foreach ($rate_data as $rate) {
+
+            array_push($rate_ports['origin'], $rate['origin_port']);
+            array_push($rate_ports['destination'], $rate['destiny_port']);
 
             $newRate = AutomaticRate::create([
                 'quote_id' => $new_quote->id,
@@ -622,6 +628,40 @@ class QuotationController extends Controller
             ]);
 
             $rateTotals->totalize($rate['currency_id']);
+        }
+
+        $inlands = $new_quote->inland_addresses()->get();
+
+        foreach($inlands as $inland){
+            if($inland->type == "Origin"){
+                if(!in_array($inland->port_id, $rate_ports['origin'])){
+                    $inland->delete();
+                }
+            }elseif($inland->type == "Destination"){
+                if(!in_array($inland->port_id, $rate_ports['destination'])){
+                    $inland->delete();
+                }
+            } 
+        }
+
+        $inlands = $new_quote->inland_addresses()->get();
+
+        if($new_quote->type == "FCL"){
+            $locals = $new_quote->local_charges_totals()->get();
+        }elseif($new_quote->type == "FCL"){
+            $locals = $new_quote->local_charges_lcl_totals()->get();
+        }
+
+        foreach($locals as $local){
+            if($local->type_id == 1){
+                if(!in_array($local->port_id, $rate_ports['origin'])){
+                    $local->delete();
+                }
+            }elseif($local->type_id == 2){
+                if(!in_array($local->port_id, $rate_ports['destination'])){
+                    $local->delete();
+                }
+            } 
         }
 
         $quote->update(['search_options' => null]);

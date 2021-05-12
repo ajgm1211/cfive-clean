@@ -774,7 +774,7 @@ export default {
     },
     createQuote(){
       this.$emit('createQuote');
-    }
+    },
   },
   mounted(){
     let component = this;
@@ -786,19 +786,14 @@ export default {
     });
 
     component.finalRates = component.rates;
-
-  component.rates.forEach(function (rate) {
-    rate.addToQuote = false;
-  });
-  component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-        let navBar = document.getElementById('top-results');
-        if(window.scrollY > navBar.offsetTop){
-            component.isActive = true;
-        } else {
-            component.isActive = false;
-        }
+      let navBar = document.getElementById('top-results');
+      if(window.scrollY > navBar.offsetTop){
+          component.isActive = true;
+      } else {
+          component.isActive = false;
+      }
     }
     
     this.loaded = true;
