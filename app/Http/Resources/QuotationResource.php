@@ -117,34 +117,4 @@ class QuotationResource extends JsonResource
 
         return $fecha;
     }
-
-    public function setInlandPorts()
-    {
-        $addresses = $this->inland_addresses()->get();
-
-        $ports = [];
-
-        foreach($addresses as $address){
-            array_push($ports, $address->port()->first()->id);
-        }
-
-        return $ports;
-    }
-
-    public function setLocalPorts()
-    {
-        if($this->type == "FCL"){
-            $locals = $this->local_charges()->get();
-        }elseif($this->type == "LCL"){
-            $locals = $this->local_charges_lcl()->get();
-        }
-
-        $ports = [];
-
-        foreach($locals as $local){
-            array_push($ports, $local->port()->first()->id);
-        }
-
-        return $ports;
-    }
 }
