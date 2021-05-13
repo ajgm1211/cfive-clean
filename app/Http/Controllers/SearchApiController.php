@@ -619,48 +619,35 @@ class SearchApiController extends Controller
         //Retrieving current companyto filter remarks
         $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
 
-        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->get();
+        $origin_country = $rate->port_origin->country()->first();
+        $destination_country = $rate->port_destiny->country()->first();
+        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
+
+        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
+
+        $rate_carriers_id = [$rate->carrier_id, 26];
+        
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+            $q->whereIn('carrier_id', $rate_carriers_id);
+        })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
+            $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
+                $q->whereIn('port_id', $rate_ports_id);
+            })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
+                $q->whereIn('country_id', $rate_countries_id);
+            });
+        })->get();
 
         $final_remarks = "";
         $included_contracts = [];
         $included_global_remarks = [];
 
-        $rate_origin_port = $rate->origin_port;
-        $rate_destination_port = $rate->destiny_port;
-        $rate_carrier = $rate->carrier_id;
-
         foreach ($remarks as $remark) {
-            $carriers = $remark->remarksCarriers()->get()->toArray();
-
-            if ($remark->mode == 'port') {
-                $ports = $remark->remarksHarbors()->get()->toArray();
-            } else if ($remark->mode == 'country') {
-                $ports = [];
-                $countries = $remark->remarksCountries()->get();
-
-                foreach ($countries as $country) {
-                    $country_ports = $country->ports()->get()->toArray();
-
-                    foreach ($country_ports as $port) {
-                        array_push($ports, $port);
-                    }
-                }
-            }
-
-            $carrier_ids = $this->getIdsFromArray($carriers);
-
-            $port_ids = $this->getIdsFromArray($ports);
-
-            if (((in_array($rate_origin_port, $port_ids) || in_array($rate_destination_port, $port_ids)) && in_array($rate_carrier, $carrier_ids)) ||
-                in_array(26, $carrier_ids) || in_array(1485, $port_ids)
-            ) {
-                if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
-                    $final_remarks .= $remark->import . "<br>";
-                    array_push($included_global_remarks, $remark->id);
-                } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
-                    $final_remarks .= $remark->export . "<br>";
-                    array_push($included_global_remarks, $remark->id);
-                }
+            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->import . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->export . "<br>";
+                array_push($included_global_remarks, $remark->id);
             }
         }
 
