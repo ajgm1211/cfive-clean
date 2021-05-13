@@ -14,6 +14,7 @@ use App\Harbor;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\AutomaticInlandTotal;
+use App\InlandDistance;
 use App\Http\Traits\SearchTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -351,6 +352,15 @@ class AutomaticInlandController extends Controller
         foreach($totals as $total){
             $total->update(['pdf_options'=>$request->input('pdf_options')]);
         }
+    }
+
+    public function getHarborAddresses($port_id)
+    {
+        $distances = InlandDistance::where('harbor_id', $port_id)->get()->map(function ($distance) {
+            return $distance->only(['id', 'display_name', 'harbor_id', 'distance']);
+        });
+
+        return response()->json(['data' => $distances]);
     }
 
     public function retrieveTotals(QuoteV2 $quote, $combo)
