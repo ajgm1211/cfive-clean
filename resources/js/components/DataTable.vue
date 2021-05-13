@@ -1231,35 +1231,24 @@ export default {
         },
 
         onDelete(id) {
-            this.isBusy = true;
             swal({
                 title: 'Are you sure?',
-                text: "You won't be to revert this!",
+                text: "You will not be able to reverse this!",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonClass: 'btn btn-danger',
-                confirmButtonClass: 'btn btn-success',
+                confirmButtonClass: 'btn btn-primary',
                 confirmButtonText: 'Yes, delete it!',
             })
                 .then((result)=> {
                     if(result.value){
-                    console.log(result.value);
-
                     this.isBusy = true;
                         this.actions
                             .delete(id)
                             .then((response) => {
                                 this.refreshData();
                             }) 
-                    }else{
-                        console.log(result.value);
-
-                        swal({
-                            title: 'Cancelled',
-                            text: "Your registry is safe",
-                            type: 'error',
-                        })
-                    }    
+                    }  
                 })    
         },
 
