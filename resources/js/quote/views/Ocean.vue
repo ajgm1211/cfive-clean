@@ -20,7 +20,7 @@
                     <!-- Logo, origen, destino -->
                     <div class="responsive-destination-card">
                         <img
-                            :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com'+ freight.carrierLogo"
+                            :src="freight.carrierLogo"
                             alt="logo"
                             width="100" 
                             height="50"
