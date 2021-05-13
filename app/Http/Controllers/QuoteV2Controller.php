@@ -3935,6 +3935,9 @@ class QuoteV2Controller extends Controller
             'type_container' => $group_containerC[$request->container_type],
             'equipment' => $request->equipment,
             'contain' => $contain,
+            'origin' => $origin_port,
+            'destiny' =>$destiny_port,
+            'harbors' =>$harborsR,
         ];
         // dd($mixSearch);
         $this->trackEvents("old_search_Fcl", $mixSearch);
