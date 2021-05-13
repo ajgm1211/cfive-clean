@@ -135,10 +135,18 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
 
+        foreach($data['data']['originPorts'] as $orig){
+            $origin[]=$orig['name'];
+        }
+        foreach($data['data']['destinationPorts'] as $dest){
+            $destiny[]=$dest['name'];
+        }
         $mixPanel->track(
             'Rate Finder FCL',
             array(
                 'Company' => $data['company_user']['name'],
+                'origin' =>$origin,
+                'destiny' =>$destiny,
                 'Container_type' => $data['data']['selectedContainerGroup']['name'],
                 'User' => $user->fullname,
             )
