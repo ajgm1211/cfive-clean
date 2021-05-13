@@ -406,6 +406,13 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
 
+        foreach  ($data['origin'] as $q){ 
+            $origin[]=$data['harbors'][$q];           
+        } 
+        foreach  ($data['destiny'] as $q){ 
+           $destiny[]=$data['harbors'][$q];           
+        }
+
         $mixPanel->track(
             'Old Search LCL',
             array(
@@ -413,6 +420,8 @@ trait MixPanelTrait
                 'Company' => $data['company'],
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
+                'origin'=> $origin,
+                'destiny'=> $destiny,
                 'User' => $user->fullname,
             )
         );
