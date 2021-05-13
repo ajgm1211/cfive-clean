@@ -338,7 +338,17 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                          >{{
+                            rate.totals_with_markups_freight_currency
+                              ? rate.totals_with_markups_freight_currency["C" + container.code]
+                              : rate.totals_freight_currency["C" + container.code]
+                          }}
+                          <span style="font-size: 10px">{{
+                            rate.currency.alphacode
+                          }}</span></b
+                        >
+                        <b style="font-size: 16px" v-else
                           >{{
                             rate.totals_with_markups
                               ? rate.totals_with_markups["C" + container.code]
