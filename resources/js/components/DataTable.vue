@@ -1243,14 +1243,25 @@ export default {
         },
 
         onDelete(id) {
-            this.isBusy = true;
-
-            this.actions
-                .delete(id)
-                .then((response) => {
-                    this.refreshData();
-                })
-                .catch((data) => {});
+            swal({
+                title: 'Are you sure?',
+                text: "You will not be able to reverse this!",
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonClass: 'btn btn-danger',
+                confirmButtonClass: 'btn btn-primary',
+                confirmButtonText: 'Yes, delete it!',
+            })
+                .then((result)=> {
+                    if(result.value){
+                    this.isBusy = true;
+                        this.actions
+                            .delete(id)
+                            .then((response) => {
+                                this.refreshData();
+                            }) 
+                    }  
+                })    
         },
 
         onDeleteAll() {
