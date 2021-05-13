@@ -3,9 +3,13 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Traits\UtilTrait;
 
 class QuotationOceanFreightChargeResource extends JsonResource
 {
+
+    use UtilTrait;
+
     /**
      * Transform the resource into an array.
      *
@@ -18,21 +22,12 @@ class QuotationOceanFreightChargeResource extends JsonResource
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
             'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
-            'price' => $this->arrayToFloat($this->price),
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
+            'price' => $this->arrayMapToFloat($this->price),
             //'profit' => $this->profit,
             'currency' => $this->currency->alphacode ?? null
         ];
-    }
-
-    public function arrayToFloat($array){
-
-        $new_array = [];
-
-        foreach((array)$array as $key=>$item){
-            $new_array[$key] = (float) $item;
-        }
-
-        return $new_array;
     }
 }

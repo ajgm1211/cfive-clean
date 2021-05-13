@@ -18,12 +18,15 @@ class QuotationChargeLclResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type->description,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
+            'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
             'port' => $this->getType($this->type_id),
-            'units' => $this->units ?? null,
-            'price' => $this->price ?? null,
-            'profit' => $this->profit ?? null,
-            'total' => $this->total ?? null,
+            'units' => $this->units ?? 0,
+            'price' => $this->price ?? 0,
+            'profit' => $this->profit ?? 0,
+            'total' => $this->total ?? $this->setTotal(),
             'currency' => $this->currency->alphacode ?? null,
             'provider' => $this->automatic_rate->carrier->name ?? null,
         ];
@@ -37,5 +40,9 @@ class QuotationChargeLclResource extends JsonResource
         }else{
             return null;
         }
+    }
+
+    public function setTotal(){
+        return ((float)$this->units*(float)$this->price) + (float)$this->profit;
     }
 }
