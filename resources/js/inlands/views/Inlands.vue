@@ -28,6 +28,7 @@
 							v-if="range"
 							:equipment="equipment" 
 							:datalists="datalists"
+							:classTable="classTable"
 							:actions="actions.ranges">
 						</inland-ranges>
 					</b-tab>
@@ -72,6 +73,7 @@
 				km: false,
 				range: false,
 				currentData: { daterange: { startDate: null, endDate: null } },
+				classTable: 'table-contract',
 
 				/* Form Inline Fields */
 	            form_fields: {
