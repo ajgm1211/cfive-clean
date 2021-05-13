@@ -18,9 +18,14 @@ class SearchApiResource extends JsonResource
     {
         $origin_ports = $this->origin_ports()->get();
         $destination_ports = $this->destination_ports()->get();
+        
         $carriers = $this->carriers()->get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name','image']);
-        });;
+            return $carrier->only(['id', 'name', 'image']);
+        });
+
+        $api_providers = $this->api_providers()->get()->map(function ($carrier) {
+            return $carrier->only(['id', 'name', 'image', 'code']);
+        });
 
         $containers = $this->containers();
 
@@ -55,6 +60,7 @@ class SearchApiResource extends JsonResource
             'origin_ports' => $origin_ports,
             'destination_ports' => $destination_ports,
             'carriers' => $carriers,
+            'carriers_api' => $api_providers,
             'company' => isset($this->company_id) ? $this->client_company()->first() : null,
             'contact' => $contact,
             'price_level' => isset($this->price_level_id) ? $this->price_level()->first() : null,

@@ -3,7 +3,7 @@
     <span class="text-left" style="font-size: 12px !important;"><b>{{__('pdf.exchange')}}</b></span>
 
     <div>
-        <table border="0" cellspacing="1" cellpadding="1">
+        <table border="0" cellspacing="1" cellpadding="1" style="width: 200px">
 
             <!-- Table Header -->
             <thead class="title-quote text-left header-table" >
