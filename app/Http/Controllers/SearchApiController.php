@@ -975,6 +975,15 @@ class SearchApiController extends Controller
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
 
         }
+
+        $totals_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals);
+        $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+
+        if(isset($rate->totals_with_markups)){
+            $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
+            $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
+        }
+
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)
