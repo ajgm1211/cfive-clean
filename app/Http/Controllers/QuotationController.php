@@ -151,10 +151,6 @@ class QuotationController extends Controller
             return $provider->only(['id', 'name']);
         });
 
-        $distances = InlandDistance::get()->map(function ($distance) {
-            return $distance->only(['id', 'display_name', 'harbor_id', 'distance']);
-        });
-
         $cargo_types = CargoType::get()->map(function ($tcargo) {
             return $tcargo->only(['id', 'name']);
         });
@@ -189,7 +185,6 @@ class QuotationController extends Controller
             'sale_codes',
             'providers',
             'providers',
-            'distances',
             'cargo_types',
             'calculationtypeslcl',
             'filtered_currencies',
