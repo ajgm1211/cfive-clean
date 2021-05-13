@@ -4385,6 +4385,7 @@ class QuoteV2Controller extends Controller
         $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
+        $harborsR = Harbor::get()->pluck('display_name', 'id');
         $countries = Country::all()->pluck('name', 'id');
         $prices = Price::all()->pluck('name', 'id');
         $company_user = User::where('id', \Auth::id())->first();
@@ -6955,6 +6956,9 @@ class QuoteV2Controller extends Controller
             'company' => $company_setting->name,
             'company_client' => $company_cliente,
             'contact_client' => $contact_cliente,
+            'origin' => $origin_port,
+            'destiny' => $destiny_port,
+            'harbors' => $harborsR,
         ];
         // dd($mixSearch);
         $this->trackEvents("old_search_lcl", $mixSearch);
