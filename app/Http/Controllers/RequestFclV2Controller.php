@@ -334,6 +334,9 @@ class RequestFclV2Controller extends Controller
             $admins = User::where('type', 'admin')->get();
             $message = 'has created an new request: ' . $Ncontract->id;
 
+    
+            $this->trackEvents("new_request_Fcl", $Ncontract);
+
             // EVENTO INTERCOM
             $event = new EventIntercom();
             $event->event_newRequest();
