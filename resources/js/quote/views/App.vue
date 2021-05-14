@@ -1,5 +1,4 @@
 <template>
-  <div class="quote-header">
     <div class="container-fluid">
       <div class="row mt-5">
         <div class="col-12">
@@ -23,12 +22,12 @@
               :filter="true"
               :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate']"
               @onEdit="onEdit"
+              :totalResults="totalResults"
             ></DataTable>
           </b-card>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 
@@ -50,6 +49,7 @@ export default {
   },
   data() {
     return {
+      totalResults: true,
       activeOcean: false,
       actions: actions,
       fields: [
