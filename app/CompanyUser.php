@@ -9,6 +9,10 @@ class CompanyUser extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
+    protected $casts = [
+        'options' => 'array',
+    ];
+
     protected $fillable = ['name', 'address', 'phone', 'currency_id', 'logo', 'pdf_language', 'type_pdf', 'pdf_ammounts', 'decimals'];
 
     public function user()
