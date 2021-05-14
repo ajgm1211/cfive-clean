@@ -26,9 +26,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PrvRequest;
 use Yajra\Datatables\Datatables;
+use App\Http\Traits\MixPanelTrait;
+use Illuminate\Support\Facades\Log;
+
 
 class NewContractRequestLclController extends Controller
 {
+    use MixPanelTrait;
 
     public function index()
     {
@@ -309,6 +313,9 @@ class NewContractRequestLclController extends Controller
                 $userNotifique->notify(new N_general($user, $message));
             }
 
+            
+            $this->trackEvents("new_request_Lcl", $contract);
+            
             // EVENTO INTERCOM
             $event = new EventIntercom();
             $event->event_newRequestLCL();
@@ -476,6 +483,7 @@ class NewContractRequestLclController extends Controller
                     }
 
                 }
+                $this->trackEvents("Request_Status_lcl", $Ncontract);
             }
 
             $Ncontract->save();
@@ -505,7 +513,38 @@ class NewContractRequestLclController extends Controller
     {
         //
     }
+    // Api Request SendEmail ---------------------------------------------------------------
+        public function sendEmailRequest(Request $request)
+    {
+        $success = false;
+        $error = null;
+        try {
+            $id = $request->request_id;
+            $Ncontract = NewContractRequestLcl::find($id);
+            $users = User::all()->where('company_user_id', '=', $Ncontract->company_user_id);
+            $message = 'The request was processed N°: ' . $Ncontract->id;
+            foreach ($users as $user) {
+                $user->notify(new N_general(\Auth::user(), $message));
+            }
 
+            $usercreador = User::find($Ncontract->user_id);
+            $message = "The importation " . $Ncontract->id . " was completed";
+            $usercreador->notify(new SlackNotification($message));
+            if (env('APP_VIEW') == 'operaciones') {
+                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
+            } else {
+                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
+            }
+            $success = true;
+        } catch (\Exception $e) {
+            $success = false;
+            Log::error($e);
+            $error = $e->getMessage();
+        } finally {
+            return response()->json(['success' => $success, 'error' => $error]);
+        }
+    }
+    
     // Delete Request Importation ----------------------------------------------------------
     public function destroyRequest($id)
     {

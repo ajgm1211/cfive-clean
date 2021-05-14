@@ -126,7 +126,7 @@
 
             <div class="row">
                 <div style="float: left; margin-left:15px;">
-                    <p class="color-title" ><b>{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                    <!-- <p class="color-title" ><b>{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p> -->
                     <p class="color-title" style="text-align: justify"><b {{$quote->payment_conditions ? '':'hidden'}}>{{__('pdf.payment_conditions')}}: </b>{{ $quote->payment_conditions }}</p>
                 </div>
             </div>
@@ -140,7 +140,7 @@
 
                             @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
                                 
-                                <span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}} |
+                                <span><b>Incoterm:</b> </span>{{$quote->incoterm->name}} - {{$quote->custom_incoterm}}  |
                             
                             @endif
                             

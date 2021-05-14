@@ -188,8 +188,8 @@
                         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;
 
-                       <!-- &nbsp; &nbsp;
-                        <a href="#" onclick="showModalsavetosurcharge({{$id}},'editSurchargeByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a> -->
+                       &nbsp; &nbsp;
+                        <a href="#" onclick="showModalsavetosurcharge({{$id}},'editSurchargeByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a>
                     </div>
 
                     <div class="m-portlet__body">

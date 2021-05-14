@@ -17,7 +17,7 @@
         <!-- End Search Input -->
 
         <!-- DataTable -->
-        <b-table-simple small responsive borderless>
+        <b-table-simple small responsive borderless :class="classTable">
             <!-- Header table -->
             <b-thead>
                 <b-tr>
@@ -30,7 +30,7 @@
                         >
                         </b-form-checkbox>
                     </b-th>
-                    <b-th v-for="(value, key) in fields" :key="key">
+                    <b-th v-for="(value, key) in fields" :key="key" :id="value.key">
                         <span
                             v-if="filter"
                             class="mr-1 btn-filter"
@@ -326,6 +326,7 @@
                         :key="key"
                         :style="'max-width:' + item.width"
                     >
+                    
                         <!-- Text field -->
                         <div v-if="item.type == 'extraText'">
                             <b-form-input
@@ -389,7 +390,7 @@
                     <!-- end Checkbox column -->
 
                     <!-- Fields data -->
-                    <b-td v-for="(col, inKey) in fields" :key="inKey">
+                    <b-td v-for="(col, inKey) in fields" :key="inKey" :id="col.key">
                         <div v-if="autoupdateDataTable">
                             <b-form-input
                                 v-if="col.type == 'text'"
@@ -493,6 +494,13 @@
                                 @click="onSpecialDuplicate(item.id)"
                             >
                                 Use as template
+                            </button>
+                            <button
+                                class="btn-action"
+                                v-if="singleActions.includes('seeProgressDetails')"
+                                @click="onOpenProgressModal(item.id)"
+                            >
+                                Processing progress
                             </button>
                         </b-popover>
                     </b-td>
@@ -622,6 +630,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        classTable: String,
         view: String,
         filter: {
             type: Boolean,
@@ -1346,6 +1355,9 @@ export default {
         onOpenModalHarborDest() {
             let ids = this.selected.map((item) => item.id);
             this.$emit("onOpenModalHarborDestView", ids);
+        },
+        onOpenProgressModal(id) {
+            this.$emit("onOpenModalProgressDetails", id);
         },
 
         addInsert() {
