@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\DestinationType;
+use App\ScheduleType;
 
 class AutomaticRateResource extends JsonResource
 {
@@ -45,11 +45,11 @@ class AutomaticRateResource extends JsonResource
     public function setSchedule($sctype)
     {
         if($sctype == 'Direct'){
-            return ['id'=>1,'name'=>DestinationType::where('id',2)->first()->name];
+            return ['id'=>1,'name'=>ScheduleType::where('id',1)->first()->name];
         }else if($sctype == 'Transhipment'){
-            return ['id'=>2,'name'=>DestinationType::where('id',1)->first()->name];
+            return ['id'=>2,'name'=>ScheduleType::where('id',2)->first()->name];
         }else if($sctype == 1 || $sctype == 2){
-            return ['id'=>$sctype,'name'=>DestinationType::where('id',$sctype)->first()->name];
+            return ['id'=>$sctype,'name'=>ScheduleType::where('id',$sctype)->first()->name];
         }else if($sctype == null){
             return $sctype;
         }
