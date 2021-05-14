@@ -114,25 +114,43 @@ $validation_expire = 'Please enter validity date';
                                         @endphp
                                         <tr id="{{'tr_clone'.$loop->index}}"  >
                                             <input type="hidden" name="surcharge_fail_id[{{$loop->index}}]" value="{{$surchargef['surcharge_id']}}">
+                                            <input type="hidden" name="typerate[{{$loop->index}}]" value="{{$surchargef['type_rate']}}">
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('id_surcharge['.$rowTable.']', $surcharges,$surchargef['surcharge'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$surchargef["classorigin"] ,'required' => 'required']) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
                                                     <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classsurcharger']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                             </td>
-                                            <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('origin_id['.$rowTable.'][]', $harbor,$surchargef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$surchargef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
-                                                <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
-                                                    <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classorigin']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </td>
-                                            <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('destiny_id['.$rowTable.'][]', $harbor,$surchargef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
-                                                <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
-                                                    <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classdestiny']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </td>
-
+                                            <!-- input port -->
+                                            @if($surchargef['type_rate']=='port')
+                                                <td style="padding: 0.75rem 0.2rem;">
+                                                    {{ Form::select('origin_id['.$rowTable.'][]', $harbor,$surchargef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$surchargef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
+                                                    <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
+                                                        <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classorigin']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 0.75rem 0.2rem;">
+                                                    {{ Form::select('destiny_id['.$rowTable.'][]', $harbor,$surchargef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
+                                                    <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
+                                                        <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classdestiny']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            @endif
+                                            <!-- input country -->
+                                            @if($surchargef['type_rate']=='country')
+                                                <td style="padding: 0.75rem 0.2rem;">
+                                                    {{ Form::select('origin_id['.$rowTable.'][]', $countries,$surchargef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$surchargef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
+                                                    <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
+                                                        <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classorigin']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 0.75rem 0.2rem;">
+                                                    {{ Form::select('destiny_id['.$rowTable.'][]', $countries,$surchargef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
+                                                    <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
+                                                        <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classdestiny']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </td>
+                                            @endif
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('type_destiny_id['.$rowTable.']', $type_destiny,$surchargef['type_destiny'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ]) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
@@ -162,7 +180,7 @@ $validation_expire = 'Please enter validity date';
                                             </td>
 
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('carrier_id['.$rowTable.']', $carrier,$surchargef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;']) }}
+                                                {{ Form::select('carrier_id['.$rowTable.'][]', $carrier,$surchargef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;','multiple' => 'multiple']) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
                                                     <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classcarrier']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>

@@ -1275,9 +1275,9 @@ background-color: #5ce4a4;
                                     </div>
                                 </div>
                                 <div class="col-lg-6" align='right'> 
-                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>
-                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')" title="New Feature">
-                                        Create FCL Quote
+                                    <!--<button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>-->
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')">
+                                        Create Quote
                                     </button>
                                 </div>
                             </div>

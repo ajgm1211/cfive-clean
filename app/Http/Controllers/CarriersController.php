@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Carrier;
-use App\Jobs\ProcessContractFile;
+use App\Http\Requests\StoreCarriers;
 use App\Jobs\SynchronImgCarrierJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
-use App\Http\Requests\StoreCarriers;
 
 class CarriersController extends Controller
 {
@@ -31,11 +30,11 @@ class CarriersController extends Controller
             ->addColumn('action', function ($carriers) {
                 return '
                 &nbsp;&nbsp;
-                <a href="#" title="Edit Carrier" onclick="showModal('.$carriers->id.',1)">
+                <a href="#" title="Edit Carrier" onclick="showModal(' . $carriers->id . ',1)">
                     <samp class="la la-edit" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="#" class="delete-carrier" data-id-carrier="'.$carriers->id.'" data-info="id:'.$carriers->id.' Number Carrier: '.$carriers->name.'"  title="Delete" >
+                <a href="#" class="delete-carrier" data-id-carrier="' . $carriers->id . '" data-info="id:' . $carriers->id . ' Number Carrier: ' . $carriers->name . '"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
             })
@@ -46,9 +45,9 @@ class CarriersController extends Controller
     public function store(StoreCarriers $request)
     {
         $file = $request->file('file');
-        $nameImg=$file->getClientOriginalName();
+        $nameImg = $file->getClientOriginalName();
         $fillbooll = Storage::disk('carriers')->put($nameImg, \File::get($file));
- 
+
         if ($fillbooll) {
             $carrier = new Carrier();
             $carrier->name = $request->name;
@@ -64,7 +63,8 @@ class CarriersController extends Controller
             $json = json_encode($type);
             $carrier->varation = $json;
             $carrier->save();
-            ProcessContractFile::dispatch($carrier->id, $nameImg, 'n/a', 'carrier');
+            // ProcessContractFile::dispatch($carrier->id, $nameImg, 'n/a', 'carrier');
+            Storage::disk('s3_upload')->put('imgcarrier/' . $nameImg, \File::get($file), 'public');
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was created');
@@ -90,12 +90,14 @@ class CarriersController extends Controller
 
     public function update(Request $request, $id)
     {
-        //dd($request->all());
-        $carrier = Carrier::find($id);
+        // dd($request->all());
 
+        $carrier = Carrier::find($id);
+        $file = $request->file('file');
+        $nameImg = $file->getClientOriginalName();
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
-        if($request->variation!=null){
+        if ($request->variation != null) {
             foreach ($request->variation as $variation) {
                 $variation = str_replace($caracteres, '', $variation);
                 $arreglo[] = trim(strtolower($variation));
@@ -103,18 +105,23 @@ class CarriersController extends Controller
             $type['type'] = $arreglo;
             $json = json_encode($type);
             $carrier->varation = $json;
-            
+
         }
-        
+        $carrier->image = $nameImg;
+            
+
         $carrier->name = $request->name;
-        $carrier->update(); 
+        $carrier->update();
 
         if ($request->DatImag) {
-                Storage::disk('carriers')->delete($carrier->image);
-                $file = $request->file('file');
-                $fillbool = Storage::disk('carriers')->put($request->image, \File::get($file));
+            Storage::disk('carriers')->delete($carrier->image);
+
+            //$fillbool = Storage::disk('carriers')->put($request->image, \File::get($file));
+            $fillbool = Storage::disk('carriers')->put($nameImg, \File::get($file));
             if ($fillbool) {
-                ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
+                Storage::disk('s3_upload')->put('imgcarrier/' . $nameImg, \File::get($file),'public');
+                // Storage::disk('s3_upload')->put('imgcarrier/'.$request->image, $file, 'public');
+                // ProcessContractFile::dispatch($id, $request->image, 'n/a', 'carrier');
             }
         }
 

@@ -46,6 +46,10 @@ class QuotationResource extends JsonResource
             $contact = null;
         }
 
+        if(isset($this->user_id)){
+            $this->user->setAttribute('fullname', $this->user->fullname);
+        }
+
         return [
             'id' => $this->id,
             'quote_id' => $this->quote_id,

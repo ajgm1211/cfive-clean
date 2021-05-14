@@ -72,7 +72,8 @@
                         </b-tab>
 
                         <b-tab title="Ocean Freight" @click="changeView('freight')">
-                            <ocean v-if="ocean"
+                            
+                            <Ocean v-if="ocean"
                             :equipment="equip"
                             :currentQuoteData="currentData"
                             :quoteEquip="quoteEquip"
@@ -81,7 +82,7 @@
                             :quoteLanguage="this.currentData.language_id['name']"
                             @freightAdded="setInitialData"
                             ref="oceanTab"
-                            ></ocean>
+                            ></Ocean>
                         </b-tab>
 
                         <b-tab title="Local Charges" @click="changeView('locals')">
@@ -267,7 +268,7 @@ export default {
                     searchable: true,
                     type: "select",
                     rules: "required",
-                    trackby: "name",
+                    trackby: "fullname",
                     placeholder: "Select options",
                     options: "users",
                     colClass: "col-lg-3",

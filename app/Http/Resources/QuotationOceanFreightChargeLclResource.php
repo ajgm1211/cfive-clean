@@ -17,11 +17,14 @@ class QuotationOceanFreightChargeLclResource extends JsonResource
         return [
             'id' => $this->id,
             'charge' => $this->surcharge->name ?? 'Ocean Freight',
+            'charge_id' => $this->surcharge_id ?? null,
+            'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
+            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
             'units' => $this->units,
             'price' => $this->price,
             'minimum' => $this->minimum ?? null,
-            'profit' => $this->profit,
+            //'profit' => $this->profit,
             'TON/M3' => $this->total,
             'currency' => $this->currency->alphacode
         ];

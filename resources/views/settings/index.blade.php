@@ -151,12 +151,12 @@
                                         <div class="form-group m-form__group">
                                             <label for="decimals">Decimals</label><br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-success">
-												<input  checked='true' type="radio" name="decimals" value="1">														
+												<input   type="radio" name="decimals" value="1">														
 													<span></span>True
                                             </label>
                                             <br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-brand">
-												<input  type="radio" name="decimals" value="0">
+												<input  checked='false' type="radio" name="decimals" value="0">
 	                                                <span></span>False
 							                </label>
                                         </div>
@@ -180,14 +180,14 @@
                                         <div class="form-group m-form__group">
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="origincharge">Origin Charges</label>
-											        <input  {{ @$IncludeOrigin}} type="checkbox" name="origincharge" value="1" >	
+											        <input  {{ @$IncludeOrigin}} type="checkbox"  checked='true' name="origincharge" value="1" >	
 											            <span></span>
                                                 </label>
                                             </label>    
                                             <br>
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="destinationcharge">Destination Charges</label>
-                                                    <input {{ @$IncludeDestiny}} type="checkbox" name="destinationcharge" value="1" >
+                                                    <input {{ @$IncludeDestiny}} type="checkbox"  checked='true' name="destinationcharge" value="1" >
                                                         <span></span>
                                                 </label>       
 											</label>
@@ -214,7 +214,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -422,7 +422,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -524,8 +524,8 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Address</th>
                                             <th>Phone</th>
+                                            <th>Address</th>
                                             <th>Options</th>
                                         </tr>
                                     </thead>
