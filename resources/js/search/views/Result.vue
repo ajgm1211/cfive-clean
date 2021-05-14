@@ -465,9 +465,7 @@
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
                       <b-td>{{
-                        charge.joint
-                          ? "Per Container"
-                          : charge.calculationtype.name
+                        charge.calculationtype.name
                       }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->

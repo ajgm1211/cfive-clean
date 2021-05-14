@@ -241,7 +241,7 @@ class SearchApiController extends Controller
             }
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency']);
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
 
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
