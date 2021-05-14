@@ -3,7 +3,7 @@
         <b-card class="q-card">
             <div class="row justify-content-between">
                 <!-- Titulo y Pais -->
-                <div class="col-12 col-lg-6 d-flex align-items-center">
+                <div class="col-12 col-lg-6 d-flex align-items-center responsive-localcharges-card">
                     <h5 style="line-height: 2">
                         <b>Local Charges at:</b>
                     </h5>
@@ -26,7 +26,7 @@
 
                 <!-- Agregar Charges -->
                 <div
-                    class="col-12 col-lg-6 d-flex justify-content-end align-items-center"
+                    class="col-12 col-lg-6 d-flex justify-content-end align-items-center responsive-localcharges-card-select" 
                 >
                     <multiselect
                         v-model="template"
@@ -448,7 +448,7 @@
                     </span>
                 </div>
 
-                <div class="col-12 mt-5">
+                <div id="modal-localcharges-table" class="col-12 mt-5">
                     <!-- DataTable -->
                     <b-table-simple small responsive="sm" borderless>
 
@@ -656,34 +656,37 @@
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
                                 >
-                                    <b-form-input
-                                        placeholder
-                                        v-model="localcharge.price['c' + item]"
-                                        class="q-input data-profit"
-                                        @keypress="isNumber($event)"
-                                        v-on:change="
-                                            onUpdate(
-                                                localcharge.id,
-                                                localcharge.price['c' + item],
-                                                'c' + item,
-                                                3
-                                            )
-                                        "
-                                    ></b-form-input>
-                                    <b-form-input
-                                        placeholder
-                                        v-model="localcharge.markup['m' + item]"
-                                        class="q-input data-profit"
-                                        @keypress="isNumber($event)"
-                                        v-on:change="
-                                            onUpdate(
-                                                localcharge.id,
-                                                localcharge.markup['m' + item],
-                                                'm' + item,
-                                                4
-                                            )
-                                        "
-                                    ></b-form-input>
+
+                                    <div style="display:flex; width: 100px;">
+                                        <b-form-input
+                                            placeholder
+                                            v-model="localcharge.price['c' + item]"
+                                            class="q-input data-profit"
+                                            @keypress="isNumber($event)"
+                                            v-on:change="
+                                                onUpdate(
+                                                    localcharge.id,
+                                                    localcharge.price['c' + item],
+                                                    'c' + item,
+                                                    3
+                                                )
+                                            "
+                                        ></b-form-input>
+                                        <b-form-input
+                                            placeholder
+                                            v-model="localcharge.markup['m' + item]"
+                                            class="q-input data-profit"
+                                            @keypress="isNumber($event)"
+                                            v-on:change="
+                                                onUpdate(
+                                                    localcharge.id,
+                                                    localcharge.markup['m' + item],
+                                                    'm' + item,
+                                                    4
+                                                )
+                                            "
+                                        ></b-form-input>
+                                    </div>
                                 </b-td>
 
                                 <!-- Profit -->
@@ -895,24 +898,27 @@
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
-                                >
-                                    <b-form-input
-                                        placeholder
-                                        v-model="input.price['c' + item]"
-                                        @keypress="isNumber($event)"
-                                        class="q-input data-profit"
-                                    ></b-form-input>
 
-                                    <b-form-input
-                                        placeholder
-                                        v-model="input.markup['m' + item]"
-                                        @keypress="isNumber($event)"
-                                        class="q-input data-profit"
-                                    ></b-form-input>
+                                >
+                                    <div style="display:flex; width: 100px;">
+                                        <b-form-input
+                                            placeholder
+                                            v-model="input.price['c' + item]"
+                                            @keypress="isNumber($event)"
+                                            class="q-input data-profit"
+                                        ></b-form-input>
+
+                                        <b-form-input
+                                            placeholder
+                                            v-model="input.markup['m' + item]"
+                                            @keypress="isNumber($event)"
+                                            class="q-input data-profit"
+                                        ></b-form-input>
+                                    </div>
                                 </b-td>
 
                                 <!-- Profits -->
-                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                <b-td v-if="currentQuoteData.type == 'LCL'" >
                                     <b-form-input
                                         v-model="input.units"
                                         style="width:80px;"
@@ -1348,7 +1354,9 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.$refs.observer.setErrors(data.data.errors);
+                            if(data.status == 422){
+                                this.alert("Please complete the fields", "error");
+                            }
                         });
                 } else {
                     actions.localchargeslcl
@@ -1363,7 +1371,9 @@ export default {
                             this.selectedInputs = [];
                         })
                         .catch((data) => {
-                            this.$refs.observer.setErrors(data.data.errors);
+                            if(data.status == 422){
+                                this.alert("Please complete the fields", "error");
+                            }
                         });
                 }
             } else {
@@ -1470,14 +1480,31 @@ export default {
             let component = this;
 
             component.selectedInputs.forEach(function (input){
-                input.currency_id = input.currency.id;
-                input.surcharge_id = input.surcharge.id;
-                input.calculation_type_id = input.calculation_type.id;
-                input.provider_name = input.carrier.name;
-                if (component.currentQuoteData.type == 'LCL') {
-                    input.price_per_unit = input.price;
-                    input.markup = input.profit;
+                    input.currency_id=null;
+                    input.surcharge_id=null;
+                    input.calculation_type_id=null;
+                    input.provider_name=null;
+
+                if(input.currency.id != null){
+                    input.currency_id = input.currency.id;
+                }if(input.surcharge.id != null){
+                    input.surcharge_id = input.surcharge.id;
+                }if(input.calculation_type.id != null ){
+                    input.calculation_type_id = input.calculation_type.id;
+                }if(input.currency.id != null){
+                    input.provider_name = input.carrier.name;
                 }
+                
+                    if (component.currentQuoteData.type == 'LCL') {
+                            input.price_per_unit=null;
+                            input.markup=null;
+
+                        if(input.price!=null){
+                           input.price_per_unit = input.price; 
+                        }if(input.profit!=null){
+                           input.markup = input.profit; 
+                        } 
+                    }
             })
         }
     },

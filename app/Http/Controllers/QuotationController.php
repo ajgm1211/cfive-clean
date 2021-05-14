@@ -86,7 +86,7 @@ class QuotationController extends Controller
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($user) {
-            return $user->only(['id', 'name', 'lastname']);
+            return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
@@ -315,11 +315,11 @@ class QuotationController extends Controller
     }
 
     public function update(Request $request, QuoteV2 $quote)
-    {
+    { 
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english'];
-
+        
         if ($form_keys != null) {
             if (array_intersect($terms_keys, $form_keys) == [] && $request->input('cargo_type_id') == null) {
                 $data = $request->validate([
@@ -337,16 +337,23 @@ class QuotationController extends Controller
                     'incoterm_id' => 'sometimes|nullable',
                     'payment_conditions' => 'sometimes|nullable',
                     'kind_of_cargo' => 'sometimes|nullable',
-                ]);
-            } else if ($request->input('cargo_type_id') != null) {
-                $data = $request->validate([
                     'cargo_type_id' => 'nullable',
-                    'total_quantity' => 'nullable',
-                    'total_volume' => 'nullable',
-                    'total_weight' => 'nullable',
-                    'chargeable_weight' => 'nullable',
+                    'total_quantity' => 'sometimes|nullable|numeric',
+                    'total_volume' => 'sometimes|nullable|numeric',
+                    'total_weight' => 'sometimes|nullable|numeric',
+                    'chargeable_weight' => 'sometimes|nullable',
                 ]);
-            } else {
+            } 
+            // else if ($request->input('cargo_type_id') != null) {
+            //     $data = $request->validate([
+            //         'cargo_type_id' => 'nullable',
+            //         'total_quantity' => 'nullable|numeric',
+            //         'total_volume' => 'nullable|numeric',
+            //         'total_weight' => 'nullable|numeric',
+            //         'chargeable_weight' => 'nullable',
+            //     ]);
+            // } 
+            else {
                 $data = [];
 
                 foreach ($form_keys as $fkey) {
@@ -379,6 +386,8 @@ class QuotationController extends Controller
                     $data[$key] = 'Sent';
                 } else if ($data[$key] == 5) {
                     $data[$key] = 'Win';
+                } else if ($data[$key] == 6) {
+                    $data[$key] = 'Lost';
                 }
             }
             $quote->update([$key => $data[$key]]);
@@ -409,10 +418,22 @@ class QuotationController extends Controller
         if ($request->input('pdf_options') != null) {
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
-        $quote->update(['total_quantity' => $request['total_quantity']]);
-        $quote->update(['total_volume' => $request['total_volume']]);
-        $quote->update(['total_weight' => $request['total_weight']]);
-        $quote->update(['chargeable_weight' => $request['chargeable_weight']]);
+
+        if(isset($request['total_quantity']) || isset($request['total_volume']) || isset($request['total_weight'])){
+
+            $calc_volume=floatval($request['total_volume']);
+            $calc_weight=floatval($request['total_weight'])/1000;
+
+            $quote->update(['total_quantity' => $request['total_quantity']]);
+            $quote->update(['total_volume' => $request['total_volume']]);
+            $quote->update(['total_weight' => $request['total_weight']]);
+            if($calc_volume > $calc_weight){
+                $quote->update(['chargeable_weight' => $request['total_volume']]);
+            }else{
+                $quote->update(['chargeable_weight' => $request['total_weight']]);
+            }
+        }
+    
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)

@@ -1041,6 +1041,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/process', 'SearchApiController@processSearch');
     Route::post('/api/search/store', 'SearchApiController@store');
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
+    Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1171,6 +1172,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('destroyAll', 'ContractController@destroyAll');
     Route::get('{contract}/files', 'ContractController@getFiles')->middleware('check_company:contract');
     Route::post('{contract}/removefile', 'ContractController@removefile')->middleware('check_company:contract');
+    Route::get('{contract}/request/status', 'ContractController@getRequestStatus')->middleware('check_company:contract');
 
     /* End Contracts endpoint (Pending to check) **/
 

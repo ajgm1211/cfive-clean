@@ -93,14 +93,16 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{url('/api/search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-graphic-1"></i>
-                                    <span class="m-menu__link-text">
-                                        Rate Finder &nbsp;<span class="badge bg-warning text-dark">Beta</span>
-                                    </span>
-                                </a>
-                            </li>
+                            @role('administrator|company')
+                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                    <a href="{{url('/api/search')}}" class="m-menu__link ">
+                                        <i class="m-menu__link-icon flaticon-graphic-1"></i>
+                                        <span class="m-menu__link-text">
+                                            Rate Finder &nbsp;<span class="badge bg-warning text-dark">Beta</span>
+                                        </span>
+                                    </a>
+                                </li>
+                            @endrole
                         </ul>
                     </div>
                 </li> 

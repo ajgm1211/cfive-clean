@@ -45,10 +45,10 @@
                                 $array_total_inland = json_decode($charge->totals);
                             @endphp
                             @foreach($array_total_inland as $total)
-                                <td>{!! isDecimal($total, true).' '.$charge->currency->alphacode !!}</td>
+                                <td>{!! isDecimal($total, false, true).' '.$charge->currency->alphacode !!}</td>
                             @endforeach
                         @else
-                            <td>{!! isDecimal($charge->total, true).' '.$charge->currency->alphacode !!}</td>
+                            <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
                         @endif
                         
                     </tr>

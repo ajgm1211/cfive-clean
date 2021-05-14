@@ -13,7 +13,7 @@
                 :key="searchKey"
                 class="col-12 col-sm-6 col-lg-3"
             >
-                <div class="recent-search">
+                <div class="recent-search mb-3">
 
                     <img src="/images/logo-ship-blue.svg" alt="bote">
 
@@ -70,7 +70,8 @@ export default {
     methods:
     {
         recentSearch(id){
-            this.$router.push({ path: `search`, query: { requested: 0, model_id: id} })
+            this.$router.push({ path: `search`, query: { requested: 0, model_id: id} });
+            this.$emit("recentSearch");
         }
     }
 }
