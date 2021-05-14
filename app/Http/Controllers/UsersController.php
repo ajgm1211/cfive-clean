@@ -356,16 +356,21 @@ class UsersController extends Controller
 
     public function datahtml()
     {
-        // temporal
+
         if (Auth::user()->type == 'admin') {
-            $data = User::all();
+            $data = User::all(); 
         }
-
         if (Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser') {
-            $data = User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->get();
+            $data = User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->get();;
         }
-
-        return view('users/indexhtml', ['arreglo' => $data]);
+        foreach($data as $u){
+            $ud=UserDelegation::where('users_id','=',$u->id)->first();
+            $delegation=Delegation::find($ud['delegations_id']);
+            $u['userD']=$delegation['name'];
+            $arreglo[]=$u;
+        }
+        // dd($arreglo);
+        return view('users/indexhtml', ['arreglo' => $arreglo]);
     }
 
     public function datajson()
