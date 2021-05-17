@@ -512,6 +512,7 @@ class SearchApiController extends Controller
         $destination_ports = [$rate->destiny_port,1485];
         $origin_countries = [$rate->port_origin->country()->first()->id, 250];
         $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
+        $container_ids = $search_ids['containers'];
 
         //creating carriers array with only rates carrier
         $carriers = [$rate->carrier->id, 26];
@@ -521,6 +522,10 @@ class SearchApiController extends Controller
             //Querying NON API contract local charges
             $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
+            })->whereHas('calculationtype', function ($q) use ($container_ids) {
+                $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
+                    $b->whereIn('container_id', $container_ids);
+                });
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
