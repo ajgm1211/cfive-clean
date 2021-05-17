@@ -10,7 +10,7 @@
         <b-card v-else class="q-card">
             <div class="row justify-content-between">
                 <!-- Origen -> Destino -->
-                <div class="col-12 col-lg-8 d-sm-flex align-items-center d-none ">
+                <div class="col-12 col-lg-8 d-sm-flex align-items-center d-none">
                     <h5 class="mb-0"><b>Inland at:</b></h5>
 
                     <multiselect
@@ -63,7 +63,7 @@
                 <!-- End Origen -> Destino -->
                 <!-- Origen -> Destino RESPONSIVO -->
                 <div class="col-12 col-lg-8 resposive-origin-destination">
-                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start origin-destination-inland-res">
                         <h5 class="mb-2"><b>Inland at:</b></h5>
 
                         <multiselect
@@ -81,7 +81,7 @@
                         </multiselect>
                     </div>
 
-                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start origin-destination-inland-res">
                         <h5 class="mb-2"><b>From:</b></h5>
 
                         <multiselect

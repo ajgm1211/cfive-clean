@@ -1,6 +1,7 @@
 {
     "/js/quote/index.js": "/js/quote/index.js",
     "/js/quote/edit.js": "/js/quote/edit.js",
+    "/js/search/index.js": "/js/search/index.js",
     "/js/contracts/edit.js": "/js/contracts/edit.js",
     "/js/inlands/edit.js": "/js/inlands/edit.js",
     "/js/saleterms/list.js": "/js/saleterms/list.js",
@@ -13,6 +14,5 @@
     "/js/providers/index.js": "/js/providers/index.js",
     "/js/inlands/index.js": "/js/inlands/index.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/js/search/index.js": "/js/search/index.js"
+    "/css/app.css": "/css/app.css"
 }
