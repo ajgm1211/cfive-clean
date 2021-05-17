@@ -672,11 +672,12 @@ class RequestFclV2Controller extends Controller
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $fileName = HelperAll::removeAccent($name);
 
-        $file->move($path, $name);
+        $file->move($path, $fileName);
 
         return response()->json([
-            'name' => $name,
+            'name' => $fileName,
             'original_name' => $file->getClientOriginalName(),
         ]);
     }
