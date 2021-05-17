@@ -30,6 +30,8 @@ class CompanyUserApiProvidersSeeder extends Seeder
                 }
             }
 
+            $options = json_decode($company->options,true);
+
             $options['api_providers'] = $final_providers;
 
             $options_json = json_encode($options);
