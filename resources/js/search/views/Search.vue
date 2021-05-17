@@ -375,7 +375,7 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
-                                <b-form-group label="SPOT Rates">
+                                <b-form-group label="SPOT Rates" v-if="searchRequest.carriersApi.length > 0">
                                     <b-form-checkbox-group
                                         v-model="searchRequest.carriersApi"
                                         :options="carriersApiOptions"
