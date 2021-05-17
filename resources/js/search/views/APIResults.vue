@@ -1390,7 +1390,6 @@ export default {
         "20FR": 0,
         "40FR": 0,
       },
-      book_qty: {},
       results: {
         maersk: [],
         cmacgm: [],
