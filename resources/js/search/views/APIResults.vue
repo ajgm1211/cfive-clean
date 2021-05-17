@@ -1171,7 +1171,7 @@
                         triggers="hover"
                         placement="top"
                       >
-                        <template #title>Transshipments</template>
+                        <template #title>Transhipments</template>
                         <ul>
                           <li
                             v-for="(trans, transKey) in result.routingDetails"
@@ -1353,7 +1353,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="completeBook(result.additionalData.deeplink)"
+                @click="completeBook(result.additionalData.deeplink, result.departureTerminal, result.arrivalTerminal)"
               >
                 Confirm Book
               </button>
@@ -1712,10 +1712,8 @@ export default {
       });
     },
 
-    completeBook(link) {
+    completeBook(link, origin, destination) {
       let component = this;
-      let apiOriginPorts = [];
-      let apiDestinationPorts = [];
       let qty_array = [];
       let string = "";
       let qty = "";
@@ -1742,27 +1740,13 @@ export default {
       component.alert("Redirecting to the Maersk/Sealand site", "success");
       component.$root.$emit("bv::hide::modal", "qty-modal");
 
-      //Formating origins
-      component.request.originPorts.forEach(function (originPort) {
-        if (!apiOriginPorts.includes(originPort.display_name)) {
-          apiOriginPorts.push(originPort.display_name);
-        }
-      });
-
-      //Formating destinations
-      component.request.destinationPorts.forEach(function (destinationPort) {
-        if (!apiDestinationPorts.includes(destinationPort.display_name)) {
-          apiDestinationPorts.push(destinationPort.display_name);
-        }
-      });
-
       //Sending data to MixPanel
       this.$mixpanel.track("Booking", {
         distinct_id: component.datalists.user.id,
         Brand: "Maersk",
         Company: component.datalists.company_user.name,
-        Origin: apiOriginPorts,
-        Destination: apiDestinationPorts,
+        Origin: origin,
+        Destination: destination,
         Qty: qty_array
       });
     },
