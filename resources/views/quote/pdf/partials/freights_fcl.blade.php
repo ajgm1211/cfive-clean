@@ -68,7 +68,7 @@
                                     @endforeach
                                     @if($freight_charges->contains('transit_time', '!=', ''))
                                         <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
-                                        <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
+                                        <td>{{@$rate->via!='' ? @$rate->via:'Direct'}}</td>
                                     @endif
                                 </tr>
                             @endforeach
