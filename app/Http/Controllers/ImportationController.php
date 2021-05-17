@@ -525,6 +525,7 @@ class ImportationController extends Controller
                     $equiment['name'] = $json_rq['group_containers']['name'];
                     $api_contract['code'] = $json_rq['contract']['code'] ?? null;
                     $api_contract['is_api'] = $json_rq['contract']['is_api'] ?? 0;
+                    $api_contract['user_id'] = $json_rq['contract']['user_id'] ?? null;
                     $groupContainer = GroupContainer::find($equiment['id']);
                     $json_rq = json_decode($groupContainer->data, true);
                     $equiment['color'] = $json_rq['color'];
@@ -568,6 +569,7 @@ class ImportationController extends Controller
                     }
                 }
             }
+            $api_contract['user_id'] = $contract->user_id;
         }
 
         // dd($equiment);
@@ -586,7 +588,7 @@ class ImportationController extends Controller
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));
         } elseif ($selector == 2) {
-            return view('importationV2.Fcl.newImport', compact('harbor', 'direction', 'country', 'region', 'carrier', 'companysUser', 'typedestiny', 'contract', 'selector', 'request_id', 'load_carrier', 'coins', 'currency', 'equiment'));
+            return view('importationV2.Fcl.newImport', compact('harbor', 'direction', 'country', 'region', 'carrier', 'companysUser', 'typedestiny', 'contract', 'selector', 'request_id', 'load_carrier', 'coins', 'currency', 'equiment', 'api_contract'));
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
         }
@@ -615,6 +617,7 @@ class ImportationController extends Controller
         $gp_container_id = $request->gp_container_id;
         $contract_code = $request->contract_code;
         $contract_is_api = $request->contract_is_api;
+        $contract_owner = $request->contract_owner;
         $validity = explode('/', $request->validation_expire);
 
         $statustypecurren = $request->valuesCurrency;
@@ -659,6 +662,7 @@ class ImportationController extends Controller
                 $contract->gp_container_id = $gp_container_id;
                 $contract->code = $contract_code;
                 $contract->is_api = $contract_is_api;
+                $contract->user_id = $contract_owner;
                 $contract->save();
 
                 foreach ($request->carrierM as $carrierVal) {
