@@ -160,7 +160,7 @@
                 <div class="col-lg-2 mb-2 input-search-form containers-search">
                         
                         <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
-                            <b-dropdown-form>
+                            <b-dropdown-form :disabled="searchRequest.requestData.requested == 1">
                                 <b-form-group label="Type">
                                     <b-form-radio-group
                                         id="containers"
@@ -1825,6 +1825,7 @@ export default {
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
+                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.dateRange.startDate =
                     this.searchData.start_date + "T01:00:00";
                 this.searchRequest.dateRange.endDate =
@@ -1837,15 +1838,14 @@ export default {
                 //this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
-                    this.searchRequest.carriers = this.searchData.carriers;
                     component.carriers = [];
+                    this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
                         component.carriers.push(carrier);
                     });
                 }else{
                     this.searchRequest.carriers = this.datalists.carriers;
                 }
-                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
@@ -2251,16 +2251,23 @@ export default {
                 }
             });
 
-            if (selectedContainersByGroup.length > 3) {
-                selectedContainersByGroup.splice(3, 2);
-            }
-
             fullContainersByGroup.forEach(function (cont) {
                 component.containerOptions.push({
                     text: cont.code,
                     value: cont,
                 });
             });
+
+            if(Object.keys(component.searchRequest.requestData).length != 0 &&
+                component.searchRequest.requestData.requested == 0 && 
+                component.searchData.container_group.id  == component.selectedContainerGroup.id){
+                selectedContainersByGroup = component.searchData.containers;
+            }else{
+                if (selectedContainersByGroup.length > 3) {
+                    selectedContainersByGroup.splice(3, 2);
+                }
+            }
+
             component.containers = selectedContainersByGroup;
         },
 
@@ -2306,8 +2313,8 @@ export default {
         allCarriers() {
             let component = this;
 
-            component.carriers = [];
             if (component.allCarriers) {
+                component.carriers = [];
                 // Check all
                 component.datalists.carriers.forEach(function (carrier) {
                     component.carriers.push(carrier);
