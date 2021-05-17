@@ -31,6 +31,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use HelperAll;
+
 
 class ContractController extends Controller
 {
@@ -429,16 +431,17 @@ class ContractController extends Controller
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $fileName = HelperAll::removeAccent($name);
 
-        $file->move($path, $name);
+        $file->move($path, $fileName);
 
-        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
+        $media = $contract->addMedia(storage_path('tmp/uploads/' . $fileName))->addCustomHeaders([
             'ACL' => 'public-read',
         ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
-            'name' => $name,
+            'name' => $fileName,
             'original_name' => $file->getClientOriginalName(),
             'url' => $media->getFullUrl(),
         ]);
