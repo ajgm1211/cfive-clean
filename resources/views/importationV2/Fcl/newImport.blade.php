@@ -213,7 +213,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="3" class="currencychk" checked type="radio" >
+                                                <input name="valuesCurrency" value="3" class="currencychk" type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -233,7 +233,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" class="currencychk" value="1"  type="radio" >
+                                                <input name="valuesCurrency" class="currencychk" value="1" checked type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -275,7 +275,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" checked>
+                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -292,7 +292,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesportcountry" value="2" id="portcountrychk" type="radio" >
+                                                <input name="valuesportcountry" value="2" id="portcountrychk" checked type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
