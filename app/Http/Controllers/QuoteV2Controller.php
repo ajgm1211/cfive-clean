@@ -2847,13 +2847,14 @@ class QuoteV2Controller extends Controller
         $company_dropdown = null;
         $pricesG = Price::doesntHave('company_price')->where('company_user_id', $company_user_id)->pluck('name', 'id');
 
-        if (\Auth::user()->hasRole('subuser')) {
+       /* if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
             })->orwhere('owner', \Auth::user()->id)->pluck('business_name', 'id');
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
-        }
+        }*/
+        $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         $companies->prepend('Select an option', '0');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
@@ -3405,14 +3406,19 @@ class QuoteV2Controller extends Controller
                 $equipmentFilter = $arregloR['arregloEquipment'];
 
                 // id de los port  ALL
-                array_push($orig_port, 1485);
-                array_push($dest_port, 1485);
+              //  array_push($orig_port, 1485);
+              //  array_push($dest_port, 1485);
                 // id de los carrier ALL
                 $carrier_all = 26;
                 array_push($carrier, $carrier_all);
                 // Id de los paises
-                array_push($origin_country, 250);
-                array_push($destiny_country, 250);
+                //array_push($origin_country, 250);
+                //array_push($destiny_country, 250);
+
+                $orig_port = [$data->origin_port,1485];
+                $dest_port = [$data->destiny_port,1485];
+                $origin_country = [$data->port_origin->country()->first()->id, 250];
+                $destiny_country = [$data->port_destiny->country()->first()->id, 250];
 
                 // ################### Calculos local  Charges #############################
                 if ($contractStatus != 'api') {
@@ -3573,6 +3579,8 @@ class QuoteV2Controller extends Controller
 
                 if ($contractStatus != 'api') {
 
+                    
+
                     $globalChar = GlobalCharge::where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function ($q) use ($carrier) {
                         $q->whereIn('carrier_id', $carrier);
                     })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
@@ -3591,6 +3599,7 @@ class QuoteV2Controller extends Controller
                         $q->whereIn('port_orig', $orig_port)->orwhereIn('port_dest', $dest_port);;
                     })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
 
+                   //
                     foreach ($globalChar as $global) {
                         $rateMount = $this->ratesCurrency($global->currency->id, $typeCurrency);
                         // Condicion para enviar los terminos de venta o compra
@@ -6239,7 +6248,7 @@ class QuoteV2Controller extends Controller
                                     if ($subtotal_global < $global->minimum) {
                                         $subtotal_global = $global->minimum;
                                         $totalAmmount = $subtotal_global / $rateMountG;
-                                        $unidades = $subtotal_global / $totalWeight;
+                                        $unidades = $subtotal_global / ($totalWeight ?? 1);
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 

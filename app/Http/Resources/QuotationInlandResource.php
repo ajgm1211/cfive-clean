@@ -25,7 +25,7 @@ class QuotationInlandResource extends JsonResource
             'distance' => $this->distance,
             'port' => $this->port->display_name ?? null,
             'address' => $this->inland_address->address ?? null,
-            'provider' => $this->providers->name ?? null,
+            'provider' => $this->providers->name ?? $this->provider ?? null,
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
             'price' => $this->arrayToFloat($this->price),
