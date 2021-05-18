@@ -171,7 +171,7 @@ class SearchApiController extends Controller
             'company_user_id',
             'company_user',
             'carriers',
-            //'carriers_api',
+            'carriers_api',
             'companies',
             'contacts',
             'currency',
