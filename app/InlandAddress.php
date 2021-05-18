@@ -20,6 +20,11 @@ class InlandAddress extends Model implements Auditable
         return $this->belongsTo('App\QuoteV2');
     }
 
+    public function port()
+    {
+        return $this->belongsTo('App\Harbor', 'port_id');
+    }
+
     public function duplicate($quote)
     {
         $newInlandAddress = $this->replicate();

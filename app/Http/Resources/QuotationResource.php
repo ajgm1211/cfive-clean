@@ -50,6 +50,9 @@ class QuotationResource extends JsonResource
             $this->user->setAttribute('fullname', $this->user->fullname);
         }
 
+        $inland_ports = $this->setInlandPorts();
+        $local_ports = $this->setLocalPorts();
+
         return [
             'id' => $this->id,
             'quote_id' => $this->quote_id,
@@ -103,15 +106,55 @@ class QuotationResource extends JsonResource
             'carriers' => $this->carrier()->get(),
             'search_options' => $this->search_options,
             'direction_id' => $this->direction_id,
+            'inland_ports' => $inland_ports,
+            'local_ports' => $local_ports,
         ];
     }
 
-    public function formatear($created_at){
-
+    public function formatear($created_at)
+    {
         $fecha=date('Y-m-d H:m:s', strtotime($created_at));
 
         return $fecha;
+    }
 
+    public function setInlandPorts()
+    {
+        $addresses = $this->inland_addresses()->get();
 
+        $ports = ['origin' => [], 'destination' => []];
+
+        foreach($addresses as $address){
+            if($address->type = 'Origin'){
+                array_push($ports['origin'], $address->port()->first()->id);
+            }else if($address->type = 'Destination'){
+                array_push($ports['destination'], $address->port()->first()->id);
+            }
+        }
+
+        return $ports;
+    }
+
+    public function setLocalPorts()
+    {
+        if($this->type == "FCL"){
+            $locals = $this->local_charges()->get();
+        }elseif($this->type == "LCL"){
+            $locals = $this->local_charges_lcl()->get();
+        }elseif($this->type == "AIR"){
+            $locals = [];
+        }
+
+        $ports = ['origin' => [], 'destination' => []];
+
+        foreach($locals as $local){
+            if($local->type_id == 1){
+                array_push($ports['origin'], $local->port()->first()->id);
+            }else if($local->type_id == 2){
+                array_push($ports['destination'], $local->port()->first()->id);
+            }
+        }
+
+        return $ports;
     }
 }
