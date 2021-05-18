@@ -309,10 +309,10 @@ trait MixPanelTrait
             array(
                 'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
-                'Contract'  => $data->namecontract,
-                'Valid_from' => $date[0],
-                'Valid_until' => $date[1],
-                'User' => $user->fullname,
+                'Contract'      => $data->namecontract,
+                'Valid_from'    => $date[0],
+                'Valid_until'   => $date[1],
+                'Owner'         => $user->username_load,
             )
         );
     }
@@ -338,7 +338,7 @@ trait MixPanelTrait
                 'Contract'      => $data->namecontract,
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
-                'Username'      => $data->username_load,
+                'Owner'         => $data->username_load,
             )
         );
     }
