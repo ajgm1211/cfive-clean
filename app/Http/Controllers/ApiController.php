@@ -1163,8 +1163,7 @@ class ApiController extends Controller
         $company_id = ($request->input('companyID') != null) ? $request->input('companyID') : null;
 
         //  $mode = $request->mode;
-        $dateRange = $request->input('date');
-        $dateRange = explode("/", $dateRange);
+
         $dateSince = $init_date;
         $dateUntil = $end_date;
 
@@ -1252,7 +1251,7 @@ class ApiController extends Controller
             $dataDest = array();
             $dataFreight = array();
 
-            $rateC = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
+            $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
 
             $typeCurrencyFreight = $data->currency->alphacode;
             $idCurrencyFreight = $data->currency->id;
@@ -3306,7 +3305,7 @@ class ApiController extends Controller
             $totalFreightOrig = $totalFreight;
 
             $rateTotal = $this->ratesCurrency($data->currency->id, $typeCurrency);
-            $totalFreight = $totalFreight / $rateTotal;
+            //$totalFreight = $totalFreight / $rateTotal;
             $totalFreight = number_format($totalFreight, 2, '.', '');
 
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
