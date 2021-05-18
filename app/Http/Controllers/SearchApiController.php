@@ -40,9 +40,9 @@ use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
 use App\CompanyPrice;
-use App\ApiProvider;
 use App\ContractFclFile;
 use App\NewContractRequest;
+use App\ApiProvider;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -91,9 +91,9 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
+        /*$carriers_api = ApiProvider::get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
-        });
+        });*/
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
@@ -171,7 +171,7 @@ class SearchApiController extends Controller
             'company_user_id',
             'company_user',
             'carriers',
-            'carriers_api',
+            //'carriers_api',
             'companies',
             'contacts',
             'currency',
@@ -241,7 +241,7 @@ class SearchApiController extends Controller
             }
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency']);
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
 
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
@@ -512,6 +512,7 @@ class SearchApiController extends Controller
         $destination_ports = [$rate->destiny_port,1485];
         $origin_countries = [$rate->port_origin->country()->first()->id, 250];
         $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
+        $container_ids = $search_ids['containers'];
 
         //creating carriers array with only rates carrier
         $carriers = [$rate->carrier->id, 26];
@@ -521,6 +522,10 @@ class SearchApiController extends Controller
             //Querying NON API contract local charges
             $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
+            })->whereHas('calculationtype', function ($q) use ($container_ids) {
+                $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
+                    $b->whereIn('container_id', $container_ids);
+                });
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
@@ -975,20 +980,15 @@ class SearchApiController extends Controller
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
 
         }
-    }
 
-    //Ordering rates by totals (cheaper to most expensive)
-    public function sortRates($rates, $search_data_ids)
-    {
-        if (isset($search_data_ids['pricelevel'])) {
-            $sortBy = 'totals_with_markups';
-        } else {
-            $sortBy = 'totals';
+        $totals_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals);
+        $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+
+        if(isset($rate->totals_with_markups)){
+            $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
+            $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
         }
 
-        $sorted = $rates->sortBy($sortBy)->values();
-
-        return ($sorted);
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)
@@ -1021,6 +1021,20 @@ class SearchApiController extends Controller
             'id' => $contract->id,
             'data' => 'Success',
         ]);
+    }
+
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates, $search_data_ids)
+    {
+        if (isset($search_data_ids['pricelevel'])) {
+            $sortBy = 'totals_with_markups';
+        } else {
+            $sortBy = 'totals';
+        }
+
+        $sorted = $rates->sortBy($sortBy)->values();
+
+        return ($sorted);
     }
 
     public function setDownloadParameters($rate)
