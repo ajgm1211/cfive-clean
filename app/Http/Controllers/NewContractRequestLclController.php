@@ -363,6 +363,14 @@ class NewContractRequestLclController extends Controller
         $extObj = new \SplFileInfo($Ncontract->namefile);
         $ext = $extObj->getExtension();
         $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-LCL.' . $ext;
+        $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
+        $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
+        $nameF = utf8_decode($name);
+        $nameF = strtr($nameF, utf8_decode($originales), $modificadas);
+        \Log::Info($name);
+
+
+
 
         $success = false;
         $descarga = null;
