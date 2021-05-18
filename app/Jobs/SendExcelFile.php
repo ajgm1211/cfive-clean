@@ -264,16 +264,24 @@ class SendExcelFile implements ShouldQueue
             });
         })->store('xls', storage_path('excel/exports'));
 
-        $path = storage_path('excel/exports') . '/' . $nameFile . '.xls'; // or storage_path() if needed
+        //$path = storage_path('excel/exports') . '/' . $nameFile . '.xls'; // or storage_path() if needed
         $nameFile = $nameFile . '.xls';
+
+        $fileExcel = \File::get(storage_path('excel/exports') . '/' . $nameFile );
+        \Log::info('Store file excel');
+        \Storage::disk('s3_upload')->put('contract_excel/' . $nameFile, $fileExcel,'public');
+        \Log::info('Push in s3');
+        $descarga = \Storage::disk('s3_upload')->url('contract_excel/' . $nameFile, $nameFile);
+        \Log::info('Link of download');
+        
 
         try {
             if ($this->to != '') {
 
-                \Mail::to($this->email)->send(new EmailForExcelFile($this->subject, $path, $nameFile));
+                \Mail::to($this->email)->send(new EmailForExcelFile($this->subject, $descarga, $nameFile));
 
             } else {
-                \Mail::to($this->email)->send(new EmailForExcelFile($this->subject, $path, $nameFile));
+                \Mail::to($this->email)->send(new EmailForExcelFile($this->subject, $descarga, $nameFile));
             }
         } catch (\Exception $e) {
             $e->getMessage();
