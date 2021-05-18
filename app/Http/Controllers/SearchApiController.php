@@ -91,9 +91,9 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        /*$carriers_api = ApiProvider::get()->map(function ($provider) {
+        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
-        });*/
+        });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 

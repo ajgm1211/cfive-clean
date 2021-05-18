@@ -1876,8 +1876,8 @@ export default {
                     this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
-                    this.searchRequest.originPorts = this.quoteData.origin_ports;
-                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
+                    this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
+                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports_duplicate;
                 }
                 if (this.quoteData.direction_id != null) {
                     this.searchRequest.direction = this.quoteData.direction_id;
