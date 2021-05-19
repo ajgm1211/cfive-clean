@@ -338,7 +338,17 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                          >{{
+                            rate.totals_with_markups_freight_currency
+                              ? rate.totals_with_markups_freight_currency["C" + container.code]
+                              : rate.totals_freight_currency["C" + container.code]
+                          }}
+                          <span style="font-size: 10px">{{
+                            rate.currency.alphacode
+                          }}</span></b
+                        >
+                        <b style="font-size: 16px" v-else
                           >{{
                             rate.totals_with_markups
                               ? rate.totals_with_markups["C" + container.code]
@@ -471,9 +481,7 @@
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
                       <b-td>{{
-                        charge.joint
-                          ? "Per Container"
-                          : charge.calculationtype.name
+                        charge.calculationtype.name
                       }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
@@ -773,7 +781,7 @@ export default {
           console.log(error);
         });
     },
-    addRateToQuote(rate) {
+    addRateToQuote(rate){
       let component = this;
 
       if (rate.addToQuote) {
@@ -794,22 +802,26 @@ export default {
     createQuote() {
       this.$emit("createQuote");
     },
+    createQuote(){
+      this.$emit('createQuote');
+    },
   },
   mounted(){
     let component = this;
     //console.log(component.datalists);
-  component.rates.forEach(function (rate) {
-    rate.addToQuote = false;
-  });
-  component.finalRates = component.rates;
+    component.searchEndDate = component.request.dateRange.endDate;
+    component.rates.forEach(function (rate) {
+      rate.addToQuote = false;
+    });
+    component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-        let navBar = document.getElementById('top-results');
-        if(window.scrollY > navBar.offsetTop){
-            component.isActive = true;
-        } else {
-            component.isActive = false;
-        }
+      let navBar = document.getElementById('top-results');
+      if(window.scrollY > navBar.offsetTop){
+          component.isActive = true;
+      } else {
+          component.isActive = false;
+      }
     }
     
     this.loaded = true;

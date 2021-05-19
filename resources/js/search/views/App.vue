@@ -6,6 +6,7 @@
             @searchRequested="setSearchStatus"
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
+            @quoteLoaded="setQuoteData"
             ref="searchComponent"
         ></Search>
 
@@ -188,6 +189,7 @@ export default {
             actions: actions,
             apiSearchDone: true,
             searchDone: true,
+            quoteData: {},
         }
     },
     created() {
@@ -207,7 +209,21 @@ export default {
                     component.noRatesAdded = false;
                 }, 2000);
             } else {
-                if (component.requestData.requested == 0) {
+                let duplicateMatch = false;
+
+                if(Object.keys(component.quoteData).length != 0){
+                    component.ratesForQuote.rates.forEach(function (rate){
+                        if((component.quoteData.local_ports.origin.length > 0 && component.quoteData.local_ports.origin.includes(rate.origin_port)) ||
+                            (component.quoteData.local_ports.destination.length > 0 && component.quoteData.local_ports.destination.includes(rate.destiny_port)) ||
+                            (component.quoteData.inland_ports.origin.length > 0 && component.quoteData.inland_ports.origin.includes(rate.origin_port)) ||
+                            (component.quoteData.inland_ports.destination.length > 0 && component.quoteData.inland_ports.destination.includes(rate.destiny_port)))
+                        {
+                            duplicateMatch = true;
+                        }
+                    });
+                }
+
+                if (component.requestData.requested == 0 || !duplicateMatch) {
                 component.actions.quotes
                     .create(component.ratesForQuote, component.$route)
                     .then((response) => {
@@ -221,7 +237,7 @@ export default {
                         component.creatingQuote = false;
                     }
                     });
-                } else if (component.requestData.requested == 1) {
+                } else if (component.requestData.requested == 1 || duplicateMatch) {
                 component.actions.quotes
                     .specialduplicate(component.ratesForQuote)
                     .then((response) => {
@@ -297,6 +313,10 @@ export default {
         
         setResultsForQuote(results){
             this.ratesForQuote['results'] = results;
+        },
+
+        setQuoteData(quoteData){
+            this.quoteData = quoteData;
         },
 
     },

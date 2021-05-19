@@ -965,10 +965,21 @@ trait SearchTrait
     }
 
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges, $client_currency)
+    public function joinCharges($charges, $client_currency, $container_group_id)
     {
         //Empty array for joint charges
         $joint_charges = [];
+        if($container_group_id == 1){
+            $per_container_calculation_type = CalculationType::where('id',5)->first();
+        }elseif($container_group_id == 2){
+            $per_container_calculation_type = CalculationType::where('id',19)->first();
+        }elseif($container_group_id == 3){
+            $per_container_calculation_type = CalculationType::where('id',20)->first();
+        }elseif($container_group_id == 4){
+            $per_container_calculation_type = CalculationType::where('id',21)->first();
+        }
+
+        $joining = false;
 
         //Looping through top charges array (Origin, Destination, Freight)
         foreach($charges as $direction=>$charges_direction){
@@ -1012,14 +1023,20 @@ trait SearchTrait
                                             $joint_containers = $charge->containers_client_currency;
                                             //Marking charge as joint under client currency
                                             $charge->setAttribute('joint_as','client_currency');
-                                            $charge->setAttribute('joint',true);
+                                            unset($charge->calculationtype);
+                                            unset($charge->calculationtype_id);
+                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
                                             $comparing_charge_containers = $comparing_charge->containers_client_currency;
                                         //If currencies match, sum is direct
                                         }elseif($charge->currency->id == $comparing_charge->currency->id){
                                             $joint_containers = $charge->containers;
                                             //Marking as joint under charge currency
                                             $charge->setAttribute('joint_as','charge_currency');
-                                            $charge->setAttribute('joint',true);
+                                            unset($charge->calculationtype);
+                                            unset($charge->calculationtype_id);
+                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
                                             $comparing_charge_containers = $comparing_charge->containers;
                                         }
                                         //Adding container rates together
@@ -1061,7 +1078,6 @@ trait SearchTrait
                     if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
                         //Including unjoint charge in final array
                         $charge->setAttribute('joint_as', 'charge_currency');
-                        $charge->setAttribute('joint',false);
                         array_push($joint_charges[$direction],$charge);
                     }
                     }
@@ -1092,6 +1108,24 @@ trait SearchTrait
             }
 
             $rate->containers_with_markups = $containers_with_markups_string;
+        }
+        
+        if(isset($rate->totals_with_markups_freight_currency)){
+            $totals_with_markups_freight_currency_string = $rate->totals_with_markups_freight_currency;
+            foreach($totals_with_markups_freight_currency_string as $key => $total){
+                $totals_with_markups_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_with_markups_freight_currency = $totals_with_markups_freight_currency_string;
+        }
+
+        if(isset($rate->totals_freight_currency)){
+            $totals_freight_currency_string = $rate->totals_freight_currency;
+            foreach($totals_freight_currency_string as $key => $total){
+                $totals_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_freight_currency = $totals_freight_currency_string;
         }
 
         $totals_string = $rate->totals;
