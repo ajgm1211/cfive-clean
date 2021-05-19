@@ -568,7 +568,7 @@ class ApiController extends Controller
         }
     }
 
-    public function searchLCL(Request $request, $code_origin, $code_destination)
+    public function searchLCL(Request $request, $code_origin, $code_destination, $init_date, $end_date)
     {
         try {
 
@@ -582,8 +582,9 @@ class ApiController extends Controller
             /** Tracking search event with Mix Panel*/
             // $this->trackEvents("api_rate_fcl", $track_array, "api");
 
-            return $this->processSearchLCL($request, $code_origin, $code_destination);
+            return $this->processSearchLCL($request, $code_origin, $code_destination, $init_date, $end_date);
         } catch (\Exception $e) {
+            \Log::error($e);
             return response()->json(['message' => 'An error occurred while performing the operation'], 500);
         }
     }
@@ -1134,7 +1135,7 @@ class ApiController extends Controller
 
 //************************************************************************************************** */
 
-    public function processSearchLCL(Request $request, $code_origin, $code_destination)
+    public function processSearchLCL(Request $request, $code_origin, $code_destination, $init_date, $end_date)
     {
 
         //Variables del usuario conectado
@@ -1157,15 +1158,14 @@ class ApiController extends Controller
         $destiny_port[] = $portDest->id;
         $destiny_country[] = $portDest->country_id;
 
-        $total_weight = $request->input('total_weight');
-        $total_volume = $request->input('total_volume');
+        $total_weight = $request->input('total_weight') ?? 1;
+        $total_volume = $request->input('total_volume') ?? 1;
         $company_id = ($request->input('companyID') != null) ? $request->input('companyID') : null;
 
         //  $mode = $request->mode;
-        $dateRange = $request->input('date');
-        $dateRange = explode("/", $dateRange);
-        $dateSince = $dateRange[0];
-        $dateUntil = $dateRange[1];
+
+        $dateSince = $init_date;
+        $dateUntil = $end_date;
 
         $total_weight = $total_weight / 1000;
         if ($total_volume > $total_weight) {
@@ -1251,7 +1251,7 @@ class ApiController extends Controller
             $dataDest = array();
             $dataFreight = array();
 
-            $rateC = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
+            $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
 
             $typeCurrencyFreight = $data->currency->alphacode;
             $idCurrencyFreight = $data->currency->id;
@@ -1289,7 +1289,7 @@ class ApiController extends Controller
                 $totalFreight += $totalT;
                 $totalRates += $totalT;
 
-                $array = array('type' => 'Ocean Freight', 'cantidad' => $weight, 'detail' => 'W/M', 'price' => $priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => $subtotalT, 'total' => $totalT . " " . $typeCurrency);
+                $array = array('type' => 'Ocean Freight', 'quantity' => (float)$weight, 'detail' => 'W/M', 'price' => (float)$priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => (float)$subtotalT, 'total' => (float)$totalT . " " . $typeCurrency );
 
                 $collectionRate->push($array);
 
@@ -3305,7 +3305,7 @@ class ApiController extends Controller
             $totalFreightOrig = $totalFreight;
 
             $rateTotal = $this->ratesCurrency($data->currency->id, $typeCurrency);
-            $totalFreight = $totalFreight / $rateTotal;
+            //$totalFreight = $totalFreight / $rateTotal;
             $totalFreight = number_format($totalFreight, 2, '.', '');
 
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
@@ -3334,17 +3334,24 @@ class ApiController extends Controller
 
             //General information
 
-            $information['contract'] = array('name' => $data->contract->name, 'validity' => $data->contract->validity, 'expire' => $data->contract->expire, 'status' => $data->contract->status, 'id_contract' => $data->contract->id, 'id_rate' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->contract->created_at, 'updated_at' => $data->contract->updated_at);
+            $status = $data->contract->status;
+
+            if($data->contract->status == 'publish'){
+                $status = "published";
+            }
+
+            $information['contract'] = array('name'=>$data->contract->name,'valid_from'=>$data->contract->validity,'valid_until'=>$data->contract->expire,'status'=>$status,'contract_id'=> $data->contract->id,'rate_id' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->contract->created_at, 'updated_at' => $data->contract->updated_at);
             $information['contract']['origin_port'] = array('id' => $data->port_origin->id, 'name' => $data->port_origin->display_name, 'code' => $data->port_origin->code, 'coordinates' => $data->port_destiny->coordinates);
             $information['contract']['destination_port'] = array('id' => $data->port_destiny->id, 'name' => $data->port_destiny->display_name, 'code' => $data->port_destiny->code, 'coordinates' => $data->port_destiny->coordinates);
-            $information['contract']['carrier'] = array('id' => $data->carrier->id, 'name' => $data->carrier->name, 'code' => $data->carrier->uncode);
-            $information['contract']['rates'] = $array;
-            $information['contract']['charges_origin'] = $collectionOrig;
-            $information['contract']['charges_destination'] = $collectionDest;
-            $information['contract']['charges_freight'] = $collectionFreight;
-            $information['contract']['totals'] = array('charge_freight' => $FreightCharges, 'charge_origin' => $totalOrigin, 'charge_destination' => $totalDestiny, 'rates' => number_format($totalRates, 2, '.', ''), 'all_freight' => $totalFreight, 'quote' => number_format($totalQuote, 2, '.', ''));
+            $information['contract']['carrier'] = array('id' => $data->carrier->id, 'name' => $data->carrier->name, 'code' => $data->carrier->uncode, 'scac' => $data->carrier->scac, 'image' => $data->carrier->image, 'url' => $data->carrier->url.$data->carrier->image);
+            $information['contract']['ocean_freight'] = $array;
+            $information['contract']['freight_charges'] = $collectionFreight;
+            $information['contract']['origin_charges'] = $collectionOrig;
+            $information['contract']['destination_charges'] = $collectionDest;
+            $information['contract']['totals'] = array('freight' => $FreightCharges, 'origin' => $totalOrigin, 'destination' => $totalDestiny,'rates'=> number_format($totalRates, 2, '.', ''),'all_freight'=>$totalFreight,'quote'=> number_format($totalQuote, 2, '.', ''));
 
-            $collectionGeneral->push($information);
+
+            $collectionGeneral->push( $information);
 
             // INLANDS
 
