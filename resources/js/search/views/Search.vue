@@ -375,7 +375,7 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
-                                <b-form-group v-if="searchRequest.carriersApi.length > 0" label="SPOT Rates">
+                                <b-form-group v-if="datalists.carriers_api.length > 0" label="SPOT Rates">
                                     <b-form-checkbox-group
                                         v-model="searchRequest.carriersApi"
                                         :options="carriersApiOptions"
@@ -1938,6 +1938,7 @@ export default {
                     })
                     .catch((error) => {
                         this.errorsExist = true;
+                        this.searching = false;
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }

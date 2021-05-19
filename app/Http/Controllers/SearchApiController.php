@@ -981,7 +981,7 @@ class SearchApiController extends Controller
 
         }
 
-        $totals_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals);
+        $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
         $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
 
         if(isset($rate->totals_with_markups)){
