@@ -845,17 +845,18 @@ trait SearchTrait
     {
         foreach($rates as $rate){
             $container_group_id = $rate->contract->gp_container_id;
+
+            $container_array = [];
+            $group_containers = Container::where('gp_container_id',$container_group_id)->get();
+            $requested_containers = [];
+
+            foreach($group_containers as $cont){
+                if(in_array($cont->id,$search_containers)){
+                    array_push($requested_containers, $cont->code);
+                }
+            }
             
             if($container_group_id == 1){
-                $container_array = [];
-                $group_containers = Container::where('gp_container_id',$container_group_id)->get();
-                $requested_containers = [];
-
-                foreach($group_containers as $cont){
-                    if(in_array($cont->id,$search_containers)){
-                        array_push($requested_containers, $cont->code);
-                    }
-                }
                 if($rate->twuenty != null && in_array('20DV',$requested_containers)){
                     $container_array['C20DV'] = $rate->twuenty;
                 }if($rate->forty != null && in_array('40DV',$requested_containers)){
@@ -867,10 +868,20 @@ trait SearchTrait
                 }if($rate->fortyfive != null && in_array('45HC',$requested_containers)){
                     $container_array['C45HC'] = $rate->fortyfive;
                 }
-
-                $rate->containers = json_encode($container_array);
-                $rate->save();
+            }else{
+                $rate_containers = json_decode($rate->containers, true);
+                foreach($requested_containers as $requested){
+                    if(!isset($rate_containers['C'.$requested])){
+                        $container_array['C'.$requested] = 0;
+                    }else{
+                        $container_array['C'.$requested] = $rate_containers['C'.$requested];
+                    }
+                
+                }
             }
+
+            $rate->containers = json_encode($container_array);
+            $rate->save();
         }
     }
 
