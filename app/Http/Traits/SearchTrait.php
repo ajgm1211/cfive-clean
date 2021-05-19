@@ -1109,6 +1109,24 @@ trait SearchTrait
 
             $rate->containers_with_markups = $containers_with_markups_string;
         }
+        
+        if(isset($rate->totals_with_markups_freight_currency)){
+            $totals_with_markups_freight_currency_string = $rate->totals_with_markups_freight_currency;
+            foreach($totals_with_markups_freight_currency_string as $key => $total){
+                $totals_with_markups_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_with_markups_freight_currency = $totals_with_markups_freight_currency_string;
+        }
+
+        if(isset($rate->totals_freight_currency)){
+            $totals_freight_currency_string = $rate->totals_freight_currency;
+            foreach($totals_freight_currency_string as $key => $total){
+                $totals_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_freight_currency = $totals_freight_currency_string;
+        }
 
         $totals_string = $rate->totals;
         foreach($totals_string as $key => $total){
