@@ -91,9 +91,9 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        /*$carriers_api = ApiProvider::get()->map(function ($provider) {
+        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
-        });*/
+        });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
@@ -171,7 +171,7 @@ class SearchApiController extends Controller
             'company_user_id',
             'company_user',
             'carriers',
-            //'carriers_api',
+            'carriers_api',
             'companies',
             'contacts',
             'currency',
@@ -981,7 +981,7 @@ class SearchApiController extends Controller
 
         }
 
-        $totals_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals);
+        $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
         $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
 
         if(isset($rate->totals_with_markups)){

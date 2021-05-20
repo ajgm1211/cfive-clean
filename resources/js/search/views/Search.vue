@@ -375,7 +375,7 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
-                                <b-form-group v-if="searchRequest.carriersApi.lentgh > 0" label="SPOT Rates">
+                                <b-form-group v-if="datalists.carriers_api.length > 0" label="SPOT Rates">
                                     <b-form-checkbox-group
                                         v-model="searchRequest.carriersApi"
                                         :options="carriersApiOptions"
@@ -1763,14 +1763,14 @@ export default {
                     value: carrier,
                 });
             });
-            /**if(component.carriersApiOptions.length == 0){
+            if(component.carriersApiOptions.length == 0){
                 component.datalists.carriers_api.forEach(function (carrier_api) {
                     component.carriersApiOptions.push({
                         text: carrier_api.name,
                         value: carrier_api,
                     });
                 });
-            }**/
+            }
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
@@ -1801,8 +1801,8 @@ export default {
             
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
-                //this.searchRequest.carriersApi = this.datalists.carriers_api;
-                //this.deliveryType = this.deliveryTypeOptions[0];
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
+                this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
@@ -1835,7 +1835,7 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                //this.searchRequest.carriersApi = this.searchData.carriers_api;
+                this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
                     component.carriers = [];
@@ -1876,8 +1876,8 @@ export default {
                     this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
-                    this.searchRequest.originPorts = this.quoteData.origin_ports;
-                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
+                    this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
+                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports_duplicate;
                 }
                 if (this.quoteData.direction_id != null) {
                     this.searchRequest.direction = this.quoteData.direction_id;
@@ -1890,7 +1890,7 @@ export default {
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
                 this.searchRequest.carriers = this.datalists.carriers;
-                //this.searchRequest.carriersApi = this.datalists.carriers_api;
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1938,6 +1938,7 @@ export default {
                     })
                     .catch((error) => {
                         this.errorsExist = true;
+                        this.searching = false;
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }

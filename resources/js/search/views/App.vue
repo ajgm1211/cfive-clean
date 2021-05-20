@@ -94,7 +94,8 @@
             class="row col-12 col-sm-4 d-flex align-items-center justify-content-end"
         >
             <div
-            class="col-12 col-sm-2 d-flex justify-content-end"
+            class="d-flex justify-content-start"
+            :class="countContainersClass()"
             v-for="(container, requestKey) in searchRequest.containers"
             :key="requestKey"
             >
@@ -197,6 +198,21 @@ export default {
     },
     methods :
     {
+        countContainersClass() {
+            if (
+                this.searchRequest.containers.length == 5 ||
+                this.searchRequest.containers.length == 4
+            ) {
+                return "col-2";
+            }
+
+            if (this.searchRequest.containers.length == 3) {
+                return "col-3";
+            }
+            if (this.searchRequest.containers.length == 2) {
+                return "col-4";
+            }
+        },
         createQuote() {
             let component = this;
             
