@@ -38,6 +38,9 @@ class QuotationResource extends JsonResource
             array_push($destiny_array, $item->display_name);
         }
 
+        $origin_ports_duplicate = $origin_ports->unique();
+        $destiny_ports_duplicate = $destiny_ports->unique();
+
         if(isset($this->contact_id)){
             $contact = $this->contact()->first();
             $fullName = $contact->getFullName();
@@ -108,6 +111,8 @@ class QuotationResource extends JsonResource
             'direction_id' => $this->direction_id,
             'inland_ports' => $inland_ports,
             'local_ports' => $local_ports,
+            'origin_ports_duplicate' => $origin_ports_duplicate,
+            'destiny_ports_duplicate' => $destiny_ports_duplicate,
         ];
     }
 
