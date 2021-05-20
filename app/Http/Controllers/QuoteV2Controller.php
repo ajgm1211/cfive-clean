@@ -6248,7 +6248,7 @@ class QuoteV2Controller extends Controller
                                     if ($subtotal_global < $global->minimum) {
                                         $subtotal_global = $global->minimum;
                                         $totalAmmount = $subtotal_global / $rateMountG;
-                                        $unidades = $subtotal_global / $totalWeight;
+                                        $unidades = $subtotal_global / ($totalWeight ?? 1);
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
