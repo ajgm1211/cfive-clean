@@ -28,7 +28,7 @@ use PrvRequest;
 use Yajra\Datatables\Datatables;
 use App\Http\Traits\MixPanelTrait;
 use Illuminate\Support\Facades\Log;
-
+use HelperAll;
 
 class NewContractRequestLclController extends Controller
 {
@@ -236,6 +236,7 @@ class NewContractRequestLclController extends Controller
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now . '_' . $nombre;
+        // $fileName = HelperAll::removeAcent($nombre);
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;

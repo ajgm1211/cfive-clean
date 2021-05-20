@@ -18,7 +18,7 @@
                 </div>
 
                 <!-- Tabs Section -->
-                <b-card no-body class="card-tabs" style="width: 100%">
+                <b-card no-body class="card-tabs" style="width: 100%" v-if="loaded">
                     <b-tabs card class="quote-content-tab">
                         <b-tab title="Quote Info" active @click="changeView('quote')">
                             <div style="padding: 0px 25px">
