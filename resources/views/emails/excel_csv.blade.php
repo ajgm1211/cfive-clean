@@ -222,7 +222,7 @@ font-family: sans-serif !important;
                         <br>
                         <p>Hey there! We hope you're doing well.</p>
 
-                        <p>This is why we want your file is available to download  </p>
+                        <p>This is why we want your file is available to download  <a href='{{$text}}'> Here </a> </p>
 
                         <p>Have a great week!</p>
 
@@ -230,7 +230,7 @@ font-family: sans-serif !important;
 
                         <p>¡Hola! Esperamos que estés bien.</p>
 
-                        <p>En este sentido, queremos informarte que tu archivo esta disponible para descargarlo </p>
+                        <p>En este sentido, queremos informarte que tu archivo esta disponible para descargarlo <a href='{{$text}}'> Aqui </a>  </p>
 
 
                         <p>¡Que tengas una excelente semana!</p>
