@@ -15,6 +15,7 @@ use App\QuoteV2;
 use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait
@@ -1835,5 +1836,97 @@ trait QuoteV2Trait
         }
 
         return json_encode($array);
+    }
+
+    public function formatApiResult($result, $containerGroup, $containers)
+    {
+        $user = \Auth::user('web');
+        $company_user = $user->worksAt();
+        $company_user_id = $company_user->id;
+
+        $currency = Currency::where('alphacode',$result['pricingDetails']['surcharges']['freightSurcharges'][0]['containers'][0]['currencyCode'])->first();
+        $result['currency_id'] = $currency->id;
+
+        $origin_port = Harbor::where('code',$result['originPort'])->first();
+        $destination_port = Harbor::where('code',$result['destinationPort'])->first();
+
+        $result['origin_port'] = $origin_port->id;
+        $result['destiny_port'] = $destination_port->id;
+
+        if($result['companyCode'] == 'cmacgm'){
+            $result['carrier_id'] = 3;
+        }else if($result['companyCode'] == 'maersk'){
+            $result['carrier_id'] = 12;
+        }else if($result['companyCode'] == 'sealand'){
+            $result['carrier_id'] = 24;
+        }
+
+        foreach ($result['pricingDetails']['surcharges'] as $key => $charge_direction) {
+            foreach ($charge_direction as $chargeKey => $charge) {
+
+                $charge_currency = Currency::where('alphacode', $charge['containers'][0]['currencyCode'])->first();
+                $charge['currency_id'] = $charge_currency->id;
+
+                $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
+
+                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas"){
+                    
+                    if($surcharge == null){
+                        $newSurcharge = Surcharge::create([
+                            'name' => $charge['chargeCode'],
+                            'description' => 'from API'
+                        ]);
+
+                        $charge['surcharge_id'] = $newSurcharge->id;
+                    }else{
+                        $charge['surcharge_id'] = $surcharge->id;
+                    }
+                }else{
+                    $charge['surcharge_id'] = null;
+                }
+
+                if($key == "originSurcharges"){
+                    $charge['type_id'] = 1;
+                }elseif($key == "destinationSurcharges"){
+                    $charge['type_id'] = 2;
+                }elseif($key == "freightSurcharges"){
+                    $charge['type_id'] = 3;
+                }
+
+                if($charge['calculationType'] == 'Per Container'){
+                    if($containerGroup['id'] == 1){
+                        $charge['calculationtype_id'] = 5;
+                    }elseif($containerGroup['id'] == 2){
+                        $charge['calculationtype_id'] = 19;
+                    }elseif($containerGroup['id'] == 3){
+                        $charge['calculationtype_id'] = 20;
+                    }elseif($containerGroup['id'] == 4){
+                        $charge['calculationtype_id'] = 21;
+                    }
+                }elseif($charge['calculationType'] == 'Per Doc'){
+                    if($containerGroup['id'] == 1){
+                        $charge['calculationtype_id'] = 9;
+                    }elseif($containerGroup['id'] == 2){
+                        $charge['calculationtype_id'] = 30;
+                    }elseif($containerGroup['id'] == 3){
+                        $charge['calculationtype_id'] = 31;
+                    }elseif($containerGroup['id'] == 4){
+                        $charge['calculationtype_id'] = 32;
+                    }
+                }
+
+                $charge['amount'] = [];
+
+                $i = 0;
+                foreach($charge['containers'] as $cont){
+                    $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                    $i++;
+                }
+
+                $result['pricingDetails']['surcharges'][$key][$chargeKey] = $charge;
+            }   
+        }
+
+        return $result;
     }
 }

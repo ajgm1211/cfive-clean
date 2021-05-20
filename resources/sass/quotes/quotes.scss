@@ -64,6 +64,24 @@ input.data-showas {
     width: 170px !important;
 }
 
+.change-currency-totals {
+    ul.multiselect__content {
+        height: 40px !important;
+    }
+}
+
+.exchange-rates {
+    display: flex;
+    flex-flow: wrap;
+    padding-left: 35px !important;
+    margin-bottom: 0px !important;
+    li {
+        display: flex;
+        align-items: center;
+        list-style: none;
+    }
+}
+
 /*** * Fin Modal Table Add Charges - Local Charges * ***/
 @media only screen and (min-width: 320px) and (max-width: 425px) {
     .responsive-checkbox-freight {
@@ -136,6 +154,10 @@ input.data-showas {
         }
     }
 
+    .origin-destination-inland-res {
+        width: 250px;
+    }
+
     .resposive-origin-destination {
         display: flex;
         align-items: center;
@@ -162,6 +184,14 @@ input.data-showas {
         }
     }
 
+}
+
+@media only screen and (min-width: 320px) and (max-width: 768px) {
+    .exchange-rates {
+        li {
+            margin-top: 10px;
+        }
+    }
 }
 
 @media only screen and (min-width: 768px) {
