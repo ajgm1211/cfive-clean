@@ -1026,9 +1026,11 @@
                             </div>
                         </div>
                     </fieldset>
+
                     <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
-                    <b-card class="mt-5">
+
+                    <b-card class="col-12 col-sm-">
                         <h5 class="q-title">Remarks</h5>
                         <br />
                         <ckeditor
@@ -1037,8 +1039,10 @@
                             v-model="remarks"
                         ></ckeditor>
                     </b-card>
-                    <br>
+
+                    <br><br>
                     </fieldset>
+
                     <!-- SURCHARGES -->
                     <fieldset v-if="stepFour">
                         <div class="row">
