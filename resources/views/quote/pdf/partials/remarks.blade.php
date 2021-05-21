@@ -17,17 +17,17 @@ $remarkP = trim(str_replace("&nbsp;", '', $remarkP));
             @switch($quote->language_id)
                 @case(1)
                     @if(trim(strip_tags($quote->remarks_english)) !== '')
-                        <span style="text-align: justify">{!! str_replace('&nbsp;', ' ', $quote->remarks_english) !!}</span>
+                        {!! str_replace('&nbsp;', ' ', $quote->remarks_english) !!}
                     @endif
                 @break
                 @case(2)
                     @if(trim(strip_tags($quote->remarks_spanish)) !== '')
-                        <span style="text-align: justify">{!! str_replace('&nbsp;', ' ',$quote->remarks_spanish) !!}</span>
+                        {!! str_replace('&nbsp;', ' ',$quote->remarks_spanish) !!}
                     @endif
                 @break
                 @case(3)
                     @if(trim(strip_tags($quote->remarks_portuguese)) !== '')
-                        <span style="text-align: justify">{!! str_replace('&nbsp;', ' ', $quote->remarks_portuguese) !!}</span>
+                        {!! str_replace('&nbsp;', ' ', $quote->remarks_portuguese) !!}
                     @endif
                 @break
             @endswitch
