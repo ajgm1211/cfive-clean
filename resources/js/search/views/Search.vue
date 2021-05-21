@@ -92,7 +92,7 @@
                         :clear-on-select="true"
                         :show-labels="false"
                         :options="originPortOptions"
-                        :disabled="searchRequest.requestData.requested == 1"
+                        @input="updateQuoteSearchOptions()"
                         label="display_name"
                         track-by="display_name"
                         placeholder="From"
@@ -121,8 +121,8 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :disabled="searchRequest.requestData.requested == 1"
                             :options="destinationPortOptions"
+                            @input="updateQuoteSearchOptions()"
                             label="display_name"
                             track-by="display_name"
                             placeholder="To" 
@@ -160,7 +160,7 @@
                 <div class="col-lg-2 mb-2 input-search-form containers-search">
                         
                         <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
-                            <b-dropdown-form>
+                            <b-dropdown-form :disabled="searchRequest.requestData.requested == 1">
                                 <b-form-group label="Type">
                                     <b-form-radio-group
                                         id="containers"
@@ -375,6 +375,12 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
+                                <b-form-group v-if="datalists.carriers_api.length > 0" label="SPOT Rates">
+                                    <b-form-checkbox-group
+                                        v-model="searchRequest.carriersApi"
+                                        :options="carriersApiOptions"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
                                 <b-form-group label="Carriers">
                                     <b-form-checkbox-group
                                         id="carriers-list"
@@ -651,6 +657,7 @@
                                 <div
                                     class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
                                     v-for="(item, index) in dataPackaging"
+                                    :key="index"
                                 >
                                     <div class="col-12 col-sm-1 pr-0">
                                         <p>{{ item.type }}</p>
@@ -690,7 +697,7 @@
 
             <div class="col-lg-8">
                 <div
-                    v-if="Array.isArray(foundRates) && foundRates.length == 0"
+                    v-if="Array.isArray(foundRates) && (foundRates.length == 0) && !foundApiRates"
                     class="alert alert-danger"
                     role="alert"
                 >
@@ -998,6 +1005,7 @@
 
                             <div
                                 v-for="(item, index) in items"
+                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1112,7 +1120,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger"
+                            :key="index">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1391,6 +1400,7 @@ export default {
                 contact: "",
                 pricelevel: "",
                 carriers: [],
+                carriersApi: [],
                 originAddress: "",
                 destinationAddress: "",
                 dateRange: {
@@ -1415,6 +1425,7 @@ export default {
             containers: [],
             //deliveryType: {},
             carriers: [],
+            carriersApiOptions: [],
             containerOptions: [],
             typeOptions: ["FCL", "LCL"],
             deliveryTypeOptions: [],
@@ -1433,6 +1444,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
+            foundApiRates:true,
             companyChosen: false,
             quoteData: {},
             originDistance: true,
@@ -1699,6 +1711,7 @@ export default {
                 .retrieve(id)
                 .then((response) => {
                     this.quoteData = response.data.data;
+                    this.$emit('quoteLoaded', this.quoteData);
                     this.setSearchDisplay(
                         this.searchRequest.requestData.requested
                     );
@@ -1750,6 +1763,14 @@ export default {
                     value: carrier,
                 });
             });
+            if(component.carriersApiOptions.length == 0){
+                component.datalists.carriers_api.forEach(function (carrier_api) {
+                    component.carriersApiOptions.push({
+                        text: carrier_api.name,
+                        value: carrier_api,
+                    });
+                });
+            }
             component.containerOptions = component.datalists.containers;
             component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
@@ -1780,7 +1801,8 @@ export default {
             
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
-                //this.deliveryType = this.deliveryTypeOptions[0];
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
+                this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
@@ -1803,6 +1825,7 @@ export default {
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
+                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.dateRange.startDate =
                     this.searchData.start_date + "T01:00:00";
                 this.searchRequest.dateRange.endDate =
@@ -1812,8 +1835,10 @@ export default {
                 this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
-                if(this.searchData.carriers.length != 0 && this.searchData.carriers.length != this.datalists.carriers.length){
+                this.searchRequest.carriersApi = this.searchData.carriers_api;
+                if(this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
+                    component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
                         component.carriers.push(carrier);
@@ -1821,7 +1846,6 @@ export default {
                 }else{
                     this.searchRequest.carriers = this.datalists.carriers;
                 }
-                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
@@ -1840,6 +1864,8 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
+                    this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
+                    this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
                     this.searchRequest.dateRange.startDate =
                         this.quoteData.search_options.start_date + "T01:00:00";
                     this.searchRequest.dateRange.endDate =
@@ -1850,6 +1876,8 @@ export default {
                     this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
+                    this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
+                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports_duplicate;
                 }
                 if (this.quoteData.direction_id != null) {
                     this.searchRequest.direction = this.quoteData.direction_id;
@@ -1857,13 +1885,12 @@ export default {
                 this.searchRequest.type = this.quoteData.type;
                 //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
-                this.searchRequest.originPorts = this.quoteData.origin_ports;
-                this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
                 this.selectedContainerGroup = this.quoteData.gp_container;
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
                 this.searchRequest.containers = this.quoteData.containers;
                 this.searchRequest.carriers = this.datalists.carriers;
+                this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1986,7 +2013,6 @@ export default {
                         }
                     });
                     this.foundRates = response.data.data;
-                    this.searching = false;
                     this.$emit(
                         "searchSuccess",
                         response.data.data
@@ -1994,7 +2020,6 @@ export default {
                 })
                 .catch((error) => {
                     this.errorsExist = true;
-                    this.searching = false;
                     if (error.status === 422) {
                         this.responseErrors = error.data.errors;
                     }
@@ -2227,16 +2252,23 @@ export default {
                 }
             });
 
-            if (selectedContainersByGroup.length > 3) {
-                selectedContainersByGroup.splice(3, 2);
-            }
-
             fullContainersByGroup.forEach(function (cont) {
                 component.containerOptions.push({
                     text: cont.code,
                     value: cont,
                 });
             });
+
+            if(Object.keys(component.searchRequest.requestData).length != 0 &&
+                component.searchRequest.requestData.requested == 0 && 
+                component.searchData.container_group.id  == component.selectedContainerGroup.id){
+                selectedContainersByGroup = component.searchData.containers;
+            }else{
+                if (selectedContainersByGroup.length > 3) {
+                    selectedContainersByGroup.splice(3, 2);
+                }
+            }
+
             component.containers = selectedContainersByGroup;
         },
 
@@ -2257,13 +2289,17 @@ export default {
         carriers() {
             let component = this;
 
-            if (component.carriers.length == component.carrierOptions.length) {
+            if (component.carriers.length == component.datalists.carriers.length) {
                 component.carrierText = "All Carriers Selected";
             } else if (component.carriers.length >= 5) {
                 component.carrierText =
                     component.carriers.length + " Carriers Selected";
-            } else if (component.carriers.length == 0) {
-                component.carrierText = "Select a Carrier";
+            } else if (component.carriers.length == 0 ) {
+                if(component.searchRequest.carriersApi.length == 0){
+                    component.carrierText = "Select a Carrier";
+                }else{
+                    component.carrierText = "SPOT Providers selected"
+                }
             } else {
                 let selectedCarriers = [];
 
@@ -2278,8 +2314,8 @@ export default {
         allCarriers() {
             let component = this;
 
-            component.carriers = [];
             if (component.allCarriers) {
+                component.carriers = [];
                 // Check all
                 component.datalists.carriers.forEach(function (carrier) {
                     component.carriers.push(carrier);
