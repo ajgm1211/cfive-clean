@@ -1,121 +1,5 @@
 <template>
   <div class="container-cards" v-if="loaded">
-    <!-- FILTERS -->
-    <div class="row mb-3" style="margin-top: 80px">
-      <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
-        <h2 class="mr-5 t-recent">
-          results found: <b>{{ finalRates.length }}</b>
-        </h2>
-        <!--<div class="d-flex filter-search">
-          <b style="color: #80888b !important; letter-spacing: 2px !important"
-            >filter by:</b
-          >&nbsp;
-          <div
-            style="
-              width: 200px !important;
-              height: 33.5px;
-              position: relative;
-              top: -8px;
-            "
-          >
-            <multiselect
-              v-model="filterBy"
-              :multiple="false"
-              :close-on-select="true"
-              :clear-on-select="false"
-              :hide-selected="true"
-              :show-labels="false"
-              :options="filterOptions"
-              placeholder="Carrier"
-              class="s-input no-select-style"
-              
-            >
-            </multiselect>
-            <button
-              v-if="filterBy != '' && filterBy != null"
-              type="button"
-              class="close custom_close_filter"
-              aria-label="Close"
-              @click="(filterBy = ''), filterCarriers()"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-          </div>
-        </div>-->
-      </div>
-
-      <div class="col-12 col-sm-6 addcontract-createquote">
-        <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
-
-        <b-button
-          v-if="!creatingQuote"
-          b-button
-          variant="primary"
-          @click="createQuote"
-        >
-          {{ requestData.requested == 0 ? "Create Quote" : "Duplicate Quote" }}
-        </b-button>
-
-        <b-button v-else b-button variant="primary">
-          <div class="spinner-border text-light" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </b-button>
-      </div>
-    </div>
-    <!-- FIN FILTERS -->
-
-    <div v-if="noRatesAdded" class="alert alert-warning" role="alert">
-      Please select at least one Rate to add
-    </div>
-
-    <!-- HEADER FCL -->
-    <div class="row mt-4 mb-4 result-header">
-      <div
-        class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-      >
-        <b>carrier</b>
-      </div>
-      <div class="row col-12 col-sm-4"></div>
-      <div
-        class="row col-12 col-sm-4 d-flex align-items-center justify-content-end"
-      >
-        <div
-          class="d-flex justify-content-start"
-          :class="countContainersClass()"
-          v-for="(container, requestKey) in request.containers"
-          :key="requestKey"
-        >
-          <b>
-            {{ container.code }}
-          </b>
-        </div>
-      </div>
-    </div>
-    <!-- FIN HEADER FCL -->
-
-    <!-- HEADER LCL -->
-    <div class="row mt-4 mb-4 result-header" v-if="false">
-      <div
-        class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-      >
-        <b>carrier</b>
-      </div>
-      <div
-        class="row col-12 col-sm-8 d-flex align-items-center justify-content-between"
-      >
-        <div class="col-12 col-sm-3"><b>ORIGEN</b></div>
-        <div class="col-12 col-sm-3 d-flex justify-content-end">
-          <b>DESTINO</b>
-        </div>
-        <div class="col-12 col-sm-6 d-flex justify-content-center">
-          <b>PRICE</b>
-        </div>
-      </div>
-    </div>
-    <!-- FIN HEADER LCL -->
-
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
       <!-- LCL CARD -->
@@ -221,6 +105,7 @@
                 class="btn-add-quote"
                 name="check-button"
                 button
+                @change="addRateToQuote(rate)"
               >
                 <b>add to quote</b>
               </b-form-checkbox>
@@ -453,7 +338,17 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                          >{{
+                            rate.totals_with_markups_freight_currency
+                              ? rate.totals_with_markups_freight_currency["C" + container.code]
+                              : rate.totals_freight_currency["C" + container.code]
+                          }}
+                          <span style="font-size: 10px">{{
+                            rate.currency.alphacode
+                          }}</span></b
+                        >
+                        <b style="font-size: 16px" v-else
                           >{{
                             rate.totals_with_markups
                               ? rate.totals_with_markups["C" + container.code]
@@ -475,14 +370,30 @@
                   <p class="mr-4 mb-0">
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
-                    <img v-if="rate.contract.validity > searchEndDate" src="/images/error.svg" width="15px" data-toggle="tooltip" title="Contract date beyond search range"/>
+                    <img
+                      v-if="rate.contract.validity > searchEndDate"
+                      src="/images/error.svg"
+                      width="15px"
+                      data-toggle="tooltip"
+                      title="Contract date beyond search range"
+                    />
                   </p>
-                  <button 
-                    v-if="rate.contract_id != 0 || rate.contract_request_id != 0 || rate.contract_backup_id != 0"
-                    style="background: transparent; border: 0; text-transform: uppercase; color: #00C581"
+                  <button
+                    v-if="
+                      rate.contract_id != 0 ||
+                      rate.contract_request_id != 0 ||
+                      rate.contract_backup_id != 0
+                    "
+                    style="
+                      background: transparent;
+                      border: 0;
+                      text-transform: uppercase;
+                      color: #00c581;
+                    "
                     @click="downloadContractFile(rate)"
                   >
-                  download contract</button>                
+                    download contract
+                  </button>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -517,6 +428,7 @@
                 class="btn-add-quote"
                 name="check-button"
                 button
+                @change="addRateToQuote(rate)"
               >
                 <b>add to quote</b>
               </b-form-checkbox>
@@ -569,9 +481,7 @@
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
                       <b-td>{{
-                        charge.joint
-                          ? "Per Container"
-                          : charge.calculationtype.name
+                        charge.calculationtype.name
                       }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
@@ -602,7 +512,9 @@
                           }}</span
                         >
                         <b v-if="chargeType == 'Freight'">{{
-                          charge.joint_as == 'client_currency' ? rate.currency.alphacode : charge.currency.alphacode
+                          charge.joint_as == "client_currency"
+                            ? rate.currency.alphacode
+                            : charge.currency.alphacode
                         }}</b>
                         <b v-else-if="charge.joint_as == 'client_currency'">{{
                           charge.client_currency.alphacode
@@ -709,9 +621,8 @@
                 font-weight: bolder;
                 border: 2px solid #0072fc !important;
               "
-              >{{
-                requestData.requested == 0 ? "Create Quote" : "Duplicate Quote"
-              }}
+            >
+              Create Quote
             </b-button>
 
             <b-button v-else b-button variant="primary">
@@ -730,7 +641,6 @@
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import actions from "../../actions";
-
 export default {
   props: {
     rates: Array,
@@ -747,16 +657,15 @@ export default {
       actions: actions,
       requestData: {},
       finalRates: [],
-      creatingQuote: false,
       errorsExist: false,
       responseErrors: {},
-      noRatesAdded: false,
       filterBy: "",
       filterOptions: [],
       searchEndDate: "",
-
       isActive: false,
       items: [],
+      ratesForQuote: [],
+      creatingQuote: false,
     };
   },
   created() {
@@ -846,12 +755,9 @@ export default {
         }
       });
     },
-
     filterCarriers() {
       let component = this;
-
       //console.log(this.request);
-
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
           if (component.filterBy == rate.carrier.name) {
@@ -862,7 +768,6 @@ export default {
         component.finalRates = component.rates;
       }
     },
-
     downloadContractFile(rate){
       let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
@@ -876,31 +781,50 @@ export default {
           console.log(error);
         });
     },
-  },
+    addRateToQuote(rate){
+      let component = this;
 
-  mounted() {
+      if (rate.addToQuote) {
+        component.ratesForQuote.push(rate);
+      } else {
+        component.ratesForQuote.forEach(function (rateQ) {
+          if (rate.id == rateQ.id) {
+            component.ratesForQuote.splice(
+              component.ratesForQuote.indexOf(rateQ),
+              1
+            );
+          }
+        });
+      }
+
+      component.$emit("addedToQuote", component.ratesForQuote);
+    },
+    createQuote() {
+      this.$emit("createQuote");
+    },
+    createQuote(){
+      this.$emit('createQuote');
+    },
+  },
+  mounted(){
     let component = this;
     //console.log(component.datalists);
-
     component.searchEndDate = component.request.dateRange.endDate;
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
     });
-
     component.finalRates = component.rates;
-
     //component.setFilters();
-
     window.document.onscroll = () => {
-      let navBar = document.getElementById("top-results");
-      if (window.scrollY > navBar.offsetTop) {
-        component.isActive = true;
+      let navBar = document.getElementById('top-results');
+      if(window.scrollY > navBar.offsetTop){
+          component.isActive = true;
       } else {
-        component.isActive = false;
+          component.isActive = false;
       }
-    };
-
+    }
+    
     this.loaded = true;
   },
-};
+}
 </script>
