@@ -745,7 +745,7 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteTwo }"
                     >
                         <div class="add-contract-step">2</div>
@@ -753,18 +753,26 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteThree }"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteThree}"
                     >
                         <div class="add-contract-step">3</div>
+                        <span>Remarks</span>
+                    </div>
+
+                    <div
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteFour }"
+                    >
+                        <div class="add-contract-step">4</div>
                         <span>Surcharges</span>
                     </div>
 
                     <div
                         class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteFour }"
+                        v-bind:class="{ stepComplete: isCompleteFive }"
                     >
-                        <div class="add-contract-step">4</div>
+                        <div class="add-contract-step">5</div>
                         <span>Files</span>
                     </div>
                 </div>
@@ -1018,9 +1026,21 @@
                             </div>
                         </div>
                     </fieldset>
-
-                    <!-- SURCHARGES -->
+                    <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
+                    <b-card class="mt-5">
+                        <h5 class="q-title">Remarks</h5>
+                        <br />
+                        <ckeditor
+                            id="inline-form-input-name"
+                            type="classic"
+                            v-model="remarks"
+                        ></ckeditor>
+                    </b-card>
+                    <br>
+                    </fieldset>
+                    <!-- SURCHARGES -->
+                    <fieldset v-if="stepFour">
                         <div class="row">
                             <div v-if="invalidSurcharger" class="col-12 mb-3">
                                 <h5 class="invalid-data">
@@ -1138,7 +1158,7 @@
                     </fieldset>
 
                     <!-- FILES -->
-                    <fieldset v-if="stepFour">
+                    <fieldset v-if="stepFive">
                         <vue-dropzone
                             ref="myVueDropzone"
                             :useCustomSlot="true"
@@ -1319,7 +1339,7 @@
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
                         <b-button
-                            v-if="stepTwo || stepThree || stepFour"
+                            v-if="stepTwo || stepThree || stepFour || stepFive"
                             v-on:click="backStep"
                             variant="link"
                             style="color: red"
@@ -1328,12 +1348,12 @@
                         >
                         <b-button
                             v-on:click="nextStep"
-                            v-if="!stepFour"
+                            v-if="!stepFive"
                             class="btn-create-quote"
                             >Save & Continue</b-button
                         >
                         <b-button
-                            v-if="stepFour"
+                            v-if="stepFive"
                             class="btn-create-quote"
                             @click="contracButtonPressed"
                         >
@@ -1361,6 +1381,7 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
 import * as VueGoogleMaps from "vue2-google-maps";
+import FormInlineView from "../../components/views/FormInlineView.vue";
 
 export default {
     components: {
@@ -1368,6 +1389,7 @@ export default {
         Multiselect,
         DateRangePicker,
         vueDropzone: vue2Dropzone,
+        FormInlineView,
     },
     data() {
         return {
@@ -1468,6 +1490,7 @@ export default {
             stepTwo: false,
             stepThree: false,
             stepFour: false,
+            stepFive: false,
             invalidInput: false,
             invalidSurcharger: false,
             valueEq: "",
@@ -1523,7 +1546,10 @@ export default {
             isCompleteTwo: false,
             isCompleteThree: false,
             isCompleteFour: false,
+            isCompleteFive: false,
             contractAdded: false,
+            remarks: null,
+
         };
     },
     mounted() {
@@ -1576,11 +1602,22 @@ export default {
                 this.stepFour = !this.stepFour;
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
+            }else if(this.stepFour){
+                this.invalidInput = false;
+                this.stepFour = false;
+                this.stepFive = !this.stepFive;
+                this.isCompleteFive = !this.isCompleteFive;
             }
         },
 
         backStep() {
-            if (this.stepFour) {
+            if (this.stepFive){
+                this.invalidInput = false;
+                this.stepFive = false;
+                this.stepFour = !this.stepFour;
+                this.isCompleteFour = !this.isCompleteFour;
+                return;
+            }else if (this.stepFour) {
                 this.invalidInput = false;
                 this.stepFour = false;
                 this.stepThree = !this.stepThree;

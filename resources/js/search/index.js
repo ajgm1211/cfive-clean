@@ -8,6 +8,8 @@ import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
 import VueNumericInput from 'vue-numeric-input';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import VueCkeditor from 'vue-ckeditor5';
 
 /* Config files */
 import App from './views/App'; // Main Component
@@ -40,3 +42,11 @@ const app = new Vue({
     render: h => h(App),
     router: router,
 });
+const options = {
+    editors: {
+        classic: ClassicEditor,
+    },
+    name: 'ckeditor'
+}
+
+Vue.use(VueCkeditor.plugin, options);
