@@ -381,24 +381,28 @@ class SearchApiController extends Controller
             }
         }
 
-        foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-            $carrier = Carrier::where('id',$carrier_id)->first();
-            
-            $search_carrier = new SearchCarrier();
+        if(isset($new_search_data_ids['carriers'])){
+            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
+                $carrier = Carrier::where('id',$carrier_id)->first();
+                
+                $search_carrier = new SearchCarrier();
 
-            $search_carrier->search_rate_id = $new_search->id;
-            
-            $search_carrier->provider()->associate($carrier)->save();
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($carrier)->save();
+            }
         }
 
-        foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
-            $provider = ApiProvider::where('id',$provider_id)->first();
-            
-            $search_carrier = new SearchCarrier();
-
-            $search_carrier->search_rate_id = $new_search->id;
-            
-            $search_carrier->provider()->associate($provider)->save();
+        if(isset($new_search_data_ids['carriersApi'])){
+            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+                $provider = ApiProvider::where('id',$provider_id)->first();
+                
+                $search_carrier = new SearchCarrier();
+    
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($provider)->save();
+            }
         }
 
         return new SearchApiResource($new_search);
