@@ -1601,7 +1601,6 @@ export default {
                 this.isCompleteThree = !this.isCompleteThree;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepFour = !this.stepFour;
                 this.isCompleteFour = !this.isCompleteFour;
@@ -1628,7 +1627,6 @@ export default {
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepTwo = !this.stepTwo;
                 this.isCompleteThree = !this.isCompleteThree;
@@ -1985,9 +1983,12 @@ export default {
                 carrier: this.carrier,
                 currency: this.currency,
                 rates: this.equipType,
-                //stepthree Surcharge
+                //stepthree remarks
+                remarks: this.remarks,
+                //stepFour Surcharges
                 dataSurcharger: this.dataSurcharger,
-                //stepFour
+                //stepFive
+                
             };
             let vcomponent = this;
             actions.search
