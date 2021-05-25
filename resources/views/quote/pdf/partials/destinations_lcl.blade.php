@@ -37,9 +37,9 @@
                 @foreach($value as $key => $charge)
                     <tr>
                         <td>{!! $charge->charge ?? 'Inland' !!}</td>
-                        <td>{{  $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
+                        <td>{{ $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
                         <td>{{ $charge->units ?? "--" }}</td>
-                        <td>{{ $charge->price ?? "--" }}</td>
+                        <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
                         @if(isset($charge->totals))
                             @php
                                 $array_total_inland = json_decode($charge->totals);

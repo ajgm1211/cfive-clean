@@ -14,13 +14,18 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 /* Config files */
 import App from './views/App'; // Main Component
 import Api from '../api.js'; // Api calls controller
+import VueMixpanel from 'vue-mixpanel';// MixPanel
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
-    // Optionally install the BootstrapVue icon components plugin
+// Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(VueNumericInput)
+Vue.use(VueMixpanel, {
+    //token: "2e500c38f49acb5c4b9f576c63d527d7" //Development
+    token: "3fddf65a971eccf21d956ba2ebbb293c"
+})
 
 Vue.use(VueToast, {
     position: 'top-right'
