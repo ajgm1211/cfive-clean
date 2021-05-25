@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mt-5">
             <div class="col-12">
                 <b-card>
@@ -18,6 +18,7 @@
                         :fields="fields"
                         :actions="actions.inlands"
                         @onEdit="onEdit"
+                        :totalResults="totalResults"
                         ></DataTable>
                 </b-card>
             </div>
@@ -54,6 +55,7 @@
         },
         data() {
             return {
+                totalResults: true,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 datalists: {},

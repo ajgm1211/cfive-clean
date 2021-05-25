@@ -734,10 +734,10 @@
                 hide-footer
             >
                 <!-- STEPS -->
-                <div id="add-contract-form-steps" class="row pt-5 pb-5">
+                <div id="add-contract-form-steps" class="row pt-5 pb-5 custom-step-box">
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteOne }"
                     >
                         <div class="add-contract-step">1</div>
@@ -769,7 +769,7 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteFive }"
                     >
                         <div class="add-contract-step">5</div>
@@ -1030,7 +1030,7 @@
                     <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
 
-                    <b-card class="col-12 col-sm-">
+                    
                         <h5 class="q-title">Remarks</h5>
                         <br />
                         <ckeditor
@@ -1038,7 +1038,6 @@
                             type="classic"
                             v-model="remarks"
                         ></ckeditor>
-                    </b-card>
 
                     <br><br>
                     </fieldset>

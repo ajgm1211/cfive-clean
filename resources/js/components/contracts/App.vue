@@ -23,6 +23,7 @@
                         :filter="true"
                         @onEdit="onEdit"
                         @onOpenModalProgressDetails="showProgressDetailsModal"
+                        :totalResults="totalResults"
                         ></DataTable>
                 </b-card>
             </div>
@@ -101,6 +102,7 @@
         },
         data() {
             return {
+                totalResults: true,
                 value: 45,
                 max: 100,
                 isBusy:true, // Loader
@@ -183,8 +185,7 @@
                         type:"daterange", 
                         sdName: 'validity', 
                         edName: 'expire',
-                        min: new Date(new Date().getFullYear(), new Date().getMonth()),
-                        max: new Date(new Date().getFullYear(), new Date().getMonth() + 1)
+                        
                     },
                     gp_container: { 
                         label: 'Equipment', 
