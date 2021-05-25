@@ -38,4 +38,9 @@ class Carrier extends Model
     {
         return 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'.$value;
     }
+
+    public function search_carriers()
+    {
+        return $this->morphToMany(SearchCarrier::class,'provider','provider_type','provider_id');
+    }
 }

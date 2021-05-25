@@ -49,6 +49,7 @@ use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\Permission\Models\Role;
 use Yajra\Datatables\Datatables;
+use HelperAll;
 
 class ContractsController extends Controller
 {
@@ -248,11 +249,11 @@ class ContractsController extends Controller
         $file = $request->file('file');
 
         $name = uniqid().'_'.trim($file->getClientOriginalName());
-
-        $file->move($path, $name);
+        $fileName = HelperAll::removeAccent($name);
+        $file->move($path, $fileName);
 
         return response()->json([
-            'name'          => $name,
+            'name'          => $fileName,
             'original_name' => $file->getClientOriginalName(),
         ]);
     }

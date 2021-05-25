@@ -42,6 +42,7 @@ use App\QuoteV2;
 use App\CompanyPrice;
 use App\ContractFclFile;
 use App\NewContractRequest;
+use App\ApiProvider;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -80,13 +81,18 @@ class SearchApiController extends Controller
     //Retrieves all data needed for search processing and displaying
     public function data(Request $request)
     {
+        $user = \Auth::user();
         //Querying each model used and mapping only necessary data
-        $company_user_id = \Auth::user()->company_user_id;
+        $company_user_id = $user->company_user_id;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
+        });
+
+        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
+            return $provider->only(['id', 'name', 'code', 'image']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
@@ -161,9 +167,11 @@ class SearchApiController extends Controller
 
         //Collecting all data retrieved
         $data = compact(
+            'user',
             'company_user_id',
             'company_user',
             'carriers',
+            'carriers_api',
             'companies',
             'contacts',
             'currency',
@@ -233,7 +241,7 @@ class SearchApiController extends Controller
             }
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency']);
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
 
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
@@ -299,7 +307,8 @@ class SearchApiController extends Controller
             'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required',
             'direction' => 'required',
-            'carriers' => 'required|array|min:1',
+            'carriers' => 'sometimes',
+            'carriersApi' => 'sometimes',
             'type' => 'required',
             'company' => 'sometimes',
             'contact' => 'sometimes',
@@ -332,7 +341,6 @@ class SearchApiController extends Controller
 
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromArray($new_search_data);
-
         //Formatting date
         $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
 
@@ -373,11 +381,28 @@ class SearchApiController extends Controller
             }
         }
 
-        foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-            $searchCarrier = new SearchCarrier();
-            $searchCarrier->carrier_id = $carrier_id;
-            $searchCarrier->search_rate()->associate($new_search);
-            $searchCarrier->save();
+        if(isset($new_search_data_ids['carriers'])){
+            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
+                $carrier = Carrier::where('id',$carrier_id)->first();
+                
+                $search_carrier = new SearchCarrier();
+
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($carrier)->save();
+            }
+        }
+
+        if(isset($new_search_data_ids['carriersApi'])){
+            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+                $provider = ApiProvider::where('id',$provider_id)->first();
+                
+                $search_carrier = new SearchCarrier();
+    
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($provider)->save();
+            }
         }
 
         return new SearchApiResource($new_search);
@@ -491,6 +516,7 @@ class SearchApiController extends Controller
         $destination_ports = [$rate->destiny_port,1485];
         $origin_countries = [$rate->port_origin->country()->first()->id, 250];
         $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
+        $container_ids = $search_ids['containers'];
 
         //creating carriers array with only rates carrier
         $carriers = [$rate->carrier->id, 26];
@@ -500,6 +526,10 @@ class SearchApiController extends Controller
             //Querying NON API contract local charges
             $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
+            })->whereHas('calculationtype', function ($q) use ($container_ids) {
+                $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
+                    $b->whereIn('container_id', $container_ids);
+                });
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
                     $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
@@ -954,6 +984,15 @@ class SearchApiController extends Controller
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
 
         }
+
+        $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
+        $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+
+        if(isset($rate->totals_with_markups)){
+            $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
+            $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
+        }
+
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)

@@ -234,13 +234,27 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
-.banda-top.maerks span,
-.banda-top.cma span {
+.banda-top.cma span, 
+.banda-top.maersk span,
+.banda-top.sealand span {
+    text-transform: uppercase;
     position: relative;
     left: -7px;
 }
 
-.banda-top.maerks {
+.banda-top.cma span {
+    left: -7px;
+}
+
+.banda-top.maersk span {
+    left: -3px;
+}
+
+.banda-top.sealand span {
+    left: -3px;
+}
+
+.banda-top.maersk {
     border-bottom: 26px solid #42B0D5;
     &::after {
         top: 26px;
@@ -266,9 +280,21 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
+.banda-top.sealand {
+    border-bottom: 26px solid #216E91;
+    &::after {
+        top: 26px;
+        border-top: 10px solid #368eac;
+    }
+    &::before {
+        top: 26px;
+        border-top: 11px solid #368eac;
+    }
+}
 
 
-/* CMA AND MAERKS */
+
+/* CMA AND maersk */
 
 .schedule {
     background: #fbfbfb;
@@ -377,6 +403,15 @@ BANDA DE CARDS CMA Y MAERSK
 .containers-numbers .numeric-input:focus {
     outline: none !important;
     box-shadow: none !important;
+}
+
+.spinner-load {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative; 
+    top: 150px; 
+    border-spacing: 0px, 20px;
 }
 
 
