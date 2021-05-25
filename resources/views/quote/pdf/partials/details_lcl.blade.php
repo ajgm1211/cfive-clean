@@ -1,7 +1,6 @@
 <div id="details" class="clearfix details">
             <!-- Company -->
             <div class="company" style="float: left; width: 350px; line-height: 10px;">
-
                 <!-- Logo -->
                 @if(isset($quote->company) && $quote->company->logo!='')
             
@@ -70,16 +69,24 @@
                 @if($delegation != null)
                                 
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
+
+                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
     
-                    <p style="line-height:10px;">{{@$delegation->address}}</p>
-    
-                    <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                        <p style="line-height:10px;">{{@$delegation->address}}</p>
+        
+                        <p style="line-height:10px;">{{@$delegation->phone}}</p>
+
+                    @endif
                 @else
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+
+                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
     
-                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-    
-                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+        
+                        <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+
+                    @endif
                 @endif
 
             </div>
@@ -105,16 +112,24 @@
                 @if($delegation != null)
                                 
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
+
+                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
     
-                    <p style="line-height:10px;">{{@$delegation->address}}</p>
-    
-                    <p style="line-height:10px;">{{@$delegation->phone}}</p>
+                        <p style="line-height:10px;">{{@$delegation->address}}</p>
+        
+                        <p style="line-height:10px;">{{@$delegation->phone}}</p>
+
+                    @endif
                 @else
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+
+                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
     
-                    <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
-    
-                    <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+        
+                        <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+
+                    @endif
                 @endif
                 
             </div>
@@ -137,7 +152,7 @@
 
                         @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
                             
-                            <span><b>Incoterm:</b> </span>{{$quote->custom_incoterm ?? @$quote->incoterm->name}} |
+                            <span><b>Incoterm:</b> </span>{{$quote->incoterm->name}} - {{$quote->custom_incoterm}} |
                         
                         @endif
                         

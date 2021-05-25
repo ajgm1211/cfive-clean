@@ -194,7 +194,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $currency_bol[$contenedor->code] = true;
                             } elseif ($statusCurrency == 2) { // valor y currency en la misma columna del excel
                                 $value_arr = [];
-                                $value_arr = explode(' ', $row[$final_columns[$contenedor->code]]);
+                                $value_arr = explode(' ', trim($row[$final_columns[$contenedor->code]]));
                                 if (count($value_arr) == 1) {
                                     array_push($value_arr, '_E_E');
                                     array_push($value_arr, $options_cont->optional);
@@ -210,7 +210,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         if (count($value_arr) == 2) {
                                             $currency_bol[$contenedor->code] = true;
                                         } else {
-                                            $value_arr[1] = $value_arr[1] . '_E_E';
+                                            $value_arr[1] = $curren_obj->alphacode . '_E_E';
                                             $currency_bol[$contenedor->code] = false;
                                         }
 
@@ -459,7 +459,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             //------------------ CALCULATION TYPE -----------------------------------------------------
                             $calculationtype = null;
                             if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0 ||
-                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0) {
+                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0
+                               || strnatcasecmp($calculation_type_exc, 'PER_TON') == 0) {
                                 $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
                                     ->whereHas('containersCalculation.container', function ($query) use ($groupContainer_id) {
                                         $query->whereHas('groupContainer', function ($queryTw) use ($groupContainer_id) {
