@@ -28,7 +28,7 @@ use PrvRequest;
 use Yajra\Datatables\Datatables;
 use App\Http\Traits\MixPanelTrait;
 use Illuminate\Support\Facades\Log;
-
+use HelperAll;
 
 class NewContractRequestLclController extends Controller
 {
@@ -236,6 +236,7 @@ class NewContractRequestLclController extends Controller
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now . '_' . $nombre;
+        // $fileName = HelperAll::removeAcent($nombre);
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;
@@ -259,6 +260,7 @@ class NewContractRequestLclController extends Controller
             //$contract->comments         = '';
             $contract->company_user_id = $CompanyUserId;
             $contract->direction_id = $direction_id;
+            $contract->user_id = $request->user;
             $contract->save();
 
             $Contract_id = $contract->id;
@@ -363,6 +365,14 @@ class NewContractRequestLclController extends Controller
         $extObj = new \SplFileInfo($Ncontract->namefile);
         $ext = $extObj->getExtension();
         $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-LCL.' . $ext;
+        $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
+        $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
+        $nameF = utf8_decode($name);
+        $nameF = strtr($nameF, utf8_decode($originales), $modificadas);
+        \Log::Info($name);
+
+
+
 
         $success = false;
         $descarga = null;
