@@ -51,7 +51,7 @@
                         type: 'select', 
                         rules: 'required', 
                         trackby: 'alphacode', 
-                        placeholder: 'Select Currency Port', 
+                        placeholder: 'Currency Port', 
                         options: 'currencies' }
                 },
             }

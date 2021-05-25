@@ -309,10 +309,10 @@ trait MixPanelTrait
             array(
                 'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
-                'Contract'  => $data->namecontract,
-                'Valid_from' => $date[0],
-                'Valid_until' => $date[1],
-                'User' => $user->fullname,
+                'Contract'      => $data->namecontract,
+                'Valid_from'    => $date[0],
+                'Valid_until'   => $date[1],
+                'Owner'         => $user->username_load,
             )
         );
     }
@@ -338,7 +338,7 @@ trait MixPanelTrait
                 'Contract'      => $data->namecontract,
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
-                'Username'      => $data->username_load,
+                'Owner'         => $data->username_load,
             )
         );
     }
@@ -458,10 +458,10 @@ trait MixPanelTrait
         $mixPanel->track(
             'New Request FCL',
             array(
-                'type' => 'FCL',
+                'Type' => 'FCL',
                 'Company' => $user->companyUser->name,
-                'contract_id'=>$data->contract_id,
-                'type_contenedor'=>$container->group_containers->name,
+                'Contract_id'=>$data->contract_id,
+                'Container_type'=>$container->group_containers->name,
                 'User' => $user->fullname,
             )
         );
@@ -483,9 +483,9 @@ trait MixPanelTrait
         $mixPanel->track(
             'New Request LCL',
             array(
-                'type' => 'LCL',
+                'Type' => 'LCL',
                 'Company' => $user->companyUser->name,
-                'contract_id'=>$data->id,
+                'Contract_id'=>$data->id,
                 'User' => $user->fullname,
             )
         );
