@@ -145,8 +145,8 @@ trait MixPanelTrait
             'Rate Finder FCL',
             array(
                 'Company' => $data['company_user']['name'],
-                'origin' =>$origin,
-                'destiny' =>$destiny,
+                'Origin' =>$origin,
+                'Destination' =>$destiny,
                 'Container_type' => $data['data']['selectedContainerGroup']['name'],
                 'User' => $user->fullname,
             )
