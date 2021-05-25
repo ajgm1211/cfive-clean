@@ -260,6 +260,7 @@ class NewContractRequestLclController extends Controller
             //$contract->comments         = '';
             $contract->company_user_id = $CompanyUserId;
             $contract->direction_id = $direction_id;
+            $contract->user_id = $request->user;
             $contract->save();
 
             $Contract_id = $contract->id;
