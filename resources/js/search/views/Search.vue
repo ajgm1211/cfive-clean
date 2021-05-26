@@ -2320,6 +2320,8 @@ export default {
                 component.datalists.carriers.forEach(function (carrier) {
                     component.carriers.push(carrier);
                 });
+            }else{
+                component.carriers = [];
             }
         },
         

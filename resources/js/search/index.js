@@ -23,7 +23,8 @@ Vue.use(IconsPlugin)
 Vue.use(VueRouter)
 Vue.use(VueNumericInput)
 Vue.use(VueMixpanel, {
-    token: "2e500c38f49acb5c4b9f576c63d527d7"
+    //token: "2e500c38f49acb5c4b9f576c63d527d7" //Development
+    token: "3fddf65a971eccf21d956ba2ebbb293c"
 })
 
 Vue.use(VueToast, {

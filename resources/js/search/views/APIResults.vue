@@ -814,7 +814,7 @@
                   :class="result.detentionCollapse ? null : 'collapsed'"
                   :aria-expanded="result.detentionCollapse ? 'true' : 'false'"
                   :aria-controls="
-                    'detention_' + String(result.routingDetails[0].voyageNumber)
+                    'detention_' + String(result.quoteLine)
                   "
                   @click="
                     result.detentionCollapse = !result.detentionCollapse;
@@ -832,7 +832,7 @@
                   :class="result.scheduleCollapse ? null : 'collapsed'"
                   :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
                   :aria-controls="
-                    'schedules_' + String(result.routingDetails[0].voyageNumber)
+                    'schedules_' + String(result.quoteLine)
                   "
                   @click="
                     result.scheduleCollapse = !result.scheduleCollapse;
@@ -850,7 +850,7 @@
                   :class="result.detailCollapse ? null : 'collapsed'"
                   :aria-expanded="result.detailCollapse ? 'true' : 'false'"
                   :aria-controls="
-                    'details_' + String(result.routingDetails[0].voyageNumber)
+                    'details_' + String(result.quoteLine)
                   "
                   @click="
                     result.detailCollapse = !result.detailCollapse;
@@ -883,7 +883,7 @@
             >
               <b>add to quote</b>
             </b-form-checkbox>
-            <a v-b-modal.qty-modal class="btn-add-quote btn-book"
+            <a @click="openModal(result.quoteLine)" class="btn-add-quote btn-book"
               ><strong>BOOK</strong></a
             >
           </div>
@@ -895,7 +895,7 @@
           <!-- DETALLES DE TARIFA -->
           <b-collapse
             class="pt-5 pb-5 pl-5 pr-5 col-12"
-            :id="'details_' + String(result.routingDetails[0].voyageNumber)"
+            :id="'details_' + String(result.quoteLine)"
             v-model="result.detailCollapse"
           >
             <div
@@ -1060,7 +1060,7 @@
 
           <!-- SCHEDULES -->
           <b-collapse
-            :id="'schedules_' + String(result.routingDetails[0].voyageNumber)"
+            :id="'schedules_' + String(result.quoteLine)"
             v-model="result.scheduleCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             style="background: #fbfbfb"
@@ -1251,7 +1251,7 @@
 
           <!-- DETENTIONS -->
           <b-collapse
-            :id="'detention_' + String(result.routingDetails[0].voyageNumber)"
+            :id="'detention_' + String(result.quoteLine)"
             v-model="result.detentionCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
           >
@@ -1325,8 +1325,8 @@
 
       <!--  Book Qty Modal  -->
       <b-modal
-        ref="qty-modal"
-        id="qty-modal"
+        :ref="'qty-modal_'+result.quoteLine"
+        :id="'qty-modal_'+result.quoteLine"
         size="md"
         centered
         hide-footer
@@ -1414,6 +1414,10 @@ export default {
       if (this.request.containers.length == 2) {
         return "col-4";
       }
+    },
+
+    openModal(quoteId){
+      this.$bvModal.show("qty-modal_"+quoteId);
     },
 
     callAPIs() {
@@ -1567,38 +1571,41 @@ export default {
       let finalDetentions = [];
       let detentionCodes = [];
 
-      responseData.additionalData.importDnDConditions.forEach(function (
+      if(responseData.additionalData.importDnDConditions != null &&
+        responseData.additionalData.importDnDConditions.length > 0){
+
+        responseData.additionalData.importDnDConditions.forEach(function (
         detention
       ) {
-        if (!detentionCodes.includes(detention.chargeType)) {
-          detentionCodes.push(detention.chargeType);
-          finalDetentions.push({
-            name: detention.chargeType,
-            event: detention.freetimeStartEvent,
-          });
-        }
+          if (!detentionCodes.includes(detention.chargeType)) {
+            detentionCodes.push(detention.chargeType);
+            finalDetentions.push({
+              name: detention.chargeType,
+              event: detention.freetimeStartEvent,
+            });
+          }
 
-        if (
-          !component.containerCodesMaerskDetentions.includes(
-            detention.containerSizeType
-          )
-        ) {
-          component.containerCodesMaerskDetentions.push(
-            detention.containerSizeType
-          );
-        }
-      });
-
-      responseData.additionalData.importDnDConditions.forEach(function (
-        detention
-      ) {
-        finalDetentions.forEach(function (final) {
-          if (detention.chargeType == final.name) {
-            final[detention.containerSizeType] = detention.freetimeGrantInDays;
+          if (
+            !component.containerCodesMaerskDetentions.includes(
+              detention.containerSizeType
+            )
+          ) {
+            component.containerCodesMaerskDetentions.push(
+              detention.containerSizeType
+            );
           }
         });
-      });
 
+        responseData.additionalData.importDnDConditions.forEach(function (
+        detention
+      ) {
+          finalDetentions.forEach(function (final) {
+            if (detention.chargeType == final.name) {
+              final[detention.containerSizeType] = detention.freetimeGrantInDays;
+            }
+          });
+        });
+      }
       responseData.formattedDetentions = finalDetentions;
     },
 
