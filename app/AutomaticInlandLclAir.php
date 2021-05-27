@@ -74,4 +74,13 @@ class AutomaticInlandLclAir extends Model
     {
         return $this->hasOne('App\Provider', 'id', 'provider_id');
     }
+
+	public function syncProviders($provider)
+    {
+        InlandProvider::create([
+            'provider_type' => $provider['model'],
+            'provider_id' => $provider['id'],
+            'automatic_inland_id' => $this->id,
+        ]);
+    }
 }
