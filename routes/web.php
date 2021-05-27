@@ -1155,6 +1155,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Providers view routes **/
     Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
     /** End providers routes view **/
+    Route::get('inlandperlocation', 'inlandPerLocationController@index')->name('inlandperlocation.index');
 });
 
 /*****************************************************************************************
@@ -1313,6 +1314,20 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
     Route::post('destroyAll', 'ProvidersController@destroyAll');
 
     /** providers **/
+});
+
+Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
+
+    /** inland per locatoin **/
+    Route::get('', 'inlandPerLocationController@list');
+    Route::get('data', 'inlandPerLocationController@data');
+    Route::post('store', 'inlandPerLocationController@store');
+    Route::post('{inlandperlocation}/update', 'inlandPerLocationController@update');
+    Route::post('{inlandperlocation}/duplicate', 'inlandPerLocationController@duplicate');
+    Route::delete('{inlandperlocation}/destroy', 'inlandPerLocationController@destroy');
+    Route::post('destroyAll', 'inlandPerLocationController@destroyAll');
+
+    /** inland per location **/
 });
 
 /*****************************************************************************************
