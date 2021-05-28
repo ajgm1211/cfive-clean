@@ -560,6 +560,31 @@
             });
         }
 
+        function message() {
+
+            $('#form').find('input[name="existsFile"]').val('');
+            $('#form').find('input[name="document"]').remove();
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-center",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "0",
+                "hideDuration": "0",
+                "timeOut": "0",
+                "extendedTimeOut": "0",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.error('The file is not loading correctly, please cancel this upload and try again');
+
+        }
+
         $('.m-select2-general').select2({
             placeholder: "Select an option"
         });
@@ -627,7 +652,7 @@
             url: '{{ route('request.fcl.storeMedia') }}',
             maxFilesize: 100, // MB
             maxFiles: 1,
-            timeout: 120000,
+            timeout: 18000,
             acceptedFiles: 'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv',
             addRemoveLinks: true,
             /*accept: function(file, done) {
@@ -642,11 +667,28 @@
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             success: function(file, response) {
-                $('#form').append('<input type="hidden" id="files" name="document" value="' + response.name +
-                    '">')
-                uploadedDocumentMap[file.name] = response.name;
-                $('#form').find('input[name="existsFile"]').val(1);
+                if (response.error) {
+                    message();
+                } else {
+                    $('#form').append('<input type="hidden" id="files" name="document" value="' + response.name +
+                        '">')
+                    uploadedDocumentMap[file.name] = response.name;
+                    $('#form').find('input[name="existsFile"]').val(1);
+
+                }
+
             },
+            sending: function(file, xhr, formData) {
+                //Execute on case of timeout only
+                xhr.ontimeout = function(e) {
+                    //Output timeout error message here
+
+                    message();
+
+
+                };
+            },
+
             removedfile: function(file) {
                 file.previewElement.remove()
                 $('#form').find('input[name="existsFile"]').val('');
@@ -657,7 +699,9 @@
                     file.previewElement.remove();
                     toastr.error('You can’t upload more than 1 file!');
                 });
-            }
+
+            },
+
         }
 
 

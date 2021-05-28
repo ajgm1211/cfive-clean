@@ -265,6 +265,7 @@
         url: '{{ route("ImpTransitTime.storeMedia") }}',
         maxFilesize: 15, // MB
         maxFiles: 1,
+        timeout: 18000,
         addRemoveLinks: true,
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"
