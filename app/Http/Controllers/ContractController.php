@@ -117,6 +117,10 @@ class ContractController extends Controller
             return $company->only(['id', 'name']);
         });
 
+        //Roles
+        $user = User::find(Auth::user()->id);
+        $rol = $user->getRoleNames()->first();
+
         $containers = Container::get();
 
         $data = compact(
@@ -131,6 +135,7 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
+            'rol',
             'users'
         );
 
