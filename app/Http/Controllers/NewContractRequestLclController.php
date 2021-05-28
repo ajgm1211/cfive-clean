@@ -367,13 +367,9 @@ class NewContractRequestLclController extends Controller
         $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-LCL.' . $ext;
         $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
         $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
-        $nameF = utf8_decode($name);
-        $nameF = strtr($nameF, utf8_decode($originales), $modificadas);
-        \Log::Info($name);
-
-
-
-
+        $name = utf8_decode($name);
+        $name = strtr($name, utf8_decode($originales), $modificadas);
+        
         $success = false;
         $descarga = null;
 
