@@ -194,6 +194,7 @@ class ContractsLclController extends Controller
         $contract->direction_id = $request->direction;
         $contract->comments = $request->input('comments');
         $contract->is_manual = 1;
+        $contract->user_id= Auth::user()->id;
         $contract->save();
 
         foreach ($request->carrierAr as $carrierFA) {
