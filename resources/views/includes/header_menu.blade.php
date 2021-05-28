@@ -78,10 +78,10 @@
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                <a href="{{url('/api/search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-graphic-1"></i>
                                     <span class="m-menu__link-text">
-                                        Search Rates
+                                        Rate Finder
                                     </span>
                                 </a>
                             </li>
@@ -93,16 +93,14 @@
                                     </span>
                                 </a>
                             </li>
-                            @role('administrator|company')
-                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                    <a href="{{url('/api/search')}}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-graphic-1"></i>
-                                        <span class="m-menu__link-text">
-                                            Rate Finder &nbsp;<span class="badge bg-warning text-dark">Beta</span>
-                                        </span>
-                                    </a>
-                                </li>
-                            @endrole
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                    <span class="m-menu__link-text">
+                                        Search Rates
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li> 
