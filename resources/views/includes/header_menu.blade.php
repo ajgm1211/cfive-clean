@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="{{route('quotes-v2.search')}}" class="m-brand__logo-wrapper">
+                <a href="{{url('/api/search')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
