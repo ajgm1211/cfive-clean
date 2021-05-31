@@ -1013,7 +1013,6 @@
 
                             <div
                                 v-for="(item, index) in items"
-                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1034,7 +1033,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    
+
                     <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
 
@@ -1143,8 +1142,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger"
-                            :key="index">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1170,7 +1168,7 @@
                     </fieldset>
 
                     <!-- FILES -->
-                    <fieldset v-if="stepFour">
+                    <fieldset v-if="stepFive">
                         <vue-dropzone
                             ref="myVueDropzone"
                             :useCustomSlot="true"
@@ -1351,7 +1349,7 @@
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
                         <b-button
-                            v-if="stepTwo || stepThree || stepFour"
+                            v-if="stepTwo || stepThree || stepFour || stepFive"
                             v-on:click="backStep"
                             variant="link"
                             style="color: red"
@@ -1360,12 +1358,12 @@
                         >
                         <b-button
                             v-on:click="nextStep"
-                            v-if="!stepFour"
+                            v-if="!stepFive"
                             class="btn-create-quote"
                             >Save & Continue</b-button
                         >
                         <b-button
-                            v-if="stepFour"
+                            v-if="stepFive"
                             class="btn-create-quote"
                             @click="contracButtonPressed"
                         >
