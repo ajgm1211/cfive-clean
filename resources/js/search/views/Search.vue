@@ -1559,6 +1559,7 @@ export default {
             isCompleteThree: false,
             isCompleteFour: false,
             isCompleteFour: false,
+            isCompleteFive: false,
             contractAdded: false,
         };
     },
