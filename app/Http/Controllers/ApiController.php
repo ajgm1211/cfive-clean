@@ -3509,16 +3509,14 @@ $company_cliente = null;
         $direction = $request->input('direction'); //'2020/10/01';
 
         $collectionGeneral = new Collection();
-        $code = $request->input('gp_container'); //'2020/10/01';
+        $code = $request->input('container'); //'2020/10/01';
         $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
-        $dateSince = $request->input('validity');
-        $dateUntil = $request->input('expire');
+        $dateSince = $request->input('since');
+        $dateUntil = $request->input('until');
         $resultado['contract']['surcharge'] = array();
 
-        $company_id = '';
         $company_user_id = \Auth::user()->company_user_id;
-        $user_id = \Auth::id();
 
         $company_setting = CompanyUser::where('id', $company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
@@ -3565,41 +3563,43 @@ $company_cliente = null;
                     if (isset($jsonContainer->{'C' . $cont->code})) {
                         $rateMount = $jsonContainer->{'C' . $cont->code};
                         $$name_rate = $rateMount;
-                        $montosAllIn = array($cont->code => $$name_rate);
+                        $montosAllIn = array($cont->code => (float)$$name_rate);
                     } else {
                         $rateMount = 0;
                         $$name_rate = $rateMount;
-                        $montosAllIn = array($cont->code => $$name_rate);
+                        $montosAllIn = array($cont->code => (float)$$name_rate);
                     }
                 } else {
                     $rateMount = $data->{$options->field_rate};
                     $$name_rate = $rateMount;
-                    $montosAllIn = array($cont->code => $$name_rate);
+                    $montosAllIn = array($cont->code => (float)$$name_rate);
                 }
 
-                $montos2 = array($cont->code => $rateMount);
+                $montos2 = array($cont->code => (float)$rateMount);
                 $montos = array_merge($montos, $montos2);
                 $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
 
             }
             $arrayFirstPartAmount = array(
-                'Contract' => $data->contract->name,
-                'Reference' => $data->contract->id,
-                'Carrier' => $data->carrier->name,
-                'Direction' => $data->contract->direction->name,
-                'Origin' => ucwords(strtolower($data->port_origin->name)),
-                'Destination' => ucwords(strtolower($data->port_destiny->name)),
-                'Charge' => 'freight',
+                'contract' => $data->contract->name,
+                'reference' => $data->contract->id,
+                'carrier' => $data->carrier->name,
+                'direction' => $data->contract->direction->name,
+                'origin' => ucwords(strtolower($data->port_origin->name)),
+                'destination' => ucwords(strtolower($data->port_destiny->name)),
+                'valid_from' => $data->contract->validity,
+                'valid_until' => $data->contract->expire,
             );
-            $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
+            //$arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
             $arraySecondPartAmount = array(
-                'Currency' => $data->currency->alphacode,
-                'From' => $data->contract->validity,
-                'Until' => $data->contract->expire,
+                'charge' => 'freight',
+                'currency' => $data->currency->alphacode,
 
             );
-            $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
-            $resultado['contract']['general'] = $arrayCompleteAmount;
+            //$arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+            $ocean_freight = array_merge($montos, $arraySecondPartAmount);
+            $resultado['contract']['general'] = $arrayFirstPartAmount;
+            $resultado['contract']['ocean_freight'] = $ocean_freight;
 
             $a++;
             // Local charges
@@ -3608,7 +3608,7 @@ $company_cliente = null;
                 $contractId = $data->contract->id;
                 $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
                 $arrayCompleteLocal = array();
-                $resultado['contract']['surcharge'] = array();
+                $resultado['contract']['surcharges'] = array();
                 if ($data1 != null) {
                     for ($i = 0; $i < count($data1); $i++) {
                         //'country_orig' =>  $data1[$i]->country_orig,
@@ -3618,7 +3618,7 @@ $company_cliente = null;
                         $arrayFirstPartLocal = array(
                             //'Contract' => $data->contract->name,
                             //'Reference' => $data->contract->id,
-                            'Charge' => $data1[$i]->surcharge,
+                            'charge' => $data1[$i]->surcharge,
 
                         );
 
@@ -3632,8 +3632,8 @@ $company_cliente = null;
                                 $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
                                 $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
                                 $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
-                                $montosAllInTot[$cont->code] = $$name_rate;
-                                $montosLocal2 = array($cont->code => $monto);
+                                $montosAllInTot[$cont->code] = (float)$$name_rate;
+                                $montosLocal2 = array($cont->code => (float)$monto);
                                 $montosLocal = array_merge($montosLocal, $montosLocal2);
                             } else {
                                 $montosLocal2 = array($cont->code => '0');
@@ -3644,10 +3644,10 @@ $company_cliente = null;
                         $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
 
                         $arraySecondPartLocal = array(
-                            'Currency' => $data1[$i]->currency,
+                            'currency' => $data1[$i]->currency,
 
                         );
-                        $resultado['contract']['surcharge'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+                        $resultado['contract']['surcharges'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
                        // $resultado['contract']['surcharge'][] = $arrayCompleteLocal;
 
                     }
@@ -3655,18 +3655,18 @@ $company_cliente = null;
             }
             // MONTOS ALL IN
             $arrayFirstPartAmountAllIn = array(
-                'Charge' => 'freight - ALL IN',
+                'charge' => 'freight - ALL IN',
             );
             $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
             $arraySecondPartAmountAllIn = array(
-                'Currency' => $data->currency->alphacode,
+                'currency' => $data->currency->alphacode,
             );
             $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
             $resultado['contract']['allIn'] = $arrayCompleteAmountAllIn;
             $collectionGeneral->push($resultado);
 
         }
-        return response()->json([$collectionGeneral], 200);
+        return response()->json($collectionGeneral, 200);
 
     }
 

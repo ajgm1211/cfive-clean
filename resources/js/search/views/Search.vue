@@ -741,10 +741,10 @@
                 hide-footer
             >
                 <!-- STEPS -->
-                <div id="add-contract-form-steps" class="row pt-5 pb-5">
+                <div id="add-contract-form-steps" class="row pt-5 pb-5 custom-step-box">
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteOne }"
                     >
                         <div class="add-contract-step">1</div>
@@ -752,7 +752,7 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteTwo }"
                     >
                         <div class="add-contract-step">2</div>
@@ -760,18 +760,26 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteThree }"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteThree}"
                     >
                         <div class="add-contract-step">3</div>
+                        <span>Remarks</span>
+                    </div>
+
+                    <div
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteFour }"
+                    >
+                        <div class="add-contract-step">4</div>
                         <span>Surcharges</span>
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteFour }"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteFive }"
                     >
-                        <div class="add-contract-step">4</div>
+                        <div class="add-contract-step">5</div>
                         <span>Files</span>
                     </div>
                 </div>
@@ -1005,7 +1013,6 @@
 
                             <div
                                 v-for="(item, index) in items"
-                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1027,8 +1034,23 @@
                         </div>
                     </fieldset>
 
-                    <!-- SURCHARGES -->
+                    <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
+
+                    
+                        <h5 class="q-title">Remarks</h5>
+                        <br />
+                        <ckeditor
+                            id="inline-form-input-name"
+                            type="classic"
+                            v-model="remarks"
+                        ></ckeditor>
+
+                    <br><br>
+                    </fieldset>
+
+                    <!-- SURCHARGES -->
+                    <fieldset v-if="stepFour">
                         <div class="row">
                             <div v-if="invalidSurcharger" class="col-12 mb-3">
                                 <h5 class="invalid-data">
@@ -1120,8 +1142,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger"
-                            :key="index">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1147,7 +1168,7 @@
                     </fieldset>
 
                     <!-- FILES -->
-                    <fieldset v-if="stepFour">
+                    <fieldset v-if="stepFive">
                         <vue-dropzone
                             ref="myVueDropzone"
                             :useCustomSlot="true"
@@ -1328,7 +1349,7 @@
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
                         <b-button
-                            v-if="stepTwo || stepThree || stepFour"
+                            v-if="stepTwo || stepThree || stepFour || stepFive"
                             v-on:click="backStep"
                             variant="link"
                             style="color: red"
@@ -1337,12 +1358,12 @@
                         >
                         <b-button
                             v-on:click="nextStep"
-                            v-if="!stepFour"
+                            v-if="!stepFive"
                             class="btn-create-quote"
                             >Save & Continue</b-button
                         >
                         <b-button
-                            v-if="stepFour"
+                            v-if="stepFive"
                             class="btn-create-quote"
                             @click="contracButtonPressed"
                         >
@@ -1535,6 +1556,8 @@ export default {
             isCompleteTwo: false,
             isCompleteThree: false,
             isCompleteFour: false,
+            isCompleteFour: false,
+            isCompleteFive: false,
             contractAdded: false,
         };
     },
@@ -1583,23 +1606,32 @@ export default {
                 this.isCompleteThree = !this.isCompleteThree;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepFour = !this.stepFour;
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
+            }else if(this.stepFour){
+                this.invalidInput = false;
+                this.stepFour = false;
+                this.stepFive = !this.stepFive;
+                this.isCompleteFive = !this.isCompleteFive;
             }
         },
 
         backStep() {
-            if (this.stepFour) {
+            if (this.stepFive){
+                this.invalidInput = false;
+                this.stepFive = false;
+                this.stepFour = !this.stepFour;
+                this.isCompleteFour = !this.isCompleteFour;
+                return;
+            }else if (this.stepFour) {
                 this.invalidInput = false;
                 this.stepFour = false;
                 this.stepThree = !this.stepThree;
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepTwo = !this.stepTwo;
                 this.isCompleteThree = !this.isCompleteThree;
@@ -1971,9 +2003,12 @@ export default {
                 carrier: this.carrier,
                 currency: this.currency,
                 rates: this.equipType,
-                //stepthree Surcharge
+                //stepthree remarks
+                remarks: this.remarks,
+                //stepFour Surcharges
                 dataSurcharger: this.dataSurcharger,
-                //stepFour
+                //stepFive
+                
             };
             let vcomponent = this;
             actions.search

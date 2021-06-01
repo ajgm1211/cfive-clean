@@ -134,11 +134,19 @@ trait MixPanelTrait
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
-
+        
+        foreach($data['data']['originPorts'] as $orig){
+            $origin[]=$orig['display_name'];
+        }
+        foreach($data['data']['destinationPorts'] as $dest){
+            $destiny[]=$dest['display_name'];
+        }
         $mixPanel->track(
             'Rate Finder FCL',
             array(
                 'Company' => $data['company_user']['name'],
+                'Origin' =>$origin,
+                'Destination' =>$destiny,
                 'Container_type' => $data['data']['selectedContainerGroup']['name'],
                 'User' => $user->fullname,
             )
@@ -362,6 +370,12 @@ trait MixPanelTrait
                 $equipment[] = $data['contain'][$equipment_id];
             }
         }
+        foreach  ($data['origin'] as $q){ 
+            $origin[]=$data['harbors'][$q];           
+        } 
+        foreach  ($data['destiny'] as $q){ 
+            $destiny[]=$data['harbors'][$q];           
+        }
 
         $mixPanel->track(
             'Old Search FCL',
@@ -371,6 +385,8 @@ trait MixPanelTrait
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
                 'Container_group' => $data['type_container'],
+                'origin'=>$origin,
+                'destiny'=>$destiny,
                 'Container_type' => $equipment,
                 'User' => $user->fullname,
             )
@@ -390,6 +406,13 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
 
+        foreach  ($data['origin'] as $q){ 
+            $origin[]=$data['harbors'][$q];           
+        } 
+        foreach  ($data['destiny'] as $q){ 
+           $destiny[]=$data['harbors'][$q];           
+        }
+
         $mixPanel->track(
             'Old Search LCL',
             array(
@@ -397,6 +420,8 @@ trait MixPanelTrait
                 'Company' => $data['company'],
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
+                'origin'=> $origin,
+                'destiny'=> $destiny,
                 'User' => $user->fullname,
             )
         );
