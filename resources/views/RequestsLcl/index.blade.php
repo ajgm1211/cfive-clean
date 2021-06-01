@@ -293,7 +293,7 @@
         $(function() {
             requesttableV = $('#requesttable').DataTable({
                 processing: true,
-                //serverSide: true,
+                serverSide: true,
                 ajax: '{!! route("RequestImportationLcl.create") !!}',
                 columns: [
                     { data: 'id', name: 'id' },

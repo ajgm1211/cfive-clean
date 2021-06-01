@@ -25,10 +25,10 @@ class SearchController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         $container = array();
         if (\Auth::user()->hasRole('admin')) {
-            dd('here');
-            $searchRates = SearchRate::where('type', 'FCL')->with('search_ports')->get();
+            
+            $searchRates = SearchRate::where('type', 'FCL')->with('search_ports')->limit(100)->get();
         } else {
-            $searchRates = SearchRate::where('type', 'FCL')->where('company_user_id', $company_user_id)->with('search_ports')->get();
+            $searchRates = SearchRate::where('type', 'FCL')->where('company_user_id', $company_user_id)->with('search_ports')->limit(100)->get();
         }
         return DataTables::of($searchRates)
 
@@ -66,9 +66,9 @@ class SearchController extends Controller
     {
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('admin')) {
-            $searchRatesLCL = SearchRate::where('type', 'LCL')->with('search_ports')->get();
+            $searchRatesLCL = SearchRate::where('type', 'LCL')->with('search_ports')->limit(100)->get();
         } else {
-            $searchRatesLCL = SearchRate::where('type', 'LCL')->where('company_user_id', $company_user_id)->with('search_ports')->get();
+            $searchRatesLCL = SearchRate::where('type', 'LCL')->where('company_user_id', $company_user_id)->with('search_ports')->limit(100)->get();
         }
         return DataTables::of($searchRatesLCL)
 
