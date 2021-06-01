@@ -1011,6 +1011,7 @@ class SearchApiController extends Controller
         $contract->gp_container_id = $request->valueEq['id'];
         $contract->is_manual = 2;
         $contract->user_id = Auth::user()->id;
+        $contract->remarks = $request->remarks;
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrier['id']);
