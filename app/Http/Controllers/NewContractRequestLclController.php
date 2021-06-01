@@ -490,6 +490,11 @@ class NewContractRequestLclController extends Controller
 
                 }
                 $this->trackEvents("Request_Status_lcl", $Ncontract);
+                if( $Ncontract->contract_id != null){
+                    $contract = ContractLcl::find($Ncontract->contract_id);
+                    $contract->status = 'publish';
+                    $contract->update();
+                }
             }
 
             $Ncontract->save();
