@@ -254,10 +254,10 @@ class SendExcelFile implements ShouldQueue
                     // Fin montos All In
 
                     $sheet->setBorder('A1:I' . $i, 'thin');
-                    $sheet->cells('C' . $i, function ($cells) {
+                    $sheet->cells('C' . $a, function ($cells) {
                         $cells->setAlignment('center');
                     });
-                    $sheet->cells('I' . $i, function ($cells) {
+                    $sheet->cells('I' . $a, function ($cells) {
                         $cells->setAlignment('center');
                     });
                 }

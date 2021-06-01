@@ -260,6 +260,7 @@ class NewContractRequestLclController extends Controller
             //$contract->comments         = '';
             $contract->company_user_id = $CompanyUserId;
             $contract->direction_id = $direction_id;
+            $contract->user_id = $request->user;
             $contract->save();
 
             $Contract_id = $contract->id;
@@ -366,13 +367,9 @@ class NewContractRequestLclController extends Controller
         $name = $Ncontract->id . '-' . $company->name . '_' . $now . '-LCL.' . $ext;
         $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
         $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
-        $nameF = utf8_decode($name);
-        $nameF = strtr($nameF, utf8_decode($originales), $modificadas);
-        \Log::Info($name);
-
-
-
-
+        $name = utf8_decode($name);
+        $name = strtr($name, utf8_decode($originales), $modificadas);
+        
         $success = false;
         $descarga = null;
 
