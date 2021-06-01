@@ -1461,7 +1461,7 @@ export default {
         apiOriginPorts.forEach(function (origin) {
           apiDestinationPorts.forEach(function (destination) {
             axios
-              .get("https://carriers.cargofive.com/api/pricing", {
+              .get("https://carriersdev.cargofive.com/api/pricing", {
                 params: {
                   originPort: origin,
                   destinationPort: destination,

@@ -7,6 +7,7 @@ use App\Http\Resources\SaleTermChargeResource;
 use App\SaleTermCharge;
 use App\SaleTermV3;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SaleTermChargeController extends Controller
 {
@@ -98,6 +99,13 @@ class SaleTermChargeController extends Controller
     public function destroy($id)
     {
         SaleTermCharge::find($id)->delete();
+
+        return response()->json(null, 204);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        DB::table('sale_term_charges')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

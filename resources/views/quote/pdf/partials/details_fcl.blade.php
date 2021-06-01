@@ -80,7 +80,7 @@
 
                                 @endif
                             @else
-                                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                                <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$user->companyUser->name}}</b></span></p>
 
                                 @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
 
@@ -124,7 +124,7 @@
 
                             @endif
                         @else
-                            <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                            <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$user->companyUser->name}}</b></span></p>
 
                             @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
                                 
@@ -156,7 +156,7 @@
 
                             @if($quote->incoterm_id!='' || $quote->custom_incoterm!='')
                                 
-                                <span><b>Incoterm:</b> </span>{{$quote->incoterm->name}} - {{$quote->custom_incoterm}}  |
+                                <span><b>Incoterm:</b> </span>{{@$quote->incoterm->name}} - {{$quote->custom_incoterm}}  |
                             
                             @endif
                             
