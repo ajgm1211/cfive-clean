@@ -878,7 +878,7 @@ class ImportationLclController extends Controller
             });
 
         $contract = ContractLcl::find($request['Contract_id']);
-        $contract->status = 'publish';
+        $contract->status = 'Review';
         $contract->update();
 
         $countfailrates = FailRateLcl::where('contractlcl_id', '=', $request['Contract_id'])->count();
