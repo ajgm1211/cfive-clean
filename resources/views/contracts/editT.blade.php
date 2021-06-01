@@ -605,6 +605,7 @@ Upload Surcharge
   Dropzone.options.documentDropzone = {
     url: '{{ route('contracts.storeMedia') }}',
     maxFilesize: 2, // MB
+    timeout: 18000,
     addRemoveLinks: true,
     headers: {
     'X-CSRF-TOKEN': "{{ csrf_token() }}"
