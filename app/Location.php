@@ -11,6 +11,6 @@ class Location extends Model
 
     public function provinces()
     {
-        return $this->belongsTo('App\InlandsProvinces', 'province_id');
+        return $this->hasOne('App\InlandsProvinces', 'province_id');
     }
 }

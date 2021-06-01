@@ -16,6 +16,6 @@ class HarborsLocationSearch extends Model
 
     public function harbors()
     {
-        return $this->belongsTo('App\location', 'harbors_id');
+        return $this->belongsToMany('App\location', 'harbors_id');
     }
 }

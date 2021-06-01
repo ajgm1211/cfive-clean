@@ -13,4 +13,8 @@ class InlandsProvinces extends Model
     {
         return $this->belongsTo('App\Country', 'country_id');
     }
+    public function location()
+    {
+        return $this->belongsTo('App\location', 'province_id');
+    }
 }
