@@ -10,6 +10,7 @@ use App\Direction;
 use App\Harbor;
 use App\Http\Requests\StoreNewRequestLcl;
 use App\Jobs\ExportRequestsJob;
+use App\Jobs\ValidateTemplateLclJob;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\SendEmailRequestLclJob;
@@ -223,16 +224,7 @@ class NewContractRequestLclController extends Controller
         $now2 = $time->format('Y-m-d H:i:s');
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
-        /* $validator = \Validator::make(
-        array('ext' => $ext),
-        array('ext' => 'in:xls,xlsx,csv')
-        );
 
-        if ($validator->fails()) {
-        $request->session()->flash('message.nivel', 'danger');
-        $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-        return redirect()->route('Requestimporfcl');
-        }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now . '_' . $nombre;
@@ -316,6 +308,12 @@ class NewContractRequestLclController extends Controller
             }
 
             
+            if (env('APP_VIEW') == 'operaciones') {
+                ValidateTemplateLclJob::dispatch($Ncontract->id)->onQueue('operaciones');
+            } else {
+                ValidateTemplateLclJob::dispatch($Ncontract->id);
+            }
+
             $this->trackEvents("new_request_Lcl", $contract);
             
             // EVENTO INTERCOM
