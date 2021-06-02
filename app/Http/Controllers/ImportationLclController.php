@@ -877,8 +877,14 @@ class ImportationLclController extends Controller
                 \Storage::disk('LclImport')->delete($requestobj['FileName']);
             });
 
+        $Ncontract = NewContractRequestLcl::where('contract_id',$request['Contract_id'])->first();
+        if(!empty($Ncontract)){
+            $Ncontract->status = 'Review';
+            $Ncontract->save();
+        }
+        
         $contract = ContractLcl::find($request['Contract_id']);
-        $contract->status = 'Review';
+        $contract->status = 'incomplete';
         $contract->update();
 
         $countfailrates = FailRateLcl::where('contractlcl_id', '=', $request['Contract_id'])->count();
