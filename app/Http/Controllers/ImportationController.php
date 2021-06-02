@@ -2413,9 +2413,9 @@ class ImportationController extends Controller
     public function DestroySurchargersG($id)
     {
         try {
-            $surchargers = LocalCharge::find($id);
-            $surchargers->forceDelete();
-
+            if(isset($surchargers = LocalCharge::find($id)){
+                 $surchargers->forceDelete();
+            }
             return 1;
         } catch (\Exception $e) {
             return 2;
