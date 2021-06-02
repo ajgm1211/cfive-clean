@@ -171,7 +171,7 @@
                             </li>
                             @role('administrator|company')
                                 <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                    <a href="{{route('contractslcl.index')}}" class="m-menu__link ">
+                                    <a href="{{route('new.contracts.lcl.index')}}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-route"></i>
                                         <span class="m-menu__link-text">
                                             Sea Freight LCL
