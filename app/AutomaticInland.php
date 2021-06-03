@@ -117,4 +117,13 @@ class AutomaticInland extends Model implements Auditable
             $q->select('id', 'display_name');
         }]);
     }
+
+    public function syncProviders($provider)
+    {
+        InlandProvider::create([
+            'provider_type' => $provider['model'],
+            'provider_id' => $provider['id'],
+            'automatic_inland_id' => $this->id,
+        ]);
+    }
 }
