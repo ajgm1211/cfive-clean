@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class InlandPerLocation extends Model
 {
     protected $table = 'inland_location';
-    protected $fillable = ['json_container, currency_id, harbor_id, inland_id, location_id, type'];
+    protected $fillable = ['json_container, currency_id, harbor_id, inland_id, location_id, type_id'];
 
     public function companyUser()
     {
