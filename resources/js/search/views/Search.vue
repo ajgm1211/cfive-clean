@@ -1501,6 +1501,7 @@ export default {
             stepTwo: false,
             stepThree: false,
             stepFour: false,
+            stepFive: false,
             invalidInput: false,
             invalidSurcharger: false,
             valueEq: "",
