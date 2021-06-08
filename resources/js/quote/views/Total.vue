@@ -38,9 +38,10 @@
                             >
                             </multiselect>
 
-                            <ul class="exchange-rates" style="margin-bottom: 0px !important">
+                            <ul v-show="showTotals" class="exchange-rates" style="margin-bottom: 0px !important">
                                 <li 
                                     v-for="(currency, key) in exchangeRates"
+                                    v-show="totalsCurrency.alphacode != currency.alphacode"
                                     :key="key"
                                     class="mr-3"
                                 >
@@ -70,78 +71,6 @@
                         </div>
                         
                         <!-- Show Totals Checkbox End-->
-                        <!-- Currency Multiselect-->
-                        <!-- <div class="col-2 col-lg-2 col-sm-2 d-flex mb-2">
-                            <span>Show totals in:</span>
-                        </div>
-                        <div class="col-12 col-lg-2 col-sm-3 d-flex mb-3">
-                            
-                        </div> -->
-                        <!-- Currency Multiselect End-->
-                        <!-- Exchange rate table-->
-                        <!-- <div class="col-12 col-lg-4 col-sm-4 d-flex mt-2 mb-3">
-                            <b-table-simple
-                                hover
-                                small
-                                responsive="sm"
-                                borderless
-                            >
-                                
-                                <b-thead class="q-thead">
-                                    <b-tr>
-                                        <b-th>
-                                            <span class="label-text"
-                                                >Currency</span
-                                            >
-                                        </b-th>
-
-                                        <b-th>
-                                            <span class="label-text"
-                                                >Exchange Rate
-                                                {{
-                                                    totalsCurrency.alphacode
-                                                }}</span
-                                            >
-                                        </b-th>
-                                    </b-tr>
-                                </b-thead>
-
-                                <b-tbody>
-                                    <b-tr
-                                        v-for="(currency, key) in exchangeRates"
-                                        :key="key"
-                                        class="q-tr"
-                                    >
-                                        <b-td>
-                                            <span>
-                                                <b>{{ currency.alphacode }}</b>
-                                            </span>
-                                        </b-td>
-                                        <b-td>
-                                            <b-form-input
-                                                v-if="
-                                                    totalsCurrency.alphacode ==
-                                                    'USD'
-                                                "
-                                                v-model="currency.exchangeUSD"
-                                                type="number"
-                                                @blur="updatePdfOptions('exchangeRates')"
-                                            ></b-form-input>
-                                            <b-form-input
-                                                v-else-if="
-                                                    totalsCurrency.alphacode ==
-                                                    'EUR'
-                                                "
-                                                v-model="currency.exchangeEUR"
-                                                type="number"
-                                                @blur="updatePdfOptions('exchangeRates')"
-                                            ></b-form-input>
-                                        </b-td>
-                                    </b-tr>
-                                </b-tbody>
-                            </b-table-simple>
-                        </div> -->
-                        <!-- Exchange rate table End-->
                     </div>
                 </div>
             </div>
@@ -200,6 +129,7 @@ export default {
             let newExchangeRates = [];
 
             if(updateType == 'exchangeRates'){
+
                 component.pdfOptions['exchangeRates'].forEach(function (exRate){
                     exRate['custom'] = true;
                     newExchangeRates.push(exRate);
@@ -229,6 +159,7 @@ export default {
                     component.$refs.observer.setErrors(data.data.errors);
                 });
         },
+
     },
 };
 </script>
