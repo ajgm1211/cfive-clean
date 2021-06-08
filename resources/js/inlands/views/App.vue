@@ -18,6 +18,7 @@
                         :fields="fields"
                         :actions="actions.inlands"
                         @onEdit="onEdit"
+                        :totalResults="totalResults"
                         ></DataTable>
                 </b-card>
             </div>
@@ -54,6 +55,7 @@
         },
         data() {
             return {
+                totalResults: true,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
                 datalists: {},

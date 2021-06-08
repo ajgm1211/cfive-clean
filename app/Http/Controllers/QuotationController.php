@@ -86,7 +86,7 @@ class QuotationController extends Controller
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($user) {
-            return $user->only(['id', 'name', 'lastname']);
+            return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
         $harbors = Harbor::get()->map(function ($harbor) {
@@ -151,10 +151,6 @@ class QuotationController extends Controller
             return $provider->only(['id', 'name']);
         });
 
-        $distances = InlandDistance::get()->map(function ($distance) {
-            return $distance->only(['id', 'display_name', 'harbor_id', 'distance']);
-        });
-
         $cargo_types = CargoType::get()->map(function ($tcargo) {
             return $tcargo->only(['id', 'name']);
         });
@@ -189,7 +185,6 @@ class QuotationController extends Controller
             'sale_codes',
             'providers',
             'providers',
-            'distances',
             'cargo_types',
             'calculationtypeslcl',
             'filtered_currencies',
@@ -383,12 +378,11 @@ class QuotationController extends Controller
     }
 
     public function update(Request $request, QuoteV2 $quote)
-    {
-        // dd($request);
+    { 
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english'];
-
+        
         if ($form_keys != null) {
             if (array_intersect($terms_keys, $form_keys) == [] && $request->input('cargo_type_id') == null) {
                 $data = $request->validate([
@@ -406,16 +400,23 @@ class QuotationController extends Controller
                     'incoterm_id' => 'sometimes|nullable',
                     'payment_conditions' => 'sometimes|nullable',
                     'kind_of_cargo' => 'sometimes|nullable',
-                ]);
-            } else if ($request->input('cargo_type_id') != null) {
-                $data = $request->validate([
                     'cargo_type_id' => 'nullable',
-                    'total_quantity' => 'nullable',
-                    'total_volume' => 'nullable',
-                    'total_weight' => 'nullable',
-                    'chargeable_weight' => 'nullable',
+                    'total_quantity' => 'sometimes|nullable|numeric',
+                    'total_volume' => 'sometimes|nullable|numeric',
+                    'total_weight' => 'sometimes|nullable|numeric',
+                    'chargeable_weight' => 'sometimes|nullable',
                 ]);
-            } else {
+            } 
+            // else if ($request->input('cargo_type_id') != null) {
+            //     $data = $request->validate([
+            //         'cargo_type_id' => 'nullable',
+            //         'total_quantity' => 'nullable|numeric',
+            //         'total_volume' => 'nullable|numeric',
+            //         'total_weight' => 'nullable|numeric',
+            //         'chargeable_weight' => 'nullable',
+            //     ]);
+            // } 
+            else {
                 $data = [];
 
                 foreach ($form_keys as $fkey) {
@@ -448,6 +449,8 @@ class QuotationController extends Controller
                     $data[$key] = 'Sent';
                 } else if ($data[$key] == 5) {
                     $data[$key] = 'Win';
+                } else if ($data[$key] == 6) {
+                    $data[$key] = 'Lost';
                 }
             }
             $quote->update([$key => $data[$key]]);
@@ -479,7 +482,8 @@ class QuotationController extends Controller
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
 
-        if(!isset($request->pdf_options['showTotals'])){
+        if(isset($request['total_quantity']) || isset($request['total_volume']) || isset($request['total_weight'])){
+
             $calc_volume=floatval($request['total_volume']);
             $calc_weight=floatval($request['total_weight'])/1000;
 
@@ -511,7 +515,10 @@ class QuotationController extends Controller
         $origin_charges = $search_data['originCharges'];
         $destination_charges = $search_data['destinationCharges'];
 
-        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges');
+        $origin_ports = $search_data['originPorts'];
+        $destination_ports = $search_data['destinationPorts'];
+
+        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 'origin_ports', 'destination_ports');
 
         $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
@@ -539,7 +546,8 @@ class QuotationController extends Controller
 
     public function specialduplicate(Request $request)
     {
-        $rate_data = $request->input();
+        $data = $request->input();
+        $rate_data = $data['rates'];
         $search_data = $rate_data[0]['search'];
 
         $search_data_ids = $this->getIdsFromArray($search_data);
@@ -575,7 +583,12 @@ class QuotationController extends Controller
             $old_rate->delete();
         }
 
+        $rate_ports = [ 'origin' => [], 'destination' => [] ];
+
         foreach ($rate_data as $rate) {
+
+            array_push($rate_ports['origin'], $rate['origin_port']);
+            array_push($rate_ports['destination'], $rate['destiny_port']);
 
             $newRate = AutomaticRate::create([
                 'quote_id' => $new_quote->id,
@@ -619,6 +632,40 @@ class QuotationController extends Controller
             ]);
 
             $rateTotals->totalize($rate['currency_id']);
+        }
+
+        $inlands = $new_quote->inland_addresses()->get();
+
+        foreach($inlands as $inland){
+            if($inland->type == "Origin"){
+                if(!in_array($inland->port_id, $rate_ports['origin'])){
+                    $inland->delete();
+                }
+            }elseif($inland->type == "Destination"){
+                if(!in_array($inland->port_id, $rate_ports['destination'])){
+                    $inland->delete();
+                }
+            } 
+        }
+
+        $inlands = $new_quote->inland_addresses()->get();
+
+        if($new_quote->type == "FCL"){
+            $locals = $new_quote->local_charges_totals()->get();
+        }elseif($new_quote->type == "FCL"){
+            $locals = $new_quote->local_charges_lcl_totals()->get();
+        }
+
+        foreach($locals as $local){
+            if($local->type_id == 1){
+                if(!in_array($local->port_id, $rate_ports['origin'])){
+                    $local->delete();
+                }
+            }elseif($local->type_id == 2){
+                if(!in_array($local->port_id, $rate_ports['destination'])){
+                    $local->delete();
+                }
+            } 
         }
 
         $quote->update(['search_options' => null]);

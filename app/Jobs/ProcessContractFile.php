@@ -90,6 +90,10 @@ class ProcessContractFile implements ShouldQueue
                 //$file       = \Storage::disk('LclRequest')->get($file);
                 $file = File::get(storage_path('app/public/Request/Lcl/'.$name));
                 $s3->put('Request/LCL/'.$filePath, $file, 'public');
+                $exists = \Storage::disk('s3_upload')->has('Request/LCL/'.$filePath);
+                if(!$exists){
+                    \Log::info("El Request numero ".$this->id." No se cargo debidamente" );
+                }
             }
         } elseif (strnatcasecmp($classification, 'account') == 0) {
             if (strnatcasecmp($this->type, 'fcl') == 0) {

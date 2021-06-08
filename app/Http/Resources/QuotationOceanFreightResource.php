@@ -3,9 +3,13 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Traits\UtilTrait;
 
 class QuotationOceanFreightResource extends JsonResource
 {
+
+    use UtilTrait;
+    
     /**
      * Transform the resource into an array.
      *
@@ -29,16 +33,5 @@ class QuotationOceanFreightResource extends JsonResource
             'carrier' => $this->carrier,
             'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
         ];
-    }
-
-    public function arrayToFloat($array){
-
-        $new_array = [];
-
-        foreach((array)$array as $key=>$item){
-            $new_array[$key] = (float) $item;
-        }
-
-        return $new_array;
     }
 }

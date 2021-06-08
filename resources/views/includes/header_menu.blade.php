@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="{{route('quotes-v2.search')}}" class="m-brand__logo-wrapper">
+                <a href="{{url('/api/search')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
@@ -78,10 +78,10 @@
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                <a href="{{url('/api/search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-graphic-1"></i>
                                     <span class="m-menu__link-text">
-                                        Search Rates
+                                        Rate Finder
                                     </span>
                                 </a>
                             </li>
@@ -94,17 +94,17 @@
                                 </a>
                             </li>
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{url('/api/search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-graphic-1"></i>
+                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
                                     <span class="m-menu__link-text">
-                                        Rate Finder &nbsp;<span class="badge bg-warning text-dark">Beta</span>
+                                        Search Rates
                                     </span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li> 
-                @role('administrator|company')
+                @role('administrator|company|subuser')
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -144,9 +144,7 @@
                         </ul>
                     </div>
                 </li>
-
-                
-
+                @endrole
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -171,26 +169,28 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('contractslcl.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-route"></i>
-                                    <span class="m-menu__link-text">
-                                        Sea Freight LCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('surcharges.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-list-1"></i>
-                                    <span class="m-menu__link-text">
-                                        Surcharge List
-                                    </span>
-                                </a>
-                            </li>
+                            @role('administrator|company')
+                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                    <a href="{{route('contractslcl.index')}}" class="m-menu__link ">
+                                        <i class="m-menu__link-icon flaticon-route"></i>
+                                        <span class="m-menu__link-text">
+                                            Sea Freight LCL
+                                        </span>
+                                    </a>
+                                </li> 
+                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                    <a href="{{route('surcharges.index')}}" class="m-menu__link ">
+                                        <i class="m-menu__link-icon flaticon-list-1"></i>
+                                        <span class="m-menu__link-text">
+                                            Surcharge List
+                                        </span>
+                                    </a>
+                                </li>
+                            @endrole
                         </ul>
                     </div>
-                </li>
-
+                </li>   
+                @role('administrator|company')
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('globalcharges.index', 'globalchargeslcl.index', 'globalchargesapi.index', 'RequestsGlobalchargersFcl.create', 'RequestsGlobalchargersLcl.create', 'globalchargesapi') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
