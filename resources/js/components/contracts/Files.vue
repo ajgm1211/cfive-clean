@@ -171,7 +171,7 @@
 				dropzoneOptions: {
 					url: `/api/v2/contracts/${this.$route.params.id}/storeMedia`,
 					thumbnailWidth: 150,
-					maxFilesize: 0.5,
+					maxFilesize: 10,
 					headers: { "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content },
 					addRemoveLinks: true,
 					previewTemplate: this.template()
