@@ -30,7 +30,8 @@ trait QuotationApiTrait
         return $localcharges;
     }
 
-    public function mapLocalCharges($collection){
+    public function mapLocalCharges($collection)
+    {
         $collection = $collection->map(function ($value){
             $value['calculation_type_name'] = $value->calculation_type->name;
             $value['currency_code'] = $value->currency->alphacode;
