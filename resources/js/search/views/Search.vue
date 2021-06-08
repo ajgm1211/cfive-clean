@@ -1563,7 +1563,7 @@ export default {
         };
     },
     mounted() {
-        console.log("mounted");
+        //console.log("mounted");
         api.getData({}, "/api/search/data", (err, data) => {
             this.setDropdownLists(err, data.data);
             this.getQuery();
