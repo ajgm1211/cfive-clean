@@ -22,6 +22,7 @@
               :filter="true"
               :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate']"
               @onEdit="onEdit"
+              :totalResults="totalResults"
             ></DataTable>
           </b-card>
         </div>
@@ -48,6 +49,7 @@ export default {
   },
   data() {
     return {
+      totalResults: true,
       activeOcean: false,
       actions: actions,
       fields: [
@@ -89,11 +91,11 @@ export default {
           key: "user_id",
           label: "User",
           formatter: (value) => {
-            return value.name;
+            return value.fullname;
           },
           filterIsOpen: true,
-          filterTrackBy: "name",
-          trackLabel: "name",
+          filterTrackBy: "fullname",
+          trackLabel: "fullname",
         },
         { key: "created_at", label: "Created at", filterIsOpen: false },
       ],

@@ -16,7 +16,7 @@ Route::get('/', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
@@ -27,7 +27,7 @@ Route::get('/home', function () {
         \Session::has('impersonate') || env('APP_VIEW') == 'local'
         || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'
     ) {
-        return redirect()->route('quotes-v2.search');
+        return redirect()->route('searchV2.index');
     } elseif (env('APP_VIEW') == 'operaciones') {
         return redirect()->route('RequestFcl.index');
     }
@@ -1041,6 +1041,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/process', 'SearchApiController@processSearch');
     Route::post('/api/search/store', 'SearchApiController@store');
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
+    Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1093,6 +1094,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inlands/harbors', 'AutomaticInlandController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland/{combo}/delete_full', 'AutomaticInlandController@deleteFull');
     Route::post('/api/quotes/{quote}/automatic_inland/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
+    Route::get('/api/quotes/automatic_inlands/{port_id}/get_harbor_address', 'AutomaticInlandController@getHarborAddresses');
     /**LCL **/
     Route::get('api/quotes/{quote}/port/{combo}/automatic_inlands_lcl', 'AutomaticInlandLclController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/store', 'AutomaticInlandLclController@store')->middleware('check_company:quote');
@@ -1106,6 +1108,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/{combo}/delete_full', 'AutomaticInlandLclController@deleteFull');
     Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
+    Route::get('/api/quotes/automatic_inlands/{port_id}/get_harbor_address', 'AutomaticInlandController@getHarborAddresses');
 
     /** Local charges routes */
     Route::get('/api/quote/local/data/{quote}', 'LocalChargeQuotationController@harbors');

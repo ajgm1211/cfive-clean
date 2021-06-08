@@ -338,7 +338,17 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                          >{{
+                            rate.totals_with_markups_freight_currency
+                              ? rate.totals_with_markups_freight_currency["C" + container.code]
+                              : rate.totals_freight_currency["C" + container.code]
+                          }}
+                          <span style="font-size: 10px">{{
+                            rate.currency.alphacode
+                          }}</span></b
+                        >
+                        <b style="font-size: 16px" v-else
                           >{{
                             rate.totals_with_markups
                               ? rate.totals_with_markups["C" + container.code]
@@ -360,8 +370,30 @@
                   <p class="mr-4 mb-0">
                     <b>Validity:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
+                    <img
+                      v-if="rate.contract.validity > searchEndDate"
+                      src="/images/error.svg"
+                      width="15px"
+                      data-toggle="tooltip"
+                      title="Contract date beyond search range"
+                    />
                   </p>
-                  <!--<a href="#">download contract</a>-->
+                  <button
+                    v-if="
+                      rate.contract_id != 0 ||
+                      rate.contract_request_id != 0 ||
+                      rate.contract_backup_id != 0
+                    "
+                    style="
+                      background: transparent;
+                      border: 0;
+                      text-transform: uppercase;
+                      color: #00c581;
+                    "
+                    @click="downloadContractFile(rate)"
+                  >
+                    download contract
+                  </button>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -449,9 +481,7 @@
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
                       <b-td>{{
-                        charge.joint
-                          ? "Per Container"
-                          : charge.calculationtype.name
+                        charge.calculationtype.name
                       }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
@@ -482,7 +512,9 @@
                           }}</span
                         >
                         <b v-if="chargeType == 'Freight'">{{
-                          rate.currency.alphacode
+                          charge.joint_as == "client_currency"
+                            ? rate.currency.alphacode
+                            : charge.currency.alphacode
                         }}</b>
                         <b v-else-if="charge.joint_as == 'client_currency'">{{
                           charge.client_currency.alphacode
@@ -589,9 +621,8 @@
                 font-weight: bolder;
                 border: 2px solid #0072fc !important;
               "
-              >
-                Create Quote
-              
+            >
+              Create Quote
             </b-button>
 
             <b-button v-else b-button variant="primary">
@@ -630,6 +661,7 @@ export default {
       responseErrors: {},
       filterBy: "",
       filterOptions: [],
+      searchEndDate: "",
       isActive: false,
       items: [],
       ratesForQuote: [],
@@ -725,7 +757,7 @@ export default {
     },
     filterCarriers() {
       let component = this;
-        //console.log(this.request);
+      //console.log(this.request);
       if (component.filterBy != "") {
         component.rates.forEach(function (rate) {
           if (component.filterBy == rate.carrier.name) {
@@ -736,40 +768,60 @@ export default {
         component.finalRates = component.rates;
       }
     },
+    downloadContractFile(rate){
+      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
+
+      this.actions.search
+        .downloadContract(parameters)
+        .then((response) => {
+          console.log('Downloading!', response);
+          window.open(response.data.url)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     addRateToQuote(rate){
       let component = this;
 
-      if(rate.addToQuote){
+      if (rate.addToQuote) {
         component.ratesForQuote.push(rate);
-      }else{
-        component.ratesForQuote.forEach(function(rateQ){
-          if(rate.id == rateQ.id){
-            component.ratesForQuote.splice(component.ratesForQuote.indexOf(rateQ),1);
+      } else {
+        component.ratesForQuote.forEach(function (rateQ) {
+          if (rate.id == rateQ.id) {
+            component.ratesForQuote.splice(
+              component.ratesForQuote.indexOf(rateQ),
+              1
+            );
           }
         });
       }
 
-      component.$emit("addedToQuote",component.ratesForQuote);
+      component.$emit("addedToQuote", component.ratesForQuote);
+    },
+    createQuote() {
+      this.$emit("createQuote");
     },
     createQuote(){
       this.$emit('createQuote');
-    }
+    },
   },
   mounted(){
     let component = this;
     //console.log(component.datalists);
-  component.rates.forEach(function (rate) {
-    rate.addToQuote = false;
-  });
-  component.finalRates = component.rates;
+    component.searchEndDate = component.request.dateRange.endDate;
+    component.rates.forEach(function (rate) {
+      rate.addToQuote = false;
+    });
+    component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-        let navBar = document.getElementById('top-results');
-        if(window.scrollY > navBar.offsetTop){
-            component.isActive = true;
-        } else {
-            component.isActive = false;
-        }
+      let navBar = document.getElementById('top-results');
+      if(window.scrollY > navBar.offsetTop){
+          component.isActive = true;
+      } else {
+          component.isActive = false;
+      }
     }
     
     this.loaded = true;

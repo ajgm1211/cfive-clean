@@ -10,7 +10,7 @@
         <b-card v-else class="q-card">
             <div class="row justify-content-between">
                 <!-- Origen -> Destino -->
-                <div class="col-12 col-lg-8 d-sm-flex align-items-center d-none ">
+                <div class="col-12 col-lg-8 d-sm-flex align-items-center d-none">
                     <h5 class="mb-0"><b>Inland at:</b></h5>
 
                     <multiselect
@@ -63,7 +63,7 @@
                 <!-- End Origen -> Destino -->
                 <!-- Origen -> Destino RESPONSIVO -->
                 <div class="col-12 col-lg-8 resposive-origin-destination">
-                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start origin-destination-inland-res">
                         <h5 class="mb-2"><b>Inland at:</b></h5>
 
                         <multiselect
@@ -81,7 +81,7 @@
                         </multiselect>
                     </div>
 
-                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start">
+                    <div class="mb-5 d-flex flex-column align-items-center justify-content-start origin-destination-inland-res">
                         <h5 class="mb-2"><b>From:</b></h5>
 
                         <multiselect
@@ -704,7 +704,7 @@ export default {
 
             component.$refs["addInland"].show();
             component.modalOpen = true;
-            component.changeModalAddress();
+            component.changeModalAddressBar();
         },
 
         setPorts() {
@@ -763,7 +763,7 @@ export default {
                         });
                     }
                     if(component.modalOpen){
-                        component.changeModalAddress();
+                        component.changeModalAddressBar();
                     }
                     component.getPdfOptions();
                 })
@@ -949,7 +949,7 @@ export default {
                         }
                     });
                     component.datalists.providers.forEach(function (prov) {
-                        if (prov.id == search["prov_id"]) {
+                        if (prov.id == search["provider_id"]) {
                             newInlandAdd.provider_id = prov;
                         }
                     });
@@ -1326,38 +1326,45 @@ export default {
             }
         },
 
-        changeModalAddress(){
+        changeModalAddressBar(){
             let component = this;
             
             component.modalAddressBar = false;
             component.modalDistance = false;
 
-            component.datalists.distances.forEach(function (distance) {
-                if (component.currentPort.id == distance.harbor_id) {
-                    component.modalDistance = true;
-                    component.distance_options.push(distance);
-                }
-                if(component.currentAddress != undefined){
-                    if(distance["display_name"] == component.currentAddress["address"]){
-                        component.modalAddress = distance;
+            component.inlandActions
+                .getHarborAddresses(component.currentPort.id)
+                .then((response) => {
+                    if(response.data.data.length > 0){
+                        component.modalDistance = true;
+                        component.distance_options = response.data.data;
+                        component.distance_options.forEach(function (distance){
+                            if(component.currentAddress != undefined){
+                                if(distance["display_name"] == component.currentAddress["address"]){
+                                    component.modalAddress = distance;
+                                }
+                            }
+                        });
                     }
-                }
-            });
-            
-            if(!component.modalDistance){
-                if(component.currentAddress != undefined &&
-                Object.keys(component.currentAddress).length != 0){
-                    component.autocompleteValue = component.currentAddress["address"]
-                    component.modalAddress = component.currentAddress["address"];
-                }else{
-                    component.autocompleteValue = null;
-                    component.modalAddress = null;
-                }            
-            }
-        
-            setTimeout(() => {
-                component.modalAddressBar = true;                
-            }, 100);
+                    
+                    if(!component.modalDistance){
+                        if(component.currentAddress != undefined &&
+                        Object.keys(component.currentAddress).length != 0){
+                            component.autocompleteValue = component.currentAddress["address"]
+                            component.modalAddress = component.currentAddress["address"];
+                        }else{
+                            component.autocompleteValue = null;
+                            component.modalAddress = null;
+                        }            
+                    }
+                
+                    setTimeout(() => {
+                        component.modalAddressBar = true;                
+                    }, 100);
+                })
+                .catch((error) => {
+                    component.$refs.observer.setErrors(error.data.errors);
+                });
         },
 
         deleteInland(){
