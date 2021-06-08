@@ -10,9 +10,10 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class NewContractRequest extends Model implements HasMedia
+class NewContractRequest extends Model implements HasMedia, Auditable
 {
     use HasMediaTrait;
+    use \OwenIt\Auditing\Auditable;
     protected $table = 'newcontractrequests';
     protected $fillable = [
         'namecontract',
