@@ -1503,6 +1503,16 @@ export default {
                 });
 
                 component.$emit("apiSearchDone", response.data.length);
+
+                //Sending data to MixPanel
+                component.$mixpanel.track("Rates Spot", {
+                  distinct_id: component.datalists.user.id,
+                  Brands: apiCarrierCodes,
+                  Company: component.datalists.company_user.name,
+                  Origin: origin,
+                  Destination: destination,
+                  Container_type: apiContainers
+                });
               })
               .catch((error) => {
                 console.log(error);
