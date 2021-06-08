@@ -390,201 +390,622 @@
           >
             <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
 
-            <div class="row">
-              <!-- INFOMACION DE LA API -->
-              <div
-                class="col-lg-6 info-schedule"
-                style="border-right: 1px solid #eee"
-              >
-                <div class="row schedule">
-                  <!-- INFORMACION DEL BARCO -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="hdd-rack"></b-icon> Vessel Information
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div class="col-lg-6">
-                        <h5 class="sub-title-schedule">Vessel/Voyage</h5>
-                        <p class="text-schedule">
-                          <b>{{
-                            cmaResult.routingDetails[0].vehiculeName +
-                            " / " +
-                            cmaResult.routingDetails[0].voyageNumber
-                          }}</b>
-                        </p>
-                      </div>
-                      <div class="col-lg-6">
-                        <h5
-                          class="sub-title-schedule"
-                          v-if="cmaResult.routingDetails[0].imoNumber != null"
-                        >
-                          IMO
-                        </h5>
-                        <p class="text-schedule">
-                          <b>{{ cmaResult.routingDetails[0].imoNumber }}</b>
-                        </p>
-                      </div>
+          <b-tabs pills card vertical>
+            <b-tab active>
+              <!-- SCHEDULE INFORMATION CARD -->
+              <template #title>
+                 <!-- INFORMACION PRINCIPAL -->
+                  <div class="margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        china chennai express
+                      </h6>
                     </div>
-                  </div>
-                  <!-- FIN INFORMACION DEL BARCO -->
+                    <!-- FIN CONTRACT NAME -->
 
-                  <!-- DEADLINE -->
-                  <div class="col-lg-6">
-                    <h5 class="title-schedule">
-                      <b-icon icon="stopwatch"></b-icon> Deadlines
-                    </h5>
-
-                    <div class="row mt-4">
-                      <div
-                        class="col-12 col-sm-6"
-                        v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
-                          .routingDetails[0].deadlines"
-                        :key="cmaDeadlineKey"
-                      >
-                        <h5 class="sub-title-schedule">
-                          {{ cmaDeadline.deadlineKey }}
-                        </h5>
-                        <p class="text-schedule">
-                          <b>{{
-                            cmaDeadline.deadline.substring(0, 10) +
-                            " " +
-                            cmaDeadline.deadline.substring(
-                              11,
-                              cmaDeadline.deadline.length - 4
-                            )
-                          }}</b>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- FIN DEADLINE -->
-                </div>
-              </div>
-              <!-- FIN INFOMACION DE LA API -->
-
-              <!-- RUTA -->
-              <div class="col-12 col-lg-6 d-none d-lg-flex align-items-center">
-                <!-- ORIGEN -->
-                <div class="origin mr-4">
-                  <span>origin</span>
-                  <p class="mb-0">
-                    {{ cmaResult.routingDetails[0].departureName }}
-                  </p>
-                  <p>
-                    {{
-                      cmaResult.routingDetails[0].departureDateGmt.substring(
-                        0,
-                        10
-                      )
-                    }}
-                  </p>
-                </div>
-                <!-- FIN ORIGEN -->
-
-                <!-- TT -->
-                <div
-                  class="d-flex flex-column justify-content-center align-items-center"
-                >
-                  <div class="direction-form">
-                    <img
-                      src="/images/logo-ship-blue.svg"
-                      class="img-indirect"
-                      alt="bote"
-                    />
-
+                    <!-- RUTA Y PRECIOS -->
                     <div
-                      class="route-indirect d-flex align-items-center"
-                      v-if="cmaResult.routingDetails.length > 1"
+                      class="row col-12 mr-0 ml-0"
                     >
-                      <div class="circle mr-2"></div>
-                      <div class="line"></div>
-                      <b-button
-                        id="popover-direction"
-                        class="pl-0 pr-0 popover-direction circle fill-circle-gray mr-2 ml-2"
-                      ></b-button>
-                      <b-popover
-                        target="popover-direction"
-                        triggers="hover"
-                        placement="top"
+                      <!-- RUTA -->
+                      <div
+                        class="col-12 col-lg-6 d-none d-lg-flex"
                       >
-                        <template #title>Transshipments</template>
-                        <ul>
-                          <li
-                            v-for="(
-                              trans, transKey
-                            ) in cmaResult.routingDetails"
-                            :key="transKey"
-                          >
-                            {{
-                              trans.departureName +
-                              " - " +
-                              trans.arrivalName +
-                              " : " +
-                              trans.arrivalDateGmt.substring(0, 10)
-                            }}
-                          </li>
-                        </ul>
-                      </b-popover>
-                      <div class="line line-blue"></div>
-                      <div class="circle fill-circle ml-2"></div>
+                        <!-- ORGIEN -->
+                        <div class="origin mr-4">
+                          <span>origin</span>
+                          <p class="mb-0">
+                            INMAA
+                          </p>
+                          <p>4 nov, 2020</p>
+                        </div>
+                        <!-- FIN ORGIEN -->
+
+                        <!-- LINEA DE RUTA -->
+                        <div
+                          class="d-flex flex-column justify-content-center align-items-center"
+                        >
+                          <div class="direction-form">
+                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px"/>
+
+                            <div class="route-indirect d-flex align-items-center">
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>
+                            37 days
+                            </p>
+                            <p><b>Via: </b>PSA (PORT OF SINGAPORE AUTHORITY)</p>
+                          </div>
+                        </div>
+                        <!-- FIN LINEA DE RUTA -->
+
+                        <!-- DESTINO -->
+                        <div class="destination ml-4">
+                          <span>destination</span>
+                          <p class="mb-0">
+                          DEHAM
+                          </p>
+                          <p>8 Dec, 2020</p>
+                        </div>
+                        <!-- FIN DESTINO -->
+                      </div>
+                      <!-- FIN RUTA -->
+
+                      
                     </div>
-                  </div>
+                    <!-- RUTA Y PRECIOS -->
 
-                  <div class="direction-desc">
-                    <p class="mb-0">
-                      <b>TT: </b> {{ cmaResult.transitTime + " days" }}
-                    </p>
-                    <p>
-                      <b>Service: </b>
-                      {{
-                        cmaResult.routingDetails.length > 1
-                          ? "Transshipment"
-                          : "Direct"
-                      }}
-                    </p>
+                  </div>
+                  <!-- FIN INFORMACION PRINCIPAL -->
+              </template>
+              <!-- SCHEDULE INFORMATION CARD FIN -->
+
+              <!-- SCHEDULE INFORMATION -->
+              <!-- RUTA -->
+              <div class="row">
+                <div class="col-12 d-none d-lg-flex align-items-center" style="border-left: 1px solid #eee">
+                  <div class="row" style="width: 100%">
+                    <!-- INFORMACION DEL BARCO -->
+                    <div class="col-lg-5 schedule-info">
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                      </h5>
+
+                      <ul>
+                        <li>
+                            <h5
+                            class="sub-title-schedule"
+                            v-if="cmaResult.routingDetails[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ cmaResult.routingDetails[0].imoNumber }}
+                            </p>
+                          </li>
+                        <li>
+                          <h5 class="sub-title-schedule"><b>Vessel/Voyage:</b></h5> 
+                          <p class="text-schedule">
+                          {{
+                              cmaResult.routingDetails[0].vehiculeName +
+                              " / " +
+                              cmaResult.routingDetails[0].voyageNumber
+                            }}
+                          </p></li>
+                          
+                      </ul>
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="stopwatch"></b-icon> Deadlines
+                      </h5>
+
+                      <ul>
+                        <li v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
+                            .routingDetails[0].deadlines"
+                            :key="cmaDeadlineKey">
+                          <h5 class="sub-title-schedule">
+                            <b>{{ cmaDeadline.deadlineKey }}:</b>
+                          </h5>
+                          <p class="text-schedule">
+                            {{
+                              cmaDeadline.deadline.substring(0, 10) +
+                              " " +
+                              cmaDeadline.deadline.substring(
+                                11,
+                                cmaDeadline.deadline.length - 4
+                              )
+                            }}
+                          </p>
+                        </li>
+                      </ul>
+
+                    </div>
+                    <!-- FIN INFORMACION DEL BARCO -->
+
+                    <div class="col-lg-5 schedule-route-info">
+                      <ul>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                      </ul>
+                    </div>
+
                   </div>
                 </div>
-
-                <!-- DESTINATION -->
-                <div class="destination ml-4">
-                  <span>destination</span>
-                  <p class="mb-0">
-                    {{ cmaResult.routingDetails[0].arrivalName }}
-                  </p>
-                  <p>
-                    {{
-                      cmaResult.routingDetails[0].arrivalDateGmt.substring(
-                        0,
-                        10
-                      )
-                    }}
-                  </p>
-                </div>
-                <!-- FIN DESTINATION -->
               </div>
               <!-- FIN RUTA -->
 
-              <!-- RUTA RESPONSIVA -->
-              <div class="col-12 d-lg-none">
-                <h6>Transshipments</h6>
-                <ul>
-                  <li
-                    v-for="(trans, transKey) in cmaResult.routingDetails"
-                    :key="transKey"
-                  >
-                    {{
-                      trans.departureName +
-                      " - " +
-                      trans.arrivalName +
-                      " : " +
-                      trans.arrivalDateGmt.substring(0, 10)
-                    }}
-                  </li>
-                </ul>
+              <!-- SCHEDULE INFORMATION FIN -->
+            </b-tab>
+
+            <b-tab active>
+              <!-- SCHEDULE INFORMATION CARD -->
+              <template #title>
+                 <!-- INFORMACION PRINCIPAL -->
+                  <div class="margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        china chennai express
+                      </h6>
+                    </div>
+                    <!-- FIN CONTRACT NAME -->
+
+                    <!-- RUTA Y PRECIOS -->
+                    <div
+                      class="row col-12 mr-0 ml-0"
+                    >
+                      <!-- RUTA -->
+                      <div
+                        class="col-12 col-lg-6 d-none d-lg-flex"
+                      >
+                        <!-- ORGIEN -->
+                        <div class="origin mr-4">
+                          <span>origin</span>
+                          <p class="mb-0">
+                            INMAA
+                          </p>
+                          <p>4 nov, 2020</p>
+                        </div>
+                        <!-- FIN ORGIEN -->
+
+                        <!-- LINEA DE RUTA -->
+                        <div
+                          class="d-flex flex-column justify-content-center align-items-center"
+                        >
+                          <div class="direction-form">
+                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px"/>
+
+                            <div class="route-indirect d-flex align-items-center">
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>
+                            37 days
+                            </p>
+                            <p><b>Via: </b>PSA (PORT OF SINGAPORE AUTHORITY)</p>
+                          </div>
+                        </div>
+                        <!-- FIN LINEA DE RUTA -->
+
+                        <!-- DESTINO -->
+                        <div class="destination ml-4">
+                          <span>destination</span>
+                          <p class="mb-0">
+                          DEHAM
+                          </p>
+                          <p>8 Dec, 2020</p>
+                        </div>
+                        <!-- FIN DESTINO -->
+                      </div>
+                      <!-- FIN RUTA -->
+
+                      
+                    </div>
+                    <!-- RUTA Y PRECIOS -->
+
+                  </div>
+                  <!-- FIN INFORMACION PRINCIPAL -->
+              </template>
+              <!-- SCHEDULE INFORMATION CARD FIN -->
+
+              <!-- SCHEDULE INFORMATION -->
+              <!-- RUTA -->
+              <div class="row">
+                <div class="col-12 d-none d-lg-flex align-items-center" style="border-left: 1px solid #eee">
+                  <div class="row" style="width: 100%">
+                    <!-- INFORMACION DEL BARCO -->
+                    <div class="col-lg-5 schedule-info">
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                      </h5>
+
+                      <ul>
+                        <li>
+                            <h5
+                            class="sub-title-schedule"
+                            v-if="cmaResult.routingDetails[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ cmaResult.routingDetails[0].imoNumber }}
+                            </p>
+                          </li>
+                        <li>
+                          <h5 class="sub-title-schedule"><b>Vessel/Voyage:</b></h5> 
+                          <p class="text-schedule">
+                          {{
+                              cmaResult.routingDetails[0].vehiculeName +
+                              " / " +
+                              cmaResult.routingDetails[0].voyageNumber
+                            }}
+                          </p></li>
+                          
+                      </ul>
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="stopwatch"></b-icon> Deadlines
+                      </h5>
+
+                      <ul>
+                        <li v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
+                            .routingDetails[0].deadlines"
+                            :key="cmaDeadlineKey">
+                          <h5 class="sub-title-schedule">
+                            <b>{{ cmaDeadline.deadlineKey }}:</b>
+                          </h5>
+                          <p class="text-schedule">
+                            {{
+                              cmaDeadline.deadline.substring(0, 10) +
+                              " " +
+                              cmaDeadline.deadline.substring(
+                                11,
+                                cmaDeadline.deadline.length - 4
+                              )
+                            }}
+                          </p>
+                        </li>
+                      </ul>
+
+                    </div>
+                    <!-- FIN INFORMACION DEL BARCO -->
+
+                    <div class="col-lg-5 schedule-route-info">
+                      <ul>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>WED</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                      </ul>
+                    </div>
+
+                  </div>
+                </div>
               </div>
-              <!-- FIN RUTA RESPONSIVA -->
-            </div>
+              <!-- FIN RUTA -->
+
+              <!-- SCHEDULE INFORMATION FIN -->
+            </b-tab>
+
+            <b-tab active>
+              <!-- SCHEDULE INFORMATION CARD -->
+              <template #title>
+                 <!-- INFORMACION PRINCIPAL -->
+                  <div class="margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        china chennai express
+                      </h6>
+                    </div>
+                    <!-- FIN CONTRACT NAME -->
+
+                    <!-- RUTA Y PRECIOS -->
+                    <div
+                      class="row col-12 mr-0 ml-0"
+                    >
+                      <!-- RUTA -->
+                      <div
+                        class="col-12 col-lg-6 d-none d-lg-flex"
+                      >
+                        <!-- ORGIEN -->
+                        <div class="origin mr-4">
+                          <span>origin</span>
+                          <p class="mb-0">
+                            INMAA
+                          </p>
+                          <p>4 nov, 2020</p>
+                        </div>
+                        <!-- FIN ORGIEN -->
+
+                        <!-- LINEA DE RUTA -->
+                        <div
+                          class="d-flex flex-column justify-content-center align-items-center"
+                        >
+                          <div class="direction-form">
+                            <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px"/>
+
+                            <div class="route-indirect d-flex align-items-center">
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div class="circle fill-circle-gray mr-2 ml-2"></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>
+                            37 days
+                            </p>
+                            <p><b>Via: </b>PSA (PORT OF SINGAPORE AUTHORITY)</p>
+                          </div>
+                        </div>
+                        <!-- FIN LINEA DE RUTA -->
+
+                        <!-- DESTINO -->
+                        <div class="destination ml-4">
+                          <span>destination</span>
+                          <p class="mb-0">
+                          DEHAM
+                          </p>
+                          <p>8 Dec, 2020</p>
+                        </div>
+                        <!-- FIN DESTINO -->
+                      </div>
+                      <!-- FIN RUTA -->
+
+                      
+                    </div>
+                    <!-- RUTA Y PRECIOS -->
+
+                  </div>
+                  <!-- FIN INFORMACION PRINCIPAL -->
+              </template>
+              <!-- SCHEDULE INFORMATION CARD FIN -->
+
+              <!-- SCHEDULE INFORMATION -->
+              <!-- RUTA -->
+              <div class="row">
+                <div class="col-12 d-none d-lg-flex align-items-center" style="border-left: 1px solid #eee">
+                  <div class="row" style="width: 100%">
+                    <!-- INFORMACION DEL BARCO -->
+                    <div class="col-lg-5 schedule-info">
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                      </h5>
+
+                      <ul>
+                        <li>
+                            <h5
+                            class="sub-title-schedule"
+                            v-if="cmaResult.routingDetails[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ cmaResult.routingDetails[0].imoNumber }}
+                            </p>
+                          </li>
+                        <li>
+                          <h5 class="sub-title-schedule"><b>Vessel/Voyage:</b></h5> 
+                          <p class="text-schedule">
+                          {{
+                              cmaResult.routingDetails[0].vehiculeName +
+                              " / " +
+                              cmaResult.routingDetails[0].voyageNumber
+                            }}
+                          </p></li>
+                          
+                      </ul>
+
+                      <!-- Vessel Information -->
+                      <h5 class="title-schedule">
+                        <b-icon icon="stopwatch"></b-icon> Deadlines
+                      </h5>
+
+                      <ul>
+                        <li v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
+                            .routingDetails[0].deadlines"
+                            :key="cmaDeadlineKey">
+                          <h5 class="sub-title-schedule">
+                            <b>{{ cmaDeadline.deadlineKey }}:</b>
+                          </h5>
+                          <p class="text-schedule">
+                            {{
+                              cmaDeadline.deadline.substring(0, 10) +
+                              " " +
+                              cmaDeadline.deadline.substring(
+                                11,
+                                cmaDeadline.deadline.length - 4
+                              )
+                            }}
+                          </p>
+                        </li>
+                      </ul>
+
+                    </div>
+                    <!-- FIN INFORMACION DEL BARCO -->
+
+                    <div class="col-lg-5 schedule-route-info">
+                      <ul>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>FRI</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>FRI</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>FRI</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                              <p>04 Nov 2020</p>
+                              <p>21:59</p>
+                              <p>FRI</p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img src="/images/port.svg" width="25px" alt="port">
+                              <p>Singapore (Arrival)</p>
+                            </div>
+                        </li>
+                      </ul>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- FIN RUTA -->
+
+              <!-- SCHEDULE INFORMATION FIN -->
+            </b-tab>
+          </b-tabs>
+
+  
+    
           </b-collapse>
           <!-- FIN SCHEDULES -->
         </div>
