@@ -240,6 +240,7 @@ class AutomaticInlandTotal extends Model implements Auditable
             foreach ($relation as $relationRecord) {
                 $newRelationship = $relationRecord->replicate();
                 $newRelationship->inland_totals_id = $newInlandTotal->id;
+                $newRelationship->automatic_rate_id = null;
                 $newRelationship->quote_id = $quote->id;
                 $newRelationship->save();
             }

@@ -6,6 +6,7 @@
             @searchRequested="setSearchStatus"
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
+            @quoteLoaded="setQuoteData"
             ref="searchComponent"
         ></Search>
 
@@ -93,7 +94,8 @@
             class="row col-12 col-sm-4 d-flex align-items-center justify-content-end"
         >
             <div
-            class="col-12 col-sm-2 d-flex justify-content-end"
+            class="d-flex justify-content-start"
+            :class="countContainersClass()"
             v-for="(container, requestKey) in searchRequest.containers"
             :key="requestKey"
             >
@@ -188,6 +190,7 @@ export default {
             actions: actions,
             apiSearchDone: true,
             searchDone: true,
+            quoteData: {},
         }
     },
     created() {
@@ -195,6 +198,21 @@ export default {
     },
     methods :
     {
+        countContainersClass() {
+            if (
+                this.searchRequest.containers.length == 5 ||
+                this.searchRequest.containers.length == 4
+            ) {
+                return "col-2";
+            }
+
+            if (this.searchRequest.containers.length == 3) {
+                return "col-3";
+            }
+            if (this.searchRequest.containers.length == 2) {
+                return "col-4";
+            }
+        },
         createQuote() {
             let component = this;
             
@@ -207,7 +225,21 @@ export default {
                     component.noRatesAdded = false;
                 }, 2000);
             } else {
-                if (component.requestData.requested == 0) {
+                let duplicateMatch = false;
+
+                if(Object.keys(component.quoteData).length != 0){
+                    component.ratesForQuote.rates.forEach(function (rate){
+                        if((component.quoteData.local_ports.origin.length > 0 && component.quoteData.local_ports.origin.includes(rate.origin_port)) ||
+                            (component.quoteData.local_ports.destination.length > 0 && component.quoteData.local_ports.destination.includes(rate.destiny_port)) ||
+                            (component.quoteData.inland_ports.origin.length > 0 && component.quoteData.inland_ports.origin.includes(rate.origin_port)) ||
+                            (component.quoteData.inland_ports.destination.length > 0 && component.quoteData.inland_ports.destination.includes(rate.destiny_port)))
+                        {
+                            duplicateMatch = true;
+                        }
+                    });
+                }
+
+                if (component.requestData.requested == 0 || !duplicateMatch) {
                 component.actions.quotes
                     .create(component.ratesForQuote, component.$route)
                     .then((response) => {
@@ -221,7 +253,7 @@ export default {
                         component.creatingQuote = false;
                     }
                     });
-                } else if (component.requestData.requested == 1) {
+                } else if (component.requestData.requested == 1 || duplicateMatch) {
                 component.actions.quotes
                     .specialduplicate(component.ratesForQuote)
                     .then((response) => {
@@ -297,6 +329,10 @@ export default {
         
         setResultsForQuote(results){
             this.ratesForQuote['results'] = results;
+        },
+
+        setQuoteData(quoteData){
+            this.quoteData = quoteData;
         },
 
     },

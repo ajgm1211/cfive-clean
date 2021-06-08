@@ -11,7 +11,7 @@
                             <div class="float-right">
                                 <button class="btn btn-link" v-b-modal.exportExcel><i class="fa fa-download"></i> Export Excel</button>
                                 <button class="btn btn-link" v-b-modal.addContract><i class="fa fa-plus"></i> Add Contract</button>
-                                <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" ><i class="fa fa-upload"></i> Import Contract</a>
+                                <a v-if="datalists['rol'] != 'subuser'" href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" ><i class="fa fa-upload"></i> Import Contract</a>
                             </div> 
                         </div>
                     </div>
@@ -23,6 +23,7 @@
                         :filter="true"
                         @onEdit="onEdit"
                         @onOpenModalProgressDetails="showProgressDetailsModal"
+                        :totalResults="totalResults"
                         ></DataTable>
                 </b-card>
             </div>
@@ -101,6 +102,7 @@
         },
         data() {
             return {
+                totalResults: true,
                 value: 45,
                 max: 100,
                 isBusy:true, // Loader
@@ -126,6 +128,7 @@
                     { key: 'expire', label: 'Valid Until', filterIsOpen:true }, 
                     { key: 'gp_container', label: 'Equipment', formatter: (value)=> { return value.name }, filterIsOpen:true, filterTrackBy: "name", trackLabel: "name"}, 
                     { key: 'direction', label: 'Direction', formatter: (value)=> { return value.name }, filterIsOpen:true, filterTrackBy: "name", trackLabel: "name"},
+                    { key: 'user_name', label: 'Owner', filterIsOpen:true },
                     { key: 'created_at', label: 'Created At', filterIsOpen:true},
 
                 ],
@@ -182,8 +185,7 @@
                         type:"daterange", 
                         sdName: 'validity', 
                         edName: 'expire',
-                        min: new Date(new Date().getFullYear(), new Date().getMonth()),
-                        max: new Date(new Date().getFullYear(), new Date().getMonth() + 1)
+                        
                     },
                     gp_container: { 
                         label: 'Equipment', 

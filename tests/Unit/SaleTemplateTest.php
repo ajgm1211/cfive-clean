@@ -1,25 +1,25 @@
 <?php
 
-// namespace Tests\Feature;
-// use App\SaleTermV3;
-// use Tests\TestCase;
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithoutMiddleware;
+namespace Tests\Feature;
 
-// class SaleTemplateTest extends TestCase
-// {
-//     /**
-//      * A basic test example.
-//      *
-//      * @return void
-//      */
-//     public function test_if_Sale_Template_is_stored()
-//     {
+use App\SaleTermV3;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-//         $this->withoutExceptionHandling();
-             
-//         $SaleTemplate = factory(SaleTermV3::class)->create();
+class SaleTemplateTest extends TestCase
+{
+    /**
+     * A basic test example.
+     *
+     * @return void
+     */
+    public function test_if_Sale_Template_is_stored()
+    {
+        $this->withoutExceptionHandling();
 
-//         $this->seeInDatabase('sale_term_v3s', $SaleTemplate->toArray());
-//     }
-// }
+        $SaleTemplate = factory(SaleTermV3::class)->create();
+
+        $this->assertDatabaseHas('sale_term_v3s', $SaleTemplate->toArray());
+    }
+}

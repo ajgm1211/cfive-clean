@@ -92,7 +92,7 @@
                         :clear-on-select="true"
                         :show-labels="false"
                         :options="originPortOptions"
-                        :disabled="searchRequest.requestData.requested == 1"
+                        @input="updateQuoteSearchOptions()"
                         label="display_name"
                         track-by="display_name"
                         placeholder="From"
@@ -121,8 +121,8 @@
                             :close-on-select="true"
                             :clear-on-select="true"
                             :show-labels="false"
-                            :disabled="searchRequest.requestData.requested == 1"
                             :options="destinationPortOptions"
+                            @input="updateQuoteSearchOptions()"
                             label="display_name"
                             track-by="display_name"
                             placeholder="To" 
@@ -160,7 +160,7 @@
                 <div class="col-lg-2 mb-2 input-search-form containers-search">
                         
                         <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
-                            <b-dropdown-form>
+                            <b-dropdown-form :disabled="searchRequest.requestData.requested == 1">
                                 <b-form-group label="Type">
                                     <b-form-radio-group
                                         id="containers"
@@ -375,7 +375,7 @@
                                         class="switch-all-carriers"
                                     ></b-form-checkbox>
                                 </label>
-                                <b-form-group label="SPOT Rates">
+                                <b-form-group v-if="datalists.carriers_api.length > 0" label="SPOT Rates">
                                     <b-form-checkbox-group
                                         v-model="searchRequest.carriersApi"
                                         :options="carriersApiOptions"
@@ -741,10 +741,10 @@
                 hide-footer
             >
                 <!-- STEPS -->
-                <div id="add-contract-form-steps" class="row pt-5 pb-5">
+                <div id="add-contract-form-steps" class="row pt-5 pb-5 custom-step-box">
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteOne }"
                     >
                         <div class="add-contract-step">1</div>
@@ -752,7 +752,7 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
                         v-bind:class="{ stepComplete: isCompleteTwo }"
                     >
                         <div class="add-contract-step">2</div>
@@ -760,18 +760,26 @@
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteThree }"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteThree}"
                     >
                         <div class="add-contract-step">3</div>
+                        <span>Remarks</span>
+                    </div>
+
+                    <div
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteFour }"
+                    >
+                        <div class="add-contract-step">4</div>
                         <span>Surcharges</span>
                     </div>
 
                     <div
-                        class="col-3 d-flex flex-column justify-content-center align-items-center step-add-contract"
-                        v-bind:class="{ stepComplete: isCompleteFour }"
+                        class="col-2 d-flex flex-column justify-content-center align-items-center step-add-contract"
+                        v-bind:class="{ stepComplete: isCompleteFive }"
                     >
-                        <div class="add-contract-step">4</div>
+                        <div class="add-contract-step">5</div>
                         <span>Files</span>
                     </div>
                 </div>
@@ -1005,7 +1013,6 @@
 
                             <div
                                 v-for="(item, index) in items"
-                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1027,8 +1034,23 @@
                         </div>
                     </fieldset>
 
-                    <!-- SURCHARGES -->
+                    <!-- REMARKS  -->
                     <fieldset v-if="stepThree">
+
+                    
+                        <h5 class="q-title">Remarks</h5>
+                        <br />
+                        <ckeditor
+                            id="inline-form-input-name"
+                            type="classic"
+                            v-model="remarks"
+                        ></ckeditor>
+
+                    <br><br>
+                    </fieldset>
+
+                    <!-- SURCHARGES -->
+                    <fieldset v-if="stepFour">
                         <div class="row">
                             <div v-if="invalidSurcharger" class="col-12 mb-3">
                                 <h5 class="invalid-data">
@@ -1120,8 +1142,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger"
-                            :key="index">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1147,7 +1168,7 @@
                     </fieldset>
 
                     <!-- FILES -->
-                    <fieldset v-if="stepFour">
+                    <fieldset v-if="stepFive">
                         <vue-dropzone
                             ref="myVueDropzone"
                             :useCustomSlot="true"
@@ -1328,7 +1349,7 @@
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
                         <b-button
-                            v-if="stepTwo || stepThree || stepFour"
+                            v-if="stepTwo || stepThree || stepFour || stepFive"
                             v-on:click="backStep"
                             variant="link"
                             style="color: red"
@@ -1337,12 +1358,12 @@
                         >
                         <b-button
                             v-on:click="nextStep"
-                            v-if="!stepFour"
+                            v-if="!stepFive"
                             class="btn-create-quote"
                             >Save & Continue</b-button
                         >
                         <b-button
-                            v-if="stepFour"
+                            v-if="stepFive"
                             class="btn-create-quote"
                             @click="contracButtonPressed"
                         >
@@ -1480,6 +1501,7 @@ export default {
             stepTwo: false,
             stepThree: false,
             stepFour: false,
+            stepFive: false,
             invalidInput: false,
             invalidSurcharger: false,
             valueEq: "",
@@ -1535,6 +1557,8 @@ export default {
             isCompleteTwo: false,
             isCompleteThree: false,
             isCompleteFour: false,
+            isCompleteFour: false,
+            isCompleteFive: false,
             contractAdded: false,
         };
     },
@@ -1583,23 +1607,32 @@ export default {
                 this.isCompleteThree = !this.isCompleteThree;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepFour = !this.stepFour;
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
+            }else if(this.stepFour){
+                this.invalidInput = false;
+                this.stepFour = false;
+                this.stepFive = !this.stepFive;
+                this.isCompleteFive = !this.isCompleteFive;
             }
         },
 
         backStep() {
-            if (this.stepFour) {
+            if (this.stepFive){
+                this.invalidInput = false;
+                this.stepFive = false;
+                this.stepFour = !this.stepFour;
+                this.isCompleteFour = !this.isCompleteFour;
+                return;
+            }else if (this.stepFour) {
                 this.invalidInput = false;
                 this.stepFour = false;
                 this.stepThree = !this.stepThree;
                 this.isCompleteFour = !this.isCompleteFour;
                 return;
             } else if (this.stepThree) {
-                this.invalidInput = false;
                 this.stepThree = false;
                 this.stepTwo = !this.stepTwo;
                 this.isCompleteThree = !this.isCompleteThree;
@@ -1711,6 +1744,7 @@ export default {
                 .retrieve(id)
                 .then((response) => {
                     this.quoteData = response.data.data;
+                    this.$emit('quoteLoaded', this.quoteData);
                     this.setSearchDisplay(
                         this.searchRequest.requestData.requested
                     );
@@ -1801,7 +1835,7 @@ export default {
             if (requestType == null) {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
-                //this.deliveryType = this.deliveryTypeOptions[0];
+                this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
@@ -1824,6 +1858,7 @@ export default {
                 this.selectedContainerGroup = this.searchData.container_group;
                 this.searchRequest.selectedContainerGroup = this.searchData.container_group;
                 this.containers = this.searchData.containers;
+                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.dateRange.startDate =
                     this.searchData.start_date + "T01:00:00";
                 this.searchRequest.dateRange.endDate =
@@ -1836,15 +1871,14 @@ export default {
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
                     this.allCarriers = false;
-                    this.searchRequest.carriers = this.searchData.carriers;
                     component.carriers = [];
+                    this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
                         component.carriers.push(carrier);
                     });
                 }else{
                     this.searchRequest.carriers = this.datalists.carriers;
                 }
-                this.searchRequest.containers = this.searchData.containers;
                 this.searchRequest.originCharges =
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
@@ -1863,6 +1897,8 @@ export default {
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
+                    this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
+                    this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
                     this.searchRequest.dateRange.startDate =
                         this.quoteData.search_options.start_date + "T01:00:00";
                     this.searchRequest.dateRange.endDate =
@@ -1873,6 +1909,8 @@ export default {
                     this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
+                    this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
+                    this.searchRequest.destinationPorts = this.quoteData.destiny_ports_duplicate;
                 }
                 if (this.quoteData.direction_id != null) {
                     this.searchRequest.direction = this.quoteData.direction_id;
@@ -1880,8 +1918,6 @@ export default {
                 this.searchRequest.type = this.quoteData.type;
                 //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
-                this.searchRequest.originPorts = this.quoteData.origin_ports;
-                this.searchRequest.destinationPorts = this.quoteData.destiny_ports;
                 this.selectedContainerGroup = this.quoteData.gp_container;
                 this.searchRequest.selectedContainerGroup = this.quoteData.gp_container;
                 this.containers = this.quoteData.containers;
@@ -1935,6 +1971,7 @@ export default {
                     })
                     .catch((error) => {
                         this.errorsExist = true;
+                        this.searching = false;
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
                         }
@@ -1967,9 +2004,12 @@ export default {
                 carrier: this.carrier,
                 currency: this.currency,
                 rates: this.equipType,
-                //stepthree Surcharge
+                //stepthree remarks
+                remarks: this.remarks,
+                //stepFour Surcharges
                 dataSurcharger: this.dataSurcharger,
-                //stepFour
+                //stepFive
+                
             };
             let vcomponent = this;
             actions.search
@@ -2248,16 +2288,23 @@ export default {
                 }
             });
 
-            if (selectedContainersByGroup.length > 3) {
-                selectedContainersByGroup.splice(3, 2);
-            }
-
             fullContainersByGroup.forEach(function (cont) {
                 component.containerOptions.push({
                     text: cont.code,
                     value: cont,
                 });
             });
+
+            if(Object.keys(component.searchRequest.requestData).length != 0 &&
+                component.searchRequest.requestData.requested == 0 && 
+                component.searchData.container_group.id  == component.selectedContainerGroup.id){
+                selectedContainersByGroup = component.searchData.containers;
+            }else{
+                if (selectedContainersByGroup.length > 3) {
+                    selectedContainersByGroup.splice(3, 2);
+                }
+            }
+
             component.containers = selectedContainersByGroup;
         },
 
@@ -2303,12 +2350,14 @@ export default {
         allCarriers() {
             let component = this;
 
-            component.carriers = [];
             if (component.allCarriers) {
+                component.carriers = [];
                 // Check all
                 component.datalists.carriers.forEach(function (carrier) {
                     component.carriers.push(carrier);
                 });
+            }else{
+                component.carriers = [];
             }
         },
         

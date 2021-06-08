@@ -296,14 +296,15 @@ input.input-modal {
 #add-contract-form-steps {
     .step-add-contract:nth-child(1)::before,
     .step-add-contract:nth-child(2)::before,
-    .step-add-contract:nth-child(3)::before {
+    .step-add-contract:nth-child(3)::before, 
+    .step-add-contract:nth-child(4)::before {
         content: '';
         width: 50%;
         height: 4px;
         border-radius: 20px;
         background-color: #ffffff;
         position: absolute;
-        right: -50px;
+        right: -35px;
         top: 22px;
     }
     .step-add-contract {
@@ -331,6 +332,11 @@ input.input-modal {
     .stepComplete::before {
         background-color: #006afa !important;
     }
+}
+
+.custom-step-box{
+    left: 64px !important;
+    position: relative !important;
 }
 
 
@@ -459,7 +465,8 @@ input.input-modal {
     #add-contract-form-steps {
         .step-add-contract:nth-child(1)::before,
         .step-add-contract:nth-child(2)::before,
-        .step-add-contract:nth-child(3)::before {
+        .step-add-contract:nth-child(3)::before, 
+        .step-add-contract:nth-child(4)::before {
             display: none;
         }
     }
@@ -508,7 +515,8 @@ input.input-modal {
     #add-contract-form-steps {
         .step-add-contract:nth-child(1)::before,
         .step-add-contract:nth-child(2)::before,
-        .step-add-contract:nth-child(3)::before {
+        .step-add-contract:nth-child(3)::before,
+        .step-add-contract:nth-child(4)::before {
             display: none;
         }
     }

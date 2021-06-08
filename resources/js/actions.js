@@ -499,6 +499,9 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${port_id}/update_pdf_options`, data)
         },
+        getHarborAddresses(port_id){
+            return api.call('get', `/api/quotes/automatic_inlands/${port_id}/get_harbor_address`, {});
+        },
     },
     automaticinlandslcl: {
         list(combo, params, callback, route) {
@@ -553,6 +556,9 @@ export default {
         updatePdfOptions(port_id, data, route) {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${port_id}/update_pdf_options`, data)
+        },
+        getHarborAddresses(port_id){
+            return api.call('get', `/api/quotes/automatic_inlands/${port_id}/get_harbor_address`, {});
         },
     },
     localcharges: {
@@ -666,7 +672,10 @@ export default {
             return api.call('get', `/api/search/${id}`, {});
         },
         createContract(data){
-            return api.call('post',`/api/search/storeContract`,data)
+            return api.call('post',`/api/search/storeContract`,data);
+        },
+        downloadContract(data){
+            return api.call('post',`/api/search/downloadContract`, data);
         },
     },
 };

@@ -2,44 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use Excel;
-use App\User;
-use HelperAll;
-use PrvRequest;
 use App\Carrier;
-use App\Contract;
-use EventIntercom;
-use App\Direction;
-use App\Container;
-use \Carbon\Carbon;
 use App\CompanyUser;
-use App\GroupContainer;
+use App\Container;
+use App\Contract;
 use App\ContractCarrier;
-use App\RequetsCarrierFcl;
-use App\NewContractRequest;
-use Illuminate\Http\Request;
-use App\Jobs\NotificationsJob;
+use App\Direction;
+use App\GroupContainer;
+use App\Http\Traits\MixPanelTrait;
+use App\Http\Traits\SearchTrait;
 use App\Jobs\ExportRequestsJob;
-use Yajra\Datatables\Datatables;
-use App\Notifications\N_general;
-use App\Jobs\ValidateTemplateJob;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Jobs\NotificationsJob;
 use App\Jobs\SelectionAutoImportJob;
 use App\Jobs\SendEmailRequestFclJob;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use App\Jobs\ValidateTemplateJob;
+use App\NewContractRequest;
+use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use App\RequetsCarrierFcl;
+use App\User;
+use EventIntercom;
+use Excel;
+use HelperAll;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer as Writer;
+use PrvRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Http\Traits\SearchTrait;
-use App\Http\Traits\MixPanelTrait;
-
+use Yajra\Datatables\Datatables;
+use \Carbon\Carbon;
 
 class RequestFclV2Controller extends Controller
 {
-    use SearchTrait,MixPanelTrait;
+    use SearchTrait, MixPanelTrait;
     // Load View All Request
     public function index(Request $request)
     {
@@ -61,15 +61,15 @@ class RequestFclV2Controller extends Controller
         //$date_start = '2019-08-26 00:00:00';
         //$date_end    = '2020-03-03 12:39:54';
         $Ncontract = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
-        
+
         $Ncontracts = array();
         foreach ($Ncontract as $contract) {
-            $request_id=NewContractRequest::find($contract->id);
-            
-            if ($request_id->status_erased==0) {
-                $Ncontracts[] = $contract;   
+            $request_id = NewContractRequest::find($contract->id);
+
+            if ($request_id->status_erased == 0) {
+                $Ncontracts[] = $contract;
             }
-        } 
+        }
 
         $permiso_eliminar = false;
         $user = \Auth::user();
@@ -113,7 +113,7 @@ class RequestFclV2Controller extends Controller
                 }
             })
             ->addColumn('carrier', function ($Ncontracts) {
-                if (count((array)$Ncontracts->carriers) >= 1) {
+                if (count((array) $Ncontracts->carriers) >= 1) {
                     return $Ncontracts->carriers;
                 } else {
                     return " -------- ";
@@ -226,13 +226,13 @@ class RequestFclV2Controller extends Controller
                     &nbsp;&nbsp;';
                     $buttons = $excel_button . $buttons;
                 } else {
-                    
-                    $delete= '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+
+                    $delete = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
                     $change_status_erased = '
                     <center><a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . ' Number Contract: ' . $Ncontracts->numbercontract . '"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a></center>';
-                    $buttons =$delete.$change_status_erased;
+                    $buttons = $delete . $change_status_erased;
                 }
                 return $buttons;
             })->make();
@@ -279,6 +279,7 @@ class RequestFclV2Controller extends Controller
             $contract->direction_id = $direction_id;
             $contract->status = 'incomplete';
             $contract->company_user_id = $CompanyUserId;
+            $contract->user_id = Auth::user()->id;
             $contract->gp_container_id = $gpContainer->id;
             $contract->save();
 
@@ -332,6 +333,8 @@ class RequestFclV2Controller extends Controller
             $admins = User::where('type', 'admin')->get();
             $message = 'has created an new request: ' . $Ncontract->id;
 
+            $this->trackEvents("new_request_Fcl", $Ncontract);
+
             // EVENTO INTERCOM
             $event = new EventIntercom();
             $event->event_newRequest();
@@ -361,7 +364,7 @@ class RequestFclV2Controller extends Controller
         $carrier = carrier::all()->pluck('name', 'id');
         $direction = HelperAll::addOptionSelect(Direction::all(), 'id', 'name');
         $groupContainer = HelperAll::addOptionSelect(GroupContainer::all(), 'id', 'name');
-        //C5 select 
+        //C5 select
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select an option', '');
         $group_contain = GroupContainer::pluck('name', 'id');
@@ -373,7 +376,7 @@ class RequestFclV2Controller extends Controller
         $containers = Container::pluck('name', 'id');
         $user = \Auth::user();
 
-        return view('RequestV2.Fcl.index', compact('carrier', 'user', 'direction', 'groupContainer', 'containers','containerType','equipment','group_contain','contain'));
+        return view('RequestV2.Fcl.index', compact('carrier', 'user', 'direction', 'groupContainer', 'containers', 'containerType', 'equipment', 'group_contain', 'contain'));
     }
 
     //Carga los Status segun la posicion actual
@@ -586,10 +589,10 @@ class RequestFclV2Controller extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $spreadsheet->getActiveSheet()
             ->fromArray(
-            $columns, // The data to set
-            null, // Array values with this value will not be set
-            'A1' // Top left coordinate of the worksheet range where
-        );
+                $columns, // The data to set
+                null, // Array values with this value will not be set
+                'A1' // Top left coordinate of the worksheet range where
+            );
         $sheet->getColumnDimension('A')->setWidth(20);
         $sheet->getColumnDimension('B')->setWidth(20);
         $sheet->getColumnDimension('C')->setWidth(10);
@@ -621,12 +624,12 @@ class RequestFclV2Controller extends Controller
     {
         try {
             $Ncontract = NewContractRequest::find($id);
-            $status_erased=1;
-            if($Ncontract->erased_contract==1){
-                $Ncontract->status_erased=$status_erased;
+            $status_erased = 1;
+            if ($Ncontract->erased_contract == 1) {
+                $Ncontract->status_erased = $status_erased;
                 $Ncontract->update();
                 return 1;
-            }else{
+            } else {
                 if (!empty($Ncontract->namefile)) {
                     try {
                         Storage::disk('FclRequest')->delete($Ncontract->namefile);
@@ -667,12 +670,22 @@ class RequestFclV2Controller extends Controller
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $fileName = HelperAll::removeAccent($name);
 
-        $file->move($path, $name);
-
+        try {
+            
+            $file->move($path, $fileName);
+        } catch (\Exception $e) {
+            return response()->json([
+                'name' => $fileName,
+                'original_name' => $file->getClientOriginalName(),
+                'error' => true,
+            ]);
+        }
         return response()->json([
-            'name' => $name,
+            'name' => $fileName,
             'original_name' => $file->getClientOriginalName(),
+            'error' => false,
         ]);
     }
 

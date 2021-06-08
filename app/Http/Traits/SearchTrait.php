@@ -195,7 +195,8 @@ trait SearchTrait
                     if ($monto > 0) {
                         $inlandDetails = Collection::make($inlandDetails);
 
-                        $arregloInland = ['prov_id' => $inlandsValue->id, 'provider' => 'Inland Haulage', 'providerName' => $inlandsValue->provider, 'port_id' => $ports->ports->id, 'port_name' => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, 'km' => $distancia, 'monto' => $monto, 'type' => $textType, 'type_currency' => $inlandDetails->first()['currency'], 'idCurrency' => $typeCurrency];
+                        //HECTOR ADDED PROVIDER_ID ON 28/04/2021
+                        $arregloInland = ['prov_id' => $inlandsValue->id, 'provider' => 'Inland Haulage', 'providerName' => $inlandsValue->provider, 'port_id' => $ports->ports->id, 'port_name' => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, 'km' => $distancia, 'monto' => $monto, 'type' => $textType, 'type_currency' => $inlandDetails->first()['currency'], 'idCurrency' => $typeCurrency, 'provider_id' => $inlandsValue->provider_id];
                         $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) use ($arregloInland) {
                             $minimoD = $item->where('sub_in', '>', 0);
                             $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
@@ -844,17 +845,18 @@ trait SearchTrait
     {
         foreach($rates as $rate){
             $container_group_id = $rate->contract->gp_container_id;
+
+            $container_array = [];
+            $group_containers = Container::where('gp_container_id',$container_group_id)->get();
+            $requested_containers = [];
+
+            foreach($group_containers as $cont){
+                if(in_array($cont->id,$search_containers)){
+                    array_push($requested_containers, $cont->code);
+                }
+            }
             
             if($container_group_id == 1){
-                $container_array = [];
-                $group_containers = Container::where('gp_container_id',$container_group_id)->get();
-                $requested_containers = [];
-
-                foreach($group_containers as $cont){
-                    if(in_array($cont->id,$search_containers)){
-                        array_push($requested_containers, $cont->code);
-                    }
-                }
                 if($rate->twuenty != null && in_array('20DV',$requested_containers)){
                     $container_array['C20DV'] = $rate->twuenty;
                 }if($rate->forty != null && in_array('40DV',$requested_containers)){
@@ -866,10 +868,20 @@ trait SearchTrait
                 }if($rate->fortyfive != null && in_array('45HC',$requested_containers)){
                     $container_array['C45HC'] = $rate->fortyfive;
                 }
-
-                $rate->containers = json_encode($container_array);
-                $rate->save();
+            }else{
+                $rate_containers = json_decode($rate->containers, true);
+                foreach($requested_containers as $requested){
+                    if(!isset($rate_containers['C'.$requested])){
+                        $container_array['C'.$requested] = 0;
+                    }else{
+                        $container_array['C'.$requested] = $rate_containers['C'.$requested];
+                    }
+                
+                }
             }
+
+            $rate->containers = json_encode($container_array);
+            $rate->save();
         }
     }
 
@@ -964,10 +976,21 @@ trait SearchTrait
     }
 
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges, $client_currency)
+    public function joinCharges($charges, $client_currency, $container_group_id)
     {
         //Empty array for joint charges
         $joint_charges = [];
+        if($container_group_id == 1){
+            $per_container_calculation_type = CalculationType::where('id',5)->first();
+        }elseif($container_group_id == 2){
+            $per_container_calculation_type = CalculationType::where('id',19)->first();
+        }elseif($container_group_id == 3){
+            $per_container_calculation_type = CalculationType::where('id',20)->first();
+        }elseif($container_group_id == 4){
+            $per_container_calculation_type = CalculationType::where('id',21)->first();
+        }
+
+        $joining = false;
 
         //Looping through top charges array (Origin, Destination, Freight)
         foreach($charges as $direction=>$charges_direction){
@@ -1011,14 +1034,20 @@ trait SearchTrait
                                             $joint_containers = $charge->containers_client_currency;
                                             //Marking charge as joint under client currency
                                             $charge->setAttribute('joint_as','client_currency');
-                                            $charge->setAttribute('joint',true);
+                                            unset($charge->calculationtype);
+                                            unset($charge->calculationtype_id);
+                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
                                             $comparing_charge_containers = $comparing_charge->containers_client_currency;
                                         //If currencies match, sum is direct
                                         }elseif($charge->currency->id == $comparing_charge->currency->id){
                                             $joint_containers = $charge->containers;
                                             //Marking as joint under charge currency
                                             $charge->setAttribute('joint_as','charge_currency');
-                                            $charge->setAttribute('joint',true);
+                                            unset($charge->calculationtype);
+                                            unset($charge->calculationtype_id);
+                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
                                             $comparing_charge_containers = $comparing_charge->containers;
                                         }
                                         //Adding container rates together
@@ -1060,7 +1089,6 @@ trait SearchTrait
                     if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
                         //Including unjoint charge in final array
                         $charge->setAttribute('joint_as', 'charge_currency');
-                        $charge->setAttribute('joint',false);
                         array_push($joint_charges[$direction],$charge);
                     }
                     }
@@ -1091,6 +1119,24 @@ trait SearchTrait
             }
 
             $rate->containers_with_markups = $containers_with_markups_string;
+        }
+        
+        if(isset($rate->totals_with_markups_freight_currency)){
+            $totals_with_markups_freight_currency_string = $rate->totals_with_markups_freight_currency;
+            foreach($totals_with_markups_freight_currency_string as $key => $total){
+                $totals_with_markups_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_with_markups_freight_currency = $totals_with_markups_freight_currency_string;
+        }
+
+        if(isset($rate->totals_freight_currency)){
+            $totals_freight_currency_string = $rate->totals_freight_currency;
+            foreach($totals_freight_currency_string as $key => $total){
+                $totals_freight_currency_string[$key] = strval(isDecimal($total, true));
+            }
+
+            $rate->totals_freight_currency = $totals_freight_currency_string;
         }
 
         $totals_string = $rate->totals;
@@ -1152,6 +1198,25 @@ trait SearchTrait
                         }
         
                         $charge->totals_with_markups = $charge_totals_with_markups_string;
+                    }
+                }else{
+                    $charge_containers_string = $charge['containers'];
+    
+                    foreach($charge_containers_string as $container => $containerTotal){
+                        $charge_containers_string[$container] = strval(isDecimal($containerTotal,true));
+                    }
+    
+                    $charge['containers'] = $charge_containers_string;
+
+                    if(isset($charge['containers_with_markups'])){
+                        //Containers With Markups
+                        $charge_containers_with_markups_string = $charge['containers_with_markups'];
+    
+                        foreach($charge_containers_with_markups_string as $container => $containerTotal){
+                            $charge_containers_with_markups_string[$container] = strval(isDecimal($containerTotal,true));
+                        }
+        
+                        $charge['containers_with_markups'] = $charge_containers_with_markups_string;
                     }
                 }
             }
