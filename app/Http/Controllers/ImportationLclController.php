@@ -1611,6 +1611,10 @@ class ImportationLclController extends Controller
         $extObj = new \SplFileInfo($account->namefile);
         $ext = $extObj->getExtension();
         $name = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
+        $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
+        $name = utf8_decode($name);
+        $name = strtr($name, utf8_decode($originales), $modificadas);
         try {
             return Storage::disk('s3_upload')->download('Account/LCL/'.$account->namefile, $name);
         } catch (\Exception $e) {
