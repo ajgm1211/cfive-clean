@@ -134,12 +134,12 @@ trait MixPanelTrait
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
-
+        
         foreach($data['data']['originPorts'] as $orig){
-            $origin[]=$orig['name'].', '.$orig['code'];
+            $origin[]=$orig['display_name'];
         }
         foreach($data['data']['destinationPorts'] as $dest){
-            $destiny[]=$dest['name'].', '.$dest['code'];
+            $destiny[]=$dest['display_name'];
         }
         $mixPanel->track(
             'Rate Finder FCL',
