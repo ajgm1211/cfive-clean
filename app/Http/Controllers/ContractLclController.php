@@ -187,7 +187,7 @@ class ContractLclController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => 'publish',
-            'remarks' => '',
+            'comments' => '',
             'is_manual' => 1
         ]);
 
@@ -359,7 +359,7 @@ class ContractLclController extends Controller
             'remarks' => 'sometimes',
         ]);
 
-        $contract->update(['remarks' => @$data['remarks']]);
+        $contract->update(['comments' => @$data['remarks']]);
 
         return new ContractLclResource($contract);
     }
