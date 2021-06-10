@@ -1007,60 +1007,28 @@
               </div>
 
               <div class="d-flex justify-content-end align-items-center">
-                <b-button
-                  class="rs-btn"
-                  :class="result.detentionCollapse ? null : 'collapsed'"
-                  :aria-expanded="result.detentionCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'detention_' + String(result.quoteLine)
-                  "
-                  @click="
-                    result.detentionCollapse = !result.detentionCollapse;
-                    result.scheduleCollapse
-                      ? (result.scheduleCollapse = false)
-                      : (result.scheduleCollapse = result.scheduleCollapse);
-                    result.detailCollapse
-                      ? (result.detailCollapse = false)
-                      : (result.detailCollapse = result.detailCollapse);
-                  "
-                  ><b>D&D</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-                <b-button
-                  class="rs-btn"
-                  :class="result.scheduleCollapse ? null : 'collapsed'"
-                  :aria-expanded="result.scheduleCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'schedules_' + String(result.quoteLine)
-                  "
-                  @click="
-                    result.scheduleCollapse = !result.scheduleCollapse;
-                    result.detentionCollapse
-                      ? (result.detentionCollapse = false)
-                      : (result.detentionCollapse = result.detentionCollapse);
-                    result.detailCollapse
-                      ? (result.detailCollapse = false)
-                      : (result.detailCollapse = result.detailCollapse);
-                  "
-                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
-                <b-button
-                  class="rs-btn"
-                  :class="result.detailCollapse ? null : 'collapsed'"
-                  :aria-expanded="result.detailCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'details_' + String(result.quoteLine)
-                  "
-                  @click="
-                    result.detailCollapse = !result.detailCollapse;
-                    result.scheduleCollapse
-                      ? (result.scheduleCollapse = false)
-                      : (result.scheduleCollapse = result.scheduleCollapse);
-                    result.detentionCollapse
-                      ? (result.detentionCollapse = false)
-                      : (result.detentionCollapse = result.detentionCollapse);
-                  "
-                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
-                ></b-button>
+                <!-- INFORMACION DESPLEGADA -->
+                <div class="row mr-0 ml-0 accordion" role="tablist">
+                  <b-button
+                    class="rs-btn"
+                    v-b-toggle="'details_' + String(result.quoteLine)"
+                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                  ></b-button>
+
+                  <b-button
+                    class="rs-btn"
+                    v-b-toggle="'schedules_' + String(result.quoteLine)"
+                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                  ></b-button>
+
+                  <b-button
+                    class="rs-btn"
+                    v-b-toggle="'detention_' + String(result.quoteLine)"
+                    ><b>D&D</b><b-icon icon="caret-down-fill"></b-icon
+                  ></b-button>
+                  
+                </div>
+                <!-- FIN INFORMACION DESPLEGADA -->
               </div>
             </div>
             <!-- FIN OPCIONES E INFORMACION EXTRA -->
@@ -1088,11 +1056,11 @@
         </div>
         <!-- FIN INFORMACION DE TARIFA -->
 
-        <!-- INFORMACION DESPLEGADA -->
-        <div class="row mr-0 ml-0">
-          <!-- DETALLES DE TARIFA -->
+        <!-- DETALLES DE TARIFA -->
           <b-collapse
             class="pt-5 pb-5 pl-5 pr-5 col-12"
+            accordion="my-accordion"
+            role="tabpanel"
             :id="'details_' + String(result.quoteLine)"
             v-model="result.detailCollapse"
           >
@@ -1256,9 +1224,11 @@
           </b-collapse>
           <!-- FIN DETALLES DE TARIFA-->
 
-          <!-- SCHEDULES -->
+          <!-- SCHEDULES -->          
           <b-collapse
             :id="'schedules_' + String(result.quoteLine)"
+            accordion="my-accordion"
+            role="tabpanel"
             v-model="result.scheduleCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             style="background: #fbfbfb"
@@ -1447,11 +1417,13 @@
           </b-collapse>
           <!-- FIN SCHEDULES -->
 
-          <!-- DETENTIONS -->
+          <!-- DETENTIONS -->          
           <b-collapse
             :id="'detention_' + String(result.quoteLine)"
             v-model="result.detentionCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            accordion="my-accordion"
+            role="tabpanel"
           >
             <div>
               <h5><b>Demurrage & Detention</b></h5>
@@ -1517,9 +1489,9 @@
             </div>
           </b-collapse>
           <!-- FIN DETENTIONS -->
-        </div>
-        <!-- FIN INFORMACION DESPLEGADA -->
       </div>
+
+      
 
       <!--  Book Qty Modal  -->
       <b-modal
@@ -1659,7 +1631,7 @@ export default {
         apiOriginPorts.forEach(function (origin) {
           apiDestinationPorts.forEach(function (destination) {
             axios
-              .get("https://carriers.cargofive.com/api/pricing", {
+              .get(component.datalists.api_url, {
                 params: {
                   originPort: origin,
                   destinationPort: destination,

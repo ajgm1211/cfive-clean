@@ -1497,7 +1497,7 @@ export default {
                     input.surcharge_id = input.surcharge.id;
                 }if(input.calculation_type.id != null ){
                     input.calculation_type_id = input.calculation_type.id;
-                }if(input.currency.id != null){
+                }if(input.carrier != null){
                     input.provider_name = input.carrier.name;
                 }
                 
