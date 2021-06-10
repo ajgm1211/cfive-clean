@@ -38,7 +38,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
      */
     protected $dates = ['deleted_at'];
     protected $table    = "contracts_lcl";
-    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual', 'is_api', 'remarks'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual', 'is_api', 'comments'];
 
     public function companyUser()
     {
