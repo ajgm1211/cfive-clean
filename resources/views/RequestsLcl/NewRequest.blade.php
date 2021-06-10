@@ -548,16 +548,16 @@
                         if (willDelete) {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         } else {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         }
                     });
 
                 } else{
-                    window.location.href = "{{route('contractslcl.index')}}";
+                    window.location.href = "{{route('new.contracts.lcl.index')}}";
                 }
 
                 //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
