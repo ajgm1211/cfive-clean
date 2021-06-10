@@ -30,6 +30,30 @@
                     </div>
                     <!-- End Text Field -->
 
+                    <!-- number Field -->
+                    <div v-if="item.type == 'number'">
+                        <b-form-group
+                            :label="item.label"
+                            :invalid-feedback="key + ' is required'"
+                            valid-feedback="key+' is done!'"
+                        >
+                            <b-form-input
+                                v-model="vdata[key]"
+                                :placeholder="item.placeholder"
+                                :id="key"
+                                @change="cleanInput(key)"
+                                @keypress="isNumber($event)"
+                            >
+                            </b-form-input>
+
+                            <span
+                                :id="'id_f_' + key"
+                                class="invalid-feedback"
+                            ></span>
+                        </b-form-group>
+                    </div>
+                    <!-- End number Field -->
+
                     <!-- Based Dinamical Select Input -->
                     <div v-if="item.type == 'pre_select' && refresh">
                         <b-form-group
@@ -378,6 +402,7 @@ export default {
 
                 switch (item.type) {
                     case "text":
+                    case "number":
                         if (component.vdata[key])
                             data[key] = component.vdata[key];
                         break;
@@ -541,6 +566,20 @@ export default {
             link.setAttribute("download", "rates.csv"); //or any other extension
             document.body.appendChild(link);
             link.click();
+        },
+
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
+            } else {
+                return true;
+            }
         },
     },
     watch: {

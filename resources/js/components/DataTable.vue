@@ -185,6 +185,22 @@
                             ></span>
                         </div>
                         <!-- End Text Input -->
+                        <!-- Text Input -->
+                        <div v-if="item.type == 'number'">
+                            <b-form-input
+                                v-model="fdata[key]"
+                                :placeholder="item.placeholder"
+                                :disabled="item.disabled"
+                                :id="key"
+                                @change="cleanInput(key)"
+                            >
+                            </b-form-input>
+                            <span
+                                :id="'id_f_table_' + key"
+                                class="invalid-feedback"
+                            ></span>
+                        </div>
+                        <!-- End Text Input -->
 
                         <!-- Based Dinamical Select Input -->
                         <div v-if="item.type == 'pre_select' && refresh">
@@ -962,6 +978,9 @@ export default {
                     keys.push(key);
                     if (this.inputFields[key].type == "text")
                         data[key] = this.fdata[key];
+                    else if(this.inputFields[key].type == "number"){
+                        data[key] = this.fdata[key];
+                    }
                     else if (
                         ["select", "pre_select"].includes(
                             this.inputFields[key].type
@@ -1670,6 +1689,20 @@ export default {
                 } else {
                     component.getData();
                 }
+            }
+        },
+
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
+            } else {
+                return true;
             }
         },
     },
