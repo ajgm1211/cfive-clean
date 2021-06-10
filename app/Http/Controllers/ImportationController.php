@@ -2413,7 +2413,8 @@ class ImportationController extends Controller
     public function DestroySurchargersG($id)
     {
         try {
-            if(isset($surchargers = LocalCharge::find($id)){
+            $surchargers = LocalCharge::find($id);
+            if(isset($surchargers)){
                  $surchargers->forceDelete();
             }
             return 1;
