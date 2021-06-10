@@ -12,6 +12,7 @@ use App\Direction;
 use App\Harbor;
 use App\Helpers\HelperAll;
 use App\Http\Resources\ContractLclResource;
+use App\NewContractRequestLcl;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\User;
@@ -231,6 +232,19 @@ class ContractLclController extends Controller
     }
 
     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(ContractLcl $contract)
+    {
+        $contract->delete();
+
+        return response()->json(null, 204);
+    }
+
+    /**
      * Remove all the resource from storage.
      *
      * @return \Illuminate\Http\Response
@@ -251,7 +265,7 @@ class ContractLclController extends Controller
     public function removefile(Request $request, Contractlcl $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        
+
         if (!empty($media) == 0) {
             $media->delete();
         }
