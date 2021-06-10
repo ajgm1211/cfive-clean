@@ -20,6 +20,8 @@ use App\Harbor;
 use App\Http\Traits\MixPanelTrait;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
+use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaStream;
 use App\IntegrationQuoteStatus;
 use App\LocalCharge;
 use App\LocalChargeApi;
@@ -3684,6 +3686,25 @@ $company_cliente = null;
             }
         } else {
             return $monto;
+        }
+    }
+
+    public function pdfApi($id)
+    {
+        $quote = QuoteV2::where('id', $id)->orwhere('quote_id', $id)->first();
+        if (!empty($quote)) {
+            $mediaItem = Media::where('model_id', $quote->id)->where('model_type', 'App\QuoteV2')->first();
+            if (!empty($mediaItem)) {
+                $data = array(
+                    "url_to_download" => $quote->getMedia('document')->first()->getUrl(),
+                    'quote_id' => $quote->quote_id
+                );
+                return $data;
+            } else {
+                return response()->json('Sorry, the media file does not exist');
+            }
+        } else {
+            return response()->json('Sorry, the quote does not exist');
         }
     }
 
