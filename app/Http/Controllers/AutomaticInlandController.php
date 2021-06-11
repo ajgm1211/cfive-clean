@@ -162,7 +162,7 @@ class AutomaticInlandController extends Controller
 
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
-            'provider'=> $validate['provider_id']['name'],
+            'provider'=> $validate['provider_id']['name'] ?? null,
             //'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
