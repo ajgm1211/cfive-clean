@@ -63,8 +63,8 @@
                                                 <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td >{{$v->units}}</td>
                                                 <td >{{$v->minimum}}</td>
-                                                <td >{{isDecimal($price_w_profit,true)}}</td>
-                                                <td >{{isDecimal($total_w_profit,true).' '.$v->currency->alphacode}}</td>
+                                                <td >{{isDecimal($price_w_profit,false,true)}}</td>
+                                                <td >{{isDecimal($total_w_profit,false,true).' '.$v->currency->alphacode}}</td>
                                                 @if($service)
                                                     <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
                                                     <td>{{@$r->via!='' ? @$r->via:'-'}}</td>

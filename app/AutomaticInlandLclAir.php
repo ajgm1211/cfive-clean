@@ -79,10 +79,12 @@ class AutomaticInlandLclAir extends Model implements Auditable
 
 	public function syncProviders($provider)
     {
-        InlandProvider::create([
-            'provider_type' => $provider['model'],
-            'provider_id' => $provider['id'],
-            'automatic_inland_id' => $this->id,
-        ]);
+		if($provider){
+			InlandProvider::create([
+				'provider_type' => $provider['model'],
+				'provider_id' => $provider['id'],
+				'automatic_inland_id' => $this->id,
+			]);
+		}
     }
 }
