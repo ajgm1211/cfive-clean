@@ -14,7 +14,7 @@
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('tax_number', 'Tax number') !!}
-    {!! Form::text('tax_number', null, ['placeholder' => 'Please enter a tax number','class' => 'form-control m-input tax_number_input']) !!}
+    {!! Form::text('tax_number', null, ['placeholder' => 'Please enter a tax number','class' => 'form-control m-input tax_number_input','required' => 'required']) !!}
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('address', 'Address') !!}
@@ -22,5 +22,5 @@
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('pdf_language', 'PDF Language') !!}
-    {{ Form::select('pdf_language',['0'=>'Choose a language',1=>'English',2=>'Spanish',3=>'Portuguese'],null,['class'=>'custom-select form-control','id' => 'pdf_language']) }}
+    {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese'],null,['class'=>'custom-select form-control','id' => 'pdf_language']) }}
 </div>

@@ -2,33 +2,35 @@
 
 namespace App\Repositories;
 
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-
+use GuzzleHttp\Exception\GuzzleException;
 
 class Schedules
 {
-    public function authentication(){
-        try{
+    public function authentication()
+    {
+        try {
             $client = new Client();
-            $url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/oauth/token";
+            $url = 'http://smanual-ec2.eu-central-1.elasticbeanstalk.com/oauth/token';
             $myBody['client_id'] = \Config::get('values.client_id');
             $myBody['client_secret'] = \Config::get('values.client_secret');
             $myBody['grant_type'] = \Config::get('values.grant_type');
             $myBody['username'] = \Config::get('values.username');
             $myBody['password'] = \Config::get('values.password');
             $res = $client->request('POST', $url, ['form_params'=>$myBody])->getBody()->getContents();
-        }catch (\Guzzle\Http\Exception\ConnectException $e) {
+        } catch (\Guzzle\Http\Exception\ConnectException $e) {
             return json_decode($e);
         }
+
         return json_decode($res);
     }
 
-    public function getSchedules($token,$carrier,$origin,$destination,$date){
-        try{
+    public function getSchedules($token, $carrier, $origin, $destination, $date)
+    {
+        try {
             $client = new Client();
 
-            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination."/".$date;
+            $get_url = 'http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/'.$carrier.'/'.$origin.'/'.$destination.'/'.$date;
 
             $get_response = $client->request('GET', $get_url, [
 
@@ -38,9 +40,10 @@ class Schedules
                 ],
 
             ]);
-        }catch (\Guzzle\Http\Exception\ConnectException $e) {
+        } catch (\Guzzle\Http\Exception\ConnectException $e) {
             return json_decode($e);
         }
+
         return json_decode($get_response->getBody());
     }
 }

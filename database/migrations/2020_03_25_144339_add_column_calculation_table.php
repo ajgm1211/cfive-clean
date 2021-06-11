@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnCalculationTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnCalculationTable extends Migration
      */
     public function up()
     {
-        Schema::table('calculationtype', function (Blueprint $table){
+        Schema::table('calculationtype', function (Blueprint $table) {
             $table->boolean('gp_pcontainer')->default(false)->after('options');
         });
     }

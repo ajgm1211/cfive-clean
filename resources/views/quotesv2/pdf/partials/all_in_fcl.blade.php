@@ -2,14 +2,14 @@
 @case('total in')
     <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
         <p class="title"><b>{{__('pdf.total_estimated')}}</b></p>
-        <br>
+        
     </div>
     @break
 
 @case('detailed')
     <div {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
         <p class="title">{{__('pdf.total_estimated')}}</p>
-        <br>
+        
     </div>
     @break
 @endswitch
@@ -62,7 +62,7 @@
                     ${'totalized_'.$c->code} = 'totalized_'.$c->code;
                 }
 
-                $array = array();
+                $array = [];
                 
                 foreach($rate->charge as $value){
                     array_push($array, $value->type_id);

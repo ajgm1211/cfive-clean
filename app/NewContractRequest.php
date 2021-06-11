@@ -10,9 +10,10 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class NewContractRequest extends Model implements HasMedia
+class NewContractRequest extends Model implements HasMedia, Auditable
 {
     use HasMediaTrait;
+    use \OwenIt\Auditing\Auditable;
     protected $table = 'newcontractrequests';
     protected $fillable = [
         'namecontract',
@@ -31,7 +32,10 @@ class NewContractRequest extends Model implements HasMedia
         'sentemail',
         'contract_id',
         'data',
-        'username_load'
+        'manage_app',
+        'username_load',
+        'code',
+        'is_api'
     ];
 
     public function user()
@@ -55,9 +59,9 @@ class NewContractRequest extends Model implements HasMedia
     }
 
     /**
-     * Sync Request Contract Carriers
+     * Sync Request Contract Carriers.
      *
-     * @param  Array  $carrier
+     * @param  array  $carrier
      * @return void
      */
     public function ContractRequestCarrierSync($carriers, $api = false)
@@ -65,27 +69,27 @@ class NewContractRequest extends Model implements HasMedia
         DB::table('request_fcl_carriers')->where('request_id', '=', $this->id)->delete();
 
         if ($api) {
-            $carriers = explode(",", $carriers);
+            $carriers = explode(',', $carriers);
         }
 
         foreach ($carriers as $carrier_id) {
             RequetsCarrierFcl::create([
                 'carrier_id' => $carrier_id,
-                'request_id' => $this->id
+                'request_id' => $this->id,
             ]);
         }
     }
 
     /**
-     * Notify a new request
+     * Notify a new request.
      *
-     * @param  Array  $admins
+     * @param  array  $admins
      * @return void
      */
     public function NotifyNewRequest($admins)
     {
         foreach ($admins as $userNotifique) {
-            $userNotifique->notify(new N_general(Auth::user(), 'A new request has been created - ' . $this->id));
+            $userNotifique->notify(new N_general(Auth::user(), 'A new request has been created - '.$this->id));
         }
     }
 }

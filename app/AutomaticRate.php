@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Filters\AutomaticRateFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticRate extends Model
+class AutomaticRate extends Model implements Auditable
 {
     use SoftDeletes;
-
+    use \OwenIt\Auditing\Auditable;
     /**
      * The attributes that should be mutated to dates.
      *
@@ -107,6 +108,16 @@ class AutomaticRate extends Model
         return $this->hasMany('App\ChargeLclAir', 'automatic_rate_id');
     }
 
+    public function totals()
+    {
+        return $this->hasMany('App\AutomaticRateTotal', 'automatic_rate_id');
+    }
+
+    public function total_rate()
+    {
+        return $this->hasOne('App\AutomaticRateTotal', 'automatic_rate_id');
+    }
+
     public function scopeCharge($query, $type_id, $type)
     {
         $query->whereHas('charge', function ($query) use ($type_id) {
@@ -144,150 +155,16 @@ class AutomaticRate extends Model
         return (new AutomaticRateFilter($request, $builder))->filter();
     }
 
-    public function totalize($new_currency_id)
-    {
-        //getting all data needed to calculate totals
-        $quote = $this->quotev2()->first();
-
-        if ($quote->type == 'FCL') {
-            $equip = $quote->getContainerCodes($quote->equipment);
-
-            $equip_array = explode(',', $equip);
-
-            array_splice($equip_array, -1, 1);
-
-            $charges = $this->charge()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
-
-            $ocean_freight = $this->charge()->where('surcharge_id', null)->first();
-
-            $this->update(['currency_id' => $new_currency_id]);
-
-            $currency = $this->currency()->first();
-
-            $totals_usd = [];
-
-            foreach ($equip_array as $eq) {
-                $totals_usd['c' . $eq] = 0;
-            }
-
-            // adding all charges together
-            foreach ($charges as $charge) {
-                $amount_array = json_decode($charge->amount);
-                $charge_currency = $charge->currency()->first();
-                foreach ($amount_array as $key => $value) {
-                    if ($charge_currency->alphacode != 'USD') {
-                        $charge_conversion = $charge_currency->rates;
-                        $value /= $charge_conversion;
-                        $value = round($value, 2);
-                    }
-                    $totals_usd[$key] += $value;
-                }
-            }
-
-            //converting to autorate currency
-            if ($currency->alphacode != 'USD') {
-                $conversion = $currency->rates;
-                foreach ($totals_usd as $cont => $price) {
-                    $conv_price = $price * $conversion;
-                    $totals_usd[$cont] = round($conv_price, 2);
-                }
-            }
-
-            //adding autorate markups
-            if ($this->markups != null) {
-                $markups = json_decode($this->markups);
-                foreach ($markups as $mark => $profit) {
-                    $clear_key = str_replace('m', 'c', $mark);
-                    $totals_usd[$clear_key] += $profit;
-                }
-            }
-
-            //adding ocean freight
-            if ($ocean_freight->amount != null) {
-                $freight_amount = json_decode($ocean_freight->amount);
-                foreach ($freight_amount as $fr => $am) {
-                    $totals_usd[$fr] += round($am, 2);
-                    $totals_usd[$fr] = round($totals_usd[$fr], 2);
-                }
-            }
-
-            $totals = json_encode($totals_usd);
-
-            $this->update(['total' => $totals]);
-        } else if ($quote->type == 'LCL') {
-
-            $charges = $this->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
-
-            $ocean_freight = $this->charge_lcl_air()->where('surcharge_id', null)->first();
-
-            $this->update(['currency_id' => $new_currency_id]);
-
-            $currency = $this->currency()->first();
-
-            $totals_usd = [];
-            $totals_usd['total'] = 0;
-            $totals_usd['per_unit'] = 0;
-
-            // adding all charges together
-            foreach ($charges as $charge) {
-                $charge_currency = $charge->currency()->first();
-                $charge_units = $charge->units;
-                if ($charge_currency->alphacode != 'USD') {
-                    $charge_conversion = $charge_currency->rates;
-                    $tots_value = $charge->total;
-                    $tots_value /= $charge_conversion;
-                    $tots_value = round($tots_value, 2);
-                    $per_unit_value = $charge->price_per_unit;
-                    $per_unit_value /= $charge_conversion;
-                    $per_unit_value = round($per_unit_value, 2);
-                } else {
-                    $tots_value = $charge->total;
-                    $per_unit_value = $charge->price_per_unit;
-                }
-                $totals_usd['total'] += $tots_value;
-                $totals_usd['per_unit'] += $per_unit_value;
-            }
-
-            //converting to autorate currency
-            if ($currency->alphacode != 'USD') {
-                $conversion = $currency->rates;
-                foreach ($totals_usd as $cont => $price) {
-                    $conv_price = $price * $conversion;
-                    $totals_usd[$cont] = round($conv_price, 2);
-                }
-            }
-
-            //adding ocean freight
-            $freight_amount_per_unit = $ocean_freight->price_per_unit;
-            $freight_amount = $ocean_freight->total;
-            $total_units = $ocean_freight->units;
-            $totals_usd['total'] += $freight_amount;
-            $totals_usd['per_unit'] += $freight_amount_per_unit;
-            $totals_usd['total'] = round($totals_usd['total'], 2);
-            $totals_usd['per_unit'] = round($totals_usd['per_unit'], 2);
-
-            //adding autorate markups
-            if ($this->markups != null) {
-                $markups = json_decode($this->markups, true);
-                $markups['total'] = $markups['per_unit'] * $total_units;
-                $totals_usd['total'] += $markups['total'];
-                $totals_usd['per_unit'] += $markups['per_unit'];
-            } else {
-                $markups = [];
-                $markups['total'] = 0;
-                $markups['per_unit'] = 0;
-            }
-
-            $markups_json = json_encode($markups);
-            $totals = json_encode($totals_usd);
-
-            $this->update(['total' => $totals, 'markups' => $markups_json]);
-        }
-    }
-
     public function scopeGetCharge($query, $type)
     {
         return $query->whereHas('charge', function ($query) use ($type) {
+            $query->where('type_id', $type);
+        });
+    }
+
+    public function scopeGetChargeLcl($query, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use ($type) {
             $query->where('type_id', $type);
         });
     }
@@ -306,11 +183,13 @@ class AutomaticRate extends Model
 
         if ($quote->type == 'FCL') {
             $this->load(
-                'charge'
+                'charge',
+                'totals'
             );
         } else if ($quote->type == 'LCL') {
             $this->load(
-                'charge_lcl_airs'
+                'charge_lcl_air',
+                'totals'
             );
         }
 
@@ -320,6 +199,9 @@ class AutomaticRate extends Model
             foreach ($relation as $relationRecord) {
 
                 $newRelationship = $relationRecord->replicate();
+                if($newRelationship->quote_id){
+                    $newRelationship->quote_id = $quote->id;
+                }
                 $newRelationship->automatic_rate_id = $new_rate->id;
                 $newRelationship->save();
             }
@@ -344,6 +226,40 @@ class AutomaticRate extends Model
         }]);
     }
 
+    public function scopeSelectChargeApi($q, $type)
+    {
+        if($type == 'FCL'){
+            return $q->with(['charge' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'amount as price',
+                    'markups as profit',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }else{
+            return $q->with(['charge_lcl_air' => function ($query) {
+                $query->where('type_id', 3);
+                $query->select(
+                    'id',
+                    'automatic_rate_id',
+                    'price_per_unit as price',
+                    'units',
+                    'minimum',
+                    'markup as profit',
+                    'total',
+                    'surcharge_id',
+                    'calculation_type_id',
+                    'currency_id'
+                );
+            }]);
+        }
+    }
+
     public function scopeSelectFields($query)
     {
         return $query->select('id', 'quote_id', 'contract', 'validity_start as valid_from', 'validity_end as valid_until', 'markups as profit', 'total', 'schedule_type', 'transit_time', 'via', 'origin_port_id', 'destination_port_id', 'currency_id', 'carrier_id');
@@ -352,14 +268,20 @@ class AutomaticRate extends Model
     public function scopeCarrierRelation($query)
     {
         $query->with(['carrier' => function ($q) {
-            $q->select('id', 'name', 'image as url');
+            $q->select('id', 'name', 'uncode', 'scac','image as url');
         }]);
     }
 
     public function getProfitAttribute($value)
     {
+        $json = json_decode($value);
 
-        return json_decode(json_decode($value));
+        if (!is_object($json)) {
+            return json_decode($json);
+        }else{
+            return $json;
+        }
+        
     }
 
     /*public function getTotalAttribute($value)

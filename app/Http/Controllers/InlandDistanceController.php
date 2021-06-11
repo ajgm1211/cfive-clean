@@ -19,7 +19,6 @@ class InlandDistanceController extends Controller
      */
     public function index($harbor_id)
     {
-
         $harbor_id = obtenerRouteKey($harbor_id);
         $harbor = Harbor::where('id', $harbor_id)->first();
 
@@ -28,8 +27,8 @@ class InlandDistanceController extends Controller
         $a->where('company_user_id', '=',$company_user_id);
         })->get();*/
         $data = InlandDistance::where('harbor_id', $harbor_id)->with('province')->get();
-        return view('inlandDistances/index', compact('data', 'harbor'));
 
+        return view('inlandDistances/index', compact('data', 'harbor'));
     }
 
     public function getDistance($ids)
@@ -49,27 +48,21 @@ class InlandDistanceController extends Controller
         if ($harbors->count() > 1) {
             return response()->json(['message' => 'maxOne']);
         } else {
-
             $data = InlandDistance::where('harbor_id', $harbors->first())->get();
-            $array2 = array();
+            $array2 = [];
             foreach ($data as $dat) {
-
-                $array = array($dat->id => $dat->display_name);
+                $array = [$dat->id => $dat->display_name];
                 $array2 = $array2 + $array;
-
             }
 
             $data = new Collection($array2);
-
         }
 
         if (empty($data->toArray())) {
             return response()->json(['message' => 'empty']);
         } else {
             return response()->json(['message' => 'Ok', 'data' => $data]);
-
         }
-
     }
 
     public function add($id)
@@ -77,6 +70,7 @@ class InlandDistanceController extends Controller
         $harborCollect = Harbor::where('id', $id)->first();
         $prov = Province::where('country_id', $harborCollect->country_id)->pluck('name', 'id');
         $harbor = $id;
+
         return view('inlandDistances/add', compact('harbor', 'prov'));
     }
 
@@ -99,13 +93,12 @@ class InlandDistanceController extends Controller
     public function store(Request $request)
     {
         $province = Province::where('id', $request->input('province_id'))->first();
-        $request->request->add(['display_name' => $request->input('zip') . "," . $request->input('address') . "," . $province->name]);
+        $request->request->add(['display_name' => $request->input('zip').','.$request->input('address').','.$province->name]);
         $inlandD = new InlandDistance($request->all());
         $inlandD->save();
         $harbor_id = setearRouteKey($request->harbor_id);
 
         return redirect()->route('inlandD.find', ['id' => $harbor_id]);
-
     }
 
     /**
@@ -145,7 +138,7 @@ class InlandDistanceController extends Controller
     {
         $province = Province::where('id', $request->input('province_id'))->first();
         //dd($province);
-        $request->request->add(['display_name' => $request->input('zip') . "," . $request->input('address') . "," . $province->name]);
+        $request->request->add(['display_name' => $request->input('zip').','.$request->input('address').','.$province->name]);
         $requestForm = $request->all();
         $inlandD = InlandDistance::find($id);
         $inlandD->update($requestForm);
@@ -153,6 +146,7 @@ class InlandDistanceController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');
+
         return redirect()->route('inlandD.find', ['id' => $harbor_id]);
     }
 

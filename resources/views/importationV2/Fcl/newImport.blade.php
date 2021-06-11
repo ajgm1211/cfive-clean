@@ -97,6 +97,10 @@
                                         {!! Form::select('carrierM[]',$carrier,$requestfcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
+                                <!-- Input's para que no se pierdan variables de contratos cargados vía API -->
+                                {!!  Form::hidden('contract_code',$api_contract['code'],['class'=>'form-control m-input'])!!}
+                                {!!  Form::hidden('contract_is_api',$api_contract['is_api'],['class'=>'form-control m-input'])!!}
+                                {!!  Form::hidden('contract_owner',$api_contract['user_id'],['class'=>'form-control m-input'])!!}
                             </div>
                             @elseif($selector == 2)
                             <div class="form-group m-form__group row">
@@ -209,7 +213,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="3" class="currencychk" checked type="radio" >
+                                                <input name="valuesCurrency" value="3" class="currencychk" type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -229,7 +233,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" class="currencychk" value="1"  type="radio" >
+                                                <input name="valuesCurrency" class="currencychk" value="1" checked type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -271,7 +275,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" checked>
+                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -288,7 +292,7 @@
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesportcountry" value="2" id="portcountrychk" type="radio" >
+                                                <input name="valuesportcountry" value="2" id="portcountrychk" checked type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -496,6 +500,7 @@ Load
         url: '{{ route("importation.storeMedia.fcl") }}',
         maxFilesize: 15, // MB
         maxFiles: 1,
+        timeout: 18000,
         addRemoveLinks: true,
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"

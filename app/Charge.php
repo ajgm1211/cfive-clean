@@ -8,18 +8,21 @@ use App\Http\Filters\ChargeFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class Charge extends Model
+class Charge extends Model implements Auditable
 {
-
+    use \OwenIt\Auditing\Auditable;
+    
     protected $casts = [
         'amount' => 'array',
         'markups' => 'array',
         'total' => 'array',
+        'options' => 'array',
     ];
 
     protected $appends = ['currency_code'];
 
-    protected $fillable = ['automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'currency_id', 'total'];
+    protected $fillable = ['automatic_rate_id', 'type_id', 'surcharge_id', 'calculation_type_id', 'amount', 'markups', 'currency_id', 'total', 
+        'provider_name','options'];
 
     public function automatic_rate()
     {
@@ -57,7 +60,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -74,8 +77,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'c' . $container->code) {
-                            $value['c' . $container->code] = $amount_value;
+                        if ($k == 'c'.$container->code) {
+                            $value['c'.$container->code] = $amount_value;
                         }
                     }
                 }
@@ -89,7 +92,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -106,8 +109,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'm' . $container->code) {
-                            $value['m' . $container->code] = $amount_value;
+                        if ($k == 'm'.$container->code) {
+                            $value['m'.$container->code] = $amount_value;
                         }
                     }
                 }
@@ -153,7 +156,7 @@ class Charge extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         if ($array != null || $array != '') {
             foreach ($array as $k => $amount_value) {
@@ -170,8 +173,8 @@ class Charge extends Model
                 } else {
                     $containers = Container::all();
                     foreach ($containers as $container) {
-                        if ($k == 'c' . $container->code) {
-                            $value['c' . $container->code] = $amount_value;
+                        if ($k == 'c'.$container->code) {
+                            $value['c'.$container->code] = $amount_value;
                         }
                     }
                 }
@@ -241,5 +244,10 @@ class Charge extends Model
     public function getCurrencyCodeAttribute()
     {
         return $this->currency()->first()->alphacode ?? null;
+    }
+
+    public function scopeSelectFields($query)
+    {
+        return $query->select('charges.id', 'automatic_rate_id', 'charges.type_id', 'charges.surcharge_id', 'charges.amount as price', 'charges.markups as profit', 'charges.total as total_price', 'calculation_type_id', 'charges.currency_id');
     }
 }
