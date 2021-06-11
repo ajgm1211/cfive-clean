@@ -81,13 +81,13 @@ class CompanyController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
 
-        if (\Auth::user()->hasRole('subuser')) {
-            $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-                $query->where('user_id', $user_id);
-            })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        } else {
+        // if (\Auth::user()->hasRole('subuser')) {
+        //     $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
+        //         $query->where('user_id', $user_id);
+        //     })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
+        // } else {
             $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        }
+        // }
 
         $companies = $companies->get();
 

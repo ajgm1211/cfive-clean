@@ -351,7 +351,7 @@
                 </div>
                 <div class="modal-footer">
                     <center>
-                        <h7>Do not leave this window, we will redirect you Thank you.</h7>
+                        <h7>Do not close this window. You will be redirected in a few moments.</h7>
                     </center>
                 </div>
             </div>
@@ -548,16 +548,16 @@
                         if (willDelete) {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         } else {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         }
                     });
 
                 } else{
-                    window.location.href = "{{route('contractslcl.index')}}";
+                    window.location.href = "{{route('new.contracts.lcl.index')}}";
                 }
 
                 //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
