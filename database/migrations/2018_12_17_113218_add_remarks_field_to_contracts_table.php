@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddRemarksFieldToContractsTable extends Migration
 {
@@ -14,7 +14,7 @@ class AddRemarksFieldToContractsTable extends Migration
     public function up()
     {
         Schema::table('contracts', function (Blueprint $table) {
-            $table->string('remarks',5000)->nullable()->after('status');
+            $table->string('remarks', 5000)->nullable()->after('status');
         });
     }
 

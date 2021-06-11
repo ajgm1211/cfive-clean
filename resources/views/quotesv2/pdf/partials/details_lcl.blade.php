@@ -79,10 +79,11 @@
 
         </div>
 
-        @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
+        @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='' || $quote->validity_end !='')
 
-            <div style="margin-top: 25px;"  class="incoterm"> 
+            <div style="margin-top: 25px; height: 50px"  class="incoterm"> 
 
+                <div style="float: left">
                 @if($quote->incoterm_id!='')
 
                     <p><span><b>Incoterm:</b> </span>{{$quote->incoterm->name}}</p>
@@ -115,6 +116,13 @@
                     @endif
                     
                     </p>
+                </div>
+
+                <div style="float: right">
+
+                    <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+
+                </div>
 
             </div>
 
@@ -142,6 +150,7 @@
 
         @endif
 
+        <br>
         <br>
 
         <div class="company" style="color: #1D3A6E;">
@@ -255,4 +264,5 @@
             @endif 
         </div>
 
+        <br>
         <br>

@@ -1,8 +1,14 @@
 <?php
+<<<<<<< HEAD
 /*
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+=======
+
+>>>>>>> ae3db67bff763b585167d51297f9d0414cfd7111
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateProcedureRequestFcl extends Migration
 {

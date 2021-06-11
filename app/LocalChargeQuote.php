@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class LocalChargeQuote extends Model
+class LocalChargeQuote extends Model implements Auditable
 {
-    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id'];
+    use \OwenIt\Auditing\Auditable;
+
+    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id', 'provider_name'];
 
     protected $casts = [
         'price' => 'array',
@@ -144,7 +147,7 @@ class LocalChargeQuote extends Model
             'type_id' => $this->type_id,
         ]);
     }
-    
+
     /**
      * Grouping charges by sale code
      *
@@ -157,6 +160,7 @@ class LocalChargeQuote extends Model
             ${'price_' . $key} = 'price->' . $key;
             foreach ($localcharge['price'] as $k => $new_price) {
                 if ($key == $k) {
+                    $new_price = floatvalue($new_price);
                     $price += $new_price;
                     $this->${'price_' . $key} = $price;
                     $this->update();
@@ -168,6 +172,7 @@ class LocalChargeQuote extends Model
             ${'profit_' . $keyp} = 'profit->' . $keyp;
             foreach ($localcharge['markup'] as $kp => $new_profit) {
                 if ($keyp == $kp) {
+                    $new_profit = floatvalue($new_profit);
                     $profit += $new_profit;
                     $this->${'profit_' . $keyp} = $profit;
                     $this->update();
@@ -214,5 +219,34 @@ class LocalChargeQuote extends Model
         $new_record->save();
 
         return $new_record;
+    }
+
+    public function setPriceAttribute($array)
+    {
+        $this->attributes['price'] = $this->removeCommas($array);
+    }
+
+    public function setProfitAttribute($array)
+    {
+        $this->attributes['profit'] = $this->removeCommas($array);
+    }
+
+    public function removeCommas($array)
+    {
+        $containers = Container::all();
+
+        if ($array != null || $array != '') {
+            foreach ($array as $k => $amount) {
+                foreach ($containers as $container) {
+                    if ($k == 'c' . $container->code) {
+                        $array['c' . $container->code] = floatvalue($amount);
+                    } else if ($k == 'm' . $container->code) {
+                        $array['m' . $container->code] = floatvalue($amount);
+                    }
+                }
+            }
+        }
+
+        return json_encode($array);
     }
 }

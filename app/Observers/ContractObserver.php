@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Observers;
-use Illuminate\Support\Facades\Auth;
-use App\Notifications\N_general;
+
 use App\Contract;
+use App\Notifications\N_general;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class ContractObserver
 {
@@ -16,17 +17,16 @@ class ContractObserver
      */
     public function created(Contract $contract)
     {
-        $userLogin  = \Auth::user();
-        if(empty($userLogin) != true){
+        $userLogin = \Auth::user();
+        if (empty($userLogin) != true) {
             $idCompany = $contract->company_user_id;
 
-            $users = User::all()->where('company_user_id','=',$idCompany);
-            $message = 'created contract ' . $contract->name ;
+            $users = User::all()->where('company_user_id', '=', $idCompany);
+            $message = 'created contract '.$contract->name;
             foreach ($users as $user) {
-                $user->notify(new N_general($userLogin,$message));
+                $user->notify(new N_general($userLogin, $message));
             }
         }
-
     }
 
     /**
@@ -35,24 +35,18 @@ class ContractObserver
      * @param  \App\Contract  $contract
      * @return void
      */
-
     public function updated(Contract $contract)
     {
-
-        if(auth()->user() != null ){
-            $userLogin  = auth()->user();
+        if (auth()->user() != null) {
+            $userLogin = auth()->user();
             $idCompany = $contract->company_user_id;
-            $users = User::all()->where('company_user_id','=',$idCompany);
-            $message = ' updated contract ' . $contract->name ;
+            $users = User::all()->where('company_user_id', '=', $idCompany);
+            $message = ' updated contract '.$contract->name;
 
             foreach ($users as $user) {
-                $user->notify(new N_general($userLogin,$message));
+                $user->notify(new N_general($userLogin, $message));
             }
-
         }
-
-
-
     }
 
     /**
@@ -63,13 +57,13 @@ class ContractObserver
      */
     public function deleted(Contract $contract)
     {
-        $userLogin  = auth()->user();
+        $userLogin = auth()->user();
         $idCompany = $contract->company_user_id;
 
-        $users = User::all()->where('company_user_id','=',$idCompany);
-        $message = 'deleted contract ' . $contract->name ;
+        $users = User::all()->where('company_user_id', '=', $idCompany);
+        $message = 'deleted contract '.$contract->name;
         foreach ($users as $user) {
-            $user->notify(new N_general($userLogin,$message));
+            $user->notify(new N_general($userLogin, $message));
         }
     }
 }

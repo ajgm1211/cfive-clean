@@ -1,6 +1,7 @@
 <?php
 
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogUdpHandler;
 
 return [
 
@@ -35,7 +36,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            //'channels' => ['single'],
+            //'channels' => ['single','slack'],
+            'ignore_exceptions' => false,
 			'channels' => explode(',',env('LOGGING_CHANNELS')),
         ],
 
@@ -49,20 +51,31 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
-            'days' => 7,
+            'days' => 14,
         ],
 
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => env('NAME_LOG','CARGOFIVE LOG'),
-            'emoji' => ':bear:',
-            'level' => 'error',
+            'username' => env('NAME_LOG','CARGOFIVE LOG 5.7'),
+            'emoji' => ':boom:',
+            'level' => 'debug',
+        ],
+
+        'papertrail' => [
+            'driver' => 'monolog',
+            'level' => 'debug',
+            'handler' => SyslogUdpHandler::class,
+            'handler_with' => [
+                'host' => env('PAPERTRAIL_URL'),
+                'port' => env('PAPERTRAIL_PORT'),
+            ],
         ],
 
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,
+            'formatter' => env('LOG_STDERR_FORMATTER'),
             'with' => [
                 'stream' => 'php://stderr',
             ],
