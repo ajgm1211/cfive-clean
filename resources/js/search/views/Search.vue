@@ -1123,6 +1123,7 @@
                                                 placeholder="Amount"
                                                 class="input-modal surcharge-input"
                                                 style="padding: 21px 11px !important"
+                                                @keypress="isNumber($event)"
                                             ></b-form-input>
                                         </label>
                                     </div>
@@ -2234,6 +2235,20 @@ export default {
         success(file, response) {
             let url_tags = $(".img-link").last();
             url_tags.attr("href", response.url);
+        },
+
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
+            } else {
+                return true;
+            }
         },
     },
     watch: {
