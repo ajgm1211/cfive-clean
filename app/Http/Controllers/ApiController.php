@@ -3505,6 +3505,9 @@ $company_cliente = null;
 
     public function getContract(Request $request)
     {
+        if(!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until){
+            return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
+        }
 
         $direction = $request->input('direction'); //'2020/10/01';
 

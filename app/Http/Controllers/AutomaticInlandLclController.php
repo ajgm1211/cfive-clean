@@ -132,7 +132,7 @@ class AutomaticInlandLclController extends Controller
 
         $inland = AutomaticInlandLclAir::create([
             'quote_id' => $quote->id,
-            'provider'=> $vdata['provider_id']['name'],
+            'provider'=> $vdata['provider_id']['name'] ?? null,
             'provider_id' => isset($vdata['provider_id']) && count($vdata['provider_id'])==0 ? null : $vdata['provider_id']['id'],
             'currency_id' => $vdata['currency_id']['id'],
             'port_id' => $port_id,
