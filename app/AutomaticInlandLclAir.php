@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Filters\AutomaticInlandFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticInlandLclAir extends Model
+class AutomaticInlandLclAir extends Model implements Auditable
 
 {	
+	use \OwenIt\Auditing\Auditable;
 	protected $fillable = [
 		'quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','units','price_per_unit','markup','total','currency_id',
 		'provider_id','inland_totals_id','charge'];
@@ -73,5 +75,16 @@ class AutomaticInlandLclAir extends Model
     public function providers()
     {
         return $this->hasOne('App\Provider', 'id', 'provider_id');
+    }
+
+	public function syncProviders($provider)
+    {
+		if($provider){
+			InlandProvider::create([
+				'provider_type' => $provider['model'],
+				'provider_id' => $provider['id'],
+				'automatic_inland_id' => $this->id,
+			]);
+		}
     }
 }
