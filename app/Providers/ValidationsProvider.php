@@ -23,6 +23,6 @@ class ValidationsProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/HelperValidations.php';
+        require_once app_path().'/Helpers/HelperValidations.php';
     }
 }

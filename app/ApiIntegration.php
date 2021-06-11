@@ -12,16 +12,26 @@ class ApiIntegration extends Model
         'api_integration_setting_id',
         'module',
         'partner_id',
-        'url'
+        'url',
+        'status',
+        'company_user_id',
+        'is_daily'
     ];
 
     protected $modules = ['Contacts', 'Companies'];
 
-    public function api_integration_setting(){
+    public function api_integration_setting()
+    {
         return $this->belongsTo('App\ApiIntegrationSetting');
     }
 
-    public function partner(){
+    public function partner()
+    {
         return $this->belongsTo('App\Partner');
+    }
+
+    public function companyUser()
+    {
+        return $this->belongsTo('App\CompanyUser');
     }
 }

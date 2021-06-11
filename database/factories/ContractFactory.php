@@ -15,11 +15,11 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Contract::class, function (Faker $faker) {
     return [
-    	// 'id'=>1,
+        // 'id'=>1,
         'name' => $faker->company,
         'status' => 'publish',
-        'validity' => "2020-07-10",
-        'expire' => "2020-10-22 ",
+        'validity' => '2020-07-10',
+        'expire' => '2020-10-22 ',
 
     ];
 });

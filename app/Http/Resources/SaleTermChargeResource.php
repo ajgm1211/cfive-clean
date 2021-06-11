@@ -16,7 +16,6 @@ class SaleTermChargeResource extends JsonResource
     {
         return [
 			'id' => $this->id,
-			'name' => $this->name,
 			'amount' => $this->amount,
 			'sale_term_id' => $this->sale_term_id,
 			'calculation_type_id' => $this->calculation_type_id,

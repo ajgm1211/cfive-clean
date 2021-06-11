@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\CompanyUser;
 use App\Currency;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyBrandingController extends Controller
 {
@@ -59,7 +59,6 @@ class CompanyBrandingController extends Controller
      */
     public function edit()
     {
-        
         $company = CompanyUser::find(Auth::user()->company_user_id);
         $currencies = Currency::All()->toArray();
 
@@ -75,16 +74,15 @@ class CompanyBrandingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
         $companyUser = CompanyUser::find($id);
         $var = $request->image;
-        
-        if($var){
+
+        if ($var) {
             $name = $var->getClientOriginalName();
             $companyUser->logo = $name;
-            \Storage::disk('local')->put($name,  \File::get($var));
+            \Storage::disk('local')->put($name, \File::get($var));
         }
-        
+
         $companyUser->name = $request->name;
         $companyUser->address = $request->address;
         $companyUser->phone = $request->phone;
@@ -94,6 +92,7 @@ class CompanyBrandingController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');
+
         return redirect()->route('users.home');
     }
 

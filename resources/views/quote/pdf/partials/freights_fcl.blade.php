@@ -1,9 +1,9 @@
                     <!-- Section Title -->
                     <div>
                                     
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
+                        <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
                         
-                        <br>
+                       
 
                     </div>
                     
@@ -62,13 +62,13 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{$hide}}>{{ isDecimal(@$total->${'c'.$c->code}, true) }}&nbsp;{{@$rate->currency->alphacode}}</td>
+                                                <td {{$hide}}>{{ isDecimal(@$total->${'c'.$c->code}, false, true) }}&nbsp;{{@$rate->currency->alphacode}}</td>
                                             @endif
                                         @endforeach
                                     @endforeach
                                     @if($freight_charges->contains('transit_time', '!=', ''))
                                         <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
-                                        <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
+                                        <td>{{@$rate->via!='' ? @$rate->via:'Direct'}}</td>
                                     @endif
                                 </tr>
                             @endforeach

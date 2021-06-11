@@ -2,29 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Inland;
-use App\GroupContainer;
-use App\Direction;
 use App\Company;
-use App\Currency;
-use App\Http\Resources\InlandResource;
 use App\Container;
-use App\InlandType;
+use App\Currency;
+use App\Direction;
+use App\GroupContainer;
 use App\Harbor;
-use App\InlandPort;
+use App\Http\Resources\InlandResource;
+use App\Inland;
+use App\InlandType;
 use App\Provider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InlandController extends Controller
 {
+    public function location(Request $request)
+    {
+        return view('inlands.location');
+    }
+
     public function index(Request $request)
     {
         return view('inlands.index');
     }
 
-    public function list(Request $request)
-    {
+    function list(Request $request) {
         $results = Inland::filterByCurrentCompany()->filter($request);
 
         return InlandResource::collection($results);
@@ -57,7 +60,7 @@ class InlandController extends Controller
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
             return $company->only(['id', 'business_name']);
         });
-        
+
         $providers = Provider::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
             return $providers->only(['id', 'name']);
         });
@@ -74,7 +77,6 @@ class InlandController extends Controller
             'harbors' => $harbors,
             'providers' => $providers,
         ];
-
 
         return response()->json(['data' => $data]);
     }
@@ -98,9 +100,8 @@ class InlandController extends Controller
             'gp_container' => 'required',
             'ports' => 'required',
             'providers' => 'required',
-            
+
         ]);
-        
 
         $inland = Inland::create([
             'provider' => $data['reference'],
@@ -112,14 +113,13 @@ class InlandController extends Controller
             'status' => 'publish',
             'inland_type_id' => '1',
             'gp_container_id' => $data['gp_container'],
-            'provider_id' => $data ['providers']
+            'provider_id' => $data['providers'],
         ]);
 
         $inland->InlandPortsSync($data['ports']);
 
         return new InlandResource($inland);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -140,10 +140,10 @@ class InlandController extends Controller
             'restrictions' => 'sometimes',
             'ports' => 'required',
             'providers' => 'required',
-            
+
         ]);
-        
-        $status= $this->updateStatus($data['expire']);
+
+        $status = $this->updateStatus($data['expire']);
 
         $inland->update([
             'provider' => $data['reference'],
@@ -153,7 +153,7 @@ class InlandController extends Controller
             'status' => $status,
             'inland_type_id' => $data['type'],
             'gp_container_id' => $data['gp_container'],
-            'provider_id' => $data ['providers']
+            'provider_id' => $data['providers'],
         ]);
 
         $inland->InlandPortsSync($data['ports']);
@@ -163,22 +163,23 @@ class InlandController extends Controller
         return new InlandResource($inland);
     }
 
-        public function updateStatus($data){
-    
-            $date= date('Y-m-d');
-            $expire=date('Y-m-d', strtotime($data));
-                    
-            if($expire<=$date){
-                $status='expired';
-            }else{
-                $status='publish';
-            } 
-                    
-            return $status;
+    public function updateStatus($data)
+    {
+
+        $date = date('Y-m-d');
+        $expire = date('Y-m-d', strtotime($data));
+
+        if ($expire <= $date) {
+            $status = 'expired';
+        } else {
+            $status = 'publish';
+        }
+
+        return $status;
     }
 
     /**
-     * Render edit view 
+     * Render edit view.
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

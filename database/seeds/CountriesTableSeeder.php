@@ -4,2521 +4,2267 @@ use Illuminate\Database\Seeder;
 
 class CountriesTableSeeder extends Seeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
     public function run()
     {
-        
-
         \DB::table('countries')->delete();
-        
-        \DB::table('countries')->insert(array (
-            0 => 
-            array (
+
+        \DB::table('countries')->insert([
+            0 => [
                 'id' => 1,
                 'code' => 'AD',
                 'name' => 'Andorra',
                 'continent' => 'EU',
                 'variation' => '{"type": ["andorra", "andorra ad"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:42:18',
-            ),
-            1 => 
-            array (
+            ],
+            1 => [
                 'id' => 2,
                 'code' => 'AE',
                 'name' => 'United Arab Emirates',
                 'continent' => 'AS',
                 'variation' => '{"type": ["united arab emirates", "united arab emirates uae"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:31:58',
-            ),
-            2 => 
-            array (
+            ],
+            2 => [
                 'id' => 3,
                 'code' => 'AF',
                 'name' => 'Afghanistan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["afghanistan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            3 => 
-            array (
+            ],
+            3 => [
                 'id' => 4,
                 'code' => 'AG',
                 'name' => 'Antigua and Barbuda',
                 'continent' => 'NA',
                 'variation' => '{"type": ["antigua and barbuda"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            4 => 
-            array (
+            ],
+            4 => [
                 'id' => 5,
                 'code' => 'AI',
                 'name' => 'Anguilla',
                 'continent' => 'NA',
                 'variation' => '{"type": ["anguilla", "anguilla uk"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:21:42',
-            ),
-            5 => 
-            array (
+            ],
+            5 => [
                 'id' => 6,
                 'code' => 'AL',
                 'name' => 'Albania',
                 'continent' => 'EU',
                 'variation' => '{"type": ["albania"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            6 => 
-            array (
+            ],
+            6 => [
                 'id' => 7,
                 'code' => 'AM',
                 'name' => 'Armenia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["armenia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            7 => 
-            array (
+            ],
+            7 => [
                 'id' => 8,
                 'code' => 'AO',
                 'name' => 'Angola',
                 'continent' => 'AF',
                 'variation' => '{"type": ["angola"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            8 => 
-            array (
+            ],
+            8 => [
                 'id' => 9,
                 'code' => 'AQ',
                 'name' => 'Antarctica',
                 'continent' => 'AN',
                 'variation' => '{"type": ["antarctica"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            9 => 
-            array (
+            ],
+            9 => [
                 'id' => 10,
                 'code' => 'AR',
                 'name' => 'Argentina',
                 'continent' => 'SA',
                 'variation' => '{"type": ["argentina"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            10 => 
-            array (
+            ],
+            10 => [
                 'id' => 11,
                 'code' => 'AS',
                 'name' => 'American Samoa',
                 'continent' => 'OC',
                 'variation' => '{"type": ["american samoa"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            11 => 
-            array (
+            ],
+            11 => [
                 'id' => 12,
                 'code' => 'AT',
                 'name' => 'Austria',
                 'continent' => 'EU',
                 'variation' => '{"type": ["austria"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            12 => 
-            array (
+            ],
+            12 => [
                 'id' => 13,
                 'code' => 'AU',
                 'name' => 'Australia',
                 'continent' => 'OC',
                 'variation' => '{"type": ["australia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            13 => 
-            array (
+            ],
+            13 => [
                 'id' => 14,
                 'code' => 'AW',
                 'name' => 'Aruba',
                 'continent' => 'NA',
                 'variation' => '{"type": ["aruba", "aruba netherlands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:19:42',
-            ),
-            14 => 
-            array (
+            ],
+            14 => [
                 'id' => 15,
                 'code' => 'AZ',
                 'name' => 'Azerbaijan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["azerbaijan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            15 => 
-            array (
+            ],
+            15 => [
                 'id' => 16,
                 'code' => 'BA',
                 'name' => 'Bosnia and Herzegovina',
                 'continent' => 'EU',
                 'variation' => '{"type": ["bosnia and herzegovina"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            16 => 
-            array (
+            ],
+            16 => [
                 'id' => 17,
                 'code' => 'BB',
                 'name' => 'Barbados',
                 'continent' => 'NA',
                 'variation' => '{"type": ["barbados"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            17 => 
-            array (
+            ],
+            17 => [
                 'id' => 18,
                 'code' => 'BD',
                 'name' => 'Bangladesh',
                 'continent' => 'AS',
                 'variation' => '{"type": ["bangladesh"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            18 => 
-            array (
+            ],
+            18 => [
                 'id' => 19,
                 'code' => 'BE',
                 'name' => 'Belgium',
                 'continent' => 'EU',
                 'variation' => '{"type": ["belgium"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            19 => 
-            array (
+            ],
+            19 => [
                 'id' => 20,
                 'code' => 'BF',
                 'name' => 'Burkina Faso',
                 'continent' => 'AF',
                 'variation' => '{"type": ["burkina faso"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            20 => 
-            array (
+            ],
+            20 => [
                 'id' => 21,
                 'code' => 'BG',
                 'name' => 'Bulgaria',
                 'continent' => 'EU',
                 'variation' => '{"type": ["bulgaria", "bulgary"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:40:30',
-            ),
-            21 => 
-            array (
+            ],
+            21 => [
                 'id' => 22,
                 'code' => 'BH',
                 'name' => 'Bahrain',
                 'continent' => 'AS',
                 'variation' => '{"type": ["bahrain"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            22 => 
-            array (
+            ],
+            22 => [
                 'id' => 23,
                 'code' => 'BI',
                 'name' => 'Burundi',
                 'continent' => 'AF',
                 'variation' => '{"type": ["burundi"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            23 => 
-            array (
+            ],
+            23 => [
                 'id' => 24,
                 'code' => 'BJ',
                 'name' => 'Benin',
                 'continent' => 'AF',
                 'variation' => '{"type": ["benin", "benín"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:22:58',
-            ),
-            24 => 
-            array (
+            ],
+            24 => [
                 'id' => 25,
                 'code' => 'BL',
                 'name' => 'Saint Barthélemy',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint barthélemy", "saint barthélemy france"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:28:31',
-            ),
-            25 => 
-            array (
+            ],
+            25 => [
                 'id' => 26,
                 'code' => 'BM',
                 'name' => 'Bermuda',
                 'continent' => 'NA',
                 'variation' => '{"type": ["bermuda"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            26 => 
-            array (
+            ],
+            26 => [
                 'id' => 27,
                 'code' => 'BN',
                 'name' => 'Brunei',
                 'continent' => 'AS',
                 'variation' => '{"type": ["brunei"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            27 => 
-            array (
+            ],
+            27 => [
                 'id' => 28,
                 'code' => 'BO',
                 'name' => 'Bolivia',
                 'continent' => 'SA',
                 'variation' => '{"type": ["bolivia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            28 => 
-            array (
+            ],
+            28 => [
                 'id' => 29,
                 'code' => 'BQ',
                 'name' => 'Caribbean Netherlands',
                 'continent' => 'NA',
                 'variation' => '{"type": ["caribbean netherlands", "caribbean netherlandsnetherlands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:29:25',
-            ),
-            29 => 
-            array (
+            ],
+            29 => [
                 'id' => 30,
                 'code' => 'BR',
                 'name' => 'Brazil',
                 'continent' => 'SA',
                 'variation' => '{"type": ["brazil"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            30 => 
-            array (
+            ],
+            30 => [
                 'id' => 31,
                 'code' => 'BS',
                 'name' => 'Bahamas',
                 'continent' => 'NA',
                 'variation' => '{"type": ["bahamas"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            31 => 
-            array (
+            ],
+            31 => [
                 'id' => 32,
                 'code' => 'BT',
                 'name' => 'Bhutan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["bhutan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            32 => 
-            array (
+            ],
+            32 => [
                 'id' => 33,
                 'code' => 'BW',
                 'name' => 'Botswana',
                 'continent' => 'AF',
                 'variation' => '{"type": ["botswana", "botsuana"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:27:28',
-            ),
-            33 => 
-            array (
+            ],
+            33 => [
                 'id' => 34,
                 'code' => 'BY',
                 'name' => 'Belarus',
                 'continent' => 'EU',
                 'variation' => '{"type": ["belarus"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            34 => 
-            array (
+            ],
+            34 => [
                 'id' => 35,
                 'code' => 'BZ',
                 'name' => 'Belize',
                 'continent' => 'NA',
                 'variation' => '{"type": ["belize"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            35 => 
-            array (
+            ],
+            35 => [
                 'id' => 36,
                 'code' => 'CA',
                 'name' => 'Canada',
                 'continent' => 'NA',
                 'variation' => '{"type": ["canada"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            36 => 
-            array (
+            ],
+            36 => [
                 'id' => 37,
                 'code' => 'CC',
             'name' => 'Cocos (Keeling) Islands',
                 'continent' => 'AS',
             'variation' => '{"type": ["cocos (keeling) islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            37 => 
-            array (
+            ],
+            37 => [
                 'id' => 38,
                 'code' => 'CD',
             'name' => 'Congo (Kinshasa)',
                 'continent' => 'AF',
             'variation' => '{"type": ["congo (kinshasa)"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            38 => 
-            array (
+            ],
+            38 => [
                 'id' => 39,
                 'code' => 'CF',
                 'name' => 'Central African Republic',
                 'continent' => 'AF',
                 'variation' => '{"type": ["central african republic"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            39 => 
-            array (
+            ],
+            39 => [
                 'id' => 40,
                 'code' => 'CG',
             'name' => 'Congo (Brazzaville)',
                 'continent' => 'AF',
             'variation' => '{"type": ["congo (brazzaville)"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            40 => 
-            array (
+            ],
+            40 => [
                 'id' => 41,
                 'code' => 'CH',
                 'name' => 'Switzerland',
                 'continent' => 'EU',
                 'variation' => '{"type": ["switzerland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            41 => 
-            array (
+            ],
+            41 => [
                 'id' => 42,
                 'code' => 'CI',
                 'name' => 'Côte d\'Ivoire',
                 'continent' => 'AF',
                 'variation' => '{"type": ["côte d\'ivoire", "costa de marfil"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:23:37',
-            ),
-            42 => 
-            array (
+            ],
+            42 => [
                 'id' => 43,
                 'code' => 'CK',
                 'name' => 'Cook Islands',
                 'continent' => 'OC',
                 'variation' => '{"type": ["cook islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            43 => 
-            array (
+            ],
+            43 => [
                 'id' => 44,
                 'code' => 'CL',
                 'name' => 'Chile',
                 'continent' => 'SA',
                 'variation' => '{"type": ["chile"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            44 => 
-            array (
+            ],
+            44 => [
                 'id' => 45,
                 'code' => 'CM',
                 'name' => 'Cameroon',
                 'continent' => 'AF',
                 'variation' => '{"type": ["cameroon"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            45 => 
-            array (
+            ],
+            45 => [
                 'id' => 46,
                 'code' => 'CN',
                 'name' => 'China',
                 'continent' => 'AS',
                 'variation' => '{"type": ["china"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            46 => 
-            array (
+            ],
+            46 => [
                 'id' => 47,
                 'code' => 'CO',
                 'name' => 'Colombia',
                 'continent' => 'SA',
                 'variation' => '{"type": ["colombia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            47 => 
-            array (
+            ],
+            47 => [
                 'id' => 48,
                 'code' => 'CR',
                 'name' => 'Costa Rica',
                 'continent' => 'NA',
                 'variation' => '{"type": ["costa rica"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            48 => 
-            array (
+            ],
+            48 => [
                 'id' => 49,
                 'code' => 'CU',
                 'name' => 'Cuba',
                 'continent' => 'NA',
                 'variation' => '{"type": ["cuba"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            49 => 
-            array (
+            ],
+            49 => [
                 'id' => 50,
                 'code' => 'CV',
                 'name' => 'Cape Verde',
                 'continent' => 'AF',
                 'variation' => '{"type": ["cape verde", "cabo verde"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:23:17',
-            ),
-            50 => 
-            array (
+            ],
+            50 => [
                 'id' => 51,
                 'code' => 'CW',
                 'name' => 'Curaçao',
                 'continent' => 'NA',
                 'variation' => '{"type": ["curaçao", "curaçao netherlands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:19:28',
-            ),
-            51 => 
-            array (
+            ],
+            51 => [
                 'id' => 52,
                 'code' => 'CX',
                 'name' => 'Christmas Island',
                 'continent' => 'AS',
                 'variation' => '{"type": ["christmas island"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            52 => 
-            array (
+            ],
+            52 => [
                 'id' => 53,
                 'code' => 'CY',
                 'name' => 'Cyprus',
                 'continent' => 'AS',
                 'variation' => '{"type": ["cyprus"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            53 => 
-            array (
+            ],
+            53 => [
                 'id' => 54,
                 'code' => 'CZ',
                 'name' => 'Czechia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["czechia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            54 => 
-            array (
+            ],
+            54 => [
                 'id' => 55,
                 'code' => 'DE',
                 'name' => 'Germany',
                 'continent' => 'EU',
                 'variation' => '{"type": ["germany"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            55 => 
-            array (
+            ],
+            55 => [
                 'id' => 56,
                 'code' => 'DJ',
                 'name' => 'Djibouti',
                 'continent' => 'AF',
                 'variation' => '{"type": ["djibouti", "yibuti"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:29:03',
-            ),
-            56 => 
-            array (
+            ],
+            56 => [
                 'id' => 57,
                 'code' => 'DK',
                 'name' => 'Denmark',
                 'continent' => 'EU',
                 'variation' => '{"type": ["denmark"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            57 => 
-            array (
+            ],
+            57 => [
                 'id' => 58,
                 'code' => 'DM',
                 'name' => 'Dominica',
                 'continent' => 'NA',
                 'variation' => '{"type": ["dominica"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            58 => 
-            array (
+            ],
+            58 => [
                 'id' => 59,
                 'code' => 'DO',
                 'name' => 'Dominican Republic',
                 'continent' => 'NA',
                 'variation' => '{"type": ["dominican republic"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            59 => 
-            array (
+            ],
+            59 => [
                 'id' => 60,
                 'code' => 'DZ',
                 'name' => 'Algeria',
                 'continent' => 'AF',
                 'variation' => '{"type": ["algeria", "algiers", "argelia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:41:29',
-            ),
-            60 => 
-            array (
+            ],
+            60 => [
                 'id' => 61,
                 'code' => 'EC',
                 'name' => 'Ecuador',
                 'continent' => 'SA',
                 'variation' => '{"type": ["ecuador"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            61 => 
-            array (
+            ],
+            61 => [
                 'id' => 62,
                 'code' => 'EE',
                 'name' => 'Estonia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["estonia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            62 => 
-            array (
+            ],
+            62 => [
                 'id' => 63,
                 'code' => 'EG',
                 'name' => 'Egypt',
                 'continent' => 'AF',
                 'variation' => '{"type": ["egypt", "egipto"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:22:43',
-            ),
-            63 => 
-            array (
+            ],
+            63 => [
                 'id' => 64,
                 'code' => 'EH',
                 'name' => 'Western Sahara',
                 'continent' => 'AF',
                 'variation' => '{"type": ["western sahara"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            64 => 
-            array (
+            ],
+            64 => [
                 'id' => 65,
                 'code' => 'ER',
                 'name' => 'Eritrea',
                 'continent' => 'AF',
                 'variation' => '{"type": ["eritrea"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            65 => 
-            array (
+            ],
+            65 => [
                 'id' => 66,
                 'code' => 'ES',
                 'name' => 'Spain',
                 'continent' => 'EU',
                 'variation' => '{"type": ["spain"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            66 => 
-            array (
+            ],
+            66 => [
                 'id' => 67,
                 'code' => 'ET',
                 'name' => 'Ethiopia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["ethiopia", "etiopía"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:28:47',
-            ),
-            67 => 
-            array (
+            ],
+            67 => [
                 'id' => 68,
                 'code' => 'FI',
                 'name' => 'Finland',
                 'continent' => 'EU',
                 'variation' => '{"type": ["finland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            68 => 
-            array (
+            ],
+            68 => [
                 'id' => 69,
                 'code' => 'FJ',
                 'name' => 'Fiji',
                 'continent' => 'OC',
                 'variation' => '{"type": ["fiji"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            69 => 
-            array (
+            ],
+            69 => [
                 'id' => 70,
                 'code' => 'FK',
                 'name' => 'Falkland Islands',
                 'continent' => 'SA',
                 'variation' => '{"type": ["falkland islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            70 => 
-            array (
+            ],
+            70 => [
                 'id' => 71,
                 'code' => 'FM',
                 'name' => 'Micronesia',
                 'continent' => 'OC',
                 'variation' => '{"type": ["micronesia", "micronesia,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:32:59',
-            ),
-            71 => 
-            array (
+            ],
+            71 => [
                 'id' => 72,
                 'code' => 'FO',
                 'name' => 'Faroe Islands',
                 'continent' => 'EU',
                 'variation' => '{"type": ["faroe islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            72 => 
-            array (
+            ],
+            72 => [
                 'id' => 73,
                 'code' => 'FR',
                 'name' => 'France',
                 'continent' => 'EU',
                 'variation' => '{"type": ["france"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            73 => 
-            array (
+            ],
+            73 => [
                 'id' => 74,
                 'code' => 'GA',
                 'name' => 'Gabon',
                 'continent' => 'AF',
                 'variation' => '{"type": ["gabon"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            74 => 
-            array (
+            ],
+            74 => [
                 'id' => 75,
                 'code' => 'GB',
                 'name' => 'United Kingdom',
                 'continent' => 'EU',
                 'variation' => '{"type": ["united kingdom"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            75 => 
-            array (
+            ],
+            75 => [
                 'id' => 76,
                 'code' => 'GD',
                 'name' => 'Grenada',
                 'continent' => 'NA',
                 'variation' => '{"type": ["grenada"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            76 => 
-            array (
+            ],
+            76 => [
                 'id' => 77,
                 'code' => 'GE',
                 'name' => 'Georgia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["georgia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            77 => 
-            array (
+            ],
+            77 => [
                 'id' => 78,
                 'code' => 'GF',
                 'name' => 'French Guiana',
                 'continent' => 'SA',
                 'variation' => '{"type": ["french guiana"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            78 => 
-            array (
+            ],
+            78 => [
                 'id' => 79,
                 'code' => 'GG',
                 'name' => 'Guernsey',
                 'continent' => 'EU',
                 'variation' => '{"type": ["guernsey"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            79 => 
-            array (
+            ],
+            79 => [
                 'id' => 80,
                 'code' => 'GH',
                 'name' => 'Ghana',
                 'continent' => 'AF',
                 'variation' => '{"type": ["ghana"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            80 => 
-            array (
+            ],
+            80 => [
                 'id' => 81,
                 'code' => 'GI',
                 'name' => 'Gibraltar',
                 'continent' => 'EU',
                 'variation' => '{"type": ["gibraltar"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            81 => 
-            array (
+            ],
+            81 => [
                 'id' => 82,
                 'code' => 'GL',
                 'name' => 'Greenland',
                 'continent' => 'NA',
                 'variation' => '{"type": ["greenland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            82 => 
-            array (
+            ],
+            82 => [
                 'id' => 83,
                 'code' => 'GM',
                 'name' => 'Gambia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["gambia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            83 => 
-            array (
+            ],
+            83 => [
                 'id' => 84,
                 'code' => 'GN',
                 'name' => 'Guinea',
                 'continent' => 'AF',
                 'variation' => '{"type": ["guinea"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            84 => 
-            array (
+            ],
+            84 => [
                 'id' => 85,
                 'code' => 'GP',
                 'name' => 'Guadeloupe',
                 'continent' => 'NA',
                 'variation' => '{"type": ["guadeloupe", "guadeloupe france"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:20:34',
-            ),
-            85 => 
-            array (
+            ],
+            85 => [
                 'id' => 86,
                 'code' => 'GQ',
                 'name' => 'Equatorial Guinea',
                 'continent' => 'AF',
                 'variation' => '{"type": ["equatorial guinea"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            86 => 
-            array (
+            ],
+            86 => [
                 'id' => 87,
                 'code' => 'GR',
                 'name' => 'Greece',
                 'continent' => 'EU',
                 'variation' => '{"type": ["greece"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            87 => 
-            array (
+            ],
+            87 => [
                 'id' => 88,
                 'code' => 'GS',
                 'name' => 'South Georgia and the South Sandwich Islands',
                 'continent' => 'AN',
                 'variation' => '{"type": ["south georgia and the south sandwich islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            88 => 
-            array (
+            ],
+            88 => [
                 'id' => 89,
                 'code' => 'GT',
                 'name' => 'Guatemala',
                 'continent' => 'NA',
                 'variation' => '{"type": ["guatemala"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            89 => 
-            array (
+            ],
+            89 => [
                 'id' => 90,
                 'code' => 'GU',
                 'name' => 'Guam',
                 'continent' => 'OC',
                 'variation' => '{"type": ["guam"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            90 => 
-            array (
+            ],
+            90 => [
                 'id' => 91,
                 'code' => 'GW',
                 'name' => 'Guinea-Bissau',
                 'continent' => 'AF',
                 'variation' => '{"type": ["guinea-bissau", "guinea-bisáu"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:23:54',
-            ),
-            91 => 
-            array (
+            ],
+            91 => [
                 'id' => 92,
                 'code' => 'GY',
                 'name' => 'Guyana',
                 'continent' => 'SA',
                 'variation' => '{"type": ["guyana"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            92 => 
-            array (
+            ],
+            92 => [
                 'id' => 93,
                 'code' => 'HK',
                 'name' => 'Hong Kong',
                 'continent' => 'AS',
                 'variation' => '{"type": ["hong kong"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            93 => 
-            array (
+            ],
+            93 => [
                 'id' => 94,
                 'code' => 'HN',
                 'name' => 'Honduras',
                 'continent' => 'NA',
                 'variation' => '{"type": ["honduras"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            94 => 
-            array (
+            ],
+            94 => [
                 'id' => 95,
                 'code' => 'HR',
                 'name' => 'Croatia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["croatia", "croacia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:40:41',
-            ),
-            95 => 
-            array (
+            ],
+            95 => [
                 'id' => 96,
                 'code' => 'HT',
                 'name' => 'Haiti',
                 'continent' => 'NA',
                 'variation' => '{"type": ["haiti"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            96 => 
-            array (
+            ],
+            96 => [
                 'id' => 97,
                 'code' => 'HU',
                 'name' => 'Hungary',
                 'continent' => 'EU',
                 'variation' => '{"type": ["hungary"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            97 => 
-            array (
+            ],
+            97 => [
                 'id' => 98,
                 'code' => 'ID',
                 'name' => 'Indonesia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["indonesia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            98 => 
-            array (
+            ],
+            98 => [
                 'id' => 99,
                 'code' => 'IE',
                 'name' => 'Ireland',
                 'continent' => 'EU',
                 'variation' => '{"type": ["ireland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            99 => 
-            array (
+            ],
+            99 => [
                 'id' => 100,
                 'code' => 'IL',
                 'name' => 'Israel',
                 'continent' => 'AS',
                 'variation' => '{"type": ["israel"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            100 => 
-            array (
+            ],
+            100 => [
                 'id' => 101,
                 'code' => 'IM',
                 'name' => 'Isle of Man',
                 'continent' => 'EU',
                 'variation' => '{"type": ["isle of man"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            101 => 
-            array (
+            ],
+            101 => [
                 'id' => 102,
                 'code' => 'IN',
                 'name' => 'India',
                 'continent' => 'AS',
                 'variation' => '{"type": ["india"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            102 => 
-            array (
+            ],
+            102 => [
                 'id' => 103,
                 'code' => 'IO',
                 'name' => 'British Indian Ocean Territory',
                 'continent' => 'AS',
                 'variation' => '{"type": ["british indian ocean territory"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            103 => 
-            array (
+            ],
+            103 => [
                 'id' => 104,
                 'code' => 'IQ',
                 'name' => 'Iraq',
                 'continent' => 'AS',
                 'variation' => '{"type": ["iraq"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            104 => 
-            array (
+            ],
+            104 => [
                 'id' => 105,
                 'code' => 'IR',
                 'name' => 'Iran',
                 'continent' => 'AS',
                 'variation' => '{"type": ["iran"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            105 => 
-            array (
+            ],
+            105 => [
                 'id' => 106,
                 'code' => 'IS',
                 'name' => 'Iceland',
                 'continent' => 'EU',
                 'variation' => '{"type": ["iceland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            106 => 
-            array (
+            ],
+            106 => [
                 'id' => 107,
                 'code' => 'IT',
                 'name' => 'Italy',
                 'continent' => 'EU',
                 'variation' => '{"type": ["italy"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            107 => 
-            array (
+            ],
+            107 => [
                 'id' => 108,
                 'code' => 'JE',
                 'name' => 'Jersey',
                 'continent' => 'EU',
                 'variation' => '{"type": ["jersey"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            108 => 
-            array (
+            ],
+            108 => [
                 'id' => 109,
                 'code' => 'JM',
                 'name' => 'Jamaica',
                 'continent' => 'NA',
                 'variation' => '{"type": ["jamaica"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            109 => 
-            array (
+            ],
+            109 => [
                 'id' => 110,
                 'code' => 'JO',
                 'name' => 'Jordan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["jordan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            110 => 
-            array (
+            ],
+            110 => [
                 'id' => 111,
                 'code' => 'JP',
                 'name' => 'Japan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["japan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            111 => 
-            array (
+            ],
+            111 => [
                 'id' => 112,
                 'code' => 'KE',
                 'name' => 'Kenya',
                 'continent' => 'AF',
                 'variation' => '{"type": ["kenya", "kenia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:30:53',
-            ),
-            112 => 
-            array (
+            ],
+            112 => [
                 'id' => 113,
                 'code' => 'KG',
                 'name' => 'Kyrgyzstan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["kyrgyzstan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            113 => 
-            array (
+            ],
+            113 => [
                 'id' => 114,
                 'code' => 'KH',
                 'name' => 'Cambodia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["cambodia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            114 => 
-            array (
+            ],
+            114 => [
                 'id' => 115,
                 'code' => 'KI',
                 'name' => 'Kiribati',
                 'continent' => 'OC',
                 'variation' => '{"type": ["kiribati"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            115 => 
-            array (
+            ],
+            115 => [
                 'id' => 116,
                 'code' => 'KM',
                 'name' => 'Comoros',
                 'continent' => 'AF',
                 'variation' => '{"type": ["comoros", "comoras"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:30:09',
-            ),
-            116 => 
-            array (
+            ],
+            116 => [
                 'id' => 117,
                 'code' => 'KN',
                 'name' => 'Saint Kitts and Nevis',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint kitts and nevis"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            117 => 
-            array (
+            ],
+            117 => [
                 'id' => 118,
                 'code' => 'KP',
                 'name' => 'North Korea',
                 'continent' => 'AS',
                 'variation' => '{"type": ["north korea", "korea democratin"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:09:52',
-            ),
-            118 => 
-            array (
+            ],
+            118 => [
                 'id' => 119,
                 'code' => 'KR',
                 'name' => 'South Korea',
                 'continent' => 'AS',
                 'variation' => '{"type": ["south korea", "korea republic"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:10:15',
-            ),
-            119 => 
-            array (
+            ],
+            119 => [
                 'id' => 120,
                 'code' => 'KW',
                 'name' => 'Kuwait',
                 'continent' => 'AS',
                 'variation' => '{"type": ["kuwait"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            120 => 
-            array (
+            ],
+            120 => [
                 'id' => 121,
                 'code' => 'KY',
                 'name' => 'Cayman Islands',
                 'continent' => 'NA',
                 'variation' => '{"type": ["cayman islands", "cayman islands uk"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:20:47',
-            ),
-            121 => 
-            array (
+            ],
+            121 => [
                 'id' => 122,
                 'code' => 'KZ',
                 'name' => 'Kazakhstan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["kazakhstan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            122 => 
-            array (
+            ],
+            122 => [
                 'id' => 123,
                 'code' => 'LA',
                 'name' => 'Laos',
                 'continent' => 'AS',
                 'variation' => '{"type": ["laos"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            123 => 
-            array (
+            ],
+            123 => [
                 'id' => 124,
                 'code' => 'LB',
                 'name' => 'Lebanon',
                 'continent' => 'AS',
                 'variation' => '{"type": ["lebanon"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            124 => 
-            array (
+            ],
+            124 => [
                 'id' => 125,
                 'code' => 'LC',
                 'name' => 'Saint Lucia',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint lucia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            125 => 
-            array (
+            ],
+            125 => [
                 'id' => 126,
                 'code' => 'LI',
                 'name' => 'Liechtenstein',
                 'continent' => 'EU',
                 'variation' => '{"type": ["liechtenstein"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            126 => 
-            array (
+            ],
+            126 => [
                 'id' => 127,
                 'code' => 'LK',
                 'name' => 'Sri Lanka',
                 'continent' => 'AS',
                 'variation' => '{"type": ["sri lanka"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            127 => 
-            array (
+            ],
+            127 => [
                 'id' => 128,
                 'code' => 'LR',
                 'name' => 'Liberia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["liberia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            128 => 
-            array (
+            ],
+            128 => [
                 'id' => 129,
                 'code' => 'LS',
                 'name' => 'Lesotho',
                 'continent' => 'AF',
                 'variation' => '{"type": ["lesotho", "lesoto"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:27:59',
-            ),
-            129 => 
-            array (
+            ],
+            129 => [
                 'id' => 130,
                 'code' => 'LT',
                 'name' => 'Lithuania',
                 'continent' => 'EU',
                 'variation' => '{"type": ["lithuania"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            130 => 
-            array (
+            ],
+            130 => [
                 'id' => 131,
                 'code' => 'LU',
                 'name' => 'Luxembourg',
                 'continent' => 'EU',
                 'variation' => '{"type": ["luxembourg"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            131 => 
-            array (
+            ],
+            131 => [
                 'id' => 132,
                 'code' => 'LV',
                 'name' => 'Latvia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["latvia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            132 => 
-            array (
+            ],
+            132 => [
                 'id' => 133,
                 'code' => 'LY',
                 'name' => 'Libya',
                 'continent' => 'AF',
                 'variation' => '{"type": ["libya", "libia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:22:06',
-            ),
-            133 => 
-            array (
+            ],
+            133 => [
                 'id' => 134,
                 'code' => 'MA',
                 'name' => 'Morocco',
                 'continent' => 'AF',
                 'variation' => '{"type": ["morocco", "marruecos"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:07:19',
-            ),
-            134 => 
-            array (
+            ],
+            134 => [
                 'id' => 135,
                 'code' => 'MC',
                 'name' => 'Monaco',
                 'continent' => 'EU',
                 'variation' => '{"type": ["monaco"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            135 => 
-            array (
+            ],
+            135 => [
                 'id' => 136,
                 'code' => 'MD',
                 'name' => 'Moldova',
                 'continent' => 'EU',
                 'variation' => '{"type": ["moldova", "moldova,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:32:46',
-            ),
-            136 => 
-            array (
+            ],
+            136 => [
                 'id' => 137,
                 'code' => 'ME',
                 'name' => 'Montenegro',
                 'continent' => 'EU',
                 'variation' => '{"type": ["montenegro"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            137 => 
-            array (
+            ],
+            137 => [
                 'id' => 138,
                 'code' => 'MF',
                 'name' => 'Saint Martin',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint martin", "saint martin france"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:27:48',
-            ),
-            138 => 
-            array (
+            ],
+            138 => [
                 'id' => 139,
                 'code' => 'MG',
                 'name' => 'Madagascar',
                 'continent' => 'AF',
                 'variation' => '{"type": ["madagascar"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            139 => 
-            array (
+            ],
+            139 => [
                 'id' => 140,
                 'code' => 'MH',
                 'name' => 'Marshall Islands',
                 'continent' => 'OC',
                 'variation' => '{"type": ["marshall islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            140 => 
-            array (
+            ],
+            140 => [
                 'id' => 141,
                 'code' => 'MK',
                 'name' => 'Macedonia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["macedonia", "macedonia,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:10:27',
-            ),
-            141 => 
-            array (
+            ],
+            141 => [
                 'id' => 142,
                 'code' => 'ML',
                 'name' => 'Mali',
                 'continent' => 'AF',
                 'variation' => '{"type": ["mali"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            142 => 
-            array (
+            ],
+            142 => [
                 'id' => 143,
                 'code' => 'MM',
                 'name' => 'Burma',
                 'continent' => 'AS',
                 'variation' => '{"type": ["burma"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            143 => 
-            array (
+            ],
+            143 => [
                 'id' => 144,
                 'code' => 'MN',
                 'name' => 'Mongolia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["mongolia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            144 => 
-            array (
+            ],
+            144 => [
                 'id' => 145,
                 'code' => 'MO',
                 'name' => 'Macau',
                 'continent' => 'AS',
                 'variation' => '{"type": ["macau", "macao"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:08:03',
-            ),
-            145 => 
-            array (
+            ],
+            145 => [
                 'id' => 146,
                 'code' => 'MP',
                 'name' => 'Northern Mariana Islands',
                 'continent' => 'OC',
                 'variation' => '{"type": ["northern mariana islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            146 => 
-            array (
+            ],
+            146 => [
                 'id' => 147,
                 'code' => 'MQ',
                 'name' => 'Martinique',
                 'continent' => 'NA',
                 'variation' => '{"type": ["martinique", "martinique france"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:19:11',
-            ),
-            147 => 
-            array (
+            ],
+            147 => [
                 'id' => 148,
                 'code' => 'MR',
                 'name' => 'Mauritania',
                 'continent' => 'AF',
                 'variation' => '{"type": ["mauritania"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            148 => 
-            array (
+            ],
+            148 => [
                 'id' => 149,
                 'code' => 'MS',
                 'name' => 'Montserrat',
                 'continent' => 'NA',
                 'variation' => '{"type": ["montserrat", "montserrat uk"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:21:56',
-            ),
-            149 => 
-            array (
+            ],
+            149 => [
                 'id' => 150,
                 'code' => 'MT',
                 'name' => 'Malta',
                 'continent' => 'EU',
                 'variation' => '{"type": ["malta"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            150 => 
-            array (
+            ],
+            150 => [
                 'id' => 151,
                 'code' => 'MU',
                 'name' => 'Mauritius',
                 'continent' => 'AF',
                 'variation' => '{"type": ["mauritius", "mauricio"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:29:57',
-            ),
-            151 => 
-            array (
+            ],
+            151 => [
                 'id' => 152,
                 'code' => 'MV',
                 'name' => 'Maldives',
                 'continent' => 'AS',
                 'variation' => '{"type": ["maldives"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:29',
-            ),
-            152 => 
-            array (
+            ],
+            152 => [
                 'id' => 153,
                 'code' => 'MW',
                 'name' => 'Malawi',
                 'continent' => 'AF',
                 'variation' => '{"type": ["malawi", "malaui"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:31:27',
-            ),
-            153 => 
-            array (
+            ],
+            153 => [
                 'id' => 154,
                 'code' => 'MX',
                 'name' => 'Mexico',
                 'continent' => 'NA',
                 'variation' => '{"type": ["mexico"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            154 => 
-            array (
+            ],
+            154 => [
                 'id' => 155,
                 'code' => 'MY',
                 'name' => 'Malaysia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["malaysia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            155 => 
-            array (
+            ],
+            155 => [
                 'id' => 156,
                 'code' => 'MZ',
                 'name' => 'Mozambique',
                 'continent' => 'AF',
                 'variation' => '{"type": ["mozambique"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            156 => 
-            array (
+            ],
+            156 => [
                 'id' => 157,
                 'code' => 'NA',
                 'name' => 'Namibia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["namibia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            157 => 
-            array (
+            ],
+            157 => [
                 'id' => 158,
                 'code' => 'NC',
                 'name' => 'New Caledonia',
                 'continent' => 'OC',
                 'variation' => '{"type": ["new caledonia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            158 => 
-            array (
+            ],
+            158 => [
                 'id' => 159,
                 'code' => 'NE',
                 'name' => 'Niger',
                 'continent' => 'AF',
                 'variation' => '{"type": ["niger"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            159 => 
-            array (
+            ],
+            159 => [
                 'id' => 160,
                 'code' => 'NF',
                 'name' => 'Norfolk Island',
                 'continent' => 'OC',
                 'variation' => '{"type": ["norfolk island"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            160 => 
-            array (
+            ],
+            160 => [
                 'id' => 161,
                 'code' => 'NG',
                 'name' => 'Nigeria',
                 'continent' => 'AF',
                 'variation' => '{"type": ["nigeria"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            161 => 
-            array (
+            ],
+            161 => [
                 'id' => 162,
                 'code' => 'NI',
                 'name' => 'Nicaragua',
                 'continent' => 'NA',
                 'variation' => '{"type": ["nicaragua"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            162 => 
-            array (
+            ],
+            162 => [
                 'id' => 163,
                 'code' => 'NL',
                 'name' => 'Netherlands',
                 'continent' => 'EU',
                 'variation' => '{"type": ["netherlands", "nederland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:42:20',
-            ),
-            163 => 
-            array (
+            ],
+            163 => [
                 'id' => 164,
                 'code' => 'NO',
                 'name' => 'Norway',
                 'continent' => 'EU',
                 'variation' => '{"type": ["norway"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            164 => 
-            array (
+            ],
+            164 => [
                 'id' => 165,
                 'code' => 'NP',
                 'name' => 'Nepal',
                 'continent' => 'AS',
                 'variation' => '{"type": ["nepal"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            165 => 
-            array (
+            ],
+            165 => [
                 'id' => 166,
                 'code' => 'NR',
                 'name' => 'Nauru',
                 'continent' => 'OC',
                 'variation' => '{"type": ["nauru"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            166 => 
-            array (
+            ],
+            166 => [
                 'id' => 167,
                 'code' => 'NU',
                 'name' => 'Niue',
                 'continent' => 'OC',
                 'variation' => '{"type": ["niue"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            167 => 
-            array (
+            ],
+            167 => [
                 'id' => 168,
                 'code' => 'NZ',
                 'name' => 'New Zealand',
                 'continent' => 'OC',
                 'variation' => '{"type": ["new zealand"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            168 => 
-            array (
+            ],
+            168 => [
                 'id' => 169,
                 'code' => 'OM',
                 'name' => 'Oman',
                 'continent' => 'AS',
                 'variation' => '{"type": ["oman"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            169 => 
-            array (
+            ],
+            169 => [
                 'id' => 170,
                 'code' => 'PA',
                 'name' => 'Panama',
                 'continent' => 'NA',
                 'variation' => '{"type": ["panama"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            170 => 
-            array (
+            ],
+            170 => [
                 'id' => 171,
                 'code' => 'PE',
                 'name' => 'Perú',
                 'continent' => 'SA',
                 'variation' => '{"type": ["perú", "peru"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:07:51',
-            ),
-            171 => 
-            array (
+            ],
+            171 => [
                 'id' => 172,
                 'code' => 'PF',
                 'name' => 'French Polynesia',
                 'continent' => 'OC',
                 'variation' => '{"type": ["french polynesia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            172 => 
-            array (
+            ],
+            172 => [
                 'id' => 173,
                 'code' => 'PG',
                 'name' => 'Papua New Guinea',
                 'continent' => 'OC',
                 'variation' => '{"type": ["papua new guinea"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            173 => 
-            array (
+            ],
+            173 => [
                 'id' => 174,
                 'code' => 'PH',
                 'name' => 'Philippines',
                 'continent' => 'AS',
                 'variation' => '{"type": ["philippines"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            174 => 
-            array (
+            ],
+            174 => [
                 'id' => 175,
                 'code' => 'PK',
                 'name' => 'Pakistan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["pakistan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            175 => 
-            array (
+            ],
+            175 => [
                 'id' => 176,
                 'code' => 'PL',
                 'name' => 'Poland',
                 'continent' => 'EU',
                 'variation' => '{"type": ["poland"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            176 => 
-            array (
+            ],
+            176 => [
                 'id' => 177,
                 'code' => 'PM',
                 'name' => 'Saint Pierre and Miquelon',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint pierre and miquelon"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            177 => 
-            array (
+            ],
+            177 => [
                 'id' => 178,
                 'code' => 'PN',
                 'name' => 'Pitcairn',
                 'continent' => 'OC',
                 'variation' => '{"type": ["pitcairn"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            178 => 
-            array (
+            ],
+            178 => [
                 'id' => 179,
                 'code' => 'PR',
                 'name' => 'Puerto Rico',
                 'continent' => 'NA',
                 'variation' => '{"type": ["puerto rico", "puerto rico us"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:18:55',
-            ),
-            179 => 
-            array (
+            ],
+            179 => [
                 'id' => 180,
                 'code' => 'PS',
                 'name' => 'Palestinian Territory',
                 'continent' => 'AS',
                 'variation' => '{"type": ["palestinian territory", "palestine", "palestine,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:33:14',
-            ),
-            180 => 
-            array (
+            ],
+            180 => [
                 'id' => 181,
                 'code' => 'PT',
                 'name' => 'Portugal',
                 'continent' => 'EU',
                 'variation' => '{"type": ["portugal"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            181 => 
-            array (
+            ],
+            181 => [
                 'id' => 182,
                 'code' => 'PW',
                 'name' => 'Palau',
                 'continent' => 'OC',
                 'variation' => '{"type": ["palau"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            182 => 
-            array (
+            ],
+            182 => [
                 'id' => 183,
                 'code' => 'PY',
                 'name' => 'Paraguay',
                 'continent' => 'SA',
                 'variation' => '{"type": ["paraguay"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            183 => 
-            array (
+            ],
+            183 => [
                 'id' => 184,
                 'code' => 'QA',
                 'name' => 'Qatar',
                 'continent' => 'AS',
                 'variation' => '{"type": ["qatar"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            184 => 
-            array (
+            ],
+            184 => [
                 'id' => 185,
                 'code' => 'RE',
                 'name' => 'Réunion',
                 'continent' => 'AF',
                 'variation' => '{"type": ["réunion"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            185 => 
-            array (
+            ],
+            185 => [
                 'id' => 186,
                 'code' => 'RO',
                 'name' => 'Romania',
                 'continent' => 'EU',
                 'variation' => '{"type": ["romania"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            186 => 
-            array (
+            ],
+            186 => [
                 'id' => 187,
                 'code' => 'RS',
                 'name' => 'Serbia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["serbia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            187 => 
-            array (
+            ],
+            187 => [
                 'id' => 188,
                 'code' => 'RU',
                 'name' => 'Russia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["russia", "russian"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:10:45',
-            ),
-            188 => 
-            array (
+            ],
+            188 => [
                 'id' => 189,
                 'code' => 'RW',
                 'name' => 'Rwanda',
                 'continent' => 'AF',
                 'variation' => '{"type": ["rwanda", "ruanda"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:30:43',
-            ),
-            189 => 
-            array (
+            ],
+            189 => [
                 'id' => 190,
                 'code' => 'SA',
                 'name' => 'Saudi Arabia',
                 'continent' => 'AS',
                 'variation' => '{"type": ["saudi arabia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            190 => 
-            array (
+            ],
+            190 => [
                 'id' => 191,
                 'code' => 'SB',
                 'name' => 'Solomon Islands',
                 'continent' => 'OC',
                 'variation' => '{"type": ["solomon islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            191 => 
-            array (
+            ],
+            191 => [
                 'id' => 192,
                 'code' => 'SC',
                 'name' => 'Seychelles',
                 'continent' => 'AF',
                 'variation' => '{"type": ["seychelles"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            192 => 
-            array (
+            ],
+            192 => [
                 'id' => 193,
                 'code' => 'SD',
                 'name' => 'Sudan',
                 'continent' => 'AF',
                 'variation' => '{"type": ["sudan", "sudán"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:41:59',
-            ),
-            193 => 
-            array (
+            ],
+            193 => [
                 'id' => 194,
                 'code' => 'SE',
                 'name' => 'Sweden',
                 'continent' => 'EU',
                 'variation' => '{"type": ["sweden"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            194 => 
-            array (
+            ],
+            194 => [
                 'id' => 195,
                 'code' => 'SG',
                 'name' => 'Singapore',
                 'continent' => 'AS',
                 'variation' => '{"type": ["singapore"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            195 => 
-            array (
+            ],
+            195 => [
                 'id' => 196,
                 'code' => 'SH',
                 'name' => 'Saint Helena',
                 'continent' => 'AF',
                 'variation' => '{"type": ["saint helena"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            196 => 
-            array (
+            ],
+            196 => [
                 'id' => 197,
                 'code' => 'SI',
                 'name' => 'Slovenia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["slovenia", "eslovenia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:40:16',
-            ),
-            197 => 
-            array (
+            ],
+            197 => [
                 'id' => 198,
                 'code' => 'SK',
                 'name' => 'Slovakia',
                 'continent' => 'EU',
                 'variation' => '{"type": ["slovakia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            198 => 
-            array (
+            ],
+            198 => [
                 'id' => 199,
                 'code' => 'SL',
                 'name' => 'Sierra Leone',
                 'continent' => 'AF',
                 'variation' => '{"type": ["sierra leone", "sierra leona"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:24:05',
-            ),
-            199 => 
-            array (
+            ],
+            199 => [
                 'id' => 200,
                 'code' => 'SM',
                 'name' => 'San Marino',
                 'continent' => 'EU',
                 'variation' => '{"type": ["san marino"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            200 => 
-            array (
+            ],
+            200 => [
                 'id' => 201,
                 'code' => 'SN',
                 'name' => 'Senegal',
                 'continent' => 'AF',
                 'variation' => '{"type": ["senegal"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            201 => 
-            array (
+            ],
+            201 => [
                 'id' => 202,
                 'code' => 'SO',
                 'name' => 'Somalia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["somalia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            202 => 
-            array (
+            ],
+            202 => [
                 'id' => 203,
                 'code' => 'SR',
                 'name' => 'Suriname',
                 'continent' => 'SA',
                 'variation' => '{"type": ["suriname"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            203 => 
-            array (
+            ],
+            203 => [
                 'id' => 204,
                 'code' => 'SS',
                 'name' => 'South Sudan',
                 'continent' => 'AF',
                 'variation' => '{"type": ["south sudan", "sudán del sur"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:31:11',
-            ),
-            204 => 
-            array (
+            ],
+            204 => [
                 'id' => 205,
                 'code' => 'ST',
                 'name' => 'São Tomé and Principe',
                 'continent' => 'AF',
                 'variation' => '{"type": ["são tomé and principe", "sao tome and principe"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:11:06',
-            ),
-            205 => 
-            array (
+            ],
+            205 => [
                 'id' => 206,
                 'code' => 'SV',
                 'name' => 'El Salvador',
                 'continent' => 'NA',
                 'variation' => '{"type": ["el salvador"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            206 => 
-            array (
+            ],
+            206 => [
                 'id' => 207,
                 'code' => 'SX',
                 'name' => 'Sint Maarten',
                 'continent' => 'NA',
                 'variation' => '{"type": ["sint maarten", "saint maritn", "sint maarten netherlands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:21:02',
-            ),
-            207 => 
-            array (
+            ],
+            207 => [
                 'id' => 208,
                 'code' => 'SY',
                 'name' => 'Syria',
                 'continent' => 'AS',
                 'variation' => '{"type": ["syria"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            208 => 
-            array (
+            ],
+            208 => [
                 'id' => 209,
                 'code' => 'SZ',
                 'name' => 'Swaziland',
                 'continent' => 'AF',
                 'variation' => '{"type": ["swaziland", "suazilandia", "eswatini"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:33:48',
-            ),
-            209 => 
-            array (
+            ],
+            209 => [
                 'id' => 210,
                 'code' => 'TC',
                 'name' => 'Turks and Caicos Islands',
                 'continent' => 'NA',
                 'variation' => '{"type": ["turks and caicos islands", "turks and caicos islands uk"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:21:27',
-            ),
-            210 => 
-            array (
+            ],
+            210 => [
                 'id' => 211,
                 'code' => 'TD',
                 'name' => 'Chad',
                 'continent' => 'AF',
                 'variation' => '{"type": ["chad"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            211 => 
-            array (
+            ],
+            211 => [
                 'id' => 212,
                 'code' => 'TF',
                 'name' => 'French Southern Territories',
                 'continent' => 'AN',
                 'variation' => '{"type": ["french southern territories"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            212 => 
-            array (
+            ],
+            212 => [
                 'id' => 213,
                 'code' => 'TG',
                 'name' => 'Togo',
                 'continent' => 'AF',
                 'variation' => '{"type": ["togo"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            213 => 
-            array (
+            ],
+            213 => [
                 'id' => 214,
                 'code' => 'TH',
                 'name' => 'Thailand',
                 'continent' => 'AS',
                 'variation' => '{"type": ["thailand"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            214 => 
-            array (
+            ],
+            214 => [
                 'id' => 215,
                 'code' => 'TJ',
                 'name' => 'Tajikistan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["tajikistan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            215 => 
-            array (
+            ],
+            215 => [
                 'id' => 216,
                 'code' => 'TK',
                 'name' => 'Tokelau',
                 'continent' => 'OC',
                 'variation' => '{"type": ["tokelau"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            216 => 
-            array (
+            ],
+            216 => [
                 'id' => 217,
                 'code' => 'TL',
                 'name' => 'Timor-Leste',
                 'continent' => 'AS',
                 'variation' => '{"type": ["timor-leste"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            217 => 
-            array (
+            ],
+            217 => [
                 'id' => 218,
                 'code' => 'TM',
                 'name' => 'Turkmenistan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["turkmenistan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            218 => 
-            array (
+            ],
+            218 => [
                 'id' => 219,
                 'code' => 'TN',
                 'name' => 'Tunisia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["tunisia", "tunez", "túnez"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 08:41:43',
-            ),
-            219 => 
-            array (
+            ],
+            219 => [
                 'id' => 220,
                 'code' => 'TO',
                 'name' => 'Tonga',
                 'continent' => 'OC',
                 'variation' => '{"type": ["tonga"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            220 => 
-            array (
+            ],
+            220 => [
                 'id' => 221,
                 'code' => 'TR',
                 'name' => 'Turkey',
                 'continent' => 'AS',
                 'variation' => '{"type": ["turkey"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            221 => 
-            array (
+            ],
+            221 => [
                 'id' => 222,
                 'code' => 'TT',
                 'name' => 'Trinidad and Tobago',
                 'continent' => 'NA',
                 'variation' => '{"type": ["trinidad and tobago", "trinidad y tobago"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:08:37',
-            ),
-            222 => 
-            array (
+            ],
+            222 => [
                 'id' => 223,
                 'code' => 'TV',
                 'name' => 'Tuvalu',
                 'continent' => 'OC',
                 'variation' => '{"type": ["tuvalu"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            223 => 
-            array (
+            ],
+            223 => [
                 'id' => 224,
                 'code' => 'TW',
                 'name' => 'Taiwan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["taiwan", "taiwan,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:08:56',
-            ),
-            224 => 
-            array (
+            ],
+            224 => [
                 'id' => 225,
                 'code' => 'TZ',
                 'name' => 'Tanzania',
                 'continent' => 'AF',
                 'variation' => '{"type": ["tanzania", "tanzania,"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-02 06:08:47',
-            ),
-            225 => 
-            array (
+            ],
+            225 => [
                 'id' => 226,
                 'code' => 'UA',
                 'name' => 'Ukraine',
                 'continent' => 'EU',
                 'variation' => '{"type": ["ukraine"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            226 => 
-            array (
+            ],
+            226 => [
                 'id' => 227,
                 'code' => 'UG',
                 'name' => 'Uganda',
                 'continent' => 'AF',
                 'variation' => '{"type": ["uganda"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            227 => 
-            array (
+            ],
+            227 => [
                 'id' => 228,
                 'code' => 'UM',
                 'name' => 'United States Minor Outlying Islands',
                 'continent' => 'OC',
                 'variation' => '{"type": ["united states minor outlying islands"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            228 => 
-            array (
+            ],
+            228 => [
                 'id' => 229,
                 'code' => 'US',
                 'name' => 'United States',
                 'continent' => 'NA',
                 'variation' => '{"type": ["united states"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            229 => 
-            array (
+            ],
+            229 => [
                 'id' => 230,
                 'code' => 'UY',
                 'name' => 'Uruguay',
                 'continent' => 'SA',
                 'variation' => '{"type": ["uruguay"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            230 => 
-            array (
+            ],
+            230 => [
                 'id' => 231,
                 'code' => 'UZ',
                 'name' => 'Uzbekistan',
                 'continent' => 'AS',
                 'variation' => '{"type": ["uzbekistan"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            231 => 
-            array (
+            ],
+            231 => [
                 'id' => 232,
                 'code' => 'VA',
                 'name' => 'Vatican City',
                 'continent' => 'EU',
                 'variation' => '{"type": ["vatican city"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            232 => 
-            array (
+            ],
+            232 => [
                 'id' => 233,
                 'code' => 'VC',
                 'name' => 'Saint Vincent and the Grenadines',
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint vincent and the grenadines"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            233 => 
-            array (
+            ],
+            233 => [
                 'id' => 234,
                 'code' => 'VE',
                 'name' => 'Venezuela',
                 'continent' => 'SA',
                 'variation' => '{"type": ["venezuela"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            234 => 
-            array (
+            ],
+            234 => [
                 'id' => 235,
                 'code' => 'VG',
                 'name' => 'British Virgin Islands',
                 'continent' => 'NA',
                 'variation' => '{"type": ["british virgin islands", "virgin island british", "british virgin islands uk"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:22:29',
-            ),
-            235 => 
-            array (
+            ],
+            235 => [
                 'id' => 236,
                 'code' => 'VI',
                 'name' => 'U.S. Virgin Islands',
                 'continent' => 'NA',
                 'variation' => '{"type": ["u.s. virgin islands", "virgin island us", "united states virgin islandsus"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:20:08',
-            ),
-            236 => 
-            array (
+            ],
+            236 => [
                 'id' => 237,
                 'code' => 'VN',
                 'name' => 'Vietnam',
                 'continent' => 'AS',
                 'variation' => '{"type": ["vietnam"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            237 => 
-            array (
+            ],
+            237 => [
                 'id' => 238,
                 'code' => 'VU',
                 'name' => 'Vanuatu',
                 'continent' => 'OC',
                 'variation' => '{"type": ["vanuatu"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            238 => 
-            array (
+            ],
+            238 => [
                 'id' => 239,
                 'code' => 'WF',
                 'name' => 'Wallis and Futuna',
                 'continent' => 'OC',
                 'variation' => '{"type": ["wallis and futuna"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            239 => 
-            array (
+            ],
+            239 => [
                 'id' => 240,
                 'code' => 'WS',
                 'name' => 'Samoa',
                 'continent' => 'OC',
                 'variation' => '{"type": ["samoa"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            240 => 
-            array (
+            ],
+            240 => [
                 'id' => 241,
                 'code' => 'XK',
                 'name' => 'Kosovo',
                 'continent' => 'EU',
                 'variation' => '{"type": ["kosovo"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            241 => 
-            array (
+            ],
+            241 => [
                 'id' => 242,
                 'code' => 'YE',
                 'name' => 'Yemen',
                 'continent' => 'AS',
                 'variation' => '{"type": ["yemen"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            242 => 
-            array (
+            ],
+            242 => [
                 'id' => 243,
                 'code' => 'YT',
                 'name' => 'Mayotte',
                 'continent' => 'AF',
                 'variation' => '{"type": ["mayotte"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            243 => 
-            array (
+            ],
+            243 => [
                 'id' => 244,
                 'code' => 'ZA',
                 'name' => 'South Africa',
                 'continent' => 'AF',
                 'variation' => '{"type": ["south africa"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            244 => 
-            array (
+            ],
+            244 => [
                 'id' => 245,
                 'code' => 'ZM',
                 'name' => 'Zambia',
                 'continent' => 'AF',
                 'variation' => '{"type": ["zambia"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            245 => 
-            array (
+            ],
+            245 => [
                 'id' => 246,
                 'code' => 'ZW',
                 'name' => 'Zimbabwe',
                 'continent' => 'AF',
                 'variation' => '{"type": ["zimbabwe", "zimbabue"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:31:42',
-            ),
-            246 => 
-            array (
+            ],
+            246 => [
                 'id' => 247,
                 'code' => 'ZZ',
                 'name' => 'Unknown or unassigned country',
                 'continent' => 'AF',
                 'variation' => '{"type": ["unknown or unassigned country"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            247 => 
-            array (
+            ],
+            247 => [
                 'id' => 248,
                 'code' => 'PPP',
                 'name' => 'No Existe',
                 'continent' => 'N/A',
                 'variation' => '{"type": ["no existe"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            248 => 
-            array (
+            ],
+            248 => [
                 'id' => 249,
                 'code' => 'MM',
                 'name' => 'Myanmar',
                 'continent' => 'Asia',
                 'variation' => '{"type": ["myanmar", "myanmar formerly burma"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-04-03 08:32:14',
-            ),
-            249 => 
-            array (
+            ],
+            249 => [
                 'id' => 250,
                 'code' => 'ALL',
                 'name' => 'ALL',
                 'continent' => 'ALL',
                 'variation' => '{"type": ["all"]}',
-                'created_at' => NULL,
+                'created_at' => null,
                 'updated_at' => '2019-03-19 16:40:30',
-            ),
-            250 => 
-            array (
+            ],
+            250 => [
                 'id' => 251,
                 'code' => 'No Aplica',
                 'name' => 'No Aplica',
@@ -2526,9 +2272,7 @@ class CountriesTableSeeder extends Seeder
                 'variation' => '{"type": ["no aplica"]}',
                 'created_at' => '2019-04-10 15:10:24',
                 'updated_at' => '2019-04-10 15:10:24',
-            ),
-        ));
-        
-        
+            ],
+        ]);
     }
 }

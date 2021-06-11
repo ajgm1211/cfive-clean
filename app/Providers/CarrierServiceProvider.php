@@ -23,6 +23,6 @@ class CarrierServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/HelperCarriers.php';
+        require_once app_path().'/Helpers/HelperCarriers.php';
     }
 }

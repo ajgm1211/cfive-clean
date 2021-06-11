@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddFailCompaniesTable extends Migration
 {
@@ -17,7 +17,7 @@ class AddFailCompaniesTable extends Migration
             $table->increments('id');
             $table->string('business_name');
             $table->string('phone');
-            $table->string('address',200)->nullable();
+            $table->string('address', 200)->nullable();
             $table->string('email');
             $table->string('tax_number')->nullable();
             $table->integer('associated_quotes')->nullable();

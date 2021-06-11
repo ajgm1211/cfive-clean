@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddNewcontractrequestTable extends Migration
 {
@@ -20,7 +20,7 @@ class AddNewcontractrequestTable extends Migration
             $table->string('validation');
             $table->integer('company_user_id')->unsigned();
             $table->string('namefile');
-            $table->enum('status',['Pending','Processing','Done'])->default('Pending');
+            $table->enum('status', ['Pending', 'Processing', 'Done'])->default('Pending');
             $table->integer('user_id')->unsigned();
             $table->date('created');
             $table->json('type');
