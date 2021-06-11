@@ -678,4 +678,129 @@ export default {
             return api.call('post',`/api/search/downloadContract`, data);
         },
     },
+    contracts_lcl: {
+        list(params, callback, route) {
+
+            api.call('get', '/api/v2/contractslcl', { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(data, route) {
+            return api.call('post', `/api/v2/contractslcl/store`, data);
+        },
+        update(id, data, route) {
+            return api.call('post', `/api/v2/contractslcl/${id}/update`, data);
+        },
+        retrieve(id) {
+            return api.call('get', `/api/v2/contractslcl/${id}`, {});
+        },
+        duplicate(id, data) {
+            return api.call('post', `/api/v2/contractslcl/${id}/duplicate`, data);
+        },
+        delete(id) {
+            return api.call('delete', `/api/v2/contractslcl/${id}/destroy`, {});
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/contractslcl/destroyAll`, { ids: ids });
+        },
+        getfiles(id) {
+            return api.call('get', `/api/v2/contractslcl/${id}/files`, {});
+        },
+        removefile(id, data) {
+            return api.call('post', `/api/v2/contractslcl/${id}/removefile`, data);
+        },
+        getRequestStatus(id) {
+            return api.call('get', `/api/v2/contractslcl/${id}/request/status`, {});
+        }
+    },
+    oceanfreightslcl: {
+        list(params, callback, route) {
+
+            let contract_id = route.params.id;
+
+            api.call('get', `/api/v2/contractslcl/${contract_id}/ocean_freight`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/ocean_freight/store`, data);
+        },
+        update(id, data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/ocean_freight/${id}/update`, data);
+        },
+        delete(id) {
+            return api.call('delete', `/api/v2/contractslcl/ocean_freight/${id}/destroy/`, {});
+        },
+        duplicate(id, data) {
+            return api.call('post', `/api/v2/contractslcl/ocean_freight/${id}/duplicate`, data);
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/contractslcl/ocean_freight/destroyAll`, { ids: ids });
+        },
+        massiveChange(data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/ocean_freight/massiveContainerChange`, data);
+        },
+        massiveChangeHarborOrig(data, route) {
+            let contract_id = route.params.id;
+
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/ocean_freight/massiveHarborChange`, data);
+        },
+        massiveChangeHarborDest(data, route) {
+            let contract_id = route.params.id;
+
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/ocean_freight/massiveHarborChangeDest`, data);
+        },
+    },
+    surchargeslcl: {
+        list(params, callback, route) {
+
+            let contract_id = route.params.id;
+
+            api.call('get', `/api/v2/contractslcl/${contract_id}/localcharges`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(data, route) {
+            let contract_id = route.params.id;
+
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/localcharge/store`, data);
+        },
+        update(id, data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/localcharge/${id}/update`, data);
+        },
+        delete(id) {
+            return api.call('delete', `/api/v2/contractslcl/localcharge/${id}/destroy`, {});
+        },
+        duplicate(id, data) {
+            return api.call('post', `/api/v2/contractslcl/localcharge/${id}/duplicate`, data);
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/contractslcl/localcharge/destroyAll`, { ids: ids });
+        }
+    },
+    remarks_lcl: {
+        create(data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/remarks`, data);
+        },
+    },
+    restrictions_lcl: {
+        create(data, route) {
+            let contract_id = route.params.id;
+            return api.call('post', `/api/v2/contractslcl/${contract_id}/restrictions`, data);
+        },
+    },
 };

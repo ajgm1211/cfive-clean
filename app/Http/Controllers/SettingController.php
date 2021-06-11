@@ -142,6 +142,11 @@ class SettingController extends Controller
             if ($file != '') {
                 $company->logo = $filepath;
             }
+            $options=[
+                'api_providers'=> [],
+                'company_address_pdf'=> 1
+            ];
+            $company->options=$options;
             $company->save();
 
             User::where('id', \Auth::id())->update(['company_user_id' => $company->id]);

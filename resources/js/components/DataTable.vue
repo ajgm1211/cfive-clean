@@ -193,6 +193,7 @@
                                 :disabled="item.disabled"
                                 :id="key"
                                 @change="cleanInput(key)"
+                                @keypress="isNumber($event)"
                             >
                             </b-form-input>
                             <span
