@@ -20,6 +20,7 @@ use App\Currency;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
+use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
 use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
@@ -39,6 +40,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
+use App\ViewQuoteV2;
 
 class QuotationController extends Controller
 {
@@ -51,9 +53,9 @@ class QuotationController extends Controller
 
     function list(Request $request)
     {
-        $results = QuoteV2::filterByCurrentCompany()->filter($request);
-
-        return QuotationResource::collection($results);
+        $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+        
+        return QuotationListResource::collection($results);
     }
 
     public function data(Request $request)
