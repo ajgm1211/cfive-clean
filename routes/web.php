@@ -59,7 +59,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('info', 'UsersController@show')->name('user.info');
-    Route::post('update/{id}','UsersController@UpdateUser')->name('user.update');
+    Route::post('update/{id}', 'UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
     Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
@@ -194,7 +194,6 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
     Route::post('Store-duplicated-FromRq/contract-fcl/{id}', 'ContractsController@duplicatedContractFromRequestStore')->name('contract.duplicated.from.request.store');
     Route::get('duplicatedOC/contract-fcl/{id}/{request_id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth', 'role:administrator|data_entry']);
-
 });
 
 Route::prefix('Requests')->group(function () {
@@ -624,7 +623,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
     Route::post('store', 'SettingController@store_d')->name('delegation.store');
     Route::get('edit/{id}', 'SettingController@edit_d')->name('settings.edit');
-    Route::put('update','SettingController@update_d')->name('settings.updateD');
+    Route::put('update', 'SettingController@update_d')->name('settings.updateD');
     Route::get('delete/{id}', 'SettingController@destroy')->name('settings.delete');
     Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
@@ -1023,11 +1022,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('harbor/search', 'HarborController@search')->name('harbor.search');
     /* Contracts V2 view routes **/
     Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
+    Route::get('api/contractslcl', 'ContractLclController@index')->name('new.contracts.lcl.index');
     Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit')->middleware('check_company:contract');
+    Route::get('api/contractslcl/{contractlcl}/edit', 'ContractLclController@edit')->name('new.contracts.edit');
     /* End Contracts routes view **/
 
     /* Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+    Route::get('api/inlands/{id}/location', 'InlandController@location')->name('inlands.location');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
@@ -1163,7 +1165,7 @@ Route::group(['middleware' => ['auth']], function () {
  *****************************************************************************************/
 
 Route::group(['prefix' => 'api/v2/contracts'], function () {
-    /* API Contracts endpoint (Pending to check) **/
+    /* API Contracts endpoint **/
     Route::get('', 'ContractController@list');
     Route::get('data', 'ContractController@data');
     Route::get('{contract}/surcharge_data', 'ContractController@surcharge_data');
@@ -1177,7 +1179,7 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('{contract}/removefile', 'ContractController@removefile')->middleware('check_company:contract');
     Route::get('{contract}/request/status', 'ContractController@getRequestStatus')->middleware('check_company:contract');
 
-    /* End Contracts endpoint (Pending to check) **/
+    /* End Contracts endpoint **/
 
     /* API Contracts Ocean Freights EndPoints **/
     Route::get('{contract}/ocean_freight', 'OceanFreightController@list')->middleware('check_company:contract');
@@ -1216,6 +1218,58 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     /** Add Contract Search blade  */
     Route::post('storeSearch', 'ContractController@storeContractSearch')->name('search-add.contract');
     /** End Contract **/
+});
+
+Route::group(['prefix' => 'api/v2/contractslcl'], function () {
+    /* API Contracts endpoint **/
+    Route::get('', 'ContractLclController@list');
+    Route::get('data', 'ContractLclController@data');
+    Route::get('{contract}/surcharge_data', 'ContractLclController@surcharge_data');
+    Route::post('store', 'ContractLclController@store');
+    Route::get('{contract}', 'ContractLclController@retrieve')->middleware('check_company:contract');
+    Route::post('{contract}/update', 'ContractLclController@update')->middleware('check_company:contract');
+    Route::post('{contract}/duplicate', 'ContractLclController@duplicate')->middleware('check_company:contract');
+    Route::delete('{contract}/destroy', 'ContractLclController@destroy')->middleware('check_company:contract');
+    Route::post('destroyAll', 'ContractLclController@destroyAll');
+    Route::get('{contract}/files', 'ContractLclController@getFiles')->middleware('check_company:contract');
+    Route::post('{contract}/removefile', 'ContractLclController@removefile')->middleware('check_company:contract');
+    Route::get('{contract}/request/status', 'ContractLclController@getRequestStatus')->middleware('check_company:contract');
+
+    /* End Contracts endpoint **/
+
+    /* API Contracts Ocean Freights EndPoints **/
+    Route::get('{contract}/ocean_freight', 'OceanFreightLclController@list');
+    Route::post('{contract}/ocean_freight/store', 'OceanFreightLclController@store');
+    Route::post('{contract}/ocean_freight/{rate}/update', 'OceanFreightLclController@update');
+    Route::get('{contract}/ocean_freight/{rate}', 'OceanFreightLclController@retrieve');
+    Route::post('ocean_freight/{rate}/duplicate', 'OceanFreightLclController@duplicate');
+    Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightLclController@destroy');
+    Route::post('ocean_freight/destroyAll', 'OceanFreightLclController@destroyAll');
+    Route::post('{contract}/ocean_freight/massiveContainerChange', 'OceanFreightLclController@massiveContainerChange');
+    Route::post('{contract}/ocean_freight/massiveHarborChange', 'OceanFreightLclController@massiveHarborChange');
+    Route::post('{contract}/ocean_freight/massiveHarborChangeDest', 'OceanFreightLclController@massiveHarborChangeDest');
+    /* End API Contracts Ocean Freights EndPoints **/
+
+    /* API Contracts LocalCharge EndPoints **/
+    Route::get('{contract}/localcharges', 'LocalChargeLclController@list')->middleware('check_company:contract');
+    Route::post('{contract}/localcharge/store', 'LocalChargeLclController@store')->middleware('check_company:contract');
+    Route::post('{contract}/localcharge/{localcharge}/update', 'LocalChargeLclController@update')->middleware('check_company:contract');
+    Route::get('{contract}/localcharge/{localcharge}', 'LocalChargeLclController@retrieve')->middleware('check_company:contract');
+    Route::post('localcharge/{localcharge}/duplicate', 'LocalChargeLclController@duplicate');
+    Route::delete('localcharge/{localcharge}/destroy', 'LocalChargeLclController@destroy');
+    Route::post('localcharge/destroyAll', 'LocalChargeLclController@destroyAll');
+    /* End Contracts V2 routes **/
+
+    /* API Contracts Restrictions EndPoints **/
+    Route::post('{contract}/restrictions', 'ContractLclController@updateRestrictions')->middleware('check_company:contract');
+    /** End Contract **/
+
+    /** API Contracts Remarks EndPoints **/
+    Route::post('{contract}/remarks', 'ContractLclController@updateRemarks')->middleware('check_company:contract');
+    /* End Contract **/
+
+    /* API Contracts Remarks EndPoints **/
+    Route::post('{contract}/storeMedia', 'ContractLclController@storeMedia')->middleware('check_company:contract');
 });
 
 /* Inland V2 routes **/
@@ -1362,5 +1416,4 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom');
-
 });
