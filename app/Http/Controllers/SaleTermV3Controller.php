@@ -72,6 +72,7 @@ class SaleTermV3Controller extends Controller
             'currencies' => $currencies,
             'calculation_types' => $calculation_types,
             'sale_term_codes' => $sale_term_codes,
+            'containers' => '40DV',
         ];
 
 
