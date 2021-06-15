@@ -26,7 +26,7 @@ class ContractLclResource extends JsonResource
             'validity' => $this->validity,
             'expire' => $this->expire,
             'created_at' => date('Y-m-d H:m:s', strtotime($this->created_at)),
-            'remarks' => $this->remarks ? $this->remarks : '',
+            'remarks' => $this->comments ? $this->comments : '',
             'carriers' => $this->carriers->pluck('carrier'),
             'restrictions' => [
                 'companies' => $this->company_restriction,

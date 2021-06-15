@@ -1433,7 +1433,7 @@ export default {
             dropzoneOptions: {
                 url: "/",
                 thumbnailWidth: 150,
-                maxFilesize: 0.5,
+                maxFilesize: 10,
                 headers: {
                     "X-CSRF-TOKEN": document.head.querySelector(
                         "[name=csrf-token]"
@@ -1501,6 +1501,7 @@ export default {
             stepTwo: false,
             stepThree: false,
             stepFour: false,
+            stepFive: false,
             invalidInput: false,
             invalidSurcharger: false,
             valueEq: "",
@@ -1869,7 +1870,6 @@ export default {
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
-                    this.allCarriers = false;
                     component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {

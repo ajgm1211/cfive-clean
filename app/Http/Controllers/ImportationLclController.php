@@ -877,8 +877,14 @@ class ImportationLclController extends Controller
                 \Storage::disk('LclImport')->delete($requestobj['FileName']);
             });
 
+        $Ncontract = NewContractRequestLcl::where('contract_id',$request['Contract_id'])->first();
+        if(!empty($Ncontract)){
+            $Ncontract->status = 'Review';
+            $Ncontract->save();
+        }
+        
         $contract = ContractLcl::find($request['Contract_id']);
-        $contract->status = 'publish';
+        $contract->status = 'incomplete';
         $contract->update();
 
         $countfailrates = FailRateLcl::where('contractlcl_id', '=', $request['Contract_id'])->count();
@@ -1605,6 +1611,10 @@ class ImportationLclController extends Controller
         $extObj = new \SplFileInfo($account->namefile);
         $ext = $extObj->getExtension();
         $name = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
+        $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
+        $name = utf8_decode($name);
+        $name = strtr($name, utf8_decode($originales), $modificadas);
         try {
             return Storage::disk('s3_upload')->download('Account/LCL/'.$account->namefile, $name);
         } catch (\Exception $e) {

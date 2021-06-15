@@ -87,11 +87,11 @@ class SearchApiController extends Controller
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
-        $carriers = Carrier::get()->map(function ($carrier) {
+        $carriers = Carrier::orderBy('name')->get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
+        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->orderBy('name')->get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
         });
 
@@ -161,6 +161,16 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
+        $environment_name = $_ENV['APP_ENV'];
+
+        if($environment_name == "production"){
+            $api_url = "https://carriers.cargofive.com/api/pricing";        
+        }else if(in_array($environment_name,["local","prod"])){
+            $api_url = "http://carriersdev.cargofive.com/api/pricing";    
+        }else{
+            $api_url = "http://carriersdev.cargofive.com/api/pricing";
+        }
+
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
         });**/
@@ -172,6 +182,7 @@ class SearchApiController extends Controller
             'company_user',
             'carriers',
             'carriers_api',
+            'api_url',
             'companies',
             'contacts',
             'currency',
