@@ -163,10 +163,13 @@ class QuotationController extends Controller
             return $desttype->only(['id', 'name']);
         });
 
+        $carrier_providers = $this->providers();
+
         $data = compact(
             'companies',
             'contacts',
             'carriers',
+            'carrier_providers',
             'containers',
             'incoterms',
             'users',
@@ -183,7 +186,6 @@ class QuotationController extends Controller
             'countries',
             'languages',
             'sale_codes',
-            'providers',
             'providers',
             'cargo_types',
             'calculationtypeslcl',
@@ -835,5 +837,35 @@ class QuotationController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * get providers
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function providers()
+    {
+        $carriers = Carrier::all();
+        $providers = Provider::where('company_user_id', \Auth::user()->company_user_id)->get();
+
+        $carriers = $carriers->map(function ($value) {
+            $value['model'] = 'App\Carrier';
+            return $value->only(['id', 'name', 'model']);
+        });
+
+        $providers = $providers->map(function ($value) {
+            $value['model'] = 'App\Provider';
+            return $value->only(['id', 'name', 'model']);
+        });
+
+        $data = $carriers->merge($providers)->unique();
+
+        $data = $data->sortBy('name');
+
+        $collection = $data->values()->all();
+
+        return $collection;
     }
 }

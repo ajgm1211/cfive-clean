@@ -547,29 +547,34 @@ class ImportationController extends Controller
             }
         } elseif ($selector == 2) {
             $contract = Contract::find($id);
-            @$contract->load('carriers');
-            if (!empty($contract->gp_container_id)) {
-                $groupContainer = GroupContainer::find($contract->gp_container_id);
-                $json_rq = json_decode($groupContainer->data, true);
-                $equiment['id'] = $groupContainer->id;
-                $equiment['name'] = $groupContainer->name;
-                $equiment['color'] = $json_rq['color'];
-            } else {
-                $groupContainer = GroupContainer::find(1);
-                $json_rq = json_decode($groupContainer->data, true);
-                $equiment['id'] = $groupContainer->id;
-                $equiment['name'] = $groupContainer->name;
-                $equiment['color'] = $json_rq['color'];
-            }
-            //dd($contract,$equiment);
-            if (count($contract->carriers) == 1) {
-                foreach ($contract->carriers as $carrier_uniq) {
-                    if ($carrier_uniq->id != $carrier_exec) {
-                        $load_carrier = true;
+            if(isset($contract)){
+                @$contract->load('carriers');
+                if (!empty($contract->gp_container_id)) {
+                    $groupContainer = GroupContainer::find($contract->gp_container_id);
+                    $json_rq = json_decode($groupContainer->data, true);
+                    $equiment['id'] = $groupContainer->id;
+                    $equiment['name'] = $groupContainer->name;
+                    $equiment['color'] = $json_rq['color'];
+                } else {
+                    $groupContainer = GroupContainer::find(1);
+                    $json_rq = json_decode($groupContainer->data, true);
+                    $equiment['id'] = $groupContainer->id;
+                    $equiment['name'] = $groupContainer->name;
+                    $equiment['color'] = $json_rq['color'];
+                }
+                //dd($contract,$equiment);
+                if (count($contract->carriers) == 1) {
+                    foreach ($contract->carriers as $carrier_uniq) {
+                        if ($carrier_uniq->id != $carrier_exec) {
+                            $load_carrier = true;
+                        }
                     }
                 }
+                $api_contract['user_id'] = $contract->user_id;
+            }else{
+                return redirect()->route('RequestFcl.index');
             }
-            $api_contract['user_id'] = $contract->user_id;
+            
         }
 
         // dd($equiment);
@@ -2409,8 +2414,9 @@ class ImportationController extends Controller
     {
         try {
             $surchargers = LocalCharge::find($id);
-            $surchargers->forceDelete();
-
+            if(isset($surchargers)){
+                 $surchargers->forceDelete();
+            }
             return 1;
         } catch (\Exception $e) {
             return 2;
