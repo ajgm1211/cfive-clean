@@ -24,7 +24,6 @@ class StoreSaleTermCharge extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required',
             'calculation_type' => 'required',
             'currency' => 'required',
             'sale_term_code' => 'required',
