@@ -401,6 +401,7 @@ BANDA DE CARDS CMA Y MAERSK
     }
     .nav-pills {
         background-color: transparent;
+        flex-flow: nowrap;
         li.nav-item {
             margin-bottom: 15px;
             a {
