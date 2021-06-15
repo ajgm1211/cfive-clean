@@ -155,14 +155,8 @@
             },
             /* Single Actions */
             onEdit(data){
-                // Single actions to redirect to:
-                if(data.type.id==1){
-                    window.location = `/api/inlands/${data.id}/edit`;
-                }else{
-                    window.location = `/api/inlands/${data.id}/location`;
-                }
+                window.location = `/api/inlands/${data.id}/edit`;
             },
-            
         }
     }
 </script>
