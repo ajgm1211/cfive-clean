@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class NewContractRequestLcl extends Model
+class NewContractRequestLcl extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     protected $table = 'new_contract_request_lcl';
     protected $fillable = [
         'namecontract',

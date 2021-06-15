@@ -357,7 +357,7 @@
                                                 currentPort['id']
                                             "
                                             v-model="inlandAdd.provider_id"
-                                            :options="datalists['providers']"
+                                            :options="datalists['carrier_providers']"
                                             :show-labels="false"
                                             :close-on-select="true"
                                             :preserve-search="true"
@@ -642,11 +642,10 @@ export default {
                     type: "text",
                 },
                 {
-                    key: "provider_id",
+                    key: "provider",
                     label: "PROVIDER",
-                    type: "select",
-                    trackby: "name",
-                    options: "providers",
+                    type: "text",
+                    disabled: true,
                 },
                 {
                     key: "currency_id",
@@ -662,7 +661,13 @@ export default {
                     label: "CHARGE",
                     type: "text",
                     rules: "required",
-                    placeholder: "Select charge",
+                    placeholder: "Enter charge",
+                },
+                provider: {
+                    label: "CHARGE",
+                    type: "text",
+                    rules: "required",
+                    placeholder: "Enter provider",
                 },
                 provider_id: {
                     label: "PROVIDER",
@@ -670,7 +675,7 @@ export default {
                     searchable: true,
                     trackby: "name",
                     placeholder: "Select Provider",
-                    options: "providers",
+                    options: "carrier_providers",
                 },
                 currency_id: {
                     label: "CURRENCY",
@@ -948,7 +953,7 @@ export default {
                             newInlandAdd.currency_id = curr;
                         }
                     });
-                    component.datalists.providers.forEach(function (prov) {
+                    component.datalists.carrier_providers.forEach(function (prov) {
                         if (prov.id == search["provider_id"]) {
                             newInlandAdd.provider_id = prov;
                         }
@@ -1225,6 +1230,12 @@ export default {
                         rules: "required",
                         placeholder: "Select charge",
                     },
+                    provider: {
+                        label: "PROVIDER",
+                        type: "text",
+                        rules: "required",
+                        placeholder: "Enter provider",
+                    },
                     provider_id: {
                         label: "PROVIDER",
                         type: "select",
@@ -1255,11 +1266,10 @@ export default {
                         type: "text",
                     },
                     {
-                        key: "provider_id",
+                        key: "provider",
                         label: "PROVIDER",
-                        type: "select",
-                        trackby: "name",
-                        options: "providers",
+                        type: "text",
+                        disabled: true,
                     },
                     {
                         key: "total",
