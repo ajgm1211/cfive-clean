@@ -150,7 +150,7 @@ class LocalChargeLclController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('localcharges')->whereIn('id', $request->input('ids'))->delete();
+        LocalChargeLcl::whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }
