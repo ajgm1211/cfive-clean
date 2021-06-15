@@ -19,10 +19,10 @@
 				>
 			</FormInlineView>
 			<!-- End Form Contract Inline -->
-
+			
 			<!-- Tabs Section -->
 			<b-card no-body class="card-tabs">
-				<b-tabs card>
+				<b-tabs card v-if="this.currentData.type.id == 1">
 					<b-tab title="Per Ranges" @click="changeView('range')">
 						<inland-ranges
 							v-if="range"
@@ -41,6 +41,17 @@
 						</inland-km>
 					</b-tab>
 				</b-tabs>
+				<b-tabs card v-if="this.currentData.type.id == 2">
+					<b-tab title="Per Location">
+						<per-location
+							v-if="range"
+							:equipment="equipment" 
+							:datalists="datalists"
+							:classTable="classTable"
+							:actions="actions.ranges">
+						</per-location>
+					</b-tab>
+				</b-tabs>
 			</b-card>
 
 			<!-- End Tabs Section -->
@@ -48,13 +59,13 @@
 		</div>
 
 	</div>
-
 </div>
 
 </template>
 <script>
 	import InlandRanges from './InlandRanges';
 	import InlandKm from './InlandKm';
+	import PerLocation from './PerLocation';
 	import actions from '../../actions';
 	import FormInlineView from '../../components/views/FormInlineView.vue';
 
@@ -62,6 +73,7 @@
 		components: { 
 			InlandRanges,
 			InlandKm,
+			PerLocation,
 			FormInlineView
 		},
 		data() {

@@ -803,4 +803,7 @@ export default {
             return api.call('post', `/api/v2/contractslcl/${contract_id}/restrictions`, data);
         },
     },
+    inlandLocation: {
+        //
+    },
 };
