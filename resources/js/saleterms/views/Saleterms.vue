@@ -26,6 +26,7 @@
 					<b-tab title="Details">
 						<SaleCharges
 							:datalists="datalists"
+							:equipment="equipment"
 							:actions="actions.sale_charges">
 						</SaleCharges>
 					</b-tab>
