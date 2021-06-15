@@ -130,11 +130,11 @@ class LocalChargeLcl extends Model implements Auditable
      */
     public function LocalChargeCountriesSync($origin_countries, $destination_countries)
     {
-        DB::table('localcharcountry')->where('localchargelcl_id', '=', $this->id)->delete();
+        DB::table('localcharcountry_lcl')->where('localchargelcl_id', '=', $this->id)->delete();
 
         foreach ($origin_countries as $origin) {
             foreach ($destination_countries as $destination) {
-                LocalCharCountry::create([
+                LocalCharCountryLcl::create([
                     'country_orig' => $origin,
                     'country_dest' => $destination,
                     'localchargelcl_id' => $this->id,

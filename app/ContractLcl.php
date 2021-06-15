@@ -38,7 +38,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
      */
     protected $dates = ['deleted_at'];
     protected $table    = "contracts_lcl";
-    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual', 'is_api', 'remarks'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'user_id', 'direction_id', 'account_id', 'validity', 'expire', 'status', 'code', 'is_manual', 'is_api', 'comments'];
 
     public function companyUser()
     {
@@ -231,5 +231,36 @@ class ContractLcl extends Model implements HasMedia, Auditable
                 'contractlcl_id' => $this->id,
             ]);
         }
+    }
+
+    /* Duplicate Contract Model instance with relations */
+    public function duplicate()
+    {
+
+        $new_contract = $this->replicate();
+        $new_contract->name .= ' copy';
+        $new_contract->save();
+
+        $this->load('carriers.carrier', 'localcharges', 'rates');
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            foreach ($relation as $relationRecord) {
+
+                if ($relationRecord instanceof \App\LocalChargeLcl) {
+                    $relationRecord->duplicate($new_contract->id);
+                } else if ($relationRecord instanceof \App\ContractCarrierLcl) {
+                    $newRelationship = $relationRecord->replicate();
+                    $newRelationship->contract_id = $new_contract->id;
+                    $newRelationship->save();
+                } else {
+                    $newRelationship = $relationRecord->replicate();
+                    $newRelationship->contractlcl_id = $new_contract->id;
+                    $newRelationship->save();
+                }
+            }
+        }
+
+        return $new_contract;
     }
 }
