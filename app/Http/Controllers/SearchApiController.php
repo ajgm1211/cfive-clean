@@ -87,11 +87,11 @@ class SearchApiController extends Controller
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
-        $carriers = Carrier::get()->map(function ($carrier) {
+        $carriers = Carrier::orderBy('name')->get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->get()->map(function ($provider) {
+        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->orderBy('name')->get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
         });
 

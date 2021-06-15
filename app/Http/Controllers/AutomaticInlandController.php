@@ -162,8 +162,8 @@ class AutomaticInlandController extends Controller
 
         $inland = AutomaticInland::create([
             'quote_id' => $quote->id,
-            'provider'=> 'Inland',
-            'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
+            'provider'=> $validate['provider_id']['name'] ?? null,
+            //'provider_id' => isset($validate['provider_id']) && count($validate['provider_id'])==0 ? null : $validate['provider_id']['id'],
             'charge' => $validate['charge'],
             'currency_id' => $validate['currency_id']['id'],
             'port_id' => $port_id,
@@ -176,6 +176,8 @@ class AutomaticInlandController extends Controller
             'validity_start' => $quote->validity_start,
             'validity_end' => $quote->validity_end,
         ]);
+
+        $inland->syncProviders($validate['provider_id']);
 
         $totals->totalize();
     }
