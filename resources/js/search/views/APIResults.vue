@@ -32,7 +32,7 @@
             <!-- CONTRACT NAME -->
             <div class="col-12">
               <h6 class="mt-4 mb-5 contract-title">
-                {{ cmaResult.quoteLine }}
+                {{ cmaResult.contractReference }} 
               </h6>
             </div>
             <!-- FIN CONTRACT NAME -->
@@ -51,7 +51,7 @@
                 <div class="origin mr-4">
                   <span>origin</span>
                   <p class="mb-0">
-                    {{ cmaResult.routingDetails[0].departureName }}
+                    {{ cmaResult.departureName }}
                   </p>
                   <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -87,7 +87,7 @@
                 <div class="destination ml-4">
                   <span>destination</span>
                   <p class="mb-0">
-                    {{ cmaResult.routingDetails[0].arrivalName }}
+                    {{ cmaResult.arrivalName }}
                   </p>
                   <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -106,7 +106,7 @@
                   <div class="origin mb-3">
                     <span>origin</span>
                     <p class="mb-1">
-                      {{ cmaResult.routingDetails[0].departureName }}
+                      {{ cmaResult.departureName }}
                     </p>
                     <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
                   </div>
@@ -116,7 +116,7 @@
                   <div class="destination align-items-start mb-3">
                     <span>destination</span>
                     <p class="mb-1">
-                      {{ cmaResult.routingDetails[0].arrivalName }}
+                      {{ cmaResult.arrivalName }}
                     </p>
                     <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
                   </div>
@@ -207,35 +207,12 @@
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
                   class="rs-btn"
-                  :class="cmaResult.scheduleCollapse ? null : 'collapsed'"
-                  :aria-expanded="cmaResult.scheduleCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'schedules_' +
-                    String(cmaResult.routingDetails[0].voyageNumber)
-                  "
-                  @click="
-                    cmaResult.scheduleCollapse = !cmaResult.scheduleCollapse;
-                    cmaResult.detailCollapse
-                      ? (cmaResult.detailCollapse = false)
-                      : (cmaResult.detailCollapse = cmaResult.detailCollapse);
-                  "
+                  v-b-toggle="'schedules_' + String(cmaResult.contractReference) + '_' + String(cmaResult.accordion_id)"
                   ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
                 <b-button
                   class="rs-btn"
-                  :class="cmaResult.detailCollapse ? null : 'collapsed'"
-                  :aria-expanded="cmaResult.detailCollapse ? 'true' : 'false'"
-                  :aria-controls="
-                    'details_' +
-                    String(cmaResult.routingDetails[0].voyageNumber)
-                  "
-                  @click="
-                    cmaResult.detailCollapse = !cmaResult.detailCollapse;
-                    cmaResult.scheduleCollapse
-                      ? (cmaResult.scheduleCollapse = false)
-                      : (cmaResult.scheduleCollapse =
-                          cmaResult.scheduleCollapse);
-                  "
+                  v-b-toggle="'details_' + String(cmaResult.contractReference) + '_' + String(cmaResult.accordion_id)"
                   ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
               </div>
@@ -262,13 +239,15 @@
         <!-- FIN INFORMACION DE TARIFA -->
 
         <!-- INFORMACION DESPLEGADA -->
-        <div class="row mr-0 ml-0">
+        <div :id="'my-accordion-' + cmaResult.accordion_id" class="row mr-0 ml-0 accordion" role="tablist">
 
           <!-- DETALLES DE TARIFA -->
           <b-collapse
-            :id="'details_' + String(cmaResult.routingDetails[0].voyageNumber)"
-            v-model="cmaResult.detailCollapse"
+            :id="'details_' + String(cmaResult.contractReference) + '_' + String(cmaResult.accordion_id)"
             class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + cmaResult.accordion_id"
+            role="tabpanel"
+            v-model="cmaResult.detailCollapse"
           >
             <div
               v-for="(cmaSurchargeType, cmaSurchargeKey) in cmaResult
@@ -382,17 +361,25 @@
 
           <!-- SCHEDULES -->
           <b-collapse
-            :id=" 'schedules_' + String(cmaResult.routingDetails[0].voyageNumber)"
-            v-model="cmaResult.scheduleCollapse"
-            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule">
+            :id=" 'schedules_' + String(cmaResult.contractReference) + '_' + String(cmaResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            :accordion="'my-accordion-' + cmaResult.accordion_id"
+            role="tabpanel"
+            v-model="cmaResult.scheduleCollapse">
             
             <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
 
 
             <!-- SCHEDULE INFORMATION -->
-            <b-tabs pills card vertical class="d-none d-lg-flex">
+            <b-tabs 
+              pills card vertical class="d-none d-lg-flex" 
+              v-model="cmaResult.activeTab" 
+            >
 
-              <b-tab >
+              <b-tab 
+                v-for="(route,routeKey) in cmaResult.routingDetails"
+                :key="routeKey"
+              >
 
                 <!-- INFORMACION PRINCIPAL -->
                 <template #title>
@@ -402,7 +389,7 @@
                       <!-- NOMBRE -->
                       <div class="col-12">
                         <h6 class="mt-4 mb-5 contract-title">
-                          china chennai express two
+                          {{ cmaResult.contractReference }}
                         </h6>
                       </div>
                       <!-- FIN NOMBRE -->
@@ -414,8 +401,8 @@
                           <!-- ORGIEN -->
                           <div class="origin mr-4">
                             <span>origin</span>
-                            <p class="mb-0">INMAA</p>
-                            <p>4 nov, 2020</p>
+                            <p class="mb-0">{{ route.details[0].departureName }}</p>
+                            <p>{{ route.details[0].departureDateGmt.substring(0,10) }}</p>
                           </div>
                           <!-- FIN ORGIEN -->
 
@@ -434,8 +421,9 @@
                             </div>
 
                             <div class="direction-desc mt-2">
-                              <p class="mb-1"><b>Transit Time: </b>37 days</p>
-                              <p><b>Via: </b>PSA (PORT OF SINGAPORE AUTHORITY)</p>
+                              <p class="mb-1"><b>Transit Time: </b>{{ route.transitTime }} days</p>
+                              <p v-if="route.details.length > 1"><b>Via: </b>{{ route.details[0].arrivalName }}</p>
+                              <p><b>Service: </b>{{ route.details.length > 1 ? "Transhipment" : "Direct" }}</p>
                             </div>
 
                           </div>
@@ -444,8 +432,8 @@
                           <!-- DESTINO -->
                           <div class="destination ml-4">
                             <span>destination</span>
-                            <p class="mb-0">DEHAM</p>
-                            <p>8 Dec, 2020</p>
+                            <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                            <p>{{ route.details[0].arrivalDateGmt.substring(0,10) }}</p>
                           </div>
                           <!-- FIN DESTINO -->
 
@@ -472,26 +460,26 @@
                         </h5>
                         <ul>
                           <li>
-                              <h5
-                              class="sub-title-schedule"
-                              v-if="cmaResult.routingDetails[0].imoNumber != null"
-                              >
-                                <b>IMO:</b>
-                              </h5>
-                              <p class="text-schedule">
-                                {{ cmaResult.routingDetails[0].imoNumber }}
-                              </p>
-                            </li>
+                            <h5
+                            class="sub-title-schedule"
+                            v-if="route.details[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ route.details[0].imoNumber }}
+                            </p>
+                          </li>
                           <li>
                             <h5 class="sub-title-schedule"><b>Vessel/Voyage:</b></h5> 
                             <p class="text-schedule">
                             {{
-                                cmaResult.routingDetails[0].vehiculeName +
+                                route.details[0].vehiculeName +
                                 " / " +
-                                cmaResult.routingDetails[0].voyageNumber
+                                route.details[0].voyageNumber
                               }}
-                            </p></li>
-                            
+                            </p>
+                          </li>
                         </ul>
 
                         <!-- DEADLINE Information -->
@@ -499,8 +487,7 @@
                           <b-icon icon="stopwatch"></b-icon> Deadlines
                         </h5>
                         <ul>
-                          <li v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
-                              .routingDetails[0].deadlines"
+                          <li v-for="(cmaDeadline, cmaDeadlineKey) in route.details[0].deadlines"
                               :key="cmaDeadlineKey">
                             <h5 class="sub-title-schedule">
                               <b>{{ cmaDeadline.deadlineKey }}:</b>
@@ -524,52 +511,19 @@
                       <!-- DIAGRAMA DE LA RUTA -->
                       <div class="col-xl-6 schedule-route-info">
                         <ul>
-                          <li>
+                          <li 
+                            v-for="(routeDetail,detailKey) in route.details"
+                            :key="detailKey"
+                          >
                               <div>
-                                <p>04 Nov 2020</p>
-                                <p>21:59</p>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }}</p>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
                                 <p>mon</p>
                               </div>
                               <div class="sri-circle"></div>
                               <div class="d-flex">
                                 <img src="/images/port.svg" width="25px" alt="port">
-                                <p>Singapore (Arrival)</p>
-                              </div>
-                          </li>
-                          <li>
-                              <div>
-                                <p>04 Nov 2020</p>
-                                <p>21:59</p>
-                                <p>mon</p>
-                              </div>
-                              <div class="sri-circle"></div>
-                              <div class="d-flex">
-                                <img src="/images/port.svg" width="25px" alt="port">
-                                <p>Singapore (Arrival)</p>
-                              </div>
-                          </li>
-                          <li>
-                              <div>
-                                <p>04 Nov 2020</p>
-                                <p>21:59</p>
-                                <p>mon</p>
-                              </div>
-                              <div class="sri-circle"></div>
-                              <div class="d-flex">
-                                <img src="/images/port.svg" width="25px" alt="port">
-                                <p>Singapore (Arrival)</p>
-                              </div>
-                          </li>
-                          <li>
-                              <div>
-                                <p>04 Nov 2020</p>
-                                <p>21:59</p>
-                                <p>mon</p>
-                              </div>
-                              <div class="sri-circle"></div>
-                              <div class="d-flex">
-                                <img src="/images/port.svg" width="25px" alt="port">
-                                <p>Singapore (Arrival)</p>
+                                <p>{{ routeDetail.arrivalName }}</p>
                               </div>
                           </li>
                         </ul>
@@ -591,19 +545,23 @@
             <!-- SCHEDULE INFORMATION RESPONSIVE -->
             <div>
                 
-              <div class="d-block d-lg-none si-responsive mb-3">
+              <div 
+                class="d-block d-lg-none si-responsive mb-3"
+                v-for="(route,routeKey) in cmaResult.routingDetails"
+                :key="routeKey"
+              >
 
                 <!-- INFORMACION PRINCIPAL -->
-                <b-button v-b-toggle.collapse-2 style="width: 100%">
-
-                  
+                <b-button 
+                  v-b-toggle="'responsiveCollapse_' + cmaResult.accordion_id + '_' + routeKey" 
+                  style="width: 100%">
 
                     <div class="row margin-res">
 
                       <!-- CONTRACT NAME -->
                       <div class="col-12">
                         <h6 class="mt-4 mb-5 contract-title">
-                          china chennai express
+                          {{ cmaResult.contractReference }}
                         </h6>
                       </div>
                       <!-- FIN CONTRACT NAME -->
@@ -612,29 +570,27 @@
                       <!-- INFORMACION DE LA RUTA -->
                       <div class="col-12 mr-0 ml-0 si-route-info">
               
-
                           <!-- ORGIEN -->
                           <div class="origin">
                             <span>origin</span>
-                            <p class="mb-0">INMAA</p>
-                            <p>4 nov, 2020</p>
+                            <p class="mb-0">{{ route.details[0].departureName }}</p>
+                            <p>{{ route.details[0].departureDateGmt.substring(0,10) }}</p>
                           </div>
                           <!-- FIN ORGIEN -->
 
-
-
                           <!-- LINEA DE RUTA -->
                             <div class="direction-desc">
-                              <p class="mb-1"><b>Transit Time: </b>40 days</p>
-                              <p><b>Via: </b>PSA (PORT OF SINGAPORE AUTHORITY)</p>
+                              <p class="mb-1"><b>Transit Time: </b>{{ route.transitTime }} days</p>
+                              <p v-if="route.details.length > 1"><b>Via: </b>{{ route.details[0].arrivalName }}</p>
+                              <p><b>Service: </b>{{ route.details.length > 1 ? "Transhipment" : "Direct" }}</p>
                             </div>
                           <!-- FIN LINEA DE RUTA -->
 
                           <!-- DESTINO -->
                           <div class="destination">
                             <span>destination</span>
-                            <p class="mb-0">DEHAM</p>
-                            <p>8 Dec, 2020</p>
+                            <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                            <p>{{ route.details[0].arrivalDateGmt.substring(0,10) }}</p>
                           </div>
                           <!-- FIN DESTINO -->
 
@@ -648,7 +604,7 @@
                     
                 </b-button>
 
-                <b-collapse id="collapse-2" class="mt-2">
+                <b-collapse :id="'responsiveCollapse_' + cmaResult.accordion_id + '_' + routeKey" class="mt-2">
                   <b-card>
                     
                     <!-- RUTA -->
@@ -667,18 +623,23 @@
 
                           <ul>
                             <li>
-                                <h5 class="sub-title-schedule" v-if="cmaResult.routingDetails[0].imoNumber != null">
-                                  <b>IMO:</b>
-                                </h5>
-                                <p class="text-schedule">{{ cmaResult.routingDetails[0].imoNumber }}</p>
+                              <h5
+                                class="sub-title-schedule"
+                                v-if="route.details[0].imoNumber != null"
+                                >
+                                <b>IMO:</b>
+                              </h5>
+                              <p class="text-schedule">
+                                {{ route.details[0].imoNumber }}
+                              </p>
                             </li>
                             <li>
                               <h5 class="sub-title-schedule"><b>Vessel/Voyage:</b></h5> 
                               <p class="text-schedule">
                               {{
-                                  cmaResult.routingDetails[0].vehiculeName +
+                                  route.details[0].vehiculeName +
                                   " / " +
-                                  cmaResult.routingDetails[0].voyageNumber
+                                  route.details[0].voyageNumber
                                 }}
                               </p>
                             </li>
@@ -691,77 +652,43 @@
                           </h5>
 
                           <ul>
-                            <li v-for="(cmaDeadline, cmaDeadlineKey) in cmaResult
-                                .routingDetails[0].deadlines"
-                                :key="cmaDeadlineKey">
-                              <h5 class="sub-title-schedule">
-                                <b>{{ cmaDeadline.deadlineKey }}:</b>
-                              </h5>
-                              <p class="text-schedule">
-                                {{
-                                  cmaDeadline.deadline.substring(0, 10) +
-                                  " " +
-                                  cmaDeadline.deadline.substring(
-                                    11,
-                                    cmaDeadline.deadline.length - 4
-                                  )
-                                }}
-                              </p>
-                            </li>
-                          </ul>
+                          <li v-for="(cmaDeadline, cmaDeadlineKey) in route.details[0].deadlines"
+                              :key="cmaDeadlineKey">
+                            <h5 class="sub-title-schedule">
+                              <b>{{ cmaDeadline.deadlineKey }}:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                cmaDeadline.deadline.substring(0, 10) +
+                                " " +
+                                cmaDeadline.deadline.substring(
+                                  11,
+                                  cmaDeadline.deadline.length - 4
+                                )
+                              }}
+                            </p>
+                          </li>
+                        </ul>
 
                         </div>
                         <!-- FIN INFORMACION DEL BARCO -->
 
                         <div class="col-sm-6 schedule-route-info mt-3">
                           <ul>
-                            <li>
-                                <div>
-                                  <p>04 Nov 2020</p>
-                                  <p>21:59</p>
-                                  <p>WED</p>
-                                </div>
-                                <div class="sri-circle d-none d-sm-block"></div>
-                                <div class="d-flex">
-                                  <img src="/images/port.svg" width="25px" alt="port">
-                                  <p>Singapore (Arrival)</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                  <p>04 Nov 2020</p>
-                                  <p>21:59</p>
-                                  <p>WED</p>
-                                </div>
-                                <div class="sri-circle d-none d-sm-block"></div>
-                                <div class="d-flex">
-                                  <img src="/images/port.svg" width="25px" alt="port">
-                                  <p>Singapore (Arrival)</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                  <p>04 Nov 2020</p>
-                                  <p>21:59</p>
-                                  <p>WED</p>
-                                </div>
-                                <div class="sri-circle d-none d-sm-block"></div>
-                                <div class="d-flex">
-                                  <img src="/images/port.svg" width="25px" alt="port">
-                                  <p>Singapore (Arrival)</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                  <p>04 Nov 2020</p>
-                                  <p>21:59</p>
-                                  <p>WED</p>
-                                </div>
-                                <div class="sri-circle d-none d-sm-block"></div>
-                                <div class="d-flex">
-                                  <img src="/images/port.svg" width="25px" alt="port">
-                                  <p>Singapore (Arrival)</p>
-                                </div>
+                            <li 
+                            v-for="(routeDetail,detailKey) in route.details"
+                            :key="detailKey"
+                            >
+                              <div>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }}</p>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
+                                <p>mon</p>
+                              </div>
+                              <div class="sri-circle"></div>
+                              <div class="d-flex">
+                                <img src="/images/port.svg" width="25px" alt="port">
+                                <p>{{ routeDetail.arrivalName }}</p>
+                              </div>
                             </li>
                           </ul>
                         </div>
@@ -791,7 +718,7 @@
     </div>
     <!-- FIN TARJETA CMA -->
 
-    <!-- TARJETA MAERKS -->
+    <!-- TARJETA MAERSK -->
     <div
       class="mb-4"
       v-for="(result, key) in orderedMaerskRates"
@@ -1008,7 +935,7 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <!-- INFORMACION DESPLEGADA -->
-                <div class="row mr-0 ml-0 accordion" role="tablist">
+                <div :id="'my-accordion-' + result.accordion_id" class="row mr-0 ml-0 accordion" role="tablist">
                   <b-button
                     class="rs-btn"
                     v-b-toggle="'details_' + String(result.quoteLine)"
@@ -1059,7 +986,7 @@
         <!-- DETALLES DE TARIFA -->
           <b-collapse
             class="pt-5 pb-5 pl-5 pr-5 col-12"
-            accordion="my-accordion"
+            :accordion="'my-accordion-' + result.accordion_id"
             role="tabpanel"
             :id="'details_' + String(result.quoteLine)"
             v-model="result.detailCollapse"
@@ -1227,7 +1154,7 @@
           <!-- SCHEDULES -->          
           <b-collapse
             :id="'schedules_' + String(result.quoteLine)"
-            accordion="my-accordion"
+            :accordion="'my-accordion-' + result.accordion_id"
             role="tabpanel"
             v-model="result.scheduleCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
@@ -1253,18 +1180,18 @@
                         <h5 class="sub-title-schedule">Vessel/Voyage</h5>
                         <p class="text-schedule">
                           <b
-                            >{{ result.routingDetails[0].vehiculeName }} /
-                            {{ result.routingDetails[0].voyageNumber }}</b
+                            >{{ result.routingDetails[0].details[0].vehiculeName }} /
+                            {{ result.routingDetails[0].details[0].voyageNumber }}</b
                           >
                         </p>
                       </div>
                       <div
-                        v-if="result.routingDetails[0].imoNumber != null"
+                        v-if="result.routingDetails[0].details[0].imoNumber != null"
                         class="col-lg-6"
                       >
                         <h5 class="sub-title-schedule">IMO</h5>
                         <p class="text-schedule">
-                          <b>{{ result.routingDetails[0].imoNumber }}</b>
+                          <b>{{ result.routingDetails[0].details[0].imoNumber }}</b>
                         </p>
                       </div>
                     </div>
@@ -1280,7 +1207,7 @@
                     <div class="row mt-4">
                       <div
                         class="col-12 col-sm-6"
-                        v-for="(deadline, deadKey) in result.routingDetails[0]
+                        v-for="(deadline, deadKey) in result.routingDetails[0].details[0]
                           .deadlines"
                         :key="deadKey"
                       >
@@ -1326,7 +1253,7 @@
 
                     <div
                       class="route-indirect d-flex align-items-center"
-                      v-if="result.routingDetails.length > 1"
+                      v-if="result.routingDetails[0].details[0].length > 1"
                     >
                       <div class="circle mr-2"></div>
                       <div class="line"></div>
@@ -1342,7 +1269,7 @@
                         <template #title>Transhipments</template>
                         <ul>
                           <li
-                            v-for="(trans, transKey) in result.routingDetails"
+                            v-for="(trans, transKey) in result.routingDetails[0].details[0]"
                             :key="transKey"
                           >
                             {{
@@ -1373,8 +1300,8 @@
                     <p>
                       <b>Service:</b>
                       {{
-                        result.routingDetails.length > 1
-                          ? "Transshipment"
+                        result.routingDetails[0].details[0].length > 1
+                          ? "Transhipment"
                           : "Direct"
                       }}
                     </p>
@@ -1393,13 +1320,13 @@
 
               <!-- RUTA RESPONSIVA -->
               <div
-                v-if="result.routingDetails.length > 1"
+                v-if="result.routingDetails[0].details[0].length > 1"
                 class="col-12 d-lg-none"
               >
                 <h6>Transshipments</h6>
                 <ul>
                   <li
-                    v-for="(trans, transKey) in result.routingDetails"
+                    v-for="(trans, transKey) in result.routingDetails[0].details[0]"
                     :key="transKey"
                   >
                     {{
@@ -1422,7 +1349,7 @@
             :id="'detention_' + String(result.quoteLine)"
             v-model="result.detentionCollapse"
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
-            accordion="my-accordion"
+            :accordion="'my-accordion-' + result.accordion_id"
             role="tabpanel"
           >
             <div>
@@ -1533,7 +1460,7 @@
       </b-modal>
       <!--  End Modal  -->
     </div>
-    <!-- FIN TARJETA MAERKS -->
+    <!-- FIN TARJETA MAERSK -->
   </div>
 </template>
 
@@ -1567,6 +1494,7 @@ export default {
       containerCodesMaerskPenalties: [],
       containerCodesMaerskDetentions: [],
       resultsForQuote: [],
+      accordion_id: 0,
     };
   },
   methods: {
@@ -1599,6 +1527,8 @@ export default {
       let apiCarrierCodes = "";
 
       component.$emit("apiSearchStarted");
+      
+      component.accordion_id = 0;
 
       component.request.originPorts.forEach(function (originPort) {
         if (!apiOriginPorts.includes(originPort.code)) {
@@ -1610,15 +1540,16 @@ export default {
         if (!apiDestinationPorts.includes(destinationPort.code)) {
           apiDestinationPorts.push(destinationPort.code);
         }
-      });
-
-      component.results.maersk = [];
-      component.results.cmacgm = [];
+      });      
 
       apiContainers = component.setApiContainers();
       if (this.request.carriersApi.length > 0) {
         component.request.carriersApi.forEach(function (carrier) {
+
+          component.results[carrier.code] = [];
+
           apiCarrierCodes += carrier.code;
+
           if (
             component.request.carriersApi[
               component.request.carriersApi.indexOf(carrier) + 1
@@ -1631,13 +1562,13 @@ export default {
         apiOriginPorts.forEach(function (origin) {
           apiDestinationPorts.forEach(function (destination) {
             axios
-              .get(component.datalists.api_url, {
+              .get("http://carriersdev.cargofive.com/api/pricing", {
                 params: {
                   originPort: origin,
                   destinationPort: destination,
                   equipmentSizeType: apiContainers,
                   departureDate: apiDate,
-                  uemail: component.datalists.user.email,
+                  uemail: "dcabanales@gmail.com",
                   brands: apiCarrierCodes,
                 },
                 headers: {
@@ -1665,7 +1596,10 @@ export default {
                       respData.image = provider.image;
                     }
                   });
+                  component.accordion_id += 1;
+
                   respData.addToQuote = false;
+                  respData.accordion_id = component.accordion_id;
                   respData.search = component.request;
                   respData.originPort = origin;
                   respData.destinationPort = destination;
