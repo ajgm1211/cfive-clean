@@ -12,6 +12,7 @@ use App\Http\Resources\InlandResource;
 use App\Inland;
 use App\InlandType;
 use App\Provider;
+use App\Carrier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -35,6 +36,7 @@ class InlandController extends Controller
 
     public function data(Request $request)
     {
+        
         $company_user_id = \Auth::user()->company_user_id;
 
         $equipments = GroupContainer::get()->map(function ($equipment) {
@@ -53,7 +55,7 @@ class InlandController extends Controller
             return $currency->only(['id', 'alphacode']);
         });
 
-        $types = InlandType::where('id', 1)->get()->map(function ($type) {
+        $types = InlandType::get()->map(function ($type) {
             return $type->only(['id', 'name']);
         });
 
@@ -64,8 +66,12 @@ class InlandController extends Controller
         $providers = Provider::where('company_user_id', '=', $company_user_id)->get()->map(function ($providers) {
             return $providers->only(['id', 'name']);
         });
-
+        
         $containers = Container::get();
+
+        $carriers = Carrier::get()->map(function ($carrier) {
+            return $carrier->only(['id', 'name']);
+        });
 
         $data = [
             'equipments' => $equipments,
@@ -76,6 +82,7 @@ class InlandController extends Controller
             'companies' => $companies,
             'harbors' => $harbors,
             'providers' => $providers,
+            'carriers' => $carriers,
         ];
 
         return response()->json(['data' => $data]);
@@ -111,7 +118,7 @@ class InlandController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => 'publish',
-            'inland_type_id' => '1',
+            'inland_type_id' => $data['type'],
             'gp_container_id' => $data['gp_container'],
             'provider_id' => $data['providers'],
         ]);

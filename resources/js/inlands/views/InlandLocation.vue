@@ -77,6 +77,16 @@
 	                    placeholder: 'Reference',
 	                    colClass: 'col-lg-2 col-pr-5'
 	                },
+					carrier: { 
+	                    label:'Carrier', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'carriers',
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                },
 	                direction: { 
 	                    label:'Direction', 
 	                    searchable: true, 
@@ -94,17 +104,15 @@
 	                    sdName: 'validity', 
 	                    edName: 'expire',
 	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
-                    },
-	                gp_container: { 
-	                    label: 'Equipment', 
-	                    searchable: true, 
-	                    type: 'select', 
-	                    rules: 'required', 
-	                    trackby: 'name', 
-	                    placeholder: 'Select option', 
-	                    options: 'equipments',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
-	                },
+                    }, 
+					restrictions: { 
+                        label:'Company Restriction', 
+                        searchable: true, 
+                        type: 'multiselect', 
+                        trackby: 'business_name', 
+                        placeholder: 'Select options', 
+                        options: 'companies' 
+					},
 	                type: { 
 	                    label: 'Calculation type', 
 	                    searchable: true, 
@@ -115,25 +123,26 @@
 	                    options: 'types',
 	                    colClass: 'col-lg-2'
 	                },
-                    restrictions: { 
-                        label:'Company restriction', 
-                        searchable: true, 
-                        type: 'multiselect', 
-                        trackby: 'business_name', 
-                        placeholder: 'Select options', 
-                        options: 'companies' 
-					},
-                    providers: { 
-                        label: 'Carriers', 
-                        searchable: true, 
-                        type: 'select', 
-                        rules: 'required', 
-                        trackby: 'name', 
-                        placeholder: 'Select', 
-						options: 'providers',
-						colClass: 'col-lg-1'
-                        
-                    },
+					gp_container: { 
+	                    label: 'Equipment', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select option', 
+	                    options: 'equipments',
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
+	                },
+                    // providers: { 
+                    //     label: 'Provider', 
+                    //     searchable: true, 
+                    //     type: 'select', 
+                    //     rules: 'required', 
+                    //     trackby: 'name', 
+                    //     placeholder: 'Select', 
+					// 	options: 'providers',
+					// 	colClass: 'col-lg-1'      
+                    // },
 					
 				}
 			}
