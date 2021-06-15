@@ -70,21 +70,21 @@ export default {
           formatter: (value) => {
             return this.setClient(value);
           },
-          filterIsOpen: true,
+          filterIsOpen: false,
           filterTrackBy: "business_name",
           trackLabel: "business_name",
         },
-        { key: "type", label: "Type", filterIsOpen: true },
+        { key: "type", label: "Type", filterIsOpen: false },
         {
           key: "origin",
           label: "Origin",
-          filterIsOpen: true,
+          filterIsOpen: false,
           collapse: "Show origins",
         },
         {
           key: "destiny",
           label: "Destiny",
-          filterIsOpen: true,
+          filterIsOpen: false,
           collapse: "Show destinations",
         },
         {
@@ -93,7 +93,7 @@ export default {
           formatter: (value) => {
             return value.fullname;
           },
-          filterIsOpen: true,
+          filterIsOpen: false,
           filterTrackBy: "fullname",
           trackLabel: "fullname",
         },
