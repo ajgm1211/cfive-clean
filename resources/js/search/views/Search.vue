@@ -383,7 +383,7 @@
                                 </b-form-group>
                                 <label>
                                     <b-input
-                                        v-model="searchQuery"
+                                        v-model="carrierSearchQuery"
                                         placeholder="Search Carrier"
                                     ></b-input>
                                 </label>
@@ -1524,7 +1524,7 @@ export default {
             calculationType: "",
             dataSurcharger: [],
             filterBy: "LOWEST PRICE",
-            searchQuery: '',
+            carrierSearchQuery: '',
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -1843,6 +1843,7 @@ export default {
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
+                    this.allCarriers = false;
                     component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
@@ -1924,6 +1925,8 @@ export default {
         //Send Search Request to Controller
         searchButtonPressed() {
             this.setSearchParameters();
+
+            this.carrierSearchQuery = '';
 
             if (
                 this.searchRequest.requestData.requested == undefined ||
@@ -2377,7 +2380,7 @@ export default {
     },
     computed: {
         carrierOptionsSearch() {
-           return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.searchQuery.toLowerCase()));
+           return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
         }
     },
 };
