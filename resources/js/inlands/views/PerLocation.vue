@@ -6,6 +6,11 @@
         <div class="col-6">
           <b-card-title>Per Location</b-card-title>
         </div>
+        <div class="col-6">
+          <div class="float-right">             
+            <button class="btn btn-primary btn-bg" v-b-modal.addRange>Import File</button>
+          </div> 
+        </div>
       </div>
       <DynamicalDataTable
         v-if="loaded"
@@ -48,9 +53,9 @@ export default {
 
       /* Table headers */
       fields: [
-        { key: "port", label: "Port" },
-        { key: "address", label: "Address" },
-        { key: "service", label: "Service" },
+        { key: "port", label: "Ports" },
+        { key: "location", label: "Address" },
+        { key: "Service", label: "Service" },
         { key: "currency", label: "Currency" },
       ],
 
@@ -65,16 +70,18 @@ export default {
           placeholder: "Select option",
           options: "harbors",
         },
-        address: {
+        location: {
           label: "Address",
-          type: "text",
+          type: "select",
           rules: "required",
+          trackby: "name",
           placeholder: "Select an Address",
+          options: "location",
         },
-        service: {
+        Service: {
           label: "Service",
           type: "text",
-          rules: "required",
+          // rules: "required",
           placeholder: "Select a Service",
         },
         currency: {

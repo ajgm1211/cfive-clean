@@ -6,7 +6,6 @@
     "/js/contracts_lcl/edit.js": "/js/contracts_lcl/edit.js",
     "/js/inlands/edit.js": "/js/inlands/edit.js",
     "/js/saleterms/list.js": "/js/saleterms/list.js",
-    "/js/inlands/location.js": "/js/inlands/location.js",
     "/js/contracts_lcl/index.js": "/js/contracts_lcl/index.js",
     "/js/contracts/index.js": "/js/contracts/index.js",
     "/js/saleterms/edit.js": "/js/saleterms/edit.js",
@@ -15,6 +14,7 @@
     "/js/saleterms/codes.js": "/js/saleterms/codes.js",
     "/js/providers/index.js": "/js/providers/index.js",
     "/js/inlands/index.js": "/js/inlands/index.js",
+    "/js/inlands/location.js": "/js/inlands/location.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css"
 }

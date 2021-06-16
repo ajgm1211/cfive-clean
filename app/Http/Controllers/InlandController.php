@@ -13,6 +13,8 @@ use App\Inland;
 use App\InlandType;
 use App\Provider;
 use App\Carrier;
+use App\Location;
+use App\TypeDestiny;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -73,6 +75,15 @@ class InlandController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
+        $location = location::get()->map(function ($location) {
+            return $location->only(['id', 'name']);
+        });
+
+        $typeDestiny = TypeDestiny::get()->map(function ($typeDestiny) {
+            return $typeDestiny->only(['id', 'description']);
+        });
+
+
         $data = [
             'equipments' => $equipments,
             'directions' => $directions,
@@ -83,6 +94,8 @@ class InlandController extends Controller
             'harbors' => $harbors,
             'providers' => $providers,
             'carriers' => $carriers,
+            'location' => $location,
+            'type_destiny' => $typeDestiny,
         ];
 
         return response()->json(['data' => $data]);
