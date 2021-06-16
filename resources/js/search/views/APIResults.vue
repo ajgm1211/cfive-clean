@@ -1562,13 +1562,13 @@ export default {
         apiOriginPorts.forEach(function (origin) {
           apiDestinationPorts.forEach(function (destination) {
             axios
-              .get("http://carriersdev.cargofive.com/api/pricing", {
+              .get(component.datalists.api_url, {
                 params: {
                   originPort: origin,
                   destinationPort: destination,
                   equipmentSizeType: apiContainers,
                   departureDate: apiDate,
-                  uemail: "dcabanales@gmail.com",
+                  uemail: component.datalists.user.email,
                   brands: apiCarrierCodes,
                 },
                 headers: {
