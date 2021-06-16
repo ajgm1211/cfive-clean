@@ -455,7 +455,7 @@
                       <div class="col-xl-6 schedule-info">
 
                         <!-- VESSEL Information -->
-                        <h5 class="title-schedule">
+                        <h5 class="title-schedule mb-3">
                           <b-icon icon="hdd-rack"></b-icon> Vessel Information
                         </h5>
                         <ul>
@@ -483,7 +483,7 @@
                         </ul>
 
                         <!-- DEADLINE Information -->
-                        <h5 class="title-schedule" style="margin-top: 25px">
+                        <h5 class="title-schedule mb-3" style="margin-top: 25px">
                           <b-icon icon="stopwatch"></b-icon> Deadlines
                         </h5>
                         <ul>
@@ -510,15 +510,16 @@
 
                       <!-- DIAGRAMA DE LA RUTA -->
                       <div class="col-xl-6 schedule-route-info">
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="calendar2-check"></b-icon> Itinerary details
+                        </h5>
                         <ul>
                           <li 
                             v-for="(routeDetail,detailKey) in route.details"
                             :key="detailKey"
                           >
                               <div>
-                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }}</p>
-                                <p>{{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
-                                <p>mon</p>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }} {{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
                               </div>
                               <div class="sri-circle"></div>
                               <div class="d-flex">
@@ -617,7 +618,7 @@
                         <div class="col-sm-6 schedule-info">
 
                           <!-- Vessel Information -->
-                          <h5 class="title-schedule">
+                          <h5 class="title-schedule mb-3">
                             <b-icon icon="hdd-rack"></b-icon> Vessel Information
                           </h5>
 
@@ -647,7 +648,7 @@
                           </ul>
 
                           <!-- Vessel Information -->
-                          <h5 class="title-schedule" style="margin-top: 25px">
+                          <h5 class="title-schedule mb-3" style="margin-top: 25px">
                             <b-icon icon="stopwatch"></b-icon> Deadlines
                           </h5>
 
@@ -674,15 +675,16 @@
                         <!-- FIN INFORMACION DEL BARCO -->
 
                         <div class="col-sm-6 schedule-route-info mt-3">
+                          <h5 class="title-schedule mb-3">
+                            <b-icon icon="calendar2-check"></b-icon> Itinerary details
+                          </h5>
                           <ul>
                             <li 
                             v-for="(routeDetail,detailKey) in route.details"
                             :key="detailKey"
                             >
                               <div>
-                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }}</p>
-                                <p>{{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
-                                <p>mon</p>
+                                <p>{{ routeDetail.arrivalDateGmt.substring(0,10) }} {{ routeDetail.arrivalDateGmt.substring(12,16) }}</p>
                               </div>
                               <div class="sri-circle"></div>
                               <div class="d-flex">
