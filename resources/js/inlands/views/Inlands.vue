@@ -96,6 +96,16 @@
 	                    placeholder: 'Reference',
 	                    colClass: 'col-lg-2 col-pr-5'
 	                },
+					carrier: { 
+	                    label:'Carrier', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'carriers',
+	                    colClass: 'col-xs-2 col-pr-5 col-pl-5 '
+	                },
 	                direction: { 
 	                    label:'Direction', 
 	                    searchable: true, 
