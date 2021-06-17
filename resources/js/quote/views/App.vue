@@ -9,7 +9,7 @@
               </div>
               <div class="col-6">
                 <div class="float-right">
-                  <a href="/v2/quotes/search" class="btn btn-primary btn-bg"
+                  <a href="/api/search" class="btn btn-primary btn-bg"
                     ><i class="fa fa-search"></i> Search Rates</a
                   >
                 </div>
