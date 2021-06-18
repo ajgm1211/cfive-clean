@@ -1769,12 +1769,14 @@ export default {
                     value: component.datalists.container_groups[3],
                 },
             ];
-            component.datalists.carriers.forEach(function (carrier) {
-                component.carrierOptions.push({
-                    text: carrier.name,
-                    value: carrier,
+            if(component.carrierOptions.length == 0){
+                component.datalists.carriers.forEach(function (carrier) {
+                    component.carrierOptions.push({
+                        text: carrier.name,
+                        value: carrier,
+                    });
                 });
-            });
+            }
             if(component.carriersApiOptions.length == 0){
                 component.datalists.carriers_api.forEach(function (carrier_api) {
                     component.carriersApiOptions.push({
