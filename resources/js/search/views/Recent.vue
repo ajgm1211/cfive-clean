@@ -11,13 +11,13 @@
             <div 
                 v-for="(search,searchKey) in searches"
                 :key="searchKey"
-                class="col-12 col-sm-6 col-lg-3"
+                class="col-12 col-md-6 col-xl-3"
             >
                 <div class="recent-search mb-3">
 
                     <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                    <p class="mt-4 mb-0">{{ search.origin_ports[0].display_name }}</p>
+                    <p class="mt-4 mb-0" style="padding: 0px 65px">{{ search.origin_ports[0].display_name }}</p>
 
                     <div class="direction-spot mt-2 mb-2">
                         <div class="circle"></div>
@@ -25,7 +25,7 @@
                         <div class="circle fill-circle"></div>
                     </div>
 
-                    <p class="mb-0">{{ search.destination_ports[0].display_name }}</p>
+                    <p class="mb-0" style="padding: 0px 10px">{{ search.destination_ports[0].display_name }}</p>
 
                     <b class="mb-4">{{ search.pick_up_date }}</b>
 

@@ -381,11 +381,17 @@
                                         :options="carriersApiOptions"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
+                                <label>
+                                    <b-input
+                                        v-model="carrierSearchQuery"
+                                        placeholder="Search Carrier"
+                                    ></b-input>
+                                </label>
                                 <b-form-group label="Carriers">
                                     <b-form-checkbox-group
                                         id="carriers-list"
                                         v-model="carriers"
-                                        :options="carrierOptions"
+                                        :options="carrierOptionsSearch"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                             </b-dropdown-form>
@@ -1519,40 +1525,7 @@ export default {
             calculationType: "",
             dataSurcharger: [],
             filterBy: "LOWEST PRICE",
-            optionsDirection: ["Import", "Export", "Both"],
-            optionsCurrency: ["USD", "EUR", "MXN"],
-            optionsCountries: [
-                "Argentina",
-                "Arabia",
-                "España",
-                "Mexico",
-                "Francia",
-            ],
-            optionsEquipment: ["DRY", "REEFER", "OPEN TOP", "FLAT RACK"],
-            optionsCarrier: [
-                "APL",
-                "CCNI",
-                "CMA CGM",
-                "COSCO",
-                "CSAV",
-                "Evergreen",
-                "Hamburg Sub",
-                "Hanjin",
-                "Hapag Lloyd",
-            ],
-            optionsTypeContract: ["Type 1", "Type 2", "Type 3", "Type 4"],
-            optionsCalculationType: [
-                "Calculation 1",
-                "Calculation 2",
-                "Calculation 3",
-                "Calculation 4",
-            ],
-            optionsFilter: [
-                "LOWEST PRICE",
-                "HIGH PRICE",
-                "LAST DATE",
-                "OLD DATE",
-            ],
+            carrierSearchQuery: '',
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -1871,6 +1844,7 @@ export default {
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
+                    this.allCarriers = false;
                     component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
@@ -1952,6 +1926,8 @@ export default {
         //Send Search Request to Controller
         searchButtonPressed() {
             this.setSearchParameters();
+
+            this.carrierSearchQuery = '';
 
             if (
                 this.searchRequest.requestData.requested == undefined ||
@@ -2416,6 +2392,11 @@ export default {
                 return;
             }
         },
+    },
+    computed: {
+        carrierOptionsSearch() {
+           return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
+        }
     },
 };
 </script>
