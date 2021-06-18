@@ -48,7 +48,7 @@
 							:equipment="equipment" 
 							:datalists="datalists"
 							:classTable="classTable"
-							:actions="actions.ranges">
+							:actions="actions.inlandLocation">
 						</per-location>
 					</b-tab>
 				</b-tabs>

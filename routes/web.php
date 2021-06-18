@@ -1299,7 +1299,15 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update')->middleware('check_company:inland');
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
-
+    
+    /* API Inland location EndPoints **/
+    Route::get('{inland}/location', 'inlandPerLocationController@list');
+    Route::post('{inland}/location/store', 'inlandPerLocationController@store');
+    Route::post('{inland}/location/{location}/update', 'inlandPerLocationController@update');
+    Route::post('location/{location}/duplicate', 'inlandPerLocationController@duplicate');
+    Route::delete('location/{location}/destroy', 'inlandPerLocationController@destroy');
+    Route::post('location/destroyAll', 'inlandPerLocationController@destroyAll');
+    /* End API Inland location EndPoints **/
     /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
     // INLAND RANGE
@@ -1370,19 +1378,8 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
     /** providers **/
 });
 
-Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], function () {
 
-    /** inland per locatoin **/
-    Route::get('', 'inlandPerLocationController@list');
-    Route::get('data', 'inlandPerLocationController@data');
-    Route::post('store', 'inlandPerLocationController@store');
-    Route::post('{inlandperlocation}/update', 'inlandPerLocationController@update');
-    Route::post('{inlandperlocation}/duplicate', 'inlandPerLocationController@duplicate');
-    Route::delete('{inlandperlocation}/destroy', 'inlandPerLocationController@destroy');
-    Route::post('destroyAll', 'inlandPerLocationController@destroyAll');
 
-    /** inland per location **/
-});
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
