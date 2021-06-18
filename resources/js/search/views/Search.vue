@@ -1848,7 +1848,6 @@ export default {
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
-                    this.allCarriers = false;
                     component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
