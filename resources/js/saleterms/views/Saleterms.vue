@@ -95,6 +95,7 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'equipments',
+						disabled: true,
 	                },
 				}
 			}
