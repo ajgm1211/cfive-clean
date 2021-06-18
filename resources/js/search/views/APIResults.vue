@@ -1545,11 +1545,12 @@ export default {
       });      
 
       apiContainers = component.setApiContainers();
-      if (this.request.carriersApi.length > 0) {
+      component.datalists.carriers_api.forEach(function (carrier) {
+        component.results[carrier.code] = [];
+      });
+
+      if (this.request.carriersApi.length > 0 && this.request.selectedContainerGroup.id == 1) {
         component.request.carriersApi.forEach(function (carrier) {
-
-          component.results[carrier.code] = [];
-
           apiCarrierCodes += carrier.code;
 
           if (
