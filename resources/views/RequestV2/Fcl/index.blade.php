@@ -581,7 +581,7 @@
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut"
             };
-            toastr.error('The file is not loading correctly, please cancel this upload and try again');
+            toastr.error('The file was not uploaded correctly. Please try again');
 
         }
 
@@ -596,7 +596,7 @@
             var name;
             if (!carrierM.length >= 1) {
                 fail = true;
-                toastr.error('Select Carrier is required ');
+                toastr.error('Carrier is required');
             }
             $('#form').find('select, textarea, input').each(function() {
                 if (!$(this).prop('required')) {} else {
@@ -618,7 +618,7 @@
                     if (date_star == date_end) {
                         swal(
                             "Error",
-                            "Error, Please select the date!", "error",
+                            "Error, Please select the date", "error",
                             true,
                         );
                     } else {
@@ -627,7 +627,7 @@
                     }
 
                 } else {
-                    toastr.error('Select a file! ');
+                    toastr.error('Select a file');
                 }
             }
 
@@ -652,7 +652,7 @@
             url: '{{ route('request.fcl.storeMedia') }}',
             maxFilesize: 100, // MB
             maxFiles: 1,
-            timeout: 18000,
+            timeout: 60000,
             acceptedFiles: 'text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.pdf,.xlsx,.xls,.csv',
             addRemoveLinks: true,
             /*accept: function(file, done) {
