@@ -298,7 +298,12 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
-                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
+                        <button 
+                            v-if="searchRequest.company != '' && searchRequest.company != null" 
+                            type="button" 
+                            class="close custom_close" 
+                            aria-label="Close" 
+                            @click="searchRequest.company = '',searchRequest.contact = '', searchRequest.pricelevel = '',unlockContacts(), setPriceLevels()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -1839,12 +1844,10 @@ export default {
                     this.searchData.end_date + "T01:00:00";
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
-                this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
                 if(this.searchData.carriers.length != this.datalists.carriers.length){
-                    this.allCarriers = false;
                     component.carriers = [];
                     this.searchRequest.carriers = this.searchData.carriers;
                     component.searchData.carriers.forEach(function (carrier) {
@@ -1866,7 +1869,6 @@ export default {
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();
-                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
@@ -1880,7 +1882,6 @@ export default {
                 } else {
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
-                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
                     this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
@@ -1911,6 +1912,7 @@ export default {
                     this.additionalVisible = true;
                 }
                 
+            this.setPriceLevels();
             this.loaded = true;
         },
 
