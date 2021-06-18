@@ -11,10 +11,10 @@ use App\Harbor;
 use App\Http\Resources\InlandResource;
 use App\Inland;
 use App\InlandType;
+use App\InlandService;
 use App\Provider;
 use App\Carrier;
 use App\Location;
-use App\TypeDestiny;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -79,8 +79,8 @@ class InlandController extends Controller
             return $location->only(['id', 'name']);
         });
 
-        $typeDestiny = TypeDestiny::get()->map(function ($typeDestiny) {
-            return $typeDestiny->only(['id', 'description']);
+        $inlnadService = InlandService::get()->map(function ($inlnadService) {
+            return $inlnadService->only(['id', 'name']);
         });
 
 
@@ -95,7 +95,7 @@ class InlandController extends Controller
             'providers' => $providers,
             'carriers' => $carriers,
             'location' => $location,
-            'type_destiny' => $typeDestiny,
+            'inland_service' => $inlnadService,
         ];
 
         return response()->json(['data' => $data]);

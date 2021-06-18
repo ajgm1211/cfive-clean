@@ -148,4 +148,8 @@ class Inland extends Model implements Auditable
     {
         return $this->hasMany('App\InlandDetail');
     }
+    public function inlandLocation()
+    {
+        return $this->hasMany('App\InlandPerLocation');
+    }
 }
