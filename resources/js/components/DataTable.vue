@@ -40,19 +40,6 @@
                         ></span>
                         {{ value.label }}
 
-                        <!-- <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label]" :id="value.label">
-                            <label>Select an Option</label>
-                            <md-select multiple>
-                                <md-option value="fight-club">Fight Club</md-option>
-                                <md-option value="godfather">Godfather</md-option>
-                                <md-option value="godfather-ii">Godfather II</md-option>
-                                <md-option value="godfather-iii">Godfather III</md-option>
-                                <md-option value="godfellas">Godfellas</md-option>
-                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
-                                <md-option value="scarface">Scarface</md-option>
-                            </md-select>
-                        </md-field> -->
-
                         <multiselect
                             v-if="filterSet"
                             :id="key"

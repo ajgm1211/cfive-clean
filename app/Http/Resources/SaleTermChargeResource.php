@@ -2,19 +2,36 @@
 
 namespace App\Http\Resources;
 
+use App\Container;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SaleTermChargeResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function toArray($request)
-    {
-        return [
+
+	/**
+	 * @var
+	 */
+	private $available_containers;
+
+	public function __construct($resource)
+	{
+		// Ensure you call the parent constructor
+		parent::__construct($resource);
+		$this->resource = $resource;
+
+		// Get the available containers except dry
+		$this->available_containers = Container::all()->pluck('code');
+	}
+
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return array
+	 */
+	public function toArray($request)
+	{
+		$data = [
 			'id' => $this->id,
 			'amount' => $this->amount,
 			'sale_term_id' => $this->sale_term_id,
@@ -27,5 +44,18 @@ class SaleTermChargeResource extends JsonResource
 			'sale_term_code' => $this->sale_term_code,
 			'total' => $this->json_containers,
 		];
-    }
+
+		return $this->addContainers($data);
+	}
+
+	public function addContainers($data)
+	{
+		$containers = $this->total;
+		
+		foreach ($this->available_containers as $available_container) {
+			$data['rates_' . $available_container] = isset($containers['c' . $available_container]) ? $containers['c' . $available_container] : '-';
+		}
+
+		return $data;
+	}
 }
