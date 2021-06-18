@@ -106,8 +106,8 @@
                     destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
                     carriers: { label: 'Carriers', searchable: true, type: 'multiselect_data', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers',values: this.contractData.carriers, },
                     calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
-                    amount: { label: 'W/M', type: 'text', rules: 'required', placeholder: 'W/M' },
-                    minimum: { label: 'Minimum', type: 'text', rules: 'required', placeholder: 'Minimum' },
+                    amount: { label: 'W/M', type: 'number', rules: 'required', placeholder: 'W/M' },
+                    minimum: { label: 'Minimum', type: 'number', rules: 'required', placeholder: 'Minimum' },
                     currency: { label: 'Currency', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Currency', options: 'currencies' },
                 },
 

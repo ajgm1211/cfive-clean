@@ -20,6 +20,7 @@ use App\Currency;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
+use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
 use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
@@ -39,6 +40,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
+use App\ViewQuoteV2;
 
 class QuotationController extends Controller
 {
@@ -51,9 +53,9 @@ class QuotationController extends Controller
 
     function list(Request $request)
     {
-        $results = QuoteV2::filterByCurrentCompany()->filter($request);
-
-        return QuotationResource::collection($results);
+        $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+        
+        return QuotationListResource::collection($results);
     }
 
     public function data(Request $request)
@@ -327,12 +329,12 @@ class QuotationController extends Controller
 
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
-                'contract' => $result['quoteLine'],
+                'contract' => $result['contractReference'] ?? $result['quoteLine'],
                 'validity_start' => $start_date,
                 'validity_end' => $end_date,
-                'transit_time' => $result['transitTime'],
-                'via' => count($result['routingDetails']) > 1 ? $result['routingDetails'][0]['arrivalName'] : null,
-                'schedule_type' => count($result['routingDetails']) > 1 ? 2 : 1,
+                'transit_time' => $result['routingDetails'][0]['transitTime'],
+                'via' => count($result['routingDetails'][0]['details']) > 1 ? $result['routingDetails'][0]['details'][0]['arrivalName'] : null,
+                'schedule_type' => count($result['routingDetails'][0]['details']) > 1 ? 2 : 1,
                 'currency_id' => $result['currency_id'],
                 'origin_port_id' => $result['origin_port'],
                 'destination_port_id' => $result['destiny_port'],
