@@ -53,14 +53,14 @@ export default {
       activeOcean: false,
       actions: actions,
       fields: [
-        { key: "quote_id", label: "Quote ID", filterIsOpen: false },
+        { key: "quote_id", label: "Quote ID", filterIsOpen: true },
         {
           key: "status",
           label: "status",
           formatter: (value) => {
             return value.name;
           },
-          filterIsOpen: false,
+          filterIsOpen: true,
           filterTrackBy: "name",
           trackLabel: "name",
         },
@@ -70,21 +70,21 @@ export default {
           formatter: (value) => {
             return this.setClient(value);
           },
-          filterIsOpen: false,
+          filterIsOpen: true,
           filterTrackBy: "business_name",
           trackLabel: "business_name",
         },
-        { key: "type", label: "Type", filterIsOpen: false },
+        { key: "type", label: "Type", filterIsOpen: true },
         {
           key: "origin",
           label: "Origin",
-          filterIsOpen: false,
+          filterIsOpen: true,
           collapse: "Show origins",
         },
         {
           key: "destiny",
           label: "Destiny",
-          filterIsOpen: false,
+          filterIsOpen: true,
           collapse: "Show destinations",
         },
         {
@@ -93,11 +93,11 @@ export default {
           formatter: (value) => {
             return value.fullname;
           },
-          filterIsOpen: false,
+          filterIsOpen: true,
           filterTrackBy: "fullname",
           trackLabel: "fullname",
         },
-        { key: "created_at", label: "Created at", filterIsOpen: false },
+        { key: "created_at", label: "Created at", filterIsOpen: true },
       ],
     };
   },
