@@ -21,10 +21,12 @@ class CreateInlandLocationTable extends Migration
             $table->integer('harbor_id')->unsigned();
             $table->foreign('harbor_id')->references('id')->on('harbors');
             $table->integer('inland_id')->unsigned();
+            $table->foreign('inland_id')->references('id')->on('inlands');
             $table->integer('location_id')->unsigned();
             $table->foreign('location_id')->references('id')->on('location');
-            $table->integer('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('typedestiny');
+            $table->string('type')->nullable();
+            $table->integer('service_id')->unsigned();
+            $table->foreign('service_id')->references('id')->on('inland_service');
             $table->timestamps();
         });
     }

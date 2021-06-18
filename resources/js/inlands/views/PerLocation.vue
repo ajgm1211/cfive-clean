@@ -26,6 +26,21 @@
         :classTable="classTable"
       ></DynamicalDataTable>
     </b-card>
+
+      <b-modal id="editLocation" size="lg" cancel-title="Cancel" hide-header-close title="Update Range" hide-footer>
+      <FormView 
+          :data="currentData" 
+          :fields="input_fields"
+          :vdatalists="datalists"
+          btnTxt="Update"
+          @exit="closeModal('editLocation')"
+          @success="closeModal('editLocation')"
+          :actions="actions"
+          :update="true"
+          >
+      </FormView>
+  </b-modal>
+  
   </div>
 </template>
 
@@ -55,7 +70,7 @@ export default {
       fields: [
         { key: "port", label: "Ports" },
         { key: "location", label: "Address" },
-        { key: "Service", label: "Service" },
+        { key: "service", label: "Service" },
         { key: "currency", label: "Currency" },
       ],
 
@@ -64,7 +79,7 @@ export default {
         port: {
           label: "Port",
           searchable: true,
-          type: "select",
+          type: "multiselect",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
@@ -78,11 +93,13 @@ export default {
           placeholder: "Select an Address",
           options: "location",
         },
-        Service: {
+        service: {
           label: "Service",
-          type: "text",
+          type: "select",
           // rules: "required",
+          trackby: "name",
           placeholder: "Select a Service",
+          options: "inland_service"
         },
         currency: {
           label: "Currency",
@@ -100,7 +117,7 @@ export default {
     /* Single Actions */
     onEdit(data) {
       this.currentData = data;
-      this.$bvModal.show("editRange");
+      this.$bvModal.show("editLocation");
     },
 
     /* Single Actions */
