@@ -55,9 +55,7 @@
                 @success="closeModal('editHarborsOrig')"
                 :actions="actions"
                 :update="true"
-                :massivechangeHarborOrig="true"
-
-                
+                :massivechangeHarborOrig="true"          
 
             >
             </FormView>

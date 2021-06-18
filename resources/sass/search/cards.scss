@@ -306,11 +306,12 @@ BANDA DE CARDS CMA Y MAERSK
     }
     .sub-title-schedule {
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 800;
+        width: 100px;
     }
     .text-schedule {
         font-size: 12px;
-        font-weight: 800;
+        margin-bottom: 0px;
     }
     .info-schedule {
         padding-top: 50px;
@@ -336,6 +337,119 @@ BANDA DE CARDS CMA Y MAERSK
         }
         .img-indirect {
             top: 40px;
+        }
+    }
+    .schedule-info {
+        ul {
+            padding: 0px;
+            list-style: none;
+            li {
+                display: flex;
+            }
+        }
+    }
+    .schedule-route-info {
+        ul {
+            list-style: none;
+            padding: 0px;
+            margin-bottom: 10px !important;
+            li {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 86px;
+                img {
+                    position: relative;
+                    top: -7px;
+                    margin-right: 7px;
+                }
+                p {
+                    margin-bottom: 0px;
+                    font-weight: 800;
+                    color: #071C4B;
+                    text-align: right;
+                    &:nth-child(3){
+                        text-transform: uppercase;
+                        color: #ababab;
+                    }
+                }
+                .sri-circle {
+                    width: 20px;
+                    height: 20px;
+                    background-color: #006afa;
+                    border-radius: 100px;
+                    position: relative;
+                    margin: 0px 15px;
+                    &::before {
+                        content: '';
+                        width: 2px;
+                        height: 100px;
+                        background-color: #dddddd;
+                        position: absolute;
+                        top: 30px;
+                        left: 9px;
+                    }
+                }
+                &:last-child {
+                    .sri-circle {
+                        &::before {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .nav-pills {
+        background-color: transparent;
+        flex-flow: nowrap;
+        li.nav-item {
+            margin-bottom: 15px;
+            a {
+                background-color: transparent;
+                border: 2px solid #dddddd;
+                &.active {
+                    border: 2px solid #007bff;
+                }
+                
+            }
+        }
+    }
+    .si-responsive {
+        button {
+            border: 2px solid #dddddd !important;
+            margin-bottom: 15px;
+            &:focus {
+                border: 2px solid #007bff !important;
+            }
+        }
+        .si-route-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            .origin,
+            .destination,
+            .direction-desc {
+                p {
+                    text-align: left;
+                }
+            }
+            .direction-desc {
+                align-items: flex-start;
+            }
+        }
+        .schedule-info {
+            ul {
+                padding-left: 0px;
+            }
+        }
+        .schedule-route-info {
+            ul {
+                li {
+                    div:first-child {
+                        margin-right: 15px;
+                    }
+                }
+            }
         }
     }
 }
@@ -421,6 +535,13 @@ BANDA DE CARDS CMA Y MAERSK
     .btn-quote-res {
         padding: 50px 0px !important;
     }
+    .si-route-info {
+        .destination {
+            float: left;
+            text-align: left;
+            align-items: flex-start;
+        }
+    }
 }
 
 @media only screen and (max-width: 768px) {
@@ -428,6 +549,20 @@ BANDA DE CARDS CMA Y MAERSK
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .si-responsive {
+        .si-route-info {
+            flex-direction: row !important;
+            justify-content: space-between;
+        }
+    }
+}
+
+@media only screen and (min-width: 920px) and (max-width: 1336px) {
+    .schedule-info {
+        margin-bottom: 50px;
     }
 }
 
