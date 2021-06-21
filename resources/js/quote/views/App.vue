@@ -53,6 +53,7 @@ export default {
       activeOcean: false,
       actions: actions,
       fields: [
+        // { key: "id", label: "ID", filterIsOpen: true },
         { key: "quote_id", label: "Quote ID", filterIsOpen: true },
         {
           key: "status",
