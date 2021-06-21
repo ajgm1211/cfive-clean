@@ -68,10 +68,10 @@ export default {
 
       /* Table headers */
       fields: [
-        { key: "port", label: "Ports" },
-        { key: "location", label: "Address" },
-        { key: "service", label: "Service" },
-        { key: "currency", label: "Currency" },
+        { key: "port", label: "Ports",formatter: (value)=> { return value.display_name}  },
+        { key: "location", label: "Address", formatter: (value)=> { return value.name} },
+        { key: "service", label: "Service", formatter: (value)=> { return value.name } },
+        { key: "currency", label: "Currency", formatter: (value)=> { return value.alphacode } },
       ],
 
       /* Table input inline fields */
@@ -79,7 +79,7 @@ export default {
         port: {
           label: "Port",
           searchable: true,
-          type: "multiselect",
+          type: "select",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
