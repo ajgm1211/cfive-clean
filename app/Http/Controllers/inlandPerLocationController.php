@@ -31,7 +31,8 @@ class inlandPerLocationController extends Controller
 
     public function store(Request $request, Inland $inland)
     {    
-        
+        $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
+
         $data = $request->validate([
             'port' => 'required',
             'location' => 'required',
@@ -39,48 +40,49 @@ class inlandPerLocationController extends Controller
             'currency' => 'required',
         ]);
 
-        $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
-
-        $prepared_data = $this->prepareData($request,$data, $inland, $available_containers);
-
-        foreach($request->port as $harbors){
-
-            $inlandPL = new InlandPerLocation();
-            $inlandPL->json_container=json_encode($prepared_data['json_containers']);
-            $inlandPL->currency_id =$prepared_data['currency_id'];
-            $inlandPL->harbor_id =$harbors;
-            $inlandPL->inland_id =$prepared_data['inland_id'];
-            $inlandPL->location_id =$prepared_data['location_id']; 
-            $inlandPL->service_id=$prepared_data['service_id'];
-            // $inlandPL-> = $prepared_data[];
-            $inlandPL->save();
-
-           
+        $containers = [];
+        foreach ($available_containers as $code) {
+            $value = isset($request['rates_' . $code]) ? number_format(floatval($request['rates_' . $code]), 2, '.', '') : 0;
+            $containers['C' . $code] = $value;
         }
-            
+            $inlandPL = new InlandPerLocation();
+            $inlandPL->json_container=json_encode($containers);
+            $inlandPL->currency_id =$data['currency'];
+            $inlandPL->harbor_id =$data['port'];
+            $inlandPL->inland_id =$inland->id;
+            $inlandPL->location_id =$data['location']; 
+            $inlandPL->service_id=$data['service'];
+            // $inlandPL->type = ;
+            $inlandPL->save();
+    
         return new InlandPerLocationResource($inlandPL);
     }
 
-    public function update(Request $request, InlandPerLocation $InlandPL)
+    public function update(Request $request, Inland $inland, InlandPerLocation $InlandPL)
     {
+        $available_containers = Container::get()->pluck('code');
+
         $data = $request->validate([
-            'containers' => 'required',
             'currency' => 'required',
-            'harbor' => 'required',
-            'inland' => 'required',
+            'port' => 'required',
+            'service' => 'required',
             'location' => 'required',
-            'type' => 'required',
+            // 'type' => 'required',
         ]);
         
-        $containers = json_encode($data['containers']);
-
+        $containers = [];
+        foreach ($available_containers as $code) {
+            $value = isset($request['rates_' . $code]) ? number_format(floatval($request['rates_' . $code]), 2, '.', '') : 0;
+            $containers['C' . $code] = $value;
+        }
+       
         $InlandPL->update([
-            'container' => $containers,
+            'json_container' => json_encode($containers),
             'currency_id' => $data['currency'],
-            'harbor_id' => $data['harbor'],
-            'inland_id' => $data['inland'],
+            'harbor_id' => $data['port'],
             'location_id' => $data['location'],
-            'type' => $data['type'],
+            'service_id' => $data['service'],
+            // 'type' => $data['type'],
         ]);
 
         return new InlandPerLocationResource($InlandPL);
@@ -105,27 +107,4 @@ class inlandPerLocationController extends Controller
         return response()->json(null, 204);
     }
 
-    public function prepareData($request,$data,$inland, $available_containers)
-    {
-        $prepared_data = [
-            'currency_id' => $data['currency'],
-            'inland_id' => $inland->id,
-            'location_id' => $data['location'], 
-            'service_id' => $data['service'],
-
-        ];
-
-        $containers = [];
-        foreach ($available_containers as $container){
-            $c='rates_'.$container;
-            $cont='C'.$container;
-
-            if(isset($request->$c)){
-                $containers[$cont]=$request->$c;
-            }
-        }
-        $prepared_data['json_containers'] = $containers;
-
-        return $prepared_data;
-    }
 }

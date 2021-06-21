@@ -20,9 +20,9 @@ class InlandPerLocation extends Model
 
     public function harbor()
     {
-        return $this->belongsTo('App\harbors');
+        return $this->belongsTo('App\Harbor');
     }
-
+    
     public function location()
     {
         return $this->belongsTo('App\location');
@@ -30,9 +30,15 @@ class InlandPerLocation extends Model
 
     public function currency()
     {
-        return $this->belongsTo('App\currency');
+        return $this->belongsTo('App\Currency');
     }
-    public function inlandService()
+
+    public function gpContainer()
+    {
+        return $this->belongsTo('App\GroupContainer');
+    }
+
+    public function service()
     {
         return $this->belongsTo('App\inlandService');
     }
