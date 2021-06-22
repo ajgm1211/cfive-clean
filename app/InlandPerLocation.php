@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class InlandPerLocation extends Model
 {
     protected $table = 'inland_location';
-    protected $fillable = ['json_container, currency_id, harbor_id, inland_id, location_id, type, service_id'];
+    protected $fillable = ['id, json_container, currency_id, harbor_id, inland_id, location_id, type, service_id'];
     
     public function inland()
     {
@@ -51,6 +51,13 @@ class InlandPerLocation extends Model
     public function scopeFilterByInland($query, $inland_id)
     {
         return $query->where('inland_id', '=', $inland_id);
+    }
+    public function duplicate()
+    {
+        $new_inland = $this->replicate();
+        $new_inland->save();
+
+        return $new_inland;
     }
 
 }
