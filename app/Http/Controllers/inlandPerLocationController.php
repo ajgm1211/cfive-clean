@@ -19,14 +19,8 @@ class inlandPerLocationController extends Controller
 
     public function list(Request $request, Inland $inland) {
         
-            $results = InlandPerLocation::filterByInland($inland->id)->filter($request);
-    // dd($results);
-            return InlandPerLocationResource::collection($results);
-    }
-
-    public function data(Request $request)
-    {
-        //
+        $results = InlandPerLocation::filterByInland($inland->id)->filter($request);
+        return InlandPerLocationResource::collection($results);
     }
 
     public function store(Request $request, Inland $inland)
@@ -58,16 +52,14 @@ class inlandPerLocationController extends Controller
         return new InlandPerLocationResource($inlandPL);
     }
 
-    public function update(Request $request, Inland $inland, InlandPerLocation $InlandPL)
+    public function update(Request $request, Inland $inland,  InlandPerLocation $location )
     {
-        $available_containers = Container::get()->pluck('code');
-
+        $available_containers = Container::where('gp_container_id', $inland->gp_container_id ?? 1)->get()->pluck('code');
         $data = $request->validate([
             'currency' => 'required',
             'port' => 'required',
             'service' => 'required',
             'location' => 'required',
-            // 'type' => 'required',
         ]);
         
         $containers = [];
@@ -75,36 +67,34 @@ class inlandPerLocationController extends Controller
             $value = isset($request['rates_' . $code]) ? number_format(floatval($request['rates_' . $code]), 2, '.', '') : 0;
             $containers['C' . $code] = $value;
         }
-       
-        $InlandPL->update([
-            'json_container' => json_encode($containers),
-            'currency_id' => $data['currency'],
-            'harbor_id' => $data['port'],
-            'location_id' => $data['location'],
-            'service_id' => $data['service'],
-            // 'type' => $data['type'],
-        ]);
-
-        return new InlandPerLocationResource($InlandPL);
+        
+        $location->json_container = json_encode($containers);
+        $location->currency_id = $data['currency'];
+        $location->harbor_id = $data['port'];
+        $location->location_id = $data['location'];
+        $location->service_id = $data['service'];
+        $location->update();
+            
+        return new InlandPerLocationResource($location);
     }
 
-    public function duplicate(Request $request )
+    public function duplicate(InlandPerLocation $location )
     {
-        //
+        $new_inland_range = $location->duplicate();
+        return new InlandPerLocationResource($new_inland_range);
     }
 
-    public function destroy(InlandPerLocation $InlandPL)
+    public function destroy(InlandPerLocation $location)
     {
-        $InlandPL->delete();
-
+        $location->delete();
         return response()->json(null, 204);
     }
 
     public function destroyAll(Request $request)
     {
         DB::table('inland_location')->whereIn('id', $request->input('ids'))->delete();
-
         return response()->json(null, 204);
     }
+    
 
 }

@@ -31,6 +31,7 @@ class InlandPerLocationResource extends JsonResource
         $containers=json_encode($this->json_container);
 
         $data = [
+            'id' => $this->id,
             'container' => $containers,
             'currency' => $this->currency,
             'port' => $this->harbor,
